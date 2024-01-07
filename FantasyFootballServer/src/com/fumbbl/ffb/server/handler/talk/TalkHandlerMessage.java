@@ -10,7 +10,7 @@ public class TalkHandlerMessage extends TalkHandler {
 	private static final String MESSAGE_COMMAND = "/message";
 
 	public TalkHandlerMessage() {
-		super("/message", 0, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_SERVER, TalkRequirements.Privilege.DEV);
+		super(MESSAGE_COMMAND, 0, TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_SERVER, TalkRequirements.Privilege.DEV);
 	}
 
 	@Override

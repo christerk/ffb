@@ -26,6 +26,7 @@ import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.DialogChatCommands;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
+import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
 import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
@@ -56,6 +57,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -66,6 +68,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,6 +158,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JRadioButtonMenuItem swapTeamColorsOffMenuItem;
 	private JRadioButtonMenuItem swapTeamColorsOnMenuItem;
+
+	private JRadioButtonMenuItem localIconCacheOffMenuItem;
+	private JRadioButtonMenuItem localIconCacheOnMenuItem;
+	private JMenuItem localIconCacheSelectMenuItem;
 
 	private JRadioButtonMenuItem playersMarkingManualMenuItem;
 	private JRadioButtonMenuItem playersMarkingAutoMenuItem;
@@ -682,56 +689,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
 	}
 
-	private void createIconsMenu(JMenu fUserSettingsMenu) {
-		JMenu fIconsMenu = new JMenu(dimensionProvider, SETTING_ICONS);
-		fIconsMenu.setMnemonic(KeyEvent.VK_I);
-		fUserSettingsMenu.add(fIconsMenu);
-
-		ButtonGroup iconsGroup = new ButtonGroup();
-
-		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons");
-		fIconsTeam.setMnemonic(KeyEvent.VK_T);
-		fIconsTeam.addActionListener(this);
-		iconsGroup.add(fIconsTeam);
-		fIconsMenu.add(fIconsTeam);
-
-		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)");
-		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
-		fIconsRosterOpponent.addActionListener(this);
-		iconsGroup.add(fIconsRosterOpponent);
-		fIconsMenu.add(fIconsRosterOpponent);
-
-		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)");
-		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
-		fIconsRosterBoth.addActionListener(this);
-		iconsGroup.add(fIconsRosterBoth);
-		fIconsMenu.add(fIconsRosterBoth);
-
-		fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons");
-		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
-		fIconsAbstract.addActionListener(this);
-		iconsGroup.add(fIconsAbstract);
-		fIconsMenu.add(fIconsAbstract);
-
-		fIconsMenu.addSeparator();
-
-		JMenu swapTeamColorsMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_SWAP_TEAM_COLORS);
-		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
-		fIconsMenu.add(swapTeamColorsMenu);
-
-		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
-
-		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
-		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
-		swapTeamColorsOffMenuItem.addActionListener(this);
-		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
-		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
-
-		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
-		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
-		swapTeamColorsOnMenuItem.addActionListener(this);
-		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
-		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
+	private static boolean iconCacheValid(File file) {
+		return file.exists() && file.isDirectory() && file.canWrite();
 	}
 
 	private void createSoundMenu(JMenu fUserSettingsMenu) {
@@ -877,6 +836,133 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		refresh();
 	}
 
+	private void createIconsMenu(JMenu fUserSettingsMenu) {
+		JMenu fIconsMenu = new JMenu(dimensionProvider, SETTING_ICONS);
+		fIconsMenu.setMnemonic(KeyEvent.VK_I);
+		fUserSettingsMenu.add(fIconsMenu);
+
+		ButtonGroup iconsGroup = new ButtonGroup();
+
+		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons");
+		fIconsTeam.setMnemonic(KeyEvent.VK_T);
+		fIconsTeam.addActionListener(this);
+		iconsGroup.add(fIconsTeam);
+		fIconsMenu.add(fIconsTeam);
+
+		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)");
+		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
+		fIconsRosterOpponent.addActionListener(this);
+		iconsGroup.add(fIconsRosterOpponent);
+		fIconsMenu.add(fIconsRosterOpponent);
+
+		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)");
+		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
+		fIconsRosterBoth.addActionListener(this);
+		iconsGroup.add(fIconsRosterBoth);
+		fIconsMenu.add(fIconsRosterBoth);
+
+		fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons");
+		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
+		fIconsAbstract.addActionListener(this);
+		iconsGroup.add(fIconsAbstract);
+		fIconsMenu.add(fIconsAbstract);
+
+		fIconsMenu.addSeparator();
+
+		JMenu swapTeamColorsMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_SWAP_TEAM_COLORS);
+		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
+		fIconsMenu.add(swapTeamColorsMenu);
+
+		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
+
+		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		swapTeamColorsOffMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
+
+		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		swapTeamColorsOnMenuItem.addActionListener(this);
+		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
+		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
+
+		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE);
+		localIconCacheMenu.setMnemonic(KeyEvent.VK_L);
+		fIconsMenu.add(localIconCacheMenu);
+
+		ButtonGroup localIconCacheGroup = new ButtonGroup();
+
+		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		localIconCacheOffMenuItem.addActionListener(this);
+		localIconCacheGroup.add(localIconCacheOffMenuItem);
+		localIconCacheMenu.add(localIconCacheOffMenuItem);
+
+		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		localIconCacheOnMenuItem.addActionListener(this);
+		localIconCacheGroup.add(localIconCacheOnMenuItem);
+		localIconCacheMenu.add(localIconCacheOnMenuItem);
+
+		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
+		localIconCacheSelectMenuItem.setMnemonic(KeyEvent.VK_S);
+		localIconCacheSelectMenuItem.addActionListener(this);
+		localIconCacheMenu.add(localIconCacheSelectMenuItem);
+
+	}
+
+	private boolean refreshFrameBackgroundMenu(boolean useColor) {
+		Color oldColor = styleProvider.getFrameBackground();
+		Color newColor = null;
+
+		if (useColor) {
+			try {
+				newColor = new Color(Integer.parseInt(getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR)));
+				frameBackgroundColor.setIcon(createColorIcon(newColor));
+			} catch (NumberFormatException ex) {
+				getClient().getFactorySource().logWithOutGameId(ex);
+			}
+		}
+
+		styleProvider.setFrameBackground(newColor);
+
+		return !Objects.equals(oldColor, newColor);
+	}
+
+	private boolean refreshColorMenu(CommonProperty key, JMenuItem customItem,
+																	 Supplier<Color> oldColor, Consumer<Color> setter) {
+
+		if (getClient().getUserInterface() == null) {
+			return false;
+		}
+
+		String colorSetting = getClient().getProperty(key);
+
+		Color color = null;
+		if (!StringTool.isProvided(colorSetting)) {
+			return false;
+		}
+
+		try {
+			color = new Color(Integer.parseInt(colorSetting));
+			customItem.setSelected(true);
+		} catch (NumberFormatException ex) {
+			getClient().getFactorySource().logWithOutGameId(ex);
+		}
+
+		if (color != null && !color.equals(oldColor.get())) {
+			customItem.setIcon(createColorIcon(color));
+			setter.accept(color);
+			return true;
+		}
+		return false;
+	}
+
+	public FantasyFootballClient getClient() {
+		return fClient;
+	}
+
 	public void refresh() {
 
 		Game game = getClient().getGame();
@@ -891,6 +977,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fIconsRosterOpponent.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(iconsSetting));
 		fIconsRosterBoth.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(iconsSetting));
 		fIconsAbstract.setSelected(IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(iconsSetting));
+
+		String localIconCacheSetting = getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE);
+		localIconCacheOffMenuItem.setSelected(true);
+		localIconCacheOnMenuItem.setSelected(IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(localIconCacheSetting));
 
 		String automoveSetting = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
@@ -1036,446 +1126,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (getClient().getUserInterface() != null && refreshUi) {
 			getClient().getUserInterface().initComponents(true);
-		}
-	}
-
-	private boolean refreshFrameBackgroundMenu(boolean useColor) {
-		Color oldColor = styleProvider.getFrameBackground();
-		Color newColor = null;
-
-		if (useColor) {
-			try {
-				newColor = new Color(Integer.parseInt(getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR)));
-				frameBackgroundColor.setIcon(createColorIcon(newColor));
-			} catch (NumberFormatException ex) {
-				getClient().getFactorySource().logWithOutGameId(ex);
-			}
-		}
-
-		styleProvider.setFrameBackground(newColor);
-
-		return !Objects.equals(oldColor, newColor);
-	}
-
-	private boolean refreshColorMenu(CommonProperty key, JMenuItem customItem,
-																	 Supplier<Color> oldColor, Consumer<Color> setter) {
-
-		if (getClient().getUserInterface() == null) {
-			return false;
-		}
-
-		String colorSetting = getClient().getProperty(key);
-
-		Color color = null;
-		if (!StringTool.isProvided(colorSetting)) {
-			return false;
-		}
-
-		try {
-			color = new Color(Integer.parseInt(colorSetting));
-			customItem.setSelected(true);
-		} catch (NumberFormatException ex) {
-			getClient().getFactorySource().logWithOutGameId(ex);
-		}
-
-		if (color != null && !color.equals(oldColor.get())) {
-			customItem.setIcon(createColorIcon(color));
-			setter.accept(color);
-			return true;
-		}
-		return false;
-	}
-
-	public FantasyFootballClient getClient() {
-		return fClient;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		ClientReplayer replayer = getClient().getReplayer();
-		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
-		if (source == null) {
-			return;
-		}
-		if (source == fLoadSetupMenuItem) {
-			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_LOAD);
-		}
-		if (source == fSaveSetupMenuItem) {
-			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_SAVE);
-		}
-		if (source == fSoundVolumeItem) {
-			showDialog(new DialogSoundVolume(getClient()));
-		}
-		if (source == scalingItem) {
-			showDialog(new DialogScalingFactor(getClient()));
-		}
-		if (source == fSoundOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fSoundMuteSpectatorsMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fSoundOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fIconsTeam) {
-			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fIconsRosterOpponent) {
-			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fIconsRosterBoth) {
-			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fIconsAbstract) {
-			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fAboutMenuItem) {
-			showDialog(new DialogAbout(getClient()));
-		}
-		if (source == fChatCommandsMenuItem) {
-			showDialog(new DialogChatCommands(getClient()));
-		}
-		if (source == changeListItem) {
-			showDialog(new DialogChangeList(getClient()));
-		}
-		if (source == autoMarkingItem) {
-			showDialog(DialogAutoMarking.create(getClient(), false));
-		}
-		if (source == fKeyBindingsMenuItem) {
-			showDialog(new DialogKeyBindings(getClient()));
-		}
-		if (source == fGameStatisticsMenuItem) {
-			showDialog(new DialogGameStatistics(getClient()));
-		}
-		if (source == fAutomoveOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fAutomoveOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fBlitzPanelOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fBlitzPanelOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
-			getClient().saveUserSettings(false);
-		}
-		if (source == gazePanelOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
-			getClient().saveUserSettings(false);
-		}
-		if (source == gazePanelOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == rightClickEndActionOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
-			getClient().saveUserSettings(false);
-		}
-		if (source == rightClickLegacyModeItem) {
-			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
-			getClient().saveUserSettings(false);
-		}
-		if (source == rightClickOpensContextMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
-			getClient().saveUserSettings(false);
-		}
-		if (source == rightClickEndActionOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainAlwaysMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
-			getClient().saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainTeamMateMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
-			getClient().saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainNoOpponentMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
-			getClient().saveUserSettings(false);
-		}
-		if (source == reRollBallAndChainNeverMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fCustomPitchMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fDefaultPitchMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fBasicPitchMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fPitchMarkingsOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fPitchMarkingsOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
-			getClient().saveUserSettings(true);
-		}
-		if (source == pitchLandscapeMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
-			getClient().saveUserSettings(true);
-		}
-		if (source == pitchPortraitMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == layoutSquareMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == showCratersAndBloodsptsMenuItem) {
-			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
-			getClient().saveUserSettings(true);
-		}
-		if (source == hideCratersAndBloodsptsMenuItem) {
-			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == sweetSpotOff) {
-			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_OFF);
-			getClient().saveUserSettings(true);
-		}
-		if (source == sweetSpotBlack) {
-			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_BLACK);
-			getClient().saveUserSettings(true);
-		}
-		if (source == sweetSpotWhite) {
-			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_WHITE);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == fTeamLogoBothMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fTeamLogoOwnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_OWN);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fTeamLogoNoneMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fCustomPitchMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fPitchWeatherOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fPitchWeatherOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
-			getClient().saveUserSettings(true);
-		}
-		if (source == fRangeGridAlwaysOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
-			getClient().saveUserSettings(false);
-		}
-
-		if (source == markUsedPlayersCheckIconGreenMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == markUsedPlayersDefaultMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == playersMarkingAutoMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-			getClient().saveUserSettings(true);
-			getClient().getCommunication().sendUpdatePlayerMarkings(true);
-
-			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(getClient().getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
-				showDialog(DialogAutoMarking.create(getClient(), true));
-			}
-		}
-
-		if (source == playersMarkingManualMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-			getClient().saveUserSettings(true);
-			getClient().getCommunication().sendUpdatePlayerMarkings(false);
-		}
-
-		if (source == swapTeamColorsOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_OFF);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == swapTeamColorsOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == chatBackground) {
-			Color defaultColor = styleProvider.getChatBackground();
-			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == logBackground) {
-			Color defaultColor = styleProvider.getLogBackground();
-			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == frameBackgroundIcons) {
-			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == frameBackgroundColor) {
-			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
-			Color defaultColor = styleProvider.getFrameBackground();
-			Color color = JColorChooser.showDialog(this, "Choose sidebar and scoreboard background color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
-			}
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == textFontColor) {
-			Color defaultColor = styleProvider.getText();
-			Color color = JColorChooser.showDialog(this, "Choose text color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_TEXT, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == awayFontColor) {
-			Color defaultColor = styleProvider.getAwayUnswapped();
-			Color color = JColorChooser.showDialog(this, "Choose away color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == homeFontColor) {
-			Color defaultColor = styleProvider.getHomeUnswapped();
-			Color color = JColorChooser.showDialog(this, "Choose home color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == specFontColor) {
-			Color defaultColor = styleProvider.getSpec();
-			Color color = JColorChooser.showDialog(this, "Choose spec color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_SPEC, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == adminFontColor) {
-			Color defaultColor = styleProvider.getAdmin();
-			Color color = JColorChooser.showDialog(this, "Choose admin color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_ADMIN, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == devFontColor) {
-			Color defaultColor = styleProvider.getDev();
-			Color color = JColorChooser.showDialog(this, "Choose dev color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_DEV, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == frameFontColor) {
-			Color defaultColor = styleProvider.getFrame();
-			Color color = JColorChooser.showDialog(this, "Choose frane color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == frameFontShadowColor) {
-			Color defaultColor = styleProvider.getFrameShadow();
-			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == inputFontColor) {
-			Color defaultColor = styleProvider.getInput();
-			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
-			if (color != null) {
-				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_INPUT, String.valueOf(color.getRGB()));
-				getClient().saveUserSettings(true);
-			}
-		}
-
-		if (source == localPropertiesItem) {
-			showDialog(new DialogSelectLocalStoredProperties(fClient));
-		}
-
-		if (source == fRestoreDefaultsMenuItem) {
-			try {
-				getClient().loadProperties();
-			} catch (IOException pIoE) {
-				throw new FantasyFootballException(pIoE);
-			}
-			refresh();
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == resetColors) {
-			resetColors(CommonProperty.COLOR_SETTINGS);
-		}
-
-		if (source == resetBackgroundColors) {
-			resetColors(CommonProperty.BACKGROUND_COLOR_SETTINGS);
-		}
-
-		if (source == resetFontColors) {
-			resetColors(CommonProperty.FONT_COLOR_SETTINGS);
-		}
-
-		if (source == fGameReplayMenuItem) {
-			fGameReplayMenuItem.setText(replayer.isReplaying() ? _REPLAY_MODE_ON : _REPLAY_MODE_OFF);
-			getClient().getClientState().actionKeyPressed(ActionKey.MENU_REPLAY);
-		}
-		if (source == fGameConcessionMenuItem) {
-			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
 		}
 	}
 
@@ -2077,5 +1727,469 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 		return entries;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		ClientReplayer replayer = getClient().getReplayer();
+		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
+		if (source == null) {
+			return;
+		}
+		if (source == fLoadSetupMenuItem) {
+			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_LOAD);
+		}
+		if (source == fSaveSetupMenuItem) {
+			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_SAVE);
+		}
+		if (source == fSoundVolumeItem) {
+			showDialog(new DialogSoundVolume(getClient()));
+		}
+		if (source == scalingItem) {
+			showDialog(new DialogScalingFactor(getClient()));
+		}
+		if (source == fSoundOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fSoundMuteSpectatorsMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fSoundOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fIconsTeam) {
+			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fIconsRosterOpponent) {
+			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fIconsRosterBoth) {
+			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fIconsAbstract) {
+			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
+			getClient().saveUserSettings(true);
+		}
+		if (source == localIconCacheOffMenuItem) {
+			getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == localIconCacheOnMenuItem) {
+			getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
+			if (!iconCacheValid()) {
+				selectIconCacheFolder();
+			}
+			getClient().saveUserSettings(true);
+		}
+		if (source == localIconCacheSelectMenuItem) {
+			selectIconCacheFolder();
+			getClient().saveUserSettings(true);
+		}
+		if (source == fAboutMenuItem) {
+			showDialog(new DialogAbout(getClient()));
+		}
+		if (source == fChatCommandsMenuItem) {
+			showDialog(new DialogChatCommands(getClient()));
+		}
+		if (source == changeListItem) {
+			showDialog(new DialogChangeList(getClient()));
+		}
+		if (source == autoMarkingItem) {
+			showDialog(DialogAutoMarking.create(getClient(), false));
+		}
+		if (source == fKeyBindingsMenuItem) {
+			showDialog(new DialogKeyBindings(getClient()));
+		}
+		if (source == fGameStatisticsMenuItem) {
+			showDialog(new DialogGameStatistics(getClient()));
+		}
+		if (source == fAutomoveOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fAutomoveOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_AUTOMOVE, IClientPropertyValue.SETTING_AUTOMOVE_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fBlitzPanelOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fBlitzPanelOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_BLITZ_TARGET_PANEL, IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == gazePanelOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == gazePanelOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickEndActionOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickLegacyModeItem) {
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickOpensContextMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU);
+			getClient().saveUserSettings(false);
+		}
+		if (source == rightClickEndActionOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION, IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_OFF);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainAlwaysMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainTeamMateMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainNoOpponentMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
+			getClient().saveUserSettings(false);
+		}
+		if (source == reRollBallAndChainNeverMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
+			getClient().saveUserSettings(false);
+		}
+		if (source == fCustomPitchMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fDefaultPitchMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_DEFAULT);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fBasicPitchMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_BASIC);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchMarkingsOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_OFF);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchMarkingsOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
+			getClient().saveUserSettings(true);
+		}
+		if (source == pitchLandscapeMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
+			getClient().saveUserSettings(true);
+		}
+		if (source == pitchPortraitMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
+			getClient().saveUserSettings(true);
+		}
+		if (source == layoutSquareMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == showCratersAndBloodsptsMenuItem) {
+			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
+			getClient().saveUserSettings(true);
+		}
+		if (source == hideCratersAndBloodsptsMenuItem) {
+			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_HIDE);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == sweetSpotOff) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_OFF);
+			getClient().saveUserSettings(true);
+		}
+		if (source == sweetSpotBlack) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_BLACK);
+			getClient().saveUserSettings(true);
+		}
+		if (source == sweetSpotWhite) {
+			getClient().setProperty(SETTING_SWEET_SPOT, IClientPropertyValue.SETTING_SWEET_SPOT_WHITE);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTeamLogoBothMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_BOTH);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTeamLogoOwnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_OWN);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTeamLogoNoneMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TEAM_LOGOS, IClientPropertyValue.SETTING_TEAM_LOGOS_NONE);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fCustomPitchMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION, IClientPropertyValue.SETTING_PITCH_CUSTOM);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchWeatherOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_ON);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchWeatherOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_WEATHER, IClientPropertyValue.SETTING_PITCH_WEATHER_OFF);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fRangeGridAlwaysOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_ALWAYS_ON);
+			getClient().saveUserSettings(false);
+		}
+
+		if (source == markUsedPlayersCheckIconGreenMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == markUsedPlayersDefaultMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == playersMarkingAutoMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+			getClient().saveUserSettings(true);
+			getClient().getCommunication().sendUpdatePlayerMarkings(true);
+
+			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(getClient().getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
+				showDialog(DialogAutoMarking.create(getClient(), true));
+			}
+		}
+
+		if (source == playersMarkingManualMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+			getClient().saveUserSettings(true);
+			getClient().getCommunication().sendUpdatePlayerMarkings(false);
+		}
+
+		if (source == swapTeamColorsOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == swapTeamColorsOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS, IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == chatBackground) {
+			Color defaultColor = styleProvider.getChatBackground();
+			Color color = JColorChooser.showDialog(this, "Choose chat background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_CHAT, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == logBackground) {
+			Color defaultColor = styleProvider.getLogBackground();
+			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameBackgroundIcons) {
+			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == frameBackgroundColor) {
+			getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_COLOR);
+			Color defaultColor = styleProvider.getFrameBackground();
+			Color color = JColorChooser.showDialog(this, "Choose sidebar and scoreboard background color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_BACKGROUND_FRAME_COLOR, String.valueOf(color.getRGB()));
+			}
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == textFontColor) {
+			Color defaultColor = styleProvider.getText();
+			Color color = JColorChooser.showDialog(this, "Choose text color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_TEXT, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == awayFontColor) {
+			Color defaultColor = styleProvider.getAwayUnswapped();
+			Color color = JColorChooser.showDialog(this, "Choose away color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_AWAY, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == homeFontColor) {
+			Color defaultColor = styleProvider.getHomeUnswapped();
+			Color color = JColorChooser.showDialog(this, "Choose home color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_HOME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == specFontColor) {
+			Color defaultColor = styleProvider.getSpec();
+			Color color = JColorChooser.showDialog(this, "Choose spec color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_SPEC, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == adminFontColor) {
+			Color defaultColor = styleProvider.getAdmin();
+			Color color = JColorChooser.showDialog(this, "Choose admin color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_ADMIN, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == devFontColor) {
+			Color defaultColor = styleProvider.getDev();
+			Color color = JColorChooser.showDialog(this, "Choose dev color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_DEV, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameFontColor) {
+			Color defaultColor = styleProvider.getFrame();
+			Color color = JColorChooser.showDialog(this, "Choose frane color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == frameFontShadowColor) {
+			Color defaultColor = styleProvider.getFrameShadow();
+			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == inputFontColor) {
+			Color defaultColor = styleProvider.getInput();
+			Color color = JColorChooser.showDialog(this, "Choose frame shadow color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(CommonProperty.SETTING_FONT_COLOR_INPUT, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == localPropertiesItem) {
+			showDialog(new DialogSelectLocalStoredProperties(fClient));
+		}
+
+		if (source == fRestoreDefaultsMenuItem) {
+			try {
+				getClient().loadProperties();
+			} catch (IOException pIoE) {
+				throw new FantasyFootballException(pIoE);
+			}
+			refresh();
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == resetColors) {
+			resetColors(CommonProperty.COLOR_SETTINGS);
+		}
+
+		if (source == resetBackgroundColors) {
+			resetColors(CommonProperty.BACKGROUND_COLOR_SETTINGS);
+		}
+
+		if (source == resetFontColors) {
+			resetColors(CommonProperty.FONT_COLOR_SETTINGS);
+		}
+
+		if (source == fGameReplayMenuItem) {
+			fGameReplayMenuItem.setText(replayer.isReplaying() ? _REPLAY_MODE_ON : _REPLAY_MODE_OFF);
+			getClient().getClientState().actionKeyPressed(ActionKey.MENU_REPLAY);
+		}
+		if (source == fGameConcessionMenuItem) {
+			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
+		}
+	}
+
+	private boolean iconCacheValid() {
+		return iconCacheValid(getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH));
+	}
+
+	private boolean iconCacheValid(String path) {
+		if (!StringTool.isProvided(path)) {
+			return false;
+		}
+		File file = new File(path);
+		return iconCacheValid(file);
+	}
+
+	private void selectIconCacheFolder() {
+		File folder = newIconCacheFolder();
+
+		if (folder == null) {
+			if (!iconCacheValid()) {
+				getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
+				getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+				showError(new String[]{"No folder selected and old path was invalid", "Cache has been disabled"});
+			}
+		} else {
+			if (iconCacheValid(folder)) {
+				getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, folder.getAbsolutePath());
+				if (!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(getClient().getProperty(SETTING_LOCAL_ICON_CACHE))) {
+					getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
+					showError(new String[]{"Cache activated"});
+				}
+			} else {
+				if (!iconCacheValid()) {
+					getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
+					getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+					showError(new String[]{"Invalid folder selected and old path was invalid",
+						"Cache has been disabled",
+						"Folder has to be writeable."});
+				} else {
+					showError(new String[]{"Invalid folder selected", "Folder has to be writeable"});
+				}
+			}
+		}
+
+	}
+
+	private File newIconCacheFolder() {
+		String oldValue = getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH);
+		JFileChooser chooser = new JFileChooser(oldValue);
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int result = chooser.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile();
+		}
+		return null;
+	}
+
+	private void showError(String[] error) {
+		DialogInformation messageDialog = new DialogInformation(getClient(), "Local Icon Cache",
+			error, DialogInformation.OK_DIALOG, false);
+		messageDialog.showDialog(this);
 	}
 }
