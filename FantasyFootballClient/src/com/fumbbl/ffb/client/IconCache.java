@@ -22,8 +22,10 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +34,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -95,7 +99,35 @@ public class IconCache {
 		} catch (IOException pIoException) {
 			// empty properties
 		}
-		// NOOP
+
+		if (StringTool.isProvided(localCacheFolder)) {
+			try (FileReader fileReader = new FileReader(localCacheFolder + LOCAL_CACHE_MAP_FILE);
+					 BufferedReader reader = new BufferedReader(fileReader)) {
+
+				JsonObject jsonObject = JsonObject.readFrom(reader);
+				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
+
+				List<String> urlsToRemove = new ArrayList<>();
+
+				localCacheMap.forEach((url, filename) -> {
+					try {
+						BufferedImage image = ImageIO.read(new File(localCacheFolder + filename));
+						fIconByKey.put(url, image);
+					} catch (IOException e) {
+						urlsToRemove.add(url);
+					}
+				});
+
+				if (!urlsToRemove.isEmpty()) {
+					urlsToRemove.forEach(localCacheMap::remove);
+					updateMapFile();
+				}
+
+			} catch (Exception e) {
+				getClient().logWithOutGameId(e);
+			}
+		}
+
 	}
 
 	public boolean loadIconFromArchive(String pUrl) {
