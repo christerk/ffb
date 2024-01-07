@@ -8,7 +8,7 @@ import com.fumbbl.ffb.FactoryType.FactoryContext;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.dialog.DialogPenaltyShootoutHandler;
+import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
@@ -17,7 +17,6 @@ import com.fumbbl.ffb.client.net.ClientPingTask;
 import com.fumbbl.ffb.client.net.CommandEndpoint;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.ClientStateFactory;
-import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
@@ -148,14 +147,14 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		getUserInterface().getFieldComponent().refresh();
 		getUserInterface().setVisible(true);
 
-		List<Integer> homeRolls = Arrays.asList(1, 2, 3, 4);
-		List<Integer> awayRolls = Arrays.asList(2, 4, 6);
-		List<Boolean> wins = Arrays.asList(true, false, true);
+	/*	List<Integer> homeRolls = Arrays.asList(1, 2, 3, 4, 5);
+		List<Integer> awayRolls = Arrays.asList(2, 4, 6, 3, 1);
+		List<Boolean> wins = Arrays.asList(true, false, true, false, true);
 		fGame.setDialogParameter(new DialogPenaltyShootoutParameter(homeRolls, awayRolls, wins, 1, 2, false));
 
-		new DialogPenaltyShootoutHandler(this).showDialog();
-		//DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
-		//aboutDialogHandler.showDialog();
+		new DialogPenaltyShootoutHandler(this).showDialog();*/
+		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
+		aboutDialogHandler.showDialog();
 	}
 
 	public void dialogClosed(IDialog pDialog) {
