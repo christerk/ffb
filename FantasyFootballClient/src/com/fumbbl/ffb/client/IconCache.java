@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.DiceDecoration;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.WeatherFactory;
+import com.fumbbl.ffb.json.JsonStringMapOption;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
@@ -17,12 +19,25 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -36,7 +51,8 @@ import java.util.zip.ZipInputStream;
 public class IconCache {
 
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
-
+	private static final String LOCAL_CACHE_MAP_FILE = "map.json";
+	private static final JsonStringMapOption JSON_OPTION = new JsonStringMapOption("map");
 	private final Map<String, BufferedImage> fIconByKey;
 	private final Map<String, BufferedImage> scaledIcons;
 
@@ -46,6 +62,9 @@ public class IconCache {
 
 	private final FantasyFootballClient fClient;
 	private final DimensionProvider dimensionProvider;
+	private final Map<String, String> localCacheMap = new HashMap<>();
+	private MessageDigest digest;
+	private String localCacheFolder;
 
 	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
@@ -53,6 +72,19 @@ public class IconCache {
 		fIconByKey = new HashMap<>();
 		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
+		try {
+			digest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			pClient.logWithOutGameId(e);
+		}
+
+		if (IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
+			.equals(pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
+			localCacheFolder = pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH);
+			if (!localCacheFolder.endsWith(File.separator)) {
+				localCacheFolder += File.separator;
+			}
+		}
 	}
 
 	public void init() {
@@ -67,7 +99,35 @@ public class IconCache {
 		} catch (IOException pIoException) {
 			// empty properties
 		}
-		// NOOP
+
+		if (StringTool.isProvided(localCacheFolder)) {
+			try (FileReader fileReader = new FileReader(localCacheFolder + LOCAL_CACHE_MAP_FILE);
+					 BufferedReader reader = new BufferedReader(fileReader)) {
+
+				JsonObject jsonObject = JsonObject.readFrom(reader);
+				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
+
+				List<String> urlsToRemove = new ArrayList<>();
+
+				localCacheMap.forEach((url, filename) -> {
+					try {
+						BufferedImage image = ImageIO.read(new File(localCacheFolder + filename));
+						fIconByKey.put(url, image);
+					} catch (IOException e) {
+						urlsToRemove.add(url);
+					}
+				});
+
+				if (!urlsToRemove.isEmpty()) {
+					urlsToRemove.forEach(localCacheMap::remove);
+					updateMapFile();
+				}
+
+			} catch (Exception e) {
+				getClient().logWithOutGameId(e);
+			}
+		}
+
 	}
 
 	public boolean loadIconFromArchive(String pUrl) {
@@ -211,12 +271,56 @@ public class IconCache {
 				iconUrl = new URL(pUrl);
 				BufferedImage icon = ImageIO.read(iconUrl);
 				fIconByKey.put(pUrl, icon);
+				addLocalCacheEntry(iconUrl, icon);
 			} catch (Exception pAny) {
 				// This should catch issues where the image is broken...
 				getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 			}
 		}
 
+	}
+
+	private void addLocalCacheEntry(URL iconUrl, BufferedImage icon) {
+		if (digest == null ||
+			!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
+				.equals(getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
+			return;
+		}
+
+		digest.reset();
+		digest.update(iconUrl.toString().getBytes());
+		try {
+			String format = getFormat(iconUrl);
+			String hash = DatatypeConverter.printHexBinary(digest.digest()) + "." + format;
+			File newFile = new File(localCacheFolder + hash);
+			if (newFile.canWrite() || newFile.createNewFile()) {
+				ImageIO.write(icon, format, newFile);
+				localCacheMap.put(iconUrl.toString(), hash);
+				updateMapFile();
+			}
+		} catch (IOException e) {
+			getClient().logWithOutGameId(e);
+		}
+
+	}
+
+	private String getFormat(URL url) throws IOException {
+		URLConnection conn = url.openConnection();
+		Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(conn.getContentType());
+		return readers.next().getFormatName();
+	}
+
+	private void updateMapFile() {
+		JsonObject jsonObject = new JsonObject();
+		JSON_OPTION.addTo(jsonObject, localCacheMap);
+		String json = jsonObject.toString();
+		try (FileWriter fileWriter = new FileWriter(localCacheFolder + LOCAL_CACHE_MAP_FILE);
+				 BufferedWriter writer = new BufferedWriter(fileWriter)) {
+			writer.write(json);
+			writer.flush();
+		} catch (IOException e) {
+			getClient().logWithOutGameId(e);
+		}
 	}
 
 	private Weather findPitchWeather(String pUrl) {
