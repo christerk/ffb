@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.StyleProvider;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -24,45 +26,61 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Kalimar
- */
+
 public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	private static final Color HIGHLIGHT = Color.lightGray;
 
-	private final JPanel rootPanel;
+	private final JPanel rollPanel;
 	private final int limit;
 
 	private final Timer timer;
 	private final DialogPenaltyShootoutParameter parameter;
 	private int currentLimit = 1;
 
-	public DialogPenaltyShootout(FantasyFootballClient pClient, DialogPenaltyShootoutParameter parameter) {
+	private final DialogPenaltyShootoutHandler handler;
+
+	public DialogPenaltyShootout(FantasyFootballClient pClient, DialogPenaltyShootoutParameter parameter, DialogPenaltyShootoutHandler handler) {
 		super(pClient, "Penalty Shootout", true);
 
 		this.parameter = parameter;
+		this.handler = handler;
 
-		rootPanel = new JPanel();
+		JPanel rootPanel = new JPanel();
+		rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));
 
-		Border innerBorder = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+		Border innerBorder = BorderFactory.createEmptyBorder(10, 20, 0, 20);
 		Border middleBorder = BorderFactory.createLineBorder(Color.BLACK, 1, true);
 		Border outerBorder = BorderFactory.createLineBorder(Color.WHITE, 5);
 		rootPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
+
+		JLabel penaltyShootout = new JLabel(dimensionProvider(), "Penalty Shootout");
+		penaltyShootout.setAlignmentX(CENTER_ALIGNMENT);
+		rootPanel.add(penaltyShootout);
+		if (ClientMode.PLAYER.equals(pClient.getMode())) {
+			JLabel close = new JLabel(dimensionProvider(), "Close to continue");
+			close.setAlignmentX(CENTER_ALIGNMENT);
+			rootPanel.add(close);
+		}
+
+		rollPanel = new JPanel();
+		rootPanel.add(rollPanel);
+
 		getContentPane().add(rootPanel);
 
-		timer = new Timer(1000, this);
+		timer = new Timer(2000, this);
 
-		limit = Math.min(Math.min(parameter.getAwayRolls().size(), parameter.getHomeRolls().size()), parameter.getHomeWon().size());
+		limit = parameter.getAwayRolls().size();
 
 		populate();
 		timer.start();
-
+		pack();
+		setLocationToCenter();
 	}
 
 	private void populate() {
-		rootPanel.removeAll();
-		rootPanel.setLayout(new GridLayout(currentLimit + 2, 3, 0, 5));
+		rollPanel.removeAll();
+		rollPanel.setLayout(new GridLayout(currentLimit + 2, 3, 0, 5));
 
 
 		List<JLabel> labels = new ArrayList<>();
@@ -71,13 +89,13 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		labels.add(headerLabel("Away", false));
 
 		for (int i = 0; i < currentLimit; i++) {
-			labels.addAll(rollPanel(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i),
+			labels.addAll(rollLabels(parameter.getHomeRolls().get(i), parameter.getAwayRolls().get(i),
 				parameter.getHomeWon().get(i), parameter.getDescriptions().get(i)));
 		}
 
 		if (currentLimit == this.limit) {
 			timer.stop();
-			labels.addAll(scorePanel(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
+			labels.addAll(summaryLabels(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
 		} else {
 			labels.add(new JLabel(dimensionProvider(), "X"));
 			labels.add(new JLabel(dimensionProvider(), "Score"));
@@ -88,6 +106,9 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 		pack();
 		setLocationToCenter();
+		if (getClient().getMode() == ClientMode.PLAYER) {
+			handler.playSound(parameter.getHomeWon().get(currentLimit - 1) ? parameter.getWinningSound() : parameter.getLosingSound());
+		}
 		currentLimit++;
 	}
 
@@ -109,7 +130,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 			Font font = label.getFont();
 			label.setFont(new Font(font.getFamily(), Font.BOLD, font.getSize()));
 		}
-		rootPanel.add(label);
+		rollPanel.add(label);
 	}
 
 	private JLabel headerLabel(String text, boolean home) {
@@ -120,7 +141,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 	}
 
 
-	private List<JLabel> scorePanel(int homeRoll, int awayRoll, boolean homeWin) {
+	private List<JLabel> summaryLabels(int homeRoll, int awayRoll, boolean homeWin) {
 		List<JLabel> labels = new ArrayList<>();
 		labels.add(new JLabel(dimensionProvider(), String.valueOf(homeRoll)));
 		labels.add(new JLabel(dimensionProvider(), "Score"));
@@ -131,7 +152,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		return labels;
 	}
 
-	private List<JLabel> rollPanel(int home, int away, boolean homeWin, String description) {
+	private List<JLabel> rollLabels(int home, int away, boolean homeWin, String description) {
 		List<JLabel> labels = new ArrayList<>();
 		labels.add(new JLabel(dimensionProvider(), icon(home)));
 		labels.add(new JLabel(dimensionProvider(), description));

@@ -44,6 +44,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode",
       Factory.CATCH_SCATTER_THROWIN_MODE);
     JsonBooleanOption CONFIRMED = new JsonBooleanOption("confirmed");
+    JsonBooleanOption CONFIRMED_SECONDED = new JsonBooleanOption("confirmedSeconded");
     JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");

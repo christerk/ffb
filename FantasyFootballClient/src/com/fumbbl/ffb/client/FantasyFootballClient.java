@@ -147,12 +147,6 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		getUserInterface().getFieldComponent().refresh();
 		getUserInterface().setVisible(true);
 
-	/*	List<Integer> homeRolls = Arrays.asList(1, 2, 3, 4, 5);
-		List<Integer> awayRolls = Arrays.asList(2, 4, 6, 3, 1);
-		List<Boolean> wins = Arrays.asList(true, false, true, false, true);
-		fGame.setDialogParameter(new DialogPenaltyShootoutParameter(homeRolls, awayRolls, wins, 1, 2, false));
-
-		new DialogPenaltyShootoutHandler(this).showDialog();*/
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
 		aboutDialogHandler.showDialog();
 	}

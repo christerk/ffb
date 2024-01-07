@@ -480,6 +480,8 @@ public interface IJsonOption {
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
+	JsonEnumWithNameOption SOUND_ALTERNATIVE = new JsonEnumWithNameOption("soundAlternative", Factory.SOUND_ID);
+
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
 	JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");

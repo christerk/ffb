@@ -3,6 +3,7 @@ package com.fumbbl.ffb.dialog;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
@@ -22,13 +23,15 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 	private int homeScore;
 	private int awayScore;
 	private boolean homeTeamWins;
+	private SoundId winningSound, losingSound;
 
 	public DialogPenaltyShootoutParameter() {
 		super();
 	}
 
 	public DialogPenaltyShootoutParameter(List<Integer> homeRolls, List<Integer> awayRolls, List<Boolean> homeWon,
-																				List<String> descriptions, int homeScore, int awayScore, boolean homeTeamWins) {
+																				List<String> descriptions, int homeScore, int awayScore, boolean homeTeamWins,
+																				SoundId winningSound, SoundId losingSound) {
 		this.homeRolls = homeRolls;
 		this.awayRolls = awayRolls;
 		this.homeWon = homeWon;
@@ -36,6 +39,8 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
 		this.homeTeamWins = homeTeamWins;
+		this.winningSound = winningSound;
+		this.losingSound = losingSound;
 	}
 
 	public DialogId getId() {
@@ -51,6 +56,10 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 
 	public boolean homeTeamWins() {
 		return homeTeamWins;
+	}
+
+	public void setHomeTeamWins(boolean homeTeamWins) {
+		this.homeTeamWins = homeTeamWins;
 	}
 
 	public List<Integer> getHomeRolls() {
@@ -85,11 +94,26 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		this.awayScore = awayScore;
 	}
 
+	public SoundId getWinningSound() {
+		return winningSound;
+	}
+
+	public void setWinningSound(SoundId winningSound) {
+		this.winningSound = winningSound;
+	}
+
+	public SoundId getLosingSound() {
+		return losingSound;
+	}
+
+	public void setLosingSound(SoundId losingSound) {
+		this.losingSound = losingSound;
+	}
 // transformation
 
 	public IDialogParameter transform() {
 		return new DialogPenaltyShootoutParameter(awayRolls, homeRolls, homeWon.stream().map(win -> !win).collect(Collectors.toList()),
-			descriptions, awayScore, homeScore, !homeTeamWins);
+			descriptions, awayScore, homeScore, !homeTeamWins, winningSound, losingSound);
 	}
 
 	// JSON serialization
@@ -107,6 +131,8 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		awayScore = IJsonOption.PENALTY_SCORE_AWAY.getFrom(source, jsonObject);
 		homeTeamWins = IJsonOption.HOME_TEAM.getFrom(source, jsonObject);
 		descriptions.addAll(Arrays.asList(IJsonOption.DESCRIPTIONS.getFrom(source, jsonObject)));
+		winningSound = (SoundId) IJsonOption.SOUND.getFrom(source, jsonObject);
+		losingSound = (SoundId) IJsonOption.SOUND_ALTERNATIVE.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -120,6 +146,8 @@ public class DialogPenaltyShootoutParameter extends DialogWithoutParameter {
 		IJsonOption.PENALTY_WINS.addTo(jsonObject, homeWon);
 		IJsonOption.HOME_TEAM.addTo(jsonObject, homeTeamWins);
 		IJsonOption.DESCRIPTIONS.addTo(jsonObject, descriptions);
+		IJsonOption.SOUND.addTo(jsonObject, winningSound);
+		IJsonOption.SOUND_ALTERNATIVE.addTo(jsonObject, losingSound);
 		return jsonObject;
 	}
 }
