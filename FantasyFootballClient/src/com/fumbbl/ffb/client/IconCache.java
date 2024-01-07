@@ -19,6 +19,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -28,9 +29,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -236,7 +239,7 @@ public class IconCache {
 				iconUrl = new URL(pUrl);
 				BufferedImage icon = ImageIO.read(iconUrl);
 				fIconByKey.put(pUrl, icon);
-				addLocalCacheEntry(pUrl, icon);
+				addLocalCacheEntry(iconUrl, icon);
 			} catch (Exception pAny) {
 				// This should catch issues where the image is broken...
 				getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
@@ -245,7 +248,7 @@ public class IconCache {
 
 	}
 
-	private void addLocalCacheEntry(String url, BufferedImage icon) {
+	private void addLocalCacheEntry(URL iconUrl, BufferedImage icon) {
 		if (digest == null ||
 			!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
 				.equals(getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
@@ -253,19 +256,26 @@ public class IconCache {
 		}
 
 		digest.reset();
-		digest.update(url.getBytes());
-		String hash = DatatypeConverter.printHexBinary(digest.digest()) + ".png";
-		File newFile = new File(localCacheFolder + hash);
+		digest.update(iconUrl.toString().getBytes());
 		try {
+			String format = getFormat(iconUrl);
+			String hash = DatatypeConverter.printHexBinary(digest.digest()) + "." + format;
+			File newFile = new File(localCacheFolder + hash);
 			if (newFile.canWrite() || newFile.createNewFile()) {
-				ImageIO.write(icon, "png", newFile);
-				localCacheMap.put(url, hash);
+				ImageIO.write(icon, format, newFile);
+				localCacheMap.put(iconUrl.toString(), hash);
 				updateMapFile();
 			}
 		} catch (IOException e) {
 			getClient().logWithOutGameId(e);
 		}
 
+	}
+
+	private String getFormat(URL url) throws IOException {
+		URLConnection conn = url.openConnection();
+		Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(conn.getContentType());
+		return readers.next().getFormatName();
 	}
 
 	private void updateMapFile() {
