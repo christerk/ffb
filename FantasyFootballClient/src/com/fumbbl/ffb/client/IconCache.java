@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.DiceDecoration;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.WeatherFactory;
+import com.fumbbl.ffb.json.JsonStringMapOption;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
@@ -17,11 +19,17 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -36,7 +44,8 @@ import java.util.zip.ZipInputStream;
 public class IconCache {
 
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
-
+	private static final String LOCAL_CACHE_MAP_FILE = "map.json";
+	private static final JsonStringMapOption JSON_OPTION = new JsonStringMapOption("map");
 	private final Map<String, BufferedImage> fIconByKey;
 	private final Map<String, BufferedImage> scaledIcons;
 
@@ -46,6 +55,9 @@ public class IconCache {
 
 	private final FantasyFootballClient fClient;
 	private final DimensionProvider dimensionProvider;
+	private final Map<String, String> localCacheMap = new HashMap<>();
+	private MessageDigest digest;
+	private String localCacheFolder;
 
 	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
@@ -53,6 +65,19 @@ public class IconCache {
 		fIconByKey = new HashMap<>();
 		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
+		try {
+			digest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			pClient.logWithOutGameId(e);
+		}
+
+		if (IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
+			.equals(pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
+			localCacheFolder = pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH);
+			if (!localCacheFolder.endsWith(File.separator)) {
+				localCacheFolder += File.separator;
+			}
+		}
 	}
 
 	public void init() {
@@ -211,12 +236,49 @@ public class IconCache {
 				iconUrl = new URL(pUrl);
 				BufferedImage icon = ImageIO.read(iconUrl);
 				fIconByKey.put(pUrl, icon);
+				addLocalCacheEntry(pUrl, icon);
 			} catch (Exception pAny) {
 				// This should catch issues where the image is broken...
 				getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 			}
 		}
 
+	}
+
+	private void addLocalCacheEntry(String url, BufferedImage icon) {
+		if (digest == null ||
+			!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
+				.equals(getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
+			return;
+		}
+
+		digest.reset();
+		digest.update(url.getBytes());
+		String hash = DatatypeConverter.printHexBinary(digest.digest()) + ".png";
+		File newFile = new File(localCacheFolder + hash);
+		try {
+			if (newFile.canWrite() || newFile.createNewFile()) {
+				ImageIO.write(icon, "png", newFile);
+				localCacheMap.put(url, hash);
+				updateMapFile();
+			}
+		} catch (IOException e) {
+			getClient().logWithOutGameId(e);
+		}
+
+	}
+
+	private void updateMapFile() {
+		JsonObject jsonObject = new JsonObject();
+		JSON_OPTION.addTo(jsonObject, localCacheMap);
+		String json = jsonObject.toString();
+		try (FileWriter fileWriter = new FileWriter(localCacheFolder + LOCAL_CACHE_MAP_FILE);
+				 BufferedWriter writer = new BufferedWriter(fileWriter)) {
+			writer.write(json);
+			writer.flush();
+		} catch (IOException e) {
+			getClient().logWithOutGameId(e);
+		}
 	}
 
 	private Weather findPitchWeather(String pUrl) {
