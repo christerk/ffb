@@ -14,6 +14,5 @@ public class Brawler extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollBothDowns);
-		registerConflictingProperty(NamedProperties.blocksDuringMove);
 	}
 }
