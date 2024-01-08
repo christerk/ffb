@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("Block knockdowns where not handled when the blocker followed up and a player from the opposing team failed their tentacle roll and after that succeeded with their shadowing roll")
 			.addFeature("Master Assassin")
 			.addFeature("Animated dialog for penalty shootout results after overtime")
+			.addBugfix("Monstrous Mouth was not selectable for Intensive Training")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
