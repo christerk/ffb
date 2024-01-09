@@ -42,7 +42,7 @@ public class InterceptionModifierCollection extends com.fumbbl.ffb.modifiers.Int
 		add(new InterceptionModifier("Thrower has Stunty", -1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, InterceptionContext context) {
-				return context.getGame().getThrower().hasSkillProperty(NamedProperties.passesAreInterceptedEasier);
+				return context.getGame().getThrower().hasSkillProperty(NamedProperties.passesAreInterceptedEasier) && !context.isBomb();
 			}
 		});
 	}

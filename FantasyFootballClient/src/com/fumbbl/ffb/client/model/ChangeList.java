@@ -30,6 +30,7 @@ public class ChangeList {
 			.addFeature("Master Assassin")
 			.addFeature("Animated dialog for penalty shootout results after overtime")
 			.addBugfix("Monstrous Mouth was not selectable for Intensive Training")
+			.addBugfix("Interception attempts of bombs thrown by stunties did give +1 bonus even though that only appplies to pass actions")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
