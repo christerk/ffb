@@ -31,6 +31,7 @@ public class ChangeList {
 			.addFeature("Animated dialog for penalty shootout results after overtime")
 			.addBugfix("Monstrous Mouth was not selectable for Intensive Training")
 			.addBugfix("Interception attempts of bombs thrown by stunties did give +1 bonus even though that only appplies to pass actions")
+			.addBugfix("Biting the opposing ball carrier with Tasty Morsel did cause a turnover")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")

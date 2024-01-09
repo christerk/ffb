@@ -210,7 +210,8 @@ public class StepInitFeeding extends AbstractStep {
 				FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(),
 					actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
-				fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
+				fEndTurn = actingPlayer.getPlayer().getTeam() == game.getDefender().getTeam()
+					&& UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier but only if on the same team (tasty morsel)
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
 				publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
 				getResult().setSound(SoundId.SLURP);
