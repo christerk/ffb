@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<team id="1071472" status="1">
+    <coach>Kinks</coach>
+    <name>Ameri-Do-Te Masters</name>
+    <rosterId>5681</rosterId>
+    <reRolls>3</reRolls>
+    <dedicatedFans>3</dedicatedFans>
+    <apothecaries>1</apothecaries>
+    <cheerleaders>0</cheerleaders>
+    <assistantCoaches>0</assistantCoaches>
+    <rating>103</rating>
+    <teamValue>1090000</teamValue>
+    <currentTeamValue>1030000</currentTeamValue>
+    <strength>103</strength>
+    <division>5</division>
+    <treasury>0</treasury>
+    <tournamentWeight>1090000</tournamentWeight>
+    <specialRules>
+        <rule>Old World Classic</rule>
+    </specialRules>
+    <record>
+        <form>L</form>
+        <wins>0</wins>
+        <ties>0</ties>
+        <losses>1</losses>
+    </record>
+    <lastMatch date="2022-04-29" opponent="1074595">4379985</lastMatch>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/691681</logo>
+    <player status="Active" nr="1" id="14810600">
+        <name>Beau Enton</name>
+        <gender>male</gender>
+        <positionId>43572</positionId>
+        <position>Samurai</position>
+        <portrait>i/691664.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>12</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="2" id="14810602">
+        <name>Kaden Nucky</name>
+        <gender>male</gender>
+        <positionId>43572</positionId>
+        <position>Samurai</position>
+        <portrait>i/691665.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>2</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="3" id="14810603">
+        <name>Parker Messchoro</name>
+        <gender>male</gender>
+        <positionId>43572</positionId>
+        <position>Samurai</position>
+        <portrait>i/691666.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>16</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="4" id="14810604">
+        <name>Ryder Staggner</name>
+        <gender>male</gender>
+        <positionId>43572</positionId>
+        <position>Samurai</position>
+        <portrait>i/691670.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>13</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="5" id="14810605">
+        <name>Ryder Zotar</name>
+        <gender>male</gender>
+        <positionId>43573</positionId>
+        <position>Warrior Monk</position>
+        <portrait>i/691668.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>4</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="7" id="14810606">
+        <name>Bryson Pelops</name>
+        <gender>male</gender>
+        <positionId>43574</positionId>
+        <position>Ninja</position>
+        <portrait>i/691669.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>23</rushing>
+            <blocks>0</blocks>
+            <fouls>1</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="9" id="14810607">
+        <name>Mason Fydar</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <portrait>i/691667.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>1</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>1</rushing>
+            <blocks>6</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList>
+            <injury recovering="true">Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="10" id="14810608">
+        <name>Axel Nassic</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <portrait>i/691667.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>2</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="11" id="14810610">
+        <name>Giovanni Charis</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <portrait>i/691667.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>4</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="12" id="14810611">
+        <name>Joseph Dawn</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <portrait>i/691667.png</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>5</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="13" id="14810612">
+        <name>August Quezo</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <portrait>i/691667.png</portrait>
+        <playerStatistics currentSpps="1">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>1</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Kick</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="journeyman" nr="17" id="14840060">
+        <name>Nicholas Quickwing</name>
+        <gender>male</gender>
+        <positionId>43571</positionId>
+        <position>Ashigaru</position>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>0</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Loner</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+</team>
