@@ -32,6 +32,8 @@ public class ChangeList {
 			.addBugfix("Monstrous Mouth was not selectable for Intensive Training")
 			.addBugfix("Interception attempts of bombs thrown by stunties did give +1 bonus even though that only appplies to pass actions")
 			.addBugfix("Biting the opposing ball carrier with Tasty Morsel did cause a turnover")
+			.addBugfix("When Primal Savagery was used to lash out against an opponent the tacklezones were not removed and still forced a dodge roll when moving away")
+			.addBugfix("Lashing out against the opposing ball carrier with Primal Savagery did cause a turnover")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
