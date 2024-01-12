@@ -240,7 +240,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				} else if (lashedOutAgainstOpponent) {
 					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
-					label = state.goToLabelOnFailure;
+					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 				}
 			}
 		}
