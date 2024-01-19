@@ -34,6 +34,7 @@ public class ChangeList {
 			.addBugfix("Biting the opposing ball carrier with Tasty Morsel did cause a turnover")
 			.addBugfix("When Primal Savagery was used to lash out against an opponent the tacklezones were not removed and still forced a dodge roll when moving away")
 			.addBugfix("Lashing out against the opposing ball carrier with Primal Savagery did cause a turnover")
+			.addBugfix("When the defence team got their ball carrier knocked down due to Throw A Rock (prayer) and still scored the touchdown by catching the bouncing ball in the endzone, both teams effectively lost a turn")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")

@@ -239,7 +239,7 @@ public class StepEndTurn extends AbstractStep {
 
 		boolean isHomeTurnEnding = game.isHomePlaying();
 		if (turnNr == 0) {
-			// work around as UtilServer#startHalf is currently called before weapons are removed and we need these values for sendToBoxReason
+			// work around as UtilServer#startHalf is currently called before weapons are removed, and we need these values for sendToBoxReason
 			turnNr = game.getTurnData().getTurnNr();
 			half = game.getHalf();
 		}
@@ -633,6 +633,7 @@ public class StepEndTurn extends AbstractStep {
 				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 				getGameState().getStepStack().push(sequence.getSequence());
 				getResult().setNextAction(StepAction.NEXT_STEP);
+				fTouchdown = null; // reset this in case the bouncing ball is caught in the end zone, this forces the touchdown check to happen again
 				return true;
 			}
 		}
