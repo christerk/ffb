@@ -132,7 +132,7 @@ public class StepEndTurn extends AbstractStep {
 	private List<String> playerIdsNaturalOnes = new ArrayList<>();
 	private Set<String> playerIdsFailedBribes = new HashSet<>();
 	private Set<String> playerIdsArgued = new HashSet<>();
-
+	private String touchdownPlayerId;
 	public StepEndTurn(GameState pGameState) {
 		super(pGameState);
 	}
@@ -301,6 +301,7 @@ public class StepEndTurn extends AbstractStep {
 					boolean offTurnTouchDown;
 					if (touchdownPlayer != null) {
 
+						touchdownPlayerId = touchdownPlayer.getId();
 						GameResult gameResult = game.getGameResult();
 						PlayerResult touchdownPlayerResult = gameResult.getPlayerResult(touchdownPlayer);
 						touchdownPlayerResult.setTouchdowns(touchdownPlayerResult.getTouchdowns() + 1);
@@ -470,7 +471,6 @@ public class StepEndTurn extends AbstractStep {
 			List<HeatExhaustion> heatExhaustions = new ArrayList<>();
 			List<Player<?>> unzappedPlayers = new ArrayList<>();
 
-			String touchdownPlayerId = (touchdownPlayer != null) ? touchdownPlayer.getId() : null;
 			int faintingCount = getFaintingCount(game, knockoutRecoveries, heatExhaustions, unzappedPlayers);
 
 			KnockoutRecovery[] knockoutRecoveryArray = knockoutRecoveries.toArray(new KnockoutRecovery[0]);
@@ -1026,6 +1026,7 @@ public class StepEndTurn extends AbstractStep {
 		IServerJsonOption.PLAYER_IDS_FAILED_BRIBE.addTo(jsonObject, playerIdsFailedBribes);
 		IServerJsonOption.PLAYER_IDS_ARGUED.addTo(jsonObject, playerIdsArgued);
 		IServerJsonOption.USE_STAR_OF_THE_SHOW.addTo(jsonObject, useStarOfTheShow);
+		IServerJsonOption.PLAYER_ID_TOUCHDOWN.addTo(jsonObject, touchdownPlayerId);
 		return jsonObject;
 	}
 
@@ -1056,6 +1057,7 @@ public class StepEndTurn extends AbstractStep {
 			playerIdsArgued = Arrays.stream(IServerJsonOption.PLAYER_IDS_ARGUED.getFrom(source, jsonObject)).collect(Collectors.toSet());
 		}
 		useStarOfTheShow = IServerJsonOption.USE_STAR_OF_THE_SHOW.getFrom(source, jsonObject);
+		touchdownPlayerId = IServerJsonOption.PLAYER_ID_TOUCHDOWN.getFrom(source, jsonObject);
 		return this;
 	}
 
