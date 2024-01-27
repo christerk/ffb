@@ -37,6 +37,8 @@ public class ChangeList {
 			.addBugfix("When the defence team got their ball carrier knocked down due to Throw A Rock (prayer) and still scored the touchdown by catching the bouncing ball in the endzone, both teams effectively lost a turn")
 			.addBugfix("The scoring player was not reported when there were also secret weapons that AtC or bribes were used for")
 			.addBugfix("Adjacent prone players declaring a blitz or jump up block on a dump off ball carrier did count as tackle zones for the pass")
+			.addBugfix("Feeding from Bloodlust during a blitz kick-off event caused the player to be counted twice")
+			.addBugfix("Feeding from Bloodlust during a blitz kick-off event with the last or second to last player allowed rendered the player limit ineffective")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")
