@@ -72,4 +72,6 @@ public abstract class PassMechanic implements Mechanic {
 		}
 		return passingDistance;
 	}
+
+	public abstract int passModifiers(Game game, Player<?> player);
 }

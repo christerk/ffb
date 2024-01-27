@@ -32,10 +32,11 @@ public class ChangeList {
 			.addBugfix("Monstrous Mouth was not selectable for Intensive Training")
 			.addBugfix("Interception attempts of bombs thrown by stunties did give +1 bonus even though that only appplies to pass actions")
 			.addBugfix("Biting the opposing ball carrier with Tasty Morsel did cause a turnover")
-			.addBugfix("When Primal Savagery was used to lash out against an opponent the tacklezones were not removed and still forced a dodge roll when moving away")
+			.addBugfix("When Primal Savagery was used to lash out against an opponent the tackle zones were not removed and still forced a dodge roll when moving away")
 			.addBugfix("Lashing out against the opposing ball carrier with Primal Savagery did cause a turnover")
 			.addBugfix("When the defence team got their ball carrier knocked down due to Throw A Rock (prayer) and still scored the touchdown by catching the bouncing ball in the endzone, both teams effectively lost a turn")
 			.addBugfix("The scoring player was not reported when there were also secret weapons that AtC or bribes were used for")
+			.addBugfix("Adjacent prone players declaring a blitz or jump up block on a dump off ball carrier did count as tackle zones for the pass")
 		);
 
 		versions.add(new VersionChangeList("2.24.1")

@@ -4,12 +4,17 @@ import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
+import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -94,6 +99,22 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 	@Override
 	public boolean eligibleToReRoll(ReRolledAction reRolledAction, Player<?> thrower) {
 		return reRolledAction != ReRolledActions.PASS && thrower.getPassingWithModifiers() > 0;
+	}
+
+	@Override
+	public int passModifiers(Game game, Player<?> player) {
+		Player<?>[] players = UtilPlayer.findTacklezonePlayers(game, player);
+		int zones = players.length;
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (game.getTurnMode() == TurnMode.DUMP_OFF
+			&& Arrays.stream(players).anyMatch(adjacentPlayer -> adjacentPlayer.getId().equals(actingPlayer.getPlayerId()))
+			&& actingPlayer.isStandingUp()
+		) {
+			zones -= 1;
+		}
+
+		return zones;
 	}
 
 	@Override

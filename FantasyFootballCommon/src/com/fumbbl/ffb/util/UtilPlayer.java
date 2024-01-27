@@ -273,9 +273,13 @@ public class UtilPlayer {
 	}
 
 	public static int findTacklezones(Game pGame, Player<?> pPlayer) {
+		return findTacklezonePlayers(pGame, pPlayer).length;
+	}
+
+	public static Player<?>[] findTacklezonePlayers(Game pGame, Player<?> pPlayer) {
 		Team otherTeam = findOtherTeam(pGame, pPlayer);
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length;
+		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false);
 	}
 
 	public static void refreshPlayersForTurnStart(Game pGame) {
