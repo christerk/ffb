@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/tinysound-1.1.1.jar" sourcepath="lib/tinysound-1.1.1-src.zip"/>
+	<classpathentry kind="lib" path="lib/jorbis-0.0.17.jar"/>
+	<classpathentry kind="lib" path="lib/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="lib/vorbisspi1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/org.osgi.core-4.3.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/FantasyFootballCommon"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

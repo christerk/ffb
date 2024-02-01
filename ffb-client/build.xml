@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<project name="FantasyFootballClient" default="buildFumbblTest" basedir=".">
+
+    <property name="src.dir" value="src" />
+    <property name="bin.dir" value="bin" />
+    <property name="lib.dir" value="lib" />
+    <property name="build.dir" value="build" />
+    <property name="metainf.dir" value="META-INF" />
+
+	<path id="libraries">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="prepareTest" depends="prepare">
+		<copy todir="${bin.dir}/icons">
+			<fileset dir="icons" />
+		</copy>
+		<copy todir="${bin.dir}/sounds">
+			<fileset dir="sounds" />
+		</copy>
+		<copy todir="${bin.dir}">
+			<file file="client.ini" />
+		</copy>
+	</target>
+	
+	<target name="clean" depends="prepare">
+		<delete includeemptydirs="true">
+			<fileset dir="${bin.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+		</delete>
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="clean" />
+	</target>
+	
+	<target name="FantasyFootballCommon">
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="build" />
+	</target>
+	
+	<target name="compile" depends="prepare,FantasyFootballCommon">
+		<path id="classpath">
+			<path refid="libraries" />
+			<pathelement location="../FantasyFootballCommon/bin" />
+		</path>
+		<property name="myClasspath" refid="classpath" />
+		<echo message="Classpath = ${myClasspath}" />
+		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" target="1.8" source="1.8" includeantruntime="false" debug="on">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+    <target name="jarCommon" depends="compile">
+    	<!-- add compress="false" attribute to jar tag for no compression -->
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="false">
+        	<metainf dir="${metainf.dir}" />
+			<manifest>
+        		<attribute name="Built-By" value="${user.name}" />
+            	<attribute name="Main-Class" value="com.fumbbl.ffb.client.FantasyFootballClient" />
+            	<attribute name="Permissions" value="all-permissions" />
+            	<attribute name="Application-Name" value="Fantasy Football Client" />
+            	<attribute name="Codebase" value="www.fumbbl.com fumbbl.com" />
+            </manifest>
+            <zipfileset dir="${bin.dir}" includes="**/*.class" />
+            <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
+        	<!--
+        	<restrict>
+        		<archives>
+        	    	<zips>
+        	      		<fileset dir="${lib.dir}">
+        	        		<include name="**/*.jar" />
+        	     		</fileset>
+        	    	</zips>
+        	  	</archives>
+        	  	<not>
+        	    	<name name="META-INF/*"/>
+        	  	</not>
+        	</restrict>
+        	-->
+        </jar>
+        <jar destfile="${build.dir}/${ant.project.name}Resources.jar">
+        	<zipfileset dir="." includes="icons/**, sounds/**" excludes="**/Thumbs.db, **/.cvsignore, icons/alternatives/**" />
+        </jar>
+    </target>
+	
+	<!--
+	keytool -genkeypair -dname "cn=Kalimar, o=fumbbl.com"
+      -alias Kalimar -keypass dragon -keystore keystore.jks -storepass dragon -validity 180
+	-->
+
+	<target name="jarFumbblTest" depends="jarCommon">
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
+        	<zipfileset file="client-fumbbl-test.ini" fullpath="client.ini" />
+        	<zipfileset file="icons-fumbbl-test.ini" fullpath="icons.ini" />
+        </jar>
+		<copy todir="${build.dir}/lib">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+		</copy>
+		<copy todir="${build.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+		</copy>
+		<!--
+		<signjar keystore="../FantasyFootballCommon/keystore.jks" storepass="dragon" alias="Kalimar" keypass="dragon">
+			<fileset dir="${build.dir}" includes="*.jar" />
+		</signjar>
+		-->
+	</target>
+
+	<target name="jarFumbblLive" depends="jarCommon">
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
+        	<zipfileset file="client-fumbbl-live.ini" fullpath="client.ini" />
+        	<zipfileset file="icons-fumbbl-live.ini" fullpath="icons.ini" />
+        </jar>
+		<copy todir="${build.dir}">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+	</target>
+	
+	<target name="jarStandalone" depends="jarCommon">
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
+        	<zipfileset file="client-standalone.ini" fullpath="client.ini" />
+        </jar>
+	</target>
+	
+	<!--
+	<target name="sign" depends="jarCommon">
+		<signjar keystore="../FantasyFootballCommon/.keystore" storepass="dragon" alias="fumbbl.com" keypass="dragon">
+			<fileset dir="${build.dir}" includes="*.jar" />
+		</signjar>
+	</target>
+	-->
+	
+    <target name="buildStandalone" depends="jarStandalone">
+   	</target>
+
+	<target name="buildFumbblLive" depends="jarFumbblLive">
+   	</target>
+
+    <target name="buildFumbblTest" depends="jarFumbblTest">
+   	</target>
+
+</project>
