@@ -1,0 +1,105 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="styles/client.css">
+<link rel="icon" type="image/png" href="data:;base64,iVBORw0KGgo=">
+<title>Fantasy Football Client</title>
+</head>
+<body>
+<div id="loading">
+	<div id="acknowledgments">
+		<p>
+			<b>Headcoach: BattleLore</b><br/>
+			thank you for providing ideas, encouragement and the occasional kick in the butt.
+		</p>
+		<p>
+    		<b>Assistant Coaches: WhatBall, Garion and Lakrillo</b><br/>
+    		thank you for helping to to pull the cart along.
+		</p>
+		<p>
+    		<b>Sports Director: Christer</b><br/>
+			thank you for the patience and energy to tackle the long road with me.
+		</p>
+		<p>
+			<b>Lifetime Luxury Suite Owner: SkiJunkie</b><br/>
+    		thank you doing it first and giving a vision to follow.
+		</p>
+		<p>
+			<b>Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz</b>
+		</p>
+		<p>
+			<b>Playing the Stadium Organ: VocalVoodoo and Minenbonnie</b>
+		</p>
+	</div>
+<!--
+    
+    
+    drawBold(g2d, 10, y += 20, "");
+    drawBold(g2d, 10, y += 20, "Official supplier of game balls: Qaz");
+    drawText(g2d, 20, y += 20, "thank you all for making FFB look and sound great.");
+
+    drawBold(g2d, 10, y += 25, "Cheerleaders & Pest Control:");
+-->
+
+</div>
+<div id="client">
+	<div id="field">
+		<canvas id="pitch" width="782" height="452"></canvas>
+		<canvas id="players" width="782" height="452"></canvas>
+	</div>
+	<div id="redSidebar">
+		<div id="playerDetails"></div>
+		<div id="boxButtons"></div>
+		<div id="turnDiceStatus"></div>
+		<div id="resources">
+			<div id="resource0" class="reroll">5</div>
+			<div id="resource1" class="apothecary">1</div>
+			<div id="resource2"></div>
+			<div id="resource3"></div>
+			<div id="resource4"></div>
+			<div id="resource5"></div>
+			<div id="resource6"></div>
+			<div id="resource7"></div>
+		</div>
+	</div>
+	<div id="scorebar">
+		<div id="home">3</div>
+		<div id="away">0</div>
+	</div>
+	<div id="blueSidebar">
+		<div id="playerDetails"></div>
+		<div id="boxButtons"></div>
+		<div id="turnDiceStatus"></div>
+		<div id="resources">
+			<div id="resource0" class="reroll">1</div>
+			<div id="resource1" class="apothecary">2</div>
+			<div id="resource2"></div>
+			<div id="resource3"></div>
+			<div id="resource4"></div>
+			<div id="resource5"></div>
+			<div id="resource6"></div>
+			<div id="resource7"></div>
+		</div>
+	</div>	
+	<div id="divLog"></div>
+	<div id="divChat"></div>
+	<input id="inputChat" type="text"></input>
+</div>
+<script src="scripts/lib/require-2.3.2.min.js"></script>
+<script>
+require.config({
+	baseUrl: "scripts",
+  	paths: {
+  		"jQuery": "lib/jquery-3.1.1.min",
+		"LZString": "lib/lzstring-1.4.4.min"
+	}
+});
+require(["jQuery", "LZString", "Client"],
+	function(jQuery, LZString, Client) {
+		$(document).ready(function() {
+			Client.start();
+    	});
+	}
+);
+</script>
+</body>
+</html>

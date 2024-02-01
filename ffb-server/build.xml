@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<project name="FantasyFootballServer" default="buildFumbblTest" basedir=".">
+
+    <property name="src.dir" value="src" />
+    <property name="bin.dir" value="bin" />
+	<property name="lib.dir" value="lib" />
+    <property name="build.dir" value="build" />
+	<path id="libraries">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<target name="prepareTest">
+		<copy todir="${bin.dir}/rosters">
+			<fileset dir="rosters" />
+		</copy>
+		<copy todir="${bin.dir}/teams">
+			<fileset dir="teams" />
+		</copy>
+		<copy todir="${bin.dir}/setups">
+			<fileset dir="setups" />
+		</copy>
+		<copy todir="${bin.dir}/htdocs">
+			<fileset dir="htdocs" />
+		</copy>
+		<copy file="server.ini" todir="${bin.dir}" />
+		<copy todir="${lib.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar"/>
+		</copy>
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="clean" depends="prepare">
+		<delete includeemptydirs="true">
+			<fileset dir="${bin.dir}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*"/>
+		</delete>
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="clean" />
+	</target>
+		
+	<target name="FantasyFootballCommon">
+		<ant antfile="build.xml" dir="../FantasyFootballCommon" target="build" />
+	</target>
+	
+	<target name="compile" depends="clean,prepare,FantasyFootballCommon">
+		<path id="classpath">
+			<path refid="libraries" />
+			<pathelement location="../FantasyFootballCommon/bin" />
+		</path>
+		<property name="myClasspath" refid="classpath" />
+		<echo message="Classpath = ${myClasspath}" />
+		<javac encoding="UTF-8" srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false" target="1.8" source="1.8" debug="on">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+    <target name="jar" depends="compile">
+		<pathconvert pathsep=" " property="manifest-classpath" refid="libraries">
+			<map from="${basedir}\${lib.dir}\" to="${lib.dir}/" />
+			<map from="${basedir}/${lib.dir}/" to="${lib.dir}/" />
+		</pathconvert>
+        <jar destfile="${build.dir}/${ant.project.name}.jar">
+            <manifest>
+              <attribute name="Built-By" value="${user.name}" />
+              <attribute name="Main-Class" value="com.fumbbl.ffb.server.FantasyFootballServer" />
+              <attribute name="Class-Path" value="${manifest-classpath}" />
+            </manifest>
+            <zipfileset dir="${bin.dir}" includes="**/*.class" />
+            <zipfileset dir="../FantasyFootballCommon/${bin.dir}" includes="**/*.class" />
+        	<!--
+        	<restrict>
+        	  <archives>
+        	    <zips>
+        	      <fileset dir="${lib.dir}">
+        	        <include name="**/*.jar" />
+        	      </fileset>
+        	    </zips>
+        	  </archives>
+        	  <not>
+        	    <name name="META-INF/*"/>
+        	  </not>
+          	  <not>
+          	    <name name="about_files/*"/>
+          	  </not>
+          	  <not>
+          	    <name name="about.html"/>
+          	  </not>
+          	  <not>
+          	    <name name="plugin.properties"/>
+          	  </not>
+        	</restrict>
+        	-->
+        </jar>
+    </target>
+
+    <target name="buildStandalone" depends="jar">
+    	<copy file="server-standalone.ini" tofile="${build.dir}/server.ini" />
+    	<copy todir="${build.dir}/rosters">
+    		<fileset dir="rosters" />
+    	</copy>
+    	<copy todir="${build.dir}/teams">
+    		<fileset dir="teams" />
+    	</copy>
+    	<copy todir="${build.dir}/htdocs">
+    		<fileset dir="htdocs" />
+    	</copy>
+   	</target>
+	
+    <target name="buildFumbblLive" depends="jar">
+    	<copy file="server-fumbbl-live.ini" tofile="${build.dir}/server.ini" />
+    	<!--
+    	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
+	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
+	  		<fileset dir="${build.dir}" includes="${ant.project.name}.jar" />
+	  		<fileset file="${build.dir}/server.ini" />
+    	</tar>
+    	-->
+   	</target>
+
+    <target name="buildFumbblTest" depends="jar">
+    	<copy file="server-fumbbl-test.ini" tofile="${build.dir}/server.ini" />
+    	<copy todir="${build.dir}/lib">
+    		<fileset dir="lib" />
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+    	</copy>
+    	<copy todir="${lib.dir}">
+			<fileset dir="../FantasyFootballCommon/lib" includes="*.jar" />
+    	</copy>
+		<mkdir dir="${build.dir}/log" />
+    	
+    	<!--
+    	<tar destfile="${build.dir}/${ant.project.name}.tar.gz" compression="gzip">
+	  		<fileset dir="." excludes="src/**, bin/**, build/**, doc/**, lib/*.zip, **/build.xml, **/.*" />
+	  		<fileset dir="${build.dir}" includes="${ant.project.name}.jar" />
+	  		<fileset file="${build.dir}/server.ini" />
+    	</tar>
+    	-->
+   	</target>
+
+</project>
