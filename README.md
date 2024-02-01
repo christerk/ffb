@@ -1,4 +1,0 @@
-ffb
-===
-
-FFB development repository
