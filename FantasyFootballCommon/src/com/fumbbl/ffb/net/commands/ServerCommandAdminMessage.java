@@ -48,7 +48,7 @@ public class ServerCommandAdminMessage extends ServerCommand {
 	}
 
 	public String[] getMessages() {
-		return fMessages.toArray(new String[fMessages.size()]);
+		return fMessages.toArray(new String[0]);
 	}
 
 	public boolean isReplayable() {

@@ -65,4 +65,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_SWEET_SPOT_OFF = "sweetSpotOff";
 	String SETTING_SWEET_SPOT_BLACK = "sweetSpotBlack";
 	String SETTING_SWEET_SPOT_WHITE = "sweetSpotWhite";
+
+	String SETTING_LOCAL_ICON_CACHE_OFF = "localIconCacheOff";
+	String SETTING_LOCAL_ICON_CACHE_ON = "localIconCacheOn";
 }

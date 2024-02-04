@@ -24,6 +24,7 @@ import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
+import com.fumbbl.ffb.report.bb2020.ReportEvent;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCards;
@@ -88,7 +89,11 @@ public class InjuryResult implements IJsonSerializable {
 			if (!basePrecedenceList.contains(oldPlayerState.getBase()) ||
 				basePrecedenceList.indexOf(injuryContext.getPlayerState().getBase()) > basePrecedenceList.indexOf(oldPlayerState.getBase())) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(defender);
-				game.getFieldModel().setPlayerState(defender, playerState.changeBase(injuryContext.getPlayerState().getBase()));
+				if (injuryContext.getPlayerState().getBase() == PlayerState.STUNNED && game.didRollOver(defender)) {
+					pStep.getResult().addReport(new ReportEvent("Ignoring stunned result as player rolled over at the start of the turn"));
+				} else {
+					game.getFieldModel().setPlayerState(defender, playerState.changeBase(injuryContext.getPlayerState().getBase()));
+				}
 				boolean homeBomb = false, awayBomb = false;
 				String originalBombardier = pStep.getGameState().getPassState().getOriginalBombardier();
 				if (StringTool.isProvided(originalBombardier)) {

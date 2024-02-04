@@ -42,6 +42,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPassing;
 
@@ -189,7 +190,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		ActionStatus status;
 		Game game = getGameState().getGame();
 		InterceptionModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.INTERCEPTION_MODIFIER);
-		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findModifiers(new InterceptionContext(game, pInterceptor, getGameState().getPassState().getResult()));
+		Set<InterceptionModifier> interceptionModifiers = modifierFactory.findModifiers(
+			new InterceptionContext(game, pInterceptor, getGameState().getPassState().getResult(),
+				StringTool.isProvided(passState.getOriginalBombardier())));
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll;
 		InterceptionModifier[] interceptionModifierArray;

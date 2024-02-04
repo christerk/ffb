@@ -33,8 +33,11 @@ public class MercenaryTable extends JTable {
 			List<String> skills = new ArrayList<>();
 			skills.add("");
 
-			SkillFactory factory = ((MercenaryTableModel)getModel()).getGame().getFactory(FactoryType.Factory.SKILL);
-			factory.getSkills().stream().filter(skill -> cat.contains(skill.getCategory()) && !player.getPosition().hasSkill(skill)).map(Skill::getName).forEach(skills::add);
+			SkillFactory factory = ((MercenaryTableModel) getModel()).getGame().getFactory(FactoryType.Factory.SKILL);
+			factory.getSkills().stream().filter(skill ->
+					skill.eligible() && cat.contains(skill.getCategory()) && !player.getPosition().hasSkill(skill))
+				.map(Skill::getName)
+				.forEach(skills::add);
 
 			JComboBox<String> box = new JComboBox<String>(dimensionProvider, skills.toArray(new String[0]));
 			return new DefaultCellEditor(box);

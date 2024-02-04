@@ -19,7 +19,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class MonstrousMouth extends Skill {
 
 	public MonstrousMouth() {
-		super("Monstrous Mouth", SkillCategory.TRAIT);
+		super("Monstrous Mouth", SkillCategory.MUTATION);
 	}
 
 	@Override

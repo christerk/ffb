@@ -72,7 +72,9 @@ public class StepStallingPlayer extends AbstractStep {
 			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
 			UtilServerGame.syncGameModel(this);
 
-			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HIT_PLAYER, true));
+			StepParameterSet pParameterSet = UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HIT_PLAYER, true);
+			pParameterSet.remove(StepParameterKey.END_TURN);
+			publishParameters(pParameterSet);
 			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, UtilServerInjury.handleInjury(this,
 				new InjuryTypeThrowARockStalling(), null, player, playerCoordinate, null, null, ApothecaryMode.HIT_PLAYER)));
 

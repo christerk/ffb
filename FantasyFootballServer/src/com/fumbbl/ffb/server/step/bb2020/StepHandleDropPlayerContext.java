@@ -106,6 +106,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	private void successfulSkillUse(InjuryResult injuryResult) {
 		injuryResult.injuryContext().getModifiedInjuryContext().getReports().forEach(report -> getResult().addReport(report));
 		injuryResult.swapToAlternateContext(this, getGameState().getGame());
+		dropPlayerContext.setEndTurn(dropPlayerContext.isModifiedInjuryEndsTurn());
 	}
 
 	@Override
@@ -136,7 +137,11 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					if (dropPlayerContext.getVictimStateKey() != null) {
 						publishParameter(new StepParameter(dropPlayerContext.getVictimStateKey(), game.getFieldModel().getPlayerState(game.getDefender())));
 					}
+				} else if (!dropPlayerContext.isAlreadyDropped()
+					&& dropPlayerContext.isEndTurnWithoutKnockdown() && dropPlayerContext.isEndTurn()) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
+
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 				if (StringTool.isProvided(dropPlayerContext.getLabel())) {
 					getResult().setNextAction(StepAction.GOTO_LABEL, dropPlayerContext.getLabel());

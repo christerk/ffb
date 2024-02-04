@@ -14,4 +14,8 @@ public class PilingOn extends Skill {
 		super("Piling On", SkillCategory.STRENGTH);
 	}
 
+	@Override
+	public boolean eligible() {
+		return false;
+	}
 }

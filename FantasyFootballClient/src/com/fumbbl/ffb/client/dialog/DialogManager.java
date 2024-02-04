@@ -213,6 +213,9 @@ public class DialogManager {
 					case BLOODLUST_ACTION:
 						setDialogHandler(new DialogBloodlustActionHandler(getClient()));
 						break;
+					case PENALTY_SHOOTOUT:
+						setDialogHandler(new DialogPenaltyShootoutHandler(getClient()));
+						break;
 					default:
 						break;
 				}

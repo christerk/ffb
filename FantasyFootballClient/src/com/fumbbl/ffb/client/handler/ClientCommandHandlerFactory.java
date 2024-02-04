@@ -4,6 +4,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ServerCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,12 +40,20 @@ public class ClientCommandHandlerFactory {
 	}
 
 	public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
+		long gameId = fClient.getGame() != null ? fClient.getGame().getId() : 0;
 		if (pNetCommand != null) {
+			if (pNetCommand instanceof ServerCommand) {
+				if (NetCommandId.SERVER_GAME_TIME != (pNetCommand.getId())) {
+					fClient.logDebug(gameId, "Received server command: " + pNetCommand.getId() + " with id: " + ((ServerCommand) pNetCommand).getCommandNr());
+				}
+			} else {
+				fClient.logDebug(gameId, "Received other command: " + pNetCommand.getId());
+			}
 			ClientCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());
 			if (commandHandler != null) {
 				boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);
 				if (completed) {
-					updateClientState(pNetCommand, pMode, false);
+					updateClientState(pNetCommand, false);
 				} else {
 					if (pMode == ClientCommandHandlerMode.PLAYING) {
 						synchronized (this) {
@@ -56,16 +65,19 @@ public class ClientCommandHandlerFactory {
 					}
 				}
 			} else {
-				updateClientState(pNetCommand, pMode, false);
+				updateClientState(pNetCommand, false);
 			}
+		} else {
+			fClient.logDebug(gameId, "Received null command");
+
 		}
 	}
 
-	public void updateClientState(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
-		updateClientState(pNetCommand, pMode, true);
+	public void updateClientState(NetCommand pNetCommand) {
+		updateClientState(pNetCommand, true);
 	}
 
-	private void updateClientState(NetCommand pNetCommand, ClientCommandHandlerMode pMode, boolean pNotify) {
+	private void updateClientState(NetCommand pNetCommand, boolean pNotify) {
 		ClientState clientState = getClient().updateClientState();
 		if (clientState != null) {
 			clientState.handleCommand(pNetCommand);

@@ -158,7 +158,7 @@ public class StepInitFeeding extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		if (fEndPlayerAction && game.getTurnMode() == TurnMode.BLITZ && getGameState().getBlitzTurnState() != null
-			&& (actingPlayer.hasActed() || getGameState().getBlitzTurnState().actingPlayerWasChanged())) {
+			&& (actingPlayer.hasActed() || getGameState().getBlitzTurnState().actingPlayerWasChanged()) && !StringTool.isProvided(fFeedOnPlayerChoice)) {
 			BlitzTurnState blitzTurnState = getGameState().getBlitzTurnState();
 			blitzTurnState.addActivation();
 			getResult().addReport(new ReportKickoffSequenceActivationsCount(blitzTurnState.getAvailable(), blitzTurnState.getAmount(), blitzTurnState.getLimit()));
@@ -210,12 +210,12 @@ public class StepInitFeeding extends AbstractStep {
 				FieldCoordinate feedOnPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 				InjuryResult injuryResultFeeding = UtilServerInjury.handleInjury(this, new InjuryTypeBitten(),
 					actingPlayer.getPlayer(), game.getDefender(), feedOnPlayerCoordinate, null, null, ApothecaryMode.FEEDING);
-				fEndTurn = UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier
+				fEndTurn |= actingPlayer.getPlayer().getTeam() == game.getDefender().getTeam()
+					&& UtilPlayer.hasBall(game, game.getDefender()); // turn end on biting the ball carrier but only if on the same team (tasty morsel)
 				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultFeeding));
 				publishParameters(UtilServerInjury.dropPlayer(this, game.getDefender(), ApothecaryMode.FEEDING));
 				getResult().setSound(SoundId.SLURP);
 				actingPlayer.setSufferingBloodLust(false);
-				doNextStep = true;
 			} else {
 				fEndTurn = true;
 				if (!playerState.isCasualty() && (playerState.getBase() != PlayerState.KNOCKED_OUT)
@@ -229,8 +229,8 @@ public class StepInitFeeding extends AbstractStep {
 					getResult().setSound(SoundId.ROAR);
 					getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "failed to bite anyone causing a turnover"));
 				}
-				doNextStep = true;
 			}
+			doNextStep = true;
 		}
 		if (doNextStep) {
 			actingPlayer.setHasFed(true);

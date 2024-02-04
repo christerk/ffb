@@ -115,7 +115,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 					}
 				}
 
-				if (playerAction == PlayerAction.GAZE) {
+				if (playerAction == PlayerAction.GAZE || playerAction == PlayerAction.BLOCK) {
 					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 				game.setDefenderId(null);

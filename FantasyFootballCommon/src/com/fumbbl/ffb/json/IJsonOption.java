@@ -11,7 +11,9 @@ public interface IJsonOption {
 	JsonObjectOption ACTING_PLAYER = new JsonObjectOption("actingPlayer");
 	JsonStringOption ACTING_PLAYER_ID = new JsonStringOption("actingPlayerId");
 	JsonBooleanOption ACTING_PLAYER_WAS_CHANGED = new JsonBooleanOption("actingPlayerWasChanged");
+	@SuppressWarnings("unused") // Required to deserialize old games
 	JsonBooleanOption ADD_BLOCK_DIE = new JsonBooleanOption("addBlockDie");
+	@SuppressWarnings("unused") // Required to deserialize old games
 	JsonEnumWithNameOption ADD_BLOCK_DIE_SKILL = new JsonEnumWithNameOption("addBlockDieSkill", Factory.SKILL);
 	JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
 	JsonIntOption AGILITY = new JsonIntOption("agility");
@@ -323,6 +325,7 @@ public interface IJsonOption {
 	JsonIntOption PENALTY_SCORE = new JsonIntOption("penaltyScore");
 	JsonIntOption PENALTY_SCORE_AWAY = new JsonIntOption("penaltyScoreAway");
 	JsonIntOption PENALTY_SCORE_HOME = new JsonIntOption("penaltyScoreHome");
+	JsonBooleanArrayOption PENALTY_WINS = new JsonBooleanArrayOption("penaltyWins");
 	JsonIntOption PETTY_CASH = new JsonIntOption("pettyCash");
 	JsonIntOption PETTY_CASH_FROM_TV_DIFF = new JsonIntOption("pettyCashFromTvDiff");
 	JsonIntOption PETTY_CASH_TRANSFERRED = new JsonIntOption("pettyCashTransferred");
@@ -422,6 +425,7 @@ public interface IJsonOption {
 	JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
 	JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
 	JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
+	JsonStringArrayOption ROLLED_OVER = new JsonStringArrayOption("rolledOver");
 	JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
 	JsonIntArrayOption ROLLS_AWAY = new JsonIntArrayOption("rollsAway");
 	JsonIntArrayOption ROLLS_HOME = new JsonIntArrayOption("rollsHome");
@@ -476,6 +480,8 @@ public interface IJsonOption {
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
+	JsonEnumWithNameOption SOUND_ALTERNATIVE = new JsonEnumWithNameOption("soundAlternative", Factory.SOUND_ID);
+
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
 	JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");

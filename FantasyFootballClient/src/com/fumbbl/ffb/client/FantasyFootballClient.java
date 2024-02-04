@@ -146,6 +146,7 @@ public class FantasyFootballClient implements IConnectionListener, IDialogCloseL
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
 		getUserInterface().getFieldComponent().refresh();
 		getUserInterface().setVisible(true);
+
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
 		aboutDialogHandler.showDialog();
 	}

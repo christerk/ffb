@@ -47,6 +47,8 @@ public enum CommonProperty {
 	SETTING_LOCAL_SETTINGS("setting.localSettings", "Local Stored Settings", "", "", true),
 	SETTING_SHOW_CRATERS_AND_BLOODSPOTS("setting.showCratersAndBloodspots", "Craters and bloodspots", "Graphics"),
 	SETTING_SWEET_SPOT("setting.sweet.spot", "Show Sweet Spot", "Configuration"),
+	SETTING_LOCAL_ICON_CACHE("setting.localIconCache", "Local Icon Cache", "Configuration"),
+	SETTING_LOCAL_ICON_CACHE_PATH("setting.localIconCache.path", "Local Icon Cache Folder", "Configuration"),
 	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration");
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
@@ -59,7 +61,8 @@ public enum CommonProperty {
 		SETTING_BACKGROUND_FRAME_COLOR, SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
-		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS, SETTING_SHOW_CRATERS_AND_BLOODSPOTS, SETTING_SWEET_SPOT
+		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS, SETTING_SHOW_CRATERS_AND_BLOODSPOTS, SETTING_SWEET_SPOT,
+		SETTING_LOCAL_ICON_CACHE, SETTING_LOCAL_ICON_CACHE_PATH
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {
@@ -87,10 +90,6 @@ public enum CommonProperty {
 
 	CommonProperty(String key) {
 		this(key, null, "", "", true);
-	}
-
-	CommonProperty(String key, String value) {
-		this(key, value, "", "", false);
 	}
 
 	CommonProperty(String key, String value, String category) {

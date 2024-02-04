@@ -5,10 +5,12 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -97,6 +99,12 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 	@Override
 	public boolean eligibleToReRoll(ReRolledAction reRolledAction, Player<?> thrower) {
 		return reRolledAction != ReRolledActions.PASS;
+	}
+
+	@Override
+	public int passModifiers(Game game, Player<?> player) {
+		return UtilPlayer.findTacklezones(game, player);
+
 	}
 
 	private boolean isModifiedFumble(int roll, PassingDistance distance, Collection<PassModifier> modifiers) {

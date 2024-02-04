@@ -3,6 +3,8 @@ package com.fumbbl.ffb.factory;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PassContext;
@@ -68,4 +70,10 @@ public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, 
 		this.passModifierCollection = modifierCollection;
 	}
 
+	@Override
+	protected int numberOfTacklezones(PassContext context) {
+		MechanicsFactory factory = context.getGame().getFactory(FactoryType.Factory.MECHANIC);
+		PassMechanic mechanic = (PassMechanic) factory.forName(Mechanic.Type.PASS.name());
+		return mechanic.passModifiers(context.getGame(), context.getPlayer());
+	}
 }

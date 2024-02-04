@@ -349,4 +349,8 @@ public abstract class Skill implements INamedObject {
 	public void setStatBasedRollModifierFactory(StatBasedRollModifierFactory statBasedRollModifierFactory) {
 		this.statBasedRollModifierFactory = statBasedRollModifierFactory;
 	}
+
+	public boolean eligible() {
+		return true;
+	}
 }

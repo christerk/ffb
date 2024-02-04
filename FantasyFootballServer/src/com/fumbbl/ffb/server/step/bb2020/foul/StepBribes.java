@@ -20,6 +20,7 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
@@ -176,6 +177,10 @@ public class StepBribes extends AbstractStepWithReRoll {
 							int roll = getGameState().getDiceRoller().rollBribes();
 							fBribeSuccessful = DiceInterpreter.getInstance().isBribesSuccessful(roll);
 							getResult().addReport(new ReportBribesRoll(actingPlayer.getPlayerId(), fBribeSuccessful, roll));
+							GameOptionBoolean bribeOption = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ONLY_ONE_BRIBE_PER_SEND_OFF);
+							if (!bribeOption.isEnabled() && !fBribeSuccessful) {
+								askForBribes();
+							}
 						}
 					});
 			}

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -192,7 +193,11 @@ public final class StepEndPassing extends AbstractStep {
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 			int deltaX;
-			if (game.isHomePlaying()) {
+			boolean eastIsForward = game.isHomePlaying();
+			if (TurnMode.DUMP_OFF == game.getTurnMode()) {
+				eastIsForward = !eastIsForward;
+			}
+			if (eastIsForward) {
 				deltaX = endCoordinate.getX() - startCoordinate.getX();
 			} else {
 				deltaX = startCoordinate.getX() - endCoordinate.getX();

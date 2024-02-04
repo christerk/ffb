@@ -296,4 +296,12 @@ public interface IIconProperty {
 	String PITCH_URL_DEFAULT = "pitch.url.default";
 	String PITCH_URL_BASIC = "pitch.url.basic";
 
+	// Penalty Dice
+	String PENALTY_DIE_1 = "game.penalty.die.1";
+	String PENALTY_DIE_2 = "game.penalty.die.2";
+	String PENALTY_DIE_3 = "game.penalty.die.3";
+	String PENALTY_DIE_4 = "game.penalty.die.4";
+	String PENALTY_DIE_5 = "game.penalty.die.5";
+	String PENALTY_DIE_6 = "game.penalty.die.6";
+
 }

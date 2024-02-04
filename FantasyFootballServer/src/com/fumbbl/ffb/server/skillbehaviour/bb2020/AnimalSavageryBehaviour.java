@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepAnimalSavagery;
 import com.fumbbl.ffb.server.step.bb2020.StepAnimalSavagery.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.util.StringTool;
@@ -210,7 +211,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
 			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 
-		boolean endTurn = UtilPlayer.hasBall(game, game.getDefender());
+		boolean lashedOutAgainstOpponent = actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam();
+
+		boolean endTurn = UtilPlayer.hasBall(game, game.getDefender()) && !lashedOutAgainstOpponent;
 		StepParameterKey playerStateKey = null;
 		String label = null;
 
@@ -234,6 +237,10 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
 					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
+				} else if (lashedOutAgainstOpponent) {
+					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
+					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
+					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 				}
 			}
 		}

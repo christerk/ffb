@@ -35,17 +35,6 @@ import java.util.Set;
  */
 public class UtilPlayer {
 
-	public static Player<?>[] findPlayersOnPitchWithSkill(Game pGame, Team pTeam, Skill pSkill) {
-		List<Player<?>> result = new ArrayList<>();
-		for (Player<?> player : pTeam.getPlayers()) {
-			if (UtilCards.hasSkill(player, pSkill)
-				&& FieldCoordinateBounds.FIELD.isInBounds(pGame.getFieldModel().getPlayerCoordinate(player))) {
-				result.add(player);
-			}
-		}
-		return result.toArray(new Player[0]);
-	}
-
 	public static Player<?>[] findPlayersOnPitchWithProperty(Game pGame, Team pTeam, ISkillProperty property) {
 		List<Player<?>> result = new ArrayList<>();
 		for (Player<?> player : pTeam.getPlayers()) {
@@ -284,9 +273,13 @@ public class UtilPlayer {
 	}
 
 	public static int findTacklezones(Game pGame, Player<?> pPlayer) {
+		return findTacklezonePlayers(pGame, pPlayer).length;
+	}
+
+	public static Player<?>[] findTacklezonePlayers(Game pGame, Player<?> pPlayer) {
 		Team otherTeam = findOtherTeam(pGame, pPlayer);
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length;
+		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false);
 	}
 
 	public static void refreshPlayersForTurnStart(Game pGame) {
@@ -296,6 +289,9 @@ public class UtilPlayer {
 
 		Set<String> enhancementsToRemove = mechanic.enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 		Set<String> enhancementsToRemoveWhenNotSettingActive = mechanic.enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(pGame.getFactory(FactoryType.Factory.SKILL));
+
+		pGame.clearRolledOver();
+
 		for (Player<?> player : players) {
 			boolean playerOnTeamFromLastTurn = player.getTeam() != pGame.getTeamHome() && pGame.isHomePlaying();
 			boolean setActive = playerOnTeamFromLastTurn || !player.hasSkillProperty(NamedProperties.hasToMissTurn);
@@ -324,6 +320,7 @@ public class UtilPlayer {
 					if ((pGame.isHomePlaying() && pGame.getTeamHome().hasPlayer(player))
 						|| (!pGame.isHomePlaying() && pGame.getTeamAway().hasPlayer(player))) {
 						newPlayerState = oldPlayerState.changeBase(PlayerState.PRONE).changeActive(false);
+						pGame.rollOver(player);
 					}
 					break;
 				default:
@@ -492,13 +489,6 @@ public class UtilPlayer {
 		return kickable;
 	}
 
-	public static boolean isPickUp(Game pGame) {
-		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		return (pGame.getFieldModel().isBallInPlay() && pGame.getFieldModel().isBallMoving()
-			&& playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
-	}
-
 	public static void sortByPlayerNr(Player<?>[] pPlayerArray) {
 		Arrays.sort(pPlayerArray, Comparator.comparingInt(Player::getNr));
 	}
@@ -522,19 +512,6 @@ public class UtilPlayer {
 			}
 		}
 		return nextMoveGoingForIt;
-	}
-
-	public static boolean isNextMoveDodge(Game pGame) {
-		boolean nextMoveDodge = false;
-		if (pGame.getActingPlayer() != null) {
-			Player<?> player = pGame.getActingPlayer().getPlayer();
-			if (player != null) {
-				Team otherTeam = findOtherTeam(pGame, player);
-				FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
-				nextMoveDodge = (findAdjacentPlayersWithTacklezones(pGame, otherTeam, playerCoordinate, false).length > 0);
-			}
-		}
-		return nextMoveDodge;
 	}
 
 	public static boolean isNextMovePossible(Game pGame, boolean jumping) {
@@ -563,12 +540,6 @@ public class UtilPlayer {
 			}
 		}
 		return movePossible;
-	}
-
-	public static boolean isPickup(Game pGame) {
-		Player<?> player = pGame.getActingPlayer().getPlayer();
-		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(player);
-		return (pGame.getFieldModel().isBallMoving() && playerCoordinate.equals(pGame.getFieldModel().getBallCoordinate()));
 	}
 
 	public static boolean testPlayersAbleToAct(Game pGame, Team pTeam) {
