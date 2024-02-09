@@ -31,7 +31,36 @@
 
     </repositories>
 
+    <profiles>
+        <profile>
+            <id>live</id>
+            <properties>
+                <client.ini>src/main/resources/client-fumbbl-live.ini</client.ini>
+                <icons.ini>src/main/resources/icons-fumbbl-live.ini</icons.ini>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <client.ini>src/main/resources/client-fumbbl-test.ini</client.ini>
+                <icons.ini>src/main/resources/icons-fumbbl-test.ini</icons.ini>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.6.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -51,6 +80,74 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.fumbbl.ffb:ffb-common</include>
+                                </includes>
+                            </artifactSet>
+                            <finalName>FantasyFootballClient</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                    <finalName>ffb-client</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <sourceFile>${client.ini}</sourceFile>
+                                    <destinationFile>target/client.ini</destinationFile>
+                                </fileSet>
+                                <fileSet>
+                                    <sourceFile>${icons.ini}</sourceFile>
+                                    <destinationFile>target/icons.ini</destinationFile>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -59,6 +156,7 @@
             <groupId>com.fumbbl.ffb</groupId>
             <artifactId>ffb-common</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>kuusisto.tinysound</groupId>
