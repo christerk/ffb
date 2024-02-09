@@ -16,18 +16,13 @@
         </file>
     </files>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <moduleSets>
-        <moduleSet>
-            <includes/>
-            <binaries>
-                <includeDependencies>true</includeDependencies>
-                <dependencySets>
-                    <dependencySet>
-                        <outputDirectory>lib</outputDirectory>
-                        <includes/>
-                    </dependencySet>
-                </dependencySets>
-            </binaries>
-        </moduleSet>
-    </moduleSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <unpack>false</unpack>
+            <excludes>
+                <exclude>${artifact}</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
