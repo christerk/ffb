@@ -19,6 +19,7 @@
         <module>ffb-tools</module>
         <module>ffb-server</module>
         <module>ffb-client</module>
+        <module>ffb-resources</module>
     </modules>
     <dependencyManagement>
         <dependencies>

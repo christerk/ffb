@@ -158,6 +158,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.fumbbl.ffb</groupId>
+            <artifactId>ffb-resources</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>kuusisto.tinysound</groupId>
             <artifactId>tinysound</artifactId>
             <version>1.1.1</version>
