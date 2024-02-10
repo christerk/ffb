@@ -21,5 +21,6 @@
                 <version>2.4</version>
             </plugin>
         </plugins>
+        <finalName>FantasyFootballClientResources</finalName>
     </build>
 </project>
