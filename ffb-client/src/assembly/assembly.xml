@@ -26,6 +26,7 @@
             <unpack>false</unpack>
             <excludes>
                 <exclude>${artifact}</exclude>
+                <exclude>com.fumbbl.ffb:ffb-common*</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

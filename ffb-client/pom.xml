@@ -156,7 +156,6 @@
             <groupId>com.fumbbl.ffb</groupId>
             <artifactId>ffb-common</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>kuusisto.tinysound</groupId>

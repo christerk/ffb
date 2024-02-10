@@ -128,7 +128,6 @@
             <groupId>com.fumbbl.ffb</groupId>
             <artifactId>ffb-common</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
