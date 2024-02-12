@@ -22,9 +22,6 @@
         </profile>
         <profile>
             <id>test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <server.ini>server-fumbbl-test.ini</server.ini>
             </properties>

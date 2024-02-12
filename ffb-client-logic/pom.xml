@@ -10,7 +10,7 @@
         <version>2.26.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ffb-client</artifactId>
+    <artifactId>ffb-client-logic</artifactId>
     <packaging>jar</packaging>
 
     <repositories>
@@ -31,54 +31,12 @@
 
     </repositories>
 
-    <profiles>
-        <profile>
-            <id>live</id>
-            <properties>
-                <resources.dir>src/main/resources-live</resources.dir>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <resources.dir>src/main/resources-testenv</resources.dir>
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
-        <resources>
-            <resource>
-                <directory>${resources.dir}</directory>
-            </resource>
-        </resources>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.6.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClient</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Built-By>${user.name}</Built-By>
-                            <Permissions>all-permissions</Permissions>
-                            <Application-Name>Fantasy Football Client</Application-Name>
-                            <Codebase>www.fumbbl.com fumbbl.com</Codebase>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -93,32 +51,10 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.fumbbl.ffb:ffb-client-logic</include>
+                                    <include>com.fumbbl.ffb:ffb-common</include>
                                 </includes>
                             </artifactSet>
-                            <finalName>FantasyFootballClient</finalName>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/assembly.xml</descriptor>
-                    </descriptors>
-                    <finalName>ffb-client</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -128,12 +64,7 @@
     <dependencies>
         <dependency>
             <groupId>com.fumbbl.ffb</groupId>
-            <artifactId>ffb-client-logic</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fumbbl.ffb</groupId>
-            <artifactId>ffb-resources</artifactId>
+            <artifactId>ffb-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
