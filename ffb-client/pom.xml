@@ -31,10 +31,6 @@
 
     </repositories>
 
-    <properties>
-        <ini.dir>target/classes</ini.dir>
-    </properties>
-
     <profiles>
         <profile>
             <id>live</id>
