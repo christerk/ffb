@@ -31,12 +31,15 @@
 
     </repositories>
 
+    <properties>
+        <ini.dir>target/classes</ini.dir>
+    </properties>
+
     <profiles>
         <profile>
             <id>live</id>
             <properties>
-                <client.ini>src/main/resources/client-fumbbl-live.ini</client.ini>
-                <icons.ini>src/main/resources/icons-fumbbl-live.ini</icons.ini>
+                <resources.dir>src/main/resources-live</resources.dir>
             </properties>
         </profile>
         <profile>
@@ -45,13 +48,17 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <client.ini>src/main/resources/client-fumbbl-test.ini</client.ini>
-                <icons.ini>src/main/resources/icons-fumbbl-test.ini</icons.ini>
+                <resources.dir>src/main/resources-testenv</resources.dir>
             </properties>
         </profile>
     </profiles>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${resources.dir}</directory>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -119,32 +126,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-file</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet>
-                                    <sourceFile>${client.ini}</sourceFile>
-                                    <destinationFile>target/client.ini</destinationFile>
-                                </fileSet>
-                                <fileSet>
-                                    <sourceFile>${icons.ini}</sourceFile>
-                                    <destinationFile>target/icons.ini</destinationFile>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

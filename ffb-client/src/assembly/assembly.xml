@@ -11,14 +11,6 @@
             <outputDirectory/>
         </file>
         <file>
-            <source>target/client.ini</source>
-            <outputDirectory/>
-        </file>
-        <file>
-            <source>target/icons.ini</source>
-            <outputDirectory/>
-        </file>
-        <file>
             <source>../ffb-resources/target/FantasyFootballClientResources.jar</source>
             <outputDirectory/>
         </file>
