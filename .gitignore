@@ -7,3 +7,10 @@
 /ffb-resources/target/
 /ffb-client-logic/target/
 /ffb-client-logic/dependency-reduced-pom.xml
+/ffb-client/pom.xml.versionsBackup
+/ffb-client-logic/pom.xml.versionsBackup
+/ffb-common/pom.xml.versionsBackup
+/ffb-resources/pom.xml.versionsBackup
+/ffb-server/pom.xml.versionsBackup
+/ffb-tools/pom.xml.versionsBackup
+/pom.xml.versionsBackup
