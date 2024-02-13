@@ -47,6 +47,7 @@ import java.util.Timer;
 /**
  * @author Kalimar
  */
+@SuppressWarnings({"rawtypes", "FieldCanBeLocal"})
 public class FantasyFootballServer implements IFactorySource {
 
 	private static final String _USAGE = "java -jar FantasyFootballServer.jar standalone\n"
@@ -140,7 +141,7 @@ public class FantasyFootballServer implements IFactorySource {
 		if (fMode.isInitDb()) {
 
 			System.err
-					.println("FantasyFootballServer " + FantasyFootballConstants.SERVER_VERSION + " initializing database.");
+					.println("FantasyFootballServer " + FantasyFootballConstants.VERSION + " initializing database.");
 
 			DbInitializer dbInitializer = new DbInitializer(dbConnectionManager);
 			dbInitializer.initDb();
@@ -227,7 +228,7 @@ public class FantasyFootballServer implements IFactorySource {
 			}
 
 			System.err.print(DateTool.formatTimestamp(new Date()));
-			System.err.print(" FantasyFootballServer " + FantasyFootballConstants.SERVER_VERSION);
+			System.err.print(" FantasyFootballServer " + FantasyFootballConstants.VERSION);
 			System.err.println(" running on port " + httpPortProperty);
 
 		}
@@ -294,16 +295,9 @@ public class FantasyFootballServer implements IFactorySource {
 		return fProperties.getProperty(pProperty);
 	}
 
-	public void setProperty(String pProperty, String pValue) {
-		fProperties.setProperty(pProperty, pValue);
-	}
-
-	public String removeProperty(String pProperty) {
-		return (String) fProperties.remove(pProperty);
-	}
-
 	public String[] getProperties() {
-		return fProperties.keySet().toArray(new String[fProperties.size()]);
+		//noinspection SuspiciousToArrayCall
+		return fProperties.keySet().toArray(new String[0]);
 	}
 
 	public DbUpdater getDbUpdater() {

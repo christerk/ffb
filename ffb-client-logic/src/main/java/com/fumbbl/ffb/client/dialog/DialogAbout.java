@@ -69,9 +69,9 @@ public class DialogAbout extends Dialog {
 
 		String versionInfo = getClient().getParameters().getBuild();
 		if (versionInfo == null) {
-			versionInfo = "Version " + FantasyFootballConstants.CLIENT_VERSION;
+			versionInfo = "Version " + FantasyFootballConstants.VERSION;
 		} else {
-			versionInfo = "Build " + FantasyFootballConstants.CLIENT_VERSION + "-" + versionInfo;
+			versionInfo = "Build " + FantasyFootballConstants.VERSION + "-" + versionInfo;
 		}
 		Rectangle2D versionBounds = g2d.getFontMetrics().getStringBounds(versionInfo, g2d);
 		g2d.drawString(versionInfo, dimension.width - dimensionProvider.scale(25) - (int) versionBounds.getWidth(), dimensionProvider.scale(155));

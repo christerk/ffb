@@ -54,7 +54,7 @@ public class StatusReport {
 				ReportId reportId = renderer.getClass().getAnnotation(ReportMessageType.class).value();
 				messageRenderers.put(reportId, renderer);
 			} catch (SecurityException | IllegalArgumentException e) {
-				System.err.println(e);
+				System.err.println(e.getMessage());
 			} catch (NullPointerException npe) {
 				System.err.println("Error processing " + renderer.getClass().getName());
 			}
@@ -74,7 +74,7 @@ public class StatusReport {
 	}
 
 	public void reportVersion() {
-		println(0, "FantasyFootballClient Version " + FantasyFootballConstants.CLIENT_VERSION);
+		println(0, "FantasyFootballClient Version " + FantasyFootballConstants.VERSION);
 	}
 
 	public void reportConnecting(InetAddress pInetAddress, int pPort) {

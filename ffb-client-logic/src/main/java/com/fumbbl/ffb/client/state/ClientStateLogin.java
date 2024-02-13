@@ -40,7 +40,6 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 
 	// this state changes after synchronizing
 
-	private DialogInformation fWaitingDialog;
 	private ServerStatus fLastServerError;
 
 	private String fGameName;
@@ -144,7 +143,7 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			case SERVER_STATUS:
 				ServerCommandStatus errorCommand = (ServerCommandStatus) pNetCommand;
 				fLastServerError = errorCommand.getServerStatus();
-				DialogInformation informationDialog = null;
+				DialogInformation informationDialog;
 				if (fLastServerError == ServerStatus.FUMBBL_ERROR) {
 					informationDialog = new DialogInformation(getClient(), "Fumbbl Error", errorCommand.getMessage(),
 						DialogInformation.CANCEL_DIALOG);
@@ -196,10 +195,11 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 
 	private boolean checkVersion(String pServerVersion, String pClientVersion) {
 
-		if (checkVersionConflict(pClientVersion, FantasyFootballConstants.CLIENT_VERSION)) {
+		DialogInformation fWaitingDialog;
+		if (checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
 			String[] messages = new String[3];
 			messages[0] = "Server expects client version " + pClientVersion + " or newer.";
-			messages[1] = "Client version is " + FantasyFootballConstants.CLIENT_VERSION + ".";
+			messages[1] = "Client version is " + FantasyFootballConstants.VERSION + ".";
 			messages[2] = "Please update your client!";
 			fWaitingDialog = new DialogInformation(getClient(), "Client Version Conflict", messages,
 				DialogInformation.CANCEL_DIALOG, false);
@@ -207,9 +207,9 @@ public class ClientStateLogin extends ClientState implements IDialogCloseListene
 			return false;
 		}
 
-		if (checkVersionConflict(FantasyFootballConstants.SERVER_VERSION, pServerVersion)) {
+		if (checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
 			String[] messages = new String[3];
-			messages[0] = "Client expects server version " + FantasyFootballConstants.SERVER_VERSION + " or newer.";
+			messages[0] = "Client expects server version " + FantasyFootballConstants.VERSION + " or newer.";
 			messages[1] = "Server version is " + pServerVersion + ".";
 			messages[2] = "Please wait for a server update!";
 			fWaitingDialog = new DialogInformation(getClient(), "Server Version Conflict", messages,

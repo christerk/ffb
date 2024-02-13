@@ -32,8 +32,8 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
 			}
 		}
 
-		getServer().getCommunication().sendVersion(pReceivedCommand.getSession(), FantasyFootballConstants.SERVER_VERSION,
-			FantasyFootballConstants.CLIENT_VERSION, clientProperties.toArray(new String[0]),
+		getServer().getCommunication().sendVersion(pReceivedCommand.getSession(), FantasyFootballConstants.VERSION,
+			FantasyFootballConstants.VERSION, clientProperties.toArray(new String[0]),
 			clientPropertyValues.toArray(new String[0]), isServerInTestMode());
 		return true;
 	}
