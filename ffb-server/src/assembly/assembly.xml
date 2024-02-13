@@ -10,15 +10,6 @@
             <source>target/FantasyFootballServer.jar</source>
             <outputDirectory/>
         </file>
-        <file>
-            <sources>
-                <source>server-fumbbl-live.ini</source>
-                <source>server.local.ini</source>
-            </sources>
-            <destName>
-                server.ini
-            </destName>
-        </file>
     </files>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
