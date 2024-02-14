@@ -60,7 +60,7 @@ public class AdminConnector {
 		} else {
 
 			Properties serverProperties = new Properties();
-			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(AdminConnector.class.getResourceAsStream("/" + filterResult.getInifileName())))) {
+			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(AdminConnector.class.getResourceAsStream("/" + filterResult.getIniFileName())))) {
 				serverProperties.load(in);
 			}
 
@@ -71,7 +71,7 @@ public class AdminConnector {
 
 			String challenge = null;
 			try (BufferedReader xmlReader = new BufferedReader(new StringReader(adminChallengeXml))) {
-				String line = null;
+				String line;
 				while ((line = xmlReader.readLine()) != null) {
 					Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
 					if (challengeMatcher.find()) {

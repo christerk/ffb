@@ -45,7 +45,7 @@ public class GameStateConnector {
 		} else {
 
 			Properties serverProperties = new Properties();
-			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(GameStateConnector.class.getResourceAsStream("/" + filterResult.getInifileName())))) {
+			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(GameStateConnector.class.getResourceAsStream("/" + filterResult.getIniFileName())))) {
 				serverProperties.load(in);
 			}
 

@@ -275,9 +275,16 @@ public class FantasyFootballServer implements IFactorySource {
 			ServerMode serverMode = ServerMode.fromArguments(args);
 			Properties properties = new Properties();
 
-			try (FileInputStream fileInputStream = new FileInputStream(filterResult.getInifileName());
-			     BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+			try (FileInputStream fileInputStream = new FileInputStream(filterResult.getIniFileName());
+					 BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
 				properties.load(propertyInputStream);
+			}
+
+			if (StringTool.isProvided(filterResult.getOverrideFileName())) {
+				try (FileInputStream fileInputStream = new FileInputStream(filterResult.getOverrideFileName());
+						 BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+					properties.load(propertyInputStream);
+				}
 			}
 
 			FantasyFootballServer server = new FantasyFootballServer(serverMode, properties);
