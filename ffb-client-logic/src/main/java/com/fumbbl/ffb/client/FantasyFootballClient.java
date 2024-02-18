@@ -7,78 +7,141 @@ import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.net.ClientPingTask;
 import com.fumbbl.ffb.client.net.CommandEndpoint;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.IConnectionListener;
+import com.fumbbl.ffb.util.StringTool;
 
+import javax.websocket.ContainerProvider;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
-public interface FantasyFootballClient extends IConnectionListener, IDialogCloseListener, IFactorySource {
+public abstract class FantasyFootballClient implements IConnectionListener, IDialogCloseListener, IFactorySource {
 
-	UserInterface getUserInterface();
+	private Session fSession;
+	private CommandEndpoint fCommandEndpoint;
+	private Timer fPingTimer;
 
-	Game getGame();
+	public FantasyFootballClient() {
+		fCommandEndpoint = new CommandEndpoint(this);
+		fPingTimer = new Timer(true);
+	}
 
-	void setGame(Game pGame);
+	public abstract UserInterface getUserInterface();
 
-	ClientCommunication getCommunication();
+	public abstract Game getGame();
 
-	void connectionEstablished(boolean pSuccessful);
+	public abstract void setGame(Game pGame);
 
-	void showUserInterface();
+	public abstract ClientCommunication getCommunication();
 
-	void dialogClosed(IDialog pDialog);
+	public abstract void connectionEstablished(boolean pSuccessful);
 
-	void startClient();
+	public abstract void showUserInterface();
 
-	void exitClient();
+	public abstract void dialogClosed(IDialog pDialog);
 
-	String getProperty(CommonProperty property);
+	public abstract void startClient();
 
-	String getProperty(String pProperty);
+	public abstract void exitClient();
 
-	void setProperty(CommonProperty pProperty, String pValue);
+	public abstract String getProperty(CommonProperty property);
 
-	void setProperty(String pProperty, String pValue);
+	public abstract String getProperty(String pProperty);
 
-	void saveUserSettings(boolean pUserinterfaceInit);
+	public abstract void setProperty(CommonProperty pProperty, String pValue);
 
-	void updateLocalPropertiesStore();
+	public abstract void setProperty(String pProperty, String pValue);
 
-	ClientState updateClientState();
+	public abstract void saveUserSettings(boolean pUserinterfaceInit);
 
-	ClientState getClientState();
+	public abstract void updateLocalPropertiesStore();
 
-	ClientCommandHandlerFactory getCommandHandlerFactory();
+	public abstract ClientState updateClientState();
 
-	ActionKeyBindings getActionKeyBindings();
+	public abstract ClientState getClientState();
 
-	ClientReplayer getReplayer();
+	public abstract ClientCommandHandlerFactory getCommandHandlerFactory();
 
-	void loadProperties() throws IOException;
+	public abstract ActionKeyBindings getActionKeyBindings();
 
-	List<CommonProperty> getLocallyStoredPropertyKeys();
+	public abstract ClientReplayer getReplayer();
 
-	void setLocallyStoredPropertyKeys(List<CommonProperty> properties);
+	public abstract void loadProperties() throws IOException;
 
-	ClientData getClientData();
+	public abstract List<CommonProperty> getLocallyStoredPropertyKeys();
 
-	ClientParameters getParameters();
+	public abstract void setLocallyStoredPropertyKeys(List<CommonProperty> properties);
 
-	ClientMode getMode();
+	public abstract ClientData getClientData();
 
-	void setMode(ClientMode pMode);
+	public abstract ClientParameters getParameters();
 
-	CommandEndpoint getCommandEndpoint();
+	public abstract ClientMode getMode();
 
-	FactoryManager getFactoryManager();
+	public abstract void setMode(ClientMode pMode);
 
-	IFactorySource getFactorySource();
+	public CommandEndpoint getCommandEndpoint() {
+		return fCommandEndpoint;
+	}
 
-	int getCurrentMouseButton();
+	public abstract FactoryManager getFactoryManager();
 
-	void setCurrentMouseButton(int currentMouseButton);
+	public abstract IFactorySource getFactorySource();
+
+	public abstract int getCurrentMouseButton();
+
+	public abstract void setCurrentMouseButton(int currentMouseButton);
+
+	public abstract int getServerPort();
+
+	public abstract InetAddress getServerHost() throws UnknownHostException;
+
+
+	protected boolean initConnection() {
+		boolean connectionEstablished = false;
+
+		try {
+
+			URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
+			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			container.setDefaultMaxSessionIdleTimeout(Integer.MAX_VALUE);
+			container.setDefaultMaxTextMessageBufferSize(64 * 1024);
+			fCommandEndpoint = new CommandEndpoint(this);
+			fSession = container.connectToServer(fCommandEndpoint, uri);
+			connectionEstablished = (fSession != null);
+
+		} catch (Exception pAnyException) {
+			pAnyException.printStackTrace();
+		}
+
+		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
+		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
+			int pingInterval = Integer.parseInt(pingIntervalProperty);
+			ClientPingTask fClientPingTask = new ClientPingTask(this);
+			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
+		}
+		return connectionEstablished;
+	}
+
+	protected void closeConnection() {
+		fPingTimer = null;
+		try {
+			fSession.close();
+			fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
+		} catch (Exception pAnyException) {
+			pAnyException.printStackTrace();
+		}
+		getCommunication().stop();
+	}
 }

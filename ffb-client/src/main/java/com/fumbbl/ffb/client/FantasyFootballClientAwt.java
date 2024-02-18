@@ -12,8 +12,6 @@ import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.net.ClientPingTask;
-import com.fumbbl.ffb.client.net.CommandEndpoint;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.ClientStateFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -22,14 +20,10 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.UIManager;
-import javax.websocket.ContainerProvider;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -46,11 +38,10 @@ import java.util.stream.Collectors;
 /**
  * @author Kalimar
  */
-public class FantasyFootballClientAwt implements FantasyFootballClient {
+public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private Game fGame;
 	private final UserInterface fUserInterface;
 	private final ClientCommunication fCommunication;
-	private Timer fPingTimer;
 	private Properties fProperties;
 	private ClientState fState;
 	private final ClientStateFactory fStateFactory;
@@ -60,8 +51,6 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 	private final ClientParameters fParameters;
 	private ClientMode fMode;
 
-	private Session fSession;
-	private CommandEndpoint fCommandEndpoint;
 
 	private final transient ClientData fClientData;
 
@@ -74,6 +63,8 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 	private final Preferences prefs;
 
 	public FantasyFootballClientAwt(ClientParameters pParameters) throws IOException {
+		super();
+
 		prefs = Preferences.userRoot().node("FfbUserSettings_" + pParameters.getCoach());
 
 		factoryManager = new FactoryManager();
@@ -107,13 +98,9 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 
-		fCommandEndpoint = new CommandEndpoint(this);
-
 		fCommunication = new ClientCommunication(this);
 		Thread fCommunicationThread = new Thread(fCommunication);
 		fCommunicationThread.start();
-
-		fPingTimer = new Timer(true);
 
 	}
 
@@ -162,28 +149,7 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 			throw new FantasyFootballException(pUnknownHostException);
 		}
 
-		boolean connectionEstablished = false;
-
-		try {
-
-			URI uri = new URI("ws", null, getServerHost().getCanonicalHostName(), getServerPort(), "/command", null, null);
-			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			container.setDefaultMaxSessionIdleTimeout(Integer.MAX_VALUE);
-			container.setDefaultMaxTextMessageBufferSize(64 * 1024);
-			fCommandEndpoint = new CommandEndpoint(this);
-			fSession = container.connectToServer(fCommandEndpoint, uri);
-			connectionEstablished = (fSession != null);
-
-		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
-		}
-
-		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
-		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
-			int pingInterval = Integer.parseInt(pingIntervalProperty);
-			ClientPingTask fClientPingTask = new ClientPingTask(this);
-			fPingTimer.schedule(fClientPingTask, 0, pingInterval);
-		}
+		boolean connectionEstablished = initConnection();
 
 		getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
 
@@ -192,14 +158,7 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 	}
 
 	public void exitClient() {
-		fPingTimer = null;
-		try {
-			fSession.close();
-			fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
-		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
-		}
-		getCommunication().stop();
+		closeConnection();
 		getUserInterface().setVisible(false);
 		System.exit(0);
 	}
@@ -370,9 +329,6 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		fMode = pMode;
 	}
 
-	public CommandEndpoint getCommandEndpoint() {
-		return fCommandEndpoint;
-	}
 
 	public FactoryManager getFactoryManager() {
 		return factoryManager;
