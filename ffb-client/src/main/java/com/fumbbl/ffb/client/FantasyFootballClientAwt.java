@@ -10,10 +10,7 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.ClientState;
-import com.fumbbl.ffb.client.state.ClientStateFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
@@ -43,9 +40,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final UserInterface fUserInterface;
 	private final ClientCommunication fCommunication;
 	private Properties fProperties;
-	private ClientState fState;
-	private final ClientStateFactory fStateFactory;
-	private final ClientCommandHandlerFactory fCommandHandlerFactory;
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
 	private final ClientParameters fParameters;
@@ -60,12 +54,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	private transient int currentMouseButton;
 
-	private final Preferences prefs;
+	private Preferences prefs;
 
 	public FantasyFootballClientAwt(ClientParameters pParameters) throws IOException {
-		super();
-
-		prefs = Preferences.userRoot().node("FfbUserSettings_" + pParameters.getCoach());
+		super(pParameters.getCoach());
 
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
@@ -74,9 +66,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setMode(fParameters.getMode());
 
 		fClientData = new ClientData();
-
-		loadProperties();
-		loadLocallyStoredProperties();
 
 		fActionKeyBindings = new ActionKeyBindings(this);
 
@@ -89,8 +78,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		}
 
 		setGame(new Game(getFactorySource(), factoryManager));
-		fStateFactory = new ClientStateFactory(this);
-		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
 		fReplayer = new ClientReplayer(this);
 
@@ -140,23 +127,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		pDialog.hideDialog();
 	}
 
-	public void startClient() {
-
-		getUserInterface().getStatusReport().reportVersion();
-		try {
-			getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
-		} catch (UnknownHostException pUnknownHostException) {
-			throw new FantasyFootballException(pUnknownHostException);
-		}
-
-		boolean connectionEstablished = initConnection();
-
-		getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
-
-		updateClientState();
-
-	}
-
 	public void exitClient() {
 		closeConnection();
 		getUserInterface().setVisible(false);
@@ -182,23 +152,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fProperties.setProperty(pProperty, pValue);
 	}
 
-	public void saveUserSettings(boolean pUserinterfaceInit) {
-		List<CommonProperty> localProperties = getLocallyStoredPropertyKeys();
-
-		List<CommonProperty> remoteProperties = Arrays.stream(CommonProperty._SAVED_USER_SETTINGS)
-			.filter(property -> !localProperties.contains(property)).collect(Collectors.toList());
-
-		String[] settingValues = new String[remoteProperties.size()];
-		for (int i = 0; i < remoteProperties.size(); i++) {
-			settingValues[i] = getProperty(remoteProperties.get(i));
-		}
-		getCommunication().sendUserSettings(remoteProperties.toArray(new CommonProperty[0]), settingValues);
-
-		updateLocalPropertiesStore();
-
-		if (pUserinterfaceInit) {
-			getUserInterface().init(getGame().getOptions());
-		}
+	protected void initUI() {
+		getUserInterface().init(getGame().getOptions());
 	}
 
 	public void updateLocalPropertiesStore() {
@@ -215,30 +170,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		} catch (BackingStoreException e) {
 			logError(0, "Could not update locally stored properties: " + e.getMessage());
 		}
-	}
-
-	public ClientState updateClientState() {
-		ClientState newState = fStateFactory.getStateForGame();
-		if ((newState != null) && (newState != fState)) {
-			if (fState != null) {
-				fState.leaveState();
-			}
-			fState = newState;
-			if (Boolean.parseBoolean(getProperty(CommonProperty.CLIENT_DEBUG_STATE))) {
-				getCommunication().sendDebugClientState(fState.getId());
-			}
-			getUserInterface().getGameMenuBar().changeState(fState.getId());
-			fState.enterState();
-		}
-		return fState;
-	}
-
-	public ClientState getClientState() {
-		return fState;
-	}
-
-	public ClientCommandHandlerFactory getCommandHandlerFactory() {
-		return fCommandHandlerFactory;
 	}
 
 	public static void main(String[] args) {
@@ -288,8 +219,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setProperty(CommonProperty.SETTING_LOCAL_SETTINGS, properties.stream().map(CommonProperty::getKey).collect(Collectors.joining(",")));
 	}
 
-	public void loadLocallyStoredProperties() {
+	@Override
+	public void loadLocallyStoredProperties(String coach) {
 		try {
+			prefs = Preferences.userRoot().node("FfbUserSettings_" + coach);
 			Arrays.stream(prefs.keys()).map(CommonProperty::forKey)
 				.filter(Objects::nonNull)
 				.forEach(property -> setProperty(property, prefs.get(property.getKey(), "")));
@@ -378,5 +311,20 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	public void setCurrentMouseButton(int currentMouseButton) {
 		this.currentMouseButton = currentMouseButton;
+	}
+
+	@Override
+	protected void postConnect(boolean connectionEstablished) {
+		getUserInterface().getStatusReport().reportConnectionEstablished(connectionEstablished);
+	}
+
+	@Override
+	protected void preConnect() {
+		getUserInterface().getStatusReport().reportVersion();
+		try {
+			getUserInterface().getStatusReport().reportConnecting(getServerHost(), getServerPort());
+		} catch (UnknownHostException pUnknownHostException) {
+			throw new FantasyFootballException(pUnknownHostException);
+		}
 	}
 }
