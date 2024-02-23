@@ -141,7 +141,6 @@ public class UtilClientStateBlocking {
 		boolean handled = false;
 		Game game = pClientState.getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		// rooted players can not move but still spend movement for the blitz action

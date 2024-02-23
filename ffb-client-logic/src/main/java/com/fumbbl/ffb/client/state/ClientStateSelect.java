@@ -475,7 +475,6 @@ public class ClientStateSelect extends ClientState {
 
 	private boolean isMultiBlockActionAvailable(Player<?> pPlayer) {
 		Game game = getClient().getGame();
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& playerState.isActive()
