@@ -164,7 +164,11 @@ public class DimensionProvider {
 		AffineTransformOp scaleOp =
 			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 
-		scaledImage = scaleOp.filter(pImage, scaledImage);
+		try {
+			scaledImage = scaleOp.filter(pImage, scaledImage);
+		} catch (Exception e) {
+			// ignore
+		}
 		return scaledImage;
 	}
 

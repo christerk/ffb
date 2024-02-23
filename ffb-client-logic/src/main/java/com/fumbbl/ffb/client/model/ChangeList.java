@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.25.1")
 			.addBugfix("Special actions like stab or chainsaw were not available during the blitz action of a Blitz! kick-off event, for details see comments here:  https://fumbbl.com/p/bugs?id/4093")
 			.addBugfix("When bloodlusting passes and hand offs to empty squares or opposing players were not performed even after having fed")
+			.addBugfix("Some pitch images cause errors when trying to rescale them (happens when the client size is set to something other than 100%) which led to the client not rendering any more. These errors are no ignored and images shown unscaled")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
