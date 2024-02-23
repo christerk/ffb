@@ -13,6 +13,7 @@ public class ChangeList {
   public ChangeList() {
 
 		versions.add(new VersionChangeList("2.25.1")
+			.addBugfix("Special actions like stab or chainsaw were not available during the blitz action of a Blitz! kick-off event, for details see comments here:  https://fumbbl.com/p/bugs?id/4093")
 
 		);
 

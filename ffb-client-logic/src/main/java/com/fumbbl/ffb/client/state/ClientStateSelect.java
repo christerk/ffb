@@ -479,7 +479,6 @@ public class ClientStateSelect extends ClientState {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& playerState.isActive()
-			&& mechanic.areSpecialBlockActionsAllowed(game.getTurnMode())
 			&& ((UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
 			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce))
 			|| (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)

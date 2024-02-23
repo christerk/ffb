@@ -70,8 +70,6 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isKickTeamMateActionAllowed(TurnMode turnMode);
 
-	public abstract boolean areSpecialBlockActionsAllowed(TurnMode turnMode);
-
 	public abstract boolean allowsCancellingGuard(TurnMode turnMode);
 
 	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
