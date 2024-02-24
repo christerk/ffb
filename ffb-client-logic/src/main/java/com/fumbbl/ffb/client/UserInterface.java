@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.client.dialog.DialogHandler;
+import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -379,8 +381,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	public void windowClosing(WindowEvent pE) {
-		DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
-		leaveGameQuestion.showDialog(this);
+		DialogHandler dialogHandler = getDialogManager().getDialogHandler();
+		if (dialogHandler != null && dialogHandler.preventsExit()) {
+			new DialogInformation(getClient(), "Can't leave game",
+				new String[]{"The game is not finished.", "You and your opponent have to close the current dialog first"},
+				DialogInformation.OK_DIALOG, true).showDialog(this);
+		} else {
+			DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
+			leaveGameQuestion.showDialog(this);
+		}
 	}
 
 	public void windowActivated(WindowEvent pE) {
