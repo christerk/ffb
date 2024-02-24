@@ -162,6 +162,9 @@ public class UtilServerStartGame {
 				UtilServerTimer.startTurnTimer(gameState, System.currentTimeMillis());
 			}
 
+			server.getCommunication().sendGameState(gameState);
+			gameState.fetchChanges(); // clear changes after sending the whole model
+
 			MarkerLoadingService loadingService = new MarkerLoadingService();
 
 			IDbStatementFactory statementFactory = server.getDbQueryFactory();
@@ -175,9 +178,6 @@ public class UtilServerStartGame {
 			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
 			loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 			loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto);
-
-			server.getCommunication().sendGameState(gameState);
-			gameState.fetchChanges(); // clear changes after sending the whole model
 		}
 	}
 
