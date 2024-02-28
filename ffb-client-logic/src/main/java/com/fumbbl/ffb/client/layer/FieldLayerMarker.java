@@ -5,12 +5,12 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -24,8 +24,6 @@ import java.util.Map;
  * @author Kalimar
  */
 public class FieldLayerMarker extends FieldLayer {
-
-	public static final Color COLOR_MARKER = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
@@ -41,9 +39,10 @@ public class FieldLayerMarker extends FieldLayer {
 	public void drawFieldMarker(FieldMarker pFieldMarker, boolean draw) {
 		if ((pFieldMarker != null) && StringTool.isProvided(pFieldMarker.getHomeText())
 			&& draw) {
+			StyleProvider styleProvider = getClient().getUserInterface().getStyleProvider();
 			removeFieldMarker(pFieldMarker);
 			Graphics2D g2d = getImage().createGraphics();
-			g2d.setColor(COLOR_MARKER);
+			g2d.setColor(styleProvider.getFieldMarker());
 			if (pFieldMarker.getHomeText().length() < 2) {
 				g2d.setFont(fontCache.font(Font.BOLD, 16));
 			} else {
