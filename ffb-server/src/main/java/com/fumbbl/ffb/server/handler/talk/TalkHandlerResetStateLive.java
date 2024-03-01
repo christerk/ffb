@@ -35,6 +35,7 @@ public class TalkHandlerResetStateLive extends TalkHandler {
 		Select generator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 
 		generator.pushSequence(new Select.SequenceParams(gameState, true));
+		gameState.startNextStep();
 
 		game.setTurnMode(TurnMode.REGULAR);
 		game.setLastTurnMode(null);

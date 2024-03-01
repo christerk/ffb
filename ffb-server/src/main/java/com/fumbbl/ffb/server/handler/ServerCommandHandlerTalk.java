@@ -81,7 +81,6 @@ public class ServerCommandHandlerTalk extends ServerCommandHandler {
 				} else if (sessionMode == SessionMode.DEV && ServerCommandTalk.Mode.DEV.findIndicator(talk)) {
 					mode = ServerCommandTalk.Mode.DEV;
 				}
-
 				getServer().getCommunication().sendSpectatorTalk(gameState, coach, talk, mode);
 			}
 

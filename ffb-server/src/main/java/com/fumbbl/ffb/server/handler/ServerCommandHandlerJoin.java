@@ -17,7 +17,7 @@ import com.fumbbl.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestCheckAuthorization;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * 
@@ -57,7 +57,7 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
 				if (joinCommand.getPassword().equals(password)) {
 					InternalServerCommandJoinApproved joinApprovedCommand = new InternalServerCommandJoinApproved(
 						joinCommand.getGameId(), joinCommand.getGameName(), joinCommand.getCoach(), joinCommand.getTeamId(),
-						joinCommand.getClientMode(), Collections.singletonList("DEV"));
+						joinCommand.getClientMode(), Arrays.asList("DEV", "STATE_EDIT"));
 					ReceivedCommand receivedJoinApproved = new ReceivedCommand(joinApprovedCommand,
 						pReceivedCommand.getSession());
 					communication.handleCommand(receivedJoinApproved);
