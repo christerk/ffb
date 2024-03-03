@@ -302,9 +302,13 @@ public class FantasyFootballServer implements IFactorySource {
 		return fProperties.getProperty(pProperty);
 	}
 
-	public String[] getProperties() {
+	public String[] getPropertyKeys() {
 		//noinspection SuspiciousToArrayCall
 		return fProperties.keySet().toArray(new String[0]);
+	}
+
+	public Properties getProperties() {
+		return fProperties;
 	}
 
 	public DbUpdater getDbUpdater() {

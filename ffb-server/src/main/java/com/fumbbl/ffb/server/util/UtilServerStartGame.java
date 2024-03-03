@@ -101,7 +101,7 @@ public class UtilServerStartGame {
 		List<CommonProperty> settingNames = new ArrayList<>();
 		List<String> settingValues = new ArrayList<>();
 		// always send any client settings defined in server.ini
-		for (String serverProperty : server.getProperties()) {
+		for (String serverProperty : server.getPropertyKeys()) {
 			if (serverProperty.startsWith("client.")) {
 				settingNames.add(CommonProperty.forKey(serverProperty));
 				settingValues.add(server.getProperty(serverProperty));

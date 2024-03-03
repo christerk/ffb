@@ -6,7 +6,7 @@ import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandDeleteGame;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandReplayLoaded;
@@ -58,7 +58,7 @@ public class ServerRequestLoadReplay extends ServerRequest {
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		GameState gameState = null;
 		try {
-			String loadUrl = StringTool.bind(server.getProperty(IServerProperty.BACKUP_URL_LOAD), getGameId());
+			String loadUrl = StringTool.bind(ServerUrlProperty.BACKUP_URL_LOAD.url(server.getProperties()), getGameId());
 			String jsonString = UtilServerHttpClient.fetchPage(loadUrl);
 			if (StringTool.isProvided(jsonString)) {
 				JsonValue jsonValue = JsonValue.readFrom(jsonString);

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.admin;
 
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.commandline.InifileParamFilter;
 import com.fumbbl.ffb.server.commandline.InifileParamFilterResult;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
@@ -49,7 +50,7 @@ public class GameStateConnector {
 				serverProperties.load(in);
 			}
 
-			String adminChallengeUrl = serverProperties.getProperty(IServerProperty.GAMESTATE_URL_CHALLENGE);
+			String adminChallengeUrl = ServerUrlProperty.GAMESTATE_URL_CHALLENGE.url(serverProperties);
 			System.out.println(adminChallengeUrl);
 			String adminChallengeXml = UtilServerHttpClient.fetchPage(adminChallengeUrl);
 			System.out.println(adminChallengeXml);
@@ -71,25 +72,25 @@ public class GameStateConnector {
 			String response = PasswordChallenge.createResponse(challenge, md5Password);
 
 			if (GameStateServlet.BEHAVIOURS.equals(args[0])) {
-				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_BEHAVIORS),
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_BEHAVIORS.url(serverProperties),
 					response, args[1]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.GET.equals(args[0])) {
-				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_GET),
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_GET.url(serverProperties),
 					response, args[1], args[2], args[3]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.SET.equals(args[0])) {
-				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_SET),
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_SET.url(serverProperties),
 					response);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.post(url, new File(args[1]));
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.RESULT.equals(args[0])) {
-				String url = StringTool.bind(serverProperties.getProperty(IServerProperty.GAMESTATE_URL_RESULT),
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_RESULT.url(serverProperties),
 					response, args[1], args[2]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);

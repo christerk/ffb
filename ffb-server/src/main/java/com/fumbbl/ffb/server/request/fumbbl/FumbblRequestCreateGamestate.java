@@ -5,7 +5,7 @@ import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandFumbblGameCreated;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
@@ -17,7 +17,7 @@ import com.fumbbl.ffb.util.StringTool;
  */
 public class FumbblRequestCreateGamestate extends ServerRequest {
 
-	private GameState fGameState;
+	private final GameState fGameState;
 
 	public FumbblRequestCreateGamestate(GameState pGameState) {
 		fGameState = pGameState;
@@ -33,7 +33,7 @@ public class FumbblRequestCreateGamestate extends ServerRequest {
 		String challengeResponse = UtilFumbblRequest.getFumbblAuthChallengeResponseForFumbblUser(server);
 		Game game = getGameState().getGame();
 		if (!game.isTesting()) {
-			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_CREATE),
+			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_GAMESTATE_CREATE.url(server.getProperties()),
 					new Object[] { challengeResponse, game.getId(), game.getTeamHome().getId(), game.getTeamAway().getId() }));
 			server.getDebugLog().log(IServerLogLevel.INFO, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());

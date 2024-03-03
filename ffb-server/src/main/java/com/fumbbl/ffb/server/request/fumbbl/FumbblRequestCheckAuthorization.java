@@ -6,7 +6,7 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandJoinApproved;
 import com.fumbbl.ffb.server.request.ServerRequest;
@@ -83,12 +83,12 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 	@Override
 	public void process(ServerRequestProcessor pRequestProcessor) {
 		boolean passwordOk = false;
-		List<String> accountProperties = new ArrayList<String>();
+		List<String> accountProperties = new ArrayList<>();
 
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		try {
 			if (getCoach() != null && getPassword() != null) {
-				setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_RESPONSE),
+				setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_AUTH_RESPONSE.url(server.getProperties()),
 					new String[]{URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING),
 						URLEncoder.encode(getPassword(), UtilFumbblRequest.CHARACTER_ENCODING)}));
 				server.getDebugLog().log(IServerLogLevel.DEBUG, getGameId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
@@ -105,8 +105,10 @@ public class FumbblRequestCheckAuthorization extends ServerRequest {
 							}
 						}
 						passwordOk = (StringTool.isProvided(response) && response.startsWith("OK"));
-						String[] segments = response.split(" ");
-						accountProperties = Arrays.stream(segments).skip(1).collect(Collectors.toList());
+						if (response != null) {
+							String[] segments = response.split(" ");
+							accountProperties = Arrays.stream(segments).skip(1).collect(Collectors.toList());
+						}
 					}
 				}
 			}

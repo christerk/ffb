@@ -8,7 +8,7 @@ import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.server.request.ServerRequestSaveReplay;
@@ -57,7 +57,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
 		FumbblResult fumbblResult = new FumbblResult(getGameState().getGame());
 		String resultXml = fumbblResult.toXml(true);
 		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), resultXml);
-		setRequestUrl(server.getProperty(IServerProperty.FUMBBL_RESULT));
+		setRequestUrl(ServerUrlProperty.FUMBBL_RESULT.url(server.getProperties()));
 		server.getDebugLog().log(IServerLogLevel.DEBUG, getGameState().getGame().getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 		try {
 
@@ -66,7 +66,7 @@ public class FumbblRequestUploadResults extends ServerRequest {
 
 			if (StringTool.isProvided(responseXml)) {
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
-					String line = null;
+					String line;
 					while ((line = xmlReader.readLine()) != null) {
 						Matcher resultMatcher = _PATTERN_RESULT.matcher(line);
 						if (resultMatcher.find()) {

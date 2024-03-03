@@ -4,7 +4,7 @@ import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
@@ -46,7 +46,7 @@ public class FumbblRequestPasswordChallenge extends ServerRequest {
 		String challenge = null;
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		try {
-			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE),
+			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_AUTH_CHALLENGE.url(server.getProperties()),
 				URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
 			server.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, getRequestUrl());
 			String responseXml = UtilServerHttpClient.fetchPage(getRequestUrl());
