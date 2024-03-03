@@ -39,22 +39,22 @@ public enum ServerUrlProperty {
 	BACKUP_URL_SAVE("backup.url.save"),
 
 
-	FUMBBL_AUTH_CHALLENGE(FUMBBL_BASE, null, "fumbbl.auth.challenge"),
-	FUMBBL_AUTH_RESPONSE(FUMBBL_BASE, null, "fumbbl.auth.response"),
-	FUMBBL_TEAMS(FUMBBL_BASE, null, "fumbbl.teams"),
-	FUMBBL_TEAM(FUMBBL_BASE, null, "fumbbl.team"),
-	FUMBBL_ROSTER(FUMBBL_BASE, null, "fumbbl.roster"),
-	FUMBBL_ROSTER_TEAM(FUMBBL_BASE, null, "fumbbl.roster.team"),
-	FUMBBL_GAMESTATE_CHECK(FUMBBL_BASE, null, "fumbbl.gamestate.check"),
-	FUMBBL_GAMESTATE_CREATE(FUMBBL_BASE, null, "fumbbl.gamestate.create"),
-	FUMBBL_GAMESTATE_RESUME(FUMBBL_BASE, null, "fumbbl.gamestate.resume"),
-	FUMBBL_GAMESTATE_UPDATE(FUMBBL_BASE, null, "fumbbl.gamestate.update"),
-	FUMBBL_GAMESTATE_REMOVE(FUMBBL_BASE, null, "fumbbl.gamestate.remove"),
-	FUMBBL_GAMESTATE_OPTIONS(FUMBBL_BASE, null, "fumbbl.gamestate.options"),
-	FUMBBL_RESULT(FUMBBL_BASE, null, "fumbbl.result"),
-	FUMBBL_TALK(FUMBBL_BASE, null, "fumbbl.talk"),
-	FUMBBL_NAMEGENERATOR_BASE(FUMBBL_BASE, null, "fumbbl.namegenerator.base"),
-	FUMBBL_PLAYER_MARKINGS(FUMBBL_BASE, null, "fumbbl.playermarkings");
+	FUMBBL_AUTH_CHALLENGE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.auth.challenge"),
+	FUMBBL_AUTH_RESPONSE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.auth.response"),
+	FUMBBL_TEAMS(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.teams"),
+	FUMBBL_TEAM(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.team"),
+	FUMBBL_ROSTER(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.roster"),
+	FUMBBL_ROSTER_TEAM(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.roster.team"),
+	FUMBBL_GAMESTATE_CHECK(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.check"),
+	FUMBBL_GAMESTATE_CREATE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.create"),
+	FUMBBL_GAMESTATE_RESUME(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.resume"),
+	FUMBBL_GAMESTATE_UPDATE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.update"),
+	FUMBBL_GAMESTATE_REMOVE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.remove"),
+	FUMBBL_GAMESTATE_OPTIONS(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.gamestate.options"),
+	FUMBBL_RESULT(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.result"),
+	FUMBBL_TALK(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.talk"),
+	FUMBBL_NAMEGENERATOR_BASE(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.namegenerator.base"),
+	FUMBBL_PLAYER_MARKINGS(FUMBBL_BASE, FUMBBL_PORT, "fumbbl.playermarkings");
 
 	private final String baseKey;
 	private final String portKey;
