@@ -12,6 +12,7 @@ import com.fumbbl.ffb.util.StringTool;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.security.NoSuchAlgorithmException;
@@ -48,6 +49,13 @@ public class GameStateConnector {
 			Properties serverProperties = new Properties();
 			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(GameStateConnector.class.getResourceAsStream("/" + filterResult.getIniFileName())))) {
 				serverProperties.load(in);
+			}
+
+			if (StringTool.isProvided(filterResult.getOverrideFileName())) {
+				try (FileInputStream fileInputStream = new FileInputStream(filterResult.getOverrideFileName());
+						 BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+					serverProperties.load(propertyInputStream);
+				}
 			}
 
 			String adminChallengeUrl = ServerUrlProperty.GAMESTATE_URL_CHALLENGE.url(serverProperties);

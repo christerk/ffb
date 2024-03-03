@@ -11,6 +11,7 @@ import com.fumbbl.ffb.util.StringTool;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
@@ -63,6 +64,13 @@ public class AdminConnector {
 			Properties serverProperties = new Properties();
 			try (BufferedInputStream in = new BufferedInputStream(Objects.requireNonNull(AdminConnector.class.getResourceAsStream("/" + filterResult.getIniFileName())))) {
 				serverProperties.load(in);
+			}
+
+			if (StringTool.isProvided(filterResult.getOverrideFileName())) {
+				try (FileInputStream fileInputStream = new FileInputStream(filterResult.getOverrideFileName());
+						 BufferedInputStream propertyInputStream = new BufferedInputStream(fileInputStream)) {
+					serverProperties.load(propertyInputStream);
+				}
 			}
 
 			String adminChallengeUrl = ServerUrlProperty.ADMIN_URL_CHALLENGE.url(serverProperties);
