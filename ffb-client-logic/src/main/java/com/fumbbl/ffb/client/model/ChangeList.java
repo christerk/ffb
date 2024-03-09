@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Internal reordering of requests to hopefully make auto marking work consistently at start up")
 			.addFeature("Added options to change colors for field marker and player marker (home and away separately)")
 			.addBugfix("Chat command dialog did not scale nicely")
+			.addFeature("Catch of the Day")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

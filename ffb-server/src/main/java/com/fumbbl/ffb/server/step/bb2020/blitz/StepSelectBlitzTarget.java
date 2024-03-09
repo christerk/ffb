@@ -38,6 +38,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
+import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Sequence;
@@ -133,6 +134,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 							BlackInk generator = (BlackInk) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.BlackInk.name());
 							generator.pushSequence(new BlackInk.SequenceParams(getGameState(), gotoLabelOnEnd, playerState));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGetBallOnGround)) {
+							getGameState().pushCurrentStepOnStack();
+							CatchOfTheDay generator = (CatchOfTheDay) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.CatchOfTheDay.name());
+							generator.pushSequence(new CatchOfTheDay.SequenceParams(getGameState(), gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							usedSkill = commandUseSkill.getSkill();

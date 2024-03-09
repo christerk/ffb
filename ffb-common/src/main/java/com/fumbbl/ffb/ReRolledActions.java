@@ -7,7 +7,7 @@ import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
-import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
+import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -27,7 +27,6 @@ public class ReRolledActions {
 	public static final ReRolledAction BLOCK = new ReRolledAction("Block");
 	public static final ReRolledAction REALLY_STUPID = new ReRolledAction("Really Stupid");
 	public static final ReRolledAction BONE_HEAD = new ReRolledAction("Bone Head");
-	public static final ReRolledAction BONEHEAD = new ReRolledAction("Bone-Head");
 	public static final ReRolledAction WILD_ANIMAL = new ReRolledAction(WildAnimal.class);
 	public static final ReRolledAction ANIMAL_SAVAGERY = new ReRolledAction(AnimalSavagery.class);
 	public static final ReRolledAction TAKE_ROOT = new ReRolledAction("Take Root");
@@ -49,7 +48,6 @@ public class ReRolledActions {
 	public static final ReRolledAction BLOOD_LUST = new ReRolledAction("Bloodlust");
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction("Hypnotic Gaze");
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
-	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
 	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction(ProjectileVomit.class);
 	public static final ReRolledAction TRAP_DOOR = new ReRolledAction("Trapdoor");
 	public static final ReRolledAction ARGUE_THE_CALL = new ReRolledAction("Argue the Call");
@@ -60,6 +58,7 @@ public class ReRolledActions {
 	public static final ReRolledAction BALEFUL_HEX = new ReRolledAction("Baleful Hex");
 	public static final ReRolledAction SINGLE_DIE = new ReRolledAction("Single Die");
 	public static final ReRolledAction ALL_YOU_CAN_EAT = new ReRolledAction("All You Can Eat");
+	public static final ReRolledAction CATCH_OF_THE_DAY = new ReRolledAction(CatchOfTheDay.class);
 
 	private final Map<String, ReRolledAction> values;
 

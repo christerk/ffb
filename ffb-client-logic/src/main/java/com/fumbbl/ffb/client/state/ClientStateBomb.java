@@ -164,7 +164,7 @@ public class ClientStateBomb extends ClientState {
 		}
 
 		if (isEndTurnActionAvailable()) {
-			addEndActionLabel(iconCache, menuItemList, actingPlayer);
+			addEndActionLabel(iconCache, menuItemList);
 		}
 
 		if (isTreacherousAvailable(actingPlayer)) {
@@ -184,6 +184,9 @@ public class ClientStateBomb extends ClientState {
 		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
@@ -255,6 +258,12 @@ public class ClientStateBomb extends ClientState {
 					communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
 				}
 				break;
+			case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
+				if (isCatchOfTheDayAvailable(actingPlayer)) {
+					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+					communication.sendUseSkill(skill, true, pPlayer.getId());
+				}
+				break;
 			default:
 				break;
 		}
@@ -292,6 +301,9 @@ public class ClientStateBomb extends ClientState {
 				return true;
 			case PLAYER_ACTION_BLACK_INK:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+				return true;
+			case PLAYER_ACTION_CATCH_OF_THE_DAY:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

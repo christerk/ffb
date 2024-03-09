@@ -63,6 +63,7 @@ public class NamedProperties {
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canGazeAutomatically = new NamedProperty("Can Gaze Automatically");
+	public static final ISkillProperty canGetBallOnGround = new NamedProperty("Can Get Ball On Ground");
 	public static final ISkillProperty canGrantReRollAfterTouchdown = new NamedProperty("Can Grant Re-Roll After Touchdown");
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");

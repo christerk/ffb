@@ -91,6 +91,16 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_TREACHEROUS, playerActions, ActionKey.PLAYER_ACTION_TREACHEROUS);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_WISDOM, playerActions, ActionKey.PLAYER_ACTION_WISDOM);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BEER_BARREL_BASH, playerActions, ActionKey.PLAYER_ACTION_BEER_BARREL_BASH);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_CATCH_OF_THE_DAY, playerActions, ActionKey.PLAYER_ACTION_CATCH_OF_THE_DAY);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_RAIDING_PARTY, playerActions, ActionKey.PLAYER_ACTION_RAIDING_PARTY);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_LOOK_INTO_MY_EYES, playerActions, ActionKey.PLAYER_ACTION_LOOK_INTO_MY_EYES);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BALEFUL_HEX, playerActions, ActionKey.PLAYER_ACTION_BALEFUL_HEX);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_HIT_AND_RUN, playerActions, ActionKey.PLAYER_ACTION_HIT_AND_RUN);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_ALL_YOU_CAN_EAT, playerActions, ActionKey.PLAYER_ACTION_ALL_YOU_CAN_EAT);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_KICK_EM_BLOCK, playerActions, ActionKey.PLAYER_ACTION_KICK_EM_BLOCK);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_KICK_EM_BLITZ, playerActions, ActionKey.PLAYER_ACTION_KICK_EM_BLITZ);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_GORED, playerActions, ActionKey.PLAYER_ACTION_GORED);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BLACK_INK, playerActions, ActionKey.PLAYER_ACTION_BLACK_INK);
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 

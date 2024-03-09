@@ -171,6 +171,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_BLACK_INK:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
 					return true;
+				case PLAYER_ACTION_CATCH_OF_THE_DAY:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+					return true;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -198,7 +201,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					selectedPlayers.keySet().forEach(id -> communication.sendUnsetBlockTarget(id));
+					selectedPlayers.keySet().forEach(communication::sendUnsetBlockTarget);
 					selectedPlayers.clear();
 					communication.sendActingPlayer(null, null, false);
 					break;
@@ -243,6 +246,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 						communication.sendUseSkill(blackInkSkill, true, player.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
+					if (isCatchOfTheDayAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -263,7 +272,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
-		addEndActionLabel(iconCache, menuItemList, actingPlayer);
+		addEndActionLabel(iconCache, menuItemList);
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
@@ -281,6 +290,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
