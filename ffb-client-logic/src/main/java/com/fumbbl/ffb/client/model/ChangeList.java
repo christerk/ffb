@@ -21,6 +21,8 @@ public class ChangeList {
 			.addFeature("Added options to change colors for field marker and player marker (home and away separately)")
 			.addBugfix("Chat command dialog did not scale nicely")
 			.addImprovement("Change Shootout dialog to use explicit close button")
+			.addBugfix("Surfing your own ball carrier did not result in a turnover")
+			.addBugfix("Surfing your team mate with fan interaction did generate spp")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
