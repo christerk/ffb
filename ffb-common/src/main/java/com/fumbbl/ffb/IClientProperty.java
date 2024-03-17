@@ -53,6 +53,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_KICK_EM_BLITZ = "key.player.action.kickEmBlitz";
 	String KEY_PLAYER_ACTION_GORED = "key.player.action.goredByTheBull";
 	String KEY_PLAYER_ACTION_BLACK_INK = "key.player.action.blackInk";
+	String KEY_PLAYER_ACTION_CATCH_OF_THE_DAY = "key.player.action.catchOfTheDay";
 
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";

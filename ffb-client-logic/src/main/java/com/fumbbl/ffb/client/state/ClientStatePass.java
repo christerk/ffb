@@ -254,7 +254,7 @@ public class ClientStatePass extends ClientStateMove {
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		addEndActionLabel(iconCache, menuItemList, actingPlayer);
+		addEndActionLabel(iconCache, menuItemList);
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());

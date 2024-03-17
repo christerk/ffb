@@ -143,6 +143,7 @@ public class ClientStateMove extends ClientState {
 			|| isBalefulHexAvailable(actingPlayer)
 			|| isPutridRegurgitationAvailable()
 			|| isGoredAvailable()
+			|| isCatchOfTheDayAvailable(actingPlayer)
 			|| isBlackInkAvailable(actingPlayer);
 	}
 
@@ -277,6 +278,12 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
+					if (isCatchOfTheDayAvailable(actingPlayer)) {
+						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -346,7 +353,7 @@ public class ClientStateMove extends ClientState {
 			menuItemList.add(fumblerooskieAction);
 		}
 		if (isEndPlayerActionAvailable()) {
-			addEndActionLabel(iconCache, menuItemList, actingPlayer);
+			addEndActionLabel(iconCache, menuItemList);
 		}
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
@@ -371,6 +378,9 @@ public class ClientStateMove extends ClientState {
 		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
@@ -445,6 +455,9 @@ public class ClientStateMove extends ClientState {
 					return true;
 				case PLAYER_ACTION_BLACK_INK:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+					return true;
+				case PLAYER_ACTION_CATCH_OF_THE_DAY:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 					return true;
 				default:
 					actionHandled = false;

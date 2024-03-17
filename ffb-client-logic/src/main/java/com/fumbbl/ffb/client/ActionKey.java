@@ -52,7 +52,7 @@ public enum ActionKey {
 	PLAYER_ACTION_KICK_EM_BLITZ(IClientProperty.KEY_PLAYER_ACTION_KICK_EM_BLITZ),
 	PLAYER_ACTION_GORED(IClientProperty.KEY_PLAYER_ACTION_GORED),
 	PLAYER_ACTION_BLACK_INK(IClientProperty.KEY_PLAYER_ACTION_BLACK_INK),
-
+	PLAYER_ACTION_CATCH_OF_THE_DAY(IClientProperty.KEY_PLAYER_ACTION_CATCH_OF_THE_DAY),
 	TOOLBAR_TURN_END(IClientProperty.KEY_TOOLBAR_TURN_END),
 	TOOLBAR_ILLEGAL_PROCEDURE(IClientProperty.KEY_TOOLBAR_ILLEGAL_PROCEDURE),
 
@@ -64,14 +64,12 @@ public enum ActionKey {
 	MENU_SETUP_LOAD(IClientProperty.KEY_MENU_SETUP_LOAD), MENU_SETUP_SAVE(IClientProperty.KEY_MENU_SETUP_SAVE),
 	MENU_REPLAY(IClientProperty.KEY_MENU_REPLAY);
 
+	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private final String fPropertyName;
 
 	ActionKey(String pPropertyName) {
 		fPropertyName = pPropertyName;
 	}
 
-	public String getPropertyName() {
-		return fPropertyName;
-	}
 
 }

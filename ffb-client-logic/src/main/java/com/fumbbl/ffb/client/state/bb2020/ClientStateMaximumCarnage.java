@@ -72,7 +72,7 @@ public class ClientStateMaximumCarnage extends ClientState {
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		addEndActionLabel(iconCache, menuItemList, actingPlayer);
+		addEndActionLabel(iconCache, menuItemList);
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}

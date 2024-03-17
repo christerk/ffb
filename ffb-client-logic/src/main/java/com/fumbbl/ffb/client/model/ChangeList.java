@@ -23,6 +23,7 @@ public class ChangeList {
 			.addImprovement("Change Shootout dialog to use explicit close button")
 			.addBugfix("Surfing your own ball carrier did not result in a turnover")
 			.addBugfix("Surfing your team mate with fan interaction did generate spp")
+			.addFeature("Catch of the Day")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

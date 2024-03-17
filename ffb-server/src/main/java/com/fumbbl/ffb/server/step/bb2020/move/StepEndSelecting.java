@@ -30,6 +30,7 @@ import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
 import com.fumbbl.ffb.server.step.generator.BlitzMove;
 import com.fumbbl.ffb.server.step.generator.Block;
+import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
@@ -411,6 +412,12 @@ public final class StepEndSelecting extends AbstractStep {
 				BlackInk.SequenceParams blackInkParams = new BlackInk.SequenceParams(getGameState(), IStepLabel.END_SELECTING, playerState);
 				BlackInk blackInkGenerator = (BlackInk) factory.forName(SequenceGenerator.Type.BlackInk.name());
 				blackInkGenerator.pushSequence(blackInkParams);
+				break;
+			case CATCH_OF_THE_DAY:
+				selectGenerator.pushSequence(selectParams);
+				CatchOfTheDay.SequenceParams cotdParams = new CatchOfTheDay.SequenceParams(getGameState(), IStepLabel.END_SELECTING);
+				CatchOfTheDay cotdGenerator = (CatchOfTheDay) factory.forName(SequenceGenerator.Type.CatchOfTheDay.name());
+				cotdGenerator.pushSequence(cotdParams);
 				break;
 
 			default:

@@ -373,6 +373,10 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.BALEFUL_HEX;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGetBallOnGround)) {
+							fDispatchPlayerAction = PlayerAction.CATCH_OF_THE_DAY;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
 							if (targetSelectionState != null && UtilCards.hasUnusedSkill(actingPlayer, commandUseSkill.getSkill())) {
 								FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));

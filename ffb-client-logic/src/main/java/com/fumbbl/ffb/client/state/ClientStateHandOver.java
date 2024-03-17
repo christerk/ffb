@@ -142,7 +142,7 @@ public class ClientStateHandOver extends ClientStateMove {
 			}
 		}
 
-		addEndActionLabel(iconCache, menuItemList, actingPlayer);
+		addEndActionLabel(iconCache, menuItemList);
 
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
@@ -158,6 +158,9 @@ public class ClientStateHandOver extends ClientStateMove {
 		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
