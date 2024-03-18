@@ -196,6 +196,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USING_HORNS = new JsonBooleanOption("usingHorns");
     JsonBooleanOption USING_JUGGERNAUT = new JsonBooleanOption("usingJuggernaut");
     JsonBooleanOption USING_MODIFYING_SKILL = new JsonBooleanOption("usingModifyingSkill");
+    JsonBooleanOption USING_MODIFIER_IGNORING_SKILL = new JsonBooleanOption("usingModifierIgnoringSkill");
     JsonBooleanOption USING_PILING_ON = new JsonBooleanOption("usingPilingOn");
     JsonBooleanOption USING_SHADOWING = new JsonBooleanOption("usingShadowing");
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
