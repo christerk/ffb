@@ -170,10 +170,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedDodgeJumpOrRush)) {
 				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
 				if (!usingModifierIgnoringSkill) {
-					ReRollSource skillRerollSource = findSkillReRollSource();
-					if (skillRerollSource != null) {
-						setReRollSource(skillRerollSource);
-					}
+					setReRollSource(findSkillReRollSource());
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			} else {
@@ -198,12 +195,11 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				if (getReRollSource() == null) {
 					failDodge();
 					return;
-				} else if ((usingModifierIgnoringSkill != null && !usingModifierIgnoringSkill)
-					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 					if (usingModifyingSkill != null
 						|| !showUseModifyingSkillDialog(mechanic, dodgeModifiers)
-						|| usingModifierIgnoringSkill != null) {
+						|| !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 						failDodge();
 					}
 					return;
@@ -256,12 +252,17 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		if (successWithoutModifiers) {
 			ignoreModifierSkill = Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedDodgeJumpOrRush));
-			if (usingModifierIgnoringSkill != null && usingModifierIgnoringSkill && ignoreModifierSkill.isPresent()) {
+			if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && ignoreModifierSkill.isPresent()) {
 				actingPlayer.markSkillUsed(ignoreModifierSkill.get());
 				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), true, SkillUse.PASS_DODGE_WITHOUT_MODIFIERS));
 				return ActionStatus.SUCCESS;
 			}
+
+			if (Boolean.FALSE.equals(usingModifierIgnoringSkill) && getReRollSource() == null && getReRolledAction() != null) {
+				return ActionStatus.FAILURE;
+			}
 		}
+
 
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
