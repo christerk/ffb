@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Surfing your own ball carrier did not result in a turnover")
 			.addBugfix("Surfing your team mate with fan interaction did generate spp")
 			.addFeature("Catch of the Day")
+			.addBugfix("Primal Savagery: Lashing out against the opposing ball carrier did not bounce the ball and suppressed the injury")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
