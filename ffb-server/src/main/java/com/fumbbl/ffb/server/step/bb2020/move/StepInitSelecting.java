@@ -387,6 +387,14 @@ public final class StepInitSelecting extends AbstractStep {
 									getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
 									ServerUtilBlock.updateDiceDecorations(game);
 								}
+								publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, targetSelectionState.getSelectedPlayerId()));
+								publishParameter(new StepParameter(StepParameterKey.USING_STAB, false));
+								publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, false));
+								publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, false));
+								publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, false));
+								fDispatchPlayerAction = PlayerAction.BLITZ;
+
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
 							}
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGazeAutomatically)) {
 							fDispatchPlayerAction = PlayerAction.BLACK_INK;

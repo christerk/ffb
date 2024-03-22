@@ -10,6 +10,9 @@ import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 
 public class ClientStateSelectBlockKind extends ClientState {
 
@@ -71,6 +74,13 @@ public class ClientStateSelectBlockKind extends ClientState {
 					break;
 				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
 					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					break;
+				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
+					Skill goredSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
+					if (UtilClientStateBlocking.isGoredAvailable(this) && goredSkill != null) {
+						getClient().getCommunication().sendUseSkill(goredSkill, true, actingPlayer.getPlayerId());
+					}
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false);
 					break;
 				default:
 					break;

@@ -12,6 +12,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.server.GameState;
@@ -143,21 +144,18 @@ public class StepEndMoving extends AbstractStep {
 				// commands redirected from initMoving
 				// add proper sequence to stack, repeat command once more -->
 				case CLIENT_BLOCK:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-					break;
 				case CLIENT_FOUL:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-					break;
 				case CLIENT_HAND_OVER:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-					break;
 				case CLIENT_PASS:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
-					break;
 				case CLIENT_THROW_TEAM_MATE:
 				case CLIENT_KICK_TEAM_MATE:
 					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
 					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (useSkill.isSkillUsed() && useSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
+						commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					}
 				default:
 					break;
 				// <--
