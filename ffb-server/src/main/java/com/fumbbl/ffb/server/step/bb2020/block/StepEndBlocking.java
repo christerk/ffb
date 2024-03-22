@@ -258,6 +258,7 @@ public class StepEndBlocking extends AbstractStep {
 			}
 
 			String defenderId = game.getDefenderId();
+			boolean isBlitz = PlayerAction.BLITZ == actingPlayer.getPlayerAction();
 			if ((unusedPlayerMustMakeSecondBlockSkill != null) && (defenderState != null)
 				&& defenderState.canBeBlocked() && attackerPosition.isAdjacent(defenderPosition)
 				&& attackerState.hasTacklezones() && fDefenderPushed
@@ -276,19 +277,15 @@ public class StepEndBlocking extends AbstractStep {
 					&& targetSelectionState != null
 					&& !targetSelectionState.getUsedSkills().contains(addBlockDieSkill)) {
 					ServerUtilBlock.updateDiceDecorations(game, true);
-					DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(defenderPosition);
-					if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2)) {
-						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), addBlockDieSkill, 0), false);
-						addBlockDieHandled = true;
-						getResult().setNextAction(StepAction.CONTINUE);
-						return;
-					}
 				}
 
 				actingPlayer.setGoingForIt(true);
 				actingPlayer.markSkillUsed(unusedPlayerMustMakeSecondBlockSkill);
-				boolean askForBlockKind = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative);
-				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
+
+				boolean askForBlockKind = UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative) ||
+					(UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternativeDuringBlitz) && isBlitz);
+
+				if (isBlitz) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), defenderId, fUsingStab, true, null, askForBlockKind));
 				} else {
 					blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(defenderId).useStab(fUsingStab).askForBlockKind(askForBlockKind).build());
@@ -374,7 +371,7 @@ public class StepEndBlocking extends AbstractStep {
 					}
 
 					// go-for-it
-				} else if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ) && !fUsingStab
+				} else if (isBlitz && !fUsingStab
 					&& !usingChainsaw
 					&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 					String actingPlayerId = activePlayer.getId();
@@ -393,7 +390,7 @@ public class StepEndBlocking extends AbstractStep {
 					ServerUtilBlock.updateDiceDecorations(game);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 				} else {
-					boolean blitzWithMoveLeft = actingPlayer.getPlayerAction() == PlayerAction.BLITZ && UtilPlayer.isNextMovePossible(game, false);
+					boolean blitzWithMoveLeft = isBlitz && UtilPlayer.isNextMovePossible(game, false);
 					Player<?>[] opponents = null;
 					if (game.getDefender() != null) {
 						opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
@@ -413,7 +410,7 @@ public class StepEndBlocking extends AbstractStep {
 						&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
 						game.setLastDefenderId(defenderId);
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
-						if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
+						if (isBlitz) {
 							blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
 						} else {
 							blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(true).publishDefender(true).build());

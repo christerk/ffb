@@ -1,29 +1,19 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.TargetSelectionState;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
-
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 /**
  * @author Kalimar
@@ -100,12 +90,6 @@ public class ClientStateBlitz extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
 					communication.sendUseFumblerooskie();
 					break;
-				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
-					if (isGoredAvailable()) {
-						Skill goredSkill = pPlayer.getSkillWithProperty(NamedProperties.canAddBlockDie);
-						communication.sendUseSkill(goredSkill, true, pPlayer.getId());
-					}
-					break;
 				default:
 					UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
 					break;
@@ -120,30 +104,6 @@ public class ClientStateBlitz extends ClientStateMove {
 			return super.playerActivationUsed();
 		}
 		return fieldModel.getTargetSelectionState().isCommitted();
-	}
-
-	@Override
-	protected boolean isGoredAvailable() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
-		if (targetSelectionState != null && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie)) {
-			FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-			DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
-			return diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate);
-		}
-
-		return false;
-	}
-
-	@Override
-	protected JMenuItem createGoredItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Gored By The Bull",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
-		return menuItem;
 	}
 
 	protected PlayerAction moveAction() {

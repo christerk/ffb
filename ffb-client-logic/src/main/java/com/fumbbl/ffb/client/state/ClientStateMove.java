@@ -142,7 +142,6 @@ public class ClientStateMove extends ClientState {
 			|| isLookIntoMyEyesAvailable(actingPlayer)
 			|| isBalefulHexAvailable(actingPlayer)
 			|| isPutridRegurgitationAvailable()
-			|| isGoredAvailable()
 			|| isCatchOfTheDayAvailable(actingPlayer)
 			|| isBlackInkAvailable(actingPlayer);
 	}
@@ -373,9 +372,6 @@ public class ClientStateMove extends ClientState {
 		if (isPutridRegurgitationAvailable()) {
 			menuItemList.add(createPutridRegurgitationItem(iconCache));
 		}
-		if (isGoredAvailable()) {
-			menuItemList.add(createGoredItem(iconCache));
-		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
@@ -449,9 +445,6 @@ public class ClientStateMove extends ClientState {
 					return true;
 				case PLAYER_ACTION_PROJECTILE_VOMIT:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
-					return true;
-				case PLAYER_ACTION_GORED:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 					return true;
 				case PLAYER_ACTION_BLACK_INK:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
@@ -533,14 +526,6 @@ public class ClientStateMove extends ClientState {
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
-		return null;
-	}
-
-	protected boolean isGoredAvailable() {
-		return false;
-	}
-
-	protected JMenuItem createGoredItem(IconCache iconCache) {
 		return null;
 	}
 

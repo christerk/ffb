@@ -11,10 +11,11 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -131,6 +132,18 @@ public class StepInitBlocking extends AbstractStep {
 							usingVomit = blockCommand.isUsingVomit();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie) && useSkillCommand.isSkillUsed()) {
+						TargetSelectionState targetSelectionState = getGameState().getGame().getFieldModel().getTargetSelectionState();
+						targetSelectionState.addUsedSkill(useSkillCommand.getSkill());
+						fBlockDefenderId = targetSelectionState.getSelectedPlayerId();
+						fUsingStab = false;
+						usingChainsaw = false;
+						usingVomit = false;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_END_TURN:

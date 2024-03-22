@@ -24,6 +24,9 @@ public class ChangeList {
 			.addBugfix("Surfing your own ball carrier did not result in a turnover")
 			.addBugfix("Surfing your team mate with fan interaction did generate spp")
 			.addFeature("Catch of the Day")
+			.addBugfix("Primal Savagery: Lashing out against the opposing ball carrier did not bounce the ball and suppressed the injury")
+			.addBugfix("Gored by the Bull: The option to use the skill was not available on the second (frenzy) block")
+			.addBehaviorChange("Gored by the Bull: The skill use has not to be declared at activation start but directly when performing the block similar to chainsaw etc.")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

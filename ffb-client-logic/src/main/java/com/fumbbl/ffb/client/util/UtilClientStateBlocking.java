@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.util;
 
-import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
@@ -11,11 +11,10 @@ import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
-import com.fumbbl.ffb.mechanics.GameMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
@@ -70,6 +69,9 @@ public class UtilClientStateBlocking {
 				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 				actionHandled = true;
 				break;
+			case PLAYER_ACTION_GORED:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+				return true;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -105,27 +107,33 @@ public class UtilClientStateBlocking {
 					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, true);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					communication.sendUseSkill(skill, true, pPlayer.getId());
+					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+					communication.sendUseSkill(skill, true, actingPlayer.getPlayerId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
 					communication.sendUseWisdom();
 					break;
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
-					Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-					communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
+					Skill raidingSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+					communication.sendUseSkill(raidingSkill, true, actingPlayer.getPlayerId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-					UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
+					UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canStealBallFromOpponent)
+						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, actingPlayer.getPlayerId()));
 					break;
 				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
-					Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-					communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
+					Skill balefulSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+					communication.sendUseSkill(balefulSkill, true, actingPlayer.getPlayerId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
-					Skill blackInk = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
-					communication.sendUseSkill(blackInk, true, pPlayer.getId());
+					Skill blackInk = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically);
+					communication.sendUseSkill(blackInk, true, actingPlayer.getPlayerId());
+					break;
+				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
+					if (isGoredAvailable(pClientState)) {
+						UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie).ifPresent(goredSkill ->
+							communication.sendUseSkill(goredSkill, true, actingPlayer.getPlayerId()));
+					}
 					break;
 				default:
 					break;
@@ -147,7 +155,8 @@ public class UtilClientStateBlocking {
 		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)
+				|| (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternativeDuringBlitz) && pDoBlitz)) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender, false);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
@@ -184,6 +193,11 @@ public class UtilClientStateBlocking {
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
 			menuItemList.add(projectileVomit);
 		}
+
+		if (isGoredAvailable(pClientState)) {
+			menuItemList.add(createGoredItem(pClientState));
+		}
+
 		JMenuItem blockAction = new JMenuItem(dimensionProvider, "Block Opponent",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
 		blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
@@ -199,4 +213,27 @@ public class UtilClientStateBlocking {
 		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
 	}
 
+	public static boolean isGoredAvailable(ClientState pClientState) {
+		Game game = pClientState.getClient().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+		if (targetSelectionState != null && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie)) {
+			FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
+			return diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate);
+		}
+
+		return false;
+	}
+
+	private static JMenuItem createGoredItem(ClientState pClientState) {
+		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
+		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
+		JMenuItem menuItem = new JMenuItem(dimensionProvider, "Gored By The Bull",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
+		return menuItem;
+	}
 }

@@ -205,6 +205,7 @@ public class NamedProperties {
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty providesBlockAlternative = new NamedProperty("Provides Block Alternative");
+	public static final ISkillProperty providesBlockAlternativeDuringBlitz = new NamedProperty("Provides Block Alternative During Blitz");
 	public static final ISkillProperty providesFoulingAlternative = new NamedProperty("Provides Fouling Alternative");
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
