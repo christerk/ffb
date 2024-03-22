@@ -17,6 +17,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportGoForItRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -55,6 +57,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private boolean fSecondGoForIt;
 	private String fGotoLabelOnFailure;
 	private FieldCoordinate moveStart;
+	private Boolean usingModifierIgnoringSkill;
+	int roll;
 
 	public StepGoForIt(GameState pGameState) {
 		super(pGameState);
@@ -103,6 +107,18 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedRush)) {
+				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
+				if (!usingModifierIgnoringSkill) {
+					setReRollSource(findSkillReRollSource(ReRolledActions.RUSH));
+				}
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			} else {
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -124,10 +140,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 			}
 			if (actingPlayer.isGoingForIt()
 				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
-				if (ReRolledActions.RUSH == getReRolledAction()) {
+				if (ReRolledActions.RUSH == getReRolledAction() && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
 					if ((getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-						failGfi();
+						if ( !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+							failGfi();
+						}
 						return;
 					}
 				}
@@ -181,7 +199,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
 		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer(), getGameState().getPrayerState().getMolesUnderThePitch()));
 		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
-		int roll = getGameState().getDiceRoller().rollGoingForIt();
+
+		if (roll == 0 && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
+			roll = getGameState().getDiceRoller().rollGoingForIt();
+		}
+
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.RUSH) && (getReRollSource() != null));
 		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
@@ -219,6 +241,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		IServerJsonOption.SECOND_GO_FOR_IT.addTo(jsonObject, fSecondGoForIt);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
 		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, usingModifierIgnoringSkill);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		return jsonObject;
 	}
 
@@ -229,6 +253,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(source, jsonObject);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		moveStart = IServerJsonOption.MOVE_START.getFrom(source, jsonObject);
+		usingModifierIgnoringSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

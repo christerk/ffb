@@ -7,9 +7,11 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
@@ -116,6 +118,15 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 			setReRollSource(reRollSource);
 			return true;
 		}
+	}
+
+	protected ReRollSource findSkillReRollSource(ReRolledAction reRolledAction) {
+		Game game = getGameState().getGame();
+		ReRollSource skillRerollSource = null;
+		if (TurnMode.REGULAR == game.getTurnMode()) {
+			skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), reRolledAction);
+		}
+		return skillRerollSource;
 	}
 
 // JSON serialization
