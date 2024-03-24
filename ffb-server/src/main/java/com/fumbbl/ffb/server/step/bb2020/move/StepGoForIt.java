@@ -9,12 +9,14 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.GoForItModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -34,11 +36,13 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -143,7 +147,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				if (ReRolledActions.RUSH == getReRolledAction() && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
 					if ((getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-						if ( !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+						if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 							failGfi();
 						}
 						return;
@@ -168,10 +172,10 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private void succeedGfi() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isJumping()
-			&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
-			&& !fSecondGoForIt) {
+		if (actingPlayer.isJumping() && !fSecondGoForIt
+			&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)) {
 			fSecondGoForIt = true;
+			usingModifierIgnoringSkill = null;
 			setReRolledAction(null);
 			getGameState().pushCurrentStepOnStack();
 		}
@@ -198,13 +202,25 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
 		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer(), getGameState().getPrayerState().getMolesUnderThePitch()));
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		int minimumRoll = diceInterpreter.minimumRollGoingForIt(goForItModifiers);
 
-		if (roll == 0 && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
+		if (roll == 0 || usingModifierIgnoringSkill == null) {
 			roll = getGameState().getDiceRoller().rollGoingForIt();
 		}
 
-		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, diceInterpreter.minimumRollGoingForIt(Collections.emptySet()));
+		Skill skill = null;
+		if (successfulWithoutModifiers) {
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedRush);
+		}
+
+		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
+			actingPlayer.markSkillUsed(skill);
+			return ActionStatus.SUCCESS;
+		}
+
+		boolean successful = diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.RUSH) && (getReRollSource() != null));
 		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
@@ -216,17 +232,23 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
 
 				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
+					if (usingModifierIgnoringSkill == null && skill != null) {
+						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+						return ActionStatus.WAITING_FOR_SKILL_USE;
+					}
 					setReRollSource(gfiRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-						ReRolledActions.RUSH, minimumRoll, false)) {
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
 					}
 				}
+			} else if (usingModifierIgnoringSkill == null && skill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+				return ActionStatus.WAITING_FOR_SKILL_USE;
 			} else {
 				return ActionStatus.FAILURE;
 			}
