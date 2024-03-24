@@ -8,6 +8,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.GoForItModifierFactory;
@@ -22,6 +23,7 @@ import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportGoForItRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -217,13 +219,16 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 
 		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
 			actingPlayer.markSkillUsed(skill);
+			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_RUSH_WITHOUT_MODIFIERS));
 			return ActionStatus.SUCCESS;
 		}
 
 		boolean successful = diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.RUSH) && (getReRollSource() != null));
-		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
-			minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
+		if (usingModifierIgnoringSkill == null) {
+			getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
+				minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
+		}
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {
@@ -233,11 +238,13 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 
 				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
+						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
 						return ActionStatus.WAITING_FOR_SKILL_USE;
 					}
 					setReRollSource(gfiRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
 					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {

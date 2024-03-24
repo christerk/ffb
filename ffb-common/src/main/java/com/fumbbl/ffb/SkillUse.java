@@ -57,6 +57,7 @@ public enum SkillUse implements INamedObject {
 	REMOVE_TACKLEZONE("removeTacklezone", "to remove opponents tacklezone"),
 	GET_BALL_ON_GROUND("getBallFromGround", "to try getting the ball on the ground"),
 	PASS_DODGE_WITHOUT_MODIFIERS("passDodgeWithoutModifiers", "to pass the dodge roll ignoring modifiers"),
+	PASS_RUSH_WITHOUT_MODIFIERS("passRushWithoutModifiers", "to pass the rush roll ignoring modifiers"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;
