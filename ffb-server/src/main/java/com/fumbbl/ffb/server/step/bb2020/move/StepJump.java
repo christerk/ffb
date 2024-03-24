@@ -25,6 +25,7 @@ import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -71,6 +72,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	private Boolean usingDivingTackle;
 	private boolean alreadyReported;
 	private ActionStatus status;
+	private Boolean usingModifierIgnoringSkill;
 
 
 	public StepJump(GameState pGameState) {
@@ -119,6 +121,13 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.DIVING_TACKLE) {
 					usingDivingTackle = StringTool.isProvided(playerChoiceCommand.getPlayerId());
 					getGameState().getGame().setDefenderId(playerChoiceCommand.getPlayerId());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
+			}
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+				ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedJump)) {
+					usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
@@ -296,6 +305,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, usingDivingTackle);
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, usingModifierIgnoringSkill);
 		if (status != null) {
 			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
 		}
@@ -311,6 +321,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
+		usingModifierIgnoringSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
 		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(statusString)) {
 			status = ActionStatus.valueOf(statusString);
