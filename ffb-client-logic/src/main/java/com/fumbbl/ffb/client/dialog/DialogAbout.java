@@ -91,8 +91,7 @@ public class DialogAbout extends Dialog {
 		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Lifetime Luxury Suite Owner: SkiJunkie");
 		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you doing it first and giving a vision to follow.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Head Grounds Keeper: Java");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Assistant Grounds Keeper: tussock");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Grounds Keepers: Java, Tussock");
 
 		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine),
 			"Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz");
