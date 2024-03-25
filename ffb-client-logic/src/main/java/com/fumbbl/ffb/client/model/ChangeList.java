@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Primal Savagery: Lashing out against the opposing ball carrier did not bounce the ball and suppressed the injury")
 			.addBugfix("Gored by the Bull: The option to use the skill was not available on the second (frenzy) block")
 			.addBehaviorChange("Gored by the Bull: The skill use has not to be declared at activation start but directly when performing the block similar to chainsaw etc.")
+			.addFeature("Swift As The Breeze")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

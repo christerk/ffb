@@ -146,7 +146,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 			}
 			if (actingPlayer.isGoingForIt()
 				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
-				if (ReRolledActions.RUSH == getReRolledAction() && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
+				if (ReRolledActions.RUSH == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 					if ((getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 						if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -50,6 +51,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -153,11 +155,13 @@ public class StepJump extends AbstractStepWithReRoll {
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
-			if (ReRolledActions.JUMP == getReRolledAction()) {
+			if (ReRolledActions.JUMP == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					handleFailure(game);
-					doLeap = false;
+					if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+						handleFailure(game);
+						doLeap = false;
+					}
 				}
 			}
 			if (doLeap) {
@@ -230,7 +234,23 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) {
 			roll = getGameState().getDiceRoller().rollSkill();
 		}
-		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+
+		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, mechanic.minimumRollJump(actingPlayer.getPlayer(), Collections.emptySet()));
+		Skill skill = null;
+		if (successfulWithoutModifiers) {
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedJump);
+		}
+
+		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
+			actingPlayer.markSkillUsed(skill);
+			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
+			status = ActionStatus.SUCCESS;
+			return status;
+		}
+
+		boolean successful = diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 		getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, jumpModifiers.toArray(new JumpModifier[0])));
 		if (successful) {
@@ -243,10 +263,12 @@ public class StepJump extends AbstractStepWithReRoll {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.JUMP) {
 				setReRolledAction(ReRolledActions.JUMP);
-				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-					ReRolledActions.JUMP, minimumRoll, false)) {
+				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.JUMP, minimumRoll, false, skill)) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
+			} else if (usingModifierIgnoringSkill == null && skill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+				return ActionStatus.WAITING_FOR_SKILL_USE;
 			}
 		}
 		return status;

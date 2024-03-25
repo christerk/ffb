@@ -189,7 +189,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
-		if (ReRolledActions.DODGE == getReRolledAction() && (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill)) {
+		if (ReRolledActions.DODGE == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 			if (usingModifyingSkill == null) {
 				if (getReRollSource() == null) {
 					failDodge();
@@ -207,8 +207,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 		boolean reRolledAction = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
 		boolean doRoll = (reRolledAction || (fUsingDivingTackle == null))
-			&& (usingModifyingSkill == null || !usingModifyingSkill)
-			&& (usingModifierIgnoringSkill == null || !usingModifierIgnoringSkill);
+			&& !Boolean.TRUE.equals(usingModifyingSkill)
+			&& !Boolean.TRUE.equals(usingModifierIgnoringSkill);
 		switch (dodge(doRoll)) {
 			case SUCCESS:
 				reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
@@ -272,7 +272,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		StatBasedRollModifier statBasedRollModifier = null;
 
-		if (usingModifyingSkill != null && usingModifyingSkill) {
+		if (Boolean.TRUE.equals(usingModifyingSkill)) {
 			statBasedRollModifier = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
 			UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge).ifPresent(
 				modifyingSkill -> {
@@ -343,7 +343,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 
 			if (!fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE
-				|| (usingModifyingSkill != null && !usingModifyingSkill))) {
+				|| !Boolean.TRUE.equals(usingModifierIgnoringSkill))) {
 				setReRolledAction(ReRolledActions.DODGE);
 				ReRollSource skillRerollSource = findSkillReRollSource(ReRolledActions.DODGE);
 				if (skillRerollSource != null) {
