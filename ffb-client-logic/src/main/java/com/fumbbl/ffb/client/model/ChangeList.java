@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBehaviorChange("Gored by the Bull: The skill use has not to be declared at activation start but directly when performing the block similar to chainsaw etc.")
 			.addFeature("Swift As The Breeze")
 			.addImprovement("Add Yoink! sound to yoink interceptions (is also used for catch of the day), provided by ramchop/LCYing")
+			.addImprovement("Include Java and tussock in about dialog credits")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
