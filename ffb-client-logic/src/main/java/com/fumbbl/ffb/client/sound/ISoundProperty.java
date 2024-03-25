@@ -45,6 +45,7 @@ public interface ISoundProperty {
 	String VOMIT = "sound.vomit";
 	String WHISTLE = "sound.whistle";
 	String WOOOAAAH = "sound.woooaaah";
+	String YOINK = "sound.yoink";
 	String ZAP = "sound.zap";
 
 	String SPEC_AAH = "sound.specAah";

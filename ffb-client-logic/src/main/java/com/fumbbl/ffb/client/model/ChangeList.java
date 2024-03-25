@@ -28,6 +28,7 @@ public class ChangeList {
 			.addBugfix("Gored by the Bull: The option to use the skill was not available on the second (frenzy) block")
 			.addBehaviorChange("Gored by the Bull: The skill use has not to be declared at activation start but directly when performing the block similar to chainsaw etc.")
 			.addFeature("Swift As The Breeze")
+			.addImprovement("Add Yoink! sound to yoink interceptions (is also used for catch of the day), provided by ramchop/LCYing")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

@@ -9,6 +9,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogInterceptionParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -226,6 +227,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 					game.getFieldModel().setBallMoving(false);
 				}
 				passState.setInterceptionSuccessful(true);
+				getResult().setSound(SoundId.YOINK);
 			}
 		} else {
 			status = ActionStatus.FAILURE;

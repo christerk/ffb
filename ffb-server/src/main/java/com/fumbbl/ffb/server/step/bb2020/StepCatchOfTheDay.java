@@ -131,7 +131,7 @@ public class StepCatchOfTheDay extends AbstractStepWithReRoll {
 				if (success) {
 					game.getFieldModel().setBallCoordinate(playerCoordinate);
 					game.getFieldModel().setBallMoving(false);
-					getResult().setSound(SoundId.PICKUP);
+					getResult().setSound(SoundId.YOINK);
 				} else {
 					if (getReRolledAction() != ReRolledActions.CATCH_OF_THE_DAY && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.CATCH_OF_THE_DAY, 3, false)) {
 						setReRolledAction(ReRolledActions.CATCH_OF_THE_DAY);
