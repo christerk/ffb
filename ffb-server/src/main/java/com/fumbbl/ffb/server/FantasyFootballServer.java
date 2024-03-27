@@ -414,4 +414,9 @@ public class FantasyFootballServer implements IFactorySource {
 		}
 		throw new FantasyFootballException("Trying to get game context from application.");
 	}
+
+	public boolean isInTestMode() {
+		String testSetting = getProperty(IServerProperty.SERVER_TEST);
+		return StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting);
+	}
 }

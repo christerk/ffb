@@ -155,9 +155,12 @@ public class GameCache {
 				StringTool.bind("REMOVE GAME cache decreases to $1 games.", fGameStateById.size()));
 			// remove gameState from db if only one team has joined
 			// or the game hasn't even started yet (and isn't scheduled)
+			// or is a test game
 			if (!StringTool.isProvided(game.getTeamHome().getId()) || !StringTool.isProvided(game.getTeamAway().getId())
 				|| ((game.getScheduled() == null)
-				&& ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))) {
+				&& ((game.getStarted() == null) || DateTool.isEqual(new Date(0), game.getStarted())))
+				|| game.isTesting()
+			) {
 				queueDbDelete(cachedGameState.getId(), true);
 			}
 		}

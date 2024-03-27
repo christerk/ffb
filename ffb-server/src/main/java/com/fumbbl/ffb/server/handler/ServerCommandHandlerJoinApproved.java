@@ -76,7 +76,7 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 
 			if ((gameState == null) && !getServer().isBlockingNewGames()) {
 				boolean testing = (joinApprovedCommand.getGameName().startsWith(_TEST_PREFIX)
-					|| getServer().getMode() == ServerMode.STANDALONE);
+					|| getServer().getMode() == ServerMode.STANDALONE) || getServer().isInTestMode();
 				gameState = gameCache.createGameState(testing ? GameStartMode.START_TEST_GAME : GameStartMode.START_GAME);
 				gameCache.mapGameNameToId(joinApprovedCommand.getGameName(), gameState.getId());
 				getServer().getDebugLog().log(IServerLogLevel.WARN, gameState.getId(),
