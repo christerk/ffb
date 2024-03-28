@@ -123,21 +123,22 @@ public abstract class AbstractStep implements IStep {
 		// Network lag during some kick off events (e.g. quick snack 2020) might result in a client sending a setup command
 		// even if the allowed amount of players is already exhausted
 
-		// This is a hacky try to fix this. Commands sent during the lag period arrive while we are still in the KICKOFF turn mode.
+		// This is a hacky try to fix this. Commands sent during the lag period arrive while we are either still in the
+		// KICKOFF turn mode or already in REGULAR mode.
 
 		Game game = getGameState().getGame();
-		if (game.getTurnMode() != TurnMode.KICKOFF) {
-			return StepCommandStatus.UNHANDLED_COMMAND;
+		if (game.getTurnMode() == TurnMode.KICKOFF || game.getTurnMode() == TurnMode.REGULAR) {
+			// Try to fix the issue by resetting the player position on client side with the server side position
+			ClientCommandSetupPlayer commandSetupPlayer = (ClientCommandSetupPlayer) command.getCommand();
+			Player<?> player = game.getPlayerById(commandSetupPlayer.getPlayerId());
+			if (player != null) {
+				game.getFieldModel().sendPosition(player);
+			}
+
+			return StepCommandStatus.SKIP_STEP;
 		}
 
-		// Try to fix the issue by resetting the player position on client side with the server side position
-		ClientCommandSetupPlayer commandSetupPlayer = (ClientCommandSetupPlayer) command.getCommand();
-		Player<?> player = game.getPlayerById(commandSetupPlayer.getPlayerId());
-		if (player != null) {
-			game.getFieldModel().sendPosition(player);
-		}
-
-		return StepCommandStatus.SKIP_STEP;
+		return StepCommandStatus.UNHANDLED_COMMAND;
 	}
 
 	protected StepCommandStatus handleSkillCommand(ClientCommandUseSkill useSkillCommand, Object state) {

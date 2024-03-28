@@ -30,6 +30,7 @@ public class ChangeList {
 			.addFeature("Swift As The Breeze")
 			.addImprovement("Add Yoink! sound to yoink interceptions (is also used for catch of the day), provided by ramchop/LCYing")
 			.addImprovement("Include Java and tussock in about dialog credits")
+			.addBugfix("Hardening of setup phase against player positions getting out of sync with high network latency")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
