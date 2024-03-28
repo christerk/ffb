@@ -41,6 +41,9 @@ public class AdminConnector {
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector loglevel <value>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector message <message>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector portrait <coach>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector purgetest <limit> <perform>\n"
+		+ "  [limit has to be a positive number]"
+		+ "  [if perform is set to \"true\" (case insensitive) games are deleted, all other values and default are considered false]"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
@@ -239,6 +242,17 @@ public class AdminConnector {
 				System.out.println(scheduleXml);
 			}
 
+			if (AdminServlet.PURGE_TEST.equals(args[0])) {
+				String perform = "false";
+				if (args.length > 2) {
+					perform = args[2];
+				}
+				String purgeUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_PURGE_TEST.url(serverProperties), response,
+					args[1], perform);
+				System.out.println(purgeUrl);
+				String scheduleXml = UtilServerHttpClient.fetchPage(purgeUrl);
+				System.out.println(scheduleXml);
+			}
 		}
 
 	}

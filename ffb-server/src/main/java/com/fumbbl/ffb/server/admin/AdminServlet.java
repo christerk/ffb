@@ -13,6 +13,7 @@ import com.fumbbl.ffb.server.IServerProperty;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.query.DbAdminListByIdQuery;
 import com.fumbbl.ffb.server.db.query.DbAdminListByStatusQuery;
+import com.fumbbl.ffb.server.db.query.DbTestGameListQuery;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandCloseGame;
@@ -44,7 +45,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 
  * @author Kalimar
  */
 public class AdminServlet extends HttpServlet {
@@ -67,6 +67,7 @@ public class AdminServlet extends HttpServlet {
 	public static final String UPLOAD = "upload";
 	public static final String FORCE_LOG = "forcelog";
 	public static final String PORTRAIT = "portrait";
+	public static final String PURGE_TEST = "purgetest";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -80,6 +81,8 @@ public class AdminServlet extends HttpServlet {
 	private static final String _PARAMETER_TEAM_HOME_ID = "teamHomeId";
 	private static final String _PARAMETER_TEAM_AWAY_ID = "teamAwayId";
 	private static final String _PARAMETER_VALUE = "value";
+	private static final String _PARAMETER_LIMIT = "limit";
+	private static final String _PARAMETER_PERFORM = "perform";
 
 	private static final String _XML_TAG_ADMIN = "admin";
 	private static final String _XML_TAG_BACKUP = "challenge";
@@ -100,6 +103,7 @@ public class AdminServlet extends HttpServlet {
 	private static final String _XML_TAG_STATUS = "status";
 	private static final String _XML_TAG_LOGLEVEL = "loglevel";
 	private static final String _XML_TAG_FORCE_LOG = "forcelog";
+	private static final String _XML_TAG_DELETED = "deleted";
 
 	private static final String _XML_ATTRIBUTE_INITIATED = "initiated";
 	private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
@@ -189,6 +193,8 @@ public class AdminServlet extends HttpServlet {
 					isOk = handleForceLog(handler, parameters);
 				} else if (PORTRAIT.equals(command)) {
 					isOk = handlePortrait(handler, parameters);
+				} else if (PURGE_TEST.equals(command)) {
+					isOk = handlePurge(handler, parameters);
 				} else {
 					isOk = false;
 				}
@@ -342,7 +348,7 @@ public class AdminServlet extends HttpServlet {
 		String message = ArrayTool.firstElement(pParameters.get(_PARAMETER_MESSSAGE));
 		if (StringTool.isProvided(message)) {
 			UtilXml.addValueElement(pHandler, _XML_TAG_MESSAGE, StringTool.print(message));
-			getServer().getCommunication().sendAdminMessage(new String[] { message });
+			getServer().getCommunication().sendAdminMessage(new String[]{message});
 			return true;
 		} else {
 			UtilXml.addEmptyElement(pHandler, _XML_TAG_MESSAGE);
@@ -422,24 +428,15 @@ public class AdminServlet extends HttpServlet {
 		AdminList adminList = new AdminList();
 		if (status != null) {
 			DbAdminListByStatusQuery listQuery = (DbAdminListByStatusQuery) getServer().getDbQueryFactory()
-					.getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY);
+				.getStatement(DbStatementId.ADMIN_LIST_BY_STATUS_QUERY);
 			listQuery.execute(adminList, status);
 		}
 		if (gameId > 0) {
 			DbAdminListByIdQuery listQuery = (DbAdminListByIdQuery) getServer().getDbQueryFactory()
-					.getStatement(DbStatementId.ADMIN_LIST_BY_ID_QUERY);
+				.getStatement(DbStatementId.ADMIN_LIST_BY_ID_QUERY);
 			listQuery.execute(adminList, gameId);
 		}
-		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SIZE, adminList.size());
-		if (adminList.size() > 0) {
-			UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
-			for (AdminListEntry listEntry : adminList.getEntries()) {
-				listEntry.addToXml(pHandler);
-			}
-			UtilXml.endElement(pHandler, _XML_TAG_LIST);
-		} else {
-			UtilXml.addEmptyElement(pHandler, _XML_TAG_LIST, attributes);
-		}
+		addGames(pHandler, attributes, adminList);
 		return isOk;
 	}
 
@@ -577,6 +574,63 @@ public class AdminServlet extends HttpServlet {
 		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_INITIATED, _TIMESTAMP_FORMAT.format(new Date()));
 		UtilXml.addEmptyElement(pHandler, _XML_TAG_REFRESH, attributes);
 		return true;
+	}
+
+
+	private boolean handlePurge(TransformerHandler pHandler, Map<String, String[]> pParameters) {
+		boolean isOk = true;
+		AttributesImpl attributes = new AttributesImpl();
+		String limitParameter = ArrayTool.firstElement(pParameters.get(_PARAMETER_LIMIT));
+		if (!StringTool.isProvided(limitParameter)) {
+			return false;
+		}
+		long limit;
+		try {
+			limit = new Long(limitParameter);
+			if (limit < 1) {
+				return false;
+			}
+		} catch (Exception e) {
+
+			return false;
+		}
+
+
+		AdminList adminList = new AdminList();
+		DbTestGameListQuery listQuery = (DbTestGameListQuery) getServer().getDbQueryFactory()
+			.getStatement(DbStatementId.TEST_GAME_LIST_QUERY);
+		listQuery.execute(adminList, limit);
+
+
+		addGames(pHandler, attributes, adminList);
+
+		String performParameter = ArrayTool.firstElement(pParameters.get(_PARAMETER_PERFORM));
+
+		boolean perform = "true".equalsIgnoreCase(performParameter);
+
+		if (perform) {
+			for (AdminListEntry entry : adminList.getEntries()) {
+				getServer().getCommunication().handleCommand(new InternalServerCommandDeleteGame(entry.getGameId(), true));
+			}
+		}
+
+		UtilXml.addValueElement(pHandler, _XML_TAG_DELETED, perform);
+
+
+		return isOk;
+	}
+
+	private void addGames(TransformerHandler pHandler, AttributesImpl attributes, AdminList adminList) {
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_SIZE, adminList.size());
+		if (adminList.size() > 0) {
+			UtilXml.startElement(pHandler, _XML_TAG_LIST, attributes);
+			for (AdminListEntry listEntry : adminList.getEntries()) {
+				listEntry.addToXml(pHandler);
+			}
+			UtilXml.endElement(pHandler, _XML_TAG_LIST);
+		} else {
+			UtilXml.addEmptyElement(pHandler, _XML_TAG_LIST, attributes);
+		}
 	}
 
 	private boolean checkResponse(String pResonse) {

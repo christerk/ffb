@@ -11,6 +11,7 @@ import com.fumbbl.ffb.server.db.query.DbPasswordForCoachQuery;
 import com.fumbbl.ffb.server.db.query.DbPlayerMarkersQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsQuery;
+import com.fumbbl.ffb.server.db.query.DbTestGameListQuery;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 
 import java.sql.Connection;
@@ -44,6 +45,7 @@ public class DbQueryFactory implements IDbStatementFactory {
 		register(new DbTeamSetupsQuery(getServer()));
 		register(new DbUserSettingsQuery(getServer()));
 		register(new DbPlayerMarkersQuery(getServer()));
+		register(new DbTestGameListQuery(getServer()));
 
 		if (ServerMode.STANDALONE == getServer().getMode()) {
 			register(new DbPasswordForCoachQuery(getServer()));
