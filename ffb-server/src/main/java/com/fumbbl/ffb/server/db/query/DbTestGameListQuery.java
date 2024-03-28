@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.server.db.query;
 
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.factory.GameStatusFactory;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.admin.AdminList;
@@ -43,8 +42,7 @@ public class DbTestGameListQuery extends DbStatement {
 				.append(IDbTableGamesInfo.COLUMN_TURN).append(",").append(IDbTableGamesInfo.COLUMN_STATUS)
 				.append(",").append(IDbTableGamesInfo.COLUMN_TESTING)
 				.append(" FROM ").append(IDbTableGamesInfo.TABLE_NAME)
-				.append(" WHERE ").append(IDbTableGamesInfo.COLUMN_STATUS).append("='").append(GameStatus.PAUSED.getTypeString()).append("'")
-				.append(" AND ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=true")
+				.append(" WHERE ").append(IDbTableGamesInfo.COLUMN_TESTING).append("=true")
 				.append(" ORDER BY ").append(IDbTableGamesInfo.COLUMN_STARTED).append(" ASC ")
 				.append(" LIMIT ?");
 			fStatement = pConnection.prepareStatement(sql.toString());
