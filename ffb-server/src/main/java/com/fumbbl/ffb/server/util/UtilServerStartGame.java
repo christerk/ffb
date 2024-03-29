@@ -212,7 +212,7 @@ public class UtilServerStartGame {
 			allowConcessions.setValue(false);
 			//game.getOptions().addOption(allowConcessions);
 			GameOptionBoolean prayer = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG);
-			prayer.setValue(false);
+			//prayer.setValue(false);
 			game.getOptions().addOption(prayer);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);

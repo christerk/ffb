@@ -33,6 +33,8 @@ public class ChangeList {
 			.addBugfix("Hardening of setup phase against player positions getting out of sync with high network latency")
 			.addBugfix("Bloodlust: A ball carrier suffering from bloodlust was allowed to move within the opposing end zone and even leave it")
 			.addBehaviorChange("Automove: Squares in the opposing end zone are considered less favorable than empty squares so a player enters it at the last possible square")
+			.addImprovement("Player select dialogs now also show markers, ball and prone/stunned state")
+			.addBehaviorChange("Player select dialogs now have a light gray background so the default marker color is better to see")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")
