@@ -31,6 +31,8 @@ public class ChangeList {
 			.addImprovement("Add Yoink! sound to yoink interceptions (is also used for catch of the day), provided by ramchop/LCYing")
 			.addImprovement("Include Java and tussock in about dialog credits")
 			.addBugfix("Hardening of setup phase against player positions getting out of sync with high network latency")
+			.addBugfix("Bloodlust: A ball carrier suffering from bloodlust was allowed to move within the opposing end zone and even leave it")
+			.addBehaviorChange("Automove: Squares in the opposing end zone are considered less favorable than empty squares so a player enters it at the last possible square")
 		);
 
 		versions.add(new VersionChangeList("2.25.0")

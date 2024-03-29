@@ -59,7 +59,7 @@ public class PathFinderWithPassBlockSupport {
 		public int distance;
 
 		// Estimated distance to go
-		private int estimate = -1;
+		private int estimate;
 
 		// Does this square have a tz?
 		public boolean tz;
@@ -299,6 +299,11 @@ public class PathFinderWithPassBlockSupport {
 				if (!context.allowExitEndzoneWithBall && hasBall && isInEndzone && !endzoneBounds.isInBounds(neighbourCoord))
 					continue;
 
+				// make the opposing endzone a bit more expensive so it is entered at the last possible square
+				if (isInEndzone) {
+					distance++;
+				}
+
 				if (neighbour == null) {
 					// This square has not been touched at all yet
 					neighbour = new PathFindNode(neighbourState, neighbourCoord, current.distance + distance, false, pEndCoords,
@@ -320,7 +325,7 @@ public class PathFinderWithPassBlockSupport {
 
 	// Constructs a path from the PathFindNode structure
 	private static FieldCoordinate[] reconstructPath(PathFindNode end) {
-		LinkedList<FieldCoordinate> list = new LinkedList<FieldCoordinate>();
+		LinkedList<FieldCoordinate> list = new LinkedList<>();
 		FieldCoordinate[] result = new FieldCoordinate[end.distance];
 
 		while (end.parent != null) {
@@ -411,7 +416,7 @@ public class PathFinderWithPassBlockSupport {
 		private final Hashtable<PathFindState, PathFindNode[][]> nodes;
 
 		public PathFindData() {
-			nodes = new Hashtable<PathFindState, PathFinderWithPassBlockSupport.PathFindNode[][]>();
+			nodes = new Hashtable<>();
 			nodes.put(normalState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
 			nodes.put(jumpState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
 		}

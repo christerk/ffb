@@ -295,4 +295,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean rollForChefAtStartOfHalf() {
 		return true;
 	}
+
+	@Override
+	public boolean allowMovementInEndZone() {
+		return true;
+	}
 }
