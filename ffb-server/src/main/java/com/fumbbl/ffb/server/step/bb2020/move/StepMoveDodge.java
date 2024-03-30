@@ -202,6 +202,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 						failDodge();
 					}
 					return;
+				} else {
+					fReRollUsed = true;
 				}
 			}
 		}
@@ -251,6 +253,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		if (successWithoutModifiers) {
 			ignoreModifierSkill = Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedDodge));
+			if (!ignoreModifierSkill.isPresent()) {
+				successWithoutModifiers = false;
+			}
 			if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && ignoreModifierSkill.isPresent()) {
 				actingPlayer.markSkillUsed(ignoreModifierSkill.get());
 				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), true, SkillUse.PASS_DODGE_WITHOUT_MODIFIERS));
@@ -335,15 +340,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		} else {
 			status = ActionStatus.FAILURE;
 
-
-			if (successWithoutModifiers) {
-				if (!ignoreModifierSkill.isPresent()) {
-					usingModifierIgnoringSkill = false;
-				}
-			}
-
 			if (!fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE
-				|| !Boolean.TRUE.equals(usingModifierIgnoringSkill))) {
+				|| (successWithoutModifiers && !Boolean.TRUE.equals(usingModifierIgnoringSkill)))) {
 				setReRolledAction(ReRolledActions.DODGE);
 				ReRollSource skillRerollSource = findSkillReRollSource(ReRolledActions.DODGE);
 				if (skillRerollSource != null) {
@@ -367,6 +365,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), 0), false);
 						usingModifierIgnoringSkill = null;
 					} else {
+						fReRollUsed = true;
 						useSkillReRollSource(skillRerollSource);
 						status = dodge(true);
 					}
