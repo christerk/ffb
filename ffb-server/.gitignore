@@ -1,0 +1,8 @@
+bin/
+build/
+/target/
+
+lib/aws-java-sdk-*.jar
+/server.local.ini
+/server-candlejack.ini
+/server-candlejack-fumbbl.ini

@@ -1,5 +1,0 @@
-bin/
-build/
-/target/
-
-lib/aws-java-sdk-*.jar
