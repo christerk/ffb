@@ -142,7 +142,7 @@ public class ClientStateMove extends ClientState {
 			|| isLookIntoMyEyesAvailable(actingPlayer)
 			|| isBalefulHexAvailable(actingPlayer)
 			|| isPutridRegurgitationAvailable()
-			|| isGoredAvailable()
+			|| isCatchOfTheDayAvailable(actingPlayer)
 			|| isBlackInkAvailable(actingPlayer);
 	}
 
@@ -277,6 +277,12 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
+					if (isCatchOfTheDayAvailable(actingPlayer)) {
+						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -346,7 +352,7 @@ public class ClientStateMove extends ClientState {
 			menuItemList.add(fumblerooskieAction);
 		}
 		if (isEndPlayerActionAvailable()) {
-			addEndActionLabel(iconCache, menuItemList, actingPlayer);
+			addEndActionLabel(iconCache, menuItemList);
 		}
 		if (isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
@@ -366,11 +372,11 @@ public class ClientStateMove extends ClientState {
 		if (isPutridRegurgitationAvailable()) {
 			menuItemList.add(createPutridRegurgitationItem(iconCache));
 		}
-		if (isGoredAvailable()) {
-			menuItemList.add(createGoredItem(iconCache));
-		}
 		if (isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
@@ -440,11 +446,11 @@ public class ClientStateMove extends ClientState {
 				case PLAYER_ACTION_PROJECTILE_VOMIT:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 					return true;
-				case PLAYER_ACTION_GORED:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
-					return true;
 				case PLAYER_ACTION_BLACK_INK:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+					return true;
+				case PLAYER_ACTION_CATCH_OF_THE_DAY:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 					return true;
 				default:
 					actionHandled = false;
@@ -520,14 +526,6 @@ public class ClientStateMove extends ClientState {
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
-		return null;
-	}
-
-	protected boolean isGoredAvailable() {
-		return false;
-	}
-
-	protected JMenuItem createGoredItem(IconCache iconCache) {
 		return null;
 	}
 

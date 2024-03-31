@@ -17,7 +17,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.report.ReportRiotousRookies;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
@@ -91,7 +91,7 @@ public class StepRiotousRookies extends AbstractStep {
 
 	private String rookieName(String generator, PlayerGender gender, String fallback) {
 		StringBuilder url = new StringBuilder(
-			getGameState().getServer().getProperty(IServerProperty.FUMBBL_NAMEGENERATOR_BASE));
+			ServerUrlProperty.FUMBBL_NAMEGENERATOR_BASE.url(getGameState().getServer().getProperties()));
 
 		if (!url.toString().endsWith("/")) {
 			url.append("/");

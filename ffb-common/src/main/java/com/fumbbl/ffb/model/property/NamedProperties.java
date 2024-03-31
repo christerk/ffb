@@ -63,6 +63,7 @@ public class NamedProperties {
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canGazeAutomatically = new NamedProperty("Can Gaze Automatically");
+	public static final ISkillProperty canGetBallOnGround = new NamedProperty("Can Get Ball On Ground");
 	public static final ISkillProperty canGrantReRollAfterTouchdown = new NamedProperty("Can Grant Re-Roll After Touchdown");
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
 	public static final ISkillProperty canHoldPlayersLeavingTacklezones = new NamedProperty("Can Hold Players Leaving Tacklezones");
@@ -75,6 +76,10 @@ public class NamedProperties {
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
 	public static final ISkillProperty canMakeOpponentMissTurn = new NamedProperty("Can Make Opponent Miss Turn");
+	public static final ISkillProperty canMakeUnmodifiedDodge = new NamedProperty("Can Make Unmodified Dodge");
+	public static final ISkillProperty canMakeUnmodifiedJump = new NamedProperty("Can Make Unmodified Jump");
+	public static final ISkillProperty canMakeUnmodifiedRush = new NamedProperty("Can Make Unmodified Rush");
+
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
@@ -203,6 +208,7 @@ public class NamedProperties {
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
 	public static final ISkillProperty providesBlockAlternative = new NamedProperty("Provides Block Alternative");
+	public static final ISkillProperty providesBlockAlternativeDuringBlitz = new NamedProperty("Provides Block Alternative During Blitz");
 	public static final ISkillProperty providesFoulingAlternative = new NamedProperty("Provides Fouling Alternative");
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");

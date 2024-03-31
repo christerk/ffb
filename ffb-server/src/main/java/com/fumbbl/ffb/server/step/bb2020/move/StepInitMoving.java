@@ -255,6 +255,7 @@ public class StepInitMoving extends AbstractStep {
 					ClientCommandUseSkill clientCommandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					Skill skill = clientCommandUseSkill.getSkill();
 					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+					commandStatus = StepCommandStatus.SKIP_STEP;
 					if (targetSelectionState != null && skill.hasSkillProperty(NamedProperties.canAddBlockDie) && UtilCards.hasUnusedSkill(actingPlayer, skill)) {
 						FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
 						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
@@ -264,8 +265,15 @@ public class StepInitMoving extends AbstractStep {
 							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ADD_BLOCK_DIE));
 							ServerUtilBlock.updateDiceDecorations(game);
 						}
+						if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE && !actingPlayer.hasBlocked()) {
+
+							commandStatus = dispatchPlayerAction(PlayerAction.BLITZ);
+
+							publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, false));
+							publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, false));
+						}
+
 					}
-					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				default:
 					break;

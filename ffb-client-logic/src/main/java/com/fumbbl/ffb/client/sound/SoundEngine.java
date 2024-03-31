@@ -68,6 +68,7 @@ public class SoundEngine {
 		_SOUND_PROPERTY_KEYS.put(SoundId.PUMP_CROWD, ISoundProperty.PUMP_CROWD);
 		_SOUND_PROPERTY_KEYS.put(SoundId.TRAPDOOR, ISoundProperty.TRAPDOOR);
 		_SOUND_PROPERTY_KEYS.put(SoundId.VOMIT, ISoundProperty.VOMIT);
+		_SOUND_PROPERTY_KEYS.put(SoundId.YOINK, ISoundProperty.YOINK);
 	}
 
 	private final FantasyFootballClient fClient;

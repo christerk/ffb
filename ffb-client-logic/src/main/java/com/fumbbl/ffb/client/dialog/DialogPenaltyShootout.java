@@ -4,12 +4,14 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -17,10 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.Border;
-import javax.swing.event.InternalFrameEvent;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -32,39 +34,50 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 	private static final Color HIGHLIGHT = Color.lightGray;
 
 	private final JPanel rollPanel;
+	private final JButton closeButton;
 	private final int limit;
 
 	private final Timer timer;
 	private final DialogPenaltyShootoutParameter parameter;
+	private final JPanel rootPanel;
 	private int currentLimit = 1;
 
 	private final DialogPenaltyShootoutHandler handler;
 
 	public DialogPenaltyShootout(FantasyFootballClient pClient, DialogPenaltyShootoutParameter parameter, DialogPenaltyShootoutHandler handler) {
-		super(pClient, "Penalty Shootout", true);
+		super(pClient, "Penalty Shootout", false);
 
 		this.parameter = parameter;
 		this.handler = handler;
 
-		JPanel rootPanel = new JPanel();
+		closeButton = new JButton(dimensionProvider(), "Proceed to MVPs and upload");
+		closeButton.setAlignmentX(CENTER_ALIGNMENT);
+		closeButton.setMargin(new Insets(3, 5, 3, 5));
+		closeButton.addActionListener(this);
+
+		rootPanel = new JPanel();
 		rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));
+
+		JPanel framedPanel = new JPanel();
+		framedPanel.setLayout(new BoxLayout(framedPanel, BoxLayout.Y_AXIS));
 
 		Border innerBorder = BorderFactory.createEmptyBorder(10, 20, 0, 20);
 		Border middleBorder = BorderFactory.createLineBorder(Color.BLACK, 1, true);
 		Border outerBorder = BorderFactory.createLineBorder(Color.WHITE, 5);
-		rootPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
+		framedPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
 
 		JLabel penaltyShootout = new JLabel(dimensionProvider(), "Penalty Shootout");
 		penaltyShootout.setAlignmentX(CENTER_ALIGNMENT);
-		rootPanel.add(penaltyShootout);
+		framedPanel.add(penaltyShootout);
 		if (ClientMode.PLAYER.equals(pClient.getMode())) {
 			JLabel close = new JLabel(dimensionProvider(), "Close to continue");
 			close.setAlignmentX(CENTER_ALIGNMENT);
-			rootPanel.add(close);
+			framedPanel.add(close);
 		}
 
 		rollPanel = new JPanel();
-		rootPanel.add(rollPanel);
+		framedPanel.add(rollPanel);
+		rootPanel.add(framedPanel);
 
 		getContentPane().add(rootPanel);
 
@@ -96,6 +109,9 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		if (currentLimit == this.limit) {
 			timer.stop();
 			labels.addAll(summaryLabels(parameter.getHomeScore(), parameter.getAwayScore(), parameter.homeTeamWins()));
+			rootPanel.add(closeButton);
+			rootPanel.add(Box.createVerticalStrut(5));
+
 		} else {
 			labels.add(new JLabel(dimensionProvider(), "X"));
 			labels.add(new JLabel(dimensionProvider(), "Score"));
@@ -114,12 +130,6 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	public DialogId getId() {
 		return DialogId.PENALTY_SHOOTOUT;
-	}
-
-	public void internalFrameClosing(InternalFrameEvent pE) {
-		if (getCloseListener() != null) {
-			getCloseListener().dialogClosed(this);
-		}
 	}
 
 	private void addDecorated(JLabel label) {
@@ -187,6 +197,12 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		populate();
+		if (e.getSource() == closeButton) {
+			if (getCloseListener() != null) {
+				getCloseListener().dialogClosed(this);
+			}
+		} else {
+			populate();
+		}
 	}
 }

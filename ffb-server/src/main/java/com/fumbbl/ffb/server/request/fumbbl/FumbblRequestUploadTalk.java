@@ -4,7 +4,7 @@ import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.Talk;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
@@ -33,7 +33,7 @@ public class FumbblRequestUploadTalk extends ServerRequest {
 			String chatJson = talk.toJsonValue().toString();
 			server.getDebugLog().log(IServerLogLevel.DEBUG, gameId, chatJson);
 
-			setRequestUrl(server.getProperty(IServerProperty.FUMBBL_TALK));
+			setRequestUrl(ServerUrlProperty.FUMBBL_TALK.url(server.getProperties()));
 			server.getDebugLog().log(IServerLogLevel.DEBUG, gameId, DebugLog.FUMBBL_REQUEST, getRequestUrl() + " with payload " + chatJson);
 
 			String response = UtilServerHttpClient.postAuthorizedForm(getRequestUrl(), challengeResponse, "chat", chatJson);

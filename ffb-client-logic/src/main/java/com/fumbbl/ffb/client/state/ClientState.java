@@ -375,6 +375,28 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return menuItem;
 	}
 
+	protected boolean isCatchOfTheDayAvailable(ActingPlayer actingPlayer) {
+		return !actingPlayer.hasActed() && isCatchOfTheDayAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isCatchOfTheDayAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		FieldCoordinate ballCoordinate = game.getFieldModel().getBallCoordinate();
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGetBallOnGround)
+			&& game.getFieldModel().isBallMoving() && playerCoordinate.distanceInSteps(ballCoordinate) <= 3;
+	}
+
+	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
+		return menuItem;
+	}
+
+
 	protected boolean isWisdomAvailable(ActingPlayer actingPlayer) {
 		return !actingPlayer.hasActed() && isWisdomAvailable(actingPlayer.getPlayer());
 	}
@@ -401,7 +423,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return menuItem;
 	}
 
-	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList, ActingPlayer actingPlayer) {
+	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = playerActivationUsed() ? "End Action" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));

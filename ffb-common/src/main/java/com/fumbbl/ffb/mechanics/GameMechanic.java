@@ -27,9 +27,6 @@ public abstract class GameMechanic implements Mechanic {
 		return Type.GAME;
 	}
 
-	/**
-	 * @return true if the re-roll used was only available in the current drive
-	 */
 	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
 
 	public abstract int minimumLonerRoll(Player<?> player);
@@ -70,8 +67,6 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isKickTeamMateActionAllowed(TurnMode turnMode);
 
-	public abstract boolean areSpecialBlockActionsAllowed(TurnMode turnMode);
-
 	public abstract boolean allowsCancellingGuard(TurnMode turnMode);
 
 	public abstract boolean isBlockActionAllowed(TurnMode turnMode);
@@ -107,4 +102,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract Set<String> enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory);
 
 	public abstract boolean rollForChefAtStartOfHalf();
+
+	public abstract boolean allowMovementInEndZone();
 }

@@ -186,11 +186,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean areSpecialBlockActionsAllowed(TurnMode turnMode) {
-		return TurnMode.BLITZ != turnMode;
-	}
-
-	@Override
 	public boolean allowsCancellingGuard(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
@@ -344,6 +339,11 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean rollForChefAtStartOfHalf() {
+		return false;
+	}
+
+	@Override
+	public boolean allowMovementInEndZone() {
 		return false;
 	}
 }

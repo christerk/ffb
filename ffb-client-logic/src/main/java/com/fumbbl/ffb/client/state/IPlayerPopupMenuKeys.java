@@ -24,7 +24,6 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_KICK_TEAM_MATE = KeyEvent.VK_K;
 	int KEY_JUMP = KeyEvent.VK_J;
 	int KEY_FOUL = KeyEvent.VK_F;
-	int KEY_DESELECT = KeyEvent.VK_ESCAPE;
 	int KEY_RECOVER = KeyEvent.VK_R;
 	int KEY_GAZE = KeyEvent.VK_G;
 	int KEY_GAZE_ZOAT = KeyEvent.VK_A;
@@ -50,4 +49,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_KICK_EM_BLITZ = KeyEvent.VK_I;
 	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
 	int KEY_BLACK_INK = KeyEvent.VK_L;
+	int KEY_CATCH_OF_THE_DAY = KeyEvent.VK_D;
 }

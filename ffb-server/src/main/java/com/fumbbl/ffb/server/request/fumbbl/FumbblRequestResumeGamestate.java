@@ -6,7 +6,7 @@ import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.util.StringTool;
@@ -17,7 +17,7 @@ import com.fumbbl.ffb.util.StringTool;
  */
 public class FumbblRequestResumeGamestate extends ServerRequest {
 
-	private GameState fGameState;
+	private final GameState fGameState;
 
 	public FumbblRequestResumeGamestate(GameState pGameState) {
 		fGameState = pGameState;
@@ -35,7 +35,7 @@ public class FumbblRequestResumeGamestate extends ServerRequest {
 		if (!game.isTesting()) {
 			GameResult gameResult = game.getGameResult();
 			int spectators = getGameState().getServer().getSessionManager().getSessionsOfSpectators(game.getId()).length;
-			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_GAMESTATE_RESUME),
+			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_GAMESTATE_RESUME.url(server.getProperties()),
 					new Object[] { challengeResponse, game.getId(), game.getTeamHome().getId(), game.getTeamAway().getId(),
 							game.getHalf(), game.getTurnData().getTurnNr(), gameResult.getTeamResultHome().getScore(),
 							gameResult.getTeamResultAway().getScore(), spectators }));

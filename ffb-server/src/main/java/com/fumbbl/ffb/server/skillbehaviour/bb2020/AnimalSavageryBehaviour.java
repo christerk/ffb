@@ -228,7 +228,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			TurnData turnData = game.isHomePlaying() ? game.getTurnDataHome() : game.getTurnDataAway();
 			boolean hitTargetTeamMate = player.getId().equals(state.thrownPlayerId) || player.getId().equals(state.catcherId);
 			PlayerAction action = fallbackAction(step, actingPlayer.getPlayerAction(), injuryResult.injuryContext(), turnData, game, state.blockDefenderId, hitTargetTeamMate);
-			if (action == BLOCK) {
+			if (action == BLOCK && !lashedOutAgainstOpponent) {
 				label = state.goToLabelOnFailure;
 			} else {
 				if (action != null && hitTargetTeamMate) {

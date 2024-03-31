@@ -8,11 +8,13 @@ import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
 import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
+import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class ReRolledActions {
 
 	public static final ReRolledAction GO_FOR_IT = new ReRolledAction("Go For It");
@@ -60,6 +62,7 @@ public class ReRolledActions {
 	public static final ReRolledAction BALEFUL_HEX = new ReRolledAction("Baleful Hex");
 	public static final ReRolledAction SINGLE_DIE = new ReRolledAction("Single Die");
 	public static final ReRolledAction ALL_YOU_CAN_EAT = new ReRolledAction("All You Can Eat");
+	public static final ReRolledAction CATCH_OF_THE_DAY = new ReRolledAction(CatchOfTheDay.class);
 
 	private final Map<String, ReRolledAction> values;
 

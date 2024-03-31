@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -48,6 +49,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fButtonCancel.setMnemonic((int) 'i');
 
 		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect);
+		fList.setBackground(Color.LIGHT_GRAY);
 		fList.setVisibleRowCount(Math.min(playerIds.length, 5));
 		fList.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent pMouseEvent) {
@@ -66,7 +68,6 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		});
 
 		JScrollPane listScroller = new JScrollPane(fList);
-		// listScroller.setPreferredSize(new Dimension(200, 100));
 		listScroller.setAlignmentX(LEFT_ALIGNMENT);
 
 		JPanel headerPanel = new JPanel();

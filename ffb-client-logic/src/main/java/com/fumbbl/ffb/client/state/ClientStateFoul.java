@@ -164,6 +164,12 @@ public class ClientStateFoul extends ClientStateMove {
 						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
+					if (isCatchOfTheDayAvailable(actingPlayer)) {
+						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, pPlayer.getId());
+					}
+					break;
 				default:
 					break;
 			}

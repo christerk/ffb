@@ -23,6 +23,9 @@ public class StyleProvider {
 		put(SETTING_FONT_COLOR_FRAME, Color.WHITE);
 		put(SETTING_FONT_COLOR_FRAME_SHADOW, Color.BLACK);
 		put(SETTING_FONT_COLOR_INPUT, Color.BLACK);
+		put(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, new Color(1.0f, 1.0f, 0.0f, 1.0f));
+		put(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, new Color(1.0f, 1.0f, 0.0f, 1.0f));
+		put(SETTING_FONT_COLOR_FIELD_MARKER, new Color(1.0f, 1.0f, 1.0f, 1.0f));
 	}};
 
 	private Color chatBackground = defaults.get(SETTING_BACKGROUND_CHAT);
@@ -37,6 +40,9 @@ public class StyleProvider {
 	private Color admin = defaults.get(SETTING_FONT_COLOR_ADMIN);
 	private Color dev = defaults.get(SETTING_FONT_COLOR_DEV);
 	private Color input = defaults.get(SETTING_FONT_COLOR_INPUT);
+	private Color playerMarkerHome = defaults.get(SETTING_FONT_COLOR_PLAYER_MARKER_HOME);
+	private Color playerMarkerAway = defaults.get(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY);
+	private Color fieldMarker = defaults.get(SETTING_FONT_COLOR_FIELD_MARKER);
 
 	private boolean swapTeamColors;
 
@@ -150,5 +156,29 @@ public class StyleProvider {
 
 	public void setInput(Color input) {
 		this.input = input;
+	}
+
+	public Color getPlayerMarkerHome() {
+		return playerMarkerHome;
+	}
+
+	public void setPlayerMarkerHome(Color playerMarkerHome) {
+		this.playerMarkerHome = playerMarkerHome;
+	}
+
+	public Color getPlayerMarkerAway() {
+		return playerMarkerAway;
+	}
+
+	public void setPlayerMarkerAway(Color playerMarkerAway) {
+		this.playerMarkerAway = playerMarkerAway;
+	}
+
+	public Color getFieldMarker() {
+		return fieldMarker;
+	}
+
+	public void setFieldMarker(Color fieldMarker) {
+		this.fieldMarker = fieldMarker;
 	}
 }

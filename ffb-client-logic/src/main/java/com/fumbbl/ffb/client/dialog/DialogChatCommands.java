@@ -31,10 +31,13 @@ public class DialogChatCommands extends Dialog {
 		JScrollPane aboutPane = new JScrollPane(createEditorPane());
 
 		Game game = getClient().getGame();
+		int offset = dimensionProvider().scale(150);
+		Dimension clientDimension = getClient().getUserInterface().getSize();
+
 		if (game.isTesting()) {
-			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 100, 500));
+			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 100, clientDimension.height - offset));
 		} else {
-			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 10, 300));
+			aboutPane.setPreferredSize(new Dimension(aboutPane.getPreferredSize().width + 10, clientDimension.height - offset));
 		}
 
 		JPanel infoPanel = new JPanel();

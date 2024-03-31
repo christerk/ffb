@@ -34,8 +34,6 @@ import java.awt.image.BufferedImage;
  */
 public class PlayerIconFactory {
 
-	private static final Color _MARK_COLOR = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-
 	public static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
@@ -53,10 +51,10 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	public static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache) {
+	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
-			g2d.setColor(_MARK_COLOR);
+			g2d.setColor(homePlayer ? styleProvider.getPlayerMarkerHome() : styleProvider.getPlayerMarkerAway());
 			g2d.setFont(fontCache.font(Font.BOLD, 12));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
@@ -233,8 +231,8 @@ public class PlayerIconFactory {
 		boolean withBall = (playerOnPitch && !game.getFieldModel().isBallMoving()
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
+		boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 		if (playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR) {
-			boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
 				withBomb);
 		}
@@ -327,7 +325,7 @@ public class PlayerIconFactory {
 		if ((playerMarker != null)) {
 			String homeText = playerMarker.getHomeText();
 			pClient.logDebug(0, Thread.currentThread().getName() + " marking " + pPlayer.getId() + " with " + homeText);
-			markIcon(icon, homeText, pClient.getUserInterface().getFontCache());
+			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer);
 		}
 
 		return icon;

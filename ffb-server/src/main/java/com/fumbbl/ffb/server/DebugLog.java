@@ -170,6 +170,9 @@ public class DebugLog {
 		if (pThrowable != null) {
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
+			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				pThrowable = pThrowable.fillInStackTrace();
+			}
 			pThrowable.printStackTrace(printWriter);
 			printWriter.close();
 			log(IServerLogLevel.ERROR, pGameId, stringWriter.getBuffer().toString());

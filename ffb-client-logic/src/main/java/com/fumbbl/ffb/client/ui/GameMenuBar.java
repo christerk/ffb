@@ -189,6 +189,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem frameFontColor;
 	private JMenuItem frameFontShadowColor;
 	private JMenuItem inputFontColor;
+	private JMenuItem homePlayerMarkerFontColor;
+	private JMenuItem awayPlayerMarkerFontColor;
+	private JMenuItem fieldMarkerFontColor;
+
+
 
 	private JRadioButtonMenuItem frameBackgroundIcons;
 	private JRadioButtonMenuItem frameBackgroundColor;
@@ -384,6 +389,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		addColorItem(SETTING_FONT_COLOR_INPUT, styleProvider.getInput(), fontStyles, (item) -> inputFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME, styleProvider.getFrame(), fontStyles, (item) -> frameFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
+		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), fontStyles, (item) -> homePlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, styleProvider.getPlayerMarkerAway(), fontStyles, (item) -> awayPlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_FIELD_MARKER, styleProvider.getFieldMarker(), fontStyles, (item) -> fieldMarkerFontColor = item);
 	}
 
 	private void createMarkingMenu(JMenu fUserSettingsMenu) {
@@ -1082,6 +1090,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_INPUT, inputFontColor,
 			styleProvider::getInput, styleProvider::setInput);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, homePlayerMarkerFontColor,
+			styleProvider::getPlayerMarkerHome, styleProvider::setPlayerMarkerHome);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, awayPlayerMarkerFontColor,
+			styleProvider::getPlayerMarkerAway, styleProvider::setPlayerMarkerAway);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_FIELD_MARKER, fieldMarkerFontColor,
+			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
 
 		String frameBackgroundSetting = getClient().getProperty(CommonProperty.SETTING_BACKGROUND_FRAME);
 		frameBackgroundIcons.setSelected(true);
@@ -2098,6 +2115,33 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
+		if (source == homePlayerMarkerFontColor) {
+			Color defaultColor = styleProvider.getPlayerMarkerHome();
+			Color color = JColorChooser.showDialog(this, "Choose home player marker color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == awayPlayerMarkerFontColor) {
+			Color defaultColor = styleProvider.getPlayerMarkerAway();
+			Color color = JColorChooser.showDialog(this, "Choose away player marker color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == fieldMarkerFontColor) {
+			Color defaultColor = styleProvider.getFieldMarker();
+			Color color = JColorChooser.showDialog(this, "Choose field marker color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(SETTING_FONT_COLOR_FIELD_MARKER, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
 		if (source == localPropertiesItem) {
 			showDialog(new DialogSelectLocalStoredProperties(fClient));
 		}
@@ -2133,6 +2177,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean iconCacheValid() {
 		return iconCacheValid(getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH));
 	}

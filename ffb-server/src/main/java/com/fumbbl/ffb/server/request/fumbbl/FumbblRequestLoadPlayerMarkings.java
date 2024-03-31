@@ -4,7 +4,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
@@ -33,7 +33,7 @@ public class FumbblRequestLoadPlayerMarkings extends ServerRequest {
 		AutoMarkingConfig config = new AutoMarkingConfig();
 
 		String coach = sessionManager.getCoachForSession(session);
-		setRequestUrl(StringTool.bind(processor.getServer().getProperty(IServerProperty.FUMBBL_PLAYER_MARKINGS),
+		setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_PLAYER_MARKINGS.url(processor.getServer().getProperties()),
 			coach));
 
 		try {

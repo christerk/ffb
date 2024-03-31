@@ -12,6 +12,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.XmlHandler;
@@ -94,14 +95,14 @@ public class UtilFumbblRequest {
 		}
 		try {
 			String challenge = null;
-			String challengeUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_AUTH_CHALLENGE),
+			String challengeUrl = StringTool.bind(ServerUrlProperty.FUMBBL_AUTH_CHALLENGE.url(pServer.getProperties()),
 					URLEncoder.encode(pCoach, CHARACTER_ENCODING));
 			pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_REQUEST, challengeUrl);
 			String responseXml = UtilServerHttpClient.fetchPage(challengeUrl);
 			if (StringTool.isProvided(responseXml)) {
 				pServer.getDebugLog().logWithOutGameId(IServerLogLevel.DEBUG, DebugLog.FUMBBL_RESPONSE, responseXml);
 				try (BufferedReader xmlReader = new BufferedReader(new StringReader(responseXml))) {
-					String line = null;
+					String line;
 					while ((line = xmlReader.readLine()) != null) {
 						Matcher challengeMatcher = _PATTERN_CHALLENGE.matcher(line);
 						if (challengeMatcher.find()) {
@@ -138,7 +139,7 @@ public class UtilFumbblRequest {
 		}
 		TeamSkeleton team = null;
 		try {
-			String teamUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_TEAM), pTeamId);
+			String teamUrl = StringTool.bind(ServerUrlProperty.FUMBBL_TEAM.url(pServer.getProperties()), pTeamId);
 			String teamXml = UtilServerHttpClient.fetchPage(teamUrl);
 			if (StringTool.isProvided(teamXml)) {
 				team = new TeamSkeleton(pServer);
@@ -160,7 +161,7 @@ public class UtilFumbblRequest {
 		}
 		Roster roster = null;
 		try {
-			String rosterUrl = StringTool.bind(pServer.getProperty(IServerProperty.FUMBBL_ROSTER_TEAM), pTeamId);
+			String rosterUrl = StringTool.bind(ServerUrlProperty.FUMBBL_ROSTER_TEAM.url(pServer.getProperties()), pTeamId);
 			String rosterXml = UtilServerHttpClient.fetchPage(rosterUrl);
 			if (StringTool.isProvided(rosterXml)) {
 				roster = new Roster();

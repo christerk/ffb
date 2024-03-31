@@ -8,16 +8,22 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.GoForItModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportGoForItRoll;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -32,11 +38,13 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -55,6 +63,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private boolean fSecondGoForIt;
 	private String fGotoLabelOnFailure;
 	private FieldCoordinate moveStart;
+	private Boolean usingModifierIgnoringSkill;
+	int roll;
 
 	public StepGoForIt(GameState pGameState) {
 		super(pGameState);
@@ -103,6 +113,18 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedRush)) {
+				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
+				if (!usingModifierIgnoringSkill) {
+					setReRollSource(findSkillReRollSource(ReRolledActions.RUSH));
+				}
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			} else {
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -124,10 +146,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 			}
 			if (actingPlayer.isGoingForIt()
 				&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers())) {
-				if (ReRolledActions.RUSH == getReRolledAction()) {
+				if (ReRolledActions.RUSH == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 					if ((getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-						failGfi();
+						if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+							failGfi();
+						}
 						return;
 					}
 				}
@@ -150,10 +174,10 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private void succeedGfi() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isJumping()
-			&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)
-			&& !fSecondGoForIt) {
+		if (actingPlayer.isJumping() && !fSecondGoForIt
+			&& (actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1)) {
 			fSecondGoForIt = true;
+			usingModifierIgnoringSkill = null;
 			setReRolledAction(null);
 			getGameState().pushCurrentStepOnStack();
 		}
@@ -180,12 +204,31 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		GoForItModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.GO_FOR_IT_MODIFIER);
 		Set<GoForItModifier> goForItModifiers = modifierFactory.findModifiers(new GoForItContext(game, actingPlayer.getPlayer(), getGameState().getPrayerState().getMolesUnderThePitch()));
-		int minimumRoll = DiceInterpreter.getInstance().minimumRollGoingForIt(goForItModifiers);
-		int roll = getGameState().getDiceRoller().rollGoingForIt();
-		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+		int minimumRoll = diceInterpreter.minimumRollGoingForIt(goForItModifiers);
+
+		if (roll == 0 || usingModifierIgnoringSkill == null) {
+			roll = getGameState().getDiceRoller().rollGoingForIt();
+		}
+
+		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, diceInterpreter.minimumRollGoingForIt(Collections.emptySet()));
+		Skill skill = null;
+		if (successfulWithoutModifiers) {
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedRush);
+		}
+
+		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
+			actingPlayer.markSkillUsed(skill);
+			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_RUSH_WITHOUT_MODIFIERS));
+			return ActionStatus.SUCCESS;
+		}
+
+		boolean successful = diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.RUSH) && (getReRollSource() != null));
-		getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
-			minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
+		if (usingModifierIgnoringSkill == null) {
+			getResult().addReport(new ReportGoForItRoll(actingPlayer.getPlayerId(), successful, roll,
+				minimumRoll, reRolled, goForItModifiers.toArray(new GoForItModifier[0])));
+		}
 		if (successful) {
 			return ActionStatus.SUCCESS;
 		} else {
@@ -194,17 +237,25 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
 
 				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
+					if (usingModifierIgnoringSkill == null && skill != null) {
+						setReRolledAction(null);
+						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+						return ActionStatus.WAITING_FOR_SKILL_USE;
+					}
 					setReRollSource(gfiRerollSource);
 					UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer());
+					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-						ReRolledActions.RUSH, minimumRoll, false)) {
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
 					}
 				}
+			} else if (usingModifierIgnoringSkill == null && skill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+				return ActionStatus.WAITING_FOR_SKILL_USE;
 			} else {
 				return ActionStatus.FAILURE;
 			}
@@ -219,6 +270,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		IServerJsonOption.SECOND_GO_FOR_IT.addTo(jsonObject, fSecondGoForIt);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
 		IServerJsonOption.MOVE_START.addTo(jsonObject, moveStart);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, usingModifierIgnoringSkill);
+		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		return jsonObject;
 	}
 
@@ -229,6 +282,8 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		fSecondGoForIt = IServerJsonOption.SECOND_GO_FOR_IT.getFrom(source, jsonObject);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		moveStart = IServerJsonOption.MOVE_START.getFrom(source, jsonObject);
+		usingModifierIgnoringSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		return this;
 	}
 

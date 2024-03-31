@@ -16,5 +16,6 @@ public class GoredByTheBull extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAddBlockDie);
+		registerProperty(NamedProperties.providesBlockAlternativeDuringBlitz);
 	}
 }

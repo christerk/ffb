@@ -77,4 +77,7 @@ public abstract class DialogHandler implements IDialogCloseListener {
 		return true;
 	}
 
+	public boolean preventsExit() {
+		return false;
+	}
 }

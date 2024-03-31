@@ -302,9 +302,13 @@ public class FantasyFootballServer implements IFactorySource {
 		return fProperties.getProperty(pProperty);
 	}
 
-	public String[] getProperties() {
+	public String[] getPropertyKeys() {
 		//noinspection SuspiciousToArrayCall
 		return fProperties.keySet().toArray(new String[0]);
+	}
+
+	public Properties getProperties() {
+		return fProperties;
 	}
 
 	public DbUpdater getDbUpdater() {
@@ -409,5 +413,10 @@ public class FantasyFootballServer implements IFactorySource {
 			return this;
 		}
 		throw new FantasyFootballException("Trying to get game context from application.");
+	}
+
+	public boolean isInTestMode() {
+		String testSetting = getProperty(IServerProperty.SERVER_TEST);
+		return StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting);
 	}
 }

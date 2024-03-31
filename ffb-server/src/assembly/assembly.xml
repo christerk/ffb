@@ -10,6 +10,10 @@
             <source>target/FantasyFootballServer.jar</source>
             <outputDirectory/>
         </file>
+        <file>
+            <source>server.ini</source>
+            <outputDirectory/>
+        </file>
     </files>
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>

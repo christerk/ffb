@@ -1,23 +1,22 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLEncoder;
-
-import org.eclipse.jetty.websocket.api.Session;
-import org.xml.sax.InputSource;
-
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.TeamList;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ServerUrlProperty;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.XmlHandler;
+import org.eclipse.jetty.websocket.api.Session;
+import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLEncoder;
 
 /**
  * 
@@ -25,9 +24,9 @@ import com.fumbbl.ffb.xml.XmlHandler;
  */
 public class FumbblRequestLoadTeamList extends ServerRequest {
 
-	private String fCoach;
-	private GameState fGameState;
-	private Session fSession;
+	private final String fCoach;
+	private final GameState fGameState;
+	private final Session fSession;
 
 	public FumbblRequestLoadTeamList(GameState pGameState, String pCoach, Session pSession) {
 		fGameState = pGameState;
@@ -52,7 +51,7 @@ public class FumbblRequestLoadTeamList extends ServerRequest {
 		FantasyFootballServer server = pRequestProcessor.getServer();
 		TeamList teamList = null;
 		try {
-			setRequestUrl(StringTool.bind(server.getProperty(IServerProperty.FUMBBL_TEAMS),
+			setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_TEAMS.url(server.getProperties()),
 					URLEncoder.encode(getCoach(), UtilFumbblRequest.CHARACTER_ENCODING)));
 			String teamsXml = UtilServerHttpClient.fetchPage(getRequestUrl());
 			if (StringTool.isProvided(teamsXml)) {

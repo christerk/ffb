@@ -1,9 +1,12 @@
 package com.fumbbl.ffb.server.step;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -20,7 +23,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- *
  * @author Kalimar
  */
 public class UtilServerSteps {
@@ -31,7 +33,7 @@ public class UtilServerSteps {
 		}
 		if (pStep.getId() != pReceivedId) {
 			throw new IllegalStateException("Wrong step id. Expected " + pStep.getId().getName() + " received "
-					+ ((pReceivedId != null) ? pReceivedId.getName() : "null"));
+				+ ((pReceivedId != null) ? pReceivedId.getName() : "null"));
 		}
 	}
 
@@ -46,20 +48,20 @@ public class UtilServerSteps {
 
 	public static boolean checkCommandIsFromHomePlayer(GameState gameState, ReceivedCommand pReceivedCommand) {
 		return (gameState.getServer().getSessionManager().getSessionOfHomeCoach(gameState.getId()) == pReceivedCommand
-				.getSession());
+			.getSession());
 	}
 
 	public static boolean checkCommandIsFromAwayPlayer(GameState gameState, ReceivedCommand pReceivedCommand) {
 		return (gameState.getServer().getSessionManager().getSessionOfAwayCoach(gameState.getId()) == pReceivedCommand
-				.getSession());
+			.getSession());
 	}
 
 	public static boolean checkCommandWithActingPlayer(GameState gameState,
-			ICommandWithActingPlayer pActingPlayerCommand) {
+																										 ICommandWithActingPlayer pActingPlayerCommand) {
 		Game game = gameState.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return (StringTool.isProvided(pActingPlayerCommand.getActingPlayerId())
-				&& pActingPlayerCommand.getActingPlayerId().equals(actingPlayer.getPlayerId()));
+			&& pActingPlayerCommand.getActingPlayerId().equals(actingPlayer.getPlayerId()));
 	}
 
 	public static void changePlayerAction(IStep pStep, String pPlayerId, PlayerAction pPlayerAction, boolean jumping) {
@@ -77,7 +79,7 @@ public class UtilServerSteps {
 			FantasyFootballServer server = gameState.getServer();
 			for (RosterPlayer addedPlayer : pAddedPlayers) {
 				server.getCommunication().sendAddPlayer(gameState, pTeam.getId(), addedPlayer,
-						game.getFieldModel().getPlayerState(addedPlayer), game.getGameResult().getPlayerResult(addedPlayer));
+					game.getFieldModel().getPlayerState(addedPlayer), game.getGameResult().getPlayerResult(addedPlayer));
 			}
 		}
 	}
@@ -85,13 +87,14 @@ public class UtilServerSteps {
 	public static boolean checkTouchdown(GameState gameState) {
 		boolean touchdown = false;
 		Game game = gameState.getGame();
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 		if (game.getFieldModel().isBallInPlay() && !game.getFieldModel().isBallMoving()) {
 			FieldCoordinate ballPosition = game.getFieldModel().getBallCoordinate();
 			Player<?> ballCarrier = game.getFieldModel().getPlayer(ballPosition);
 			PlayerState ballCarrierState = game.getFieldModel().getPlayerState(ballCarrier);
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			if ((ballCarrier != null) && (ballCarrierState != null) && !ballCarrierState.isProneOrStunned()
-				&& ((ballCarrier != actingPlayer.getPlayer()) || !actingPlayer.isSufferingBloodLust())) {
+				&& ((ballCarrier != actingPlayer.getPlayer()) || !actingPlayer.isSufferingBloodLust() || !mechanic.allowMovementInEndZone())) {
 				touchdown = ((game.getTeamHome().hasPlayer(ballCarrier)
 					&& FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(ballPosition))
 					|| (game.getTeamAway().hasPlayer(ballCarrier)

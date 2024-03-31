@@ -22,7 +22,7 @@ public class ServerCommandHandlerRequestVersion extends ServerCommandHandler {
 	}
 
 	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
-		String[] properties = getServer().getProperties();
+		String[] properties = getServer().getPropertyKeys();
 		List<String> clientProperties = new ArrayList<>();
 		List<String> clientPropertyValues = new ArrayList<>();
 		for (String property : properties) {

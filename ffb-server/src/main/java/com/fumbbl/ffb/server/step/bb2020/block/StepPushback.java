@@ -176,7 +176,9 @@ public class StepPushback extends AbstractStep {
 					Player<?> attacker;
 					InjuryTypeServer<?> injuryTypeServer;
 
-					if (getGameState().getPrayerState().hasFanInteraction(game.getActingTeam())) {
+					boolean sameTeam = state.defender != null && state.defender.getTeam() == game.getActingTeam();
+
+					if (getGameState().getPrayerState().hasFanInteraction(game.getActingTeam()) && !sameTeam) {
 						attacker = game.getActingPlayer().getPlayer();
 						injuryTypeServer = new InjuryTypeCrowdPushForSpp();
 					} else {
@@ -193,6 +195,9 @@ public class StepPushback extends AbstractStep {
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 						publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, defenderCoordinate));
+						if (sameTeam) {
+							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+						}
 					}
 					publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					state.doPush = true;
