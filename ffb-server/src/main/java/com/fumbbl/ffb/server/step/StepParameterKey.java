@@ -137,7 +137,6 @@ public enum StepParameterKey {
 	THROW_SCATTER, // Boolean
 	TOUCHBACK, // Boolean
 	TOUCHDOWNS, // Integer
-	TRIGGER_FOR_SPECIAL_BLOCK, // Boolean
 	TV_AWAY, // Integer
 	TV_HOME, // Integer
 	UPDATE_PERSISTENCE, // Boolean

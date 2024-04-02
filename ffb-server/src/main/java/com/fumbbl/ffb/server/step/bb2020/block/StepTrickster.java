@@ -27,10 +27,10 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTrickster extends AbstractStep {
 
-	private boolean fUsingStab, usingChainsaw, usingVomit, triggersForSpecialAction;
+	private boolean fUsingStab, usingChainsaw, usingVomit;
 	private TurnMode lastTurnMode;
 	private final List<FieldCoordinate> eligibleSquares = new ArrayList<>();
 	private Boolean usingTrickster;
@@ -52,20 +52,6 @@ public class StepTrickster extends AbstractStep {
 
 	public StepId getId() {
 		return StepId.TRICKSTER;
-	}
-
-	@Override
-	public void init(StepParameterSet pParameterSet) {
-		if (pParameterSet != null) {
-			for (StepParameter parameter : pParameterSet.values()) {
-				switch (parameter.getKey()) {
-					case TRIGGER_FOR_SPECIAL_BLOCK:
-						triggersForSpecialAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					default:
-						break;
-				}
-			}
-		}
 	}
 
 	@Override
@@ -147,7 +133,7 @@ public class StepTrickster extends AbstractStep {
 		if (usingTrickster == null) {
 
 			if (defender != null && defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
-				&& triggersForSpecialAction == (usingChainsaw || usingVomit || fUsingStab)) {
+				&& (usingChainsaw || usingVomit || fUsingStab ||!UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
 				eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(coord -> fieldModel.getPlayer(coord) == null).collect(Collectors.toList()));
 
@@ -198,7 +184,6 @@ public class StepTrickster extends AbstractStep {
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
-		IServerJsonOption.TRIGGERS_FOR_SPECIAL_ACTION.addTo(jsonObject, triggersForSpecialAction);
 		IServerJsonOption.LAST_TURN_MODE.addTo(jsonObject, lastTurnMode);
 		JsonArray jsonArray = new JsonArray();
 		eligibleSquares.stream().map(FieldCoordinate::toJsonValue).forEach(jsonArray::add);
@@ -216,7 +201,6 @@ public class StepTrickster extends AbstractStep {
 		fUsingStab = IServerJsonOption.USING_STAB.getFrom(source, jsonObject);
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		usingVomit = IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject);
-		triggersForSpecialAction = IServerJsonOption.TRIGGERS_FOR_SPECIAL_ACTION.getFrom(source, jsonObject);
 		if (IServerJsonOption.LAST_TURN_MODE.isDefinedIn(jsonObject)) {
 			lastTurnMode = (TurnMode) IServerJsonOption.LAST_TURN_MODE.getFrom(source, jsonObject);
 		}
