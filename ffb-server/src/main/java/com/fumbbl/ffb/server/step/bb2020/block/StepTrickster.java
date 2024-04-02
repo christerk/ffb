@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
@@ -160,6 +161,9 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
 				ServerUtilBlock.updateDiceDecorations(game);
+				if (toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
+					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+				}
 				leave();
 			}
 		} else {
