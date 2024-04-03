@@ -14,6 +14,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.27.0")
 			.addFeature("Trickster")
+			.addRuleChange("Reduce Master Chef costs are now only available to Halfling teams and not all Halfling Thimble Cup teams")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")

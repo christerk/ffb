@@ -6,6 +6,7 @@ public enum Keyword {
 	VAMPIRE_LORD("Vampire Lord"),
 	THRALL("Thrall"),
 	DWARF("Dwarf"),
+	MASTER_CHEF("master chef"),
 	UNKNOWN("unknown");
 
 	private final String name;

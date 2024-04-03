@@ -5,6 +5,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.GameOptions;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -36,7 +37,7 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
 			@Override
 			protected boolean useReducedCostId(Team team) {
-				return team.getSpecialRules().contains(SpecialRule.HALFLING_THIMBLE_CUP);
+				return team.getRoster().getKeywords().contains(Keyword.MASTER_CHEF);
 			}
 		});
 
