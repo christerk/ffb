@@ -12,6 +12,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.27.0")
+			.addFeature("Trickster")
+		);
+
 		versions.add(new VersionChangeList("2.26.1")
 			.addBugfix("Unchanneled Fury & Bone-Head: Failure caused the game to hang due to re-roll dialog not being displayed")
 			.addBugfix("Client allowed dodges to be re-rolled twice")
