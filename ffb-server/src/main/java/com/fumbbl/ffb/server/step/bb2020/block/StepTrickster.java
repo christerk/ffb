@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
@@ -136,7 +137,7 @@ public class StepTrickster extends AbstractStep {
 			if (defender != null && defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
 				&& (usingChainsaw || usingVomit || fUsingStab ||!UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
 				eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 1, false))
-					.filter(coord -> fieldModel.getPlayer(coord) == null).collect(Collectors.toList()));
+					.filter(coord -> fieldModel.getPlayer(coord) == null && !fieldModel.isBlockedForTrickster(coord)).collect(Collectors.toList()));
 
 				if (eligibleSquares.isEmpty()) {
 					getResult().setNextAction(StepAction.NEXT_STEP);
@@ -158,9 +159,11 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.add(eligibleSquares.stream().map(coord -> new MoveSquare(coord, 0, 0))
 					.toArray(MoveSquare[]::new));
 			} else {
+				fieldModel.replaceMultiBlockTargetCoordinate(fieldModel.getPlayerCoordinate(defender), toCoordinate);
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
 				ServerUtilBlock.updateDiceDecorations(game);
+				UtilServerGame.syncGameModel(this);
 				if (toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				}

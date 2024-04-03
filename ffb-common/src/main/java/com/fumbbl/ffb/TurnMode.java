@@ -54,6 +54,10 @@ public enum TurnMode implements INamedObject {
 		return checkForActivePlayers;
 	}
 
+	public boolean forceDiceDecorationUpdate() {
+		return this == TRICKSTER;
+	}
+
 	public static TurnMode forName(String name) {
 		return Arrays.stream(values()).filter(turnMode -> turnMode.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
