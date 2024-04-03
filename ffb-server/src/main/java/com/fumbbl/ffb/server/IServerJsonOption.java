@@ -183,6 +183,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption TOUCHBACK = new JsonBooleanOption("touchback");
     JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
     JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
+    JsonBooleanOption TRIGGERS_FOR_SPECIAL_ACTION = new JsonBooleanOption("triggersForSpecialAction");
     JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");
     JsonBooleanOption USE_KICK_CHOICE = new JsonBooleanOption("useKickChoice");
     JsonBooleanOption USE_STAR_OF_THE_SHOW = new JsonBooleanOption("useStarOfTheShow");
@@ -202,6 +203,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
     JsonBooleanMapOption USING_STAND_FIRM = new JsonBooleanMapOption("usingStandFirm");
     JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
+    JsonBooleanOption USING_TRICKSTER = new JsonBooleanOption("usingTrickster");
     JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
     JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
     JsonBooleanOption WITH_GAMES_INFO = new JsonBooleanOption("withGamesInfo");

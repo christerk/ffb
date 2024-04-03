@@ -38,7 +38,10 @@ public class ServerUtilBlock {
 
 		if ((actingPlayer.getPlayer() != null)
 			&& (blocksDuringMove
-			|| ((!actingPlayer.hasBlocked() || decorateForFrenzyBlitz) && (isBlitz || isBlock || isMultiBlock || kicksDowned)) || isCarnage || isPutrid)) {
+			|| ((!actingPlayer.hasBlocked() || decorateForFrenzyBlitz || pGame.getTurnMode().forceDiceDecorationUpdate())
+			&& (isBlitz || isBlock || isMultiBlock || kicksDowned))
+			|| isCarnage || isPutrid)
+		) {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());

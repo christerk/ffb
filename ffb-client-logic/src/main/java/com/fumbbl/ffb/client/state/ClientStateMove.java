@@ -515,7 +515,7 @@ public class ClientStateMove extends ClientState {
 	private boolean isFumblerooskieAvailable() {
 		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
 
-		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canDropBall)
+		return (UtilCards.hasUncanceledSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canDropBall)
 			&& actingPlayer.getPlayerAction() != null
 			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
 			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));

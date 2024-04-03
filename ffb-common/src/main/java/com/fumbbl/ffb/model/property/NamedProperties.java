@@ -70,6 +70,7 @@ public class NamedProperties {
 	public static final ISkillProperty canInterceptEasily = new NamedProperty("Can Intercept Easily");
 	public static final ISkillProperty canJoinTeamIfLessThanEleven = new NamedProperty("Can Join Team If Less Than Eleven");
 	public static final ISkillProperty canKickTeamMates = new NamedProperty("Can Kick Team Mates");
+	public static final ISkillProperty canMoveBeforeBeingBlocked = new NamedProperty("Can Move Before Being Blocked");
 	public static final ISkillProperty canThrowKeg = new NamedProperty("Can Throw Keg");
 	public static final ISkillProperty canLashOutAgainstOpponents = new NamedProperty("Can Lash Out Against Opponents");
 	public static final ISkillProperty canLeap = new NamedProperty("Can Leap");
