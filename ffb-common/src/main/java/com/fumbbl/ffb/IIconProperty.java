@@ -256,6 +256,15 @@ public interface IIconProperty {
 	String ANIMATION_ZAP_11 = "animation.zap.11";
 	String ANIMATION_ZAP_12 = "animation.zap.12";
 
+	String ANIMATION_TRICKSTER_SMOKE_1 = "animation.trickster.smoke.1";
+	String ANIMATION_TRICKSTER_SMOKE_2 = "animation.trickster.smoke.2";
+	String ANIMATION_TRICKSTER_SMOKE_3 = "animation.trickster.smoke.3";
+	String ANIMATION_TRICKSTER_SMOKE_4 = "animation.trickster.smoke.4";
+	String ANIMATION_TRICKSTER_GLOW_1 = "animation.trickster.glow.1";
+	String ANIMATION_TRICKSTER_GLOW_2 = "animation.trickster.glow.2";
+	String ANIMATION_TRICKSTER_GLOW_3 = "animation.trickster.glow.3";
+	String ANIMATION_TRICKSTER_GLOW_4 = "animation.trickster.glow.4";
+
 	String ANIMATION_KICKOFF_BLITZ = "animation.kickoff.blitz";
 	String ANIMATION_KICKOFF_BLIZZARD = "animation.kickoff.blizzard";
 	String ANIMATION_KICKOFF_BRILLIANT_COACHING = "animation.kickoff.brilliantCoaching";

@@ -7,12 +7,15 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -159,8 +162,14 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.add(eligibleSquares.stream().map(coord -> new MoveSquare(coord, 0, 0))
 					.toArray(MoveSquare[]::new));
 			} else {
-				fieldModel.replaceMultiBlockTargetCoordinate(fieldModel.getPlayerCoordinate(defender), toCoordinate);
+				FieldCoordinate defCoordinate = fieldModel.getPlayerCoordinate(defender);
+				fieldModel.replaceMultiBlockTargetCoordinate(defCoordinate, toCoordinate);
+				fieldModel.setPlayerState(defender, fieldModel.getPlayerState(defender).changeBase(PlayerState.IN_THE_AIR));
+			//	UtilServerGame.syncGameModel(this);
+				getResult().setAnimation(new Animation(AnimationType.TRICKSTER, defCoordinate, toCoordinate, null));
+		//		UtilServerGame.syncGameModel(this);
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
+				fieldModel.setPlayerState(defender, fieldModel.getPlayerState(defender).changeBase(PlayerState.STANDING));
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
 				ServerUtilBlock.updateDiceDecorations(game);
 				UtilServerGame.syncGameModel(this);

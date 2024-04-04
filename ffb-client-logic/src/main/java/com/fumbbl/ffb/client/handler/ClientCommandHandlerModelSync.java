@@ -27,8 +27,10 @@ import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportBlockChoice;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportList;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -50,6 +52,8 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 	private boolean fUpdateTimeout;
 	private boolean fClearSelectedPlayer;
 	private boolean fReloadPitch;
+
+	private int runningAnimations;
 
 	protected ClientCommandHandlerModelSync(FantasyFootballClient pClient) {
 		super(pClient);
@@ -140,7 +144,12 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 
 	}
 
-	public void animationFinished() {
+	public synchronized void animationFinished() {
+
+		runningAnimations--;
+		if (runningAnimations> 0) {
+			return;
+		}
 
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
@@ -306,15 +315,16 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		}
 	}
 
-	private void startAnimation(Animation pAnimation) {
-		IAnimationSequence animationSequence = AnimationSequenceFactory.getInstance().getAnimationSequence(getClient(),
+	private synchronized void startAnimation(Animation pAnimation) {
+		IAnimationSequence[] animationSequence = AnimationSequenceFactory.getInstance().getAnimationSequence(getClient(),
 			pAnimation);
-		if (animationSequence != null) {
+		if (ArrayTool.isProvided(animationSequence)) {
 			if (fMode == ClientCommandHandlerMode.REPLAYING) {
 				getClient().getReplayer().pause();
 			}
+			runningAnimations += animationSequence.length;
 			FieldLayer fieldLayerRangeRuler = getClient().getUserInterface().getFieldComponent().getLayerRangeRuler();
-			animationSequence.play(fieldLayerRangeRuler, this);
+			Arrays.stream(animationSequence).forEach(seq -> seq.play(fieldLayerRangeRuler, this));
 		}
 	}
 
