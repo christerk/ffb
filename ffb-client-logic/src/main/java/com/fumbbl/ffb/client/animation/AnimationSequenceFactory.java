@@ -72,7 +72,7 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceSpecialEffect.createAnimationSequenceLightning(pAnimation.getStartCoordinate());
 			case SPELL_ZAP:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceZap(pAnimation.getStartCoordinate());
-			case BOMB_EXLOSION:
+			case BOMB_EXPLOSION:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceBomb(pAnimation.getStartCoordinate());
 			case PASS:
 				return AnimationSequenceThrowing.createAnimationSequencePass(pClient, pAnimation);
