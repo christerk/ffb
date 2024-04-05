@@ -4,12 +4,16 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 
 import javax.swing.Timer;
 import java.awt.Dimension;
@@ -29,7 +33,16 @@ public class AnimationSequenceSimultaneous implements IAnimationSequence, Action
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, 150),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, 200),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, 200),
-			}),
+			}) {
+			@Override
+			public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
+				super.play(pFieldLayer, pListener);
+				Game game = client.getGame();
+				FieldModel fieldModel = game.getFieldModel();
+				Player<?> player = game.getPlayerById(animation.getThrownPlayerId());
+				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(PlayerState.IN_THE_AIR));
+			}
+		},
 			new AnimationSequenceSimultaneous(animation.getEndCoordinate(),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 120),

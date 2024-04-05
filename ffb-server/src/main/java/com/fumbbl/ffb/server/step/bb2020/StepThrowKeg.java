@@ -109,8 +109,7 @@ public class StepThrowKeg extends AbstractStepWithReRoll {
 			if (success) {
 				getResult().setAnimation(new Animation(AnimationType.THROW_KEG,
 					throwerCoordinate,
-					targetCoordinate,
-					null));
+					targetCoordinate));
 				hitPlayer(game.getPlayerById(playerId), false);
 			} else {
 				if (getReRolledAction() != ReRolledActions.THROW_KEG && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.THROW_KEG, 3, false)) {

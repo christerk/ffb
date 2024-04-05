@@ -49,6 +49,12 @@ public class Animation implements IJsonSerializable {
 		this(pAnimationType, null, pStartCoordinate, pEndCoordinate, null, false, pInterceptorCoordinate);
 	}
 
+	public Animation(AnimationType pAnimationType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate) {
+		this(pAnimationType, null, pStartCoordinate, pEndCoordinate, null, false, null);
+	}
+	public Animation(AnimationType pAnimationType, FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, String playerId) {
+		this(pAnimationType, null, pStartCoordinate, pEndCoordinate, playerId, false, null);
+	}
 	private Animation(AnimationType pAnimationType, Card pCard, FieldCoordinate pStartCoordinate,
 			FieldCoordinate pEndCoordinate, String pThrownPlayerId, boolean pWithBall,
 			FieldCoordinate pInterceptorCoordinate) {

@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -50,6 +51,7 @@ public class StepTrickster extends AbstractStep {
 	private final List<FieldCoordinate> eligibleSquares = new ArrayList<>();
 	private Boolean usingTrickster;
 	private FieldCoordinate toCoordinate;
+	private ActionStatus actionStatus = ActionStatus.WAITING_FOR_SKILL_USE;
 
 	public StepTrickster(GameState pGameState) {
 		super(pGameState);
@@ -87,41 +89,47 @@ public class StepTrickster extends AbstractStep {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			switch (pReceivedCommand.getId()) {
-				case CLIENT_USE_SKILL:
-					if (UtilServerSteps.checkCommandIsFromPassivePlayer(getGameState(), pReceivedCommand)) {
-						ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-						if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)) {
+		StepCommandStatus commandStatus;
+		if (ActionStatus.SKILL_CHOICE_YES == actionStatus) {
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
 
-							usingTrickster = useSkillCommand.isSkillUsed();
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-							UtilServerDialog.hideDialog(getGameState());
+		} else {
+			commandStatus = super.handleCommand(pReceivedCommand);
+			if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+				switch (pReceivedCommand.getId()) {
+					case CLIENT_USE_SKILL:
+						if (UtilServerSteps.checkCommandIsFromPassivePlayer(getGameState(), pReceivedCommand)) {
+							ClientCommandUseSkill useSkillCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+							if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)) {
+
+								usingTrickster = useSkillCommand.isSkillUsed();
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+								UtilServerDialog.hideDialog(getGameState());
+							}
 						}
-					}
-					break;
-				case CLIENT_FIELD_COORDINATE:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-						ClientCommandFieldCoordinate fieldCoordinateCommand = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
-						FieldCoordinate fieldCoordinate = fieldCoordinateCommand.getFieldCoordinate();
-						if (UtilServerSteps.checkCommandIsFromAwayPlayer(getGameState(), pReceivedCommand)) {
-							fieldCoordinate = fieldCoordinate.transform();
+						break;
+					case CLIENT_FIELD_COORDINATE:
+						if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+							ClientCommandFieldCoordinate fieldCoordinateCommand = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
+							FieldCoordinate fieldCoordinate = fieldCoordinateCommand.getFieldCoordinate();
+							if (UtilServerSteps.checkCommandIsFromAwayPlayer(getGameState(), pReceivedCommand)) {
+								fieldCoordinate = fieldCoordinate.transform();
+							}
+							if (eligibleSquares.contains(fieldCoordinate)) {
+								toCoordinate = fieldCoordinate;
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
 						}
-						if (eligibleSquares.contains(fieldCoordinate)) {
-							toCoordinate = fieldCoordinate;
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						break;
+					case CLIENT_END_TURN:
+						if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+							leave();
+							commandStatus = StepCommandStatus.SKIP_STEP;
 						}
-					}
-					break;
-				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-						leave();
-						commandStatus = StepCommandStatus.SKIP_STEP;
-					}
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
+				}
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -138,7 +146,7 @@ public class StepTrickster extends AbstractStep {
 		if (usingTrickster == null) {
 
 			if (defender != null && defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
-				&& (usingChainsaw || usingVomit || fUsingStab ||!UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
+				&& (usingChainsaw || usingVomit || fUsingStab || !UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
 				eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(coord -> fieldModel.getPlayer(coord) == null && !fieldModel.isBlockedForTrickster(coord)).collect(Collectors.toList()));
 
@@ -161,15 +169,17 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.clearMoveSquares();
 				fieldModel.add(eligibleSquares.stream().map(coord -> new MoveSquare(coord, 0, 0))
 					.toArray(MoveSquare[]::new));
-			} else {
+			} else if (ActionStatus.WAITING_FOR_SKILL_USE == actionStatus) {
 				FieldCoordinate defCoordinate = fieldModel.getPlayerCoordinate(defender);
 				fieldModel.replaceMultiBlockTargetCoordinate(defCoordinate, toCoordinate);
-				fieldModel.setPlayerState(defender, fieldModel.getPlayerState(defender).changeBase(PlayerState.IN_THE_AIR));
-			//	UtilServerGame.syncGameModel(this);
-				getResult().setAnimation(new Animation(AnimationType.TRICKSTER, defCoordinate, toCoordinate, null));
-		//		UtilServerGame.syncGameModel(this);
+				//	UtilServerGame.syncGameModel(this);
+				getResult().setAnimation(new Animation(AnimationType.TRICKSTER, defCoordinate, toCoordinate, defender.getId()));
+				//		UtilServerGame.syncGameModel(this);
+				getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
+				actionStatus = ActionStatus.SKILL_CHOICE_YES;
+				getGameState().pushCurrentStepOnStack();
+			} else {
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
-				fieldModel.setPlayerState(defender, fieldModel.getPlayerState(defender).changeBase(PlayerState.STANDING));
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
 				ServerUtilBlock.updateDiceDecorations(game);
 				UtilServerGame.syncGameModel(this);
@@ -207,6 +217,7 @@ public class StepTrickster extends AbstractStep {
 
 		IServerJsonOption.USING_TRICKSTER.addTo(jsonObject, usingTrickster);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, toCoordinate);
+		IServerJsonOption.STATUS.addTo(jsonObject, actionStatus.name());
 		return jsonObject;
 	}
 
@@ -229,6 +240,7 @@ public class StepTrickster extends AbstractStep {
 
 		usingTrickster = IServerJsonOption.USING_TRICKSTER.getFrom(source, jsonObject);
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		actionStatus = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
 		return this;
 	}
 

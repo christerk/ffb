@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.handler;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -173,6 +174,10 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 				case KICK_TEAM_MATE:
 					Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
 					game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
+					break;
+				case TRICKSTER:
+					Player<?> player = game.getPlayerById(animation.getThrownPlayerId());
+					game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeBase(PlayerState.STANDING));
 					break;
 				default:
 					break;

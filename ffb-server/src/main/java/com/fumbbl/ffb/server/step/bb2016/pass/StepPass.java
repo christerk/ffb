@@ -185,9 +185,9 @@ public class StepPass extends AbstractStepWithReRoll {
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
 			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
 				getResult()
-					.setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate(), null));
+					.setAnimation(new Animation(AnimationType.THROW_BOMB, startCoordinate, game.getPassCoordinate()));
 			} else {
-				getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate(), null));
+				getResult().setAnimation(new Animation(AnimationType.PASS, startCoordinate, game.getPassCoordinate()));
 			}
 			UtilServerGame.syncGameModel(this);
 			Player<?> catcher = game.getPlayerById(state.CatcherId);
