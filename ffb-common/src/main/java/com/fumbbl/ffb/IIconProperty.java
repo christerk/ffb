@@ -264,6 +264,8 @@ public interface IIconProperty {
 	String ANIMATION_TRICKSTER_GLOW_2 = "animation.trickster.glow.2";
 	String ANIMATION_TRICKSTER_GLOW_3 = "animation.trickster.glow.3";
 	String ANIMATION_TRICKSTER_GLOW_4 = "animation.trickster.glow.4";
+	String ANIMATION_TRICKSTER_EXPLOSION_1 = "animation.trickster.explosion.1";
+	String ANIMATION_TRICKSTER_EXPLOSION_2 = "animation.trickster.explosion.2";
 
 	String ANIMATION_KICKOFF_BLITZ = "animation.kickoff.blitz";
 	String ANIMATION_KICKOFF_BLIZZARD = "animation.kickoff.blizzard";

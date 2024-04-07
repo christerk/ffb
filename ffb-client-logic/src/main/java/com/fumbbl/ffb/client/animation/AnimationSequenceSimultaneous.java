@@ -27,8 +27,8 @@ public class AnimationSequenceSimultaneous implements IAnimationSequence, Action
 			new AnimationFrame[]{
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 120, SoundId.HYPNO),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_2, 0.6f, 120),
-				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_3, 0.4f, 120),
-				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_4, 0.2f, 0.8d, 120),
+				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_3, 0.5f, 120),
+				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_4, 0.4f, 0.8d, 120),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d, 150),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, 150),
 				new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, 200),
@@ -45,10 +45,8 @@ public class AnimationSequenceSimultaneous implements IAnimationSequence, Action
 		},
 			new AnimationSequenceSimultaneous(animation.getEndCoordinate(),
 				new AnimationFrame[]{
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_2, 0.6f, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_3, 0.4f, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_4, 0.2f, 0.8d, 120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_1, 0.8f, 0.6d, 120, SoundId.BLUNDER),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_2, 0.6f, 0.6d,120),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d, 150),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, 150),
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, 200),
