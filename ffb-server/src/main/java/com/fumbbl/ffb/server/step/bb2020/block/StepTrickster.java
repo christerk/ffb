@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTrickster extends AbstractStep {
 
-	private boolean fUsingStab, usingChainsaw, usingVomit;
+	private boolean fUsingStab, usingChainsaw, usingVomit, withBall;
 	private TurnMode lastTurnMode;
 	private final List<FieldCoordinate> eligibleSquares = new ArrayList<>();
 	private Boolean usingTrickster;
@@ -169,6 +170,7 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.add(eligibleSquares.stream().map(coord -> new MoveSquare(coord, 0, 0))
 					.toArray(MoveSquare[]::new));
 			} else if (ActionStatus.WAITING_FOR_SKILL_USE == actionStatus) {
+				withBall = UtilPlayer.hasBall(game,defender);
 				FieldCoordinate defCoordinate = fieldModel.getPlayerCoordinate(defender);
 				fieldModel.replaceMultiBlockTargetCoordinate(defCoordinate, toCoordinate);
 				getResult().setAnimation(new Animation(AnimationType.TRICKSTER, defCoordinate, toCoordinate, defender.getId()));
@@ -179,8 +181,11 @@ public class StepTrickster extends AbstractStep {
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
 				ServerUtilBlock.updateDiceDecorations(game);
+				if (withBall) {
+					fieldModel.setBallCoordinate(toCoordinate);
+				}
 				UtilServerGame.syncGameModel(this);
-				if (toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
+				if (!withBall && toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 				}
 				leave();
@@ -215,6 +220,7 @@ public class StepTrickster extends AbstractStep {
 		IServerJsonOption.USING_TRICKSTER.addTo(jsonObject, usingTrickster);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, toCoordinate);
 		IServerJsonOption.STATUS.addTo(jsonObject, actionStatus.name());
+		IServerJsonOption.WITH_BALL.addTo(jsonObject, withBall);
 		return jsonObject;
 	}
 
@@ -238,6 +244,7 @@ public class StepTrickster extends AbstractStep {
 		usingTrickster = IServerJsonOption.USING_TRICKSTER.getFrom(source, jsonObject);
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		actionStatus = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
+		withBall = IServerJsonOption.WITH_BALL.getFrom(source, jsonObject);
 		return this;
 	}
 
