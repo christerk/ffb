@@ -8,6 +8,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -261,7 +262,11 @@ public class PlayerIconFactory {
 				case PlayerState.BLOCKED:
 				case PlayerState.FALLING:
 				case PlayerState.HIT_ON_GROUND:
-					if (game.isHomePlaying()) {
+					boolean useHomeProperty = game.isHomePlaying();
+					if (game.getTurnMode() == TurnMode.TRICKSTER) {
+						useHomeProperty = !useHomeProperty;
+					}
+					if (useHomeProperty) {
 						decorationProperty2 = IIconProperty.DECORATION_BLOCK_HOME;
 					} else {
 						decorationProperty2 = IIconProperty.DECORATION_BLOCK_AWAY;

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
@@ -18,31 +19,36 @@ import javax.swing.Timer;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class AnimationSequenceChained implements IAnimationSequence, ActionListener {
 
 	public static AnimationSequenceChained createAnimationSequenceTrickster(FantasyFootballClient client, Animation animation) {
 		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
+		Player<?> player = client.getGame().getPlayerById(animation.getThrownPlayerId());
+		BufferedImage icon = playerIconFactory.getIcon(client, player);
+
 		return new AnimationSequenceChained(
 			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),
 				new AnimationFrame[]{
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 120, SoundId.HYPNO),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_2, 0.6f, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_3, 0.5f, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_4, 0.4f, 0.8d, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d, 150),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, 150),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, 200),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, 200),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_1, 0.8f, 1.0d, icon, 1.0f, 1.0d,120, SoundId.HYPNO),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_2, 0.6f, 1.0d, icon, 0.9f, 0.95d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_3, 0.5f, 1.0d, icon, 0.8f, 0.9d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_GLOW_4, 0.4f, 0.8d, icon, 0.7f, 0.85d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d,icon, 0.5f, 0.6d, 120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, icon, 0.3f, 0.4d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, icon, 0.2f, 0.2d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, icon, 0.0f, 0.05d,120),
 				}),
 			new AnimationData(dimensionProvider.mapToLocal(animation.getEndCoordinate(), true),
 				new AnimationFrame[]{
 					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_1, 0.8f, 0.6d, 120, SoundId.BLUNDER),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_2, 0.6f, 0.6d, 120),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d, 150),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, 150),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, 200),
-					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, 200),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_EXPLOSION_2, 0.6f, 0.6d, icon, 0.2f, 0.2d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_1, 1.0f, 0.35d, icon, 0.4f, 0.4d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_2, 1.0f, 0.35d, icon, 0.8f, 0.8d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_3, 0.7f, 0.35d, icon, 0.9f, 0.9d,120),
+					new AnimationFrame(IIconProperty.ANIMATION_TRICKSTER_SMOKE_4, 0.5f, 0.35d, icon, 1.0f, 1.0d,120),
 				})
 		) {
 			@Override
