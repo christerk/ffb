@@ -7,7 +7,6 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
@@ -172,9 +171,7 @@ public class StepTrickster extends AbstractStep {
 			} else if (ActionStatus.WAITING_FOR_SKILL_USE == actionStatus) {
 				FieldCoordinate defCoordinate = fieldModel.getPlayerCoordinate(defender);
 				fieldModel.replaceMultiBlockTargetCoordinate(defCoordinate, toCoordinate);
-				//	UtilServerGame.syncGameModel(this);
 				getResult().setAnimation(new Animation(AnimationType.TRICKSTER, defCoordinate, toCoordinate, defender.getId()));
-				//		UtilServerGame.syncGameModel(this);
 				getResult().setNextAction(StepAction.NEXT_STEP_AND_REPEAT);
 				actionStatus = ActionStatus.SKILL_CHOICE_YES;
 				getGameState().pushCurrentStepOnStack();
