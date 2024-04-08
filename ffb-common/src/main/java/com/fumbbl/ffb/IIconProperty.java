@@ -206,7 +206,8 @@ public interface IIconProperty {
 	String CURSOR_INVALID_RAID = "cursor.invalidraid";
 	String CURSOR_HIT_AND_RUN = "cursor.hitandrun";
 	String CURSOR_INVALID_HIT_AND_RUN = "cursor.invalidhitandrun";
-
+	String CURSOR_TRICKSTER = "cursor.trickster";
+	String CURSOR_INVALID_TRICKSTER = "cursor.invalidtrickster";
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
 	String BLOODSPOT_BH = "bloodspot.bh";

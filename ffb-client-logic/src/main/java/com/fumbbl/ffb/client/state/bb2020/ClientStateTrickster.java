@@ -62,16 +62,16 @@ public class ClientStateTrickster extends ClientState {
 
 	@Override
 	protected boolean mouseOverPlayer(Player<?> player) {
-		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_RAID);
+		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
 		return true;
 	}
 
 	@Override
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
 		if (getClient().getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_RAID);
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_TRICKSTER);
 		} else {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_RAID);
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
 		}
 
 		return true;
