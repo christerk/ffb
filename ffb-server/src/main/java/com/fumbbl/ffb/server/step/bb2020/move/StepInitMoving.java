@@ -273,6 +273,9 @@ public class StepInitMoving extends AbstractStep {
 							publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, false));
 						}
 
+					} else if (skill.hasSkillProperty(NamedProperties.canIgnoreJumpModifiers)) {
+						actingPlayer.setJumpsWithoutModifiers(true);
+						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 					}
 					break;
 				default:

@@ -41,6 +41,9 @@ public class NamedProperties {
 	public static final ISkillProperty canBlockTwoAtOnce = new NamedProperty("Can Block Two At Once");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
+	public static final ISkillProperty canChooseToIgnoreDodgeModifierAfterRoll = new NamedProperty("Can Choose To Ignore Dodge Modifier After Roll");
+	public static final ISkillProperty canChooseToIgnoreJumpModifierAfterRoll = new NamedProperty("Can Choose To Ignore Jump Modifier After Roll");
+	public static final ISkillProperty canChooseToIgnoreRushModifierAfterRoll = new NamedProperty("Can Choose To Ignore Rush Modifier After Roll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 		"Can Choose Own Pushed Back Square");
 	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
@@ -77,9 +80,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
 	public static final ISkillProperty canMakeOpponentMissTurn = new NamedProperty("Can Make Opponent Miss Turn");
-	public static final ISkillProperty canChooseToIgnoreDodgeModifierAfterRoll = new NamedProperty("Can Choose To Ignore Dodge Modifier After Roll");
-	public static final ISkillProperty canChooseToIgnoreJumpModifierAfterRoll = new NamedProperty("Can Choose To Ignore Jump Modifier After Roll");
-	public static final ISkillProperty canChooseToIgnoreRushModifierAfterRoll = new NamedProperty("Can Choose To Ignore Rush Modifier After Roll");
+	public static final ISkillProperty canIgnoreJumpModifiers = new NamedProperty("Can Ignore Jump Modifiers");
 
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");

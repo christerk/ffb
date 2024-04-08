@@ -36,6 +36,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -53,6 +54,14 @@ public class ClientStateMove extends ClientState {
 	protected boolean isJumpAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		return mechanic.isAvailableAsNextMove(game, actingPlayer, jumping);
+	}
+
+	protected Optional<Skill> isBoundingLeapAvailable(Game game, ActingPlayer actingPlayer) {
+		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+			return Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers));
+		}
+
+		return Optional.empty();
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
@@ -283,6 +292,9 @@ public class ClientStateMove extends ClientState {
 						communication.sendUseSkill(skill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
+					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
+						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
 				default:
 					break;
 			}
@@ -335,6 +347,16 @@ public class ClientStateMove extends ClientState {
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
+
+				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				if (boundingLeap.isPresent()) {
+					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
+						"Jump (" + boundingLeap.get().getName() + ")",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
+					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
+					menuItemList.add(specialJumpAction);
+				}
 			}
 		}
 		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
@@ -451,6 +473,9 @@ public class ClientStateMove extends ClientState {
 					return true;
 				case PLAYER_ACTION_CATCH_OF_THE_DAY:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+					return true;
+				case PLAYER_ACTION_BOUNDING_LEAP:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					return true;
 				default:
 					actionHandled = false;

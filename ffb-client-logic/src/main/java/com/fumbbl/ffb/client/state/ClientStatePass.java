@@ -19,6 +19,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
@@ -27,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -211,16 +213,28 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			JMenuItem jumpAction;
+			JMenuItem specialJumpAction = null;
 			if (actingPlayer.isJumping()) {
 				jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
 			} else {
 				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				if (boundingLeap.isPresent()) {
+					specialJumpAction = new JMenuItem(dimensionProvider(),
+						"Jump (" + boundingLeap.get().getName() + ")",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
+					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
+				}
 			}
 			jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 			jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 			menuItemList.add(jumpAction);
+			if (specialJumpAction != null) {
+				menuItemList.add(specialJumpAction);
+			}
 		}
 
 		if (!actingPlayer.hasPassed()) {

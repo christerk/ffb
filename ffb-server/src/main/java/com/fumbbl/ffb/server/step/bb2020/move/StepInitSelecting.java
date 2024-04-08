@@ -56,6 +56,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilActingPlayer;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -400,6 +401,10 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.BLACK_INK;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canIgnoreJumpModifiers)) {
+							actingPlayer.setJumpsWithoutModifiers(true);
+							UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					}
 					break;

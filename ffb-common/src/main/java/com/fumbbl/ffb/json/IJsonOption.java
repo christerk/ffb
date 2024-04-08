@@ -247,6 +247,7 @@ public interface IJsonOption {
 	JsonBooleanOption IS_OWN_CHOICE = new JsonBooleanOption("isOwnChoice");
 	JsonBooleanOption IS_SCATTER = new JsonBooleanOption("isScatter");
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
+	JsonBooleanOption JUMPS_WITHOUT_MODIFIERS = new JsonBooleanOption("jumpsWithoutModifiers");
 	JsonStringArrayOption KEYWORDS = new JsonStringArrayOption("keywords");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");

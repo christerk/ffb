@@ -170,6 +170,10 @@ public class ClientStateFoul extends ClientStateMove {
 						communication.sendUseSkill(skill, true, pPlayer.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
+					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
+						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
+					break;
 				default:
 					break;
 			}

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class Skill implements INamedObject {
+public abstract class Skill implements INamedObject, Comparable<Skill> {
 
 	private final String name;
 	private final SkillCategory category;
@@ -352,5 +352,10 @@ public abstract class Skill implements INamedObject {
 
 	public boolean eligible() {
 		return true;
+	}
+
+	@Override
+	public int compareTo(Skill o) {
+		return this.name.compareTo(o.name);
 	}
 }
