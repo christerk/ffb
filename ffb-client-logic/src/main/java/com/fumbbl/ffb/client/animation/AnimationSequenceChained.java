@@ -51,7 +51,9 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 				Game game = client.getGame();
 				FieldModel fieldModel = game.getFieldModel();
 				Player<?> player = game.getPlayerById(animation.getThrownPlayerId());
-				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(PlayerState.IN_THE_AIR));
+				PlayerState playerState = fieldModel.getPlayerState(player);
+				animation.setOldPlayerState(playerState);
+				fieldModel.setPlayerState(player, playerState.changeBase(PlayerState.IN_THE_AIR));
 			}
 		};
 	}

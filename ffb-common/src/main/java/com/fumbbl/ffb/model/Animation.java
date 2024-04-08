@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -22,6 +23,7 @@ public class Animation implements IJsonSerializable {
 	private FieldCoordinate fEndCoordinate;
 	private FieldCoordinate fInterceptorCoordinate;
 	private Card fCard;
+	private transient PlayerState oldPlayerState;
 
 	public Animation() {
 		super();
@@ -129,4 +131,11 @@ public class Animation implements IJsonSerializable {
 		return this;
 	}
 
+	public PlayerState getOldPlayerState() {
+		return oldPlayerState;
+	}
+
+	public void setOldPlayerState(PlayerState oldPlayerState) {
+		this.oldPlayerState = oldPlayerState;
+	}
 }
