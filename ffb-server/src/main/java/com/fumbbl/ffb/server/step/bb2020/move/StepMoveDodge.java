@@ -166,7 +166,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					}
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-			} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedDodge)) {
+			} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreDodgeModifierAfterRoll)) {
 				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
 				if (!usingModifierIgnoringSkill) {
 					setReRollSource(findSkillReRollSource(ReRolledActions.DODGE));
@@ -252,7 +252,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 
 		if (successWithoutModifiers) {
-			ignoreModifierSkill = Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedDodge));
+			ignoreModifierSkill = Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreDodgeModifierAfterRoll));
 			if (!ignoreModifierSkill.isPresent()) {
 				successWithoutModifiers = false;
 			}

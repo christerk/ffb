@@ -77,9 +77,9 @@ public class NamedProperties {
 	public static final ISkillProperty canMakeAnExtraGfi = new NamedProperty("Can Make Extra GFI");
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
 	public static final ISkillProperty canMakeOpponentMissTurn = new NamedProperty("Can Make Opponent Miss Turn");
-	public static final ISkillProperty canMakeUnmodifiedDodge = new NamedProperty("Can Make Unmodified Dodge");
-	public static final ISkillProperty canMakeUnmodifiedJump = new NamedProperty("Can Make Unmodified Jump");
-	public static final ISkillProperty canMakeUnmodifiedRush = new NamedProperty("Can Make Unmodified Rush");
+	public static final ISkillProperty canChooseToIgnoreDodgeModifierAfterRoll = new NamedProperty("Can Choose To Ignore Dodge Modifier After Roll");
+	public static final ISkillProperty canChooseToIgnoreJumpModifierAfterRoll = new NamedProperty("Can Choose To Ignore Jump Modifier After Roll");
+	public static final ISkillProperty canChooseToIgnoreRushModifierAfterRoll = new NamedProperty("Can Choose To Ignore Rush Modifier After Roll");
 
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");

@@ -115,7 +115,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedRush)) {
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreRushModifierAfterRoll)) {
 				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
 				if (!usingModifierIgnoringSkill) {
 					setReRollSource(findSkillReRollSource(ReRolledActions.RUSH));
@@ -214,7 +214,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, diceInterpreter.minimumRollGoingForIt(Collections.emptySet()));
 		Skill skill = null;
 		if (successfulWithoutModifiers) {
-			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedRush);
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreRushModifierAfterRoll);
 		}
 
 		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {

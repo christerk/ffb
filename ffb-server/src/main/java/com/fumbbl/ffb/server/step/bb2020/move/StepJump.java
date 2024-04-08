@@ -74,7 +74,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	private Boolean usingDivingTackle;
 	private boolean alreadyReported;
 	private ActionStatus status;
-	private Boolean usingModifierIgnoringSkill;
+	private Boolean useIgnoreModifierAfterRollSkill;
 
 
 	public StepJump(GameState pGameState) {
@@ -128,8 +128,8 @@ public class StepJump extends AbstractStepWithReRoll {
 			}
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 				ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedJump)) {
-					usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
+				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreJumpModifierAfterRoll)) {
+					useIgnoreModifierAfterRollSkill = commandUseSkill.isSkillUsed();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
@@ -155,10 +155,10 @@ public class StepJump extends AbstractStepWithReRoll {
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
-			if (ReRolledActions.JUMP == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+			if (ReRolledActions.JUMP == getReRolledAction() && !Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+					if (!Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 						handleFailure(game);
 						doLeap = false;
 					}
@@ -240,10 +240,10 @@ public class StepJump extends AbstractStepWithReRoll {
 		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, mechanic.minimumRollJump(actingPlayer.getPlayer(), Collections.emptySet()));
 		Skill skill = null;
 		if (successfulWithoutModifiers) {
-			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedJump);
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
 		}
 
-		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
+		if (Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill) && skill != null) {
 			actingPlayer.markSkillUsed(skill);
 			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
 			status = ActionStatus.SUCCESS;
@@ -266,7 +266,7 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.JUMP, minimumRoll, false, skill)) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
-			} else if (usingModifierIgnoringSkill == null && skill != null) {
+			} else if (useIgnoreModifierAfterRollSkill == null && skill != null) {
 				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
 				return ActionStatus.WAITING_FOR_SKILL_USE;
 			}
@@ -327,7 +327,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, usingDivingTackle);
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
-		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, usingModifierIgnoringSkill);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, useIgnoreModifierAfterRollSkill);
 		if (status != null) {
 			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
 		}
@@ -343,7 +343,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
-		usingModifierIgnoringSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		useIgnoreModifierAfterRollSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
 		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(statusString)) {
 			status = ActionStatus.valueOf(statusString);
