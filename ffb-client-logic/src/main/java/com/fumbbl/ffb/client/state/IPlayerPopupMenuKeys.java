@@ -50,5 +50,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
 	int KEY_BLACK_INK = KeyEvent.VK_L;
 	int KEY_CATCH_OF_THE_DAY = KeyEvent.VK_D;
-	int KEY_BOUNDING_LEAP = KeyEvent.VK_B;
+	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
 }
