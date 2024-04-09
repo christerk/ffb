@@ -237,7 +237,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
 					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
-				} else if (lashedOutAgainstOpponent) {
+				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction() == BLOCK && action == null)) {
 					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
 					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));

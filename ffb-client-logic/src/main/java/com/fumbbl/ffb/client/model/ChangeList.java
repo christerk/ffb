@@ -17,6 +17,7 @@ public class ChangeList {
 			.addRuleChange("Reduce Master Chef costs are now only available to Halfling teams and not all Halfling Thimble Cup teams")
 			.addFeature("My Ball")
 			.addFeature("Bounding Leap")
+			.addBugfix("Primal Savagery: When lashing out against an opponent during a block action that was not the target of the block, the action got skipped after lashing out")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")
