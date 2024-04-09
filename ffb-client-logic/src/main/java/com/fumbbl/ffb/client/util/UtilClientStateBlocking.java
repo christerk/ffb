@@ -221,7 +221,11 @@ public class UtilClientStateBlocking {
 			FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
-			return diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate);
+			Player<?> defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
+			boolean opponentCanMove = UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.canMoveBeforeBeingBlocked);
+			return diceDecoration != null
+				&& (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove))
+				&& targetCoordinate.isAdjacent(playerCoordinate);
 		}
 
 		return false;

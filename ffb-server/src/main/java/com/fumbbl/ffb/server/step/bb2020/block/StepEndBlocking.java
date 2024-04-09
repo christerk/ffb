@@ -123,7 +123,9 @@ public class StepEndBlocking extends AbstractStep {
 							FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
 							FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 							DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
-							if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2) && targetCoordinate.isAdjacent(playerCoordinate)) {
+							Player<?> defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
+							boolean opponentCanMove = UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.canMoveBeforeBeingBlocked);
+							if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
 								targetSelectionState.addUsedSkill(commandUseSkill.getSkill());
 								getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
 								ServerUtilBlock.updateDiceDecorations(game);
