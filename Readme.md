@@ -59,7 +59,7 @@ The main class is `com.fumbbl.ffb.server.FantasyFootballServer`
 | -inifile [filepath]  | Path to server config file, [server.ini](ffb-server/server.ini) can be used as a template                                                                                   |
 | -override [filepath] | Path to an override file supporting the same syntax and values as `inifile`. This allows to use a base ini file and apply environment specific overrides                    |
 
-The server requires a database (connection data has to be defined in ini files), currently mysql or mariadb are supported.
+The server requires a database (connection data has to be defined in ini files), currently mysql up to 5.6 or mariadb up to 10.4. are supported by the used mysql-connector lib (5.1.27).
 
 ## Client
 
