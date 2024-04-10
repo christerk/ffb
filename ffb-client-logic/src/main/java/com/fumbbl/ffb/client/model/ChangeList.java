@@ -18,6 +18,7 @@ public class ChangeList {
 			.addFeature("My Ball")
 			.addFeature("Bounding Leap")
 			.addBugfix("Primal Savagery: When lashing out against an opponent during a block action that was not the target of the block, the action got skipped after lashing out")
+			.addBugfix("Animal Savagery: When failing AS for TTM of an adjacent player and another adjacent team-mate the select dialog was not displayed but instead the game froze")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")
