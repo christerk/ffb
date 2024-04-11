@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Primal Savagery: When lashing out against an opponent during a block action that was not the target of the block, the action got skipped after lashing out")
 			.addBugfix("Animal Savagery: When failing AS for TTM of an adjacent player and another adjacent team-mate the select dialog was not displayed but instead the game froze")
 			.addBugfix("Raiding Party: Moving a player without tackle zone onto the ball did not result in a bounce")
+			.addBugfix("Stat reductions by injuries were not always applied properly")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")
