@@ -101,7 +101,11 @@ public class IconCache {
 		}
 
 		if (StringTool.isProvided(localCacheFolder)) {
-			try (FileReader fileReader = new FileReader(localCacheFolder + LOCAL_CACHE_MAP_FILE);
+			String fileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
+			if (!new File(fileName).exists()) {
+				updateMapFile();
+			}
+			try (FileReader fileReader = new FileReader(fileName);
 					 BufferedReader reader = new BufferedReader(fileReader)) {
 
 				JsonObject jsonObject = JsonObject.readFrom(reader);
