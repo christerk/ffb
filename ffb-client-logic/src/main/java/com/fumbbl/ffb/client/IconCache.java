@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.tools.UtilHttpClient;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
@@ -22,13 +23,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -267,9 +262,12 @@ public class IconCache {
 
 		} else {
 			URL iconUrl = null;
-			try {
-				iconUrl = new URL(pUrl);
-				BufferedImage icon = ImageIO.read(iconUrl);
+			ByteArrayInputStream pngByteStream;
+            try {
+                iconUrl = new URL(pUrl);
+                pngByteStream = new ByteArrayInputStream(UtilHttpClient.fetchBytes(pUrl));
+                BufferedImage icon = ImageIO.read(pngByteStream);
+				pngByteStream.close();
 				fIconByKey.put(pUrl, icon);
 				addLocalCacheEntry(iconUrl, icon);
 			} catch (Exception pAny) {
