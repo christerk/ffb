@@ -152,7 +152,12 @@ public class StepPickUp extends AbstractStepWithReRoll {
 					}
 				}
 			} else {
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+				// a player of the own team without tackle zone was moved onto the ball with e.g. Raiding Party or some other voluntary movement (no chain pushes)
+				// this should be considered a pickup fail, unless the player has e.g. Ball And Chain
+				if (game.getActingTeam().hasPlayer(player) && !player.hasSkillProperty(NamedProperties.preventPickup)) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
 		} else {
