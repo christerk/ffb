@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Animal Savagery: When failing AS for TTM of an adjacent player and another adjacent team-mate the select dialog was not displayed but instead the game froze")
 			.addBugfix("Raiding Party: Moving a player without tackle zone onto the ball did not result in a bounce")
 			.addBugfix("Stat reductions by injuries were not always applied properly")
+			.addBugfix("Sure Feet: Did trigger during Blitz! kick-off event and caused the game to crash")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")

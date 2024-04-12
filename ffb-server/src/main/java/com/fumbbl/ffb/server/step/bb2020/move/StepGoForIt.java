@@ -234,9 +234,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		} else {
 			if (getReRolledAction() != ReRolledActions.RUSH) {
 				setReRolledAction(ReRolledActions.RUSH);
-				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
-
-				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
+				ReRollSource gfiRerollSource = null;
+				if (TurnMode.REGULAR == game.getTurnMode()) {
+					gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
+				}
+				if (gfiRerollSource != null) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
 						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
@@ -247,7 +249,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, null, minimumRoll, false, skill)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
