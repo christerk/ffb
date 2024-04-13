@@ -172,4 +172,8 @@ public final class UtilCards {
 			.min(Comparator.comparingInt(ReRollSource::getPriority))
 			.orElse(null);
 	}
+
+	public static Optional<Skill> getSkillForReRollSource(Player<?> player, ReRollSource reRollSource, ReRolledAction reRolledAction) {
+		return Arrays.stream(UtilCards.findAllSkills(player)).filter(skill -> reRollSource == skill.getRerollSource(reRolledAction)).findFirst();
+	}
 }

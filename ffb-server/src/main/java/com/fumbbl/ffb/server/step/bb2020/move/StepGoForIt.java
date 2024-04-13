@@ -45,6 +45,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -234,11 +235,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		} else {
 			if (getReRolledAction() != ReRolledActions.RUSH) {
 				setReRolledAction(ReRolledActions.RUSH);
-				ReRollSource gfiRerollSource = null;
-				if (TurnMode.REGULAR == game.getTurnMode()) {
-					gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
-				}
-				if (gfiRerollSource != null) {
+				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
+
+				if (TurnMode.REGULAR == game.getTurnMode() && gfiRerollSource != null) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
 						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
@@ -249,7 +248,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, null, minimumRoll, false, skill)) {
+					Set<Skill> ignore = new HashSet<>();
+					if (gfiRerollSource != null) {
+						UtilCards.getSkillForReRollSource(actingPlayer.getPlayer(), gfiRerollSource, ReRolledActions.RUSH).ifPresent(ignore::add);
+					}
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer,
+						ReRolledActions.RUSH, minimumRoll, false, skill, ignore)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;
