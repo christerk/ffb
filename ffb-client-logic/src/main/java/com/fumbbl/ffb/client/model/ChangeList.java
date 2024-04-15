@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Raiding Party: Moving a player without tackle zone onto the ball did not result in a bounce")
 			.addBugfix("Stat reductions by injuries were not always applied properly")
 			.addBugfix("Sure Feet: Did trigger during Blitz! kick-off event and caused the game to crash")
+			.addBugfix("Animal Savagery: When lashing out against a player to be thrown that player was still able to make their landing roll")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")
