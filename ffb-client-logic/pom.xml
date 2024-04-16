@@ -92,5 +92,11 @@
             <artifactId>tritonus_share</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.fumbbl.ffb</groupId>
+            <artifactId>ffb-tools</artifactId>
+            <version>2.27.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
