@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Stat reductions by injuries were not always applied properly")
 			.addBugfix("Sure Feet: Did trigger during Blitz! kick-off event and caused the game to crash")
 			.addBugfix("Animal Savagery: When lashing out against a player to be thrown that player was still able to make their landing roll")
+			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
 		);
 
 		versions.add(new VersionChangeList("2.26.1")

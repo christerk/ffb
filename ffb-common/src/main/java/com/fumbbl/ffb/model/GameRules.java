@@ -15,6 +15,8 @@ public class GameRules implements IFactorySource {
 	private final FactoryManager manager;
 	private final IFactorySource applicationSource;
 
+	private boolean initialized;
+
 	public GameRules(IFactorySource applicationSource, FactoryManager manager) {
 		this.manager = manager;
 		this.applicationSource = applicationSource;
@@ -25,6 +27,11 @@ public class GameRules implements IFactorySource {
 		for (INamedObjectFactory factory : factories.values()) {
 			factory.initialize(game);
 		}
+		initialized = true;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 	public SkillFactory getSkillFactory() {
