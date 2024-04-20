@@ -198,7 +198,7 @@ public final class StepInitBomb extends AbstractStep {
                 }
             } else {
                 game.getFieldModel().setBombCoordinate(null);
-                getResult().setAnimation(new Animation(AnimationType.BOMB_EXLOSION, fBombCoordinate));
+                getResult().setAnimation(new Animation(AnimationType.BOMB_EXPLOSION, fBombCoordinate));
                 UtilServerGame.syncGameModel(this);
                 game.getFieldModel().add(new BloodSpot(fBombCoordinate, new PlayerState(PlayerState.HIT_BY_BOMB)));
                 List<Player<?>> affectedPlayers = new ArrayList<>();

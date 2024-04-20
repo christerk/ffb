@@ -96,13 +96,13 @@ public class StepMultipleBlockFork extends AbstractStep {
 			Sequence sequence = new Sequence(getGameState());
 			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
 			sequence.add(StepId.DOUBLE_STRENGTH);
+			blockGroup.forEach(target -> {
+				sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+				sequence.add(StepId.TRICKSTER);
+				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+			});
 			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup),
 				StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
-			blockGroup.forEach(target -> {
-				Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
-				PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
-				getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedBlockTarget(false));
-			});
 			getGameState().getStepStack().push(sequence.getSequence());
 		}
 
@@ -112,7 +112,9 @@ public class StepMultipleBlockFork extends AbstractStep {
 			stabGroup.forEach(
 				target -> {
 					Sequence sequence = new Sequence(getGameState());
-					sequence.add(StepId.SET_DEFENDER, IStepLabel.NEXT, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+					sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+					sequence.add(StepId.TRICKSTER);
+					sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
 					sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 					sequence.add(StepId.REPORT_STAB_INJURY, IStepLabel.NEXT, StepParameter.from(StepParameterKey.PLAYER_ID, target.getPlayerId()));
@@ -121,9 +123,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 					publishParameter(StepParameter.from(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
 					publishParameter(StepParameter.from(StepParameterKey.USING_STAB, true));
 
-					Player<?> player = getGameState().getGame().getPlayerById(target.getPlayerId());
-					PlayerState playerState = getGameState().getGame().getFieldModel().getPlayerState(player);
-					getGameState().getGame().getFieldModel().setPlayerState(player, playerState.changeSelectedStabTarget(false));
 				}
 			);
 		}

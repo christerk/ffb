@@ -123,14 +123,14 @@ public class StepMissedPass extends AbstractStep {
 		game.getFieldModel().setRangeRuler(null);
 		if (PlayerAction.HAIL_MARY_PASS == game.getThrowerAction()) {
 			getResult()
-				.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate, null));
+				.setAnimation(new Animation(AnimationType.HAIL_MARY_PASS, throwerCoordinate, lastValidCoordinate));
 		} else if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 			getResult()
-					.setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate, null));
+					.setAnimation(new Animation(AnimationType.HAIL_MARY_BOMB, throwerCoordinate, lastValidCoordinate));
 		} else if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-			getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate, null));
+			getResult().setAnimation(new Animation(AnimationType.THROW_BOMB, throwerCoordinate, lastValidCoordinate));
 		} else {
-			getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate, null));
+			getResult().setAnimation(new Animation(AnimationType.PASS, throwerCoordinate, lastValidCoordinate));
 		}
 		UtilServerGame.syncGameModel(this);
 		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {

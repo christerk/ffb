@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -52,6 +53,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -74,7 +76,8 @@ public class StepJump extends AbstractStepWithReRoll {
 	private Boolean usingDivingTackle;
 	private boolean alreadyReported;
 	private ActionStatus status;
-	private Boolean usingModifierIgnoringSkill;
+	private Boolean useIgnoreModifierAfterRollSkill;
+	private boolean useIgnoreModifierSkill;
 
 
 	public StepJump(GameState pGameState) {
@@ -128,8 +131,8 @@ public class StepJump extends AbstractStepWithReRoll {
 			}
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 				ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedJump)) {
-					usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
+				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreJumpModifierAfterRoll)) {
+					useIgnoreModifierAfterRollSkill = commandUseSkill.isSkillUsed();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
@@ -142,9 +145,13 @@ public class StepJump extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.MOVE_START) {
-			moveStart = (FieldCoordinate) parameter.getValue();
-			return true;
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case MOVE_START: {
+					moveStart = (FieldCoordinate) parameter.getValue();
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -155,16 +162,26 @@ public class StepJump extends AbstractStepWithReRoll {
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
-			if (ReRolledActions.JUMP == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+			if (ReRolledActions.JUMP == getReRolledAction() && !Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 				if ((getReRollSource() == null)
 					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					if (!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+					if (!Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 						handleFailure(game);
 						doLeap = false;
 					}
 				}
 			}
+			useIgnoreModifierSkill = actingPlayer.isJumpsWithoutModifiers();
 			if (doLeap) {
+				if (useIgnoreModifierSkill) {
+					Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
+					if (skill == null) {
+						useIgnoreModifierSkill = false;
+					} else {
+						usingDivingTackle = false;
+						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
+					}
+				}
 				switch (leap()) {
 					case SUCCESS:
 						actingPlayer.setJumping(false);
@@ -227,8 +244,11 @@ public class StepJump extends AbstractStepWithReRoll {
 				});
 			}
 		}
-		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
-		jumpModifiers.addAll(divingTackleModifiers);
+		Set<JumpModifier> jumpModifiers = new HashSet<>();
+		if (!useIgnoreModifierSkill) {
+			jumpModifiers.addAll(modifierFactory.findModifiers(context));
+			jumpModifiers.addAll(divingTackleModifiers);
+		}
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 		if (status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) {
@@ -238,19 +258,19 @@ public class StepJump extends AbstractStepWithReRoll {
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, mechanic.minimumRollJump(actingPlayer.getPlayer(), Collections.emptySet()));
-		Skill skill = null;
+		Skill ignoreModifiersAfterRollSkill = null;
 		if (successfulWithoutModifiers) {
-			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedJump);
+			ignoreModifiersAfterRollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
 		}
 
-		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
-			actingPlayer.markSkillUsed(skill);
-			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
+		if (Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill) && ignoreModifiersAfterRollSkill != null) {
+			actingPlayer.markSkillUsed(ignoreModifiersAfterRollSkill);
+			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
 			status = ActionStatus.SUCCESS;
 			return status;
 		}
 
-		boolean successful = diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
+		boolean successful = useIgnoreModifierSkill ? successfulWithoutModifiers : diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 		getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll,
 			minimumRoll, reRolled, jumpModifiers.toArray(new JumpModifier[0])));
 		if (successful) {
@@ -261,15 +281,29 @@ public class StepJump extends AbstractStepWithReRoll {
 			}
 		} else {
 			status = ActionStatus.FAILURE;
+			Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
+			Set<Skill> ignoreSkills = new HashSet<>();
+			if (skill != null) {
+				ignoreSkills.add(skill);
+			}
 			if (getReRolledAction() != ReRolledActions.JUMP) {
 				setReRolledAction(ReRolledActions.JUMP);
-				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.JUMP, minimumRoll, false, skill)) {
+
+				ReRollSource skillReRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.JUMP);
+
+				if (skillReRollSource != null && (skill == null || skill.getRerollSource(ReRolledActions.JUMP) != skillReRollSource || useIgnoreModifierSkill)) {
+					status = ActionStatus.WAITING_FOR_RE_ROLL;
+					status = leap();
+				} else if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.JUMP, minimumRoll, false, ignoreModifiersAfterRollSkill, ignoreSkills)) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
-			} else if (usingModifierIgnoringSkill == null && skill != null) {
-				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
+			} else if (useIgnoreModifierAfterRollSkill == null && ignoreModifiersAfterRollSkill != null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, 0), false);
 				return ActionStatus.WAITING_FOR_SKILL_USE;
 			}
+		}
+		if (useIgnoreModifierSkill) {
+			actingPlayer.markSkillUsed(NamedProperties.canIgnoreJumpModifiers);
 		}
 		return status;
 	}
@@ -327,7 +361,8 @@ public class StepJump extends AbstractStepWithReRoll {
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, usingDivingTackle);
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
-		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, usingModifierIgnoringSkill);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL.addTo(jsonObject, useIgnoreModifierAfterRollSkill);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, useIgnoreModifierAfterRollSkill);
 		if (status != null) {
 			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
 		}
@@ -343,7 +378,8 @@ public class StepJump extends AbstractStepWithReRoll {
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
-		usingModifierIgnoringSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		useIgnoreModifierAfterRollSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		useIgnoreModifierSkill = toPrimitive(IServerJsonOption.USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL.getFrom(source, jsonObject));
 		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(statusString)) {
 			status = ActionStatus.valueOf(statusString);

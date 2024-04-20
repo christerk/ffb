@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -136,6 +137,11 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					}
 					if (dropPlayerContext.getVictimStateKey() != null) {
 						publishParameter(new StepParameter(dropPlayerContext.getVictimStateKey(), game.getFieldModel().getPlayerState(game.getDefender())));
+					}
+					if (ArrayTool.isProvided(dropPlayerContext.getAdditionalVictimStateKeys())) {
+						for (StepParameterKey additionalVictimStateKey : dropPlayerContext.getAdditionalVictimStateKeys()) {
+							publishParameter(new StepParameter(additionalVictimStateKey, game.getFieldModel().getPlayerState(game.getDefender())));
+						}
 					}
 				} else if (!dropPlayerContext.isAlreadyDropped()
 					&& dropPlayerContext.isEndTurnWithoutKnockdown() && dropPlayerContext.isEndTurn()) {

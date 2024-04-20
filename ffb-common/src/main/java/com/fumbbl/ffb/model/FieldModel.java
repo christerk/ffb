@@ -78,6 +78,7 @@ public class FieldModel implements IJsonSerializable {
 	private TargetSelectionState targetSelectionState;
 	private final Set<String> multiBlockTargets = new HashSet<>();
 	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
+	private final Set<FieldCoordinate> blockedForTricksterCoordinates = new HashSet<>();
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
 
 	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
@@ -137,6 +138,7 @@ public class FieldModel implements IJsonSerializable {
 		setPlayerState(player, playerState);
 		multiBlockTargets.add(playerId);
 		multiBlockTargetCoordinates.add(getPlayerCoordinate(player));
+		blockedForTricksterCoordinates.add(getPlayerCoordinate(player));
 	}
 
 	public void removeMultiBlockTarget(String playerId) {
@@ -146,6 +148,7 @@ public class FieldModel implements IJsonSerializable {
 
 		multiBlockTargets.remove(playerId);
 		multiBlockTargetCoordinates.remove(getPlayerCoordinate(player));
+		blockedForTricksterCoordinates.remove(getPlayerCoordinate(player));
 	}
 
 	public void clearMultiBlockTargets() {
@@ -158,6 +161,7 @@ public class FieldModel implements IJsonSerializable {
 
 		multiBlockTargets.clear();
 		multiBlockTargetCoordinates.clear();
+		blockedForTricksterCoordinates.clear();
 	}
 
 	public boolean isMultiBlockTarget(String playerId) {
@@ -166,6 +170,17 @@ public class FieldModel implements IJsonSerializable {
 
 	public boolean wasMultiBlockTargetSquare(FieldCoordinate coordinate) {
 		return multiBlockTargetCoordinates.contains(coordinate);
+	}
+
+	public void replaceMultiBlockTargetCoordinate(FieldCoordinate old, FieldCoordinate current) {
+		if (multiBlockTargetCoordinates.contains(old)) {
+			multiBlockTargetCoordinates.remove(old);
+			multiBlockTargetCoordinates.add(current);
+		}
+	}
+
+	public boolean isBlockedForTrickster(FieldCoordinate coordinate) {
+		return blockedForTricksterCoordinates.contains(coordinate);
 	}
 
 	public Player<?> getPlayer(FieldCoordinate pPlayerPosition) {

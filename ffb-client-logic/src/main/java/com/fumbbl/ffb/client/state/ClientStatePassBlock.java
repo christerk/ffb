@@ -12,8 +12,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -23,11 +21,13 @@ import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -78,6 +78,9 @@ public class ClientStatePassBlock extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
 					communication.sendActingPlayer(null, null, false);
 					break;
+				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
+					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
+						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
 				default:
 					break;
 			}
@@ -111,6 +114,15 @@ public class ClientStatePassBlock extends ClientStateMove {
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
+				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				if (boundingLeap.isPresent()) {
+					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
+						"Jump (" + boundingLeap.get().getName() + ")",
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
+					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
+					menuItemList.add(specialJumpAction);
+				}
 			}
 		}
 		if (game.getActingPlayer().getPlayer() == pPlayer) {
@@ -132,7 +144,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 			}
 		}
 		if (menuItemList.size() > 0) {
-			createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}
 	}
@@ -175,6 +187,9 @@ public class ClientStatePassBlock extends ClientStateMove {
 			case PLAYER_ACTION_JUMP:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
 				break;
+			case PLAYER_ACTION_BOUNDING_LEAP:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
+				return true;
 			default:
 				actionHandled = false;
 				break;
@@ -192,11 +207,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 				fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
 					new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},
 					DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
-				fInfoDialog.showDialog(new IDialogCloseListener() {
-					public void dialogClosed(IDialog pDialog) {
-						fInfoDialog.hideDialog();
-					}
-				});
+				fInfoDialog.showDialog(pDialog -> fInfoDialog.hideDialog());
 				return;
 			}
 		}

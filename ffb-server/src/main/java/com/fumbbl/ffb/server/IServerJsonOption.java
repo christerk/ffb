@@ -197,11 +197,13 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USING_JUGGERNAUT = new JsonBooleanOption("usingJuggernaut");
     JsonBooleanOption USING_MODIFYING_SKILL = new JsonBooleanOption("usingModifyingSkill");
     JsonBooleanOption USING_MODIFIER_IGNORING_SKILL = new JsonBooleanOption("usingModifierIgnoringSkill");
+    JsonBooleanOption USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL = new JsonBooleanOption("usingModifierIgnoringSkillBeforeRoll");
     JsonBooleanOption USING_PILING_ON = new JsonBooleanOption("usingPilingOn");
     JsonBooleanOption USING_SHADOWING = new JsonBooleanOption("usingShadowing");
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
     JsonBooleanMapOption USING_STAND_FIRM = new JsonBooleanMapOption("usingStandFirm");
     JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
+    JsonBooleanOption USING_TRICKSTER = new JsonBooleanOption("usingTrickster");
     JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
     JsonBooleanOption USING_WRESTLE_DEFENDER = new JsonBooleanOption("usingWrestleDefender");
     JsonBooleanOption WITH_GAMES_INFO = new JsonBooleanOption("withGamesInfo");

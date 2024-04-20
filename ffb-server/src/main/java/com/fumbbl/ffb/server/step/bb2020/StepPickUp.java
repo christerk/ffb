@@ -118,36 +118,47 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		Player<?> player = StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer();
 		boolean doPickUp = true;
 		if (player != null && isPickUp(player)) {
-			if (ReRolledActions.PICK_UP == getReRolledAction()) {
-				if ((getReRollSource() == null)
-					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
-					doPickUp = false;
-					publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-					publishParameter(
-						new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-				}
-			}
-			if (doPickUp) {
-				switch (pickUp(player)) {
-					case SUCCESS:
-						game.getFieldModel().setBallMoving(false);
-						getResult().setSound(SoundId.PICKUP);
-						getResult().setNextAction(StepAction.NEXT_STEP);
-						break;
-					case FAILURE:
+			PlayerState playerState = game.getFieldModel().getPlayerState(player);
+			if (playerState.hasTacklezones()) {
+				if (ReRolledActions.PICK_UP == getReRolledAction()) {
+					if ((getReRollSource() == null)
+						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
+						doPickUp = false;
 						publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-						if (!player.hasSkillProperty(NamedProperties.preventPickup)) {
-							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-						}
+						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
 						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-						break;
-					default:
-						break;
+					}
 				}
+				if (doPickUp) {
+					switch (pickUp(player)) {
+						case SUCCESS:
+							game.getFieldModel().setBallMoving(false);
+							getResult().setSound(SoundId.PICKUP);
+							getResult().setNextAction(StepAction.NEXT_STEP);
+							break;
+						case FAILURE:
+							publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
+							if (!player.hasSkillProperty(NamedProperties.preventPickup)) {
+								publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+							}
+							publishParameter(
+								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+							break;
+						default:
+							break;
+					}
+				}
+			} else {
+				// a player of the own team without tackle zone was moved onto the ball with e.g. Raiding Party or some other voluntary movement (no chain pushes)
+				// this should be considered a pickup fail, unless the player has e.g. Ball And Chain
+				if (game.getActingTeam().hasPlayer(player) && !player.hasSkillProperty(NamedProperties.preventPickup)) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -156,14 +167,12 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private boolean isPickUp(Player<?> player) {
 		Game game = getGameState().getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		return (
 			!ignore
 				&& game.getFieldModel().isBallInPlay()
 				&& game.getFieldModel().isBallMoving()
 				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate())
-				&& playerState.hasTacklezones()
 		);
 	}
 

@@ -503,7 +503,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 
 		getResult().addReport(new ReportThrowIn(direction, directionRoll, distanceRoll));
-		getResult().setAnimation(new Animation(AnimationType.PASS, ballCoordinateStart, lastValidCoordinate, null));
+		getResult().setAnimation(new Animation(AnimationType.PASS, ballCoordinateStart, lastValidCoordinate));
 
 		game.getFieldModel().setBallMoving(true);
 

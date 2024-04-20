@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -160,12 +161,19 @@ public final class UtilCards {
 	}
 
 	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action) {
+		return getUnusedRerollSource(actingPlayer, action, Collections.emptyNavigableSet());
+	}
+	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action, Set<Skill> ignoreSkills) {
 
 		return Arrays.stream(UtilCards.findAllSkills(actingPlayer.getPlayer()))
-			.filter(skill -> !actingPlayer.isSkillUsed(skill))
+			.filter(skill -> !actingPlayer.isSkillUsed(skill) && !ignoreSkills.contains(skill))
 			.map(skill -> skill.getRerollSource(action))
 			.filter(Objects::nonNull)
 			.min(Comparator.comparingInt(ReRollSource::getPriority))
 			.orElse(null);
+	}
+
+	public static Optional<Skill> getSkillForReRollSource(Player<?> player, ReRollSource reRollSource, ReRolledAction reRolledAction) {
+		return Arrays.stream(UtilCards.findAllSkills(player)).filter(skill -> reRollSource == skill.getRerollSource(reRolledAction)).findFirst();
 	}
 }

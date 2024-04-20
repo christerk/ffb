@@ -165,6 +165,10 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 					Player<?> kickedPlayer = game.getPlayerById(animation.getThrownPlayerId());
 					game.getFieldModel().setPlayerCoordinate(kickedPlayer, fKickedPlayerCoordinate);
 					break;
+				case TRICKSTER:
+					Player<?> player = game.getPlayerById(animation.getThrownPlayerId());
+					game.getFieldModel().setPlayerState(player, animation.getOldPlayerState());
+					break;
 				default:
 					break;
 			}
@@ -306,7 +310,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		}
 	}
 
-	private void startAnimation(Animation pAnimation) {
+	private synchronized void startAnimation(Animation pAnimation) {
 		IAnimationSequence animationSequence = AnimationSequenceFactory.getInstance().getAnimationSequence(getClient(),
 			pAnimation);
 		if (animationSequence != null) {

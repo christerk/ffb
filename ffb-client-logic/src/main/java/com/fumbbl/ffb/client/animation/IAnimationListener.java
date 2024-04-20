@@ -8,6 +8,6 @@ import java.util.EventListener;
  */
 public interface IAnimationListener extends EventListener {
 
-	public void animationFinished();
+	void animationFinished();
 
 }

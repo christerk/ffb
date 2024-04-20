@@ -495,7 +495,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			} else {
 				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
 			}
-			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
+			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate));
 			UtilServerGame.syncGameModel(this);
 
 			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.HOME));
@@ -515,7 +515,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			} else {
 				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 14);
 			}
-			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate, null));
+			getResult().setAnimation(new Animation(AnimationType.THROW_A_ROCK, startCoordinate, playerCoordinate));
 			UtilServerGame.syncGameModel(this);
 
 			publishParameters(UtilServerInjury.dropPlayer(this, player, ApothecaryMode.AWAY));

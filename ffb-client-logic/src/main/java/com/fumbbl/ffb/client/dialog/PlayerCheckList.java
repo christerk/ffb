@@ -40,7 +40,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		for (int i = 0; i < playerIds.length; i++) {
 			Player<?> player = game.getPlayerById(playerIds[i]);
 			if (player != null) {
-				BufferedImage playerIcon = playerIconFactory.getIcon(client, player);
+				BufferedImage playerIcon = playerIconFactory.getIcon(client, player, true);
 				StringBuilder text = new StringBuilder();
 				text.append(player.getName());
 				if (ArrayTool.isProvided(descriptions)) {

@@ -46,6 +46,15 @@ public class UtilServerSteps {
 		}
 	}
 
+	public static boolean checkCommandIsFromPassivePlayer(GameState gameState, ReceivedCommand pReceivedCommand) {
+		Game game = gameState.getGame();
+		if (!game.isHomePlaying()) {
+			return checkCommandIsFromHomePlayer(gameState, pReceivedCommand);
+		} else {
+			return checkCommandIsFromAwayPlayer(gameState, pReceivedCommand);
+		}
+	}
+
 	public static boolean checkCommandIsFromHomePlayer(GameState gameState, ReceivedCommand pReceivedCommand) {
 		return (gameState.getServer().getSessionManager().getSessionOfHomeCoach(gameState.getId()) == pReceivedCommand
 			.getSession());

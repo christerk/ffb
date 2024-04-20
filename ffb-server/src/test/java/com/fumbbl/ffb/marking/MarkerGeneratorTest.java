@@ -13,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,8 +62,11 @@ class MarkerGeneratorTest {
 		builder = new AutoMarkingRecord.Builder(skillFactory);
 		markings = config.getMarkings();
 
-		Skill[] gainedSkills = {skillFactory.forName(BLOCK), skillFactory.forName(DODGE)};
-		given(player.getSkills()).willReturn(gainedSkills);
+		List<Skill> gainedSkills = new ArrayList<Skill>() {{
+			add(skillFactory.forName(BLOCK));
+			add(skillFactory.forName(DODGE));
+		}};
+		given(player.getSkillsIncludingTemporaryOnesWithDuplicates()).willReturn(gainedSkills);
 
 		Skill[] baseSkills = {skillFactory.forName(WRESTLE), skillFactory.forName(TACKLE)};
 		given(player.getPosition()).willReturn(position);
@@ -346,8 +351,11 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateSingleMarkingForMultiStatIncreases() {
-		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
-		given(player.getSkills()).willReturn(increases);
+		List<Skill> increases = new ArrayList<Skill>() {{
+			add(skillFactory.forName("+AG"));
+			add(skillFactory.forName("+AG"));
+		}};
+		given(player.getSkillsIncludingTemporaryOnesWithDuplicates()).willReturn(increases);
 		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
 		markings.add(builder.withSkill("+AG").withMarking(AG_MARKING).build());
 
@@ -358,8 +366,11 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void generateMarkingMatchingForMultiStatIncreases() {
-		Skill[] increases = new Skill[]{skillFactory.forName("+AG"), skillFactory.forName("+AG")};
-		given(player.getSkills()).willReturn(increases);
+		List<Skill> increases = new ArrayList<Skill>() {{
+			add(skillFactory.forName("+AG"));
+			add(skillFactory.forName("+AG"));
+		}};
+		given(player.getSkillsIncludingTemporaryOnesWithDuplicates()).willReturn(increases);
 		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
 		markings.add(builder.withSkill("+AG").withSkill("+AG").withMarking(AG_MARKING).build());
 
@@ -370,8 +381,10 @@ class MarkerGeneratorTest {
 
 	@Test
 	public void ignoreMatchingForMultiStatIncreasesIfOnlyOneIsPresent() {
-		Skill[] increases = new Skill[]{skillFactory.forName("+AG")};
-		given(player.getSkills()).willReturn(increases);
+		List<Skill> increases = new ArrayList<Skill>() {{
+			add(skillFactory.forName("+AG"));
+		}};
+		given(player.getSkillsIncludingTemporaryOnesWithDuplicates()).willReturn(increases);
 		given(player.getLastingInjuries()).willReturn(new SeriousInjury[0]);
 		markings.add(builder.withSkill("+AG").withSkill("+AG").withMarking(AG_MARKING).build());
 

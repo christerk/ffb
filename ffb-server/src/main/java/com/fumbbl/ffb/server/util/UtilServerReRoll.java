@@ -27,7 +27,9 @@ import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Kalimar
@@ -115,9 +117,14 @@ public class UtilServerReRoll {
 
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
 																								int minimumRoll, boolean fumble, Skill modifyingSkill) {
+		return askForReRollIfAvailable(gameState, actingPlayer, reRolledAction, minimumRoll, fumble, modifyingSkill, Collections.emptySet());
+	}
+
+	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
+																								int minimumRoll, boolean fumble, Skill modifyingSkill, Set<Skill> ignoreSkills) {
 
 		Game game = gameState.getGame();
-		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction);
+		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction, ignoreSkills);
 		Skill reRollSkill = reRollSource != null ? reRollSource.getSkill(game) : null;
 		Player<?> player = actingPlayer.getPlayer();
 

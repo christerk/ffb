@@ -294,27 +294,27 @@ public class RosterPlayer extends Player<RosterPosition> {
 				if (injury.getInjuryAttribute() != null) {
 					switch (injury.getInjuryAttribute()) {
 						case MA:
-							if ((fMovement > 1) && mechanic.statCanBeReducedByInjury(oldMovement, fMovement)) {
+							if (mechanic.statCanBeReducedByInjury(oldMovement, fMovement)) {
 								fMovement = mechanic.applyLastingInjury(fMovement, PlayerStatKey.MA);
 							}
 							break;
 						case AV:
-							if ((fArmour > 1) && mechanic.statCanBeReducedByInjury(oldArmour, fArmour)) {
+							if (mechanic.statCanBeReducedByInjury(oldArmour, fArmour)) {
 								fArmour = mechanic.applyLastingInjury(fArmour, PlayerStatKey.AV);
 							}
 							break;
 						case AG:
-							if ((fAgility > 1) && mechanic.statCanBeReducedByInjury(oldAgility, fAgility)) {
+							if (mechanic.statCanBeReducedByInjury(oldAgility, fAgility)) {
 								fAgility = mechanic.applyLastingInjury(fAgility, PlayerStatKey.AG);
 							}
 							break;
 						case ST:
-							if ((fStrength > 1) && mechanic.statCanBeReducedByInjury(oldStrength, fStrength)) {
+							if (mechanic.statCanBeReducedByInjury(oldStrength, fStrength)) {
 								fStrength = mechanic.applyLastingInjury(fStrength, PlayerStatKey.ST);
 							}
 							break;
 						case PA:
-							if ((fPassing > 1) && mechanic.statCanBeReducedByInjury(oldPassing, fPassing)) {
+							if (mechanic.statCanBeReducedByInjury(oldPassing, fPassing)) {
 								fPassing = mechanic.applyLastingInjury(fPassing, PlayerStatKey.PA);
 							}
 							break;

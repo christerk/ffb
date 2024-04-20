@@ -12,6 +12,20 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.27.0")
+			.addFeature("Trickster")
+			.addRuleChange("Reduce Master Chef costs are now only available to Halfling teams and not all Halfling Thimble Cup teams")
+			.addFeature("My Ball")
+			.addFeature("Bounding Leap")
+			.addBugfix("Primal Savagery: When lashing out against an opponent during a block action that was not the target of the block, the action got skipped after lashing out")
+			.addBugfix("Animal Savagery: When failing AS for TTM of an adjacent player and another adjacent team-mate the select dialog was not displayed but instead the game froze")
+			.addBugfix("Raiding Party: Moving a player without tackle zone onto the ball did not result in a bounce")
+			.addBugfix("Stat reductions by injuries were not always applied properly")
+			.addBugfix("Sure Feet: Did trigger during Blitz! kick-off event and caused the game to crash")
+			.addBugfix("Animal Savagery: When lashing out against a player to be thrown that player was still able to make their landing roll")
+			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
+		);
+
 		versions.add(new VersionChangeList("2.26.1")
 			.addBugfix("Unchanneled Fury & Bone-Head: Failure caused the game to hang due to re-roll dialog not being displayed")
 			.addBugfix("Client allowed dodges to be re-rolled twice")

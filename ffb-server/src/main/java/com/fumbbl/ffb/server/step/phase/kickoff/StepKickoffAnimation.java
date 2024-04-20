@@ -87,7 +87,7 @@ public final class StepKickoffAnimation extends AbstractStep {
 		}
 		game.getFieldModel().setBallInPlay(true);
 		FieldCoordinate ballCoordinate = game.getFieldModel().getBallCoordinate();
-		getResult().setAnimation(new Animation(AnimationType.KICK, fKickingPlayerCoordinate, ballCoordinate, null));
+		getResult().setAnimation(new Animation(AnimationType.KICK, fKickingPlayerCoordinate, ballCoordinate));
 		if (!fTouchback) {
 			publishParameter(
 					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_KICKOFF));

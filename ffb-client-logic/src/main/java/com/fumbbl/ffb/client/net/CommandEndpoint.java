@@ -69,7 +69,13 @@ public class CommandEndpoint {
 		JsonValue jsonValue = JsonValue
 				.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
-		handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+		if (fClient.getGame().getRules().isInitialized()) {
+			handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+		} else {
+			synchronized (this) {
+				handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+			}
+		}
 	}
 
 	@OnClose

@@ -18,8 +18,8 @@ public class SwiftAsTheBreeze extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canMakeUnmodifiedDodge);
-		registerProperty(NamedProperties.canMakeUnmodifiedRush);
-		registerProperty(NamedProperties.canMakeUnmodifiedJump);
+		registerProperty(NamedProperties.canChooseToIgnoreDodgeModifierAfterRoll);
+		registerProperty(NamedProperties.canChooseToIgnoreRushModifierAfterRoll);
+		registerProperty(NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
 	}
 }

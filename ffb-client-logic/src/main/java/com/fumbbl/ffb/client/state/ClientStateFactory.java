@@ -20,6 +20,7 @@ import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateTrickster;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -90,6 +91,7 @@ public class ClientStateFactory {
 		register(new ClientStatePutridRegurgitationBlock(pClient));
 		register(new ClientStateKickEmBlitz(pClient));
 		register(new ClientStateKickEmBlock(pClient));
+		register(new ClientStateTrickster(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -317,7 +319,6 @@ public class ClientStateFactory {
 					}
 					break;
 				case INTERCEPTION:
-//        if (!game.isHomePlaying() && !StringTool.isProvided(game.getDefenderId())) {
 					if ((!game.isHomePlaying() && (game.getThrowerAction() != PlayerAction.DUMP_OFF))
 						|| (game.isHomePlaying() && (game.getThrowerAction() == PlayerAction.DUMP_OFF))) {
 						clientStateId = ClientStateId.INTERCEPTION;
@@ -361,6 +362,9 @@ public class ClientStateFactory {
 					break;
 				case SELECT_BLOCK_KIND:
 					clientStateId = ClientStateId.SELECT_BLOCK_KIND;
+					break;
+				case TRICKSTER:
+					clientStateId = ClientStateId.TRICKSTER;
 					break;
 				default:
 					break;

@@ -45,6 +45,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -115,7 +116,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canMakeUnmodifiedRush)) {
+			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreRushModifierAfterRoll)) {
 				usingModifierIgnoringSkill = commandUseSkill.isSkillUsed();
 				if (!usingModifierIgnoringSkill) {
 					setReRollSource(findSkillReRollSource(ReRolledActions.RUSH));
@@ -214,7 +215,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll, diceInterpreter.minimumRollGoingForIt(Collections.emptySet()));
 		Skill skill = null;
 		if (successfulWithoutModifiers) {
-			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMakeUnmodifiedRush);
+			skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreRushModifierAfterRoll);
 		}
 
 		if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && skill != null) {
@@ -236,7 +237,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				setReRolledAction(ReRolledActions.RUSH);
 				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
 
-				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
+				if (TurnMode.REGULAR == game.getTurnMode() && gfiRerollSource != null) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
 						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
@@ -247,7 +248,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {
+					Set<Skill> ignore = new HashSet<>();
+					if (gfiRerollSource != null) {
+						UtilCards.getSkillForReRollSource(actingPlayer.getPlayer(), gfiRerollSource, ReRolledActions.RUSH).ifPresent(ignore::add);
+					}
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer,
+						ReRolledActions.RUSH, minimumRoll, false, skill, ignore)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;

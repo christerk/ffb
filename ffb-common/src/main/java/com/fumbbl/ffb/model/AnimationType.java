@@ -19,8 +19,8 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_TIMEOUT("kickoffTimeout"),
 	KICKOFF_SWELTERING_HEAT("kickoffSwelteringHeat"), KICKOFF_THROW_A_ROCK("kickoffThrowARock"),
 	KICKOFF_VERY_SUNNY("kickoffVerySunny"), HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
-	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXLOSION("bombExplosion"), CARD("card"),
-	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg");
+	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXPLOSION("bombExplosion"), CARD("card"),
+	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg"), TRICKSTER("trickster");
 
 	private final String fName;
 

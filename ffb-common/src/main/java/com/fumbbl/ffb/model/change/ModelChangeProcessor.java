@@ -109,7 +109,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
 				pGame.getActingPlayer().setSufferingBloodLust((Boolean) pModelChange.getValue());
 				return true;
-
+			case ACTING_PLAYER_SET_JUMPS_WITHOUT_MODIFIERS:
+				pGame.getActingPlayer().setJumpsWithoutModifiers((Boolean) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_ADD_BLOOD_SPOT:
 				pGame.getFieldModel().add((BloodSpot) pModelChange.getValue());
 				return true;
