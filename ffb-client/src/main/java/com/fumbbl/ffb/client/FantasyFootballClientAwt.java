@@ -1,23 +1,15 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FactoryManager;
-import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.FactoryType.FactoryContext;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.INamedObjectFactory;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.UIManager;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -25,7 +17,6 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
@@ -36,48 +27,26 @@ import java.util.stream.Collectors;
  * @author Kalimar
  */
 public class FantasyFootballClientAwt extends FantasyFootballClient {
-	private Game fGame;
 	private final UserInterface fUserInterface;
-	private final ClientCommunication fCommunication;
 	private Properties fProperties;
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
-	private final ClientParameters fParameters;
-	private ClientMode fMode;
-
-
-	private final transient ClientData fClientData;
-
-	private final FactoryManager factoryManager;
-	@SuppressWarnings("rawtypes")
-	private final Map<Factory, INamedObjectFactory> factories;
 
 	private transient int currentMouseButton;
 
 	private Preferences prefs;
 
 	public FantasyFootballClientAwt(ClientParameters pParameters) throws IOException {
-		super(pParameters.getCoach());
-
-		factoryManager = new FactoryManager();
-		factories = factoryManager.getFactoriesForContext(getContext());
-
-		fParameters = pParameters;
-		setMode(fParameters.getMode());
-
-		fClientData = new ClientData();
-
+		super(pParameters);
 		fActionKeyBindings = new ActionKeyBindings(this);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			// UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
 		} catch (Exception all) {
+			//noinspection CallToPrintStackTrace
 			all.printStackTrace();
 		}
-
-		setGame(new Game(getFactorySource(), factoryManager));
 
 		fReplayer = new ClientReplayer(this);
 
@@ -85,33 +54,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 
-		fCommunication = new ClientCommunication(this);
-		Thread fCommunicationThread = new Thread(fCommunication);
-		fCommunicationThread.start();
-
 	}
 
 	public UserInterface getUserInterface() {
 		return fUserInterface;
-	}
-
-	public Game getGame() {
-		return fGame;
-	}
-
-	public void setGame(Game pGame) {
-		fGame = pGame;
-		getClientData().clear();
-	}
-
-	public ClientCommunication getCommunication() {
-		return fCommunication;
-	}
-
-	public void connectionEstablished(boolean pSuccessful) {
-		synchronized (this) {
-			this.notify();
-		}
 	}
 
 	public void showUserInterface() {
@@ -127,8 +73,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		pDialog.hideDialog();
 	}
 
-	public void exitClient() {
-		closeConnection();
+	public void exit() {
 		getUserInterface().setVisible(false);
 		System.exit(0);
 	}
@@ -156,32 +101,27 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		getUserInterface().init(getGame().getOptions());
 	}
 
-	public void updateLocalPropertiesStore() {
+	protected void clearPrefs() {
 		try {
 			prefs.clear();
-			for (CommonProperty property : CommonProperty._SAVED_USER_SETTINGS) {
-				String key = property.getKey();
-				String value = getProperty(property);
-				if (StringTool.isProvided(key) && StringTool.isProvided(value)) {
-					prefs.put(key, value);
-				}
-			}
-
 		} catch (BackingStoreException e) {
-			logError(0, "Could not update locally stored properties: " + e.getMessage());
+			logError(0, "Could not clear locally stored properties: " + e.getMessage());
 		}
+	}
+
+	protected void setPref(String key, String value) {
+		prefs.put(key, value);
 	}
 
 	public static void main(String[] args) {
 
 		try {
-			ClientParameters parameters = new ClientParameters();
-			parameters.initFrom(args);
-			if (!parameters.validate()) {
+			ClientParameters parameters = ClientParameters.createValidParams(args);
+			if (parameters == null) {
 				System.out.println(ClientParameters.USAGE);
 				return;
 			}
-			FantasyFootballClient client = new FantasyFootballClientAwt(parameters);
+			FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
 			client.showUserInterface();
 		} catch (Exception all) {
 			all.printStackTrace(System.err);
@@ -231,14 +171,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		}
 	}
 
-	public ClientData getClientData() {
-		return fClientData;
-	}
-
-	public ClientParameters getParameters() {
-		return fParameters;
-	}
-
 	public int getServerPort() {
 		if (getParameters().getPort() > 0) {
 			return getParameters().getPort();
@@ -254,30 +186,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		return InetAddress.getByName(serverName);
 	}
 
-	public ClientMode getMode() {
-		return fMode;
-	}
-
-	public void setMode(ClientMode pMode) {
-		fMode = pMode;
-	}
-
-
-	public FactoryManager getFactoryManager() {
-		return factoryManager;
-	}
-
-	@Override
-	public FactoryContext getContext() {
-		return FactoryContext.APPLICATION;
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	@Override
-	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
-		return (T) factories.get(factory);
-	}
-
 	@Override
 	public void logError(long gameId, String message) {
 		System.err.println(gameId + ": " + message);
@@ -291,18 +199,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	@Override
 	public void logWithOutGameId(Throwable throwable) {
 		throwable.printStackTrace(System.err);
-	}
-
-	public IFactorySource getFactorySource() {
-		return this;
-	}
-
-	@Override
-	public IFactorySource forContext(FactoryContext context) {
-		if (context == getContext()) {
-			return this;
-		}
-		throw new FantasyFootballException("Trying to get game context from application.");
 	}
 
 	public int getCurrentMouseButton() {

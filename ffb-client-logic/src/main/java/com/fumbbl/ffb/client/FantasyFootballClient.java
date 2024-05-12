@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
@@ -12,6 +14,7 @@ import com.fumbbl.ffb.client.net.CommandEndpoint;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.ClientStateFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.IConnectionListener;
 import com.fumbbl.ffb.util.StringTool;
@@ -25,6 +28,7 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -34,33 +38,56 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	private Session fSession;
 	private CommandEndpoint fCommandEndpoint;
 	private Timer fPingTimer;
-
+	private final transient ClientData fClientData;
 	private ClientState fState;
 	private final ClientStateFactory fStateFactory;
 	private final ClientCommandHandlerFactory fCommandHandlerFactory;
+	private final ClientCommunication fCommunication;
+	private Game fGame;
+	private ClientMode fMode;
+	private final ClientParameters parameters;
 
-	public FantasyFootballClient(String coach) throws IOException {
+	private final FactoryManager factoryManager;
+	@SuppressWarnings("rawtypes")
+	private final Map<FactoryType.Factory, INamedObjectFactory> factories;
+
+	public FantasyFootballClient(ClientParameters parameters) throws IOException {
 		loadProperties();
-		loadLocallyStoredProperties(coach);
+		loadLocallyStoredProperties(parameters.getCoach());
+		fClientData = new ClientData();
+
+		this.parameters = parameters;
+		setMode(parameters.getMode());
 
 		fCommandEndpoint = new CommandEndpoint(this);
 		fPingTimer = new Timer(true);
 		fStateFactory = new ClientStateFactory(this);
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
+
+		factoryManager = new FactoryManager();
+		factories = factoryManager.getFactoriesForContext(getContext());
+		setGame(new Game(getFactorySource(), factoryManager));
+
+		fCommunication = new ClientCommunication(this);
+		Thread fCommunicationThread = new Thread(fCommunication);
+		fCommunicationThread.start();
 	}
 
 	public abstract UserInterface getUserInterface();
 
-	public abstract Game getGame();
+	public ClientCommunication getCommunication() {
+		return fCommunication;
+	}
 
-	public abstract void setGame(Game pGame);
+	public void connectionEstablished(boolean pSuccessful) {
+		synchronized (this) {
+			this.notify();
+		}
+	}
 
-	public abstract ClientCommunication getCommunication();
-
-	public abstract void connectionEstablished(boolean pSuccessful);
-
-	public abstract void showUserInterface();
-
+	public ClientParameters getParameters() {
+		return parameters;
+	}
 	public abstract void dialogClosed(IDialog pDialog);
 
 	public void startClient() {
@@ -71,15 +98,11 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		updateClientState();
 
 		postConnect(connectionEstablished);
-
-
 	}
 
 	protected abstract void postConnect(boolean connectionEstablished);
 
 	protected abstract void preConnect();
-
-	public abstract void exitClient();
 
 	public abstract String getProperty(CommonProperty property);
 
@@ -110,8 +133,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	protected abstract void initUI();
 
-	public abstract void updateLocalPropertiesStore();
-
 	public ClientState updateClientState() {
 		ClientState newState = fStateFactory.getStateForGame();
 		if ((newState != null) && (newState != fState)) {
@@ -136,6 +157,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		return fCommandHandlerFactory;
 	}
 
+	// TODO remove from generic client
 	public abstract ActionKeyBindings getActionKeyBindings();
 
 	public abstract ClientReplayer getReplayer();
@@ -148,30 +170,35 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public abstract void loadLocallyStoredProperties(String coach);
 
-	public abstract ClientData getClientData();
-
-	public abstract ClientParameters getParameters();
-
-	public abstract ClientMode getMode();
-
-	public abstract void setMode(ClientMode pMode);
+	public ClientData getClientData() {
+		return fClientData;
+	}
 
 	public CommandEndpoint getCommandEndpoint() {
 		return fCommandEndpoint;
 	}
 
-	public abstract FactoryManager getFactoryManager();
+	public IFactorySource getFactorySource() {
+		return this;
+	}
 
-	public abstract IFactorySource getFactorySource();
+	@Override
+	public IFactorySource forContext(FactoryType.FactoryContext context) {
+		if (context == getContext()) {
+			return this;
+		}
+		throw new FantasyFootballException("Trying to get game context from application.");
+	}
 
+	// TODO move to some client state class
 	public abstract int getCurrentMouseButton();
 
+	// TODO move to some client state class
 	public abstract void setCurrentMouseButton(int currentMouseButton);
 
 	public abstract int getServerPort();
 
 	public abstract InetAddress getServerHost() throws UnknownHostException;
-
 
 	protected boolean initConnection() {
 		boolean connectionEstablished = false;
@@ -187,7 +214,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 			connectionEstablished = (fSession != null);
 
 		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
+			logWithOutGameId(pAnyException);
 		}
 
 		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
@@ -205,8 +232,63 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 			fSession.close();
 			fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
 		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
+			logWithOutGameId(pAnyException);
 		}
 		getCommunication().stop();
+	}
+
+	public void exitClient() {
+		closeConnection();
+		exit();
+	}
+
+	abstract protected void exit();
+
+	public void updateLocalPropertiesStore() {
+		clearPrefs();
+		for (CommonProperty property : CommonProperty._SAVED_USER_SETTINGS) {
+			String key = property.getKey();
+			String value = getProperty(property);
+			if (StringTool.isProvided(key) && StringTool.isProvided(value)) {
+				setPref(key, value);
+			}
+		}
+	}
+
+	abstract protected void clearPrefs();
+
+	abstract protected void setPref(String key, String value);
+
+	public Game getGame() {
+		return fGame;
+	}
+
+	public void setGame(Game pGame) {
+		fGame = pGame;
+		getClientData().clear();
+	}
+
+	public ClientMode getMode() {
+		return fMode;
+	}
+
+	public void setMode(ClientMode pMode) {
+		fMode = pMode;
+	}
+
+
+	public FactoryManager getFactoryManager() {
+		return factoryManager;
+	}
+
+	@Override
+	public FactoryType.FactoryContext getContext() {
+		return FactoryType.FactoryContext.APPLICATION;
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	@Override
+	public <T extends INamedObjectFactory> T getFactory(FactoryType.Factory factory) {
+		return (T) factories.get(factory);
 	}
 }
