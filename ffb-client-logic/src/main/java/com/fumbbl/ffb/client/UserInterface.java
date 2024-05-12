@@ -150,30 +150,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private JPanel landscapeContent() {
-		JPanel fieldPanel = new JPanel();
-		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
-		fieldPanel.add(fFieldComponent);
+		JPanel fieldPanel = fieldPanel();
 
-		JPanel logChatPanel = new JPanel();
-		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
-		logChatPanel.add(getLog());
-		logChatPanel.add(Box.createHorizontalStrut(2));
-		logChatPanel.add(getChat());
-		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		JPanel logChatPanel = logChatPanel();
 
-		JPanel panelCenter = new JPanel();
-		panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
-		panelCenter.add(fieldPanel);
-		panelCenter.add(getScoreBar());
-		panelCenter.add(logChatPanel);
+		JPanel panelCenter = wrapperPanel(BoxLayout.Y_AXIS, fieldPanel, getScoreBar(), logChatPanel);
 
-		JPanel panelMain = new JPanel();
-		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
-		panelMain.add(createSideBarPanel(fSideBarHome));
-		panelMain.add(panelCenter);
-		panelMain.add(createSideBarPanel(fSideBarAway));
-
-		return panelMain;
+		return wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), panelCenter, createSideBarPanel(fSideBarAway));
 	}
 
 	private JPanel createSideBarPanel(SideBarComponent fSideBarHome) {
@@ -184,50 +167,39 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private JPanel portraitContent() {
-		JPanel fieldPanel = new JPanel();
-		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
-		fieldPanel.add(fFieldComponent);
+		JPanel fieldPanel = fieldPanel();
 
+		JPanel logChatPanel = logChatPanel();
 
+		JPanel panelMain = wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), fieldPanel, createSideBarPanel(fSideBarAway));
+
+		return wrapperPanel(BoxLayout.Y_AXIS, panelMain, getScoreBar(), logChatPanel);
+	}
+
+	private JPanel logChatPanel() {
 		JPanel logChatPanel = new JPanel();
 		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
 		logChatPanel.add(getLog());
 		logChatPanel.add(Box.createHorizontalStrut(2));
 		logChatPanel.add(getChat());
 		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-		JPanel panelMain = new JPanel();
-		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
-		panelMain.add(createSideBarPanel(fSideBarHome));
-		panelMain.add(fieldPanel);
-		panelMain.add(createSideBarPanel(fSideBarAway));
-
-		JPanel panelContent = new JPanel();
-		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.Y_AXIS));
-		panelContent.add(panelMain);
-		panelContent.add(getScoreBar());
-		panelContent.add(logChatPanel);
-
-		return panelContent;
+		return logChatPanel;
 	}
 
-	private JPanel squareContent() {
+	private JPanel fieldPanel() {
 		JPanel fieldPanel = new JPanel();
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
 		fieldPanel.add(fFieldComponent);
+		return fieldPanel;
+	}
 
-		JPanel logChatScorePanel = new JPanel();
-		logChatScorePanel.setLayout(new BoxLayout(logChatScorePanel, BoxLayout.Y_AXIS));
-		logChatScorePanel.add(getLog());
-		logChatScorePanel.add(getScoreBar());
-		logChatScorePanel.add(getChat());
+	private JPanel squareContent() {
+		JPanel fieldPanel = fieldPanel();
+
+		JPanel logChatScorePanel = wrapperPanel(BoxLayout.Y_AXIS, getLog(), getScoreBar(), getChat());
 		logChatScorePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-		JPanel panelMain = new JPanel();
-		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.X_AXIS));
-		panelMain.add(createSideBarPanel(fSideBarHome));
-		panelMain.add(fieldPanel);
-		panelMain.add(createSideBarPanel(fSideBarAway));
+		JPanel panelMain = wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), fieldPanel, createSideBarPanel(fSideBarAway));
 
 		JPanel panelContent = new JPanel();
 		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
@@ -235,6 +207,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelContent.add(logChatScorePanel);
 
 		return panelContent;
+	}
+
+	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
+		JPanel panelMain = new JPanel();
+		panelMain.setLayout(new BoxLayout(panelMain, axis));
+		panelMain.add(fSideBarHome);
+		panelMain.add(fieldPanel);
+		panelMain.add(fSideBarAway);
+		return panelMain;
 	}
 
 	public FontCache getFontCache() {
