@@ -11,10 +11,12 @@ import com.fumbbl.ffb.util.StringTool;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginLogicModule {
+public class LoginLogicModule extends LogicModule {
 	private static final Pattern _PATTERN_VERSION = Pattern.compile("([0-9]+)\\.([0-9]+)\\.([0-9]+)");
 
 	private String gameName;
@@ -27,10 +29,18 @@ public class LoginLogicModule {
 	private long gameId;
 
 	public LoginLogicModule(FantasyFootballClient client) {
-		this.client = client;
+		super(client);
 	}
 
-	private final FantasyFootballClient client;
+	@Override
+	public Set<ClientAction> availableActions() {
+		return Collections.emptySet();
+	}
+
+	@Override
+	protected void performAvailableAction(ClientAction action) {
+		// no actions in this state
+	}
 
 	public String getTeamHomeName() {
 		return teamHomeName;

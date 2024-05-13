@@ -73,6 +73,13 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		fCommunicationThread.start();
 	}
 
+	public long gameId() {
+		if (fGame != null) {
+			return fGame.getId();
+		}
+		return 0;
+	}
+
 	public abstract UserInterface getUserInterface();
 
 	public ClientCommunication getCommunication() {
@@ -290,5 +297,13 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	@Override
 	public <T extends INamedObjectFactory> T getFactory(FactoryType.Factory factory) {
 		return (T) factories.get(factory);
+	}
+
+	public void logError(String message) {
+		logError(gameId(), message);
+	}
+
+	public void logDebug(String message) {
+		logDebug(gameId(), message);
 	}
 }
