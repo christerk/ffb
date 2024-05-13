@@ -1,10 +1,12 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
+import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.io.IOException;
@@ -15,14 +17,14 @@ import java.util.regex.Pattern;
 public class LoginLogicModule {
 	private static final Pattern _PATTERN_VERSION = Pattern.compile("([0-9]+)\\.([0-9]+)\\.([0-9]+)");
 
-	private String fGameName;
-	private byte[] fEncodedPassword;
-	private int fPasswordLength;
-	private boolean fListGames;
-	private String fTeamHomeId;
-	private String fTeamHomeName;
-	private String fTeamAwayName;
-	private long fGameId;
+	private String gameName;
+	private byte[] encodedPassword;
+	private int passwordLength;
+	private boolean listGames;
+	private String teamHomeId;
+	private String teamHomeName;
+	private String teamAwayName;
+	private long gameId;
 
 	public LoginLogicModule(FantasyFootballClient client) {
 		this.client = client;
@@ -30,60 +32,60 @@ public class LoginLogicModule {
 
 	private final FantasyFootballClient client;
 
-	public void setfTeamHomeId(String fTeamHomeId) {
-		this.fTeamHomeId = fTeamHomeId;
+	public String getTeamHomeName() {
+		return teamHomeName;
 	}
 
-	public String getfTeamHomeName() {
-		return fTeamHomeName;
+	public String getTeamAwayName() {
+		return teamAwayName;
 	}
 
-	public void setfTeamHomeName(String fTeamHomeName) {
-		this.fTeamHomeName = fTeamHomeName;
+	public String getGameName() {
+		return gameName;
 	}
 
-	public String getfTeamAwayName() {
-		return fTeamAwayName;
+	public byte[] getEncodedPassword() {
+		return encodedPassword;
 	}
 
-	public void setfTeamAwayName(String fTeamAwayName) {
-		this.fTeamAwayName = fTeamAwayName;
+	public int getPasswordLength() {
+		return passwordLength;
 	}
 
-
-	public String getfGameName() {
-		return fGameName;
+	public void setPasswordLength(int passwordLength) {
+		this.passwordLength = passwordLength;
 	}
 
-	public byte[] getfEncodedPassword() {
-		return fEncodedPassword;
-	}
-
-	public int getfPasswordLength() {
-		return fPasswordLength;
-	}
-
-	public void setfPasswordLength(int fPasswordLength) {
-		this.fPasswordLength = fPasswordLength;
+	public void init() {
+		if (StringTool.isProvided(client.getParameters().getTeamId())) {
+			teamHomeId = client.getParameters().getTeamId();
+			teamHomeName = client.getParameters().getTeamName();
+			teamAwayName = null;
+		} else {
+			teamHomeId = null;
+			teamHomeName = client.getParameters().getTeamHome();
+			teamAwayName = client.getParameters().getTeamAway();
+		}
+		client.getCommunication().sendRequestVersion();
 	}
 
 	public void sendChallenge(LoginData loginData) {
-		fEncodedPassword = loginData.fEncodedPassword;
-		fGameName = loginData.fGameName;
-		fListGames = loginData.fListGames;
-		fPasswordLength = loginData.fPasswordLength;
+		encodedPassword = loginData.encodedPassword;
+		gameName = loginData.gameName;
+		listGames = loginData.listGames;
+		passwordLength = loginData.passwordLength;
 		sendChallenge();
 	}
 
 	public void sendChallenge(TeamListEntry teamListEntry) {
-		fTeamHomeId = teamListEntry.getTeamId();
-		fTeamHomeName = teamListEntry.getTeamName();
+		teamHomeId = teamListEntry.getTeamId();
+		teamHomeName = teamListEntry.getTeamName();
 		sendChallenge();
 	}
 
 	public void sendChallenge(GameListEntry gameListEntry) {
-		fGameId = gameListEntry.getGameId();
-		fListGames = false;
+		gameId = gameListEntry.getGameId();
+		listGames = false;
 		sendChallenge();
 	}
 
@@ -97,12 +99,12 @@ public class LoginLogicModule {
 	}
 
 	public void sendJoin(String pResponse) {
-		if (fListGames) {
+		if (listGames) {
 			client.getCommunication().sendJoin(client.getParameters().getCoach(), pResponse, 0, null, null, null);
 
 		} else {
 			client.getCommunication().sendJoin(client.getParameters().getCoach(), pResponse,
-				(fGameId > 0L) ? fGameId : client.getParameters().getGameId(), fGameName, fTeamHomeId, fTeamHomeName);
+				(gameId > 0L) ? gameId : client.getParameters().getGameId(), gameName, teamHomeId, teamHomeName);
 		}
 	}
 
@@ -122,7 +124,7 @@ public class LoginLogicModule {
 	private String createResponse(String pChallenge) {
 		String response;
 		try {
-			response = PasswordChallenge.createResponse(pChallenge, fEncodedPassword);
+			response = PasswordChallenge.createResponse(pChallenge, encodedPassword);
 		} catch (IOException | NoSuchAlgorithmException ioe) {
 			response = null;
 		}
@@ -130,20 +132,48 @@ public class LoginLogicModule {
 	}
 
 	public boolean idAndNameProvided() {
-		return (client.getParameters().getGameId() == 0) && StringTool.isProvided(getfGameName());
+		return (client.getParameters().getGameId() == 0) && StringTool.isProvided(getGameName());
 	}
 
-	public static class LoginData {
-		private final String fGameName;
-		private final byte[] fEncodedPassword;
-		private final int fPasswordLength;
-		private final boolean fListGames;
+	public VersionCheck handleVersionCommand(ServerCommandVersion pNetCommand) {
+		VersionCheck versionCheck = checkVersion(pNetCommand.getServerVersion(), pNetCommand.getClientVersion());
+		if (pNetCommand.isTestServer() || versionCheck == VersionCheck.SUCCESS) {
+			String[] properties = pNetCommand.getClientProperties();
+			for (String property : properties) {
+				client.setProperty(property, pNetCommand.getClientPropertyValue(property));
+			}
+		}
+		return versionCheck;
+	}
 
-		public LoginData(String fGameName, byte[] fEncodedPassword, int fPasswordLength, boolean fListGames) {
-			this.fGameName = fGameName;
-			this.fEncodedPassword = fEncodedPassword;
-			this.fPasswordLength = fPasswordLength;
-			this.fListGames = fListGames;
+	private VersionCheck checkVersion(String pServerVersion, String pClientVersion) {
+
+		if (checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
+				return VersionCheck.CLIENT_FAIL;
+		}
+
+		if (checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
+			return VersionCheck.SERVER_FAIL;
+		}
+
+		return VersionCheck.SUCCESS;
+	}
+
+	public enum VersionCheck {
+		SUCCESS, CLIENT_FAIL, SERVER_FAIL
+	}
+
+		public static class LoginData {
+		private final String gameName;
+		private final byte[] encodedPassword;
+		private final int passwordLength;
+		private final boolean listGames;
+
+		public LoginData(String gameName, byte[] encodedPassword, int passwordLength, boolean listGames) {
+			this.gameName = gameName;
+			this.encodedPassword = encodedPassword;
+			this.passwordLength = passwordLength;
+			this.listGames = listGames;
 		}
 	}
 

@@ -48,16 +48,7 @@ public class ClientStateLogin extends ClientStateAwt implements IDialogCloseList
 		super.enterState();
 		hideSelectSquare();
 		setClickable(false);
-		if (StringTool.isProvided(getClient().getParameters().getTeamId())) {
-			logicModule.setfTeamHomeId(getClient().getParameters().getTeamId());
-			logicModule.setfTeamHomeName(getClient().getParameters().getTeamName());
-			logicModule.setfTeamAwayName(null);
-		} else {
-			logicModule.setfTeamHomeId(null);
-			logicModule.setfTeamHomeName(getClient().getParameters().getTeamHome());
-			logicModule.setfTeamAwayName(getClient().getParameters().getTeamAway());
-		}
-		getClient().getCommunication().sendRequestVersion();
+		logicModule.init();
 	}
 
 	@Override
@@ -107,10 +98,30 @@ public class ClientStateLogin extends ClientStateAwt implements IDialogCloseList
 	public void handleCommand(NetCommand pNetCommand) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
+		DialogInformation fWaitingDialog;
+		String[] messages = new String[3];
 		switch (pNetCommand.getId()) {
 			case SERVER_VERSION:
-				if (handleVersionCommand((ServerCommandVersion) pNetCommand)) {
-					showLoginDialog();
+				ServerCommandVersion versionCommand = (ServerCommandVersion) pNetCommand;
+				switch (logicModule.handleVersionCommand(versionCommand)) {
+					case SUCCESS: showLoginDialog(); break;
+					case SERVER_FAIL:
+						messages[0] = "Client expects server version " + FantasyFootballConstants.VERSION + " or newer.";
+						messages[1] = "Server version is " + versionCommand.getServerVersion() + ".";
+						messages[2] = "Please wait for a server update!";
+						fWaitingDialog = new DialogInformation(getClient(), "Server Version Conflict", messages,
+							DialogInformation.CANCEL_DIALOG, false);
+						fWaitingDialog.showDialog(this);
+						break;
+					case CLIENT_FAIL:
+						messages[0] = "Server expects client version " + versionCommand.getClientVersion() + " or newer.";
+						messages[1] = "Client version is " + FantasyFootballConstants.VERSION + ".";
+						messages[2] = "Please update your client!";
+						fWaitingDialog = new DialogInformation(getClient(), "Client Version Conflict", messages,
+							DialogInformation.CANCEL_DIALOG, false);
+						fWaitingDialog.showDialog(this);
+						break;
+
 				}
 				break;
 			case SERVER_STATUS:
@@ -147,7 +158,7 @@ public class ClientStateLogin extends ClientStateAwt implements IDialogCloseList
 				ServerCommandJoin joinCommand = (ServerCommandJoin) pNetCommand;
 				if (joinCommand.getPlayerNames().length <= 1) {
 					if (logicModule.idAndNameProvided()) {
-						getClient().getUserInterface().getStatusReport().reportGameName(logicModule.getfGameName());
+						getClient().getUserInterface().getStatusReport().reportGameName(logicModule.getGameName());
 					}
 					game.setDialogParameter(new DialogJoinParameter());
 				} else {
@@ -164,65 +175,24 @@ public class ClientStateLogin extends ClientStateAwt implements IDialogCloseList
 		}
 	}
 
-	private boolean handleVersionCommand(ServerCommandVersion pNetCommand) {
-		if (pNetCommand.isTestServer() || checkVersion(pNetCommand.getServerVersion(), pNetCommand.getClientVersion())) {
-			String[] properties = pNetCommand.getClientProperties();
-			for (String property : properties) {
-				getClient().setProperty(property, pNetCommand.getClientPropertyValue(property));
-			}
-			return true;
-		}
-		return false;
-	}
-
-	private boolean checkVersion(String pServerVersion, String pClientVersion) {
-
-		DialogInformation fWaitingDialog;
-		if (logicModule.checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
-			String[] messages = new String[3];
-			messages[0] = "Server expects client version " + pClientVersion + " or newer.";
-			messages[1] = "Client version is " + FantasyFootballConstants.VERSION + ".";
-			messages[2] = "Please update your client!";
-			fWaitingDialog = new DialogInformation(getClient(), "Client Version Conflict", messages,
-				DialogInformation.CANCEL_DIALOG, false);
-			fWaitingDialog.showDialog(this);
-			return false;
-		}
-
-		if (logicModule.checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
-			String[] messages = new String[3];
-			messages[0] = "Client expects server version " + FantasyFootballConstants.VERSION + " or newer.";
-			messages[1] = "Server version is " + pServerVersion + ".";
-			messages[2] = "Please wait for a server update!";
-			fWaitingDialog = new DialogInformation(getClient(), "Server Version Conflict", messages,
-				DialogInformation.CANCEL_DIALOG, false);
-			fWaitingDialog.showDialog(this);
-			return false;
-		}
-
-		return true;
-
-	}
-
 	private void showLoginDialog() {
 		boolean hasGameId = (getClient().getParameters().getGameId() > 0);
 		if (StringTool.isProvided(getClient().getParameters().getAuthentication())) {
-			logicModule.setfPasswordLength(-1);
+			logicModule.setPasswordLength(-1);
 		}
-		DialogLogin loginDialog = new DialogLogin(getClient(), logicModule.getfEncodedPassword(), logicModule.getfPasswordLength(),
-			logicModule.getfTeamHomeName(), logicModule.getfTeamAwayName(), !hasGameId);
-		if (hasGameId && (logicModule.getfPasswordLength() < 0)) {
+		DialogLogin loginDialog = new DialogLogin(getClient(), logicModule.getEncodedPassword(), logicModule.getPasswordLength(),
+			logicModule.getTeamHomeName(), logicModule.getTeamAwayName(), !hasGameId);
+		if (hasGameId && (logicModule.getPasswordLength() < 0)) {
 			dialogClosed(loginDialog); // close dialog right away if no game name or password is necessary
 		} else if (fLastServerError == ServerStatus.ERROR_GAME_IN_USE) {
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_GAME);
 		} else if (fLastServerError == ServerStatus.ERROR_UNKNOWN_COACH) {
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_COACH);
 		} else if (fLastServerError == ServerStatus.ERROR_WRONG_PASSWORD) {
-			loginDialog.setEncodedPassword(null, logicModule.getfPasswordLength());
+			loginDialog.setEncodedPassword(null, logicModule.getPasswordLength());
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_PASSWORD);
 		} else {
 			loginDialog.showDialog(this);
 		}
 	}
-
 }
