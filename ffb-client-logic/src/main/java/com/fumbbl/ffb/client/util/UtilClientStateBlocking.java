@@ -130,7 +130,7 @@ public class UtilClientStateBlocking {
 					communication.sendUseSkill(blackInk, true, actingPlayer.getPlayerId());
 					break;
 				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
-					if (isGoredAvailable(pClientState)) {
+					if (isGoredAvailable(game)) {
 						UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie).ifPresent(goredSkill ->
 							communication.sendUseSkill(goredSkill, true, actingPlayer.getPlayerId()));
 					}
@@ -156,7 +156,7 @@ public class UtilClientStateBlocking {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)
-				|| (isGoredAvailable(pClientState) && pDoBlitz)) {
+				|| (isGoredAvailable(game) && pDoBlitz)) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender, false);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
@@ -194,7 +194,7 @@ public class UtilClientStateBlocking {
 			menuItemList.add(projectileVomit);
 		}
 
-		if (isGoredAvailable(pClientState)) {
+		if (isGoredAvailable(pClientState.getClient().getGame())) {
 			menuItemList.add(createGoredItem(pClientState));
 		}
 
@@ -213,8 +213,7 @@ public class UtilClientStateBlocking {
 		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
 	}
 
-	public static boolean isGoredAvailable(ClientState pClientState) {
-		Game game = pClientState.getClient().getGame();
+	public static boolean isGoredAvailable(Game game) {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 		if (targetSelectionState != null && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie)) {

@@ -274,8 +274,18 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 	}
 
 	public final void menuItemSelected(Player<?> player, int pMenuKey) {
+		prePerform();
 		ClientAction action = actionMapping().get(pMenuKey);
 		logicModule.perform(player, action);
+		postPerform();
+	}
+
+	protected void prePerform() {
+
+	}
+
+	protected void postPerform() {
+
 	}
 
 	protected abstract Map<Integer, ClientAction> actionMapping();

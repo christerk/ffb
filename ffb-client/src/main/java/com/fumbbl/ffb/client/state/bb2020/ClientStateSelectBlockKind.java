@@ -4,20 +4,22 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.util.UtilCards;
 
-public class ClientStateSelectBlockKind extends ClientState {
+import java.util.HashMap;
+import java.util.Map;
+
+public class ClientStateSelectBlockKind extends ClientStateAwt<BlockLogicModule> {
 
 	public ClientStateSelectBlockKind(FantasyFootballClient pClient) {
-		super(pClient);
+		super(pClient, new BlockLogicModule(pClient));
 	}
 
 	@Override
@@ -32,11 +34,6 @@ public class ClientStateSelectBlockKind extends ClientState {
 		if (game.isHomePlaying()) {
 			UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, game.getActingPlayer().getPlayer(), game.getDefender(), false);
 		}
-	}
-
-	@Override
-	public void leaveState() {
-		super.leaveState();
 	}
 
 	@Override
@@ -55,38 +52,24 @@ public class ClientStateSelectBlockKind extends ClientState {
 		}
 	}
 
-	public void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
-			Game game = getClient().getGame();
-			if (!game.isHomePlaying()) {
-				return;
-			}
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			switch (pMenuKey) {
-				case IPlayerPopupMenuKeys.KEY_BLOCK:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false);
-					break;
-				case IPlayerPopupMenuKeys.KEY_STAB:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, true, false, false);
-					break;
-				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
-					break;
-				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
-					break;
-				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
-					Skill goredSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
-					if (UtilClientStateBlocking.isGoredAvailable(this) && goredSkill != null) {
-						getClient().getCommunication().sendUseSkill(goredSkill, true, actingPlayer.getPlayerId());
-					}
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false);
-					break;
-				default:
-					break;
-			}
+	@Override
+	protected void prePerform() {
+		Game game = getClient().getGame();
+		if (game.isHomePlaying()) {
+			getClient().getUserInterface().getFieldComponent().refresh();
 		}
 	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+			return new HashMap<Integer, ClientAction>() {{
+				put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
+				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
+				put(IPlayerPopupMenuKeys.KEY_CHAINSAW, ClientAction.CHAINSAW);
+				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
+				put(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, ClientAction.GORED_BY_THE_BULL);
+			}};
+		}
 
 	@Override
 	public boolean actionKeyPressed(ActionKey pActionKey) {
