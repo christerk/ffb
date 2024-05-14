@@ -2,60 +2,43 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
-import com.fumbbl.ffb.mechanics.GameMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.ISkillProperty;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
-import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt extends ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T extends LogicModule> extends ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -68,8 +51,11 @@ public abstract class ClientStateAwt extends ClientState implements INetCommandH
 
 	private Player<?> fPopupMenuPlayer;
 
-	public ClientStateAwt(FantasyFootballClient pClient) {
+	protected final T logicModule;
+
+	public ClientStateAwt(FantasyFootballClient pClient, T logicModule) {
 		super(pClient);
+		this.logicModule = logicModule;
 		setClickable(true);
 	}
 
@@ -268,7 +254,7 @@ public abstract class ClientStateAwt extends ClientState implements INetCommandH
 	protected void clickOnField(FieldCoordinate pCoordinate) {
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	protected void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
@@ -279,7 +265,7 @@ public abstract class ClientStateAwt extends ClientState implements INetCommandH
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	protected boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		if (getClient().getClientData().getSelectedPlayer() != null) {
 			getClient().getClientData().setSelectedPlayer(null);
 			getClient().getUserInterface().refreshSideBars();
@@ -287,8 +273,12 @@ public abstract class ClientStateAwt extends ClientState implements INetCommandH
 		return true;
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
+	public final void menuItemSelected(Player<?> player, int pMenuKey) {
+		ClientAction action = actionMapping().get(pMenuKey);
+		logicModule.perform(player, action);
 	}
+
+	protected abstract Map<Integer, ClientAction> actionMapping();
 
 	public void setClickable(boolean pClickable) {
 		fClickable = pClickable;
@@ -321,15 +311,15 @@ public abstract class ClientStateAwt extends ClientState implements INetCommandH
 		return false;
 	}
 
-	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
+	public boolean isInitDragAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		return false;
 	}
 
-	public boolean isDragAllowed(FieldCoordinate pCoordinate) {
+	public boolean isDragAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		return false;
 	}
 
-	public boolean isDropAllowed(FieldCoordinate pCoordinate) {
+	public boolean isDropAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		return false;
 	}
 

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.dialog.DialogLogin;
 import com.fumbbl.ffb.client.dialog.DialogTeamChoice;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LoginLogicModule;
 import com.fumbbl.ffb.dialog.DialogJoinParameter;
 import com.fumbbl.ffb.model.Game;
@@ -26,18 +27,19 @@ import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * @author Kalimar
  */
-public class ClientStateLogin extends ClientStateAwt implements IDialogCloseListener {
+public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implements IDialogCloseListener {
 
 	// this state changes after synchronizing
 
 	private ServerStatus fLastServerError;
-	private final LoginLogicModule logicModule ;
 	protected ClientStateLogin(FantasyFootballClient pClient) {
-		super(pClient);
-		logicModule = new LoginLogicModule(pClient);
+		super(pClient, new LoginLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -173,6 +175,11 @@ public class ClientStateLogin extends ClientStateAwt implements IDialogCloseList
 				super.handleCommand(pNetCommand);
 				break;
 		}
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return Collections.emptyMap();
 	}
 
 	private void showLoginDialog() {

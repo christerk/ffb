@@ -5,6 +5,7 @@ import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
@@ -38,7 +39,7 @@ public class LoginLogicModule extends LogicModule {
 	}
 
 	@Override
-	protected void performAvailableAction(ClientAction action) {
+	protected void performAvailableAction(Player<?> player, ClientAction action) {
 		// no actions in this state
 	}
 

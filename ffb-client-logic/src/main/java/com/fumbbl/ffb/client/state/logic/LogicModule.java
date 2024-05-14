@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.model.Player;
 
 import java.util.Set;
 
@@ -11,14 +12,15 @@ public abstract class LogicModule {
 		this.client = client;
 	}
 
-	public abstract Set<ClientAction> availableActions();
-	public void perform(ClientAction action) {
+	public void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
-			performAvailableAction(action);
+			performAvailableAction(player, action);
 		} else {
 			client.logError("Unsupported action " + action.name() + " in logic module " + this.getClass().getCanonicalName());
 		}
 	}
 
-	protected abstract void performAvailableAction(ClientAction action);
+	public abstract Set<ClientAction> availableActions();
+
+	protected abstract void performAvailableAction(Player<?> player, ClientAction action);
 }
