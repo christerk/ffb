@@ -3,7 +3,7 @@ package com.fumbbl.ffb.client.state.bb2020;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockLogicModule> {
 
-	public ClientStateSelectBlockKind(FantasyFootballClient pClient) {
+	public ClientStateSelectBlockKind(FantasyFootballClientAwt pClient) {
 		super(pClient, new BlockLogicModule(pClient));
 	}
 
@@ -88,9 +88,12 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockLogicModule>
 			case PLAYER_ACTION_PROJECTILE_VOMIT:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 				break;
-			default:
+			case PLAYER_ACTION_BLOCK:
+			case PLAYER_ACTION_GORED:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
 				break;
+			default:
+				return super.actionKeyPressed(pActionKey);
 		}
 		return true;
 	}
