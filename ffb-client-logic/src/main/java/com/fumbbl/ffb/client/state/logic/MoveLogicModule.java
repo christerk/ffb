@@ -1,13 +1,20 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -26,15 +33,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class MoveLogicModule extends LogicModule{
-	
+public class MoveLogicModule extends LogicModule {
+
 	public MoveLogicModule(FantasyFootballClient client) {
 		super(client);
 	}
 
 	@Override
 	public Set<ClientAction> availableActions() {
-	
+
 		return new HashSet<ClientAction>() {{
 			add(ClientAction.END_MOVE);
 			add(ClientAction.JUMP);
@@ -324,5 +331,49 @@ public class MoveLogicModule extends LogicModule{
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		perform(actingPlayer.getPlayer(), ClientAction.END_MOVE);
 		client.getCommunication().sendEndTurn(game.getTurnMode());
+	}
+
+	public MoveSquare moveSquare(FieldCoordinate coordinate) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinate);
+		FieldCoordinate fromCoordinate = null;
+		if (actingPlayer != null) {
+			fromCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		}
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		if (moveSquare != null && (actingPlayer == null || !actingPlayer.isJumping() || mechanic.isValidJump(game, actingPlayer.getPlayer(), fromCoordinate, coordinate))) {
+			return moveSquare;
+		}
+		return null;
+	}
+
+	public FieldCoordinate[] automovePath(FieldCoordinate coordinate) {
+		String automoveProperty = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if ((actingPlayer != null) && (actingPlayer.getPlayerAction() != null)
+			&& actingPlayer.getPlayerAction().isMoving() && ArrayTool.isProvided(game.getFieldModel().getMoveSquares())
+			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
+			&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
+			&& (game.getTurnMode() != TurnMode.SWARMING)
+			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
+			return PathFinderWithPassBlockSupport.getShortestPath(game, coordinate);
+		}
+		return new FieldCoordinate[0];
+	}
+
+	public MoveSquare.Kind kind(MoveSquare moveSquare) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (moveSquare.isGoingForIt() && (moveSquare.isDodging() && !actingPlayer.isJumping())) {
+			return MoveSquare.Kind.RUSH_DODGE;
+		} else if (moveSquare.isGoingForIt()) {
+			return MoveSquare.Kind.RUSH;
+		} else if (moveSquare.isDodging() && !actingPlayer.isJumping()) {
+			return MoveSquare.Kind.DODGE;
+		} else {
+			return MoveSquare.Kind.MOVE;
+		}
 	}
 }

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
@@ -44,7 +45,7 @@ import java.util.Optional;
  */
 public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 
-	protected ClientStateMove(FantasyFootballClient pClient) {
+	protected ClientStateMove(FantasyFootballClientAwt pClient) {
 		super(pClient, new MoveLogicModule(pClient));
 	}
 
@@ -58,44 +59,37 @@ public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
-		FieldCoordinate fromCoordinate = null;
-		if (actingPlayer != null) {
-			fromCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		}
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		if (moveSquare != null && (actingPlayer == null || !actingPlayer.isJumping() || mechanic.isValidJump(game, actingPlayer.getPlayer(), fromCoordinate, pCoordinate))) {
+		MoveSquare moveSquare = logicModule.moveSquare(pCoordinate);
+		if (moveSquare != null) {
 			setCustomCursor(moveSquare);
 		} else {
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-			String automoveProperty = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
-			if ((actingPlayer != null) && (actingPlayer.getPlayerAction() != null)
-				&& actingPlayer.getPlayerAction().isMoving() && ArrayTool.isProvided(game.getFieldModel().getMoveSquares())
-				&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
-				&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
-				&& (game.getTurnMode() != TurnMode.SWARMING)
-				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
-				FieldCoordinate[] shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
-				if (ArrayTool.isProvided(shortestPath)) {
-					fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
-					fieldComponent.refresh();
-				}
+			FieldCoordinate[] shortestPath = logicModule.automovePath(pCoordinate);
+			if (ArrayTool.isProvided(shortestPath)) {
+				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+				fieldComponent.refresh();
 			}
 		}
 		return super.mouseOverField(pCoordinate);
 	}
 
 	private void setCustomCursor(MoveSquare pMoveSquare) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pMoveSquare.isGoingForIt() && (pMoveSquare.isDodging() && !actingPlayer.isJumping())) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
-		} else if (pMoveSquare.isGoingForIt()) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
-		} else if (pMoveSquare.isDodging() && !actingPlayer.isJumping()) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
-		} else {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
+		MoveSquare.Kind kind = logicModule.kind(pMoveSquare);
+		switch (kind) {
+			case RUSH_DODGE:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI_DODGE);
+				break;
+			case RUSH:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_GFI);
+				break;
+			case DODGE:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_DODGE);
+				break;
+			case MOVE:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
+				break;
+			default:
+				break;
 		}
 	}
 
