@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.PlayerAction;
@@ -13,8 +13,6 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -348,6 +346,46 @@ public class MoveLogicModule extends LogicModule {
 		return null;
 	}
 
+	public MoveSquare.Kind kind(MoveSquare moveSquare) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (moveSquare.isGoingForIt() && (moveSquare.isDodging() && !actingPlayer.isJumping())) {
+			return MoveSquare.Kind.RUSH_DODGE;
+		} else if (moveSquare.isGoingForIt()) {
+			return MoveSquare.Kind.RUSH;
+		} else if (moveSquare.isDodging() && !actingPlayer.isJumping()) {
+			return MoveSquare.Kind.DODGE;
+		} else {
+			return MoveSquare.Kind.MOVE;
+		}
+	}
+
+	public boolean movePlayer(FieldCoordinate[] pCoordinates) {
+		if (!ArrayTool.isProvided(pCoordinates)) {
+			return false;
+		}
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate coordinateFrom = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		if (coordinateFrom == null) {
+			return false;
+		}
+
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+
+		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, pCoordinates[pCoordinates.length - 1])) {
+			return false;
+		}
+
+		sendCommand(actingPlayer, coordinateFrom, pCoordinates);
+		return true;
+	}
+
+	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {
+		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
+	}
+
+  // TODO do we really need both path finder calls?
 	public FieldCoordinate[] automovePath(FieldCoordinate coordinate) {
 		String automoveProperty = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		Game game = client.getGame();
@@ -363,17 +401,33 @@ public class MoveLogicModule extends LogicModule {
 		return new FieldCoordinate[0];
 	}
 
-	public MoveSquare.Kind kind(MoveSquare moveSquare) {
+	public FieldCoordinate[] findShortestPath(FieldCoordinate coordinate) {
+		String automoveProperty = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (moveSquare.isGoingForIt() && (moveSquare.isDodging() && !actingPlayer.isJumping())) {
-			return MoveSquare.Kind.RUSH_DODGE;
-		} else if (moveSquare.isGoingForIt()) {
-			return MoveSquare.Kind.RUSH;
-		} else if (moveSquare.isDodging() && !actingPlayer.isJumping()) {
-			return MoveSquare.Kind.DODGE;
-		} else {
-			return MoveSquare.Kind.MOVE;
+		if (actingPlayer != null
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().isMoving()
+			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
+			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
+		) {
+
+			Player<?> playerInTarget = game.getFieldModel().getPlayer(coordinate);
+
+			if (actingPlayer.isStandingUp()
+				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
+				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
+					actingPlayer.getPlayer().getMovementWithModifiers()));
+				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
+				// go-for-it
+			}
+
+			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
+				return PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
+			} else {
+				return PathFinderWithPassBlockSupport.getShortestPath(game, coordinate);
+			}
 		}
+		return new FieldCoordinate[0];
 	}
 }

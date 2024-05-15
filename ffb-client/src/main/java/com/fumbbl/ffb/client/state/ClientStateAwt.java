@@ -8,7 +8,6 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
@@ -258,7 +257,6 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	protected void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
 	}
 
-	// TODO split and move to logic module
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		if (getClient().getClientData().getSelectedPlayer() != pPlayer) {
 			getClient().getClientData().setSelectedPlayer(pPlayer);
@@ -267,7 +265,6 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		return true;
 	}
 
-	// TODO split and move to logic module
 	protected boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		if (getClient().getClientData().getSelectedPlayer() != null) {
 			getClient().getClientData().setSelectedPlayer(null);

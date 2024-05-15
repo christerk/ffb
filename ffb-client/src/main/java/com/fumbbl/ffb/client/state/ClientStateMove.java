@@ -1,18 +1,12 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
@@ -349,7 +343,7 @@ public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					return true;
 				default:
-					actionHandled = false;
+					actionHandled = super.actionKeyPressed(pActionKey);
 					break;
 			}
 		}
@@ -371,68 +365,24 @@ public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 	}
 
 	protected void movePlayer(FieldCoordinate[] pCoordinates) {
-		if (!ArrayTool.isProvided(pCoordinates)) {
-			return;
+		if (logicModule.movePlayer(pCoordinates)) {
+			getClient().getGame().getFieldModel().clearMoveSquares();
+			getClient().getUserInterface().getFieldComponent().refresh();
 		}
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		FieldCoordinate coordinateFrom = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		if (coordinateFrom == null) {
-			return;
-		}
-
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-
-		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, pCoordinates[pCoordinates.length - 1])) {
-			return;
-		}
-
-		getClient().getGame().getFieldModel().clearMoveSquares();
-		getClient().getUserInterface().getFieldComponent().refresh();
-		sendCommand(actingPlayer, coordinateFrom, pCoordinates);
-	}
-
-	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {
-		getClient().getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(@SuppressWarnings("unused") IconCache iconCache) {
 		return null;
 	}
 
-	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
+	protected void showShortestPath(FieldCoordinate pCoordinate, FieldComponent fieldComponent,
 																	ActingPlayer actingPlayer) {
-		// TODO move path calculation to logic module
-		String automoveProperty = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
-		if (actingPlayer != null
-			&& actingPlayer.getPlayerAction() != null
-			&& actingPlayer.getPlayerAction().isMoving()
-			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
-			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)
-		) {
-
-			FieldCoordinate[] shortestPath;
-
-			Player<?> playerInTarget = game.getFieldModel().getPlayer(pCoordinate);
-
-			if (actingPlayer.isStandingUp()
-				&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
-				actingPlayer.setCurrentMove(Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP,
-					actingPlayer.getPlayer().getMovementWithModifiers()));
-				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
-				// go-for-it
-			}
-
-			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
-				shortestPath = PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
-			} else {
-				shortestPath = PathFinderWithPassBlockSupport.getShortestPath(game, pCoordinate);
-			}
-			if (ArrayTool.isProvided(shortestPath)) {
-				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
-				fieldComponent.refresh();
-			}
+		FieldCoordinate[] shortestPath = logicModule.findShortestPath(pCoordinate);
+		if (ArrayTool.isProvided(shortestPath)) {
+			fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+			fieldComponent.refresh();
 		}
 	}
-
 }
+
+
