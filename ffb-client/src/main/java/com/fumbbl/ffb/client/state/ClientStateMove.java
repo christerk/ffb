@@ -16,7 +16,8 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
@@ -29,39 +30,26 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author Kalimar
  */
-public class ClientStateMove extends ClientState {
+public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 
 	protected ClientStateMove(FantasyFootballClient pClient) {
-		super(pClient);
+		super(pClient, new MoveLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
 		return ClientStateId.MOVE;
-	}
-
-	protected boolean isJumpAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		return mechanic.isAvailableAsNextMove(game, actingPlayer, jumping);
-	}
-
-	protected Optional<Skill> isBoundingLeapAvailable(Game game, ActingPlayer actingPlayer) {
-		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-			return Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers));
-		}
-
-		return Optional.empty();
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
@@ -144,16 +132,6 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
-	protected boolean isSpecialAbilityAvailable(ActingPlayer actingPlayer) {
-		return isTreacherousAvailable(actingPlayer)
-			|| isWisdomAvailable(actingPlayer)
-			|| isRaidingPartyAvailable(actingPlayer)
-			|| isLookIntoMyEyesAvailable(actingPlayer)
-			|| isBalefulHexAvailable(actingPlayer)
-			|| isPutridRegurgitationAvailable()
-			|| isCatchOfTheDayAvailable(actingPlayer)
-			|| isBlackInkAvailable(actingPlayer);
-	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
@@ -163,7 +141,7 @@ public class ClientStateMove extends ClientState {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
 				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
-				|| isSpecialAbilityAvailable(actingPlayer)
+				|| logicModule.isSpecialAbilityAvailable(actingPlayer)
 				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
@@ -184,125 +162,28 @@ public class ClientStateMove extends ClientState {
 		}
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
-			Game game = getClient().getGame();
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			ClientCommunication communication = getClient().getCommunication();
-			switch (pMenuKey) {
-				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					if (isEndPlayerActionAvailable()) {
-						communication.sendActingPlayer(null, null, false);
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_JUMP:
-					if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_HAND_OVER:
-					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-						if (PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction()) {
-							communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER, actingPlayer.isJumping());
-						} else if (PlayerAction.HAND_OVER == actingPlayer.getPlayerAction()) {
-							communication.sendActingPlayer(pPlayer, PlayerAction.HAND_OVER_MOVE, actingPlayer.isJumping());
-						}
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_PASS:
-					if (PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction()
-						&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE, actingPlayer.isJumping());
-					break;
-				case IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE, actingPlayer.isJumping());
-					break;
-				case IPlayerPopupMenuKeys.KEY_MOVE:
-					if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.PASS == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.KICK_TEAM_MATE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isJumping());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_GAZE:
-					if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.GAZE, actingPlayer.isJumping());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
-					if (isFumblerooskieAvailable()) {
-						communication.sendUseFumblerooskie();
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					if (isTreacherousAvailable(actingPlayer)) {
-						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-						communication.sendUseSkill(skill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					if (isWisdomAvailable(actingPlayer)) {
-						communication.sendUseWisdom();
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
-					if (isRaidingPartyAvailable(actingPlayer)) {
-						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-						communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-					if (isLookIntoMyEyesAvailable(pPlayer)) {
-						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
-					if (isBalefulHexAvailable(actingPlayer)) {
-						Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-						communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
-					if (isPutridRegurgitationAvailable()) {
-						Skill putridSkill = pPlayer.getSkillWithProperty(NamedProperties.canUseVomitAfterBlock);
-						communication.sendUseSkill(putridSkill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
-					if (isBlackInkAvailable(actingPlayer)) {
-						Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
-						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
-					if (isCatchOfTheDayAvailable(actingPlayer)) {
-						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-						communication.sendUseSkill(skill, true, pPlayer.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
-					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
-						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
-				default:
-					break;
-			}
-		}
-	}
-
-	protected boolean showGridForKTM(Game game, ActingPlayer actingPlayer) {
-		return false;
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
+			put(IPlayerPopupMenuKeys.KEY_HAND_OVER, ClientAction.HAND_OVER);
+			put(IPlayerPopupMenuKeys.KEY_PASS, ClientAction.PASS);
+			put(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE, ClientAction.THROW_TEAM_MATE);
+			put(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, ClientAction.KICK_TEAM_MATE);
+			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
+			put(IPlayerPopupMenuKeys.KEY_GAZE, ClientAction.GAZE);
+			put(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, ClientAction.FUMBLEROOSKIE);
+			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
+			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
+			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
+		}};
 	}
 
 	protected void createAndShowPopupMenuForActingPlayer() {
@@ -312,29 +193,24 @@ public class ClientStateMove extends ClientState {
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+		if (logicModule.isPassAnySquareAvailable(actingPlayer, game)) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 		}
-		if (((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-			|| showGridForKTM(game, actingPlayer)
-			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true))) {
+		if (logicModule.isRangeGridAvailable(actingPlayer, game)) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
 		}
-		if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
+		if (logicModule.isMoveAvailable(actingPlayer)) {
 			menuItemList.add(createMoveMenuItem(iconCache));
 		}
-		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
+		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
@@ -348,7 +224,7 @@ public class ClientStateMove extends ClientState {
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 
-				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
@@ -359,45 +235,45 @@ public class ClientStateMove extends ClientState {
 				}
 			}
 		}
-		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
+		if (logicModule.isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
-		if (isFumblerooskieAvailable()) {
+		if (logicModule.isFumblerooskieAvailable()) {
 			JMenuItem fumblerooskieAction = new JMenuItem(dimensionProvider(), "Fumblerooskie",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
 			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
 			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
 			menuItemList.add(fumblerooskieAction);
 		}
-		if (isEndPlayerActionAvailable()) {
+		if (logicModule.isEndPlayerActionAvailable()) {
 			addEndActionLabel(iconCache, menuItemList);
 		}
-		if (isTreacherousAvailable(actingPlayer)) {
+		if (logicModule.isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
-		if (isWisdomAvailable(actingPlayer)) {
+		if (logicModule.isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
-		if (isRaidingPartyAvailable(actingPlayer)) {
+		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+		if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
-		if (isBalefulHexAvailable(actingPlayer)) {
+		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
-		if (isPutridRegurgitationAvailable()) {
+		if (logicModule.isPutridRegurgitationAvailable()) {
 			menuItemList.add(createPutridRegurgitationItem(iconCache));
 		}
-		if (isBlackInkAvailable(actingPlayer)) {
+		if (logicModule.isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
+		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
@@ -486,11 +362,7 @@ public class ClientStateMove extends ClientState {
 	}
 
 	@Override
-	public void endTurn() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
-		getClient().getCommunication().sendEndTurn(game.getTurnMode());
+	public void postEndTurn() {
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();
@@ -529,33 +401,13 @@ public class ClientStateMove extends ClientState {
 		getClient().getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
 	}
 
-	private boolean isEndPlayerActionAvailable() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (!actingPlayer.hasActed()
-			|| !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFullMovement)
-			|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
-	}
-
-	private boolean isFumblerooskieAvailable() {
-		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
-
-		return (UtilCards.hasUncanceledSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canDropBall)
-			&& actingPlayer.getPlayerAction() != null
-			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
-			&& UtilPlayer.hasBall(getClient().getGame(), actingPlayer.getPlayer()));
-	}
-
-	protected boolean isPutridRegurgitationAvailable() {
-		return false;
-	}
-
-	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
+	protected JMenuItem createPutridRegurgitationItem(@SuppressWarnings("unused") IconCache iconCache) {
 		return null;
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, Game game, FieldComponent fieldComponent,
 																	ActingPlayer actingPlayer) {
+		// TODO move path calculation to logic module
 		String automoveProperty = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		if (actingPlayer != null
 			&& actingPlayer.getPlayerAction() != null

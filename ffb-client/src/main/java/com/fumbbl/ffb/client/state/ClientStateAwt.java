@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt<T extends LogicModule> extends ClientState implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState<T> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -51,11 +51,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 
 	private Player<?> fPopupMenuPlayer;
 
-	protected final T logicModule;
-
 	public ClientStateAwt(FantasyFootballClient pClient, T logicModule) {
-		super(pClient);
-		this.logicModule = logicModule;
+		super(pClient, logicModule);
 		setClickable(true);
 	}
 
@@ -173,6 +170,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 		hideSelectSquare();
 	}
 
+	// TODO split and move to logic module
 	public void mouseReleased(MouseEvent pMouseEvent) {
 		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
 			return;
@@ -251,12 +249,15 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
+	// TODO split and move to logic module
 	protected void clickOnField(FieldCoordinate pCoordinate) {
 	}
 
+	// TODO split and move to logic module
 	protected void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
 	}
 
+	// TODO split and move to logic module
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		if (getClient().getClientData().getSelectedPlayer() != pPlayer) {
 			getClient().getClientData().setSelectedPlayer(pPlayer);
@@ -265,6 +266,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 		return true;
 	}
 
+	// TODO split and move to logic module
 	protected boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		if (getClient().getClientData().getSelectedPlayer() != null) {
 			getClient().getClientData().setSelectedPlayer(null);
@@ -278,14 +280,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 		ClientAction action = actionMapping().get(pMenuKey);
 		logicModule.perform(player, action);
 		postPerform();
-	}
-
-	protected void prePerform() {
-
-	}
-
-	protected void postPerform() {
-
 	}
 
 	protected abstract Map<Integer, ClientAction> actionMapping();
@@ -333,8 +327,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState 
 		return false;
 	}
 
-	public void endTurn() {
-	}
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
