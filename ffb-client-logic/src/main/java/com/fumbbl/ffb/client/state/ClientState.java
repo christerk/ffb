@@ -5,14 +5,14 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 
-public abstract class ClientState<T extends LogicModule> {
+public abstract class ClientState<T extends LogicModule, C extends FantasyFootballClient> {
 
-	private final FantasyFootballClient fClient;
+	private final C fClient;
 	protected final T logicModule;
 
 	protected FieldCoordinate fSelectSquareCoordinate;
 
-	public ClientState(FantasyFootballClient pClient, T logicModule) {
+	public ClientState(C pClient, T logicModule) {
 		fClient = pClient;
 		this.logicModule = logicModule;
 	}
@@ -23,7 +23,7 @@ public abstract class ClientState<T extends LogicModule> {
 
 	public abstract ClientStateId getId();
 
-	public FantasyFootballClient getClient() {
+	public C getClient() {
 		return fClient;
 	}
 

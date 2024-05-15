@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.net.ClientPingTask;
 import com.fumbbl.ffb.client.net.CommandEndpoint;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.ClientStateFactory;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
@@ -39,7 +40,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	private CommandEndpoint fCommandEndpoint;
 	private Timer fPingTimer;
 	private final transient ClientData fClientData;
-	private ClientState fState;
+	private ClientState<? extends LogicModule, ? extends FantasyFootballClient> fState;
 	private final ClientStateFactory fStateFactory;
 	private final ClientCommandHandlerFactory fCommandHandlerFactory;
 	private final ClientCommunication fCommunication;
@@ -140,8 +141,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	protected abstract void initUI();
 
-	public ClientState updateClientState() {
-		ClientState newState = fStateFactory.getStateForGame();
+	public ClientState<? extends LogicModule, ? extends FantasyFootballClient> updateClientState() {
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> newState = fStateFactory.getStateForGame();
 		if ((newState != null) && (newState != fState)) {
 			if (fState != null) {
 				fState.leaveState();
@@ -156,7 +157,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		return fState;
 	}
 
-	public ClientState getClientState() {
+	public ClientState<? extends LogicModule, ? extends FantasyFootballClient> getClientState() {
 		return fState;
 	}
 
@@ -196,12 +197,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		}
 		throw new FantasyFootballException("Trying to get game context from application.");
 	}
-
-	// TODO move to some client state class
-	public abstract int getCurrentMouseButton();
-
-	// TODO move to some client state class
-	public abstract void setCurrentMouseButton(int currentMouseButton);
 
 	public abstract int getServerPort();
 
@@ -301,9 +296,5 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public void logError(String message) {
 		logError(gameId(), message);
-	}
-
-	public void logDebug(String message) {
-		logDebug(gameId(), message);
 	}
 }

@@ -9,6 +9,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
@@ -38,7 +39,7 @@ import java.util.Set;
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState<T> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -51,7 +52,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	private Player<?> fPopupMenuPlayer;
 
-	public ClientStateAwt(FantasyFootballClient pClient, T logicModule) {
+	public ClientStateAwt(FantasyFootballClientAwt pClient, T logicModule) {
 		super(pClient, logicModule);
 		setClickable(true);
 	}
