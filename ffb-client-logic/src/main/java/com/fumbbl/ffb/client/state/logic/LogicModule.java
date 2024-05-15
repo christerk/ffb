@@ -4,6 +4,7 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.PlayerInteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -92,4 +93,11 @@ public abstract class LogicModule {
 
 	public void endTurn() {
 	}
+
+	public void deselectActingPlayer() {
+		client.getCommunication().sendActingPlayer(null, null, false);
+	}
+
+	public abstract PlayerInteractionResult playerInteraction(Player<?> player);
+
 }

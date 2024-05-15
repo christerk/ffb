@@ -1,11 +1,9 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -13,19 +11,17 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.PlayerInteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.mechanics.JumpMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -105,9 +101,8 @@ public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
+		MoveSquare moveSquare = logicModule.moveSquare(pCoordinate);
 		FieldCoordinate[] movePath = fieldComponent.getLayerUnderPlayers().getMovePath();
 		if (ArrayTool.isProvided(movePath) || (moveSquare != null)) {
 			if (ArrayTool.isProvided(movePath)) {
@@ -123,32 +118,21 @@ public class ClientStateMove extends ClientStateAwt<MoveLogicModule> {
 
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		FieldCoordinate position = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		if (pPlayer == actingPlayer.getPlayer()) {
-			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-			if (actingPlayer.hasActed() || mechanic.canJump(game, pPlayer, position)
-				|| pPlayer.hasSkillProperty(NamedProperties.inflictsConfusion)
-				|| logicModule.isSpecialAbilityAvailable(actingPlayer)
-				|| (pPlayer.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, pPlayer))
-				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, pPlayer))
-				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, pPlayer))
-				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
+		PlayerInteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
-			} else {
-				getClient().getCommunication().sendActingPlayer(null, null, false);
-			}
-		} else {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
-			if (moveSquare != null) {
-				movePlayer(playerCoordinate);
-			}
+				break;
+			case DESELECT:
+				logicModule.deselectActingPlayer();
+				break;
+			case MOVE:
+				movePlayer(result.getCoordinate());
+				break;
+			default:
+				break;
 		}
+		
 	}
 
 	@Override

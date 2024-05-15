@@ -13,6 +13,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.PlayerInteractionResult;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -429,5 +430,36 @@ public class MoveLogicModule extends LogicModule {
 			}
 		}
 		return new FieldCoordinate[0];
+	}
+
+	@Override
+	public PlayerInteractionResult playerInteraction(Player<?> player) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate position = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		if (player == actingPlayer.getPlayer()) {
+			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+			if (actingPlayer.hasActed() || mechanic.canJump(game, player, position)
+				|| player.hasSkillProperty(NamedProperties.inflictsConfusion)
+				|| isSpecialAbilityAvailable(actingPlayer)
+				|| (player.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, player))
+				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, player))
+				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, player))
+				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
+				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
+				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
+				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
+				return new PlayerInteractionResult(PlayerInteractionResult.Kind.SHOW_ACTIONS);
+			} else {
+				return new PlayerInteractionResult(PlayerInteractionResult.Kind.DESELECT);
+			}
+		} else {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
+			if (moveSquare != null) {
+				return new PlayerInteractionResult(PlayerInteractionResult.Kind.MOVE, position);
+			}
+		}
+		return new PlayerInteractionResult(PlayerInteractionResult.Kind.IGNORE);
 	}
 }
