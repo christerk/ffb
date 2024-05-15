@@ -297,4 +297,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	public void logError(String message) {
 		logError(gameId(), message);
 	}
+
+	public void logDebug(String message) {
+		logDebug(gameId(), message);
+	}
 }
