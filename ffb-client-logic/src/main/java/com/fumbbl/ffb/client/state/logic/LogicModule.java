@@ -27,12 +27,39 @@ public abstract class LogicModule {
 		this.client = client;
 	}
 
+	public abstract Set<ClientAction> availableActions();
+
 	public final void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
 			performAvailableAction(player, action);
 		} else {
 			client.logError("Unsupported action " + action.name() + " in logic module " + this.getClass().getCanonicalName());
 		}
+	}
+
+	protected abstract void performAvailableAction(Player<?> player, ClientAction action);
+
+	public void endTurn() {
+	}
+
+	public void deselectActingPlayer() {
+		client.getCommunication().sendActingPlayer(null, null, false);
+	}
+
+	public boolean playerActivationUsed() {
+		return client.getGame().getActingPlayer().hasActed();
+	}
+
+	public InteractionResult playerInteraction(Player<?> player) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	public InteractionResult.Kind playerPeek(Player<?> player) {
+		return InteractionResult.Kind.IGNORE;
 	}
 
 	public boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player, ISkillProperty property) {
@@ -86,27 +113,5 @@ public abstract class LogicModule {
 				game.getFieldModel().getPlayerCoordinate(player), false))
 			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) && !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
 	}
-	
-	public abstract Set<ClientAction> availableActions();
 
-	protected abstract void performAvailableAction(Player<?> player, ClientAction action);
-
-	public void endTurn() {
-	}
-
-	public void deselectActingPlayer() {
-		client.getCommunication().sendActingPlayer(null, null, false);
-	}
-
-	public InteractionResult playerInteraction(Player<?> player) {
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
-	}
-
-	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
-	}
-
-	public InteractionResult.Kind playerPeek(Player<?> player) {
-		return InteractionResult.Kind.IGNORE;
-	}
 }

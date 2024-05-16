@@ -6,7 +6,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
-import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.BlockKindLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -16,10 +16,10 @@ import com.fumbbl.ffb.model.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ClientStateSelectBlockKind extends ClientStateAwt<BlockLogicModule> {
+public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
 
 	public ClientStateSelectBlockKind(FantasyFootballClientAwt pClient) {
-		super(pClient, new BlockLogicModule(pClient));
+		super(pClient, new BlockKindLogicModule(pClient));
 	}
 
 	@Override

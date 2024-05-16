@@ -46,10 +46,6 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	protected void postPerform() {
 	}
 
-	protected boolean playerActivationUsed() {
-		return getClient().getGame().getActingPlayer().hasActed();
-	}
-
 	public final void endTurn() {
 		logicModule.endTurn();
 		postEndTurn();

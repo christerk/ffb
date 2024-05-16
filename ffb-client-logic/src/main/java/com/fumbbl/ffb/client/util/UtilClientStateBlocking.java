@@ -29,6 +29,7 @@ import java.util.Optional;
 /**
  * @author Kalimar
  */
+// TODO this has to go - split up into logic modules and client states
 public class UtilClientStateBlocking {
 
 	public static boolean actionKeyPressed(ClientState pClientState, ActionKey pActionKey, boolean pDoBlitz) {

@@ -12,9 +12,9 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlockLogicModule extends LogicModule {
+public class BlockKindLogicModule extends LogicModule {
 	
-	public BlockLogicModule(FantasyFootballClient client) {
+	public BlockKindLogicModule(FantasyFootballClient client) {
 		super(client);
 	}
 

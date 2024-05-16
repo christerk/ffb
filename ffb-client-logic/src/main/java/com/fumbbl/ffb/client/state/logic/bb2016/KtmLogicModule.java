@@ -13,6 +13,9 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class KtmLogicModule extends MoveLogicModule {
 	public KtmLogicModule(FantasyFootballClient client) {
 		super(client);
@@ -40,7 +43,6 @@ public class KtmLogicModule extends MoveLogicModule {
 			return new InteractionResult(InteractionResult.Kind.SUPER);
 		} else {
 			if ((game.getDefender() == null) && canBeKicked(player)) {
-
 				return new InteractionResult(InteractionResult.Kind.PERFORM);
 			}
 			return new InteractionResult(InteractionResult.Kind.IGNORE);
@@ -69,6 +71,14 @@ public class KtmLogicModule extends MoveLogicModule {
 			}
 		}
 		return InteractionResult.Kind.IGNORE;
+	}
+
+	@Override
+	public Set<ClientAction> availableActions() {
+		return new HashSet<ClientAction>() {{
+			add(ClientAction.PASS_SHORT);
+			add(ClientAction.PASS_LONG);
+		}};
 	}
 
 	@Override
