@@ -3,39 +3,37 @@ package com.fumbbl.ffb.client.state.bb2016;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
-import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.ClientStateMove;
+import com.fumbbl.ffb.client.state.AbstractClientStateMove;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.bb2016.KtmLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Christer
  */
-public class ClientStateKickTeamMate extends ClientStateMove {
+public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicModule> {
 
-	public ClientStateKickTeamMate(FantasyFootballClient pClient) {
-		super(pClient);
+	public ClientStateKickTeamMate(FantasyFootballClientAwt pClient) {
+		super(pClient, new KtmLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -48,13 +46,9 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			super.clickOnPlayer(pPlayer);
-		} else {
-			if ((game.getDefender() == null) && canBeKicked(pPlayer)) {
-
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case PERFORM:
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
 				List<JMenuItem> menuItemList = new ArrayList<>();
 
@@ -70,58 +64,40 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 				longKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LONG, 0));
 				menuItemList.add(longKick);
 
-				createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+				createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 				showPopupMenuForPlayer(pPlayer);
-
-				// getClient().getCommunication().sendKickTeamMate(actingPlayer.getPlayerId(),
-				// pPlayer.getId(), 0);
-			}
+				break;
+			case SUPER:
+				super.clickOnPlayer(pPlayer);
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		if (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE) {
+		if (logicModule.fieldInteraction(pCoordinate).getKind() == InteractionResult.Kind.PERFORM) {
 			super.clickOnField(pCoordinate);
 			markKickablePlayers();
 			userInterface.getFieldComponent().refresh();
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		return super.mouseOverField(pCoordinate);
-	}
-
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
-		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
-			if (canBeKicked(pPlayer)) {
+		switch (logicModule.playerPeek(pPlayer)) {
+			case PERFORM:
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BLOCK);
-			} else {
+				break;
+			case RESET:
 				UtilClientCursor.setDefaultCursor(userInterface);
-			}
+				break;
+			default:
+				break;
 		}
-
-		getClient().getClientData().setSelectedPlayer(pPlayer);
 		userInterface.refreshSideBars();
 		return true;
-	}
-
-	private boolean canBeKicked(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		PlayerState catcherState = game.getFieldModel().getPlayerState(pPlayer);
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		// added a check so you could not throw the opponents players, maybe this should
-		// be in the server-check?
-		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canKickTeamMates)
-				&& pPlayer.hasSkillProperty(NamedProperties.canBeKicked) && catcherState.hasTacklezones()
-				&& catcherCoordinate.isAdjacent(throwerCoordinate)
-				&& (actingPlayer.getPlayer().getTeam() == pPlayer.getTeam()));
 	}
 
 	private void markKickablePlayers() {
@@ -139,11 +115,6 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 	}
 
 	@Override
-	public void handleCommand(NetCommand pNetCommand) {
-		super.handleCommand(pNetCommand);
-	}
-
-	@Override
 	public void leaveState() {
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
@@ -151,26 +122,11 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		super.menuItemSelected(pPlayer, pMenuKey);
-
-		if (pPlayer != null) {
-			Game game = getClient().getGame();
-			ActingPlayer actingPlayer = game.getActingPlayer();
-
-			ClientCommunication communication = getClient().getCommunication();
-			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_SHORT:
-				communication.sendKickTeamMate(actingPlayer.getPlayerId(), pPlayer.getId(), 1);
-				break;
-			case IPlayerPopupMenuKeys.KEY_LONG:
-				communication.sendKickTeamMate(actingPlayer.getPlayerId(), pPlayer.getId(), 2);
-				break;
-			}
-		}
-	}
-
-	public boolean actionKeyPressed(ActionKey pActionKey) {
-		return super.actionKeyPressed(pActionKey);
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_SHORT, ClientAction.PASS_SHORT);
+			put(IPlayerPopupMenuKeys.KEY_LONG, ClientAction.PASS_LONG);
+		}};
 	}
 }

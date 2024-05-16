@@ -2,16 +2,16 @@ package com.fumbbl.ffb.client.state.logic.interaction;
 
 import com.fumbbl.ffb.FieldCoordinate;
 
-public class PlayerInteractionResult {
+public class InteractionResult {
 
 	private final Kind kind;
 	private final FieldCoordinate coordinate;
 
-	public PlayerInteractionResult(Kind kind) {
+	public InteractionResult(Kind kind) {
 		this(kind, null);
 	}
 
-	public PlayerInteractionResult(Kind kind, FieldCoordinate coordinates) {
+	public InteractionResult(Kind kind, FieldCoordinate coordinates) {
 		this.kind = kind;
 		this.coordinate = coordinates;
 	}
@@ -25,6 +25,12 @@ public class PlayerInteractionResult {
 	}
 
 	public enum Kind {
-		DESELECT, SHOW_ACTIONS, MOVE, IGNORE
+		DESELECT,
+		IGNORE,
+		MOVE,
+		PERFORM,
+		RESET,
+		SHOW_ACTIONS,
+		SUPER
 	}
 }

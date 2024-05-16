@@ -4,7 +4,7 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.logic.interaction.PlayerInteractionResult;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -27,7 +27,7 @@ public abstract class LogicModule {
 		this.client = client;
 	}
 
-	public void perform(Player<?> player, ClientAction action) {
+	public final void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
 			performAvailableAction(player, action);
 		} else {
@@ -98,6 +98,15 @@ public abstract class LogicModule {
 		client.getCommunication().sendActingPlayer(null, null, false);
 	}
 
-	public abstract PlayerInteractionResult playerInteraction(Player<?> player);
+	public InteractionResult playerInteraction(Player<?> player) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
 
+	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	public InteractionResult.Kind playerPeek(Player<?> player) {
+		return InteractionResult.Kind.IGNORE;
+	}
 }

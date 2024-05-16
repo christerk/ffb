@@ -13,7 +13,7 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.logic.interaction.PlayerInteractionResult;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -433,7 +433,7 @@ public class MoveLogicModule extends LogicModule {
 	}
 
 	@Override
-	public PlayerInteractionResult playerInteraction(Player<?> player) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate position = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
@@ -449,17 +449,17 @@ public class MoveLogicModule extends LogicModule {
 				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
-				return new PlayerInteractionResult(PlayerInteractionResult.Kind.SHOW_ACTIONS);
+				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
 			} else {
-				return new PlayerInteractionResult(PlayerInteractionResult.Kind.DESELECT);
+				return new InteractionResult(InteractionResult.Kind.DESELECT);
 			}
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
 			if (moveSquare != null) {
-				return new PlayerInteractionResult(PlayerInteractionResult.Kind.MOVE, position);
+				return new InteractionResult(InteractionResult.Kind.MOVE, position);
 			}
 		}
-		return new PlayerInteractionResult(PlayerInteractionResult.Kind.IGNORE);
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 }
