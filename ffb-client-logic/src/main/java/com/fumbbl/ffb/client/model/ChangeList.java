@@ -12,7 +12,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.27.0")
+		versions.add(new VersionChangeList("2.27.1")
 			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
 			.addImprovement("Added logs to exception logging code")
 			.addImprovement("Flush writer in exception logging code")
