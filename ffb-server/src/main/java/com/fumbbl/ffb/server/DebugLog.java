@@ -171,9 +171,16 @@ public class DebugLog {
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
 			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "Filling in stacktrace for " + pThrowable.getClass().getCanonicalName());
 				pThrowable = pThrowable.fillInStackTrace();
 			}
+
+			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "No stacktrace for " + pThrowable.getClass().getCanonicalName());
+			}
+
 			pThrowable.printStackTrace(printWriter);
+			printWriter.flush();
 			printWriter.close();
 			log(IServerLogLevel.ERROR, pGameId, stringWriter.getBuffer().toString());
 		}
