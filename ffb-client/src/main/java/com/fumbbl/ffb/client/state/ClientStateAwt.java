@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -282,6 +283,20 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected abstract Map<Integer, ClientAction> actionMapping();
 
+	protected Map<Integer, ClientAction> genericBlockMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
+			put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
+			put(IPlayerPopupMenuKeys.KEY_CHAINSAW, ClientAction.CHAINSAW);
+			put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
+			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
+		}};
+	}
 	public void setClickable(boolean pClickable) {
 		fClickable = pClickable;
 	}

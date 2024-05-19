@@ -75,17 +75,8 @@ public class ClientStateBlitz extends ClientStateMove {
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
 			put(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, ClientAction.FUMBLEROOSKIE);
 			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
-			put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
-			put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
-			put(IPlayerPopupMenuKeys.KEY_CHAINSAW, ClientAction.CHAINSAW);
-			put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
-			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
-			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
-			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
-			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
-			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
-			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, ClientAction.GORED_BY_THE_BULL);
+			putAll(genericBlockMapping());
 		}};
 	}
 
