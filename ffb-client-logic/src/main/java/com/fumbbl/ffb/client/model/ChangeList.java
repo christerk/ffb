@@ -12,6 +12,13 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.27.1")
+			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
+			.addImprovement("Added logs to exception logging code")
+			.addImprovement("Flush writer in exception logging code")
+			.addImprovement("Make code compatible with open jdk by removing javafx references")
+		);
+
 		versions.add(new VersionChangeList("2.27.0")
 			.addFeature("Trickster")
 			.addRuleChange("Reduce Master Chef costs are now only available to Halfling teams and not all Halfling Thimble Cup teams")

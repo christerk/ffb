@@ -27,7 +27,6 @@ public class DebugLog {
 	public static final String COMMAND_SERVER_HOME_SPECTATORS = "->HS";
 	public static final String COMMAND_CLIENT_AWAY = " A->";
 	public static final String COMMAND_SERVER_AWAY = " ->A";
-	public static final String COMMAND_SERVER_AWAY_SPECTATORS = "->AS";
 	public static final String COMMAND_CLIENT_SPECTATOR = " S->";
 	public static final String COMMAND_SERVER_SPECTATOR = " ->S";
 	public static final String COMMAND_CLIENT_UNKNOWN = " ?->";
@@ -81,7 +80,7 @@ public class DebugLog {
 			|| (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
 			return;
 		}
-		GameState gameState = null;
+		GameState gameState;
 		String commandFlag = COMMAND_CLIENT_UNKNOWN;
 		Session session = pReceivedCommand.getSession();
 		SessionManager sessionManager = getServer().getSessionManager();
@@ -171,9 +170,16 @@ public class DebugLog {
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
 			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "Filling in stacktrace for " + pThrowable.getClass().getCanonicalName());
 				pThrowable = pThrowable.fillInStackTrace();
 			}
+
+			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "No stacktrace for " + pThrowable.getClass().getCanonicalName());
+			}
+
 			pThrowable.printStackTrace(printWriter);
+			printWriter.flush();
 			printWriter.close();
 			log(IServerLogLevel.ERROR, pGameId, stringWriter.getBuffer().toString());
 		}
@@ -212,9 +218,7 @@ public class DebugLog {
 		StringTokenizer tokenizer = new StringTokenizer(pLogString, "\r\n");
 		// write synchronized to the log, create a new one if necessary
 		synchronized (this) {
-			PrintWriter out = null;
-			try {
-				out = new PrintWriter(new FileWriter(getLogFile(), true));
+			try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true))) {
 				while (tokenizer.hasMoreTokens()) {
 					String line = tokenizer.nextToken();
 					out.print(header);
@@ -223,10 +227,6 @@ public class DebugLog {
 				out.flush();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
-			} finally {
-				if (out != null) {
-					out.close();
-				}
 			}
 		}
 	}
