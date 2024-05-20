@@ -43,8 +43,8 @@ public class ClientStateSelect extends ClientState {
 		super(pClient);
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		getClient().getGame().setDefenderId(null);
 		getClient().getClientData().clearBlockDiceResult();
 	}

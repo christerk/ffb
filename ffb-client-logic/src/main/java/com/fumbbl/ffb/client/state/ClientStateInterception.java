@@ -25,8 +25,8 @@ public class ClientStateInterception extends ClientState {
 		return ClientStateId.INTERCEPTION;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(true);
 	}
 

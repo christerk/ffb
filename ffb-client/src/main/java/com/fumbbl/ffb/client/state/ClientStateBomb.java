@@ -49,8 +49,8 @@ public class ClientStateBomb extends ClientState {
 		return ClientStateId.BOMB;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		fShowRangeRuler = true;
 		fRangeGridHandler.refreshSettings();
 	}

@@ -23,8 +23,8 @@ public class ClientStateWaitForSetup extends ClientState {
 		return ClientStateId.WAIT_FOR_SETUP;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(false);
 		Game game = getClient().getGame();
 		SideBarComponent sideBarAway = getClient().getUserInterface().getSideBarAway();

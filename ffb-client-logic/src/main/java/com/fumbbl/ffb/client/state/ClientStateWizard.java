@@ -28,8 +28,8 @@ public class ClientStateWizard extends ClientState {
 		return ClientStateId.WIZARD;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(true);
 		fShowMarker = true;
 	}

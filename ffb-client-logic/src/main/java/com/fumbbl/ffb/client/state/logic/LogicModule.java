@@ -34,6 +34,9 @@ public abstract class LogicModule {
 
 	public abstract Set<ClientAction> availableActions();
 
+	public void postInit() {
+	}
+
 	public final void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
 			performAvailableAction(player, action);
@@ -64,6 +67,10 @@ public abstract class LogicModule {
 	}
 
 	public InteractionResult.Kind playerPeek(Player<?> player) {
+		return InteractionResult.Kind.IGNORE;
+	}
+
+	public InteractionResult.Kind fieldPeek(FieldCoordinate coordinate) {
 		return InteractionResult.Kind.IGNORE;
 	}
 

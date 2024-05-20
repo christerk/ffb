@@ -30,8 +30,8 @@ public class ClientStateMaximumCarnage extends ClientState {
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {

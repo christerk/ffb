@@ -27,8 +27,8 @@ public class ClientStateHighKick extends ClientState {
 		return ClientStateId.HIGH_KICK;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(true);
 		fOldCoordinate = null;
 	}

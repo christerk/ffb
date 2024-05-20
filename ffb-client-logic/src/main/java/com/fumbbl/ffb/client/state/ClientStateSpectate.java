@@ -22,8 +22,8 @@ public class ClientStateSpectate extends ClientState {
 		return ClientStateId.SPECTATE;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(false);
 		Game game = getClient().getGame();
 		if ((game.getFinished() != null) && (ClientMode.PLAYER == getClient().getMode())) {

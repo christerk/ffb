@@ -25,8 +25,8 @@ public class ClientStateKickoff extends ClientState {
 		return ClientStateId.KICKOFF;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		fKicked = false;
 	}
 

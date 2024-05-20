@@ -18,8 +18,8 @@ public class ClientStateWaitForOpponent extends ClientState {
 		return ClientStateId.WAIT_FOR_OPPONENT;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(false);
 	}
 

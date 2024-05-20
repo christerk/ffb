@@ -59,7 +59,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	public abstract ClientStateId getId();
 
-	public void enterState() {
+	public void initUI() {
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getDialogManager().updateDialog();
 		UtilClientCursor.setDefaultCursor(userInterface);

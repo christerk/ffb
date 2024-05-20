@@ -20,7 +20,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +41,8 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		return ClientStateId.KICK_TEAM_MATE;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		markKickablePlayers();
 	}
 

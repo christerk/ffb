@@ -6,6 +6,7 @@ import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogGameChoice;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
@@ -35,10 +36,8 @@ import java.util.Map;
  */
 public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implements IDialogCloseListener {
 
-	// this state changes after synchronizing
-
 	private ServerStatus fLastServerError;
-	protected ClientStateLogin(FantasyFootballClient pClient) {
+	protected ClientStateLogin(FantasyFootballClientAwt pClient) {
 		super(pClient, new LoginLogicModule(pClient));
 	}
 
@@ -46,8 +45,8 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 		return ClientStateId.LOGIN;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		hideSelectSquare();
 		setClickable(false);
 		logicModule.init();

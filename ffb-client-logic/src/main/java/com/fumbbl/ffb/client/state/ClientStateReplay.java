@@ -38,8 +38,8 @@ public class ClientStateReplay extends ClientState implements IDialogCloseListen
 		return ClientStateId.REPLAY;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		setClickable(false);
 		ClientParameters parameters = getClient().getParameters();
 		ClientReplayer replayer = getClient().getReplayer();

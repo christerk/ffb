@@ -47,8 +47,8 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		return ClientStateId.SYNCHRONOUS_MULTI_BLOCK;
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		selectedPlayers.clear();
 		originalPlayerStates.clear();
 	}

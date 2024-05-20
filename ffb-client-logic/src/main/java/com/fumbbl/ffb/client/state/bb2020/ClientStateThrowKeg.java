@@ -38,8 +38,8 @@ public class ClientStateThrowKeg extends ClientState {
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
 		MoveSquare[] squares = Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(player), FieldCoordinateBounds.FIELD,

@@ -24,8 +24,8 @@ public class ClientStateIllegalSubstitution extends ClientStateSetup {
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		Game game = getClient().getGame();
 		fFieldPlayers = new HashSet<>();
 		for (Player<?> player : game.getTeamHome().getPlayers()) {

@@ -29,8 +29,8 @@ public class ClientStateSetup extends ClientState {
 		super(pClient);
 	}
 
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		getClient().getClientData().clear();
 			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		if (!sideBarHome.isBoxOpen()) {

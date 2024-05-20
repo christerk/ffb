@@ -28,8 +28,8 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void initUI() {
+		super.initUI();
 		Game game = getClient().getGame();
 		if (game.isHomePlaying()) {
 			UtilClientStateBlocking.createAndShowBlockOptionsPopupMenu(this, game.getActingPlayer().getPlayer(), game.getDefender(), false);
