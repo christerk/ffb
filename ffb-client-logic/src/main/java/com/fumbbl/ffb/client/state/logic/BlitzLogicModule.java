@@ -53,13 +53,13 @@ public class BlitzLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult.Kind playerPeek(Player<?> player) {
+	public InteractionResult playerPeek(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (!actingPlayer.hasBlocked() && delegate.isBlockable(player)) {
-			return InteractionResult.Kind.PERFORM;
+			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else {
-			return InteractionResult.Kind.RESET;
+			return new InteractionResult(InteractionResult.Kind.RESET);
 		}
 	}
 

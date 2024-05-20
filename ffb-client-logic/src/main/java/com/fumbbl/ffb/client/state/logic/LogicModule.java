@@ -66,12 +66,12 @@ public abstract class LogicModule {
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
-	public InteractionResult.Kind playerPeek(Player<?> player) {
-		return InteractionResult.Kind.IGNORE;
+	public InteractionResult playerPeek(Player<?> player) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
-	public InteractionResult.Kind fieldPeek(FieldCoordinate coordinate) {
-		return InteractionResult.Kind.IGNORE;
+	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
 	public boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player, ISkillProperty property) {

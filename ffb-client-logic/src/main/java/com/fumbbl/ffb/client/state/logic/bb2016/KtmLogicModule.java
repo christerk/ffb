@@ -60,17 +60,17 @@ public class KtmLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult.Kind playerPeek(Player<?> player) {
+	public InteractionResult playerPeek(Player<?> player) {
 		Game game = client.getGame();
 		client.getClientData().setSelectedPlayer(player);
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
 			if (canBeKicked(player)) {
-				return InteractionResult.Kind.PERFORM;
+				return new InteractionResult(InteractionResult.Kind.PERFORM);
 			} else {
-				return InteractionResult.Kind.RESET;
+				return new InteractionResult(InteractionResult.Kind.RESET);
 			}
 		}
-		return InteractionResult.Kind.IGNORE;
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
 	@Override

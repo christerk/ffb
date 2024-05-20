@@ -87,7 +87,8 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		UserInterface userInterface = getClient().getUserInterface();
-		switch (logicModule.playerPeek(pPlayer)) {
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
 			case PERFORM:
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BLOCK);
 				break;

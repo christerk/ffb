@@ -5,7 +5,6 @@ import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.TeamListEntry;
-import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogGameChoice;

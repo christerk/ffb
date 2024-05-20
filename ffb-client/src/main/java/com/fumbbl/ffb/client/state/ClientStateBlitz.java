@@ -51,7 +51,8 @@ public class ClientStateBlitz extends AbstractClientStateMove<BlitzLogicModule> 
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
-		switch (logicModule.playerPeek(pPlayer)) {
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
 			case PERFORM:
 				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
 				break;

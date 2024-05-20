@@ -1,23 +1,22 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.BombLogicModule;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -25,23 +24,22 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kalimar
  */
-public class ClientStateBomb extends ClientState {
+public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 
-	private boolean fShowRangeRuler;
 	private final RangeGridHandler fRangeGridHandler;
 
-	protected ClientStateBomb(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStateBomb(FantasyFootballClientAwt pClient) {
+		super(pClient, new BombLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, false);
 	}
 
@@ -50,78 +48,76 @@ public class ClientStateBomb extends ClientState {
 	}
 
 	public void initUI() {
-		super.initUI();
-		fShowRangeRuler = true;
 		fRangeGridHandler.refreshSettings();
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			createAndShowPopupMenuForActingPlayer();
-		} else {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-			clickOnField(playerCoordinate);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
+				createAndShowPopupMenuForActingPlayer();
+				break;
+			case PERFORM:
+				clickOnField(result.getCoordinate());
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
-		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
-		if ((PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) || (passingDistance != null)) {
-			game.setPassCoordinate(pCoordinate);
-			getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
-			game.getFieldModel().setRangeRuler(null);
-			getClient().getUserInterface().getFieldComponent().refresh();
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case PERFORM:
+				getClient().getUserInterface().getFieldComponent().refresh();
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		getClient().getClientData().setSelectedPlayer(pPlayer);
-		userInterface.refreshSideBars();
-		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		return mouseOverField(playerCoordinate);
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
+			case PERFORM:
+				UserInterface userInterface = getClient().getUserInterface();
+				userInterface.refreshSideBars();
+				return mouseOverField(result.getCoordinate());
+			default:
+				return false;
+		}
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
 		boolean selectable = false;
-		if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
-			game.getFieldModel().setRangeRuler(null);
-			userInterface.getFieldComponent().refresh();
-			selectable = true;
-			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
-		} else {
-			drawRangeRuler(pCoordinate);
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		switch (result.getKind()) {
+			case PERFORM:
+				userInterface.getFieldComponent().refresh();
+				selectable = true;
+				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
+				break;
+			case DRAW:
+				drawRangeRuler(result.getRangeRuler());
+				break;
+			default:
+				break;
 		}
 		return selectable;
 	}
 
-	private void drawRangeRuler(FieldCoordinate pCoordinate) {
-		RangeRuler rangeRuler;
-		Game game = getClient().getGame();
-		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			UserInterface userInterface = getClient().getUserInterface();
-			FieldComponent fieldComponent = userInterface.getFieldComponent();
-			rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), pCoordinate, false);
-			game.getFieldModel().setRangeRuler(rangeRuler);
-			if (rangeRuler != null) {
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
-			} else {
-				UtilClientCursor.setDefaultCursor(userInterface);
-			}
-			fieldComponent.getLayerUnderPlayers().clearMovePath();
-			fieldComponent.refresh();
+	private void drawRangeRuler(RangeRuler rangeRuler) {
+		UserInterface userInterface = getClient().getUserInterface();
+		FieldComponent fieldComponent = userInterface.getFieldComponent();
+		if (rangeRuler != null) {
+			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
+		} else {
+			UtilClientCursor.setDefaultCursor(userInterface);
 		}
+		fieldComponent.getLayerUnderPlayers().clearMovePath();
+		fieldComponent.refresh();
 	}
 
 	@Override
@@ -267,6 +263,11 @@ public class ClientStateBomb extends ClientState {
 			default:
 				break;
 		}
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return null;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

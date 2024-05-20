@@ -2,13 +2,10 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -64,20 +61,20 @@ public class DumpOffLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult.Kind fieldPeek(FieldCoordinate coordinate) {
+	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
 		Game game = client.getGame();
 		if (testCoordinateInRange(coordinate) && (game.getPassCoordinate() == null)) {
 			RangeRuler rangeRuler = UtilRangeRuler.createRangeRuler(game, game.getThrower(), coordinate, false);
 			game.getFieldModel().setRangeRuler(rangeRuler);
-			return InteractionResult.Kind.PERFORM;
+			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else {
-			return InteractionResult.Kind.IGNORE;
+			return new InteractionResult(InteractionResult.Kind.IGNORE);
 		}
 	}
 
 	@Override
-	public InteractionResult.Kind playerPeek(Player<?> player) {
+	public InteractionResult playerPeek(Player<?> player) {
 		client.getClientData().setSelectedPlayer(player);
-		return InteractionResult.Kind.IGNORE;
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 }
