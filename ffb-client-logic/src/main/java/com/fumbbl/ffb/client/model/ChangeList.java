@@ -17,6 +17,7 @@ public class ChangeList {
 			.addImprovement("Added logs to exception logging code")
 			.addImprovement("Flush writer in exception logging code")
 			.addImprovement("Make code compatible with open jdk by removing javafx references")
+			.addRemoval("Technical: Removed 2 unreachable steps in block sequences")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")
