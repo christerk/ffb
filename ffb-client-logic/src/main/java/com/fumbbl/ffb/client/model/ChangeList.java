@@ -19,6 +19,7 @@ public class ChangeList {
 			.addImprovement("Make code compatible with open jdk by removing javafx references")
 			.addRemoval("Technical: Removed 2 unreachable steps in block sequences")
 			.addBugfix("Prevent exceptions when automarking is handled for a game already removed from game cache")
+			.addImprovement("Technical: Logs are now separated by game id (old log is still written until new logging proves stable)")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")

@@ -163,6 +163,7 @@ public class GameCache {
 			) {
 				queueDbDelete(cachedGameState.getId(), true);
 			}
+			fServer.closeResources(cachedGameState.getId());
 		}
 	}
 

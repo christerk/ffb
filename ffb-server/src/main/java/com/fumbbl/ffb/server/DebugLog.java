@@ -16,7 +16,9 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -45,14 +47,21 @@ public class DebugLog {
 	private static final int _COMMAND_FLAG_LENGTH = 4;
 
 	private final FantasyFootballServer fServer;
-	private final File fLogFile;
+	private final File fLogFile, logPath, defaultLogFile;
 	private int fLogLevel;
 	private final Set<Long> forceLog = new HashSet<>();
+	private final Map<Long, File> logFiles = new HashMap<>();
 
-	public DebugLog(FantasyFootballServer server, File logFile, int logLevel) {
+	public DebugLog(FantasyFootballServer server, File logFile, File logPath, int logLevel) {
 		fServer = server;
 		fLogFile = logFile;
+		this.logPath = logPath;
+		this.defaultLogFile = createLogFile(logPath, "default.log");
 		setLogLevel(logLevel);
+	}
+
+	private static File createLogFile(File logPath, String fileName) {
+		return new File(logPath.getAbsolutePath() + File.separator + fileName);
 	}
 
 	public int getLogLevel() {
@@ -218,12 +227,17 @@ public class DebugLog {
 		StringTokenizer tokenizer = new StringTokenizer(pLogString, "\r\n");
 		// write synchronized to the log, create a new one if necessary
 		synchronized (this) {
-			try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true))) {
+
+			try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true));
+					 PrintWriter gameLog = new PrintWriter(new FileWriter(gameLogFile(pGameId), true))) {
 				while (tokenizer.hasMoreTokens()) {
 					String line = tokenizer.nextToken();
+					gameLog.print(header);
+					gameLog.println(line);
 					out.print(header);
 					out.println(line);
 				}
+				gameLog.flush();
 				out.flush();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -235,4 +249,15 @@ public class DebugLog {
 		return (getLogLevel() >= pLogLevel);
 	}
 
+	private File gameLogFile(long id) {
+		if (id > 0) {
+			return logFiles.computeIfAbsent(id, aLong -> createLogFile(logPath, "game_" + aLong + ".log"));
+		}
+
+		return defaultLogFile;
+	}
+
+	public void closeResources(long id) {
+		logFiles.remove(id);
+	}
 }
