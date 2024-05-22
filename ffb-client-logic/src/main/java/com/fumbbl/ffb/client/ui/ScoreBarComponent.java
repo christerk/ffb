@@ -28,6 +28,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -55,13 +58,14 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private int fHalf;
 	private int fScoreHome;
 	private int fScoreAway;
-	private int fSpectators;
+	private int spectatorCount;
 	private Weather fWeather;
 	private boolean fCoachBannedHome;
 	private boolean fCoachBannedAway;
 	private boolean fRefreshNecessary;
 	private BufferedImage fImage;
 	private Font spectatorFont;
+	private final List<String> spectators = new ArrayList<>();
 
 	public ScoreBarComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider,
 													 StyleProvider styleProvider, FontCache fontCache) {
@@ -163,13 +167,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	private void drawSpectators() {
-		if (fSpectators > 0) {
+		if (spectatorCount > 0) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS);
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(spectatorFont);
-			String spectatorString = Integer.toString(fSpectators);
+			String spectatorString = Integer.toString(spectatorCount);
 			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + dimensionProvider.scale(108), spectatorLocation.y + dimensionProvider.scale(21), styleProvider);
 			g2d.dispose();
 		}
@@ -229,9 +233,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		fTurnAway = 0;
 		fScoreHome = 0;
 		fScoreAway = 0;
-		fSpectators = 0;
+		spectatorCount = 0;
 		fWeather = null;
 		fRefreshNecessary = true;
+		spectators.clear();
 		refresh();
 	}
 
@@ -276,7 +281,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 					|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
 			}
 			if (!fRefreshNecessary) {
-				fRefreshNecessary = (fSpectators != clientData.getSpectators());
+				fRefreshNecessary = (spectatorCount != clientData.getSpectatorCount());
+			}
+			if (!fRefreshNecessary) {
+				fRefreshNecessary = !spectators.equals(clientData.getSpectators());
 			}
 			if (!fRefreshNecessary) {
 				fRefreshNecessary = (fWeather != game.getFieldModel().getWeather());
@@ -291,10 +299,12 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 				fHalf = game.getHalf();
 				fScoreHome = game.getGameResult().getTeamResultHome().getScore();
 				fScoreAway = game.getGameResult().getTeamResultAway().getScore();
-				fSpectators = clientData.getSpectators();
+				spectatorCount = clientData.getSpectatorCount();
 				fWeather = game.getFieldModel().getWeather();
 				fCoachBannedHome = game.getTurnDataHome().isCoachBanned();
 				fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
+				spectators.clear();
+				spectators.addAll(clientData.getSpectators());
 				drawBackground();
 				drawTurn();
 				drawScore();
@@ -327,9 +337,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			toolTip = "<html><b>" + fieldModel.getWeather().getName() + "</b><br>" +
 				mechanic.weatherDescription(fWeather) + "</html>";
 		}
-		if ((fSpectators > 0) && spectatorLocation.contains(pMouseEvent.getPoint())) {
-			toolTip = "<html>" + fSpectators +
-				((fSpectators == 1) ? " spectator is watching the game." : " spectators are watching the game.") +
+		if ((spectatorCount > 0) && spectatorLocation.contains(pMouseEvent.getPoint())) {
+			String coaches = spectators.stream().sorted().map(coach -> "<br/> - " + coach).collect(Collectors.joining(""));
+			toolTip = "<html>" + spectatorCount +
+				((spectatorCount == 1) ? " spectator is watching the game:" : " spectators are watching the game:") + coaches +
 				"</html>";
 		}
 		return toolTip;

@@ -20,6 +20,7 @@ public class ChangeList {
 			.addRemoval("Technical: Removed 2 unreachable steps in block sequences")
 			.addBugfix("Prevent exceptions when automarking is handled for a game already removed from game cache")
 			.addImprovement("Technical: Logs are now separated by game id (old log is still written until new logging proves stable)")
+			.addFeature("Spectator names are now also displayed in the spectator tool tip")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")

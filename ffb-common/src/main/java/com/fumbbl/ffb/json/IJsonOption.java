@@ -485,6 +485,7 @@ public interface IJsonOption {
 
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
+	JsonStringArrayOption SPECTATOR_NAMES = new JsonStringArrayOption("spectatorNames");
 	JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");
 	JsonIntArrayOption SPECTATOR_ROLL_HOME = new JsonIntArrayOption("spectatorRollHome");
 	JsonIntOption SPECTATORS = new JsonIntOption("spectators");

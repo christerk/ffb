@@ -12,29 +12,32 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * 
  * @author Kalimar
  */
 public class ServerCommandJoin extends ServerCommand {
 
 	private String fCoach;
 	private ClientMode fClientMode;
-	private final List<String> fPlayerNames;
-	private int fSpectators;
+	private final List<String> fPlayerNames, spectators;
+	private int spectatorCount;
 
 	public ServerCommandJoin() {
 		fPlayerNames = new ArrayList<>();
+		spectators = new ArrayList<>();
 	}
 
-	public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, int pSpectators) {
+	public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, List<String> spectators) {
 		this();
 		fCoach = pCoach;
 		fClientMode = pClientMode;
 		addPlayerNames(pPlayerNames);
-		fSpectators = pSpectators;
+		spectatorCount = spectators.size();
+		this.spectators.addAll(spectators);
+
 	}
 
 	public NetCommandId getId() {
@@ -50,7 +53,10 @@ public class ServerCommandJoin extends ServerCommand {
 	}
 
 	public String[] getPlayerNames() {
-		return fPlayerNames.toArray(new String[fPlayerNames.size()]);
+		return fPlayerNames.toArray(new String[0]);
+	}
+	public List<String> getSpectators() {
+		return spectators;
 	}
 
 	private void addPlayerName(String pPlayerName) {
@@ -67,8 +73,8 @@ public class ServerCommandJoin extends ServerCommand {
 		}
 	}
 
-	public int getSpectators() {
-		return fSpectators;
+	public int getSpectatorCount() {
+		return spectatorCount;
 	}
 
 	public boolean isReplayable() {
@@ -79,8 +85,8 @@ public class ServerCommandJoin extends ServerCommand {
 	public FactoryContext getContext() {
 		return FactoryContext.APPLICATION;
 	}
-	
-		// JSON serialization
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
@@ -88,8 +94,9 @@ public class ServerCommandJoin extends ServerCommand {
 		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
 		IJsonOption.COACH.addTo(jsonObject, fCoach);
 		IJsonOption.CLIENT_MODE.addTo(jsonObject, fClientMode);
-		IJsonOption.SPECTATORS.addTo(jsonObject, fSpectators);
+		IJsonOption.SPECTATORS.addTo(jsonObject, spectatorCount);
 		IJsonOption.PLAYER_NAMES.addTo(jsonObject, fPlayerNames);
+		IJsonOption.SPECTATOR_NAMES.addTo(jsonObject, spectators);
 		return jsonObject;
 	}
 
@@ -99,8 +106,13 @@ public class ServerCommandJoin extends ServerCommand {
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
 		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(source, jsonObject);
-		fSpectators = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
 		addPlayerNames(IJsonOption.PLAYER_NAMES.getFrom(source, jsonObject));
+		if (IJsonOption.SPECTATOR_NAMES.isDefinedIn(jsonObject)) {
+			Collections.addAll(spectators, IJsonOption.SPECTATOR_NAMES.getFrom(source, jsonObject));
+			spectatorCount = spectators.size();
+		} else {
+			spectatorCount = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
