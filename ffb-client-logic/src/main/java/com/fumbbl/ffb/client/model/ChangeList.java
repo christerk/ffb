@@ -12,7 +12,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.27.1")
+		versions.add(new VersionChangeList("2.28.0")
 			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
 			.addImprovement("Added logs to exception logging code")
 			.addImprovement("Flush writer in exception logging code")
@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Prevent exceptions when automarking is handled for a game already removed from game cache")
 			.addImprovement("Technical: Logs are now separated by game id (old log is still written until new logging proves stable)")
 			.addFeature("Spectator names are now also displayed in the spectator tool tip")
+			.addImprovement("Cheering Fans: Prayers now have their own animation")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")
