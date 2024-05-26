@@ -22,6 +22,7 @@ public class ChangeList {
 			.addImprovement("Technical: Logs are now separated by game id (old log is still written until new logging proves stable)")
 			.addFeature("Spectator names are now also displayed in the spectator tool tip")
 			.addImprovement("Cheering Fans: Prayers now have their own animation")
+			.addImprovement("Log files are no split by game and zipped")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")
