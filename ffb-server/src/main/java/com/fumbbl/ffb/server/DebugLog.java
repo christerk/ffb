@@ -265,7 +265,7 @@ public class DebugLog {
 		return defaultLogFile;
 	}
 
-	private File createLogFile(Long aLong) {
+	public File createLogFile(Long aLong) {
 		return createLogFile(logPath, GAME_LOG_PREFIX + aLong + GAME_LOG_SUFFIX);
 	}
 
@@ -308,7 +308,7 @@ public class DebugLog {
 	}
 
 	private void zipLog(File unzipped) {
-		File zipped = new File(unzipped.getAbsolutePath() + GZ_SUFFIX);
+		File zipped = createZippedFile(unzipped);
 		try (PrintWriter out = new PrintWriter(new GZIPOutputStream(new FileOutputStream(zipped, true)));
 				 BufferedReader in = new BufferedReader(new FileReader(unzipped))) {
 			logWithOutGameId(IServerLogLevel.INFO, "Processing " + unzipped.getName());
@@ -329,5 +329,9 @@ public class DebugLog {
 			logWithOutGameId(IServerLogLevel.WARN, "Failed to delete " + unzipped.getName());
 		}
 
+	}
+
+	public File createZippedFile(File unzipped) {
+		return new File(unzipped.getAbsolutePath() + GZ_SUFFIX);
 	}
 }

@@ -19,6 +19,7 @@ public enum ServerUrlProperty {
 	ADMIN_URL_LIST_ID("admin.url.list.id"),
 	ADMIN_URL_LIST_STATUS("admin.url.list.status"),
 	ADMIN_URL_LOGLEVEL("admin.url.loglevel"),
+	ADMIN_URL_LOGFILE("admin.url.logfile"),
 	ADMIN_URL_MESSAGE("admin.url.message"),
 	ADMIN_URL_REFRESH("admin.url.refresh"),
 	ADMIN_URL_SCHEDULE("admin.url.schedule"),

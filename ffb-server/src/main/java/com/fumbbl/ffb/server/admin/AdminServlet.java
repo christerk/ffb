@@ -26,23 +26,35 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.xml.UtilXml;
+import org.apache.http.HttpStatus;
+import org.apache.http.entity.ContentType;
 import org.eclipse.jetty.websocket.api.Session;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.sax.TransformerHandler;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Kalimar
@@ -68,6 +80,7 @@ public class AdminServlet extends HttpServlet {
 	public static final String FORCE_LOG = "forcelog";
 	public static final String PORTRAIT = "portrait";
 	public static final String PURGE_TEST = "purgetest";
+	public static final String LOGFILE = "logfile";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -119,6 +132,10 @@ public class AdminServlet extends HttpServlet {
 	private final FantasyFootballServer fServer;
 	private String fLastChallenge;
 
+	private static final Set<String> PLAIN_RESPONSE_COMMANDS = new HashSet<String>() {{
+		add(LOGFILE);
+	}};
+
 	public AdminServlet(FantasyFootballServer pServer) {
 		fServer = pServer;
 	}
@@ -135,24 +152,28 @@ public class AdminServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest pRequest, HttpServletResponse pResponse)
 		throws IOException {
 
-		pResponse.setContentType("text/xml; charset=UTF-8");
-
-		boolean isOk;
-		TransformerHandler handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
-
-		try {
-			handler.startDocument();
-		} catch (SAXException pSaxException) {
-			throw new FantasyFootballException(pSaxException);
-		}
-
-		UtilXml.startElement(handler, _XML_TAG_ADMIN);
-
 		String command = pRequest.getPathInfo();
+		Map<String, String[]> parameters = pRequest.getParameterMap();
 		if ((command != null) && (command.length() > 1) && command.startsWith("/")) {
 			command = command.substring(1);
 		}
-		Map<String, String[]> parameters = pRequest.getParameterMap();
+		boolean isOk;
+		TransformerHandler handler = null;
+
+		boolean xmlResponse = !PLAIN_RESPONSE_COMMANDS.contains(command);
+
+		if (xmlResponse) {
+			pResponse.setContentType("text/xml; charset=UTF-8");
+
+			handler = UtilXml.createTransformerHandler(pResponse.getWriter(), true);
+
+			try {
+				handler.startDocument();
+			} catch (SAXException pSaxException) {
+				throw new FantasyFootballException(pSaxException);
+			}
+			UtilXml.startElement(handler, _XML_TAG_ADMIN);
+		}
 
 		if (CHALLENGE.equals(command)) {
 			isOk = handleChallenge(handler);
@@ -195,22 +216,25 @@ public class AdminServlet extends HttpServlet {
 					isOk = handlePortrait(handler, parameters);
 				} else if (PURGE_TEST.equals(command)) {
 					isOk = handlePurge(handler, parameters);
+				} else if (LOGFILE.equals(command)) {
+					handleLogfile(parameters, pResponse);
 				} else {
 					isOk = false;
 				}
 			}
 		}
 
-		UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL);
+		if (xmlResponse) {
+			UtilXml.addValueElement(handler, _XML_TAG_STATUS, isOk ? _STATUS_OK : _STATUS_FAIL);
 
-		UtilXml.endElement(handler, _XML_TAG_ADMIN);
+			UtilXml.endElement(handler, _XML_TAG_ADMIN);
 
-		try {
-			handler.endDocument();
-		} catch (SAXException pSaxException) {
-			throw new FantasyFootballException(pSaxException);
+			try {
+				handler.endDocument();
+			} catch (SAXException pSaxException) {
+				throw new FantasyFootballException(pSaxException);
+			}
 		}
-
 	}
 
 	private boolean handleChallenge(TransformerHandler pHandler) {
@@ -228,6 +252,91 @@ public class AdminServlet extends HttpServlet {
 			isOk = false;
 		}
 		return isOk;
+	}
+
+	private void handleLogfile(Map<String, String[]> pParameters, HttpServletResponse pResponse) {
+		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+		long gameId = parseGameId(gameIdString);
+		if (gameId > 0) {
+			File plainFile = getServer().getDebugLog().createLogFile(gameId);
+			File zippedFile = getServer().getDebugLog().createZippedFile(plainFile);
+			if (!plainFile.exists() && !zippedFile.exists()) {
+				setError(HttpStatus.SC_NOT_FOUND, "Logfiles do not exist for game id" + gameId, pResponse);
+			}
+
+			if (plainFile.exists() && !plainFile.canRead()) {
+				setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Can't read " + plainFile.getName(), pResponse);
+			}
+
+			if (zippedFile.exists() && !zippedFile.canRead()) {
+				setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Can't read " + zippedFile.getName(), pResponse);
+			}
+
+			pResponse.addHeader("Content-Disposition", "attachment; filename=" + zippedFile.getName());
+
+			try {
+				pResponse.flushBuffer();
+			} catch (IOException e) {
+				getServer().getDebugLog().logWithOutGameId(e);
+			}
+
+			if (zippedFile.exists()) {
+				try (ServletOutputStream out = pResponse.getOutputStream();
+						 FileInputStream in = new FileInputStream(zippedFile)) {
+					byte[] buffer = new byte[(int) zippedFile.length()];
+
+					//noinspection ResultOfMethodCallIgnored
+					in.read(buffer, 0, buffer.length);
+					out.write(buffer);
+					out.flush();
+				} catch (FileNotFoundException e) {
+					// already checked above
+					getServer().getDebugLog().logWithOutGameId(e);
+					return;
+				} catch (IOException e) {
+					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + zippedFile.getName(), pResponse);
+					getServer().getDebugLog().logWithOutGameId(e);
+					return;
+				}
+			}
+
+			if (plainFile.exists()) {
+				try (PrintWriter out = new PrintWriter(new GZIPOutputStream(pResponse.getOutputStream()));
+						 BufferedReader in = new BufferedReader(new FileReader(plainFile))) {
+					String line;
+					while ((line = in.readLine()) != null) {
+						out.println(line);
+					}
+					out.flush();
+				} catch (FileNotFoundException e) {
+					// already checked above
+					getServer().getDebugLog().logWithOutGameId(e);
+					return;
+				} catch (IOException e) {
+					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + plainFile.getName(), pResponse);
+					getServer().getDebugLog().logWithOutGameId(e);
+					return;
+				}
+			}
+
+			pResponse.setStatus(HttpStatus.SC_OK);
+		} else {
+			setError(HttpStatus.SC_BAD_REQUEST, "Invalid game id: " + gameIdString, pResponse);
+		}
+	}
+
+	private void setError(int code, String text, HttpServletResponse response) {
+		response.setStatus(code);
+		response.setContentType(ContentType.TEXT_PLAIN.getMimeType());
+		PrintWriter writer;
+		try {
+			writer = response.getWriter();
+			writer.write(text);
+			writer.flush();
+		} catch (IOException e) {
+			getServer().getDebugLog().logWithOutGameId(e);
+		}
+
 	}
 
 	private boolean handleSchedule(TransformerHandler pHandler, Map<String, String[]> pParameters) {
