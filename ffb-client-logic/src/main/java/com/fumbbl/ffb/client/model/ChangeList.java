@@ -24,6 +24,7 @@ public class ChangeList {
 			.addImprovement("Cheering Fans: Prayers now have their own animation")
 			.addImprovement("Log files are no split by game and zipped")
 			.addRuleChange("Guard no longer works for foul assists")
+			.addRuleChange("Players now can be restunned again on their turn, e.g. failed Bloodlust")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")

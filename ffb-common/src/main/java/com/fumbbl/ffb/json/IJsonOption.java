@@ -426,7 +426,6 @@ public interface IJsonOption {
 	JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
 	JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
 	JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
-	JsonStringArrayOption ROLLED_OVER = new JsonStringArrayOption("rolledOver");
 	JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
 	JsonIntArrayOption ROLLS_AWAY = new JsonIntArrayOption("rollsAway");
 	JsonIntArrayOption ROLLS_HOME = new JsonIntArrayOption("rollsHome");
