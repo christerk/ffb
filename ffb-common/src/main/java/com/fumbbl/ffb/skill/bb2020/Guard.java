@@ -21,7 +21,6 @@ public class Guard extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.assistsBlocksInTacklezones);
-		registerProperty(NamedProperties.assistsFoulsInTacklezones);
 	}
 
 }

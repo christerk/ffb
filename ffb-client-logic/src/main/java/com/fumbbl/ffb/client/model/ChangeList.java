@@ -23,6 +23,7 @@ public class ChangeList {
 			.addFeature("Spectator names are now also displayed in the spectator tool tip")
 			.addImprovement("Cheering Fans: Prayers now have their own animation")
 			.addImprovement("Log files are no split by game and zipped")
+			.addRuleChange("Guard no longer works for foul assists")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")
