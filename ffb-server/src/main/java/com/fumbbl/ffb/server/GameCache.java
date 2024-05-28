@@ -163,7 +163,6 @@ public class GameCache {
 			) {
 				queueDbDelete(cachedGameState.getId(), true);
 			}
-			fServer.closeResources(cachedGameState.getId());
 		}
 	}
 
@@ -362,6 +361,8 @@ public class GameCache {
 			if ((getServer().getMode() == ServerMode.FUMBBL) && (gameState.getStatus() != GameStatus.REPLAYING)
 					&& (gameState.getStatus() != GameStatus.LOADING)) {
 				getServer().getRequestProcessor().add(new FumbblRequestRemoveGamestate(gameState));
+			} else {
+				fServer.closeResources(gameId);
 			}
 		}
 	}

@@ -318,7 +318,7 @@ public class DebugLog {
 				line = in.readLine();
 			}
 			out.flush();
-		} catch (IOException ioe) {
+		} catch (Exception ioe) {
 			logWithOutGameId(ioe);
 			return;
 		}

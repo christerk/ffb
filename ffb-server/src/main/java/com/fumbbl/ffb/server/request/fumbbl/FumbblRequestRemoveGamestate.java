@@ -11,7 +11,6 @@ import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
 public class FumbblRequestRemoveGamestate extends ServerRequest {
@@ -32,12 +31,13 @@ public class FumbblRequestRemoveGamestate extends ServerRequest {
 		Game game = getGameState().getGame();
 		String challengeResponse = UtilFumbblRequest.getFumbblAuthChallengeResponseForFumbblUser(server);
 		setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_GAMESTATE_REMOVE.url(server.getProperties()),
-				new Object[] { challengeResponse, game.getId() }));
+			new Object[]{challengeResponse, game.getId()}));
 		server.getDebugLog().log(IServerLogLevel.INFO, game.getId(), DebugLog.FUMBBL_REQUEST, getRequestUrl());
 		FumbblGameState fumbblGameState = UtilFumbblRequest.processFumbblGameStateRequest(server, getRequestUrl());
 		if ((fumbblGameState == null) || !fumbblGameState.isOk()) {
 			UtilFumbblRequest.reportFumbblError(getGameState(), fumbblGameState);
 		}
+		server.closeResources(game.getId());
 	}
 
 }
