@@ -15,6 +15,7 @@ import com.fumbbl.ffb.server.db.query.DbAdminListByIdQuery;
 import com.fumbbl.ffb.server.db.query.DbAdminListByStatusQuery;
 import com.fumbbl.ffb.server.db.query.DbTestGameListQuery;
 import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
+import com.fumbbl.ffb.server.handler.RedeployHandler;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandCloseGame;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandDeleteGame;
@@ -47,13 +48,16 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -81,10 +85,12 @@ public class AdminServlet extends HttpServlet {
 	public static final String PORTRAIT = "portrait";
 	public static final String PURGE_TEST = "purgetest";
 	public static final String LOGFILE = "logfile";
+	public static final String REDEPLOY = "redeploy";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
 
+	private static final String _PARAMETER_BRANCH = "branch";
 	private static final String _PARAMETER_COACH = "coach";
 	private static final String _PARAMETER_RESPONSE = "response";
 	private static final String _PARAMETER_GAME_ID = "gameId";
@@ -96,6 +102,7 @@ public class AdminServlet extends HttpServlet {
 	private static final String _PARAMETER_VALUE = "value";
 	private static final String _PARAMETER_LIMIT = "limit";
 	private static final String _PARAMETER_PERFORM = "perform";
+	private static final String _PARAMETER_FORCE = "force";
 
 	private static final String _XML_TAG_ADMIN = "admin";
 	private static final String _XML_TAG_BACKUP = "challenge";
@@ -117,7 +124,8 @@ public class AdminServlet extends HttpServlet {
 	private static final String _XML_TAG_LOGLEVEL = "loglevel";
 	private static final String _XML_TAG_FORCE_LOG = "forcelog";
 	private static final String _XML_TAG_DELETED = "deleted";
-
+	private static final String _XML_TAG_GAME = "game";
+	private static final String _XML_TAG_GAMES = "games";
 	private static final String _XML_ATTRIBUTE_INITIATED = "initiated";
 	private static final String _XML_ATTRIBUTE_GAME_ID = "gameId";
 	private static final String _XML_ATTRIBUTE_TEAM_ID = "teamId";
@@ -131,7 +139,7 @@ public class AdminServlet extends HttpServlet {
 
 	private final FantasyFootballServer fServer;
 	private String fLastChallenge;
-
+	private final RedeployHandler redeployHandler = new RedeployHandler();
 	private static final Set<String> PLAIN_RESPONSE_COMMANDS = new HashSet<String>() {{
 		add(LOGFILE);
 	}};
@@ -218,6 +226,8 @@ public class AdminServlet extends HttpServlet {
 					isOk = handlePurge(handler, parameters);
 				} else if (LOGFILE.equals(command)) {
 					handleLogfile(parameters, pResponse);
+				} else if (REDEPLOY.equals(command)) {
+					isOk = handleRedeploy(handler, parameters);
 				} else {
 					isOk = false;
 				}
@@ -337,6 +347,35 @@ public class AdminServlet extends HttpServlet {
 			getServer().getDebugLog().logWithOutGameId(e);
 		}
 
+	}
+
+	private boolean handleRedeploy(TransformerHandler pHandler, Map<String, String[]> pParameters) {
+
+
+		boolean force = toBoolean(pParameters, _PARAMETER_FORCE);
+
+		if (!force) {
+			List<String> response = Arrays.stream(getServer().getGameCache().findActiveGames().getEntriesSorted())
+				.map(entry -> entry.getTeamHomeCoach() + " vs " + entry.getTeamAwayCoach()).collect(Collectors.toList());
+
+			if (!response.isEmpty()) {
+				UtilXml.startElement(pHandler, _XML_TAG_GAMES);
+				response.forEach(game -> UtilXml.addValueElement(pHandler, _XML_TAG_GAME, game));
+				UtilXml.endElement(pHandler, _XML_TAG_GAMES);
+				List<String> messages = new ArrayList<>();
+				messages.add("System will go down for redeploy shortly.");
+				if (!getServer().isInTestMode()) {
+					messages.add("Please try to finish your current turn and then close the client.");
+				}
+				getServer().getCommunication().sendAdminMessage(messages.toArray(new String[0]));
+				return false;
+			}
+		}
+
+		String branch = ArrayTool.firstElement(pParameters.get(_PARAMETER_BRANCH));
+
+		redeployHandler.redeploy(getServer(), branch); // this shuts down the VM so all code after this line is obsolete
+		return true;
 	}
 
 	private boolean handleSchedule(TransformerHandler pHandler, Map<String, String[]> pParameters) {
@@ -713,9 +752,7 @@ public class AdminServlet extends HttpServlet {
 
 		addGames(pHandler, attributes, adminList);
 
-		String performParameter = ArrayTool.firstElement(pParameters.get(_PARAMETER_PERFORM));
-
-		boolean perform = "true".equalsIgnoreCase(performParameter);
+		boolean perform = toBoolean(pParameters, _PARAMETER_PERFORM);
 
 		if (perform) {
 			for (AdminListEntry entry : adminList.getEntries()) {
@@ -727,6 +764,12 @@ public class AdminServlet extends HttpServlet {
 
 
 		return isOk;
+	}
+
+	private static boolean toBoolean(Map<String, String[]> pParameters, String parameter) {
+		String value = ArrayTool.firstElement(pParameters.get(parameter));
+
+		return "true".equalsIgnoreCase(value);
 	}
 
 	private void addGames(TransformerHandler pHandler, AttributesImpl attributes, AdminList adminList) {

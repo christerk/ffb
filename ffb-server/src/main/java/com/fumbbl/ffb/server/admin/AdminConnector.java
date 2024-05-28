@@ -44,6 +44,9 @@ public class AdminConnector {
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector purgetest <limit> <perform>\n"
 		+ "  [limit has to be a positive number]"
 		+ "  [if perform is set to \"true\" (case insensitive) games are deleted, all other values and default are considered false]"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector redeploy <branch> <force>\n"
+		+ "  [branch has to be a git branch]"
+		+ "  [if force is set to \"true\" (case insensitive) is always triggered, otherwise only if no games are running]"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
@@ -259,6 +262,18 @@ public class AdminConnector {
 					args[1], perform);
 				System.out.println(purgeUrl);
 				String scheduleXml = UtilServerHttpClient.fetchPage(purgeUrl);
+				System.out.println(scheduleXml);
+			}
+
+			if (AdminServlet.REDEPLOY.equals(args[0])) {
+				String force = "false";
+				if (args.length > 2) {
+					force = args[2];
+				}
+				String redeployUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_REDEPLOY.url(serverProperties), response,
+					args[1], force);
+				System.out.println(redeployUrl);
+				String scheduleXml = UtilServerHttpClient.fetchPage(redeployUrl);
 				System.out.println(scheduleXml);
 			}
 		}

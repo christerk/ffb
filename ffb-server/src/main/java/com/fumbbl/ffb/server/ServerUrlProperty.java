@@ -29,6 +29,7 @@ public enum ServerUrlProperty {
 	ADMIN_URL_UPLOAD("admin.url.upload"),
 	ADMIN_URL_PORTRAIT("admin.url.portrait"),
 	ADMIN_URL_PURGE_TEST("admin.url.purgetest"),
+	ADMIN_URL_REDEPLOY("admin.url.redeploy"),
 	GAMESTATE_URL_CHALLENGE("gamestate.url.challenge"),
 	GAMESTATE_URL_BEHAVIORS("gamestate.url.behaviours"),
 	GAMESTATE_URL_GET("gamestate.url.get"),
