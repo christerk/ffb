@@ -26,6 +26,7 @@ public class ChangeList {
 			.addRuleChange("Guard no longer works for foul assists")
 			.addRuleChange("Players now can be restunned again on their turn, e.g. failed Bloodlust")
 			.addBugfix("Player without ball failing take root on a hand over action did cause a turnover")
+			.addBugfix("Range ruler was sometimes not removed properly")
 		);
 
 		versions.add(new VersionChangeList("2.27.0")
