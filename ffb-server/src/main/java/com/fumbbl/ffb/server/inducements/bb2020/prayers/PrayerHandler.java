@@ -2,6 +2,8 @@ package com.fumbbl.ffb.server.inducements.bb2020.prayers;
 
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Team;
@@ -9,6 +11,7 @@ import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +34,13 @@ public abstract class PrayerHandler implements INamedObject {
 
 	abstract Prayer handledPrayer();
 
+	abstract AnimationType animationType();
+
 	public final void initEffect(IStep step, GameState gameState, String prayingTeamId) {
+		if (step != null) {
+			step.getResult().setAnimation(new Animation(animationType()));
+			UtilServerGame.syncGameModel(step);
+		}
 		Game game = gameState.getGame();
 		Team prayingTeam = game.getTeamById(prayingTeamId);
 		InducementSet inducementSet = game.getTeamHome() == prayingTeam ? game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();

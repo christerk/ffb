@@ -375,13 +375,13 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// not logged in Game Log
 	}
 
-	public void sendJoin(Session[] pSessions, String pCoach, ClientMode pMode, String[] pPlayers, int pSpectators) {
-		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, pSpectators);
+	public void sendJoin(Session[] pSessions, String pCoach, ClientMode pMode, String[] pPlayers, List<String> spectators) {
+		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, spectators);
 		send(pSessions, joinCommand, true);
 		// not logged in Game Log
 	}
 
-	public void sendLeave(Session[] pSessions, String pCoach, ClientMode pMode, int pSpectators) {
+	public void sendLeave(Session[] pSessions, String pCoach, ClientMode pMode, List<String> pSpectators) {
 		ServerCommandLeave leaveCommand = new ServerCommandLeave(pCoach, pMode, pSpectators);
 		send(pSessions, leaveCommand, true);
 		// not logged in Game Log

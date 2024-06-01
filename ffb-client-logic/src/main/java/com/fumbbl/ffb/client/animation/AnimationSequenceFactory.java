@@ -96,6 +96,38 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceSpecialEffect.createAnimationFumbledKeg(pAnimation.getStartCoordinate());
 			case TRICKSTER:
 				return AnimationSequenceChained.createAnimationSequenceTrickster(pClient, pAnimation);
+			case PRAYER_TREACHEROUS_TRAPDOOR:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_TRAPDOOR, dimensionProvider.isPitchPortrait());
+			case PRAYER_BAD_HABITS:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_BAD_HABITS, dimensionProvider.isPitchPortrait());
+			case PRAYER_FOULING_FRENZY:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_FOULING_FRENZY, dimensionProvider.isPitchPortrait());
+			case PRAYER_FRIENDS_WITH_THE_REF:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_FRIENDS_WITH_THE_REF, dimensionProvider.isPitchPortrait());
+			case PRAYER_UNDER_SCRUTINY:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_UNDER_SCRUTINY, dimensionProvider.isPitchPortrait());
+			case PRAYER_FAN_INTERACTION:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_FAN_INTERACTION, dimensionProvider.isPitchPortrait());
+			case PRAYER_GREASY_CLEATS:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_GREASY_CLEATS, dimensionProvider.isPitchPortrait());
+			case PRAYER_IRON_MAN:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_IRON_MAN, dimensionProvider.isPitchPortrait());
+			case PRAYER_INTENSIVE_TRAINING:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_INTENSIVE_TRAINING, dimensionProvider.isPitchPortrait());
+			case PRAYER_KNUCKLE_DUSTERS:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_KNUCKLE_DUSTERS, dimensionProvider.isPitchPortrait());
+			case PRAYER_STILETTO:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_STILETTO, dimensionProvider.isPitchPortrait());
+			case PRAYER_THROW_A_ROCK:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_THROW_A_ROCK, dimensionProvider.isPitchPortrait());
+			case PRAYER_NECESSARY_VIOLENCE:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_NECESSARY_VIOLENCE, dimensionProvider.isPitchPortrait());
+			case PRAYER_PERFECT_PASSING:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_PERFECT_PASSING, dimensionProvider.isPitchPortrait());
+			case PRAYER_MOLES_UNDER_THE_PITCH:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_MOLES_UNDER_THE_PITCH, dimensionProvider.isPitchPortrait());
+			case PRAYER_BLESSED_STATUE_OF_NUFFLE:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_BLESSED_STATUE_OF_NUFFLE, dimensionProvider.isPitchPortrait());
 			default:
 				return null;
 		}

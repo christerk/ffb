@@ -1,11 +1,11 @@
 package com.fumbbl.ffb.marking;
 
 import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.Pair;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.StringTool;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,11 +112,11 @@ public class MarkerGenerator {
 	private void removeNegatingPairs(List<Skill> skills, List<InjuryAttribute> injuries) {
 
 		new HashSet<>(skills).stream().filter(Objects::nonNull).map(skill -> new Pair<>(skill, InjuryAttribute.forSkill(skill)))
-			.filter(pair -> pair.getValue() != null)
+			.filter(pair -> pair.getRight() != null)
 			.forEach(
-				pair -> injuries.stream().filter(injury -> injury == pair.getValue()).findFirst().ifPresent(injury -> {
+				pair -> injuries.stream().filter(injury -> injury == pair.getRight()).findFirst().ifPresent(injury -> {
 					injuries.remove(injury);
-					skills.remove(pair.getKey());
+					skills.remove(pair.getLeft());
 				})
 			);
 	}

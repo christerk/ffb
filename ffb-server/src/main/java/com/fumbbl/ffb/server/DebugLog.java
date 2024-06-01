@@ -8,17 +8,24 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.zip.GZIPOutputStream;
 
 public class DebugLog {
 
@@ -27,7 +34,6 @@ public class DebugLog {
 	public static final String COMMAND_SERVER_HOME_SPECTATORS = "->HS";
 	public static final String COMMAND_CLIENT_AWAY = " A->";
 	public static final String COMMAND_SERVER_AWAY = " ->A";
-	public static final String COMMAND_SERVER_AWAY_SPECTATORS = "->AS";
 	public static final String COMMAND_CLIENT_SPECTATOR = " S->";
 	public static final String COMMAND_SERVER_SPECTATOR = " ->S";
 	public static final String COMMAND_CLIENT_UNKNOWN = " ?->";
@@ -44,16 +50,26 @@ public class DebugLog {
 	private static final DateFormat _HEADER_TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
 	private static final int _TIMESTAMP_LENGTH = 23;
 	private static final int _COMMAND_FLAG_LENGTH = 4;
-
+	private static final String GAME_LOG_PREFIX = "game_";
+	private static final String GAME_LOG_SUFFIX = ".log";
+	private static final String GZ_SUFFIX = ".gz";
 	private final FantasyFootballServer fServer;
-	private final File fLogFile;
+	private final File fLogFile, logPath, defaultLogFile;
 	private int fLogLevel;
 	private final Set<Long> forceLog = new HashSet<>();
+	private final Map<Long, File> logFiles = new HashMap<>();
 
-	public DebugLog(FantasyFootballServer server, File logFile, int logLevel) {
+	public DebugLog(FantasyFootballServer server, File logFile, File logPath, int logLevel) {
 		fServer = server;
 		fLogFile = logFile;
+		this.logPath = logPath;
+		this.defaultLogFile = createLogFile(logPath, "default.log");
 		setLogLevel(logLevel);
+		cleanLogsFromCrash();
+	}
+
+	private File createLogFile(File logPath, String fileName) {
+		return new File(logPath.getAbsolutePath() + File.separator + fileName);
 	}
 
 	public int getLogLevel() {
@@ -81,7 +97,7 @@ public class DebugLog {
 			|| (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
 			return;
 		}
-		GameState gameState = null;
+		GameState gameState;
 		String commandFlag = COMMAND_CLIENT_UNKNOWN;
 		Session session = pReceivedCommand.getSession();
 		SessionManager sessionManager = getServer().getSessionManager();
@@ -171,9 +187,16 @@ public class DebugLog {
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
 			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "Filling in stacktrace for " + pThrowable.getClass().getCanonicalName());
 				pThrowable = pThrowable.fillInStackTrace();
 			}
+
+			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
+				log(IServerLogLevel.ERROR, pGameId, "No stacktrace for " + pThrowable.getClass().getCanonicalName());
+			}
+
 			pThrowable.printStackTrace(printWriter);
+			printWriter.flush();
 			printWriter.close();
 			log(IServerLogLevel.ERROR, pGameId, stringWriter.getBuffer().toString());
 		}
@@ -212,21 +235,20 @@ public class DebugLog {
 		StringTokenizer tokenizer = new StringTokenizer(pLogString, "\r\n");
 		// write synchronized to the log, create a new one if necessary
 		synchronized (this) {
-			PrintWriter out = null;
-			try {
-				out = new PrintWriter(new FileWriter(getLogFile(), true));
+
+			try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true));
+					 PrintWriter gameLog = new PrintWriter(new FileWriter(gameLogFile(pGameId), true))) {
 				while (tokenizer.hasMoreTokens()) {
 					String line = tokenizer.nextToken();
+					gameLog.print(header);
+					gameLog.println(line);
 					out.print(header);
 					out.println(line);
 				}
+				gameLog.flush();
 				out.flush();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
-			} finally {
-				if (out != null) {
-					out.close();
-				}
 			}
 		}
 	}
@@ -235,4 +257,81 @@ public class DebugLog {
 		return (getLogLevel() >= pLogLevel);
 	}
 
+	private File gameLogFile(long id) {
+		if (id > 0) {
+			return logFiles.computeIfAbsent(id, this::createLogFile);
+		}
+
+		return defaultLogFile;
+	}
+
+	public File createLogFile(Long aLong) {
+		return createLogFile(logPath, GAME_LOG_PREFIX + aLong + GAME_LOG_SUFFIX);
+	}
+
+	public void closeResources(long id) {
+		zipLog(logFiles.get(id));
+		logFiles.remove(id);
+	}
+
+	private void cleanLogsFromCrash() {
+		if (logPath == null) {
+			log(IServerLogLevel.ERROR, -1, "Path to log folder is null");
+			return;
+		}
+		if (!logPath.exists()) {
+			return;
+		}
+		logWithOutGameId(IServerLogLevel.INFO, "Looking for unzipped log files");
+		String[] files = logPath.list((dir, name) -> name.startsWith(GAME_LOG_PREFIX) && name.endsWith(GAME_LOG_SUFFIX));
+
+		if (!ArrayTool.isProvided(files)) {
+			logWithOutGameId(IServerLogLevel.INFO, "No files to process");
+			return;
+		}
+
+		logWithOutGameId(IServerLogLevel.INFO, "Found " + files.length + " files to process");
+
+		Arrays.stream(files).map(name -> name.replace(GAME_LOG_SUFFIX, "").replace(GAME_LOG_PREFIX, ""))
+			.forEach(id -> {
+				try {
+					logWithOutGameId(IServerLogLevel.INFO, "Processing file for id '" + id + "'");
+					zipLog(Long.parseLong(id));
+				} catch (Exception ex) {
+					logWithOutGameId(ex);
+				}
+			});
+	}
+
+	private void zipLog(long id) {
+		zipLog(createLogFile(id));
+	}
+
+	private void zipLog(File unzipped) {
+		File zipped = createZippedFile(unzipped);
+		try (PrintWriter out = new PrintWriter(new GZIPOutputStream(new FileOutputStream(zipped, true)));
+				 BufferedReader in = new BufferedReader(new FileReader(unzipped))) {
+			logWithOutGameId(IServerLogLevel.INFO, "Processing " + unzipped.getName());
+			String line = in.readLine();
+			while (line != null) {
+				out.println(line);
+				line = in.readLine();
+			}
+			out.flush();
+		} catch (Exception ioe) {
+			logWithOutGameId(ioe);
+			return;
+		}
+
+		if (unzipped.delete()) {
+			logWithOutGameId(IServerLogLevel.INFO, "Deleted " + unzipped.getName());
+		} else {
+			logWithOutGameId(IServerLogLevel.WARN, "Failed to delete " + unzipped.getName());
+		}
+
+	}
+
+	public File createZippedFile(File unzipped) {
+		return new File(unzipped.getAbsolutePath() + GZ_SUFFIX);
+	}
 }

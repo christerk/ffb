@@ -16,6 +16,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
  * @author Kalimar
  */
 public class UtilServerHttpClient {
@@ -47,6 +47,31 @@ public class UtilServerHttpClient {
 			try (CloseableHttpResponse response = client.execute(request)) {
 				HttpEntity entity = response.getEntity();
 				return EntityUtils.toString(entity, CHARACTER_ENCODING);
+			}
+
+		}
+
+	}
+
+	public static String loadFile(String url) throws IOException {
+
+		HttpClientBuilder clientBuilder = getHttpClientBuilder();
+
+		try (CloseableHttpClient client = clientBuilder.build()) {
+
+			HttpGet request = new HttpGet(url);
+			request.addHeader("Accept-Encoding", "gzip");
+
+			try (CloseableHttpResponse response = client.execute(request)) {
+				HttpEntity entity = response.getEntity();
+				String filename = response.getFirstHeader("Content-Disposition").getValue().split("=")[1];
+
+				try (FileOutputStream out = new FileOutputStream(filename)) {
+					out.write(EntityUtils.toByteArray(entity));
+					out.flush();
+				}
+
+				return "Stored in: " + filename;
 			}
 
 		}

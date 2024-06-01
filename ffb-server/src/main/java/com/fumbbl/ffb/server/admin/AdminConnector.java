@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 
  * @author Kalimar
  */
 public class AdminConnector {
@@ -38,12 +37,16 @@ public class AdminConnector {
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector list <status>\n"
 		+ "  [status being one of: scheduled, starting, active, paused, finished, uploaded or backuped]\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector list <gameId>\n"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector logfile <gameId>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector loglevel <value>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector message <message>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector portrait <coach>\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector purgetest <limit> <perform>\n"
 		+ "  [limit has to be a positive number]"
 		+ "  [if perform is set to \"true\" (case insensitive) games are deleted, all other values and default are considered false]"
+		+ "java com.fumbbl.ffb.server.admin.AdminConnector redeploy <branch> <force>\n"
+		+ "  [branch has to be a git branch]"
+		+ "  [if force is set to \"true\" (case insensitive) is always triggered, otherwise only if no games are running]"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector refresh\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector shutdown\n"
 		+ "java com.fumbbl.ffb.server.admin.AdminConnector schedule <teamHomeId> <teamAwayId>\n"
@@ -94,12 +97,12 @@ public class AdminConnector {
 			}
 
 			byte[] md5Password = PasswordChallenge
-					.fromHexString(serverProperties.getProperty(IServerProperty.ADMIN_PASSWORD));
+				.fromHexString(serverProperties.getProperty(IServerProperty.ADMIN_PASSWORD));
 			String response = PasswordChallenge.createResponse(challenge, md5Password);
 
 			if (AdminServlet.SHUTDOWN.equals(args[0])) {
 				String shutdownUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_SHUTDOWN.url(serverProperties),
-						response);
+					response);
 				System.out.println(shutdownUrl);
 				String shutdownXml = UtilServerHttpClient.fetchPage(shutdownUrl);
 				System.out.println(shutdownXml);
@@ -128,10 +131,18 @@ public class AdminConnector {
 
 			if (AdminServlet.LOGLEVEL.equals(args[0])) {
 				String logLevelUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_LOGLEVEL.url(serverProperties), response,
-						args[1]);
+					args[1]);
 				System.out.println(logLevelUrl);
 				String logLevelXml = UtilServerHttpClient.fetchPage(logLevelUrl);
 				System.out.println(logLevelXml);
+			}
+
+			if (AdminServlet.LOGFILE.equals(args[0])) {
+				String logFileUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_LOGFILE.url(serverProperties), response,
+					args[1]);
+				System.out.println(logFileUrl);
+				String downloadMessage = UtilServerHttpClient.loadFile(logFileUrl);
+				System.out.println(downloadMessage);
 			}
 
 			if (AdminServlet.LIST.equals(args[0])) {
@@ -144,10 +155,10 @@ public class AdminConnector {
 				String adminListUrl;
 				if (gameId > 0) {
 					adminListUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_LIST_ID.url(serverProperties), response,
-							args[1]);
+						args[1]);
 				} else {
 					adminListUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_LIST_STATUS.url(serverProperties), response,
-							args[1]);
+						args[1]);
 				}
 				System.out.println(adminListUrl);
 				String adminListXml = UtilServerHttpClient.fetchPage(adminListUrl);
@@ -163,7 +174,7 @@ public class AdminConnector {
 
 			if (AdminServlet.STATS.equals(args[0])) {
 				String statsUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_STATS.url(serverProperties), response,
-						args[1]);
+					args[1]);
 				System.out.println(statsUrl);
 				String statsXml = UtilServerHttpClient.fetchPage(statsUrl);
 				System.out.println(statsXml);
@@ -195,7 +206,7 @@ public class AdminConnector {
 
 			if (AdminServlet.UPLOAD.equals(args[0])) {
 				String uploadUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_UPLOAD.url(serverProperties), response,
-						args[1]);
+					args[1]);
 				System.out.println(uploadUrl);
 				String uploadXml = UtilServerHttpClient.fetchPage(uploadUrl);
 				System.out.println(uploadXml);
@@ -203,7 +214,7 @@ public class AdminConnector {
 
 			if (AdminServlet.BACKUP.equals(args[0])) {
 				String backupUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_BACKUP.url(serverProperties), response,
-						args[1]);
+					args[1]);
 				System.out.println(backupUrl);
 				String backupXml = UtilServerHttpClient.fetchPage(backupUrl);
 				System.out.println(backupXml);
@@ -220,7 +231,7 @@ public class AdminConnector {
 			if (AdminServlet.MESSAGE.equals(args[0])) {
 				String message = URLEncoder.encode(args[1], "UTF-8");
 				String messageUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_MESSAGE.url(serverProperties), response,
-						message);
+					message);
 				System.out.println(messageUrl);
 				String messageXml = UtilServerHttpClient.fetchPage(messageUrl);
 				System.out.println(messageXml);
@@ -251,6 +262,18 @@ public class AdminConnector {
 					args[1], perform);
 				System.out.println(purgeUrl);
 				String scheduleXml = UtilServerHttpClient.fetchPage(purgeUrl);
+				System.out.println(scheduleXml);
+			}
+
+			if (AdminServlet.REDEPLOY.equals(args[0])) {
+				String force = "false";
+				if (args.length > 2) {
+					force = args[2];
+				}
+				String redeployUrl = StringTool.bind(ServerUrlProperty.ADMIN_URL_REDEPLOY.url(serverProperties), response,
+					args[1], force);
+				System.out.println(redeployUrl);
+				String scheduleXml = UtilServerHttpClient.fetchPage(redeployUrl);
 				System.out.println(scheduleXml);
 			}
 		}

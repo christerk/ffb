@@ -12,6 +12,23 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.28.0")
+			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
+			.addImprovement("Added logs to exception logging code")
+			.addImprovement("Flush writer in exception logging code")
+			.addImprovement("Make code compatible with open jdk by removing javafx references")
+			.addRemoval("Technical: Removed 2 unreachable steps in block sequences")
+			.addBugfix("Prevent exceptions when automarking is handled for a game already removed from game cache")
+			.addImprovement("Technical: Logs are now separated by game id (old log is still written until new logging proves stable)")
+			.addFeature("Spectator names are now also displayed in the spectator tool tip")
+			.addImprovement("Cheering Fans: Prayers now have their own animation")
+			.addImprovement("Log files are no split by game and zipped")
+			.addRuleChange("Guard no longer works for foul assists")
+			.addRuleChange("Players now can be restunned again on their turn, e.g. failed Bloodlust")
+			.addBugfix("Player without ball failing take root on a hand over action did cause a turnover")
+			.addBugfix("Range ruler was sometimes not removed properly")
+		);
+
 		versions.add(new VersionChangeList("2.27.0")
 			.addFeature("Trickster")
 			.addRuleChange("Reduce Master Chef costs are now only available to Halfling teams and not all Halfling Thimble Cup teams")

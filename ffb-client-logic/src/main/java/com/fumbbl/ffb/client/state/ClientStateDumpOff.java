@@ -90,4 +90,10 @@ public class ClientStateDumpOff extends ClientStateMove {
 		return validInRange;
 	}
 
+	@Override
+	public void leaveState() {
+		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
+		getClient().getUserInterface().getFieldComponent().refresh();
+		super.leaveState();
+	}
 }

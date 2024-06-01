@@ -25,12 +25,9 @@ public class ClientData {
 	private boolean fTurnTimerStopped;
 	private boolean fEndTurnButtonHidden;
 
-	private int fSpectators;
+	private int spectatorCount;
 	private SpecialEffect fWizardSpell;
-
-	public ClientData() {
-		super();
-	}
+	private List<String> spectators = new ArrayList<>();
 
 	public Player<?> getSelectedPlayer() {
 		return fSelectedPlayer;
@@ -107,12 +104,12 @@ public class ClientData {
 		return fTurnTimerStopped;
 	}
 
-	public int getSpectators() {
-		return fSpectators;
+	public int getSpectatorCount() {
+		return spectatorCount;
 	}
 
-	public void setSpectators(int pSpectators) {
-		fSpectators = pSpectators;
+	public void setSpectatorCount(int pSpectators) {
+		spectatorCount = pSpectators;
 	}
 
 	public void setWizardSpell(SpecialEffect pWizardSpell) {
@@ -129,6 +126,14 @@ public class ClientData {
 
 	public void setEndTurnButtonHidden(boolean pEndTurnButtonHidden) {
 		fEndTurnButtonHidden = pEndTurnButtonHidden;
+	}
+
+	public void setSpectators(List<String> spectators) {
+		this.spectators = spectators;
+	}
+
+	public List<String> getSpectators() {
+		return spectators;
 	}
 
 	public void clear() {

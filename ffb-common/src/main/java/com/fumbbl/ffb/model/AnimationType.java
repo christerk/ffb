@@ -3,7 +3,6 @@ package com.fumbbl.ffb.model;
 import com.fumbbl.ffb.INamedObject;
 
 /**
- * 
  * @author Kalimar
  */
 public enum AnimationType implements INamedObject {
@@ -20,7 +19,12 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_SWELTERING_HEAT("kickoffSwelteringHeat"), KICKOFF_THROW_A_ROCK("kickoffThrowARock"),
 	KICKOFF_VERY_SUNNY("kickoffVerySunny"), HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
 	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXPLOSION("bombExplosion"), CARD("card"),
-	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg"), TRICKSTER("trickster");
+	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg"), TRICKSTER("trickster"),
+	PRAYER_TREACHEROUS_TRAPDOOR("prayerTrapdoor"), PRAYER_BAD_HABITS("badhabits"), PRAYER_BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle"),
+	PRAYER_FAN_INTERACTION("fanInteraction"), PRAYER_FOULING_FRENZY("foulingFrenzy"), PRAYER_FRIENDS_WITH_THE_REF("friendsWithTheRef"),
+	PRAYER_GREASY_CLEATS("greasyCleats"), PRAYER_INTENSIVE_TRAINING("intensiveTraining"), PRAYER_IRON_MAN("ironMan"),
+	PRAYER_KNUCKLE_DUSTERS("knuckleDusters"), PRAYER_MOLES_UNDER_THE_PITCH("molesUnderThePitch"), PRAYER_NECESSARY_VIOLENCE("necessaryViolence"),
+	PRAYER_PERFECT_PASSING("perfectPassing"), PRAYER_STILETTO("stiletto"), PRAYER_THROW_A_ROCK("throwARockPrayer"), PRAYER_UNDER_SCRUTINY("underScrutiny");
 
 	private final String fName;
 

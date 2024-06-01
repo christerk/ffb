@@ -33,6 +33,7 @@ public class ClientCommandHandlerLeave extends ClientCommandHandler {
 			getClient().getClientData().setTurnTimerStopped(true);
 		}
 
+		getClient().getClientData().setSpectatorCount(leaveCommand.getSpectatorCount());
 		getClient().getClientData().setSpectators(leaveCommand.getSpectators());
 
 		if (pMode != ClientCommandHandlerMode.REPLAYING) {
