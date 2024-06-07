@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.28.1")
 			.addBugfix("Moles under the pitch only lasted a drive instead of a half")
+			.addBugfix("Trickster could be used without tackle zone")
 		);
 
 		versions.add(new VersionChangeList("2.28.0")
