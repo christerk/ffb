@@ -11,6 +11,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.28.1")
+			.addBugfix("Moles under the pitch only lasted a drive instead of a half")
+		);
 
 		versions.add(new VersionChangeList("2.28.0")
 			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
