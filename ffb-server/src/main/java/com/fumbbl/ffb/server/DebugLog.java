@@ -66,6 +66,7 @@ public class DebugLog {
 	private final Map<Long, File> logFiles = new HashMap<>();
 
 	private int logFileLimit = 1000;
+	private final boolean splitLogs;
 
 	public DebugLog(FantasyFootballServer server, File logFile, File baseLogPath, int logLevel) {
 		fServer = server;
@@ -82,6 +83,8 @@ public class DebugLog {
 				logWithOutGameId(e);
 			}
 		}
+
+		splitLogs = Boolean.parseBoolean(server.getProperty(IServerProperty.SERVER_LOG_FILE_SPLIT));
 
 		setLogLevel(logLevel);
 		cleanLogsFromCrash();
@@ -285,21 +288,30 @@ public class DebugLog {
 		// write synchronized to the log, create a new one if necessary
 		synchronized (this) {
 
-			try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true));
-					 PrintWriter gameLog = new PrintWriter(new FileWriter(gameLogFile(pGameId), true))) {
-				while (tokenizer.hasMoreTokens()) {
-					String line = tokenizer.nextToken();
-					gameLog.print(header);
-					gameLog.println(line);
-					out.print(header);
-					out.println(line);
+			if (splitLogs) {
+
+				try (PrintWriter gameLog = new PrintWriter(new FileWriter(gameLogFile(pGameId), true))) {
+					writeLogLine(header, tokenizer, gameLog);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
 				}
-				gameLog.flush();
-				out.flush();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+			} else {
+				try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true))) {
+					writeLogLine(header, tokenizer, out);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
 			}
 		}
+	}
+
+	private static void writeLogLine(String header, StringTokenizer tokenizer, PrintWriter gameLog) {
+		while (tokenizer.hasMoreTokens()) {
+			String line = tokenizer.nextToken();
+			gameLog.print(header);
+			gameLog.println(line);
+		}
+		gameLog.flush();
 	}
 
 	public boolean isLogging(int pLogLevel) {
@@ -406,7 +418,7 @@ public class DebugLog {
 		Map<String, List<File>> files = new HashMap<>();
 
 		if (ArrayTool.isProvided(logDirs)) {
-			for (String suffix : new String[]{GAME_LOG_SUFFIX, GZ_SUFFIX}){
+			for (String suffix : new String[]{GAME_LOG_SUFFIX, GZ_SUFFIX}) {
 				files.put(suffix, new ArrayList<>());
 				for (File logDir : logDirs) {
 					File[] logs = logDir.listFiles(pathname ->
@@ -418,7 +430,8 @@ public class DebugLog {
 						files.get(suffix).addAll(Arrays.asList(logs));
 					}
 				}
-		}}
+			}
+		}
 
 		return files;
 	}
