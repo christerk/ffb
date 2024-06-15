@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Moles under the pitch only lasted a drive instead of a half")
 			.addBugfix("Trickster could be used without tackle zone")
 			.addRuleChange("Leap & Pogo Stick: When failing rush for jumps, player will always land in target square")
+			.addFeature("Technical: Logs are now grouped in folders, limited by number")
 		);
 
 		versions.add(new VersionChangeList("2.28.0")
