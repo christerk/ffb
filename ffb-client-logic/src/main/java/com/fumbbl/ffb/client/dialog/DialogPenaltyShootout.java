@@ -34,7 +34,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 	private static final Color HIGHLIGHT = Color.lightGray;
 
 	private final JPanel rollPanel;
-	private final JButton closeButton;
+	private JButton closeButton;
 	private final int limit;
 
 	private final Timer timer;
@@ -50,10 +50,12 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		this.parameter = parameter;
 		this.handler = handler;
 
-		closeButton = new JButton(dimensionProvider(), "Proceed to MVPs and upload");
-		closeButton.setAlignmentX(CENTER_ALIGNMENT);
-		closeButton.setMargin(new Insets(3, 5, 3, 5));
-		closeButton.addActionListener(this);
+		if (ClientMode.PLAYER.equals(pClient.getMode())) {
+			closeButton = new JButton(dimensionProvider(), "Proceed to MVPs and upload");
+			closeButton.setAlignmentX(CENTER_ALIGNMENT);
+			closeButton.setMargin(new Insets(3, 5, 3, 5));
+			closeButton.addActionListener(this);
+		}
 
 		rootPanel = new JPanel();
 		rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));

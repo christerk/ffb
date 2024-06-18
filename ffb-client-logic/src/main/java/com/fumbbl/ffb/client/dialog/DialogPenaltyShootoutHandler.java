@@ -32,6 +32,6 @@ public class DialogPenaltyShootoutHandler extends DialogHandler {
 
 	@Override
 	public boolean preventsExit() {
-		return getDialog() != null && getDialog().isVisible();
+		return getDialog() != null && getDialog().isVisible() && getClient().getMode() == ClientMode.PLAYER;
 	}
 }
