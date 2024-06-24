@@ -16,6 +16,7 @@ public class PogoStick extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
 		registerProperty(NamedProperties.ignoreTacklezonesWhenJumping);
+		registerProperty(NamedProperties.failedRushForJumpAlwaysLandsInTargetSquare);
 		registerProperty(new CancelSkillProperty(NamedProperties.makesJumpingHarder));
 		registerProperty(new CancelSkillProperty(NamedProperties.canAttemptToTackleJumpingPlayer));
 	}

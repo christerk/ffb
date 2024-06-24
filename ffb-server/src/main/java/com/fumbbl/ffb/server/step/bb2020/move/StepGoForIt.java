@@ -188,7 +188,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private void failGfi() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isJumping() && !fSecondGoForIt && actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1) {
+		if (actingPlayer.isJumping()
+			&& !fSecondGoForIt
+			&& actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1
+			&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.failedRushForJumpAlwaysLandsInTargetSquare)
+		) {
 			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
 			game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), moveStart);
 		}

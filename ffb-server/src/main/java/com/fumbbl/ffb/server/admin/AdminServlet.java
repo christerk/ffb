@@ -7,6 +7,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.factory.GameStatusFactory;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.server.DebugLog;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerProperty;
@@ -50,6 +51,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -268,21 +270,17 @@ public class AdminServlet extends HttpServlet {
 		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
 		long gameId = parseGameId(gameIdString);
 		if (gameId > 0) {
-			File plainFile = getServer().getDebugLog().createLogFile(gameId);
-			File zippedFile = getServer().getDebugLog().createZippedFile(plainFile);
-			if (!plainFile.exists() && !zippedFile.exists()) {
+			Map<String, List<File>> files = getServer().getDebugLog().getLogFiles(gameId);
+			List<File> plainFiles = files.get(DebugLog.GAME_LOG_SUFFIX);
+			List<File> zippedFiles = files.get(DebugLog.GZ_SUFFIX);
+			if (plainFiles.isEmpty() && zippedFiles.isEmpty()) {
 				setError(HttpStatus.SC_NOT_FOUND, "Logfiles do not exist for game id" + gameId, pResponse);
 			}
 
-			if (plainFile.exists() && !plainFile.canRead()) {
-				setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Can't read " + plainFile.getName(), pResponse);
-			}
+			pResponse.addHeader("Content-Disposition", "attachment; filename=" + zippedFiles.get(0).getName());
 
-			if (zippedFile.exists() && !zippedFile.canRead()) {
-				setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Can't read " + zippedFile.getName(), pResponse);
-			}
-
-			pResponse.addHeader("Content-Disposition", "attachment; filename=" + zippedFile.getName());
+			zippedFiles.sort(new FolderComparator());
+			plainFiles.sort(new FolderComparator());
 
 			try {
 				pResponse.flushBuffer();
@@ -290,40 +288,55 @@ public class AdminServlet extends HttpServlet {
 				getServer().getDebugLog().logWithOutGameId(e);
 			}
 
-			if (zippedFile.exists()) {
-				try (ServletOutputStream out = pResponse.getOutputStream();
-						 FileInputStream in = new FileInputStream(zippedFile)) {
-					byte[] buffer = new byte[(int) zippedFile.length()];
+			if (!zippedFiles.isEmpty()) {
+				try (ServletOutputStream out = pResponse.getOutputStream()) {
+					for (File zippedFile : zippedFiles) {
 
-					//noinspection ResultOfMethodCallIgnored
-					in.read(buffer, 0, buffer.length);
-					out.write(buffer);
-					out.flush();
-				} catch (FileNotFoundException e) {
-					// already checked above
-					getServer().getDebugLog().logWithOutGameId(e);
-					return;
+						try (FileInputStream in = new FileInputStream(zippedFile)) {
+							byte[] buffer = new byte[(int) zippedFile.length()];
+
+							//noinspection ResultOfMethodCallIgnored
+							in.read(buffer, 0, buffer.length);
+							out.write(buffer);
+							out.flush();
+						} catch (FileNotFoundException e) {
+							// already checked above
+							getServer().getDebugLog().logWithOutGameId(e);
+							return;
+						} catch (IOException e) {
+							setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + zippedFile.getName(), pResponse);
+							getServer().getDebugLog().logWithOutGameId(e);
+							return;
+						}
+					}
 				} catch (IOException e) {
-					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + zippedFile.getName(), pResponse);
+					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error writing to response", pResponse);
 					getServer().getDebugLog().logWithOutGameId(e);
 					return;
 				}
 			}
 
-			if (plainFile.exists()) {
-				try (PrintWriter out = new PrintWriter(new GZIPOutputStream(pResponse.getOutputStream()));
-						 BufferedReader in = new BufferedReader(new FileReader(plainFile))) {
-					String line;
-					while ((line = in.readLine()) != null) {
-						out.println(line);
+			if (!plainFiles.isEmpty()) {
+				try (PrintWriter out = new PrintWriter(new GZIPOutputStream(pResponse.getOutputStream()))) {
+					for (File plainFile : plainFiles) {
+						try (BufferedReader in = new BufferedReader(new FileReader(plainFile))) {
+							String line;
+							while ((line = in.readLine()) != null) {
+								out.println(line);
+							}
+							out.flush();
+						} catch (FileNotFoundException e) {
+							// already checked above
+							getServer().getDebugLog().logWithOutGameId(e);
+							return;
+						} catch (IOException e) {
+							setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + plainFile.getName(), pResponse);
+							getServer().getDebugLog().logWithOutGameId(e);
+							return;
+						}
 					}
-					out.flush();
-				} catch (FileNotFoundException e) {
-					// already checked above
-					getServer().getDebugLog().logWithOutGameId(e);
-					return;
 				} catch (IOException e) {
-					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error reading " + plainFile.getName(), pResponse);
+					setError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Error writing to response", pResponse);
 					getServer().getDebugLog().logWithOutGameId(e);
 					return;
 				}
@@ -798,6 +811,18 @@ public class AdminServlet extends HttpServlet {
 		}
 		fLastChallenge = null;
 		return isOk;
+	}
+
+	private static class FolderComparator implements Comparator<File> {
+
+		private Integer folderNumber(File file) {
+			return Integer.parseInt(file.getParentFile().getName());
+		}
+
+		@Override
+		public int compare(File o1, File o2) {
+			return folderNumber(o1).compareTo(folderNumber(o2));
+		}
 	}
 
 }

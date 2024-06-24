@@ -11,6 +11,13 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.28.1")
+			.addBugfix("Moles under the pitch only lasted a drive instead of a half")
+			.addBugfix("Trickster could be used without tackle zone")
+			.addRuleChange("Leap & Pogo Stick: When failing rush for jumps, player will always land in target square")
+			.addFeature("Technical: Logs are now grouped in folders, limited by number")
+			.addBugfix("Penalty Shootout: Dialog did prevent client from being closed in spec mode")
+		);
 
 		versions.add(new VersionChangeList("2.28.0")
 			.addBugfix("Auto Marking: Add synchronization to client side event handling until the game is initialized completely")
