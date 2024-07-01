@@ -66,4 +66,11 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		return mouseOverField(playerCoordinate);
 	}
+
+	@Override
+	public void leaveState() {
+		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
+		getClient().getUserInterface().getFieldComponent().refresh();
+		super.leaveState();
+	}
 }

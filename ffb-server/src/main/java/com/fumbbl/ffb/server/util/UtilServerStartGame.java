@@ -62,7 +62,7 @@ public class UtilServerStartGame {
 
 		List<String> playerList = new ArrayList<>();
 
-		int numVisibleSpectators = 0;
+		List<String> visibleSpectators = new ArrayList<>();
 		Session[] sessions = sessionManager.getSessionsForGameId(pGameState.getId());
 		for (Session session : sessions) {
 			if (session.isOpen()) {
@@ -75,7 +75,7 @@ public class UtilServerStartGame {
 						playerList.add(coach);
 					}
 				} else if (!sessionManager.isSessionAdmin(session)) {
-					numVisibleSpectators++;
+					visibleSpectators.add(coach);
 				}
 			}
 		}
@@ -85,7 +85,7 @@ public class UtilServerStartGame {
 
 		boolean silentJoin = pMode == ClientMode.SPECTATOR && pAccountProperties.contains("ADMIN");
 		if (!silentJoin) {
-			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, numVisibleSpectators);
+			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, visibleSpectators);
 		}
 
 		if (pMode == ClientMode.SPECTATOR

@@ -29,6 +29,9 @@ public class ServerCommandHandlerUpdatePlayerMarkings extends ServerCommandHandl
 		Session session = receivedCommand.getSession();
 		long gameId = sessionManager.getGameIdForSession(session);
 		GameState gameState = getServer().getGameCache().getGameStateById(gameId);
+		if (gameState == null) {
+			return false;
+		}
 		ClientMode mode = sessionManager.getModeForSession(session);
 		boolean isHome = UtilServerSteps.checkCommandIsFromHomePlayer(gameState, receivedCommand);
 

@@ -107,7 +107,7 @@ public enum Prayer implements INamedObject {
 		}
 	},
 	MOLES_UNDER_THE_PITCH("Moles under the Pitch",
-		"Rushes have a -1 modifier (-2 if both coaches rolled this result)"),
+		"Rushes have a -1 modifier (-2 if both coaches rolled this result)", InducementDuration.UNTIL_END_OF_HALF),
 	PERFECT_PASSING("Perfect Passing",
 		"Completions generate 2 instead of 1 spp", InducementDuration.UNTIL_END_OF_GAME),
 	FAN_INTERACTION("Fan Interaction",

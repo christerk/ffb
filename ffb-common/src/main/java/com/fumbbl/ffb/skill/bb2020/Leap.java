@@ -24,6 +24,7 @@ public class Leap extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
+		registerProperty(NamedProperties.failedRushForJumpAlwaysLandsInTargetSquare);
 		registerModifier(new JumpModifier("Leap", -1, ModifierType.DEPENDS_ON_SUM_OF_OTHERS) {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpContext context) {

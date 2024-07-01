@@ -12,6 +12,9 @@ import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author Kalimar
@@ -41,11 +44,11 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 		GameState gameState = gameCache.getGameStateById(gameId);
 		if (gameState != null) {
 
-			int spectators = 0;
+			List<String> spectators = new ArrayList<>();
 			for (Session session : sessions) {
 				if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
 					if (!sessionManager.isSessionAdmin(session)) {
-						spectators++;
+						spectators.add(sessionManager.getCoachForSession(session));
 					}
 				}
 			}

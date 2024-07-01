@@ -199,7 +199,7 @@ public class StepEndMoving extends AbstractStep {
 		} else {
 			PlayerAction playerAction = actingPlayer.getPlayerAction();
 			if (StringTool.isProvided(actingPlayer.getPlayerId()) && (playerAction != null)
-				&& !playerAction.isMoving() && !(playerAction == PlayerAction.PASS
+				&& !playerAction.isMoving() && !((playerAction == PlayerAction.PASS || playerAction == PlayerAction.HAND_OVER)
 				&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
 				pushSequenceForPlayerAction(playerAction);
 			} else if (ArrayTool.isProvided(fMoveStack)) {
