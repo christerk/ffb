@@ -45,10 +45,10 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	abstract protected void drawSelectSquare();
 
-	protected void prePerform() {
+	protected void prePerform(int menuKey) {
 	}
 
-	protected void postPerform() {
+	protected void postPerform(int menuKey) {
 	}
 
 	public final void endTurn() {

@@ -180,7 +180,7 @@ public abstract class LogicModule {
 		return !actingPlayer.hasActed() && hadTackleZone && isLookIntoMyEyesAvailable(actingPlayer.getPlayer());
 	}
 
-	protected boolean isLookIntoMyEyesAvailable(Player<?> player) {
+	public boolean isLookIntoMyEyesAvailable(Player<?> player) {
 		Game game = client.getGame();
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
 			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(player.getTeam()), game.getFieldModel().getPlayerCoordinate(player)))
