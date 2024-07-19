@@ -347,8 +347,10 @@ public class DebugLog {
 	}
 
 	public void closeResources(long id) {
-		zipLog(logFiles.get(id));
-		logFiles.remove(id);
+		if (splitLogs) {
+			zipLog(logFiles.get(id));
+			logFiles.remove(id);
+		}
 	}
 
 	private void cleanLogsFromCrash() {
