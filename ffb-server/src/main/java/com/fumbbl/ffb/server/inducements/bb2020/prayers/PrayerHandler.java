@@ -49,17 +49,20 @@ public abstract class PrayerHandler implements INamedObject {
 			step.getResult().setNextAction(StepAction.NEXT_STEP);
 			reports.forEach(report -> step.getResult().addReport(report));
 			reports.clear();
-		}
-		if (handledPrayer().isChangingPlayer()) {
-			gameState.updatePlayerMarkings();
+			if (handledPrayer().isChangingPlayer()) {
+				gameState.updatePlayerMarkings();
+			}
 		}
 	}
 
-	public final void applySelection(IStep step, Game game, PrayerDialogSelection selection) {
-		applySelection(game, selection);
+	public final void applySelection(IStep step, GameState gameState, PrayerDialogSelection selection) {
+		applySelection(gameState.getGame(), selection);
 		if (step != null) {
 			reports.forEach(report -> step.getResult().addReport(report));
 			reports.clear();
+		}
+		if (handledPrayer().isChangingPlayer()) {
+			gameState.updatePlayerMarkings();
 		}
 	}
 
