@@ -2,7 +2,9 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
@@ -13,6 +15,7 @@ import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.IInjuryContextModification;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -249,7 +252,58 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return sum;
 	}
 
-	protected abstract Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers();
+	private int findNewStatDecreases(PlayerResult pPlayerResult, InjuryAttribute pInjuryAttribute) {
+		int decreases = 0;
+		if (pPlayerResult != null) {
+			if ((pPlayerResult.getSeriousInjury() != null)
+				&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
+				decreases++;
+			}
+			if ((pPlayerResult.getSeriousInjuryDecay() != null)
+				&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
+				decreases++;
+			}
+		}
+		return decreases;
+	}
+
+	private int getStatWithModifiers(PlayerStatKey stat, Game game, int baseValue) {
+		StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+			.forName(Mechanic.Type.STAT.name());
+		PlayerResult playerResult = game.getGameResult().getPlayerResult(this);
+		int decreases = findNewStatDecreases(playerResult, InjuryAttribute.forStatKey(stat));
+		switch (stat) {
+			case AG:
+				return mechanic.applyInGameAgilityInjury(getAgilityWithModifiers(), decreases);
+			case PA:
+				int paValue = getStatWithModifiers(stat, baseValue);
+				return paValue > 0 ? paValue + decreases : paValue;
+			default:
+				return getStatWithModifiers(stat, baseValue) - decreases;
+		}
+	}
+
+	public int getAgilityWithModifiers(Game game) {
+		return getStatWithModifiers(PlayerStatKey.AG, game, getAgility());
+	}
+
+	public int getMovementWithModifiers(Game game) {
+		return getStatWithModifiers(PlayerStatKey.MA, game, getMovement());
+	}
+
+	public int getStrengthWithModifiers(Game game) {
+		return getStatWithModifiers(PlayerStatKey.ST, game, getStrength());
+	}
+
+	public int getPassingWithModifiers(Game game) {
+		return getStatWithModifiers(PlayerStatKey.PA, game, getPassing());
+	}
+
+	public int getArmourWithModifiers(Game game) {
+		return getStatWithModifiers(PlayerStatKey.AV, game, getArmour());
+	}
+
+	public abstract Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers();
 
 	public abstract void addTemporaryModifiers(String source, Set<TemporaryStatModifier> modifiers);
 
@@ -385,6 +439,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public boolean hasUnused(Skill skill) {
 		return has(skill) && !isUsed(skill);
 	}
+
 	public abstract boolean isUsed(Skill skill);
 
 	public abstract void markUsed(Skill skill, Game game);
