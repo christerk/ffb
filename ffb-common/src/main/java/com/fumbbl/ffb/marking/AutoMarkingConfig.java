@@ -22,10 +22,6 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		return markings;
 	}
 
-	public void setMarkings(Set<AutoMarkingRecord> markings) {
-		this.markings = markings;
-	}
-
 	public String getSeparator() {
 		return separator;
 	}

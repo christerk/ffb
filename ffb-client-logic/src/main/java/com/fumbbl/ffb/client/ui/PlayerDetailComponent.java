@@ -241,7 +241,6 @@ public class PlayerDetailComponent extends JPanel {
 			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
 				.forName(Mechanic.Type.STAT.name());
 
-			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
 			int movement = getPlayer().getMovementWithModifiers(game);
 			int moveLeft = movement;

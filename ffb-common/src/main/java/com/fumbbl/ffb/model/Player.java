@@ -114,8 +114,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	abstract void addSkill(Skill pSkill);
 
-	abstract boolean removeSkill(Skill pSkill);
-
 	public boolean hasSkillExcludingTemporaryOnes(Skill pSkill) {
 		return Arrays.asList(getSkills()).contains(pSkill);
 	}
@@ -160,8 +158,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract void setTeam(Team pTeam);
 
 	public abstract String getId();
-
-	abstract void setId(String pId);
 
 	public abstract PlayerGender getPlayerGender();
 
