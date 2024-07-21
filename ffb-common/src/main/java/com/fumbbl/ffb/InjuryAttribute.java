@@ -1,6 +1,6 @@
 package com.fumbbl.ffb;
 
-import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 
 import java.util.Arrays;
 
@@ -28,14 +28,12 @@ public enum InjuryAttribute {
 		return fName;
 	}
 
-	public static InjuryAttribute forName(String name) {
-		return Arrays.stream(values()).filter(value -> name.equalsIgnoreCase(value.getName()) || ("-" + name).equalsIgnoreCase(value.getName())).findFirst().orElse(null);
+	public static InjuryAttribute forName(String rawName) {
+		String name = rawName.replaceFirst("[+\\-]", "");
+		return Arrays.stream(values()).filter(value -> name.equalsIgnoreCase(value.getName())).findFirst().orElse(null);
 	}
 
-	public static InjuryAttribute forSkill(Skill skill) {
-		if (skill.getCategory() == SkillCategory.STAT_INCREASE) {
-			return forName(skill.getName().replace("+", ""));
-		}
-		return null;
+	public static InjuryAttribute forStatKey(PlayerStatKey key) {
+		return forName(key.name());
 	}
 }
