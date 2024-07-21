@@ -99,7 +99,7 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				boolean defenderCanUseSkill = UtilCards.hasSkill(game.getDefender(), skill) && state.oldDefenderState.hasTacklezones();
 				boolean actingPlayerIsBlitzing = actingPlayer.getPlayerAction() == PlayerAction.BLITZ;
-				boolean wrestlePrevented = actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill);
+				boolean wrestlePrevented = actingPlayerIsBlitzing && UtilCards.cancelsSkill(actingPlayer.getPlayer(), skill) && UtilCards.hasSkill(game.getDefender(), skill);
 				if (!state.usingWrestleAttacker && defenderCanUseSkill
 					&& !wrestlePrevented) {
 					UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skill, 0),
