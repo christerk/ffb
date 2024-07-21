@@ -7,7 +7,9 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -19,6 +21,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
@@ -27,6 +30,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 public class StepSelectGazeTargetEnd extends AbstractStep {
 
 	private boolean endTurn;
+	private PlayerAction bloodlustAction;
 
 	public StepSelectGazeTargetEnd(GameState pGameState) {
 		super(pGameState);
@@ -39,12 +43,19 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null && parameter.getKey() == StepParameterKey.END_TURN) {
-			endTurn = parameter.getValue() != null && (boolean) parameter.getValue();
-			return true;
+		if (parameter != null) {
+			switch (parameter.getKey()) {
+				case END_TURN:
+					endTurn = parameter.getValue() != null && (boolean) parameter.getValue();
+					break;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					break;
+				default:
+					super.setParameter(parameter);
+			}
 		}
-
-		return super.setParameter(parameter);
+		return false;
 	}
 
 	@Override
@@ -68,10 +79,20 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 					.pushSequence(new Select.SequenceParams(getGameState(), false));
 			} else if (targetSelectionState.isSelected()) {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.GAZE_MOVE, false);
-				((Select) factory.forName(SequenceGenerator.Type.Select.name()))
-					.pushSequence(new Select.SequenceParams(getGameState(), false));
-				game.getActingPlayer().setHasMoved(true);
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
+					Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
+					Player<?> target = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
+					game.getFieldModel().setPlayerState(target, targetSelectionState.getOldPlayerState());
+					game.setDefenderId(null);
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+				} else {
+					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.GAZE_MOVE, false);
+					((Select) factory.forName(SequenceGenerator.Type.Select.name()))
+						.pushSequence(new Select.SequenceParams(getGameState(), false));
+				}
+				actingPlayer.setHasMoved(true);
 			} else {
 				Sequence sequence = new Sequence(getGameState());
 				sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
@@ -86,6 +107,7 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -95,6 +117,7 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		Boolean endTurnObject = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		endTurn = endTurnObject != null && endTurnObject;
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		return this;
 	}
 }

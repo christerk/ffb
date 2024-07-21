@@ -14,6 +14,7 @@ public class ChangeList {
 
     versions.add(new VersionChangeList("2.28.2")
       .addBugfix("Auto Marking: Skill and stat changes of some prayers did not get applied")
+      .addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls an be avoided")
     );
 
     versions.add(new VersionChangeList("2.28.1")
