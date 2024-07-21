@@ -4,7 +4,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.net.commands.ServerCommand;
 
 import java.util.HashMap;
 import java.util.Map;
