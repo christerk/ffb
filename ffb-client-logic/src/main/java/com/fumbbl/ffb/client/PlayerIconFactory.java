@@ -333,7 +333,6 @@ public class PlayerIconFactory {
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
 			String homeText = playerMarker.getHomeText();
-			pClient.logDebug(0, Thread.currentThread().getName() + " marking " + pPlayer.getId() + " with " + homeText);
 			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer);
 		}
 
