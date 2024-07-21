@@ -30,6 +30,11 @@ public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 	}
 
 	@Override
+	public boolean improvementIncreasesValue() {
+		return false;
+	}
+
+	@Override
 	public int applyInGameAgilityInjury(int agility, int decreases) {
 		return agility + decreases;
 	}
