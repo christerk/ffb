@@ -284,7 +284,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	protected Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
+	public Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
 		return originalPlayer.getTemporaryModifiers();
 	}
 
