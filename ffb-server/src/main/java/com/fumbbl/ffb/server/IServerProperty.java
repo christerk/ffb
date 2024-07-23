@@ -13,7 +13,6 @@ public interface IServerProperty {
 	String SERVER_LOG_FILE = "server.log.file";
 	String SERVER_LOG_FOLDER = "server.log.folder";
 	String SERVER_LOG_LEVEL = "server.log.level";
-	String SERVER_LOG_FILE_LIMIT = "server.log.file.limit";
 	String SERVER_LOG_FILE_SPLIT = "server.log.file.split";
 	String SERVER_SPECTATOR_COOLDOWN = "server.spectator.cooldown";
 	String SERVER_COMMAND_COMPRESSION = "server.command.compression";
