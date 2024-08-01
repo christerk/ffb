@@ -17,6 +17,7 @@ public class ChangeList {
       .addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls an be avoided")
       .addBugfix("Juggernaut: Message of cancelling wrestle was always displayed even if opponent did not have wrestle")
       .addBugfix("Raiding Party: Can't move players without tz anymore, since they have to mark an opponent after move")
+      .addBugfix("Slayer: Modifier could be used on injury even aginst opponent with st4 or lower")
     );
 
     versions.add(new VersionChangeList("2.28.1")
