@@ -290,7 +290,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				break;
 			case FIELD_MODEL_SET_PLAYER_STATE:
 				Player<?> player = game.getPlayerById(pModelChange.getKey());
-				getLayerPlayers().updateBallAndPlayers(fieldModel.getPlayerCoordinate(player), true);
+				FieldCoordinate playerCoordinateForStateChange = fieldModel.getPlayerCoordinate(player);
+				boolean playerOverBall = fieldModel.isBallInPlay()
+					|| !playerCoordinateForStateChange.equals(fieldModel.getBallCoordinate());
+				getLayerPlayers().updateBallAndPlayers(playerCoordinateForStateChange, playerOverBall);
 				break;
 			case FIELD_MODEL_SET_RANGE_RULER:
 				getLayerRangeRuler().drawRangeRuler((RangeRuler) pModelChange.getValue());
