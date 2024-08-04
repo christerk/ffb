@@ -73,7 +73,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClient</mainClass>
+                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Built-By>${user.name}</Built-By>
