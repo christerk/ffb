@@ -489,7 +489,7 @@ public class IconCache {
 				try {
 					zipStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					getClient().logWithOutGameId(e);
 				}
 			}
 		}
