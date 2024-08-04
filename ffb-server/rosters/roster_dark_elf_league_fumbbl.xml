@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roster team="1084086" id="4959">
+    <name>Dark Elf</name>
+    <type>Regular</type>
+    <reRollCost>50000</reRollCost>
+    <maxReRolls>8</maxReRolls>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/486259</logo>
+    <raisedPositionId></raisedPositionId>
+    <apothecary>true</apothecary>
+    <necromancer>false</necromancer>
+    <undead>false</undead>
+    <nameGenerator>elf</nameGenerator>
+    <specialRules>
+        <rule></rule>
+    </specialRules>
+    <maxBigGuys>1</maxBigGuys>
+    <keywords/>
+    <position id="37736">
+        <quantity>4</quantity>
+        <name>Blitzer</name>
+        <shorthand>Z</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>100000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>4</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/318596</portrait>
+        <iconSet size="4" mimeType="image/png">i/674138.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+        <keywords/>
+    </position>
+    <position id="37734">
+        <quantity>12</quantity>
+        <name>Dark Elf Lineman</name>
+        <shorthand>L</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>70000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>4</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/318599</portrait>
+        <iconSet size="8" mimeType="image/png">i/674139.png</iconSet>
+        <skillList/>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <double>Strength</double>
+        </skillCategoryList>
+        <keywords/>
+    </position>
+    <position id="37737">
+        <quantity>2</quantity>
+        <name>Assassin</name>
+        <shorthand>A</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>85000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>5</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/318597</portrait>
+        <iconSet size="2" mimeType="image/png">i/585634.png</iconSet>
+        <skillList>
+            <skill>Shadowing</skill>
+            <skill>Stab</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+        <keywords/>
+    </position>
+    <position id="37735">
+        <quantity>2</quantity>
+        <name>Runner</name>
+        <shorthand>R</shorthand>
+        <type>Regular</type>
+        <gender>random</gender>
+        <cost>80000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>3</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/318598</portrait>
+        <iconSet size="2" mimeType="image/png">i/674132.png</iconSet>
+        <skillList>
+            <skill>Dump-off</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <normal>Passing</normal>
+            <double>Strength</double>
+        </skillCategoryList>
+        <keywords/>
+    </position>
+    <position id="37738">
+        <quantity>2</quantity>
+        <name>Witch Elf</name>
+        <shorthand>WE</shorthand>
+        <type>Regular</type>
+        <gender>female</gender>
+        <cost>110000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>5</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/318595</portrait>
+        <iconSet size="2" mimeType="image/png">i/674137.png</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill>Frenzy</skill>
+            <skill>Jump Up</skill>
+        </skillList>
+        <skillCategoryList>
+            <normal>General</normal>
+            <normal>Agility</normal>
+            <double>Strength</double>
+            <double>Passing</double>
+        </skillCategoryList>
+        <keywords/>
+    </position>
+    <position id="39398">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Eldril Sidewinder</name>
+        <shorthand>ES</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>230000</cost>
+        <movement>8</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>5</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674095</portrait>
+        <iconSet size="1" mimeType="image/png">i/674096.png</iconSet>
+        <skillList>
+            <skill>Catch</skill>
+            <skill>Dodge</skill>
+            <skill>Hypnotic Gaze</skill>
+            <skill value="4">Loner</skill>
+            <skill>Mesmerizing Dance</skill>
+            <skill>Nerves of Steel</skill>
+            <skill>On the Ball</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39458">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Gloriel Summerbloom</name>
+        <shorthand>GS</shorthand>
+        <type>Star</type>
+        <gender>female</gender>
+        <cost>150000</cost>
+        <movement>7</movement>
+        <strength>2</strength>
+        <agility>2</agility>
+        <passing>2</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674100</portrait>
+        <iconSet size="1" mimeType="image/png">i/674101.png</iconSet>
+        <skillList>
+            <skill>Accurate</skill>
+            <skill>Dodge</skill>
+            <skill value="3">Loner</skill>
+            <skill>Pass</skill>
+            <skill>Shot to Nothing</skill>
+            <skill>Side Step</skill>
+            <skill>Sure Hands</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39459">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Grak</name>
+        <shorthand>Gr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>250000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>4</passing>
+        <armour>10</armour>
+        <teamWithPositionId>39460</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674104</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674105.gif</iconSet>
+        <skillList>
+            <skill>Bone Head</skill>
+            <skill>Kick Team-mate</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Thick Skull</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39460">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Crumbleberry</name>
+        <shorthand>Cr</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>0</cost>
+        <movement>5</movement>
+        <strength>2</strength>
+        <agility>3</agility>
+        <passing>6</passing>
+        <armour>7</armour>
+        <teamWithPositionId>39459</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674107</portrait>
+        <iconSet size="1" mimeType="image/gif">i/674106.gif</iconSet>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill value="4">Loner</skill>
+            <skill>Right Stuff</skill>
+            <skill>Stunty</skill>
+            <skill>Sure Hands</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39465">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Helmut Wulf</name>
+        <shorthand>HW</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>140000</cost>
+        <movement>6</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>0</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674065</portrait>
+        <iconSet size="1" mimeType="image/png">i/674066.png</iconSet>
+        <skillList>
+            <skill>Chainsaw</skill>
+            <skill value="4">Loner</skill>
+            <skill>Old Pro</skill>
+            <skill>Pro</skill>
+            <skill>Secret Weapon</skill>
+            <skill>Stand Firm</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39549">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Morg 'n' Thorg</name>
+        <shorthand>MT</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>380000</cost>
+        <movement>6</movement>
+        <strength>6</strength>
+        <agility>3</agility>
+        <passing>4</passing>
+        <armour>11</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674074</portrait>
+        <iconSet size="1" mimeType="image/png">i/674075.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill value="4">Loner</skill>
+            <skill value="2">Mighty Blow</skill>
+            <skill>The Ballista</skill>
+            <skill>Thick Skull</skill>
+            <skill>Throw Team-mate</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39550">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Roxanna Darknail</name>
+        <shorthand>RD</shorthand>
+        <type>Star</type>
+        <gender>female</gender>
+        <cost>270000</cost>
+        <movement>8</movement>
+        <strength>3</strength>
+        <agility>1</agility>
+        <passing>4</passing>
+        <armour>8</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674076</portrait>
+        <iconSet size="1" mimeType="image/png">i/674077.png</iconSet>
+        <skillList>
+            <skill>Burst of Speed</skill>
+            <skill>Dodge</skill>
+            <skill>Frenzy</skill>
+            <skill>Juggernaut</skill>
+            <skill>Jump Up</skill>
+            <skill>Leap</skill>
+            <skill value="4">Loner</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39553">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Lucien Swift</name>
+        <shorthand>LS</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>340000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>5</passing>
+        <armour>9</armour>
+        <teamWithPositionId>39554</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674083</portrait>
+        <iconSet size="1" mimeType="image/png">i/674084.png</iconSet>
+        <skillList>
+            <skill>Block</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Tackle</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39554">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Valen Swift</name>
+        <shorthand>VS</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>0</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>2</passing>
+        <armour>8</armour>
+        <teamWithPositionId>39553</teamWithPositionId>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674086</portrait>
+        <iconSet size="1" mimeType="image/png">i/674085.png</iconSet>
+        <skillList>
+            <skill>Accurate</skill>
+            <skill value="4">Loner</skill>
+            <skill>Nerves of Steel</skill>
+            <skill>Pass</skill>
+            <skill>Safe Pass</skill>
+            <skill>Sure Hands</skill>
+            <skill>Two for One</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39557">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Willow Rosebark</name>
+        <shorthand>WR</shorthand>
+        <type>Star</type>
+        <gender>female</gender>
+        <cost>150000</cost>
+        <movement>5</movement>
+        <strength>4</strength>
+        <agility>3</agility>
+        <passing>6</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674089</portrait>
+        <iconSet size="1" mimeType="image/png">i/674090.png</iconSet>
+        <skillList>
+            <skill>Dauntless</skill>
+            <skill>Indomitable</skill>
+            <skill value="4">Loner</skill>
+            <skill>Side Step</skill>
+            <skill>Thick Skull</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="39558">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Zolcath the Zoat</name>
+        <shorthand>ZZ</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>230000</cost>
+        <movement>5</movement>
+        <strength>5</strength>
+        <agility>4</agility>
+        <passing>5</passing>
+        <armour>10</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/674091</portrait>
+        <iconSet size="1" mimeType="image/png">i/674092.png</iconSet>
+        <skillList>
+            <skill>"Excuse Me, Are You a Zoat?"</skill>
+            <skill>Disturbing Presence</skill>
+            <skill>Juggernaut</skill>
+            <skill value="4">Loner</skill>
+            <skill value="1">Mighty Blow</skill>
+            <skill>Prehensile Tail</skill>
+            <skill>Regeneration</skill>
+            <skill>Sure Feet</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="44743">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Akhorne the Squirrel</name>
+        <shorthand>SQ</shorthand>
+        <type>Star</type>
+        <gender>neutral</gender>
+        <cost>80000</cost>
+        <movement>7</movement>
+        <strength>1</strength>
+        <agility>2</agility>
+        <passing></passing>
+        <armour>6</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/682637</portrait>
+        <iconSet size="1" mimeType="image/png">i/682638.png</iconSet>
+        <skillList>
+            <skill>Blind Rage</skill>
+            <skill>Claws</skill>
+            <skill>Dauntless</skill>
+            <skill>Dodge</skill>
+            <skill>Frenzy</skill>
+            <skill>Jump Up</skill>
+            <skill value="4">Loner</skill>
+            <skill>No Hands</skill>
+            <skill>Side Step</skill>
+            <skill>Stunty</skill>
+            <skill>Titchy</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="54496">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Kiroth Krakeneye</name>
+        <shorthand>KK</shorthand>
+        <type>Star</type>
+        <gender>male</gender>
+        <cost>160000</cost>
+        <movement>7</movement>
+        <strength>3</strength>
+        <agility>2</agility>
+        <passing>3</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/720865</portrait>
+        <iconSet size="1" mimeType="image/png">i/720866.png</iconSet>
+        <skillList>
+            <skill>Black Ink</skill>
+            <skill>Disturbing Presence</skill>
+            <skill>Foul Appearance</skill>
+            <skill value="4">Loner</skill>
+            <skill>On the Ball</skill>
+            <skill>Tackle</skill>
+            <skill>Tentacles</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords/>
+    </position>
+    <position id="47520">
+        <race>Special</race>
+        <quantity>1</quantity>
+        <name>Josef Bugman</name>
+        <shorthand>JB</shorthand>
+        <type>Infamous Staff</type>
+        <gender>male</gender>
+        <cost>100000</cost>
+        <movement>5</movement>
+        <strength>3</strength>
+        <agility>3</agility>
+        <passing>6</passing>
+        <armour>9</armour>
+        <undead>false</undead>
+        <thrall>false</thrall>
+        <replacesPosition></replacesPosition>
+        <portrait>i/699505</portrait>
+        <iconSet size="1" mimeType="image/png">i/694538.png</iconSet>
+        <skillList>
+            <skill>Bugman's XXXXXX</skill>
+            <skill>Keen Player</skill>
+            <skill value="5">Loner</skill>
+            <skill>Tackle</skill>
+            <skill>Thick Skull</skill>
+            <skill>Wrestle</skill>
+        </skillList>
+        <skillCategoryList/>
+        <keywords>
+            <keyword>dwarf</keyword>
+        </keywords>
+    </position>
+</roster>

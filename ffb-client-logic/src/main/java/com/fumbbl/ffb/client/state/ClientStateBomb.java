@@ -132,6 +132,8 @@ public class ClientStateBomb extends ClientState {
 
 	@Override
 	public void leaveState() {
+		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
+		getClient().getUserInterface().getFieldComponent().refresh();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 	}

@@ -50,7 +50,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private PlayerAction fDefenderAction;
 	private String fThrowerId;
 	private PlayerAction fThrowerAction;
-	private final List<String> rolledOver;
 	private long fTurnTime; // no notification for observers
 	private long fGameTime; // no notification for observers
 	private boolean fTimeoutPossible;
@@ -95,7 +94,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		fOptions = new GameOptions(this);
 		rules = new GameRules(applicationSource, manager);
-		rolledOver = new ArrayList<>();
 	}
 
 	public void setId(long pId) {
@@ -595,20 +593,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		teamState = TeamState.SKELETON;
 	}
 
-	public void clearRolledOver() {
-		rolledOver.clear();
-	}
-
-	public void rollOver(Player<?> player) {
-		if (player != null) {
-			rolledOver.add(player.getId());
-		}
-	}
-
-	public boolean didRollOver(Player<?> player) {
-		return player != null && rolledOver.contains(player.getId());
-	}
-
 	// transformation
 
 	public Game transform() {
@@ -660,7 +644,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		transformedGame.concededLegally = concededLegally;
 		transformedGame.teamState = teamState;
-		transformedGame.rolledOver.addAll(rolledOver);
 		return transformedGame;
 
 	}
@@ -708,8 +691,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 			IJsonOption.DIALOG_PARAMETER.addTo(jsonObject, fDialogParameter.toJsonValue());
 		}
 		IJsonOption.CONCEDED_LEGALLY.addTo(jsonObject, concededLegally);
-
-		IJsonOption.ROLLED_OVER.addTo(jsonObject, rolledOver);
 
 		return jsonObject;
 
@@ -778,9 +759,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 		if (IJsonOption.LAST_DEFENDER_ID.isDefinedIn(jsonObject)) {
 			lastDefenderId = IJsonOption.LAST_DEFENDER_ID.getFrom(source, jsonObject);
-		}
-		if (IJsonOption.ROLLED_OVER.isDefinedIn(jsonObject)) {
-			rolledOver.addAll(Arrays.asList(IJsonOption.ROLLED_OVER.getFrom(source, jsonObject)));
 		}
 		return this;
 

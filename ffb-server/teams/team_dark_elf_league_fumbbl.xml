@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<team id="1084086" status="1">
+    <coach>Jeffro</coach>
+    <name>Buffalo Chill</name>
+    <rosterId>4959</rosterId>
+    <reRolls>6</reRolls>
+    <dedicatedFans>3</dedicatedFans>
+    <apothecaries>1</apothecaries>
+    <cheerleaders>0</cheerleaders>
+    <assistantCoaches>0</assistantCoaches>
+    <rating>284</rating>
+    <teamValue>2840000</teamValue>
+    <currentTeamValue>2840000</currentTeamValue>
+    <strength>284</strength>
+    <division>5</division>
+    <treasury>320000</treasury>
+    <tournamentWeight>2840000</tournamentWeight>
+    <specialRules>
+        <rule>Elven Kingdoms League</rule>
+    </specialRules>
+    <record>
+        <form>WDLDW</form>
+        <wins>21</wins>
+        <ties>11</ties>
+        <losses>19</losses>
+    </record>
+    <lastMatch date="2024-04-03" opponent="1084014">4535967</lastMatch>
+    <baseIconPath>https://fumbbl.com/</baseIconPath>
+    <logo>i/682636</logo>
+    <player status="Active" nr="1" id="14940719">
+        <name>Julio Jones [BAMA]</name>
+        <gender>male</gender>
+        <positionId>37736</positionId>
+        <position>Blitzer</position>
+        <portrait>i/674585.jpg</portrait>
+        <playerStatistics currentSpps="152">
+            <completions>0</completions>
+            <touchdowns>30</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>3</casualties>
+            <mvps>4</mvps>
+            <passing>0</passing>
+            <rushing>504</rushing>
+            <blocks>74</blocks>
+            <fouls>0</fouls>
+            <games>51</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+AG</skill>
+            <skill>+MA</skill>
+            <skill>Dodge</skill>
+            <skill>Leap</skill>
+            <skill>Side Step</skill>
+            <skill>Sprint</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="2" id="14940720">
+        <name>Tom Mack [CIN]</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/674572.jpg</portrait>
+        <playerStatistics currentSpps="81">
+            <completions>1</completions>
+            <touchdowns>7</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>15</casualties>
+            <mvps>6</mvps>
+            <passing>0</passing>
+            <rushing>94</rushing>
+            <blocks>259</blocks>
+            <fouls>0</fouls>
+            <games>48</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+AG</skill>
+            <skill>+MA</skill>
+            <skill>+ST</skill>
+            <skill>Block</skill>
+            <skill>Defensive</skill>
+            <skill>Dodge</skill>
+        </skillList>
+        <injuryList>
+            <injury>Neck Injury (-AG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="3" id="15327703">
+        <name>Isaiah Spiller [A&amp;M]</name>
+        <gender>male</gender>
+        <positionId>37736</positionId>
+        <position>Blitzer</position>
+        <portrait>i/674577.jpg</portrait>
+        <playerStatistics currentSpps="54">
+            <completions>0</completions>
+            <touchdowns>22</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>5</casualties>
+            <mvps>2</mvps>
+            <passing>0</passing>
+            <rushing>321</rushing>
+            <blocks>150</blocks>
+            <fouls>1</fouls>
+            <games>33</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+MA</skill>
+            <skill>+ST</skill>
+            <skill>Defensive</skill>
+            <skill>Dodge</skill>
+            <skill>Side Step</skill>
+            <skill>Sure Hands</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Broken Arm (-PA)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="4" id="15969889">
+        <name>Bryce Paup</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/727633.jpg</portrait>
+        <playerStatistics currentSpps="1">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>12</blocks>
+            <fouls>0</fouls>
+            <games>8</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Wrestle</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="5" id="14940734">
+        <name>Dasher Geaux [CIN]</name>
+        <gender>male</gender>
+        <positionId>37736</positionId>
+        <position>Blitzer</position>
+        <portrait>i/674579.jpg</portrait>
+        <playerStatistics currentSpps="29">
+            <completions>0</completions>
+            <touchdowns>5</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>23</casualties>
+            <mvps>4</mvps>
+            <passing>0</passing>
+            <rushing>25</rushing>
+            <blocks>189</blocks>
+            <fouls>0</fouls>
+            <games>44</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Defensive</skill>
+            <skill>Dodge</skill>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="6" id="16267215">
+        <name>Bruce Smith</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/696669.jpg</portrait>
+        <playerStatistics currentSpps="4">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>1</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="7" id="15685048">
+        <name>Donovan Lackus [TT]</name>
+        <gender>male</gender>
+        <positionId>37736</positionId>
+        <position>Blitzer</position>
+        <portrait>i/674575.jpg</portrait>
+        <playerStatistics currentSpps="18">
+            <completions>0</completions>
+            <touchdowns>1</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>10</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>93</blocks>
+            <fouls>0</fouls>
+            <games>18</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Dodge</skill>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+            <skill>Tackle</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="8" id="16189290">
+        <name>The Ghost of Steve Tasker</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/674587.jpg</portrait>
+        <playerStatistics currentSpps="0">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>1</blocks>
+            <fouls>1</fouls>
+            <games>5</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList>
+            <injury>Smashed Knee (-MA)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="9" id="15195269">
+        <name>Baylon Spector</name>
+        <gender>nonbinary</gender>
+        <positionId>37737</positionId>
+        <position>Assassin</position>
+        <portrait>i/674574.jpg</portrait>
+        <playerStatistics currentSpps="4">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>6</mvps>
+            <passing>0</passing>
+            <rushing>13</rushing>
+            <blocks>48</blocks>
+            <fouls>37</fouls>
+            <games>33</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Dirty Player</skill>
+            <skill>Kick</skill>
+            <skill>Sneaky Git</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Dislocated Shoulder (-ST)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="10" id="15390099">
+        <name>Khalil Shakir</name>
+        <gender>male</gender>
+        <positionId>37737</positionId>
+        <position>Assassin</position>
+        <portrait>i/674580.jpg</portrait>
+        <playerStatistics currentSpps="5">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>3</mvps>
+            <passing>0</passing>
+            <rushing>9</rushing>
+            <blocks>41</blocks>
+            <fouls>2</fouls>
+            <games>30</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Kick</skill>
+            <skill>Sure Hands</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Serious Injury (NI)</injury>
+            <injury>Smashed Knee (-MA)</injury>
+            <injury>Broken Arm (-PA)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="11" id="15936567">
+        <name>Reggie McKenzie</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/727632.jpg</portrait>
+        <playerStatistics currentSpps="1">
+            <completions>1</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>1</passing>
+            <rushing>1</rushing>
+            <blocks>14</blocks>
+            <fouls>0</fouls>
+            <games>10</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Tackle</skill>
+            <skill>Wrestle</skill>
+        </skillList>
+        <injuryList>
+            <injury>Serious Injury (NI)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="12" id="16141720">
+        <name>Bitch Trumissky</name>
+        <gender>male</gender>
+        <positionId>37735</positionId>
+        <position>Runner</position>
+        <portrait>i/674583.jpg</portrait>
+        <playerStatistics currentSpps="1">
+            <completions>1</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>2</passing>
+            <rushing>16</rushing>
+            <blocks>0</blocks>
+            <fouls>0</fouls>
+            <games>6</games>
+        </playerStatistics>
+        <skillList>
+            <skill>On the Ball</skill>
+            <skill>Safe Pass</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="13" id="15404492">
+        <name>Doug Flutie</name>
+        <gender>male</gender>
+        <positionId>37735</positionId>
+        <position>Runner</position>
+        <portrait>i/674586.jpg</portrait>
+        <playerStatistics currentSpps="1">
+            <completions>10</completions>
+            <touchdowns>1</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>0</mvps>
+            <passing>16</passing>
+            <rushing>119</rushing>
+            <blocks>10</blocks>
+            <fouls>1</fouls>
+            <games>32</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Cloud Burster</skill>
+            <skill>On the Ball</skill>
+            <skill>Pass</skill>
+        </skillList>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="14" id="16139828">
+        <name>Max Anders [MU]</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/727630.jpg</portrait>
+        <playerStatistics currentSpps="8">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>1</casualties>
+            <mvps>0</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>11</blocks>
+            <fouls>0</fouls>
+            <games>5</games>
+        </playerStatistics>
+        <skillList>
+            <skill>Block</skill>
+            <skill>Guard</skill>
+            <skill>Mighty Blow</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+        </injuryList>
+    </player>
+    <player status="Active" nr="15" id="16166320">
+        <name>Jame Gumb</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/270759.jpg</portrait>
+        <playerStatistics currentSpps="11">
+            <completions>0</completions>
+            <touchdowns>0</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>0</casualties>
+            <mvps>1</mvps>
+            <passing>0</passing>
+            <rushing>0</rushing>
+            <blocks>2</blocks>
+            <fouls>3</fouls>
+            <games>7</games>
+        </playerStatistics>
+        <skillList/>
+        <injuryList/>
+    </player>
+    <player status="Active" nr="16" id="15351323">
+        <name>Doug Cuzco [MIA]</name>
+        <gender>male</gender>
+        <positionId>37734</positionId>
+        <position>Dark Elf Lineman</position>
+        <portrait>i/674571.jpg</portrait>
+        <playerStatistics currentSpps="6">
+            <completions>0</completions>
+            <touchdowns>6</touchdowns>
+            <interceptions>0</interceptions>
+            <casualties>5</casualties>
+            <mvps>3</mvps>
+            <passing>0</passing>
+            <rushing>28</rushing>
+            <blocks>141</blocks>
+            <fouls>0</fouls>
+            <games>32</games>
+        </playerStatistics>
+        <skillList>
+            <skill>+ST</skill>
+            <skill>Block</skill>
+            <skill>Defensive</skill>
+            <skill>Guard</skill>
+        </skillList>
+        <injuryList>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Seriously Hurt (MNG)</injury>
+            <injury>Broken Arm (-PA)</injury>
+        </injuryList>
+    </player>
+</team>

@@ -135,6 +135,7 @@ public final class StepEndPassing extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
 		game.getFieldModel().setRangeRuler(null);
+		game.getFieldModel().setOutOfBounds(false);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()));
@@ -207,7 +208,7 @@ public final class StepEndPassing extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer())
 			&& actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
 			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() && !(game.getFieldModel().getPlayerState(game.getThrower()).isRooted() && UtilPlayer.hasBall(game, game.getThrower())))
+				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust())
 				|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() || fPassFumble);
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {

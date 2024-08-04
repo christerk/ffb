@@ -241,15 +241,12 @@ public class PlayerDetailComponent extends JPanel {
 			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
 				.forName(Mechanic.Type.STAT.name());
 
-			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			boolean moveIsRed = false;
-			int movement = getPlayer().getMovementWithModifiers()
-				- findNewStatDecreases(playerResult, InjuryAttribute.MA);
+			int movement = getPlayer().getMovementWithModifiers(game);
 			int moveLeft = movement;
-			int strength = getPlayer().getStrengthWithModifiers()
-				- findNewStatDecreases(playerResult, InjuryAttribute.ST);
-			int agility = mechanic.applyInGameAgilityInjury(getPlayer().getAgilityWithModifiers(), findNewStatDecreases(playerResult, InjuryAttribute.AG));
-			int armour = getPlayer().getArmourWithModifiers() - findNewStatDecreases(playerResult, InjuryAttribute.AV);
+			int strength = getPlayer().getStrengthWithModifiers(game);
+			int agility = getPlayer().getAgilityWithModifiers(game);
+			int armour = getPlayer().getArmourWithModifiers(game);
 			ActingPlayer actingPlayer = getSideBar().getClient().getGame().getActingPlayer();
 			if (fPlayer == actingPlayer.getPlayer()) {
 				moveLeft -= actingPlayer.getCurrentMove();
@@ -286,10 +283,7 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
-				int passing = getPlayer().getPassingWithModifiers();
-				if (passing > 0) {
-					passing += findNewStatDecreases(playerResult, InjuryAttribute.PA);
-				}
+				int passing = getPlayer().getPassingWithModifiers(game);
 				int passingModifier = passing - position.getPassing();
 				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
@@ -301,21 +295,6 @@ public class PlayerDetailComponent extends JPanel {
 
 		}
 
-	}
-
-	private int findNewStatDecreases(PlayerResult pPlayerResult, InjuryAttribute pInjuryAttribute) {
-		int decreases = 0;
-		if (pPlayerResult != null) {
-			if ((pPlayerResult.getSeriousInjury() != null)
-				&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
-				decreases++;
-			}
-			if ((pPlayerResult.getSeriousInjuryDecay() != null)
-				&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
-				decreases++;
-			}
-		}
-		return decreases;
 	}
 
 	private int findNigglings() {

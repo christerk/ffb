@@ -136,7 +136,6 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_ADD_PLAYER_MARKER:
 				PlayerMarker marker = (PlayerMarker) pModelChange.getValue();
-				pGame.getApplicationSource().logDebug(pGame.getId(), "Processing model change: " + (marker != null ? marker.toString() : "null"));
 				pGame.getFieldModel().add(marker);
 				return true;
 			case FIELD_MODEL_ADD_PRAYER:
@@ -218,6 +217,9 @@ public class ModelChangeProcessor {
 				return true;
 			case FIELD_MODEL_SET_BOMB_MOVING:
 				pGame.getFieldModel().setBombMoving((Boolean) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_SET_OUT_OF_BOUNDS:
+				pGame.getFieldModel().setOutOfBounds((boolean) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
 				pGame.getFieldModel().setPlayerCoordinate(pGame.getPlayerById(pModelChange.getKey()),

@@ -449,8 +449,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			}
 		}
 
-		boolean awayGainsReRoll = (totalAway > totalHome);
-		if (awayGainsReRoll) {
+		boolean awayGainsPrayer = (totalAway > totalHome);
+		if (awayGainsPrayer) {
 			teamId = game.getTeamAway().getId();
 			List<Integer> availablePrayerRolls = prayerFactory.availablePrayerRolls(inducementsAway, inducementsHome);
 			prayerAvailable = !availablePrayerRolls.isEmpty();

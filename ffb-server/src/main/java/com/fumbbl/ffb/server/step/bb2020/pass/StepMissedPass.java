@@ -192,6 +192,7 @@ public class StepMissedPass extends AbstractStep {
 		}
 		game.setPassCoordinate(lastValidCoordinate);
 		state.setLandingOutOfBounds(lastValidCoordinate != coordinateEnd);
+		game.getFieldModel().setOutOfBounds(state.isLandingOutOfBounds());
 		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);
 
 		game.getFieldModel().setRangeRuler(rangeRuler);

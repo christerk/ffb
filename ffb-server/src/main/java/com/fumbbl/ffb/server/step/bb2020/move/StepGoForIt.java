@@ -45,6 +45,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -187,7 +188,11 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 	private void failGfi() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.isJumping() && !fSecondGoForIt && actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1) {
+		if (actingPlayer.isJumping()
+			&& !fSecondGoForIt
+			&& actingPlayer.getCurrentMove() > actingPlayer.getPlayer().getMovementWithModifiers() + 1
+			&& !UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.failedRushForJumpAlwaysLandsInTargetSquare)
+		) {
 			publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, null));
 			game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), moveStart);
 		}
@@ -236,7 +241,7 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				setReRolledAction(ReRolledActions.RUSH);
 				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
 
-				if (gfiRerollSource != null && TurnMode.REGULAR == game.getTurnMode()) {
+				if (TurnMode.REGULAR == game.getTurnMode() && gfiRerollSource != null) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
 						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
@@ -247,7 +252,12 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					usingModifierIgnoringSkill = null;
 					return rush();
 				} else {
-					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.RUSH, minimumRoll, false, skill)) {
+					Set<Skill> ignore = new HashSet<>();
+					if (gfiRerollSource != null) {
+						UtilCards.getSkillForReRollSource(actingPlayer.getPlayer(), gfiRerollSource, ReRolledActions.RUSH).ifPresent(ignore::add);
+					}
+					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer,
+						ReRolledActions.RUSH, minimumRoll, false, skill, ignore)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					} else {
 						return ActionStatus.FAILURE;

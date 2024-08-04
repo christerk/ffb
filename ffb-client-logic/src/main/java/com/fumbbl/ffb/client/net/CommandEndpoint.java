@@ -49,11 +49,13 @@ public class CommandEndpoint {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig unused) {
 		fSession = session;
 	}
 
+	@SuppressWarnings("unused")
 	@OnMessage
 	public void onBinary(byte[] buf, boolean unused, Session ignored) {
 		this.onMessage(new String(buf, StandardCharsets.UTF_8));
@@ -67,9 +69,33 @@ public class CommandEndpoint {
 		}
 
 		JsonValue jsonValue = JsonValue
-				.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
+			.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
-		handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+		synchronized (this) {
+			if (fClient.getGame().getRules().isInitialized()) {
+				handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+			} else {
+				boolean repeat = true;
+				int retries = 3;
+				while (repeat && retries > 0) {
+					try {
+						handleNetCommand(fNetCommandFactory.forJsonValue(fClient.getGame().getRules(), jsonValue));
+						repeat = false;
+					} catch (NullPointerException npe) {
+						if (--retries > 0) {
+							fClient.logError(0, "Retrying after npe");
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+								// ignored
+							}
+						} else {
+							fClient.logWithOutGameId(npe);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@OnClose

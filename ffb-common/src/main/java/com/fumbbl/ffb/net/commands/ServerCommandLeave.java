@@ -9,24 +9,31 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class ServerCommandLeave extends ServerCommand {
 
 	private String fCoach;
 	private ClientMode fClientMode;
-	private int fSpectators;
+	private int spectatorCount;
+	private List<String> spectators;
 
 	public ServerCommandLeave() {
 		super();
+		spectators = new ArrayList<>();
 	}
 
-	public ServerCommandLeave(String pCoach, ClientMode pClientMode, int pSpectators) {
+	public ServerCommandLeave(String pCoach, ClientMode pClientMode, List<String> pSpectators) {
+		this();
 		fCoach = pCoach;
 		fClientMode = pClientMode;
-		fSpectators = pSpectators;
+		spectators = pSpectators;
+		spectatorCount = pSpectators.size();
 	}
 
 	public NetCommandId getId() {
@@ -41,8 +48,12 @@ public class ServerCommandLeave extends ServerCommand {
 		return fClientMode;
 	}
 
-	public int getSpectators() {
-		return fSpectators;
+	public int getSpectatorCount() {
+		return spectatorCount;
+	}
+
+	public List<String> getSpectators() {
+		return spectators;
 	}
 
 	public boolean isReplayable() {
@@ -53,7 +64,7 @@ public class ServerCommandLeave extends ServerCommand {
 	public FactoryContext getContext() {
 		return FactoryContext.APPLICATION;
 	}
-	
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -62,7 +73,8 @@ public class ServerCommandLeave extends ServerCommand {
 		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
 		IJsonOption.COACH.addTo(jsonObject, fCoach);
 		IJsonOption.CLIENT_MODE.addTo(jsonObject, fClientMode);
-		IJsonOption.SPECTATORS.addTo(jsonObject, fSpectators);
+		IJsonOption.SPECTATORS.addTo(jsonObject, spectatorCount);
+		IJsonOption.SPECTATOR_NAMES.addTo(jsonObject, spectators);
 		return jsonObject;
 	}
 
@@ -72,7 +84,12 @@ public class ServerCommandLeave extends ServerCommand {
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		fCoach = IJsonOption.COACH.getFrom(source, jsonObject);
 		fClientMode = (ClientMode) IJsonOption.CLIENT_MODE.getFrom(source, jsonObject);
-		fSpectators = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
+		if (IJsonOption.SPECTATOR_NAMES.isDefinedIn(jsonObject)) {
+			Collections.addAll(spectators, IJsonOption.SPECTATOR_NAMES.getFrom(source, jsonObject));
+			spectatorCount = spectators.size();
+		} else {
+			spectatorCount = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

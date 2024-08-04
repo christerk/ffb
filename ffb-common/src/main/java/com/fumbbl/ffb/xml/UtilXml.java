@@ -181,58 +181,19 @@ public class UtilXml {
 
 	public static boolean getBooleanAttribute(Attributes pXmlAttributes, String pAttribute) {
 		String value = getStringAttribute(pXmlAttributes, pAttribute);
-		return (value != null) ? Boolean.parseBoolean(value) : false;
+		return Boolean.parseBoolean(value);
 	}
 
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, String[] pValue) {
 		addAttribute(pXmlAttributes, pAttribute, ArrayTool.join(pValue, ","));
 	}
 
-	public static String[] getStringArrayAttribute(Attributes pXmlAttributes, String pAttribute) {
-		String[] result = null;
-		String value = getStringAttribute(pXmlAttributes, pAttribute);
-		if (value != null) {
-			result = value.split(",");
-		}
-		return result;
-	}
-
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, int[] pValue) {
 		addAttribute(pXmlAttributes, pAttribute, ArrayTool.join(pValue, ","));
 	}
 
-	public static int[] getIntArrayAttribute(Attributes pXmlAttributes, String pAttribute) {
-		return getIntArrayAttribute(pXmlAttributes, pAttribute, 0);
-	}
-
-	private static int[] getIntArrayAttribute(Attributes pXmlAttributes, String pAttribute, int pDefault) {
-		int[] result = null;
-		String value = getStringAttribute(pXmlAttributes, pAttribute);
-		if (value != null) {
-			String[] intValues = value.split(",");
-			result = new int[intValues.length];
-			for (int i = 0; i < intValues.length; i++) {
-				result[i] = (intValues[i] != null) ? Integer.parseInt(intValues[i]) : pDefault;
-			}
-		}
-		return result;
-	}
-
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, boolean[] pValue) {
 		addAttribute(pXmlAttributes, pAttribute, ArrayTool.join(pValue, ","));
-	}
-
-	public static boolean[] getBooleanArrayAttribute(Attributes pXmlAttributes, String pAttribute) {
-		boolean[] result = null;
-		String value = getStringAttribute(pXmlAttributes, pAttribute);
-		if (value != null) {
-			String[] booleanValues = value.split(",");
-			result = new boolean[booleanValues.length];
-			for (int i = 0; i < booleanValues.length; i++) {
-				result[i] = Boolean.parseBoolean(booleanValues[i]);
-			}
-		}
-		return result;
 	}
 
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, FieldCoordinate pValue) {
@@ -240,15 +201,6 @@ public class UtilXml {
 			return;
 		}
 		addAttribute(pXmlAttributes, pAttribute, new int[] { pValue.getX(), pValue.getY() });
-	}
-
-	public static FieldCoordinate getFieldCoordinateAttribute(Attributes pXmlAttributes, String pAttribute) {
-		FieldCoordinate fieldCoordinate = null;
-		int[] xyValues = getIntArrayAttribute(pXmlAttributes, pAttribute, -1);
-		if ((xyValues != null) && (xyValues.length == 2)) {
-			fieldCoordinate = new FieldCoordinate(xyValues[0], xyValues[1]);
-		}
-		return fieldCoordinate;
 	}
 
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, Date pTimestamp) {

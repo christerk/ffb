@@ -216,6 +216,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		boolean endTurn = UtilPlayer.hasBall(game, game.getDefender()) && !lashedOutAgainstOpponent;
 		StepParameterKey playerStateKey = null;
 		String label = null;
+		StepParameterKey[] additionalStateKeys = null;
 
 		if (endTurn) {
 			actingPlayer.setStandingUp(false);
@@ -237,6 +238,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 					step.publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
 					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
+					additionalStateKeys = new StepParameterKey[] {StepParameterKey.OLD_DEFENDER_STATE};
 				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction() == BLOCK && action == null)) {
 					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
@@ -246,7 +248,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		}
 
 		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-			new DropPlayerContext(injuryResult, endTurn, true, label, game.getDefenderId(), ApothecaryMode.ANIMAL_SAVAGERY, false, playerStateKey)));
+			new DropPlayerContext(injuryResult, endTurn, true, label, game.getDefenderId(), ApothecaryMode.ANIMAL_SAVAGERY, false, playerStateKey, additionalStateKeys)));
 
 	}
 

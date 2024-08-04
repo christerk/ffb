@@ -177,6 +177,8 @@ public class ClientStatePass extends ClientStateMove {
 
 	@Override
 	public void leaveState() {
+		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
+		getClient().getUserInterface().getFieldComponent().refresh();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 	}

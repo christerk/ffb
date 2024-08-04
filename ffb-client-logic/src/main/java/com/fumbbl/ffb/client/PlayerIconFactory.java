@@ -35,7 +35,16 @@ import java.awt.image.BufferedImage;
  */
 public class PlayerIconFactory {
 
-	public static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
+
+	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty) {
+		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+		IconCache iconCache = client.getUserInterface().getIconCache();
+
+		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty), maxIconSize);
+	}
+
+	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
 		if (pIcon != null) {
@@ -333,7 +342,6 @@ public class PlayerIconFactory {
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
 			String homeText = playerMarker.getHomeText();
-			pClient.logDebug(0, Thread.currentThread().getName() + " marking " + pPlayer.getId() + " with " + homeText);
 			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer);
 		}
 

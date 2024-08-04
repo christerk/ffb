@@ -23,6 +23,8 @@ public abstract class StatsMechanic implements Mechanic {
 
 	public abstract StatsDrawingModifier agilityModifier(int modifier);
 
+	public abstract boolean improvementIncreasesValue();
+
 	public abstract int applyInGameAgilityInjury(int agility, int decreases);
 
 	protected int reduceArmour(InjuryContext context, int armour, int reductionValue) {

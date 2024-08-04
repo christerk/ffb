@@ -11,7 +11,9 @@ public interface IServerProperty {
 	String SERVER_BASE_DIR = "server.base.dir";
 
 	String SERVER_LOG_FILE = "server.log.file";
+	String SERVER_LOG_FOLDER = "server.log.folder";
 	String SERVER_LOG_LEVEL = "server.log.level";
+	String SERVER_LOG_FILE_SPLIT = "server.log.file.split";
 	String SERVER_SPECTATOR_COOLDOWN = "server.spectator.cooldown";
 	String SERVER_COMMAND_COMPRESSION = "server.command.compression";
 	String SERVER_TEST = "server.test";

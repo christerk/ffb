@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.inducements.bb2020.prayers;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
@@ -35,4 +36,10 @@ public class TreacherousTrapdoorHandler extends PrayerHandler {
 	public void removeEffectInternal(GameState gameState, Team team) {
 		gameState.getGame().getFieldModel().clearTrapdoors();
 	}
+
+	@Override
+	AnimationType animationType() {
+		return AnimationType.PRAYER_TREACHEROUS_TRAPDOOR;
+	}
+
 }

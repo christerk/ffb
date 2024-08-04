@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.Pair;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
@@ -38,7 +39,6 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
-import javafx.util.Pair;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -167,8 +167,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					}
 					Pair<Integer, Boolean> dieCountWithAddInfo = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
 						game.getDefender(), false, successfulDauntless, doubleTargetStrength, addDieSkill.isPresent());
-					fNrOfDice = dieCountWithAddInfo.getKey();
-					if (addDieSkill.isPresent() && dieCountWithAddInfo.getValue()) {
+					fNrOfDice = dieCountWithAddInfo.getLeft();
+					if (addDieSkill.isPresent() && dieCountWithAddInfo.getRight()) {
 						actingPlayer.markSkillUsed(addDieSkill.get());
 					}
 

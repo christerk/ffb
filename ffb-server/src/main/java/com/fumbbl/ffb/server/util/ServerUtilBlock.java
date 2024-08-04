@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.util;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.Pair;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -15,7 +16,6 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
-import javafx.util.Pair;
 
 public class ServerUtilBlock {
 
@@ -92,7 +92,7 @@ public class ServerUtilBlock {
 							.anyMatch(skill -> skill.hasSkillProperty(NamedProperties.canAddBlockDie));
 
 						nrOfDice = findNrOfBlockDice(pGame, actingPlayer.getPlayer(), pPlayer,
-							usingMultiBlock, false, false, addBlockDie).getKey();
+							usingMultiBlock, false, false, addBlockDie).getLeft();
 					}
 				}
 				FieldCoordinate coordinateOpponent = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -127,7 +127,7 @@ public class ServerUtilBlock {
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
 																			boolean usingMultiBlock, boolean successfulDauntless) {
 
-		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false).getKey();
+		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false).getLeft();
 	}
 
 	public static Pair<Integer, Boolean> findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,

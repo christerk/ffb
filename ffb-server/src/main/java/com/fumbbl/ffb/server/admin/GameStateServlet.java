@@ -39,6 +39,7 @@ public class GameStateServlet extends HttpServlet {
 	public static final String SET = "set";
 	public static final String AUTO = "auto";
 	public static final String RESULT = "result";
+	public static final String RESET = "reset";
 
 	private static final String _STATUS_OK = "ok";
 	private static final String _STATUS_FAIL = "fail";
@@ -54,6 +55,7 @@ public class GameStateServlet extends HttpServlet {
 
 	private final FantasyFootballServer fServer;
 	private String fLastChallenge;
+	private final GameStateService gameStateService = new GameStateService();
 
 	public GameStateServlet(FantasyFootballServer pServer) {
 		fServer = pServer;
@@ -118,6 +120,8 @@ public class GameStateServlet extends HttpServlet {
 					response = handleGet(parameters, pResponse);
 				} else if (RESULT.equals(command)) {
 					response = handleResult(parameters, pResponse);
+				} else if (RESET.equals(command)) {
+					response = handleResetStepStack(parameters, pResponse);
 				} else {
 					JsonObject someObject = new JsonObject();
 					someObject.add("message", "method '" + command + "' not found");
@@ -227,6 +231,27 @@ public class GameStateServlet extends HttpServlet {
 		}
 
 		return jsonObject.toString();
+	}
+
+	private String handleResetStepStack(Map<String, String[]> pParameters, HttpServletResponse pResponse) {
+
+		GameState gameState = getGameState(pParameters);
+
+		JsonObject jsonObject = new JsonObject();
+
+
+		if (gameState == null) {
+			String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
+
+			jsonObject.add("message", "Game '" + gameIdString + "' not found");
+			pResponse.setStatus(404);
+		} else {
+			jsonObject.add("message", "Game '" + gameState.getId() + "' reset");
+			gameStateService.resetStepStack(gameState);
+		}
+
+		return jsonObject.toString();
+
 	}
 
 	private void handleChallenge(HttpServletResponse pResponse) throws IOException {

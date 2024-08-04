@@ -25,13 +25,13 @@ public class DialogPenaltyShootoutHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		if (ClientMode.PLAYER == getClient().getMode()) {
+		if (ClientMode.PLAYER.equals(getClient().getMode())) {
 			getClient().getCommunication().sendConfirm();
 		}
 	}
 
 	@Override
 	public boolean preventsExit() {
-		return getDialog() != null && getDialog().isVisible();
+		return getDialog() != null && getDialog().isVisible() && ClientMode.PLAYER.equals(getClient().getMode());
 	}
 }

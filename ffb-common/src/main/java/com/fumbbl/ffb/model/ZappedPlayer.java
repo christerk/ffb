@@ -119,11 +119,6 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	public boolean removeSkill(Skill pSkill) {
-		return false;
-	}
-
-	@Override
 	public Skill[] getSkills() {
 		return getPosition().getSkills();
 	}
@@ -197,11 +192,6 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	@Override
 	public String getId() {
 		return originalPlayer.getId();
-	}
-
-	@Override
-	public void setId(String pId) {
-		// NOOP
 	}
 
 	@Override
@@ -284,7 +274,7 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
-	protected Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
+	public Map<String, Set<TemporaryStatModifier>> getTemporaryModifiers() {
 		return originalPlayer.getTemporaryModifiers();
 	}
 
