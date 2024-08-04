@@ -80,6 +80,7 @@ public class FieldModel implements IJsonSerializable {
 	private final Set<FieldCoordinate> multiBlockTargetCoordinates = new HashSet<>();
 	private final Set<FieldCoordinate> blockedForTricksterCoordinates = new HashSet<>();
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
+	private boolean outOfBounds;
 
 	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
 	// reconstructed
@@ -204,7 +205,7 @@ public class FieldModel implements IJsonSerializable {
 		List<Player<?>> players = null;
 		if (pPlayerPosition != null) {
 			List<String> playersAtCoordinate = fPlayerIdByCoordinate.get(pPlayerPosition);
-			if (playersAtCoordinate != null && playersAtCoordinate.size() > 0) {
+			if (playersAtCoordinate != null && !playersAtCoordinate.isEmpty()) {
 				players = new ArrayList<>();
 				for (String playerId : playersAtCoordinate) {
 					players.add(getGame().getPlayerById(playerId));
@@ -284,7 +285,7 @@ public class FieldModel implements IJsonSerializable {
 	public FieldCoordinate[] getPlayerCoordinates() {
 		List<FieldCoordinate> coordinates = new ArrayList<>();
 		for (FieldCoordinate c : fPlayerIdByCoordinate.keySet()) {
-			if (fPlayerIdByCoordinate.get(c).size() > 0) {
+			if (!fPlayerIdByCoordinate.get(c).isEmpty()) {
 				coordinates.add(c);
 			}
 		}
@@ -933,6 +934,18 @@ public class FieldModel implements IJsonSerializable {
 
 	}
 
+	public void setOutOfBounds(boolean outOfBounds) {
+		if (this.outOfBounds == outOfBounds) {
+			return;
+		}
+		this.outOfBounds = outOfBounds;
+		notifyObservers(ModelChangeId.FIELD_MODEL_SET_OUT_OF_BOUNDS, null, outOfBounds);
+	}
+
+	public boolean isOutOfBounds() {
+		return outOfBounds;
+	}
+	
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
@@ -1029,6 +1042,8 @@ public class FieldModel implements IJsonSerializable {
 		JsonArray trapDoorArray = new JsonArray();
 		trapDoors.stream().map(TrapDoor::toJsonValue).forEach(trapDoorArray::add);
 		IJsonOption.TRAP_DOORS.addTo(jsonObject, trapDoorArray);
+
+		IJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, outOfBounds);
 
 		return jsonObject;
 
@@ -1134,6 +1149,10 @@ public class FieldModel implements IJsonSerializable {
 
 		if (trapDoorArray != null) {
 			trapDoorArray.values().stream().map(value -> new TrapDoor().initFrom(source, value)).forEach(trapDoors::add);
+		}
+
+		if (IJsonOption.OUT_OF_BOUNDS.isDefinedIn(jsonObject)) {
+			outOfBounds = IJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
 		}
 		return this;
 

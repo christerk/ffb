@@ -32,7 +32,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Final step of the pass sequence. Consumes all expected stepParameters.
- *
+ * <p>
  * Expects stepParameter CATCHER_ID to be set by a preceding step. Expects
  * stepParameter END_PLAYER_ACTION to be set by a preceding step. Expects
  * stepParameter END_TURN to be set by a preceding step. Expects stepParameter
@@ -118,6 +118,7 @@ public final class StepEndPassing extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
 		game.getFieldModel().setRangeRuler(null);
+		game.getFieldModel().setOutOfBounds(false);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()));

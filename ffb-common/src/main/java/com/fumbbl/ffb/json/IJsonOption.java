@@ -314,6 +314,7 @@ public interface IJsonOption {
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonEnumWithNameOption OLD_WEATHER = new JsonEnumWithNameOption("oldWeather", Factory.WEATHER);
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+	JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");

@@ -14,8 +14,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -88,8 +87,11 @@ public class FieldLayerPlayers extends FieldLayer {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
 
+			if (fieldModel.isOutOfBounds()) {
+				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
-					findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
 		}
 	}
 
@@ -99,8 +101,11 @@ public class FieldLayerPlayers extends FieldLayer {
 		if (pCoordinate.equals(fieldModel.getBombCoordinate()) && fieldModel.isBombMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
 			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB);
+			if (fieldModel.isOutOfBounds()) {
+				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(bombIcon, findCenteredIconUpperLeftX(bombIcon, pCoordinate),
-					findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
 		}
 	}
 

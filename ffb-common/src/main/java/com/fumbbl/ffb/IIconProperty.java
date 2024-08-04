@@ -33,6 +33,7 @@ public interface IIconProperty {
 	String DECORATION_VOMIT_TARGET = "decoration.vomit.target";
 	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
+	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";

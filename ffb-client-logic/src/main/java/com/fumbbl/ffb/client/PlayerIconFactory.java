@@ -35,7 +35,16 @@ import java.awt.image.BufferedImage;
  */
 public class PlayerIconFactory {
 
-	public static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
+
+	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty) {
+		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+		IconCache iconCache = client.getUserInterface().getIconCache();
+
+		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty), maxIconSize);
+	}
+
+	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
 		if (pIcon != null) {

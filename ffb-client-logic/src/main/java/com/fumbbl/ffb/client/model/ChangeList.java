@@ -19,6 +19,7 @@ public class ChangeList {
       .addBugfix("Raiding Party: Can't move players without tz anymore, since they have to mark an opponent after move")
       .addBugfix("Slayer: Modifier could be used on injury even against opponent with st4 or lower")
       .addImprovement("During kick-off events like Quick Snap the ball is now always drawn over a player on the same coordinate to make it more visible")
+      .addImprovement("When balls or bombs land out of bounds they are marked with white cross similar to the stunned marking during the kick off phase and deflector selection")
     );
 
     versions.add(new VersionChangeList("2.28.1")

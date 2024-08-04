@@ -218,6 +218,9 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_SET_BOMB_MOVING:
 				pGame.getFieldModel().setBombMoving((Boolean) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_SET_OUT_OF_BOUNDS:
+				pGame.getFieldModel().setOutOfBounds((boolean) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
 				pGame.getFieldModel().setPlayerCoordinate(pGame.getPlayerById(pModelChange.getKey()),
 					(FieldCoordinate) pModelChange.getValue());

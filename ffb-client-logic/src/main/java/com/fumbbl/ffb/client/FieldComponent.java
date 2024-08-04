@@ -262,6 +262,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				fBallCoordinate = ballCoordinate;
 				break;
 			case FIELD_MODEL_SET_BALL_MOVING:
+			case FIELD_MODEL_SET_OUT_OF_BOUNDS:
 				getLayerPlayers().updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
 				break;
 			case FIELD_MODEL_SET_BOMB_COORDINATE:
@@ -291,8 +292,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			case FIELD_MODEL_SET_PLAYER_STATE:
 				Player<?> player = game.getPlayerById(pModelChange.getKey());
 				FieldCoordinate playerCoordinateForStateChange = fieldModel.getPlayerCoordinate(player);
-				boolean playerOverBall = fieldModel.isBallInPlay()
-					|| !playerCoordinateForStateChange.equals(fieldModel.getBallCoordinate());
+				boolean playerOverBall = fieldModel.isBallInPlay();
 				getLayerPlayers().updateBallAndPlayers(playerCoordinateForStateChange, playerOverBall);
 				break;
 			case FIELD_MODEL_SET_RANGE_RULER:
