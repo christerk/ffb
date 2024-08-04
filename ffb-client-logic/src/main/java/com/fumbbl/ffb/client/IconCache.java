@@ -42,7 +42,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -460,7 +459,6 @@ public class IconCache {
 	public BufferedImage getIcon(BloodSpot pBloodspot) {
 		String iconProperty = pBloodspot.getIconProperty();
 		if (iconProperty == null) {
-			// System.out.println(pBloodspot.getInjury());
 			switch (pBloodspot.getInjury().getBase()) {
 				case PlayerState.KNOCKED_OUT:
 					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_KO);
@@ -484,7 +482,7 @@ public class IconCache {
 					iconProperty = IIconProperty.BLOODSPOT_LIGHTNING;
 					break;
 				default:
-					throw new IllegalArgumentException("Cannot get icon for Bloodspot with injury " + pBloodspot.getInjury() + ".");
+					throw new IllegalArgumentException("Cannot get icon for blood spot with injury " + pBloodspot.getInjury() + ".");
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
@@ -521,24 +519,24 @@ public class IconCache {
 
 	private void loadPitchFromUrl(String pUrl) {
 		URL pitchUrl = null;
-		ZipInputStream zipStream = null;
 		try {
 			pitchUrl = new URL(pUrl);
-			HttpURLConnection connection = (HttpURLConnection) pitchUrl.openConnection();
-			connection.setRequestMethod("GET");
-			zipStream = new ZipInputStream(connection.getInputStream());
-			loadPitchFromStream(zipStream, pUrl);
+
+			HttpGet get = new HttpGet(pUrl);
+			httpClient.execute(get, response -> {
+				final HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					try (ZipInputStream zipStream = new ZipInputStream(entity.getContent())) {
+						loadPitchFromStream(zipStream, pUrl);
+						EntityUtils.consumeQuietly(entity);
+					}
+				}
+				return null;
+			});
+
 		} catch (Exception pAny) {
 			// This should catch issues where the image is broken...
 			getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
-		} finally {
-			if (zipStream != null) {
-				try {
-					zipStream.close();
-				} catch (IOException e) {
-					getClient().logWithOutGameId(e);
-				}
-			}
 		}
 	}
 
