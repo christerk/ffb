@@ -27,16 +27,20 @@ public class UtilHttpClient {
     return result;
   }
 
-  public static String fetchPage(String pUrl) throws IOException {
+  public static byte[] fetchBytes(String pUrl) throws IOException {
     HttpClient client = new HttpClient();
     client.getHttpConnectionManager().getParams().setConnectionTimeout(CONNECTION_TIMEOUT);
     // HttpMethod method = new GetMethod(URLEncoder.encode(pUrl, CHARACTER_ENCODING));
     HttpMethod method = new GetMethod(pUrl);
     method.setFollowRedirects(true);
     client.executeMethod(method);
-    String responseBody = new String(method.getResponseBody(), CHARACTER_ENCODING);
+    byte[] responseBody = method.getResponseBody();
     method.releaseConnection();
     return responseBody;
+  }
+
+  public static String fetchPage(String pUrl) throws IOException {
+    return new String(fetchBytes(pUrl), CHARACTER_ENCODING);
   }
   
 }
