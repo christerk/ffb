@@ -7,6 +7,7 @@ import com.fumbbl.ffb.SkillChoiceMode;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -60,5 +61,10 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 	@Override
 	protected boolean handled(Game game) {
 		return game.getDialogParameter() == null;
+	}
+
+	@Override
+	AnimationType animationType() {
+		return AnimationType.PRAYER_INTENSIVE_TRAINING;
 	}
 }

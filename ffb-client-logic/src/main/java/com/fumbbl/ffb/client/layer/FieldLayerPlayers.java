@@ -14,8 +14,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -88,8 +87,11 @@ public class FieldLayerPlayers extends FieldLayer {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
 
+			if (fieldModel.isOutOfBounds()) {
+				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
-					findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
 		}
 	}
 
@@ -99,8 +101,11 @@ public class FieldLayerPlayers extends FieldLayer {
 		if (pCoordinate.equals(fieldModel.getBombCoordinate()) && fieldModel.isBombMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
 			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB);
+			if (fieldModel.isOutOfBounds()) {
+				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(bombIcon, findCenteredIconUpperLeftX(bombIcon, pCoordinate),
-					findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
 		}
 	}
 
@@ -108,9 +113,6 @@ public class FieldLayerPlayers extends FieldLayer {
 		if (pPlayerMarker == null) {
 			return;
 		}
-		String marker = pPlayerMarker.getPlayerId() + " with " + pPlayerMarker.getHomeText();
-		getClient().logDebug(0, Thread.currentThread().getName() + " entering update for " + marker);
-
 		Game game = getClient().getGame();
 		Player<?> player = game.getPlayerById(pPlayerMarker.getPlayerId());
 		if (player == null) {
@@ -118,7 +120,6 @@ public class FieldLayerPlayers extends FieldLayer {
 		}
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		updateBallAndPlayers(playerCoordinate, true);
-		getClient().logDebug(0, Thread.currentThread().getName() + " leaving update for " + marker);
 	}
 
 	public void init() {

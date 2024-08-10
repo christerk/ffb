@@ -50,7 +50,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		this.parameter = parameter;
 		this.handler = handler;
 
-		closeButton = new JButton(dimensionProvider(), "Proceed to MVPs and upload");
+		closeButton = new JButton(dimensionProvider(), ClientMode.PLAYER.equals(pClient.getMode()) ? "Proceed to MVPs and upload" : "Close");
 		closeButton.setAlignmentX(CENTER_ALIGNMENT);
 		closeButton.setMargin(new Insets(3, 5, 3, 5));
 		closeButton.addActionListener(this);

@@ -289,6 +289,7 @@ public class StepRaidingParty extends AbstractStep {
 				PlayerState playerState = fieldModel.getPlayerState(teamMate);
 				return (playerState.getBase() == PlayerState.STANDING || player.equals(teamMate))
 					&& !playerState.isRooted()
+					&& playerState.hasTacklezones() // has to mark opponent after move so needs tz
 					&& teamMateCoordinate.distanceInSteps(playerCoordinate) <= 5
 					&& !ArrayTool.isProvided(adjacentPlayersWithTacklezones)
 					&& Arrays.stream(adjacentCoordinates).anyMatch(adjacentCoordinate -> {

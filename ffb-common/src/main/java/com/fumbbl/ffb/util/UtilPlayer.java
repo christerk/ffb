@@ -290,8 +290,6 @@ public class UtilPlayer {
 		Set<String> enhancementsToRemove = mechanic.enhancementsToRemoveAtEndOfTurn(pGame.getFactory(FactoryType.Factory.SKILL));
 		Set<String> enhancementsToRemoveWhenNotSettingActive = mechanic.enhancementsToRemoveAtEndOfTurnWhenNotSettingActive(pGame.getFactory(FactoryType.Factory.SKILL));
 
-		pGame.clearRolledOver();
-
 		for (Player<?> player : players) {
 			boolean playerOnTeamFromLastTurn = player.getTeam() != pGame.getTeamHome() && pGame.isHomePlaying();
 			boolean setActive = playerOnTeamFromLastTurn || !player.hasSkillProperty(NamedProperties.hasToMissTurn);
@@ -320,7 +318,6 @@ public class UtilPlayer {
 					if ((pGame.isHomePlaying() && pGame.getTeamHome().hasPlayer(player))
 						|| (!pGame.isHomePlaying() && pGame.getTeamAway().hasPlayer(player))) {
 						newPlayerState = oldPlayerState.changeBase(PlayerState.PRONE).changeActive(false);
-						pGame.rollOver(player);
 					}
 					break;
 				default:

@@ -33,6 +33,7 @@ public interface IIconProperty {
 	String DECORATION_VOMIT_TARGET = "decoration.vomit.target";
 	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
+	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -299,6 +300,22 @@ public interface IIconProperty {
 	String ANIMATION_KEG_FUMBLE_120 = "animation.keg.fumble.120";
 	String ANIMATION_KEG_FUMBLE_150 = "animation.keg.fumble.150";
 
+	String ANIMATION_PRAYER_TRAPDOOR = "animation.prayer.treacherous.trapdoor";
+	String ANIMATION_PRAYER_BAD_HABITS = "animation.prayer.bad.habits";
+	String ANIMATION_PRAYER_BLESSED_STATUE_OF_NUFFLE = "animation.prayer.blessed.statue.of.nuffle";
+	String ANIMATION_PRAYER_FAN_INTERACTION = "animation.prayer.fan.interaction";
+	String ANIMATION_PRAYER_FOULING_FRENZY = "animation.prayer.fouling.frenzy";
+	String ANIMATION_PRAYER_FRIENDS_WITH_THE_REF = "animation.prayer.friends.with.the.ref";
+	String ANIMATION_PRAYER_GREASY_CLEATS = "animation.prayer.greasy.cleats";
+	String ANIMATION_PRAYER_INTENSIVE_TRAINING = "animation.prayer.intensive.training";
+	String ANIMATION_PRAYER_IRON_MAN = "animation.prayer.iron.man";
+	String ANIMATION_PRAYER_KNUCKLE_DUSTERS = "animation.prayer.knuckle.dusters";
+	String ANIMATION_PRAYER_MOLES_UNDER_THE_PITCH = "animation.prayer.moles.under.the.pitch";
+	String ANIMATION_PRAYER_NECESSARY_VIOLENCE = "animation.prayer.necessary.violence";
+	String ANIMATION_PRAYER_PERFECT_PASSING = "animation.prayer.perfect.passing";
+	String ANIMATION_PRAYER_STILETTO = "animation.prayer.stiletto";
+	String ANIMATION_PRAYER_THROW_A_ROCK = "animation.prayer.throw.a.rock";
+	String ANIMATION_PRAYER_UNDER_SCRUTINY = "animation.prayer.under.scrutiny";
 
 	// Augments
 	String AUGMENTS_SWEET_WHITE = "augments.sweet.white";

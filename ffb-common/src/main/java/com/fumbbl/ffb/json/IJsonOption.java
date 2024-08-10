@@ -314,6 +314,7 @@ public interface IJsonOption {
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonEnumWithNameOption OLD_WEATHER = new JsonEnumWithNameOption("oldWeather", Factory.WEATHER);
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+	JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");
@@ -426,7 +427,6 @@ public interface IJsonOption {
 	JsonIntOption ROLL_AWAY = new JsonIntOption("rollAway");
 	JsonIntOption ROLL_HOME = new JsonIntOption("rollHome");
 	JsonArrayOption ROLL_MODIFIERS = new JsonArrayOption("rollModifiers");
-	JsonStringArrayOption ROLLED_OVER = new JsonStringArrayOption("rolledOver");
 	JsonIntArrayOption ROLLS = new JsonIntArrayOption("rolls");
 	JsonIntArrayOption ROLLS_AWAY = new JsonIntArrayOption("rollsAway");
 	JsonIntArrayOption ROLLS_HOME = new JsonIntArrayOption("rollsHome");
@@ -485,6 +485,7 @@ public interface IJsonOption {
 
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
+	JsonStringArrayOption SPECTATOR_NAMES = new JsonStringArrayOption("spectatorNames");
 	JsonIntArrayOption SPECTATOR_ROLL_AWAY = new JsonIntArrayOption("spectatorRollAway");
 	JsonIntArrayOption SPECTATOR_ROLL_HOME = new JsonIntArrayOption("spectatorRollHome");
 	JsonIntOption SPECTATORS = new JsonIntOption("spectators");

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.fumbbl.ffb</groupId>
         <artifactId>ffb</artifactId>
-        <version>2.27.1</version>
+        <version>2.28.2</version>
     </parent>
 
     <artifactId>ffb-client-logic</artifactId>
@@ -66,6 +66,11 @@
             <groupId>com.fumbbl.ffb</groupId>
             <artifactId>ffb-common</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.3</version>
         </dependency>
         <dependency>
             <groupId>kuusisto.tinysound</groupId>

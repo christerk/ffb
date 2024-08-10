@@ -69,6 +69,7 @@ public enum ModelChangeId implements INamedObject {
 	FIELD_MODEL_SET_RANGE_RULER("fieldModelSetRangeRuler", ModelChangeDataType.RANGE_RULER),
 	FIELD_MODEL_SET_TARGET_SELECTION_STATE("fieldModelSetTargetSelectionState", ModelChangeDataType.TARGET_SELECTION_STATE),
 	FIELD_MODEL_SET_WEATHER("fieldModelSetWeather", ModelChangeDataType.WEATHER),
+	FIELD_MODEL_SET_OUT_OF_BOUNDS("fieldModelOutOfBounds", ModelChangeDataType.BOOLEAN),
 
 	GAME_SET_ADMIN_MODE("gameSetAdminMode", ModelChangeDataType.BOOLEAN),
 	GAME_SET_CONCEDED_LEGALLY("gameSetConcededLegally", ModelChangeDataType.BOOLEAN),

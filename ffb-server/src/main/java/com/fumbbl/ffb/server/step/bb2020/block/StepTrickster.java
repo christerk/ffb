@@ -143,9 +143,13 @@ public class StepTrickster extends AbstractStep {
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> defender = game.getDefender();
+		if (defender == null || !fieldModel.getPlayerState(defender).hasTacklezones()) {
+			usingTrickster = false;
+		}
+
 		if (usingTrickster == null) {
 
-			if (defender != null && defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
+			if (defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
 				&& (usingChainsaw || usingVomit || fUsingStab || !UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
 				eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(coord -> fieldModel.getPlayer(coord) == null && !fieldModel.isBlockedForTrickster(coord)).collect(Collectors.toList()));

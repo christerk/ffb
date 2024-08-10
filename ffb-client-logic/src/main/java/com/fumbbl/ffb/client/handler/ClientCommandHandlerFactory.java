@@ -4,7 +4,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.net.commands.ServerCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,13 +41,6 @@ public class ClientCommandHandlerFactory {
 	public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {
 		long gameId = fClient.getGame() != null ? fClient.getGame().getId() : 0;
 		if (pNetCommand != null) {
-			if (pNetCommand instanceof ServerCommand) {
-				if (NetCommandId.SERVER_GAME_TIME != (pNetCommand.getId())) {
-					fClient.logDebug(gameId, "Received server command: " + pNetCommand.getId() + " with id: " + ((ServerCommand) pNetCommand).getCommandNr());
-				}
-			} else {
-				fClient.logDebug(gameId, "Received other command: " + pNetCommand.getId());
-			}
 			ClientCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());
 			if (commandHandler != null) {
 				boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);

@@ -115,6 +115,20 @@ public class FantasyFootballServer implements IFactorySource {
 		if (StringTool.isProvided(logFileProperty)) {
 			logFile = new File(logFileProperty);
 		}
+
+		File logPath = null;
+		String logPathProperty = getProperty(IServerProperty.SERVER_LOG_FOLDER);
+		if (StringTool.isProvided(logPathProperty)) {
+			logPath = new File(logPathProperty);
+			if (!logPath.exists() && !logPath.mkdirs()) {
+				throw new IllegalArgumentException("Can't create folder " + logPathProperty);
+			}
+
+			if (!logPath.isDirectory() || !logPath.canWrite()) {
+				throw new IllegalArgumentException("Can't create new files in " + logPathProperty);
+			}
+		}
+
 		int logLevel = IServerLogLevel.ERROR;
 		String logLevelProperty = getProperty(IServerProperty.SERVER_LOG_LEVEL);
 		if (StringTool.isProvided(logLevelProperty)) {
@@ -124,7 +138,7 @@ public class FantasyFootballServer implements IFactorySource {
 				// logLevel remains at ERROR
 			}
 		}
-		fDebugLog = new DebugLog(this, logFile, logLevel);
+		fDebugLog = new DebugLog(this, logFile, logPath, logLevel);
 
 		try {
 			Class.forName(getProperty(IServerProperty.DB_DRIVER));
@@ -292,7 +306,11 @@ public class FantasyFootballServer implements IFactorySource {
 			try {
 				server.run();
 			} catch (Exception all) {
-				server.getDebugLog().logWithOutGameId(all);
+				if (server.getDebugLog() == null) {
+					all.printStackTrace();
+				} else {
+					server.getDebugLog().logWithOutGameId(all);
+				}
 				server.stop(99);
 			}
 		}
@@ -418,5 +436,9 @@ public class FantasyFootballServer implements IFactorySource {
 	public boolean isInTestMode() {
 		String testSetting = getProperty(IServerProperty.SERVER_TEST);
 		return StringTool.isProvided(testSetting) && Boolean.parseBoolean(testSetting);
+	}
+
+	public void closeResources(long id) {
+		fDebugLog.closeResources(id);
 	}
 }

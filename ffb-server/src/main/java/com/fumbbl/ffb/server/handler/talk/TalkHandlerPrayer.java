@@ -126,7 +126,7 @@ public class TalkHandlerPrayer extends TalkHandler {
 			}
 
 			if (StringTool.isProvided(playerId)) {
-				handler.applySelection(null, game, new PrayerDialogSelection(playerId, skill));
+				handler.applySelection(null, gameState, new PrayerDialogSelection(playerId, skill));
 			} else {
 				if (requiresArgument) {
 					server.getCommunication().sendPlayerTalk(gameState, null,

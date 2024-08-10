@@ -29,9 +29,9 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
  * Step in kickoff sequence to handle touchback.
- *
+ * <p>
  * Expects stepParameter TOUCHBACK to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  *
  * @author Kalimar
@@ -61,17 +61,17 @@ public final class StepTouchback extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_TOUCHBACK:
-				ClientCommandTouchback touchbackCommand = (ClientCommandTouchback) pReceivedCommand.getCommand();
-				if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-					fTouchbackCoordinate = touchbackCommand.getBallCoordinate();
-				} else {
-					fTouchbackCoordinate = touchbackCommand.getBallCoordinate().transform();
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+				case CLIENT_TOUCHBACK:
+					ClientCommandTouchback touchbackCommand = (ClientCommandTouchback) pReceivedCommand.getCommand();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						fTouchbackCoordinate = touchbackCommand.getBallCoordinate();
+					} else {
+						fTouchbackCoordinate = touchbackCommand.getBallCoordinate().transform();
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -84,11 +84,11 @@ public final class StepTouchback extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case TOUCHBACK:
-				fTouchback = (Boolean) parameter.getValue();
-				return true;
-			default:
-				break;
+				case TOUCHBACK:
+					fTouchback = (Boolean) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -107,6 +107,7 @@ public final class StepTouchback extends AbstractStep {
 				game.setDialogParameter(new DialogTouchbackParameter());
 				doNextStep = false;
 			} else {
+				game.getFieldModel().setOutOfBounds(false);
 				UtilServerDialog.hideDialog(getGameState());
 				game.getFieldModel().setBallCoordinate(fTouchbackCoordinate);
 				Player<?> player = game.getFieldModel().getPlayer(fTouchbackCoordinate);

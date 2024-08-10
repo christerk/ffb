@@ -36,8 +36,8 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
 		String[] players = joinCommand.getPlayerNames();
 		if (ArrayTool.isProvided(players) && (players.length > 1)) {
 
-			String homeCoach = null;
-			String awayCoach = null;
+			String homeCoach;
+			String awayCoach;
 			if (players[1].equals(coachName)) {
 				homeCoach = players[1];
 				awayCoach = players[0];
@@ -54,6 +54,7 @@ public class ClientCommandHandlerJoin extends ClientCommandHandler {
 
 		}
 
+		getClient().getClientData().setSpectatorCount(joinCommand.getSpectatorCount());
 		getClient().getClientData().setSpectators(joinCommand.getSpectators());
 
 		if (pMode != ClientCommandHandlerMode.REPLAYING && coachName != null && !coachName.equals(joinCommand.getCoach())) {

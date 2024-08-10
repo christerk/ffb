@@ -46,7 +46,6 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.JUGGERNAUT),
 			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 
 		// on blockChoice = BOTH_DOWN
 		sequence.add(StepId.JUGGERNAUT, IStepLabel.JUGGERNAUT,

@@ -134,6 +134,7 @@ public class StepMissedPass extends AbstractStep {
 		}
 		UtilServerGame.syncGameModel(this);
 		if (!FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd)) {
+			game.getFieldModel().setOutOfBounds(true);
 			if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
 					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
 				game.getFieldModel().setBombCoordinate(null);
@@ -161,12 +162,6 @@ public class StepMissedPass extends AbstractStep {
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
-	}
-
-	// ByteArray serialization
-
-	public int getByteArraySerializationVersion() {
-		return 1;
 	}
 
 	// JSON serialization

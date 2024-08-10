@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.fumbbl.ffb</groupId>
         <artifactId>ffb</artifactId>
-        <version>2.27.1</version>
+        <version>2.28.2</version>
     </parent>
 
     <artifactId>ffb-client</artifactId>
@@ -73,7 +73,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClient</mainClass>
+                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Built-By>${user.name}</Built-By>
