@@ -275,10 +275,12 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	public final void menuItemSelected(Player<?> player, int pMenuKey) {
-		prePerform();
+		prePerform(pMenuKey);
 		ClientAction action = actionMapping().get(pMenuKey);
-		logicModule.perform(player, action);
-		postPerform();
+		if (action != null) {
+			logicModule.perform(player, action);
+		}
+		postPerform(pMenuKey);
 	}
 
 	protected abstract Map<Integer, ClientAction> actionMapping();
@@ -309,6 +311,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		return fPopupMenu == null || !fPopupMenu.isVisible();
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		GameMenuBar gameMenuBar = getClient().getUserInterface().getGameMenuBar();
 		switch (pActionKey) {

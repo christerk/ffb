@@ -53,7 +53,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	protected void prePerform() {
+	protected void prePerform(int menuKey) {
 		Game game = getClient().getGame();
 		if (game.isHomePlaying()) {
 			getClient().getUserInterface().getFieldComponent().refresh();

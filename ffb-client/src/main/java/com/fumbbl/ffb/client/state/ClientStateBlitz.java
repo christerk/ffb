@@ -83,7 +83,7 @@ public class ClientStateBlitz extends AbstractClientStateMove<BlitzLogicModule> 
 	}
 
 	@Override
-	protected void postPerform() {
+	protected void postPerform(int menuKey) {
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 }

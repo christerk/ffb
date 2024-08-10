@@ -5,13 +5,11 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.BombLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -20,13 +18,9 @@ import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
-import com.fumbbl.ffb.util.UtilCards;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +137,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		if (isHailMaryPassActionAvailable()) {
+		if (logicModule.isHailMaryPassActionAvailable()) {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 				: "Use Hail Mary Pass";
 			JMenuItem hailMaryBombAction = new JMenuItem(dimensionProvider(), text,
@@ -153,7 +147,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 			menuItemList.add(hailMaryBombAction);
 		}
 
-		if (isRangeGridAvailable()) {
+		if (logicModule.playerIsAboutToThrow()) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
@@ -161,110 +155,34 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 			menuItemList.add(toggleRangeGridAction);
 		}
 
-		if (isEndTurnActionAvailable()) {
+		if (logicModule.isEndTurnActionAvailable()) {
 			addEndActionLabel(iconCache, menuItemList);
 		}
 
-		if (isTreacherousAvailable(actingPlayer)) {
+		if (logicModule.isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
-		if (isWisdomAvailable(actingPlayer)) {
+		if (logicModule.isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
-		if (isRaidingPartyAvailable(actingPlayer)) {
+		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+		if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
-		if (isBalefulHexAvailable(actingPlayer)) {
+		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
-		if (isBlackInkAvailable(actingPlayer)) {
+		if (logicModule.isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
+		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
-	}
-
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		ClientCommunication communication = getClient().getCommunication();
-		switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_END_MOVE:
-				if (isEndTurnActionAvailable()) {
-					communication.sendActingPlayer(null, null, false);
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
-				if (isRangeGridAvailable()) {
-					fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-					fRangeGridHandler.refreshRangeGrid();
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB:
-				if (isHailMaryPassActionAvailable()) {
-					if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.THROW_BOMB, actingPlayer.isJumping());
-						fShowRangeRuler = true;
-					} else {
-						communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_BOMB, actingPlayer.isJumping());
-						fShowRangeRuler = false;
-					}
-					if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
-						game.getFieldModel().setRangeRuler(null);
-					}
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-				if (isTreacherousAvailable(actingPlayer)) {
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-					communication.sendUseSkill(skill, true, pPlayer.getId());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_WISDOM:
-				if (isWisdomAvailable(actingPlayer)) {
-					getClient().getCommunication().sendUseWisdom();
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
-				if (isRaidingPartyAvailable(actingPlayer)) {
-					Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-					communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-				if (isLookIntoMyEyesAvailable(pPlayer)) {
-					UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-						.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
-				if (isBalefulHexAvailable(actingPlayer)) {
-					Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-					communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_BLACK_INK:
-				if (isBlackInkAvailable(actingPlayer)) {
-					Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
-					communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
-				}
-				break;
-			case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
-				if (isCatchOfTheDayAvailable(actingPlayer)) {
-					Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-					communication.sendUseSkill(skill, true, pPlayer.getId());
-				}
-				break;
-			default:
-				break;
-		}
 	}
 
 	@Override
@@ -313,22 +231,15 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		}
 	}
 
-	private boolean isHailMaryPassActionAvailable() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
-			&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
-	}
 
-	private boolean isRangeGridAvailable() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB);
+	@Override
+	protected void postPerform(int menuKey) {
+		super.postPerform(menuKey);
+		if (menuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
+			if (logicModule.playerIsAboutToThrow()) {
+				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+				fRangeGridHandler.refreshRangeGrid();
+			}
+		}
 	}
-
-	private boolean isEndTurnActionAvailable() {
-		Game game = getClient().getGame();
-		return !game.getTurnMode().isBombTurn();
-	}
-
 }
