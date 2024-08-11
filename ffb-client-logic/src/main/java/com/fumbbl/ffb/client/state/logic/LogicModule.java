@@ -66,6 +66,10 @@ public abstract class LogicModule {
 		return false;
 	}
 
+	public ActingPlayer getActingPlayer() {
+		return client.getGame().getActingPlayer();
+	}
+
 	public boolean playerActivationUsed() {
 		return client.getGame().getActingPlayer().hasActed();
 	}

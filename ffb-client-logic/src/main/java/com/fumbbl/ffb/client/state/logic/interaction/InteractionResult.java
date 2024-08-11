@@ -5,48 +5,51 @@ import com.fumbbl.ffb.RangeRuler;
 
 public class InteractionResult {
 
-	private final Kind kind;
-	private final FieldCoordinate coordinate;
-	private final RangeRuler rangeRuler;
+  private final Kind kind;
+  private final FieldCoordinate coordinate;
+  private final RangeRuler rangeRuler;
 
-	public InteractionResult(Kind kind) {
-		this(kind, null, null);
-	}
+  public InteractionResult(Kind kind) {
+    this(kind, null, null);
+  }
 
-	public InteractionResult(Kind kind, RangeRuler rangeRuler) {
-		this(kind, null, rangeRuler);
-	}
+  public InteractionResult(Kind kind, RangeRuler rangeRuler) {
+    this(kind, null, rangeRuler);
+  }
 
-	public InteractionResult(Kind kind, FieldCoordinate coordinates) {
-		this(kind, coordinates, null);
-	}
+  public InteractionResult(Kind kind, FieldCoordinate coordinates) {
+    this(kind, coordinates, null);
+  }
 
-	public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler) {
-		this.kind = kind;
-		this.coordinate = coordinate;
-		this.rangeRuler = rangeRuler;
-	}
+  public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler) {
+    this.kind = kind;
+    this.coordinate = coordinate;
+    this.rangeRuler = rangeRuler;
+  }
 
-	public Kind getKind() {
-		return kind;
-	}
+  public Kind getKind() {
+    return kind;
+  }
 
-	public FieldCoordinate getCoordinate() {
-		return coordinate;
-	}
+  public FieldCoordinate getCoordinate() {
+    return coordinate;
+  }
 
-	public RangeRuler getRangeRuler() {
-		return rangeRuler;
-	}
+  public RangeRuler getRangeRuler() {
+    return rangeRuler;
+  }
 
-	public enum Kind {
-		DESELECT,
-		DRAW,
-		IGNORE,
-		MOVE,
-		PERFORM,
-		RESET,
-		SHOW_ACTIONS,
-		SUPER
-	}
+  public enum Kind {
+    DESELECT,
+    DRAW,
+    HANDLED,
+    IGNORE,
+    MOVE,
+    PERFORM,
+    RESET,
+    SHOW_ACTIONS,
+    SHOW_ACTION_ALTERNATIVES,
+    SHOW_BLOODLUST_ACTIONS,
+    SUPER
+  }
 }

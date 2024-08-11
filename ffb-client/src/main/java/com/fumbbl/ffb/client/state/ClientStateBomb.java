@@ -194,7 +194,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		if (pActionKey == null) {
 			return false;
 		}
-		Player<?> player = getClient().getGame().getActingPlayer().getPlayer();
+		Player<?> player = logicModule.getActingPlayer().getPlayer();
 		switch (pActionKey) {
 			case PLAYER_ACTION_RANGE_GRID:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RANGE_GRID);

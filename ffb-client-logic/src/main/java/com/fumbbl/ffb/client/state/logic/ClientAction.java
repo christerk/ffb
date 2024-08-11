@@ -8,6 +8,7 @@ public enum ClientAction {
 	CATCH_OF_THE_DAY,
 	CHAINSAW,
 	END_MOVE,
+	FOUL,
 	FUMBLEROOSKIE,
 	GAZE,
 	GORED_BY_THE_BULL,

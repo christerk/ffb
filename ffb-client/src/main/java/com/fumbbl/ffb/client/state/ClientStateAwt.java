@@ -194,7 +194,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 				if (isClickable()) {
 					hideSelectSquare();
 					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
-					if (getClient().getGame().getActingPlayer().getPlayer() != null
+					if (logicModule.getActingPlayer().getPlayer() != null
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
 						if (logicModule.endPlayerActivation()) {
 							getClient().getUserInterface().getFieldComponent().refresh();
