@@ -23,6 +23,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class LogicModule {
@@ -54,6 +55,17 @@ public abstract class LogicModule {
 		client.getCommunication().sendActingPlayer(null, null, false);
 	}
 
+	public boolean endPlayerActivation() {
+		if (client.getGame().getTurnMode().allowEndPlayerAction()) {
+			if (client.getGame().getFieldModel() != null) {
+				client.getGame().getFieldModel().setRangeRuler(null);
+			}
+			client.getCommunication().sendActingPlayer(null, null, false);
+			return true;
+		}
+		return false;
+	}
+
 	public boolean playerActivationUsed() {
 		return client.getGame().getActingPlayer().hasActed();
 	}
@@ -72,6 +84,10 @@ public abstract class LogicModule {
 
 	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	public Optional<Player<?>> getPlayer(FieldCoordinate coordinate) {
+		return Optional.ofNullable(client.getGame().getFieldModel().getPlayer(coordinate));
 	}
 
 	public boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player, ISkillProperty property) {
@@ -203,4 +219,7 @@ public abstract class LogicModule {
 		);
 	}
 
+	public FieldCoordinate getCoordinate(Player<?> player) {
+		return client.getGame().getFieldModel().getPlayerCoordinate(player);
+	}
 }

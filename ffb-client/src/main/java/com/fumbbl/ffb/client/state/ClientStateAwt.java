@@ -18,7 +18,6 @@ import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
@@ -34,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -152,13 +152,8 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 				if (!coordinate.equals(fSelectSquareCoordinate)) {
 					hideSelectSquare();
 					boolean selectable;
-					Game game = getClient().getGame();
-					Player<?> player = game.getFieldModel().getPlayer(coordinate);
-					if (player != null) {
-						selectable = mouseOverPlayer(player);
-					} else {
-						selectable = mouseOverField(coordinate);
-					}
+					Optional<Player<?>> player = logicModule.getPlayer(coordinate);
+					selectable = player.map(this::mouseOverPlayer).orElseGet(() -> mouseOverField(coordinate));
 					if (selectable) {
 						showSelectSquare(coordinate);
 					}
@@ -171,7 +166,6 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		hideSelectSquare();
 	}
 
-	// TODO split and move to logic module
 	public void mouseReleased(MouseEvent pMouseEvent) {
 		if (getClient().getCurrentMouseButton() != pMouseEvent.getButton()) {
 			return;
@@ -179,10 +173,10 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
 		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
-			Player<?> player = getClient().getGame().getFieldModel().getPlayer(coordinate);
+			Optional<Player<?>> player = logicModule.getPlayer(coordinate);
 			if (pMouseEvent.isShiftDown()) {
 				hideSelectSquare();
-				if (player != null) {
+				if (player.isPresent()) {
 					int offsetX = 1, offsetY = 1;
 					DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
 
@@ -191,7 +185,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 					}
 
 					Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
-					UtilClientMarker.showMarkerPopup(getClient(), player, dimension.width, dimension.height);
+					UtilClientMarker.showMarkerPopup(getClient(), player.get(), dimension.width, dimension.height);
 
 				} else {
 					UtilClientMarker.showMarkerPopup(getClient(), coordinate);
@@ -202,15 +196,11 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
 					if (getClient().getGame().getActingPlayer().getPlayer() != null
 						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
-						if (getClient().getGame().getTurnMode().allowEndPlayerAction()) {
-							if (getClient().getGame().getFieldModel() != null) {
-								getClient().getGame().getFieldModel().setRangeRuler(null);
-								getClient().getUserInterface().getFieldComponent().refresh();
-							}
-							getClient().getCommunication().sendActingPlayer(null, null, false);
+						if (logicModule.endPlayerActivation()) {
+							getClient().getUserInterface().getFieldComponent().refresh();
 						}
-					} else if (player != null && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
-						clickOnPlayer(player);
+					} else if (player.isPresent() && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
+						clickOnPlayer(player.get());
 					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 || IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
 						clickOnField(coordinate);
 					}
@@ -230,7 +220,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	public void showPopupMenuForPlayer(Player<?> pPlayer) {
 		if ((pPlayer != null) && (fPopupMenu != null)) {
 			fPopupMenuPlayer = pPlayer;
-			FieldCoordinate coordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(fPopupMenuPlayer);
+			FieldCoordinate coordinate = logicModule.getCoordinate(fPopupMenuPlayer);
 			if (coordinate != null) {
 				hideSelectSquare();
 				int offsetX = 1, offsetY = 1;
@@ -250,11 +240,9 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
-	// TODO split and move to logic module
 	protected void clickOnField(FieldCoordinate pCoordinate) {
 	}
 
-	// TODO split and move to logic module
 	protected void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
 	}
 
@@ -299,6 +287,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 		}};
 	}
+
 	public void setClickable(boolean pClickable) {
 		fClickable = pClickable;
 	}
