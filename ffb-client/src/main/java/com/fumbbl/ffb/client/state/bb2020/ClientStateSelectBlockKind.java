@@ -6,7 +6,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
-import com.fumbbl.ffb.client.state.logic.BlockKindLogicModule;
+import com.fumbbl.ffb.client.state.logic.bb2020.BlockKindLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;

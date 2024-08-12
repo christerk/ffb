@@ -1,6 +1,8 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.bb2020;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
