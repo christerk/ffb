@@ -35,6 +35,9 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
 	String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";
 
+	String SETTING_PITCH_MARKINGS_ROW_ON = "pitchMarkingsRowOn";
+	String SETTING_PITCH_MARKINGS_ROW_OFF = "pitchMarkingsRowOff";
+
 	// keep old property value ids for backwards compatibility
 	String SETTING_PITCH_LANDSCAPE = "pitchLandscape";
 	String SETTING_PITCH_PORTRAIT = "pitchPortrait";
