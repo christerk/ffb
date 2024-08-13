@@ -30,6 +30,7 @@ public class GameStateService {
 
 		game.setTurnMode(TurnMode.REGULAR);
 		game.setLastTurnMode(null);
+		game.setTimeoutEnforced(false);
 		gameState.setPassState(new PassState());
 		gameState.setBlitzTurnState(null);
 
