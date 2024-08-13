@@ -5,10 +5,14 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.bb2020.HitAndRunLogicModule;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -19,10 +23,11 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class ClientStateHitAndRun extends ClientState {
-	public ClientStateHitAndRun(FantasyFootballClient pClient) {
-		super(pClient);
+public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
+	public ClientStateHitAndRun(FantasyFootballClientAwt client) {
+		super(client, new HitAndRunLogicModule(client));
 	}
 
 	@Override
@@ -97,6 +102,11 @@ public class ClientStateHitAndRun extends ClientState {
 		if (pMenuKey == IPlayerPopupMenuKeys.KEY_HIT_AND_RUN) {
 			getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
 		}
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return null;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
