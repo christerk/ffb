@@ -20,6 +20,7 @@ public class ChangeList {
       .addBugfix("Slayer: Modifier could be used on injury even against opponent with st4 or lower")
       .addImprovement("During kick-off events like Quick Snap the ball is now always drawn over a player on the same coordinate to make it more visible")
       .addImprovement("When balls or bombs land out of bounds they are marked with white cross similar to the stunned marking during the kick off phase and deflector selection")
+      .addBugfix("Pitch Markings were not aligned properly in portrait and square modes")
     );
 
     versions.add(new VersionChangeList("2.28.1")

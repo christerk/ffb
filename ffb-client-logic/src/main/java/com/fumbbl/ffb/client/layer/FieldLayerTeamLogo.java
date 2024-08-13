@@ -47,8 +47,17 @@ public class FieldLayerTeamLogo extends FieldLayer {
 		FieldCoordinate upperLine = new FieldCoordinate(pX, 0);
 		clear(upperLine, true); // marks square as updated
 		Dimension dimension = dimensionProvider.mapToLocal(upperLine, true);
-		int x = dimension.width - (int) (distanceBounds.getWidth() / 2) + 1;
-		int y = dimension.height + (int) (distanceBounds.getHeight() / 2) - 8;
+		int x = dimension.width;
+		int y = dimension.height;
+
+		if (dimensionProvider.isPitchPortrait()) {
+			x -= (int) (distanceBounds.getWidth() / 2) + dimensionProvider.scale(4);
+			y += (int) (distanceBounds.getHeight() / 2) - 1;
+		} else {
+			x -= (int) (distanceBounds.getWidth() / 2) + 1;
+			y += (int) (distanceBounds.getHeight() / 2) - dimensionProvider.scale(8);
+		}
+
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(distanceString, x + 1, y + 1);
 		g2d.setColor(distanceColor);
@@ -56,8 +65,17 @@ public class FieldLayerTeamLogo extends FieldLayer {
 		FieldCoordinate lowerLine = new FieldCoordinate(pX, 14);
 		clear(lowerLine, true); // marks square as updated
 		dimension = dimensionProvider.mapToLocal(lowerLine, true);
-		x = dimension.width - (int) (distanceBounds.getWidth() / 2) + 1;
-		y = dimension.height + (int) (distanceBounds.getHeight() / 2) + 4;
+		x = dimension.width;
+		y = dimension.height;
+
+		if (dimensionProvider.isPitchPortrait()) {
+			x -= (int) (distanceBounds.getWidth() / 2) - dimensionProvider.scale(4);
+			y += (int) (distanceBounds.getHeight() / 2) - 1;
+		} else {
+			x -= (int) (distanceBounds.getWidth() / 2) + 1;
+			y += (int) (distanceBounds.getHeight() / 2) + dimensionProvider.scale(4);
+		}
+
 		g2d.setColor(Color.BLACK);
 		g2d.drawString(distanceString, x + 1, y + 1);
 		g2d.setColor(distanceColor);
