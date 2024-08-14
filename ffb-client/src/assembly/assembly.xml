@@ -21,8 +21,6 @@
             <outputDirectory>/lib</outputDirectory>
             <unpack>false</unpack>
             <excludes>
-                <exclude>${artifact}</exclude>
-                <exclude>com.fumbbl.ffb:ffb-common*</exclude>
                 <exclude>com.fumbbl.ffb:ffb-client-logic*</exclude>
                 <exclude>com.fumbbl.ffb:ffb-resources*</exclude>
             </excludes>

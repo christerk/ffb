@@ -43,9 +43,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-		} catch (Exception all) {
-			//noinspection CallToPrintStackTrace
-			all.printStackTrace();
+		} catch (Exception e) {
+			logWithOutGameId(e);
 		}
 
 		fReplayer = new ClientReplayer(this);
