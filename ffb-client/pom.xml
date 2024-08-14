@@ -165,5 +165,19 @@
             <artifactId>tritonus_share</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <!-- Including these two libs as a workaround as otherwise the assembly
+         does not pick them up even though they are transitive dependencies via
+         ffb-common -->
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.eclipsesource.minimal-json</groupId>
+            <artifactId>minimal-json</artifactId>
+            <version>0.9.5</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 </project>
