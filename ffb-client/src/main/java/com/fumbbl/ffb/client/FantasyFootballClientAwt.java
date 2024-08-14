@@ -93,8 +93,8 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			// UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-		} catch (Exception all) {
-			all.printStackTrace();
+		} catch (Exception e) {
+			logWithOutGameId(e);
 		}
 
 		setGame(new Game(getFactorySource(), factoryManager));
@@ -174,8 +174,8 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 			fSession = container.connectToServer(fCommandEndpoint, uri);
 			connectionEstablished = (fSession != null);
 
-		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
+		} catch (Exception e) {
+			logWithOutGameId(e);
 		}
 
 		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
@@ -196,8 +196,8 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		try {
 			fSession.close();
 			fCommandEndpoint.awaitClose(10, TimeUnit.SECONDS);
-		} catch (Exception pAnyException) {
-			pAnyException.printStackTrace();
+		} catch (Exception e) {
+			logWithOutGameId(e);
 		}
 		getCommunication().stop();
 		getUserInterface().setVisible(false);
