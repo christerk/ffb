@@ -23,6 +23,7 @@ public class ChangeList {
       .addBugfix("Distance Markings were not aligned properly in portrait and square modes")
       .addImprovement("Increase contrast for away team pitch markings")
       .addFeature("Pitch now supports row markings")
+      .addBugfix("What's new: Descriptions of dialog and releases were not scaled")
     );
 
     versions.add(new VersionChangeList("2.28.1")
