@@ -24,6 +24,7 @@ public class ChangeList {
       .addImprovement("Increase contrast for away team pitch markings")
       .addFeature("Pitch now supports row markings")
       .addBugfix("What's new: Descriptions of dialog and releases were not scaled")
+      .addBugfix("Nerves of Steel: Did work on TTM actions")
     );
 
     versions.add(new VersionChangeList("2.28.1")
