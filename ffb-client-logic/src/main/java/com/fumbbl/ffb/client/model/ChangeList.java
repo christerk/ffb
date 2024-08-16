@@ -14,7 +14,7 @@ public class ChangeList {
 
     versions.add(new VersionChangeList("2.29.0")
       .addBugfix("Auto Marking: Skill and stat changes of some prayers did not get applied")
-      .addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls an be avoided")
+      .addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls are avoided")
       .addBugfix("Juggernaut: Message of cancelling wrestle was always displayed even if opponent did not have wrestle")
       .addBugfix("Raiding Party: Can't move players without tz anymore, since they have to mark an opponent after move")
       .addBugfix("Slayer: Modifier could be used on injury even against opponent with st4 or lower")
