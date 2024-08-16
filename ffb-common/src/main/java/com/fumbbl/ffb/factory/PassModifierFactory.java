@@ -52,7 +52,7 @@ public class PassModifierFactory extends GenerifiedModifierFactory<PassContext, 
 
 	@Override
 	protected boolean isAffectedByTackleZones(PassContext context) {
-		return context.isSpecialThrow() || !context.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenPassing);
+		return context.isTtm() || !context.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenPassing);
 	}
 
 	@Override

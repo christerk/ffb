@@ -25,6 +25,7 @@ public class ChangeList {
       .addFeature("Pitch now supports row markings")
       .addBugfix("What's new: Descriptions of dialog and releases were not scaled")
       .addBugfix("Nerves of Steel: Did work on TTM actions")
+      .addBugfix("Nerves of Steel: Did not apply for HMP bombs")
     );
 
     versions.add(new VersionChangeList("2.28.1")

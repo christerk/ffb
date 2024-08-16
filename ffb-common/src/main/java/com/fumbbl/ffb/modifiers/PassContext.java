@@ -6,15 +6,15 @@ import com.fumbbl.ffb.model.Player;
 
 public class PassContext implements ModifierContext {
 	private final PassingDistance distance;
-	private final boolean specialThrow;
+	private final boolean ttm;
 	private final Player<?> player;
 	private final Game game;
 
-	public PassContext(Game game, Player<?> player, PassingDistance distance, boolean specialThrow) {
+	public PassContext(Game game, Player<?> player, PassingDistance distance, boolean ttm) {
 		this.game = game;
 		this.player = player;
 		this.distance = distance;
-		this.specialThrow = specialThrow;
+		this.ttm = ttm;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class PassContext implements ModifierContext {
 		return distance;
 	}
 
-	public boolean isSpecialThrow() {
-		return specialThrow;
+	public boolean isTtm() {
+		return ttm;
 	}
 }

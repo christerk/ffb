@@ -31,7 +31,7 @@ public class NervesOfSteel extends Skill {
 			}
 			@Override
 			public boolean appliesToContext(Skill skill, PassContext context) {
-				return !context.isSpecialThrow();
+				return !context.isTtm();
 			}
 		});
 		registerModifier(new InterceptionModifier("Nerves of Steel", "0 tackle zones due to Nerves of Steel", 0, ModifierType.REGULAR) {
