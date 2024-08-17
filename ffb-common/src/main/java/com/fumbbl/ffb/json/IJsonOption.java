@@ -389,6 +389,7 @@ public interface IJsonOption {
 	JsonStringOption RACE = new JsonStringOption("race");
 	JsonIntOption RAISED_DEAD = new JsonIntOption("raisedDead");
 	JsonStringOption RAISED_POSITION_ID = new JsonStringOption("raisedPositionId");
+	JsonObjectOption RANGE_RULER = new JsonObjectOption("rangeRuler");
 	JsonStringOption REASON = new JsonStringOption("reason");
 	JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
 	JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");

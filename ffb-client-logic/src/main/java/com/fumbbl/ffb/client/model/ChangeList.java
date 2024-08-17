@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Nerves of Steel: Did work on TTM actions")
 			.addBugfix("Nerves of Steel: Did not apply for HMP bombs")
 			.addBugfix("If reconnecting during bomb intercept, the bomb was not rendered")
+				.addBugfix("Range ruler was not rendered when (re)connecting during an interference attempt")
 			.addImprovement("Show ball/bomb in target square on successful throw during interception dialog")
 		);
 

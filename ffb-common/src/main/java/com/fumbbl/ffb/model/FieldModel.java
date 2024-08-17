@@ -1045,6 +1045,9 @@ public class FieldModel implements IJsonSerializable {
 
 		IJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, outOfBounds);
 
+		if (fRangeRuler != null) {
+			IJsonOption.RANGE_RULER.addTo(jsonObject, fRangeRuler.toJsonValue());
+		}
 		return jsonObject;
 
 	}
@@ -1153,6 +1156,10 @@ public class FieldModel implements IJsonSerializable {
 
 		if (IJsonOption.OUT_OF_BOUNDS.isDefinedIn(jsonObject)) {
 			outOfBounds = IJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
+		}
+
+		if (IJsonOption.RANGE_RULER.isDefinedIn(jsonObject)) {
+			fRangeRuler = new RangeRuler().initFrom(source, IJsonOption.RANGE_RULER.getFrom(source, jsonObject));
 		}
 		return this;
 
