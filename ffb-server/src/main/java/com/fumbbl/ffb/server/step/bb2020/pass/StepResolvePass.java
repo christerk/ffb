@@ -73,11 +73,9 @@ public class StepResolvePass extends AbstractStep {
 				}
 			} else {
 				if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
-					game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						CatchScatterThrowInMode.CATCH_ACCURATE_BOMB));
 				} else {
-					game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
 					publishParameter(new StepParameter(StepParameterKey.PASS_ACCURATE, true));
 					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
 						CatchScatterThrowInMode.CATCH_ACCURATE_PASS));

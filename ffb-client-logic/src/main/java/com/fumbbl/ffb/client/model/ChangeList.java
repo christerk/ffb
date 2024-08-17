@@ -26,6 +26,7 @@ public class ChangeList {
       .addBugfix("What's new: Descriptions of dialog and releases were not scaled")
       .addBugfix("Nerves of Steel: Did work on TTM actions")
       .addBugfix("Nerves of Steel: Did not apply for HMP bombs")
+      .addImprovement("Show ball/bomb in target square on successful throw during interception dialog")
     );
 
     versions.add(new VersionChangeList("2.28.1")
