@@ -136,6 +136,9 @@ public class FieldLayerPlayers extends FieldLayer {
 				updateBallAndPlayers(playerCoordinate, true);
 			}
 			updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+			if (fieldModel.getBombCoordinate() != null) {
+				updateBallAndPlayers(fieldModel.getBombCoordinate(), false);
+			}
 		}
 	}
 
