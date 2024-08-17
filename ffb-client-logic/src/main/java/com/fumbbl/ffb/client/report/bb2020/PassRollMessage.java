@@ -13,7 +13,7 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportNervesOfSteel;
+import com.fumbbl.ffb.report.bb2020.ReportNervesOfSteel;
 import com.fumbbl.ffb.report.bb2020.ReportPassRoll;
 
 @ReportMessageType(ReportId.PASS_ROLL)
@@ -54,7 +54,11 @@ public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
   		PassModifierFactory pmf = game.getFactory(Factory.PASS_MODIFIER);
   		if (report.hasRollModifier(pmf.forName("Nerves of Steel"))) {
   			Player<?> player = game.getActingPlayer().getPlayer();
-  			statusReport.report(new ReportNervesOfSteel(player.getId(), "pass"));
+				if (report.isBomb()) {
+					statusReport.report(new ReportNervesOfSteel(player.getId(), report.isBomb()));
+				} else {
+					statusReport.report(new ReportNervesOfSteel(player.getId(), "pass"));
+				}
   		}
   		
   		status.append(mechanic.formatReportRoll(report.getRoll(), thrower));

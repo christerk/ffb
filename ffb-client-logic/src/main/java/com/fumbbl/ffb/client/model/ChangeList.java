@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("If reconnecting during bomb intercept, the bomb was not rendered")
 			.addBugfix("Range ruler was not rendered when (re)connecting during an interference attempt")
 			.addImprovement("Show ball/bomb in target square on successful throw during interception dialog")
+			.addBugfix("Nerves of Steel: Had no wording for bomb action")
 		);
 
 		versions.add(new VersionChangeList("2.28.1")

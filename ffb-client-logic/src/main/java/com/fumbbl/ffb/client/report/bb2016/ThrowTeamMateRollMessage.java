@@ -10,7 +10,7 @@ import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportNervesOfSteel;
+import com.fumbbl.ffb.report.bb2016.ReportNervesOfSteel;
 import com.fumbbl.ffb.report.bb2016.ReportThrowTeamMateRoll;
 
 @ReportMessageType(ReportId.THROW_TEAM_MATE_ROLL)
