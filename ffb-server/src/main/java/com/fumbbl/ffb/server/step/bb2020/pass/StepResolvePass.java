@@ -82,7 +82,7 @@ public class StepResolvePass extends AbstractStep {
 				}
 			}
 		} else  {
-			if (state.isLandingOutOfBounds()) {
+			if (game.getFieldModel().isOutOfBounds()) {
 				if ((PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction())
 					|| (PlayerAction.THROW_BOMB == game.getThrowerAction())) {
 					game.getFieldModel().setBombCoordinate(null);
