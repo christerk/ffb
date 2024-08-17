@@ -25,7 +25,7 @@ public class StrongArm extends Skill {
 		registerModifier(new PassModifier("Strong Arm", -1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, PassContext context) {
-				return context.isDuringThrowTeamMate();
+				return context.isTtm();
 			}
 		});
 	}

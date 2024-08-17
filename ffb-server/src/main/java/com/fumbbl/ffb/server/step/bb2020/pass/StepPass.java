@@ -225,6 +225,11 @@ public class StepPass extends AbstractStepWithReRoll {
 			passModifiers.toArray(new PassModifier[0]), passingDistance, isBomb, state.getResult(), false, statBasedRollModifier));
 		if (PassResult.ACCURATE == state.getResult()) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
+			if (PlayerAction.THROW_BOMB == game.getThrowerAction()) {
+				game.getFieldModel().setBombCoordinate(game.getPassCoordinate());
+			} else {
+				game.getFieldModel().setBallCoordinate(game.getPassCoordinate());
+			}
 		} else {
 			boolean doNextStep = true;
 			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
@@ -240,10 +245,10 @@ public class StepPass extends AbstractStepWithReRoll {
 						new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), minimumRoll, modificationSkill),
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
-						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
-							minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill, null)) {
-							doNextStep = false;
-						}
+					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
+						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill, null)) {
+						doNextStep = false;
+					}
 				}
 			} else if (usingModifyingSkill == null && showUseModifyingSkillDialog(mechanic, passingDistance, passModifiers, isBomb)) {
 				doNextStep = false;

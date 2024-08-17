@@ -9,6 +9,9 @@ public enum CommonProperty {
 	CLIENT_PING_INTERVAL("client.ping.interval"),
 	CLIENT_DEBUG_STATE("client.debug.state"),
 
+	HTTPCLIENT_TIMEOUT_CONNECT("httpclient.timeout.connect"),
+	HTTPCLIENT_TIMEOUT_SOCKET("httpclient.timeout.socket"),
+
 	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain", "Ask for Whirling Dervish", "Gameplay"),
 	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking", "Configuration"),
 

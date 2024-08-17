@@ -262,8 +262,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				fBallCoordinate = ballCoordinate;
 				break;
 			case FIELD_MODEL_SET_BALL_MOVING:
-			case FIELD_MODEL_SET_OUT_OF_BOUNDS:
 				getLayerPlayers().updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+				break;
+			case FIELD_MODEL_SET_OUT_OF_BOUNDS:
+				if (fBombCoordinate != null) {
+					getLayerPlayers().updateBallAndPlayers(fBombCoordinate, false);
+				} else {
+					getLayerPlayers().updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+				}
 				break;
 			case FIELD_MODEL_SET_BOMB_COORDINATE:
 				if (fBombCoordinate != null) {

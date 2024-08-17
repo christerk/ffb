@@ -19,6 +19,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
@@ -29,6 +30,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.util.Timeout;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -113,8 +115,17 @@ public class IconCache {
 			SSLConnectionSocketFactory sslCF = SSLConnectionSocketFactoryBuilder.create()
 				.setSslContext(sslContext).build();
 
+			int connTimeout = Integer.parseInt(fClient.getProperty(CommonProperty.HTTPCLIENT_TIMEOUT_CONNECT));
+			int socketTimeout = Integer.parseInt(fClient.getProperty(CommonProperty.HTTPCLIENT_TIMEOUT_SOCKET));
+
+			ConnectionConfig connectionConfig = ConnectionConfig.custom()
+				.setConnectTimeout(Timeout.ofMilliseconds(connTimeout))
+				.setSocketTimeout(Timeout.ofMilliseconds(socketTimeout))
+				.build();
+
 			PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
-				.setSSLSocketFactory(sslCF).setMaxConnTotal(5).setMaxConnPerRoute(5).build();
+				.setSSLSocketFactory(sslCF).setMaxConnTotal(5).setMaxConnPerRoute(5)
+				.setDefaultConnectionConfig(connectionConfig).build();
 
 			httpClient = HttpClients.custom().setConnectionManager(cm).build();
 		} catch (Exception e) {
@@ -137,11 +148,11 @@ public class IconCache {
 		}
 
 		if (StringTool.isProvided(localCacheFolder)) {
-			String fileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
-			if (!new File(fileName).exists()) {
+			String mapFileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
+			if (!new File(mapFileName).exists()) {
 				updateMapFile();
 			}
-			try (FileReader fileReader = new FileReader(fileName);
+			try (FileReader fileReader = new FileReader(mapFileName);
 					 BufferedReader reader = new BufferedReader(fileReader)) {
 
 				JsonObject jsonObject = JsonObject.readFrom(reader);

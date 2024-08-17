@@ -44,9 +44,9 @@ import java.util.Set;
 
 /**
  * Step in the pass sequence to handle interceptions.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- *
+ * <p>
  * Sets stepParameter INTERCEPTOR_ID for all steps on the stack.
  *
  * @author Kalimar
@@ -135,7 +135,6 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 				} else if (interceptor != null) {
 					switch (intercept(interceptor)) {
 					case SUCCESS:
-						doIntercept = true;
 						break;
 					case FAILURE:
 						doIntercept = false;
@@ -178,6 +177,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			interceptionModifierArray, (PlayerAction.THROW_BOMB == game.getThrowerAction()), false));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
+			game.getFieldModel().setOutOfBounds(false);
 		} else {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.CATCH) {

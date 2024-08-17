@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -78,7 +79,9 @@ public class FieldLayerPlayers extends FieldLayer {
 	}
 
 	private void drawBall(Graphics2D pG2d, FieldCoordinate pCoordinate) {
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		PlayerAction playerAction = game.getThrowerAction();
+		FieldModel fieldModel = game.getFieldModel();
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
@@ -87,7 +90,7 @@ public class FieldLayerPlayers extends FieldLayer {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
 
-			if (fieldModel.isOutOfBounds()) {
+			if (fieldModel.isOutOfBounds() && (playerAction == null || !playerAction.isBomb())) {
 				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
 			}
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
@@ -96,12 +99,14 @@ public class FieldLayerPlayers extends FieldLayer {
 	}
 
 	private void drawBomb(Graphics2D pG2d, FieldCoordinate pCoordinate) {
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		PlayerAction playerAction = game.getThrowerAction();
+		FieldModel fieldModel = game.getFieldModel();
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBombCoordinate()) && fieldModel.isBombMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
 			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB);
-			if (fieldModel.isOutOfBounds()) {
+			if (fieldModel.isOutOfBounds() && playerAction != null && playerAction.isBomb()) {
 				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
 			}
 			pG2d.drawImage(bombIcon, findCenteredIconUpperLeftX(bombIcon, pCoordinate),
@@ -131,6 +136,9 @@ public class FieldLayerPlayers extends FieldLayer {
 				updateBallAndPlayers(playerCoordinate, true);
 			}
 			updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+			if (fieldModel.getBombCoordinate() != null) {
+				updateBallAndPlayers(fieldModel.getBombCoordinate(), false);
+			}
 		}
 	}
 
