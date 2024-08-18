@@ -17,9 +17,24 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.util.Timeout;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.net.ssl.SSLContext;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -29,11 +44,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,6 +79,7 @@ public class IconCache {
 	private final Map<String, String> localCacheMap = new HashMap<>();
 	private MessageDigest digest;
 	private String localCacheFolder;
+	private final HttpClient httpClient;
 
 	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		fClient = pClient;
@@ -85,6 +100,38 @@ public class IconCache {
 				localCacheFolder += File.separator;
 			}
 		}
+
+		httpClient = setupHttpClient();
+	}
+
+	private HttpClient setupHttpClient() {
+		HttpClient httpClient = null;
+		try {
+			SSLContext sslContext = SSLContexts.custom().loadTrustMaterial((chain, authType) -> {
+				final X509Certificate cert = chain[0];
+				return "CN=fumbbl.com".equalsIgnoreCase(cert.getSubjectDN().getName());
+			}).build();
+
+			SSLConnectionSocketFactory sslCF = SSLConnectionSocketFactoryBuilder.create()
+				.setSslContext(sslContext).build();
+
+			int connTimeout = Integer.parseInt(fClient.getProperty(CommonProperty.HTTPCLIENT_TIMEOUT_CONNECT));
+			int socketTimeout = Integer.parseInt(fClient.getProperty(CommonProperty.HTTPCLIENT_TIMEOUT_SOCKET));
+
+			ConnectionConfig connectionConfig = ConnectionConfig.custom()
+				.setConnectTimeout(Timeout.ofMilliseconds(connTimeout))
+				.setSocketTimeout(Timeout.ofMilliseconds(socketTimeout))
+				.build();
+
+			PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
+				.setSSLSocketFactory(sslCF).setMaxConnTotal(5).setMaxConnPerRoute(5)
+				.setDefaultConnectionConfig(connectionConfig).build();
+
+			httpClient = HttpClients.custom().setConnectionManager(cm).build();
+		} catch (Exception e) {
+			getClient().logWithOutGameId(e);
+		}
+		return httpClient;
 	}
 
 	public void init() {
@@ -101,11 +148,11 @@ public class IconCache {
 		}
 
 		if (StringTool.isProvided(localCacheFolder)) {
-			String fileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
-			if (!new File(fileName).exists()) {
+			String mapFileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
+			if (!new File(mapFileName).exists()) {
 				updateMapFile();
 			}
-			try (FileReader fileReader = new FileReader(fileName);
+			try (FileReader fileReader = new FileReader(mapFileName);
 					 BufferedReader reader = new BufferedReader(fileReader)) {
 
 				JsonObject jsonObject = JsonObject.readFrom(reader);
@@ -273,9 +320,20 @@ public class IconCache {
 			URL iconUrl = null;
 			try {
 				iconUrl = new URL(pUrl);
-				BufferedImage icon = ImageIO.read(iconUrl);
-				fIconByKey.put(pUrl, icon);
-				addLocalCacheEntry(iconUrl, icon);
+				HttpGet get = new HttpGet(pUrl);
+				httpClient.execute(get, response -> {
+					final HttpEntity entity = response.getEntity();
+					if (entity != null) {
+						Header header = response.getHeader(HttpHeaders.CONTENT_TYPE);
+						String contentType = header != null ? header.getValue() : "";
+						BufferedImage icon = ImageIO.read(entity.getContent());
+						EntityUtils.consumeQuietly(entity);
+						fIconByKey.put(pUrl, icon);
+						addLocalCacheEntry(pUrl, icon, contentType);
+					}
+					return null;
+				});
+
 			} catch (Exception pAny) {
 				// This should catch issues where the image is broken...
 				getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
@@ -284,7 +342,7 @@ public class IconCache {
 
 	}
 
-	private void addLocalCacheEntry(URL iconUrl, BufferedImage icon) {
+	private void addLocalCacheEntry(String iconUrl, BufferedImage icon, String contentType) {
 		if (digest == null ||
 			!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
 				.equals(getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
@@ -292,14 +350,14 @@ public class IconCache {
 		}
 
 		digest.reset();
-		digest.update(iconUrl.toString().getBytes());
+		digest.update(iconUrl.getBytes());
 		try {
-			String format = getFormat(iconUrl);
+			String format = getFormat(contentType);
 			String hash = DatatypeConverter.printHexBinary(digest.digest()) + "." + format;
 			File newFile = new File(localCacheFolder + hash);
 			if (newFile.canWrite() || newFile.createNewFile()) {
 				ImageIO.write(icon, format, newFile);
-				localCacheMap.put(iconUrl.toString(), hash);
+				localCacheMap.put(iconUrl, hash);
 				updateMapFile();
 			}
 		} catch (IOException e) {
@@ -308,9 +366,8 @@ public class IconCache {
 
 	}
 
-	private String getFormat(URL url) throws IOException {
-		URLConnection conn = url.openConnection();
-		Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(conn.getContentType());
+	private String getFormat(String contentType) throws IOException {
+		Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType(contentType);
 		return readers.next().getFormatName();
 	}
 
@@ -413,7 +470,6 @@ public class IconCache {
 	public BufferedImage getIcon(BloodSpot pBloodspot) {
 		String iconProperty = pBloodspot.getIconProperty();
 		if (iconProperty == null) {
-			// System.out.println(pBloodspot.getInjury());
 			switch (pBloodspot.getInjury().getBase()) {
 				case PlayerState.KNOCKED_OUT:
 					iconProperty = getNextProperty(IIconProperty.BLOODSPOT_KO);
@@ -437,7 +493,7 @@ public class IconCache {
 					iconProperty = IIconProperty.BLOODSPOT_LIGHTNING;
 					break;
 				default:
-					throw new IllegalArgumentException("Cannot get icon for Bloodspot with injury " + pBloodspot.getInjury() + ".");
+					throw new IllegalArgumentException("Cannot get icon for blood spot with injury " + pBloodspot.getInjury() + ".");
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
@@ -474,24 +530,24 @@ public class IconCache {
 
 	private void loadPitchFromUrl(String pUrl) {
 		URL pitchUrl = null;
-		ZipInputStream zipStream = null;
 		try {
 			pitchUrl = new URL(pUrl);
-			HttpURLConnection connection = (HttpURLConnection) pitchUrl.openConnection();
-			connection.setRequestMethod("GET");
-			zipStream = new ZipInputStream(connection.getInputStream());
-			loadPitchFromStream(zipStream, pUrl);
+
+			HttpGet get = new HttpGet(pUrl);
+			httpClient.execute(get, response -> {
+				final HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					try (ZipInputStream zipStream = new ZipInputStream(entity.getContent())) {
+						loadPitchFromStream(zipStream, pUrl);
+						EntityUtils.consumeQuietly(entity);
+					}
+				}
+				return null;
+			});
+
 		} catch (Exception pAny) {
 			// This should catch issues where the image is broken...
 			getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
-		} finally {
-			if (zipStream != null) {
-				try {
-					zipStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

@@ -171,6 +171,7 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			}
 
 			if (fTouchback) {
+				game.getFieldModel().setOutOfBounds(true);
 				getResult().addReport(new ReportEvent("The ball lands out of bounds -> TOUCHBACK!!"));
 			}
 

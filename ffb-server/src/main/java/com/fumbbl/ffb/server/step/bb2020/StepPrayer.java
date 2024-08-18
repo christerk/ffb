@@ -112,7 +112,7 @@ public class StepPrayer extends AbstractStep {
 			}
 
 		} else {
-			prayerHandler.ifPresent(handler -> handler.applySelection(this, getGameState().getGame(), new PrayerDialogSelection(playerId, skill)));
+			prayerHandler.ifPresent(handler -> handler.applySelection(this, getGameState(), new PrayerDialogSelection(playerId, skill)));
 
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}

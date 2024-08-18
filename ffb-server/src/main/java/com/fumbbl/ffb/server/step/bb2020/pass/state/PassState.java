@@ -13,7 +13,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 
 public class PassState implements IJsonSerializable {
 	private String catcherId, interceptorId, originalBombardier;
-	private boolean passSkillUsed, landingOutOfBounds, interceptorChosen, deflectionSuccessful, interceptionSuccessful;
+	private boolean passSkillUsed, interceptorChosen, deflectionSuccessful, interceptionSuccessful;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
 	private TurnMode oldTurnMode;
@@ -83,14 +83,6 @@ public class PassState implements IJsonSerializable {
 		this.passSkillUsed = passSkillUsed;
 	}
 
-	public boolean isLandingOutOfBounds() {
-		return landingOutOfBounds;
-	}
-
-	public void setLandingOutOfBounds(boolean landingOutOfBounds) {
-		this.landingOutOfBounds = landingOutOfBounds;
-	}
-
 	public PassResult getResult() {
 		return result;
 	}
@@ -145,7 +137,6 @@ public class PassState implements IJsonSerializable {
 		if (throwerCoordinate != null) {
 			IJsonOption.FIELD_COORDINATE_THROWER.addTo(jsonObject, throwerCoordinate.toJsonValue());
 		}
-		IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, landingOutOfBounds);
 		IServerJsonOption.INTERCEPTOR_ID.addTo(jsonObject, interceptorId);
 		IServerJsonOption.INTERCEPTOR_CHOSEN.addTo(jsonObject, interceptorChosen);
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, oldTurnMode);
@@ -166,7 +157,6 @@ public class PassState implements IJsonSerializable {
 		if (throwerObject != null) {
 			throwerCoordinate = new FieldCoordinate().initFrom(source, throwerObject);
 		}
-		landingOutOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
 		interceptorId = IServerJsonOption.INTERCEPTOR_ID.getFrom(source, jsonObject);
 		interceptorChosen = IServerJsonOption.INTERCEPTOR_CHOSEN.getFrom(source, jsonObject);
 		oldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);

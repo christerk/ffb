@@ -135,6 +135,7 @@ public final class StepEndPassing extends AbstractStep {
 		UtilServerDialog.hideDialog(getGameState());
 		Game game = getGameState().getGame();
 		game.getFieldModel().setRangeRuler(null);
+		game.getFieldModel().setOutOfBounds(false);
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()));

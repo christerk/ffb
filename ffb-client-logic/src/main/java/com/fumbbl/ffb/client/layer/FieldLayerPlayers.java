@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -14,8 +15,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -79,7 +79,9 @@ public class FieldLayerPlayers extends FieldLayer {
 	}
 
 	private void drawBall(Graphics2D pG2d, FieldCoordinate pCoordinate) {
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		PlayerAction playerAction = game.getThrowerAction();
+		FieldModel fieldModel = game.getFieldModel();
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
@@ -88,19 +90,27 @@ public class FieldLayerPlayers extends FieldLayer {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
 
+			if (fieldModel.isOutOfBounds() && (playerAction == null || !playerAction.isBomb())) {
+				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
-					findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
 		}
 	}
 
 	private void drawBomb(Graphics2D pG2d, FieldCoordinate pCoordinate) {
-		FieldModel fieldModel = getClient().getGame().getFieldModel();
+		Game game = getClient().getGame();
+		PlayerAction playerAction = game.getThrowerAction();
+		FieldModel fieldModel = game.getFieldModel();
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBombCoordinate()) && fieldModel.isBombMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
 			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB);
+			if (fieldModel.isOutOfBounds() && playerAction != null && playerAction.isBomb()) {
+				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+			}
 			pG2d.drawImage(bombIcon, findCenteredIconUpperLeftX(bombIcon, pCoordinate),
-					findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
+				findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);
 		}
 	}
 
@@ -108,9 +118,6 @@ public class FieldLayerPlayers extends FieldLayer {
 		if (pPlayerMarker == null) {
 			return;
 		}
-		String marker = pPlayerMarker.getPlayerId() + " with " + pPlayerMarker.getHomeText();
-		getClient().logDebug(0, Thread.currentThread().getName() + " entering update for " + marker);
-
 		Game game = getClient().getGame();
 		Player<?> player = game.getPlayerById(pPlayerMarker.getPlayerId());
 		if (player == null) {
@@ -118,7 +125,6 @@ public class FieldLayerPlayers extends FieldLayer {
 		}
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		updateBallAndPlayers(playerCoordinate, true);
-		getClient().logDebug(0, Thread.currentThread().getName() + " leaving update for " + marker);
 	}
 
 	public void init() {
@@ -130,6 +136,9 @@ public class FieldLayerPlayers extends FieldLayer {
 				updateBallAndPlayers(playerCoordinate, true);
 			}
 			updateBallAndPlayers(fieldModel.getBallCoordinate(), false);
+			if (fieldModel.getBombCoordinate() != null) {
+				updateBallAndPlayers(fieldModel.getBombCoordinate(), false);
+			}
 		}
 	}
 

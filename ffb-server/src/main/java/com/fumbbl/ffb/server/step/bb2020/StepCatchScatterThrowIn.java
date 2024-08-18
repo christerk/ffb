@@ -690,6 +690,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 			}
 		} else {
+			game.getFieldModel().setOutOfBounds(true);
 			if (fScatterBounds.equals(FieldCoordinateBounds.FIELD)) {
 				fThrowInCoordinate = lastValidCoordinate;
 				return CatchScatterThrowInMode.THROW_IN;
@@ -784,6 +785,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		game.getFieldModel().setBallMoving(true);
 
 		if (ballCoordinateEnd.equals(lastValidCoordinate)) {
+			game.getFieldModel().setOutOfBounds(false);
 			game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 			fThrowInCoordinate = null;
 			return CatchScatterThrowInMode.CATCH_THROW_IN;

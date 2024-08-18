@@ -36,9 +36,9 @@ import java.util.List;
 
 /**
  * Step in kickoff sequence to scatter the kick.
- *
+ * <p>
  * Expects stepParameter KICKOFF_START_COORDINATE to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter KICKING_PLAYER_COORDINATE for all steps on the stack. Sets
  * stepParameter KICKOFF_BOUNDS for all steps on the stack. Sets stepParameter
  * TOUCHBACK for all steps on the stack.
@@ -68,11 +68,11 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case KICKOFF_START_COORDINATE:
-				fKickoffStartCoordinate = (FieldCoordinate) parameter.getValue();
-				return true;
-			default:
-				break;
+				case KICKOFF_START_COORDINATE:
+					fKickoffStartCoordinate = (FieldCoordinate) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -89,15 +89,15 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_USE_SKILL:
-				ClientCommandUseSkill skillUseCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				if (skillUseCommand.getSkill().hasSkillProperty(NamedProperties.canReduceKickDistance)) {
-					fUseKickChoice = skillUseCommand.isSkillUsed();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
-				break;
-			default:
-				break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill skillUseCommand = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (skillUseCommand.getSkill().hasSkillProperty(NamedProperties.canReduceKickDistance)) {
+						fUseKickChoice = skillUseCommand.isSkillUsed();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -122,20 +122,20 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			fScatterDistance = getGameState().getDiceRoller().rollScatterDistance();
 
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate,
-					fScatterDirection, fScatterDistance);
+				fScatterDirection, fScatterDistance);
 			getResult().addReport(
-					new ReportKickoffScatter(ballCoordinateEnd, fScatterDirection, rollScatterDirection, fScatterDistance));
+				new ReportKickoffScatter(ballCoordinateEnd, fScatterDirection, rollScatterDirection, fScatterDistance));
 
 			if (kickingPlayer != null) {
 				fKickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
 				if (skillReduceKickDistance != null && ((game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME
-						.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer)))
-						|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY
-								.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
+					.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer)))
+					|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY
+					.isInBounds(game.getFieldModel().getPlayerCoordinate(kickingPlayer))))) {
 					FieldCoordinate ballCoordinateEndWithKick = UtilServerCatchScatterThrowIn
-							.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
+						.findScatterCoordinate(fKickoffStartCoordinate, fScatterDirection, fScatterDistance / 2);
 					UtilServerDialog.showDialog(getGameState(),
-							new DialogKickSkillParameter(kickingPlayer.getId(), ballCoordinateEnd, ballCoordinateEndWithKick), false);
+						new DialogKickSkillParameter(kickingPlayer.getId(), ballCoordinateEnd, ballCoordinateEndWithKick), false);
 				} else {
 					fUseKickChoice = false;
 				}
@@ -153,11 +153,11 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		if (fUseKickChoice != null) {
 			int distance = fUseKickChoice ? fScatterDistance / 2 : fScatterDistance;
 			FieldCoordinate ballCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate,
-					fScatterDirection, distance);
+				fScatterDirection, distance);
 			FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
 			while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate)) {
 				lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(fKickoffStartCoordinate,
-						fScatterDirection, --distance);
+					fScatterDirection, --distance);
 			}
 			game.getFieldModel().setBallInPlay(false);
 			game.getFieldModel().setBallCoordinate(lastValidCoordinate);
@@ -170,10 +170,11 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 				fKickoffBounds = FieldCoordinateBounds.HALF_HOME;
 			}
 			fTouchback = (fKickoffBounds == null);
+			game.getFieldModel().setOutOfBounds(fTouchback);
 
 			if (fUseKickChoice && skillReduceKickDistance != null) {
 				getResult().addReport(
-						new ReportSkillUse(kickingPlayer.getId(), skillReduceKickDistance, true, SkillUse.HALVE_KICKOFF_SCATTER));
+					new ReportSkillUse(kickingPlayer.getId(), skillReduceKickDistance, true, SkillUse.HALVE_KICKOFF_SCATTER));
 			}
 
 			publishParameter(new StepParameter(StepParameterKey.KICKING_PLAYER_COORDINATE, fKickingPlayerCoordinate));
@@ -191,32 +192,32 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		Team kickingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 		Player<?>[] players = kickingTeam.getPlayers();
 		List<Player<?>> playersOnField = new ArrayList<>();
-		for (int i = 0; i < players.length; i++) {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(players[i]);
+		for (Player<?> player : players) {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			if ((playerCoordinate != null) && !playerCoordinate.isBoxCoordinate()) {
-				playersOnField.add(players[i]);
+				playersOnField.add(player);
 			}
-			if ((game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(playerCoordinate))
-					|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(playerCoordinate))) {
-				if (players[i].hasSkillProperty(NamedProperties.canReduceKickDistance)) {
-					kickingPlayer = players[i];
+			if (playerCoordinate != null && (game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_HOME.isInBounds(playerCoordinate))
+				|| (!game.isHomePlaying() && FieldCoordinateBounds.CENTER_FIELD_AWAY.isInBounds(playerCoordinate))) {
+				if (player.hasSkillProperty(NamedProperties.canReduceKickDistance)) {
+					kickingPlayer = player;
 					break;
 				} else {
-					if (kickingPlayer != null) {
+					if (kickingPlayer != null && playerCoordinate != null) {
 						FieldCoordinate kickingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(kickingPlayer);
 						if ((game.isHomePlaying() && (playerCoordinate.getX() < kickingPlayerCoordinate.getX()))
-								|| (!game.isHomePlaying() && (playerCoordinate.getX() > kickingPlayerCoordinate.getX()))) {
-							kickingPlayer = players[i];
+							|| (!game.isHomePlaying() && (playerCoordinate.getX() > kickingPlayerCoordinate.getX()))) {
+							kickingPlayer = player;
 						}
 					} else {
-						kickingPlayer = players[i];
+						kickingPlayer = player;
 					}
 				}
 			}
 		}
 		if (kickingPlayer == null) {
 			kickingPlayer = getGameState().getDiceRoller()
-					.randomPlayer(playersOnField.toArray(new Player[playersOnField.size()]));
+				.randomPlayer(playersOnField.toArray(new Player[0]));
 		}
 		return kickingPlayer;
 	}

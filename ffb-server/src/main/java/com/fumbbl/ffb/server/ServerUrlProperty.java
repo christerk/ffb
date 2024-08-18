@@ -33,6 +33,7 @@ public enum ServerUrlProperty {
 	GAMESTATE_URL_CHALLENGE("gamestate.url.challenge"),
 	GAMESTATE_URL_BEHAVIORS("gamestate.url.behaviours"),
 	GAMESTATE_URL_GET("gamestate.url.get"),
+	GAMESTATE_URL_RESET("gamestate.url.reset"),
 	GAMESTATE_URL_RESULT("gamestate.url.result"),
 	GAMESTATE_URL_SET("gamestate.url.set"),
 

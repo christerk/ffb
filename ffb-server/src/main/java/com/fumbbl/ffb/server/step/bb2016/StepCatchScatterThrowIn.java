@@ -71,11 +71,11 @@ import java.util.Set;
 /**
  * Step in any sequence to handle scattering the ball and throw-ins. Consumes
  * all expected stepParameters.
- *
+ * <p>
  * Expects stepParameter CATCH_SCATTER_THROWIN_MODE to be set by a preceding
  * step. Expects stepParameter THROW_IN_COORDINATE to be set by a preceding
  * step.
- *
+ * <p>
  * Sets stepParameter CATCHER_ID for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
@@ -467,6 +467,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 			}
 		} else {
+			game.getFieldModel().setOutOfBounds(true);
 			if (fScatterBounds.equals(FieldCoordinateBounds.FIELD)) {
 				fThrowInCoordinate = lastValidCoordinate;
 				return CatchScatterThrowInMode.THROW_IN;
@@ -508,6 +509,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		game.getFieldModel().setBallMoving(true);
 
 		if (ballCoordinateEnd.equals(lastValidCoordinate)) {
+			game.getFieldModel().setOutOfBounds(false);
 			game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 			fThrowInCoordinate = null;
 			return CatchScatterThrowInMode.CATCH_THROW_IN;

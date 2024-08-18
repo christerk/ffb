@@ -314,6 +314,7 @@ public interface IJsonOption {
 	JsonIntOption OLD_ROLL = new JsonIntOption("oldRoll");
 	JsonEnumWithNameOption OLD_WEATHER = new JsonEnumWithNameOption("oldWeather", Factory.WEATHER);
 	JsonIntOption OPPONENT_TEAM_VALUE = new JsonIntOption("opponentTeamValue");
+	JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
 	JsonStringOption PARTNER_ID = new JsonStringOption("partnerId");
 	JsonBooleanOption PASS_BLOCK_AVAILABLE = new JsonBooleanOption("passBlockAvailable");
 	JsonFieldCoordinateOption PASS_COORDINATE = new JsonFieldCoordinateOption("passCoordinate");
@@ -388,6 +389,7 @@ public interface IJsonOption {
 	JsonStringOption RACE = new JsonStringOption("race");
 	JsonIntOption RAISED_DEAD = new JsonIntOption("raisedDead");
 	JsonStringOption RAISED_POSITION_ID = new JsonStringOption("raisedPositionId");
+	JsonObjectOption RANGE_RULER = new JsonObjectOption("rangeRuler");
 	JsonStringOption REASON = new JsonStringOption("reason");
 	JsonBooleanOption RECEIVE_CHOICE = new JsonBooleanOption("receiveChoice");
 	JsonBooleanOption RECOVERING = new JsonBooleanOption("recovering");

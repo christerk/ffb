@@ -219,6 +219,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			interceptionModifierArray, isBomb, easyIntercept));
 		if (successful) {
 			status = ActionStatus.SUCCESS;
+			game.getFieldModel().setOutOfBounds(false);
 			if (easyIntercept) {
 				if (isBomb) {
 					game.getFieldModel().setBombMoving(false);

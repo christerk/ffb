@@ -196,7 +196,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 	}
 
-	@Override
 	public boolean removeSkill(Skill pSkill) {
 		return fSkills.remove(pSkill);
 	}
@@ -341,7 +340,6 @@ public class RosterPlayer extends Player<RosterPosition> {
 		return fId;
 	}
 
-	@Override
 	public void setId(String pId) {
 		fId = pId;
 	}

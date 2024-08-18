@@ -60,15 +60,15 @@ import java.util.List;
 
 /**
  * Step in kickoff sequence to apply the kickoff result.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_END.
- *
+ * <p>
  * Needs to be initialized with stepParameter SKIP_PAST_LABEL_ON_BLITZ.
- *
+ * <p>
  * Expects stepParameter KICKOFF_BOUNDS to be set by a preceding step. Expects
  * stepParameter KICKOFF_RESULT to be set by a preceding step. Expects
  * stepParameter TOUCHBACK to be set by a preceding step.
- *
+ * <p>
  * Sets stepParameter TOUCHBACK for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *
@@ -406,7 +406,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			fTouchback = !fKickoffBounds.isInBounds(ballCoordinateEnd);
 			if (!fTouchback) {
 				game.getFieldModel().setBallCoordinate(ballCoordinateEnd);
-				lastValidCoordinate = ballCoordinateEnd;
 			} else {
 				game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 			}
@@ -509,7 +508,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			Player<?> player = game.getPlayerById(hitPlayerIdAway);
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 
-			FieldCoordinate startCoordinate = null;
+			FieldCoordinate startCoordinate;
 			if (FieldCoordinateBounds.UPPER_HALF.isInBounds(playerCoordinate)) {
 				startCoordinate = new FieldCoordinate(getGameState().getDiceRoller().rollXCoordinate(), 0);
 			} else {
@@ -580,7 +579,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				playersOnField.add(player);
 			}
 		}
-		return playersOnField.toArray(new Player[playersOnField.size()]);
+		return playersOnField.toArray(new Player[0]);
 	}
 
 	private boolean isPlayerOnField(Game pGame, Player<?> pPlayer) {

@@ -11,6 +11,27 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+
+		versions.add(new VersionChangeList("2.29.0")
+			.addBugfix("Auto Marking: Skill and stat changes of some prayers did not get applied")
+			.addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls are avoided")
+			.addBugfix("Juggernaut: Message of cancelling wrestle was always displayed even if opponent did not have wrestle")
+			.addBugfix("Raiding Party: Can't move players without tz anymore, since they have to mark an opponent after move")
+			.addBugfix("Slayer: Modifier could be used on injury even against opponent with st4 or lower")
+			.addImprovement("During kick-off events like Quick Snap the ball is now always drawn over a player on the same coordinate to make it more visible")
+			.addImprovement("When balls or bombs land out of bounds they are marked with white cross similar to the stunned marking during the kick off phase and deflector selection")
+			.addBugfix("Distance Markings were not aligned properly in portrait and square modes")
+			.addImprovement("Increase contrast for away team pitch markings")
+			.addFeature("Pitch now supports row markings")
+			.addBugfix("What's new: Descriptions of dialog and releases were not scaled")
+			.addBugfix("Nerves of Steel: Did work on TTM actions")
+			.addBugfix("Nerves of Steel: Did not apply for HMP bombs")
+			.addBugfix("If reconnecting during bomb intercept, the bomb was not rendered")
+			.addBugfix("Range ruler was not rendered when (re)connecting during an interference attempt")
+			.addImprovement("Show ball/bomb in target square on successful throw during interception dialog")
+			.addBugfix("Nerves of Steel: Had no wording for bomb action")
+		);
+
 		versions.add(new VersionChangeList("2.28.1")
 			.addBugfix("Moles under the pitch only lasted a drive instead of a half")
 			.addBugfix("Trickster could be used without tackle zone")

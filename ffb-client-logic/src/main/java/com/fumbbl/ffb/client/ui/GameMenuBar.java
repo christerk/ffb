@@ -139,6 +139,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem fPitchMarkingsOnMenuItem;
 	private JRadioButtonMenuItem fPitchMarkingsOffMenuItem;
 
+	private JRadioButtonMenuItem fPitchMarkingsRowOnMenuItem;
+	private JRadioButtonMenuItem fPitchMarkingsRowOffMenuItem;
+
 	private JRadioButtonMenuItem pitchLandscapeMenuItem;
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
@@ -480,15 +483,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ButtonGroup tdDistanceGroup = new ButtonGroup();
 
-		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Pitch Markings on");
+		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings on");
 		fPitchMarkingsOnMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOnMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOnMenuItem);
 
-		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Pitch Markings off");
+		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings off");
 		fPitchMarkingsOffMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOffMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOffMenuItem);
+
+		JMenu fPitchMarkingsRowMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS_ROW);
+		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_R);
+		fPitchMenu.add(fPitchMarkingsRowMenu);
+
+		ButtonGroup rowMarkingsGroup = new ButtonGroup();
+
+		fPitchMarkingsRowOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings on");
+		fPitchMarkingsRowOnMenuItem.addActionListener(this);
+		rowMarkingsGroup.add(fPitchMarkingsRowOnMenuItem);
+		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOnMenuItem);
+
+		fPitchMarkingsRowOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings off");
+		fPitchMarkingsRowOffMenuItem.addActionListener(this);
+		rowMarkingsGroup.add(fPitchMarkingsRowOffMenuItem);
+		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOffMenuItem);
 
 		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_PITCH_ORIENTATION);
 		orientationMenu.setMnemonic(KeyEvent.VK_O);
@@ -1022,6 +1041,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String pitchMarkingsSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_MARKINGS);
 		fPitchMarkingsOffMenuItem.setSelected(true);
 		fPitchMarkingsOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ON.equals(pitchMarkingsSetting));
+
+		String pitchMarkingsRowSetting = getClient().getProperty(SETTING_PITCH_MARKINGS_ROW);
+		fPitchMarkingsRowOffMenuItem.setSelected(true);
+		fPitchMarkingsRowOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON.equals(pitchMarkingsRowSetting));
 
 		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
 		pitchLandscapeMenuItem.setSelected(true);
@@ -1899,6 +1922,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fPitchMarkingsOnMenuItem) {
 			getClient().setProperty(CommonProperty.SETTING_PITCH_MARKINGS, IClientPropertyValue.SETTING_PITCH_MARKINGS_ON);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchMarkingsRowOffMenuItem) {
+			getClient().setProperty(SETTING_PITCH_MARKINGS_ROW, IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_OFF);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fPitchMarkingsRowOnMenuItem) {
+			getClient().setProperty(SETTING_PITCH_MARKINGS_ROW, IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON);
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchLandscapeMenuItem) {

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.util.Scanner;
 
 import java.util.Collection;
@@ -46,6 +47,10 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 			return skills.get("ball and chain");
 		}
 		return null;
+	}
+
+	public Skill forStatKey(PlayerStatKey key) {
+		return forName("+" + key.name());
 	}
 
 	public Skill forClass(Class<? extends Skill> c) {

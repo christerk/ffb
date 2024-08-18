@@ -65,7 +65,7 @@ public class ServerCommandHandlerApplyAutomatedPlayerMarkings extends ServerComm
 
 	private void markForSpecOrReplay(GameState gameState, Game game, AutoMarkingConfig config, Session session) {
 		List<PlayerMarker> markers = Arrays.stream(game.getPlayers()).map(player -> {
-			String marking = markerGenerator.generate(player, config, false);
+			String marking = markerGenerator.generate(game, player, config, false);
 			PlayerMarker playerMarker = new PlayerMarker(player.getId());
 			playerMarker.setHomeText(marking);
 			return playerMarker;
@@ -80,7 +80,7 @@ public class ServerCommandHandlerApplyAutomatedPlayerMarkings extends ServerComm
 		Team team = homeCoach ? game.getTeamHome() : game.getTeamAway();
 
 		Arrays.stream(game.getPlayers()).forEach(player -> {
-			String marking = markerGenerator.generate(player, config, team.hasPlayer(player));
+			String marking = markerGenerator.generate(game, player, config, team.hasPlayer(player));
 			PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
 			if (playerMarker == null) {
 				playerMarker = new PlayerMarker(player.getId());

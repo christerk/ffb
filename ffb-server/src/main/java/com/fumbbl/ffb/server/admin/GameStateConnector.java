@@ -29,6 +29,7 @@ public class GameStateConnector {
 		"  [includeLog being true, false or a positive integer, where an integer limits the log the last n entries, 0 has the same effect as true]\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector result <gameId> <fromDb>\n" +
 		"  [fromDb being true, false or auto, where auto tries in memory first and falls back to db if needed]\n" +
+		"java com.fumbbl.ffb.server.admin.GameStateConnector reset <gameId>\n" +
 		"java com.fumbbl.ffb.server.admin.GameStateConnector set <file>\n" +
 		"  [file being an unzipped json file containing the new gameState]\n";
 
@@ -100,6 +101,12 @@ public class GameStateConnector {
 			} else if (GameStateServlet.RESULT.equals(args[0])) {
 				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_RESULT.url(serverProperties),
 					response, args[1], args[2]);
+				System.out.println(url);
+				String servletResponse = UtilServerHttpClient.fetchPage(url);
+				System.out.println(servletResponse);
+			} else if (GameStateServlet.RESET.equals(args[0])) {
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_RESULT.url(serverProperties),
+					response, args[1]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);

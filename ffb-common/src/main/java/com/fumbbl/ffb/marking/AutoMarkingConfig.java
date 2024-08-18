@@ -22,10 +22,6 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		return markings;
 	}
 
-	public void setMarkings(Set<AutoMarkingRecord> markings) {
-		this.markings = markings;
-	}
-
 	public String getSeparator() {
 		return separator;
 	}
@@ -48,6 +44,7 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		defaults.add(builder.withSkill("Diving Tackle").withMarking("Dt").withGainedOnly(true).build());
 		defaults.add(builder.withSkill("Dirty Player").withMarking("Dp").withGainedOnly(true).build());
 		defaults.add(builder.withSkill("Side Step").withMarking("S").withGainedOnly(true).build());
+		defaults.add(builder.withSkill("Guard").withMarking("G").withGainedOnly(true).build());
 
 		return defaults;
 	}

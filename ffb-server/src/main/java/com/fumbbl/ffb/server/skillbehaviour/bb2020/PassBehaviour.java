@@ -97,7 +97,7 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 				PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 				PassingDistance passingDistance = PassingDistance.LONG_BOMB;
 				PassModifierFactory factory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
-				PassContext passContext = new PassContext(game, game.getThrower(), passingDistance, bombAction);
+				PassContext passContext = new PassContext(game, game.getThrower(), passingDistance, false);
 				Set<PassModifier> modifiers = factory.findModifiers(passContext);
 
 				if (ReRolledActions.PASS == step.getReRolledAction()) {
