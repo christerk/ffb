@@ -1,13 +1,15 @@
-package com.fumbbl.ffb.client.report;
+package com.fumbbl.ffb.client.report.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.client.report.ReportMessageBase;
+import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportNervesOfSteel;
+import com.fumbbl.ffb.report.bb2016.ReportNervesOfSteel;
 
 @ReportMessageType(ReportId.NERVES_OF_STEEL)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
 public class NervesOfSteelMessage extends ReportMessageBase<ReportNervesOfSteel> {
 
     @Override
