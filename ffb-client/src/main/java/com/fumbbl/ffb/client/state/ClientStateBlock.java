@@ -11,6 +11,7 @@ import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
+import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -70,20 +71,21 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> player = actingPlayer.getPlayer();
+		boolean actionHandled = true;
 		if (logicModule.isSufferingBloodLust(actingPlayer)) {
-			boolean actionHandled = true;
 			switch (pActionKey) {
 				case PLAYER_SELECT:
 					createAndShowPopupMenuForBlockingPlayer();
 					break;
 				case PLAYER_ACTION_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_MOVE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_MOVE);
 					break;
 				case PLAYER_ACTION_END_MOVE:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
 				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
-					menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 					break;
 				default:
 					actionHandled = false;
@@ -91,9 +93,63 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
 			}
 			return actionHandled;
 		} else {
+
 			return UtilClientStateBlocking.actionKeyPressed(this, pActionKey, false);
 		}
 	}
+
+
+	/*public static boolean actionKeyPressed(ClientState pClientState, ActionKey pActionKey, boolean pDoBlitz) {
+		boolean actionHandled;
+		Game game = pClientState.getClient().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Player<?> player = actingPlayer.getPlayer();
+		switch (pActionKey) {
+			case PLAYER_ACTION_BLOCK:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BLOCK);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_STAB:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_STAB);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_CHAINSAW:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_CHAINSAW);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_PROJECTILE_VOMIT:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_TREACHEROUS:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_WISDOM:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_WISDOM);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_RAIDING_PARTY:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_BALEFUL_HEX:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+				actionHandled = true;
+				break;
+			case PLAYER_ACTION_GORED:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+				return true;
+			default:
+				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
+				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
+					pActionKey);
+				Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
+				actionHandled = showPopupOrBlockPlayer(pClientState, defender, pDoBlitz);
+				break;
+		}
+		return actionHandled;
+	}*/
 
 	@Override
 	protected Map<Integer, ClientAction> actionMapping() {
