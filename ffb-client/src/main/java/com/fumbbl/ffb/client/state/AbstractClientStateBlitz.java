@@ -1,24 +1,32 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Kalimar
  */
 public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> extends AbstractClientStateMove<MoveLogicModule> {
+
+	protected ClientStateBlockExtension extension;
 
 	protected AbstractClientStateBlitz(FantasyFootballClientAwt client, T logicModule) {
 		super(client, logicModule);
@@ -41,6 +49,16 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 				// TODO this needs to be split and probably integrated into logic module
 				UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, true);
 				break;
+			case SHOW_ACTION_ALTERNATIVES:
+
+				List<JMenuItem> menuItemList = new ArrayList<>();
+				if (logicModule.isGoredAvailable(pClientState.getClient().getGame())) {
+					menuItemList.add(createGoredItem(pClientState));
+				}
+
+				ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
+				extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), pPlayer, false, menuItemList);
+
 			default:
 				break;
 		}
@@ -63,7 +81,7 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		return UtilClientStateBlocking.actionKeyPressed(this, pActionKey, true) || super.actionKeyPressed(pActionKey);
+		return extension.actionKeyPressed(this, pActionKey) || super.actionKeyPressed(pActionKey);
 	}
 
 	@Override
@@ -82,5 +100,16 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	@Override
 	protected void postPerform(int menuKey) {
 		getClient().getUserInterface().getFieldComponent().refresh();
+	}
+
+
+	private static JMenuItem createGoredItem(ClientStateAwt<?> pClientState) {
+		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
+		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
+		JMenuItem menuItem = new JMenuItem(dimensionProvider, "Gored By The Bull",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
+		return menuItem;
 	}
 }
