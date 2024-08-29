@@ -35,7 +35,7 @@ public class InjuryTypeFoulForSpp extends ModificationAwareInjuryTypeServer<Foul
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 		Set<InjuryModifier> armorModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul(), isVomit());
+			pDefender, isStab(), isFoul(), isVomitLike());
 		injuryContext.addInjuryModifiers(armorModifiers);
 
 		setInjury(pDefender, gameState, diceRoller, injuryContext);

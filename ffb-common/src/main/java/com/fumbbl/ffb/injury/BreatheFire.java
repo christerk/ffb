@@ -2,10 +2,10 @@ package com.fumbbl.ffb.injury;
 
 import com.fumbbl.ffb.SendToBoxReason;
 
-public class ProjectileVomit extends InjuryType {
+public class BreatheFire extends InjuryType {
 
-	public ProjectileVomit() {
-		super("projectileVomit", false, SendToBoxReason.PROJECTILE_VOMIT);
+	public BreatheFire() {
+		super("breatheFire", false, SendToBoxReason.BREATHE_FIRE);
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		// do not use injuryModifiers on blocking own team-mate with b&c
 		if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit());
+				pDefender, isStab(), isFoul(), isVomitLike());
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 

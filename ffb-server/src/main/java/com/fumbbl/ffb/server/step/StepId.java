@@ -29,6 +29,7 @@ public enum StepId implements INamedObject {
 	BOMBARDIER("bombardier"), // action.pass
 	BONE_HEAD("boneHead"), // action.common
 	BOTH_DOWN("bothDown"),  // action.block
+	BREATHE_FIRE("breatheFire"),
 	BRIBES("bribes"), // action.foul
 	BUY_CARDS("buyCards"), // game.start
 	BUY_CARDS_AND_INDUCEMENTS("buyCardsAndInducements"), // game.start

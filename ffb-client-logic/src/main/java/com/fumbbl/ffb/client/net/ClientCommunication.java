@@ -358,9 +358,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPass(pActingPlayerId, pTargetCoordinate));
 	}
 
-	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit) {
+	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw,
+												boolean usingVomit, boolean usingBreatheFire) {
 		String defenderId = (pDefender != null) ? pDefender.getId() : null;
-		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit));
+		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire));
 	}
 
 	public void sendFoul(String pActingPlayerId, Player<?> pDefender, boolean usingChainsaw) {

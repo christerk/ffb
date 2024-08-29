@@ -15,18 +15,19 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 
 	private String fActingPlayerId;
 	private String fDefenderId;
-	private boolean fUsingStab, usingChainsaw, usingVomit;
+	private boolean fUsingStab, usingChainsaw, usingVomit, usingBreatheFire;
 
 	public ClientCommandBlock() {
 		super();
 	}
 
-	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit) {
+	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
 		fActingPlayerId = pActingPlayerId;
 		fDefenderId = pDefenderId;
 		fUsingStab = pUsingStab;
 		this.usingChainsaw = usingChainsaw;
 		this.usingVomit = usingVomit;
+		this.usingBreatheFire = usingBreatheFire;
 	}
 
 	public NetCommandId getId() {
@@ -53,7 +54,10 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		return usingVomit;
 	}
 
-	// JSON serialization
+	public boolean isUsingBreatheFire() {
+		return usingBreatheFire;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -62,6 +66,7 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		IJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
+		IJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
 		return jsonObject;
 	}
 
@@ -73,6 +78,9 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		fUsingStab = IJsonOption.USING_STAB.getFrom(source, jsonObject);
 		usingChainsaw = IJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		usingVomit = IJsonOption.USING_VOMIT.getFrom(source, jsonObject);
+		if (IJsonOption.USING_BREATHE_FIRE.isDefinedIn(jsonObject)) {
+			usingBreatheFire = IJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

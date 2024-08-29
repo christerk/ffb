@@ -41,7 +41,7 @@ public class InjuryTypeDropGFI extends InjuryTypeServer<DropGFI> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			setInjury(pDefender, gameState, diceRoller);
 		} else {

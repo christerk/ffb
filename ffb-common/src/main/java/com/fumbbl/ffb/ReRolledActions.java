@@ -6,6 +6,7 @@ import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
+import com.fumbbl.ffb.skill.bb2020.BreatheFire;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
 import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
 import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
@@ -53,6 +54,7 @@ public class ReRolledActions {
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
 	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction(ProjectileVomit.class);
+	public static final ReRolledAction BREATHE_FIRE = new ReRolledAction(BreatheFire.class);
 	public static final ReRolledAction TRAP_DOOR = new ReRolledAction("Trapdoor");
 	public static final ReRolledAction ARGUE_THE_CALL = new ReRolledAction("Argue the Call");
 	public static final ReRolledAction OLD_PRO = new ReRolledAction("Old Pro");

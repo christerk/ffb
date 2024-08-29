@@ -36,7 +36,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		Optional<IInjuryContextModification> modification = Optional.empty();
 		if (pAttacker != null) {
 			modification = pAttacker.getUnusedInjuryModification(injuryType);
-		} else if (injuryType.isChainsaw() || injuryType.isVomit()) {
+		} else if (injuryType.isChainsaw() || injuryType.isVomitLike()) {
 			modification = pDefender.getUnusedInjuryModification(injuryType);
 		}
 

@@ -505,6 +505,7 @@ public interface IJsonOption {
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
+	JsonBooleanOption STRONG_OPPONENT = new JsonBooleanOption("strongOpponent");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
 	JsonBooleanOption SUCCESSFUL_DAUNTLESS = new JsonBooleanOption("successfulDauntless");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
@@ -586,6 +587,7 @@ public interface IJsonOption {
 	JsonIntOption USES = new JsonIntOption("uses");
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
 	JsonBooleanOption USES_TREASURY = new JsonBooleanOption("usesTreasury");
+	JsonBooleanOption USING_BREATHE_FIRE = new JsonBooleanOption("usingBreatheFire");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");

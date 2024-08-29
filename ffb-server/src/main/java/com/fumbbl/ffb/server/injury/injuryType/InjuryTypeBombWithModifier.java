@@ -45,7 +45,7 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			((InjuryModifierFactory) game.getFactory(FactoryType.Factory.INJURY_MODIFIER)).findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			if (Arrays.stream(injuryContext.getArmorModifiers())
 				.noneMatch(modifier -> modifier instanceof SpecialEffectArmourModifier)) {

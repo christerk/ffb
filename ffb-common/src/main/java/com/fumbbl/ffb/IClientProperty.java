@@ -55,7 +55,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_BLACK_INK = "key.player.action.blackInk";
 	String KEY_PLAYER_ACTION_CATCH_OF_THE_DAY = "key.player.action.catchOfTheDay";
 	String KEY_PLAYER_ACTION_BOUNDING_LEAP = "key.player.action.boundingLeap";
-
+	String KEY_PLAYER_ACTION_BREATHE_FIRE = "key.player.action.breatheFire";
 	String KEY_TOOLBAR_TURN_END = "key.toolbar.turn.end";
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
 	String KEY_PLAYER_ACTION_ALL_YOU_CAN_EAT = "key.player.action.allYouCanEat";

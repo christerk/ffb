@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepTrickster extends AbstractStep {
 
-	private boolean fUsingStab, usingChainsaw, usingVomit, withBall;
+	private boolean fUsingStab, usingChainsaw, usingVomit, withBall, usingBreatheFire;
 	private TurnMode lastTurnMode;
 	private final List<FieldCoordinate> eligibleSquares = new ArrayList<>();
 	private Boolean usingTrickster;
@@ -73,6 +73,9 @@ public class StepTrickster extends AbstractStep {
 					break;
 				case USING_VOMIT:
 					usingVomit = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					break;
+				case USING_BREATHE_FIRE:
+					usingBreatheFire = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					break;
 				default:
 					break;
@@ -150,7 +153,7 @@ public class StepTrickster extends AbstractStep {
 		if (usingTrickster == null) {
 
 			if (defender.hasSkillProperty(NamedProperties.canMoveBeforeBeingBlocked)
-				&& (usingChainsaw || usingVomit || fUsingStab || !UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
+				&& (usingChainsaw || usingVomit || fUsingStab || usingBreatheFire|| !UtilCards.cancelsSkill(actingPlayer.getPlayer(), defender.getSkillWithProperty(NamedProperties.canMoveBeforeBeingBlocked)))) {
 				eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(coord -> fieldModel.getPlayer(coord) == null && !fieldModel.isBlockedForTrickster(coord)).collect(Collectors.toList()));
 
@@ -216,6 +219,7 @@ public class StepTrickster extends AbstractStep {
 		IServerJsonOption.USING_STAB.addTo(jsonObject, fUsingStab);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
+		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
 		IServerJsonOption.LAST_TURN_MODE.addTo(jsonObject, lastTurnMode);
 		JsonArray jsonArray = new JsonArray();
 		eligibleSquares.stream().map(FieldCoordinate::toJsonValue).forEach(jsonArray::add);
@@ -249,6 +253,7 @@ public class StepTrickster extends AbstractStep {
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		actionStatus = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
 		withBall = IServerJsonOption.WITH_BALL.getFrom(source, jsonObject);
+		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
 		return this;
 	}
 

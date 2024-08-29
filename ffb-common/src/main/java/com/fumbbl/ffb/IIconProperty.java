@@ -179,6 +179,7 @@ public interface IIconProperty {
 	String ACTION_KICK_EM_BLOCK = "action.kickEmBlock";
 	String ACTION_KICK_EM_BLITZ = "action.kickEmBlitz";
 	String ACTION_CATCH_OF_THE_DAY = "action.catchOfTheDay";
+	String ACTION_BREATHE_FIRE = "action.breatheFire";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

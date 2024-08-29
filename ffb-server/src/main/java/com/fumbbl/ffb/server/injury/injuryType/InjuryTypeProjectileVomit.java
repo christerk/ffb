@@ -26,7 +26,7 @@ public class InjuryTypeProjectileVomit extends ModificationAwareInjuryTypeServer
 
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul(), isVomit());
+			pDefender, isStab(), isFoul(), isVomitLike());
 		injuryContext.addInjuryModifiers(injuryModifiers);
 
 		setInjury(pDefender, gameState, diceRoller);

@@ -94,6 +94,8 @@ public class NamedProperties {
 		"Can Perform Armour Roll Instead Of Block");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFail = new NamedProperty(
 		"Can Perform Armour Roll Instead Of Block That Might Fail");
+	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover = new NamedProperty(
+		"Can Perform Armour Roll Instead Of Block That Might Fail With Turnover");
 	public static final ISkillProperty canPerformSecondChainsawAttack = new NamedProperty("Can Perform Second Chainsaw Attack");
 	public static final ISkillProperty canPerformTwoBlocksAfterFailedFury = new NamedProperty("Can Perform Two Blocks After Failed Fury");
 	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");

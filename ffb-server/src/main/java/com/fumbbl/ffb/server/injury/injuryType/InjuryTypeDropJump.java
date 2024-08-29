@@ -84,7 +84,7 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 			if (avOrInjModifierSkill != null) {
 				avOrInjModifierSkill.getInjuryModifiers().forEach(injuryContext::addInjuryModifier);
 			}
