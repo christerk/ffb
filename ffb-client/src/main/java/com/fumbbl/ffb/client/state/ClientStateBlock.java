@@ -12,7 +12,6 @@ import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -28,7 +27,7 @@ import java.util.Map;
  */
 public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
 
-  private ClientStateBlockExtension extension = new ClientStateBlockExtension();
+  private final ClientStateBlockExtension extension = new ClientStateBlockExtension();
 
   protected ClientStateBlock(FantasyFootballClientAwt pClient) {
     super(pClient, new BlockLogicModule(pClient));
@@ -43,9 +42,6 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
     switch (result.getKind()) {
       case SHOW_ACTIONS:
         createAndShowPopupMenuForBlockingPlayer();
-        break;
-      case PERFORM:
-        UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, false);
         break;
       case SHOW_ACTION_ALTERNATIVES:
         List<JMenuItem> menuItemList = new ArrayList<>();
@@ -106,59 +102,6 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
       return extension.actionKeyPressed(this, pActionKey);
     }
   }
-
-
-  /*public static boolean actionKeyPressed(ClientState pClientState, ActionKey pActionKey, boolean pDoBlitz) {
-    boolean actionHandled;
-    Game game = pClientState.getClient().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    Player<?> player = actingPlayer.getPlayer();
-    switch (pActionKey) {
-      case PLAYER_ACTION_BLOCK:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BLOCK);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_STAB:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_STAB);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_CHAINSAW:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_CHAINSAW);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_PROJECTILE_VOMIT:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_TREACHEROUS:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_WISDOM:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_WISDOM);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_RAIDING_PARTY:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_BALEFUL_HEX:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
-        actionHandled = true;
-        break;
-      case PLAYER_ACTION_GORED:
-        menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
-        return true;
-      default:
-        FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
-        FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
-          pActionKey);
-        Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
-        actionHandled = showPopupOrBlockPlayer(pClientState, defender, pDoBlitz);
-        break;
-    }
-    return actionHandled;
-  }*/
 
   @Override
   protected Map<Integer, ClientAction> actionMapping() {

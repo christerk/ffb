@@ -2,16 +2,13 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
@@ -24,7 +21,7 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
-public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> extends AbstractClientStateMove<MoveLogicModule> {
+public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> extends AbstractClientStateMove<T> {
 
 	protected ClientStateBlockExtension extension;
 
@@ -45,15 +42,11 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
 				break;
-			case PERFORM:
-				// TODO this needs to be split and probably integrated into logic module
-				UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, true);
-				break;
 			case SHOW_ACTION_ALTERNATIVES:
 
 				List<JMenuItem> menuItemList = new ArrayList<>();
-				if (logicModule.isGoredAvailable(pClientState.getClient().getGame())) {
-					menuItemList.add(createGoredItem(pClientState));
+				if (logicModule.isGoredAvailable(getClient().getGame())) {
+					menuItemList.add(createGoredItem());
 				}
 
 				ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
@@ -103,10 +96,9 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	}
 
 
-	private static JMenuItem createGoredItem(ClientStateAwt<?> pClientState) {
-		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
-		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
-		JMenuItem menuItem = new JMenuItem(dimensionProvider, "Gored By The Bull",
+	private JMenuItem createGoredItem() {
+		IconCache iconCache = getClient().getUserInterface().getIconCache();
+		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Gored By The Bull",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
