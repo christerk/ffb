@@ -51,5 +51,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BLACK_INK = KeyEvent.VK_L;
 	int KEY_CATCH_OF_THE_DAY = KeyEvent.VK_D;
 	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
-	int KEY_BREATHE_FIRE = KeyEvent.VK_F;
+	int KEY_BREATHE_FIRE = KeyEvent.VK_T;
 }

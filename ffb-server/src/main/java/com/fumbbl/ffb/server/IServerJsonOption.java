@@ -165,7 +165,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
 
     JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
-    JsonStringOption STATUS = new JsonStringOption("status");
     JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
     JsonStringOption STEP_PHASE = new JsonStringOption("stepPhase");
     JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");

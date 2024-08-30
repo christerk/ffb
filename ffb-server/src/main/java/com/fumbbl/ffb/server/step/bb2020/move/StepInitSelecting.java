@@ -242,7 +242,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
-						publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, blockCommand.isUsingBreatheFire()));
+						publishParameter(new StepParameter(StepParameterKey.USING_BREATHE_FIRE, blockCommand.isUsingBreatheFire()));
 						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 						if (targetSelectionState != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;

@@ -8,7 +8,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
-public class StatBasedRollModifier extends RollModifier implements IJsonSerializable {
+public class StatBasedRollModifier extends RollModifier<ModifierContext> implements IJsonSerializable {
 
 	private String name;
 

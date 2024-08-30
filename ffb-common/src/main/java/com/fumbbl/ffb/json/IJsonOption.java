@@ -500,6 +500,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
+	JsonStringOption STATUS = new JsonStringOption("status");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
 	JsonStringOption STEP_PARAMETER_KEY = new JsonStringOption("stepParameterKey");
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");

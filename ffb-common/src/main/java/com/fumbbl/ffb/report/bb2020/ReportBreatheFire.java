@@ -55,7 +55,7 @@ public class ReportBreatheFire extends ReportSkillRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, defenderId);
 		IJsonOption.STRONG_OPPONENT.addTo(jsonObject, strongOpponent);
-		IJsonOption.
+		IJsonOption.STATUS.addTo(jsonObject, result.name());
 		return jsonObject;
 	}
 
@@ -65,6 +65,7 @@ public class ReportBreatheFire extends ReportSkillRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		defenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		strongOpponent = IJsonOption.STRONG_OPPONENT.getFrom(source, jsonObject);
+		result = BreatheFireResult.valueOf(IJsonOption.STATUS.getFrom(source, jsonObject));
 		return this;
 	}
 }

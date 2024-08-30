@@ -55,6 +55,9 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
 		sequence.add(StepId.PROJECTILE_VOMIT, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
+		sequence.add(StepId.BREATHE_FIRE, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED),
+			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		// GFI for ball & chain should go here.
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.NEXT),

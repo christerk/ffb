@@ -36,7 +36,7 @@ public class ClientStatePutridRegurgitationBlock extends ClientStateBlock {
 		if (pPlayer == actingPlayer.getPlayer()) {
 			super.clickOnPlayer(pPlayer);
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
 		}
 	}
 

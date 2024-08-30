@@ -43,7 +43,7 @@ public class ClientStatePutridRegurgitationBlitz extends ClientStateBlitz {
 			} else {
 				if (PlayerAction.PUTRID_REGURGITATION_BLITZ == actingPlayer.getPlayerAction()
 					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
 				}
 			}
 		}

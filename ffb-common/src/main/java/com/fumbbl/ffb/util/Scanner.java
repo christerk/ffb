@@ -63,6 +63,8 @@ public class Scanner<T extends IKeyedItem> {
 							Object key = instance.getKey();
 
 							if (result.containsKey(key)) {
+								System.out.println(instance.getClass().getCanonicalName());
+								System.out.println(result.get(key).getClass().getCanonicalName());
 								throw new FantasyFootballException("Duplicate implementation found when scanning: " + key);
 							}
 

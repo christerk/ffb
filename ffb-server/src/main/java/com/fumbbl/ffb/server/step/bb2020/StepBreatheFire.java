@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.BreatheFireResult;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
@@ -14,7 +15,6 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.bb2020.ReportBreatheFire;
-import com.fumbbl.ffb.report.bb2020.ReportProjectileVomit;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -39,169 +39,186 @@ import java.util.Collections;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepBreatheFire extends AbstractStepWithReRoll {
 
-  private String fGotoLabelOnSuccess;
-  private String fGotoLabelOnFailure;
-  private boolean usingBreatheFire;
-  private BreatheFireResult result;
+	private String fGotoLabelOnSuccess;
+	private String fGotoLabelOnFailure;
+	private String gotoOnEnd;
+	private boolean usingBreatheFire;
+	private BreatheFireResult result;
 
-  public StepBreatheFire(GameState pGameState) {
-    super(pGameState);
-  }
+	public StepBreatheFire(GameState pGameState) {
+		super(pGameState);
+	}
 
-  public StepId getId() {
-    return StepId.BREATHE_FIRE;
-  }
+	public StepId getId() {
+		return StepId.BREATHE_FIRE;
+	}
 
-  @Override
-  public void init(StepParameterSet pParameterSet) {
-    if (pParameterSet != null) {
-      for (StepParameter parameter : pParameterSet.values()) {
-        switch (parameter.getKey()) {
-          case GOTO_LABEL_ON_FAILURE:
-            fGotoLabelOnFailure = (String) parameter.getValue();
-            break;
-          case GOTO_LABEL_ON_SUCCESS:
-            fGotoLabelOnSuccess = (String) parameter.getValue();
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    if (!StringTool.isProvided(fGotoLabelOnFailure)) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
-    }
-    if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
-      throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
-    }
-  }
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_FAILURE:
+						fGotoLabelOnFailure = (String) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_SUCCESS:
+						fGotoLabelOnSuccess = (String) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_END:
+						gotoOnEnd = (String) parameter.getValue();
+					break;
+					default:
+						break;
+				}
+			}
+		}
+		if (!StringTool.isProvided(fGotoLabelOnFailure)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_FAILURE + " is not initialized.");
+		}
+		if (!StringTool.isProvided(fGotoLabelOnSuccess)) {
+			throw new StepException("StepParameter " + StepParameterKey.GOTO_LABEL_ON_SUCCESS + " is not initialized.");
+		}
+	}
 
-  @Override
-  public boolean setParameter(StepParameter parameter) {
-    if (parameter != null && parameter.getKey() == StepParameterKey.USING_BREATHE_FIRE) {
-      usingBreatheFire = (boolean) parameter.getValue();
-      consume(parameter);
-      return true;
-    }
+	@Override
+	public boolean setParameter(StepParameter parameter) {
+		if (parameter != null && parameter.getKey() == StepParameterKey.USING_BREATHE_FIRE) {
+			usingBreatheFire = (boolean) parameter.getValue();
+			consume(parameter);
+			return true;
+		}
 
-    return super.setParameter(parameter);
-  }
+		return super.setParameter(parameter);
+	}
 
-  @Override
-  public void start() {
-    super.start();
-    executeStep();
-  }
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
 
-  @Override
-  public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
-    StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-    if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-      executeStep();
-    }
-    return commandStatus;
-  }
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
 
-  private void executeStep() {
-    Game game = getGameState().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover) && usingBreatheFire) {
-      actingPlayer.markSkillUsed(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
-      if (ReRolledActions.BREATHE_FIRE == getReRolledAction()) {
-        if ((getReRollSource() != null)
-          && UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-          result = null;
-        }
-      }
-      if (result == null) {
-        boolean reRolled = ((getReRolledAction() == ReRolledActions.BREATHE_FIRE) && (getReRollSource() != null));
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover) && usingBreatheFire) {
+			actingPlayer.markSkillUsed(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
+			if (ReRolledActions.BREATHE_FIRE == getReRolledAction()) {
+				if ((getReRollSource() != null)
+					&& UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					result = null;
+				}
+			}
+			if (result == null) {
+				boolean reRolled = ((getReRolledAction() == ReRolledActions.BREATHE_FIRE) && (getReRollSource() != null));
 
-        int roll = getGameState().getDiceRoller().rollSkill();
-        boolean strongOpponent = game.getDefender().getStrengthWithModifiers(game) > 4;
-        int minimumRoll = strongOpponent ? 3 : 2;
-        result = evaluate(roll, strongOpponent);
-        boolean successful = result == BreatheFireResult.KNOCK_DOWN;
+				int roll = getGameState().getDiceRoller().rollSkill();
+				boolean strongOpponent = game.getDefender().getStrengthWithModifiers(game) > 4;
+				int minimumRoll = strongOpponent ? 3 : 2;
+				int effectiveRoll = strongOpponent ? roll - 1 : roll;
+				result = evaluate(roll, effectiveRoll);
+				boolean successful = result == BreatheFireResult.KNOCK_DOWN;
+				int reportRoll = successful ? roll : Math.max(1, effectiveRoll);
 
-        getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, roll,
-          minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
-        getResult().setSound(SoundId.BREATHE_FIRE);
+				getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, reportRoll,
+					minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
+				getResult().setSound(SoundId.BREATHE_FIRE);
 
-        if (successful) {
-          FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-          InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(),
-            actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
-          publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-            new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess,
-              game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
-          getResult().setNextAction(StepAction.NEXT_STEP);
-        } else {
-          if (getReRolledAction() != ReRolledActions.BREATHE_FIRE && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-            ReRolledActions.BREATHE_FIRE, minimumRoll, Collections.singletonList(result.getMessage()))) {
-            return;
-          }
-        }
-      }
-      if (result == BreatheFireResult.FAILURE) {
-        FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-        InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), null,
-          actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-        publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-          new DropPlayerContext(injuryResultAttacker, false, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
-        getResult().setNextAction(StepAction.NEXT_STEP);
-      }
-    } else {
-      getResult().setNextAction(StepAction.NEXT_STEP);
-    }
-  }
+				if (successful) {
+					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(),
+						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
+					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess,
+							game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
+					getResult().setNextAction(StepAction.NEXT_STEP);
+				} else {
+					if (getReRolledAction() != ReRolledActions.BREATHE_FIRE && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+						ReRolledActions.BREATHE_FIRE, minimumRoll, Collections.singletonList(result.getMessage()))) {
+						return;
+					}
+				}
+			}
+			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
+			switch (result) {
+				case FAILURE: {
+					FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), null,
+						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+						new DropPlayerContext(injuryResultAttacker, true, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
+					getResult().setNextAction(StepAction.NEXT_STEP);
+					break;
+				}
+				case NO_EFFECT:
+					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
+					break;
+				case PRONE:
+					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.PRONE).removeAllTargetSelections());
+					break;
+				default:
+					// SUCCESS is already handled above
+					break;
+			}
 
-  private BreatheFireResult evaluate(int roll, boolean modified) {
-    if (roll == 6) {
-      return BreatheFireResult.KNOCK_DOWN;
-    }
+		} else {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+	}
 
-    int effectiveRoll = roll;
-    if (modified) {
-      effectiveRoll--;
-    }
+	private BreatheFireResult evaluate(int roll, int effectiveRoll) {
+		if (roll == 6) {
+			return BreatheFireResult.KNOCK_DOWN;
+		}
 
-    if (roll == 1 || effectiveRoll == 1) {
-      return BreatheFireResult.FAILURE;
-    }
+		if (roll == 1 || effectiveRoll == 1) {
+			return BreatheFireResult.FAILURE;
+		}
 
-    if (effectiveRoll < 4) {
-      return BreatheFireResult.NO_EFFECT;
-    }
+		if (effectiveRoll < 4) {
+			return BreatheFireResult.NO_EFFECT;
+		}
 
-    return BreatheFireResult.PRONE;
+		return BreatheFireResult.PRONE;
 
-  }
+	}
 
-  // JSON serialization
+	// JSON serialization
 
-  @Override
-  public JsonObject toJsonValue() {
-    JsonObject jsonObject = super.toJsonValue();
-    IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
-    IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
-    IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
-    if (result != null) {
-      IServerJsonOption.STATUS.addTo(jsonObject, result.name());
-    }
-    return jsonObject;
-  }
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
+		if (result != null) {
+			IServerJsonOption.STATUS.addTo(jsonObject, result.name());
+		}
+		return jsonObject;
+	}
 
-  @Override
-  public StepBreatheFire initFrom(IFactorySource source, JsonValue jsonValue) {
-    super.initFrom(source, jsonValue);
-    JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-    fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
-    fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
-    usingBreatheFire = IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
-    if (IServerJsonOption.STATUS.isDefinedIn(jsonObject)) {
-      result = BreatheFireResult.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
-    }
-    return this;
-  }
+	@Override
+	public StepBreatheFire initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		usingBreatheFire = IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
+		if (IServerJsonOption.STATUS.isDefinedIn(jsonObject)) {
+			result = BreatheFireResult.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
+		}
+		return this;
+	}
 
 
 }
