@@ -193,7 +193,7 @@ public class UtilClientStateBlocking {
 			menuItemList.add(chainsawAction);
 		}
 		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
-		if (vomitSkill.isPresent()) {
+		if (vomitSkill.isPresent()  && !multiBlock) {
 			JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
@@ -202,7 +202,7 @@ public class UtilClientStateBlocking {
 		}
 
 		Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
-		if (fireSkill.isPresent()) {
+		if (fireSkill.isPresent() && !multiBlock) {
 			JMenuItem breatheFire = new JMenuItem(dimensionProvider, fireSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE)));
 			breatheFire.setMnemonic(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);

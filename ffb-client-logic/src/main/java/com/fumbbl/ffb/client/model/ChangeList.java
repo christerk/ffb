@@ -14,6 +14,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.30.0")
 			.addFeature("Breathe Fire")
+			.addBugfix("Multiple Block: Projectile Vomit was available")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")
