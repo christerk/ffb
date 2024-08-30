@@ -12,6 +12,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.30.0")
+			.addFeature("Breathe Fire")
+		);
+
 		versions.add(new VersionChangeList("2.29.0")
 			.addBugfix("Auto Marking: Skill and stat changes of some prayers did not get applied")
 			.addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls are avoided")
