@@ -154,7 +154,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), null,
 						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-						new DropPlayerContext(injuryResultAttacker, true, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
+						new DropPlayerContext(injuryResultAttacker, true, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, false)));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 					break;
 				}

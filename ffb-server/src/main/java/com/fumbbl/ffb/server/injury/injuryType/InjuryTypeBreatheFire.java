@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.injury.injuryType;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.BreatheFire;
-import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
