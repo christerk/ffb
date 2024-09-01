@@ -33,7 +33,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -123,6 +123,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 				int roll = getGameState().getDiceRoller().rollSkill();
 				boolean strongOpponent = game.getDefender().getStrengthWithModifiers(game) > 4;
 				int minimumRoll = strongOpponent ? 3 : 2;
+				int proneRoll = strongOpponent ? 5 : 4;
 				int effectiveRoll = strongOpponent ? roll - 1 : roll;
 				result = evaluate(roll, effectiveRoll);
 				boolean successful = result == BreatheFireResult.KNOCK_DOWN;
@@ -144,7 +145,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (getReRolledAction() != ReRolledActions.BREATHE_FIRE && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-						ReRolledActions.BREATHE_FIRE, minimumRoll, Collections.singletonList(result.getMessage()))) {
+						ReRolledActions.BREATHE_FIRE, minimumRoll, Arrays.asList(result.getMessage(), "You need a " + proneRoll + "+ to place your opponent prone. "))) {
 						return;
 					}
 				}
