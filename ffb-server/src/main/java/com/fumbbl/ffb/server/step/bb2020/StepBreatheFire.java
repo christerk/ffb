@@ -126,9 +126,8 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 				int effectiveRoll = strongOpponent ? roll - 1 : roll;
 				result = evaluate(roll, effectiveRoll);
 				boolean successful = result == BreatheFireResult.KNOCK_DOWN;
-				int reportRoll = successful ? roll : Math.max(1, effectiveRoll);
 
-				getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, reportRoll,
+				getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, roll,
 					minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
 
 				if (!reRolled) {
