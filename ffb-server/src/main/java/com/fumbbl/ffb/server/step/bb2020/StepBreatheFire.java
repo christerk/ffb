@@ -130,7 +130,10 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 
 				getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, reportRoll,
 					minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
-				getResult().setSound(SoundId.BREATHE_FIRE);
+
+				if (!reRolled) {
+					getResult().setSound(SoundId.BREATHE_FIRE);
+				}
 
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());

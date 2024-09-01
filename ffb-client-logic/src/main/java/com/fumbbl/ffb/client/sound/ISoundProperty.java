@@ -8,6 +8,7 @@ public interface ISoundProperty {
 
 	String BLOCK = "sound.block";
 	String BLUNDER = "sound.blunder";
+	String BREATHE_FIRE = "sound.breatheFire";
 	String BOUNCE = "sound.bounce";
 	String CATCH = "sound.catch";
 	String CHAINSAW = "sound.chainsaw";

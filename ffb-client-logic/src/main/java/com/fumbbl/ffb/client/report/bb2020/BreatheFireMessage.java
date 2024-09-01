@@ -47,8 +47,6 @@ public class BreatheFireMessage extends ReportMessageBase<ReportBreatheFire> {
 			default:
 				break;
 		}
-		;
-
 	}
 
 	private void printNeededRoll(boolean modified, BreatheFireResult potentialResult) {

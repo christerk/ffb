@@ -22,6 +22,7 @@ public class SoundEngine {
 		_SOUND_PROPERTY_KEYS.put(SoundId.BLOCK, ISoundProperty.BLOCK);
 		_SOUND_PROPERTY_KEYS.put(SoundId.BLUNDER, ISoundProperty.BLUNDER);
 		_SOUND_PROPERTY_KEYS.put(SoundId.BOUNCE, ISoundProperty.BOUNCE);
+		_SOUND_PROPERTY_KEYS.put(SoundId.BREATHE_FIRE, ISoundProperty.BREATHE_FIRE);
 		_SOUND_PROPERTY_KEYS.put(SoundId.CATCH, ISoundProperty.CATCH);
 		_SOUND_PROPERTY_KEYS.put(SoundId.CHAINSAW, ISoundProperty.CHAINSAW);
 		_SOUND_PROPERTY_KEYS.put(SoundId.CLICK, ISoundProperty.CLICK);
