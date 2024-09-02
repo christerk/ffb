@@ -32,7 +32,8 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fAnimatedIcon = pAnimatedIcon;
 		fSound = pSound;
 		fTimer = new Timer((int) (20 / dimensionProvider.getScale()), this);
-		this.animationProjector = new AnimationProjector(pStartCoordinate, pEndCoordinate, pInterceptorCoordinate, dimensionProvider);
+		this.animationProjector = new AnimationProjector(pStartCoordinate, pEndCoordinate, pInterceptorCoordinate, dimensionProvider,
+			new CoordinateBasedSteppingStrategy(pStartCoordinate, pEndCoordinate));
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequencePass(FantasyFootballClient pClient,

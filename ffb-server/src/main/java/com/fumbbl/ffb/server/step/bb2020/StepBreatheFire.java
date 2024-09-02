@@ -8,7 +8,6 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -134,10 +133,6 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 
 				getResult().addReport(new ReportBreatheFire(actingPlayer.getPlayerId(), successful, roll,
 					minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
-
-				if (!reRolled) {
-					getResult().setSound(SoundId.BREATHE_FIRE);
-				}
 
 				if (successful) {
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(),

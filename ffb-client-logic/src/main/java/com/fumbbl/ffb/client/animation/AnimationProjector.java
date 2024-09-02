@@ -7,21 +7,19 @@ import com.fumbbl.ffb.model.AnimationType;
 import java.awt.*;
 
 public class AnimationProjector {
-	private final FieldCoordinate start;
-	private final FieldCoordinate end;
 
-	private final int stepping;
+	private final double stepping;
 	private final boolean xAxisAnimation;
 	private final Dimension startDimension;
 	private final Dimension endDimension;
 	private Dimension interceptorDimension;
 
-	private final Dimension currentDimension;
+	private double currentWidth;
+	private double currentHeight;
 
-	public AnimationProjector(FieldCoordinate start, FieldCoordinate end, FieldCoordinate interceptor, DimensionProvider dimensionProvider) {
-		this.start = start;
-		this.end = end;
-		stepping = findStepping();
+	public AnimationProjector(FieldCoordinate start, FieldCoordinate end, FieldCoordinate interceptor,
+														DimensionProvider dimensionProvider, SteppingStrategy steppingStrategy) {
+		stepping = steppingStrategy.findStepping();
 
 		startDimension = dimensionProvider.mapToLocal(start, true);
 		endDimension = dimensionProvider.mapToLocal(end, true);
@@ -32,56 +30,43 @@ public class AnimationProjector {
 			interceptorDimension = dimensionProvider.mapToLocal(interceptor, true);
 		}
 
-		currentDimension = new Dimension(startDimension);
+		currentWidth = startDimension.getWidth();
+		currentHeight = startDimension.getHeight();
 	}
 
 	public Dimension getCurrentDimension() {
-		return currentDimension;
-	}
-
-	private int findStepping() {
-		if ((start == null) || (end == null)) {
-			return 0;
-		}
-		int deltaX = Math.abs(end.getX() - start.getX());
-		int deltaY = Math.abs(end.getY() - start.getY());
-		int deltaMax = Math.max(deltaX, deltaY);
-		if (deltaMax <= 7) {
-			return 2;
-		} else {
-			return 3;
-		}
+		return new Dimension((int) currentWidth, (int) currentHeight);
 	}
 
 	public boolean updateCurrentDimension() {
 		if (xAxisAnimation) {
 			// y - y1 = (y2 - y1) / (x2 - x1) * (x - x1)
-			currentDimension.height = startDimension.height + (int) (((double) (endDimension.height - startDimension.height) / (double) (endDimension.width - startDimension.width)) * (currentDimension.width - startDimension.width));
+			currentHeight = startDimension.height + (int) (((double) (endDimension.height - startDimension.height) / (double) (endDimension.width - startDimension.width)) * (currentWidth - startDimension.width));
 			if (startDimension.width < endDimension.width) {
-				currentDimension.width += stepping;
-				return (currentDimension.width >= interceptorDimension.width);
+				currentWidth += stepping;
+				return (currentWidth >= interceptorDimension.width);
 			} else {
-				currentDimension.width -= stepping;
-				return (currentDimension.width <= interceptorDimension.width);
+				currentWidth -= stepping;
+				return (currentWidth <= interceptorDimension.width);
 			}
 		} else {
 			// x - x1 = (x2 - x1) / (y2 - y1) * (y - y1)
-			currentDimension.width = startDimension.width + (int) (((double) (endDimension.width - startDimension.width) / (double) (endDimension.height - startDimension.height)) * (currentDimension.height - startDimension.height));
+			currentWidth = startDimension.width + (int) (((double) (endDimension.width - startDimension.width) / (double) (endDimension.height - startDimension.height)) * (currentHeight - startDimension.height));
 			if (startDimension.height < endDimension.height) {
-				currentDimension.height += stepping;
-				return currentDimension.height >= interceptorDimension.height;
+				currentHeight += stepping;
+				return currentHeight >= interceptorDimension.height;
 			} else {
-				currentDimension.height -= stepping;
-				return currentDimension.height <= interceptorDimension.height;
+				currentHeight -= stepping;
+				return currentHeight <= interceptorDimension.height;
 			}
 		}
 	}
 
 	public double findScale(AnimationType animationType) {
 		if (xAxisAnimation) {
-			return findScale(((double) (currentDimension.width - startDimension.width) / (double) (endDimension.width - startDimension.width)) * 2, animationType);
+			return findScale(((double) (currentWidth - startDimension.width) / (double) (endDimension.width - startDimension.width)) * 2, animationType);
 		} else {
-			return findScale(((double) (currentDimension.height - startDimension.height) / (double) (endDimension.height - startDimension.height)) * 2, animationType);
+			return findScale(((double) (currentHeight - startDimension.height) / (double) (endDimension.height - startDimension.height)) * 2, animationType);
 		}
 	}
 
