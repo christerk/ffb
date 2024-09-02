@@ -22,7 +22,7 @@ public enum SoundId implements INamedObject {
 	SPEC_CHEER("specCheer", true), SPEC_CLAP("specClap", true), SPEC_CRICKETS("specCrickets", true),
 	SPEC_HURT("specHurt", true), SPEC_LAUGH("specLaugh", true), SPEC_OOH("specOoh", true), SPEC_SHOCK("specShock", true),
 	SPEC_STOMP("specStomp", true), PUMP_CROWD("pumpcrowd", false), TRAPDOOR("trapdoor", false), VOMIT("vomit", false),
-	BREATHE_FIRE("breatheFire", false), YOINK("yoink", false);
+	YOINK("yoink", false);
 
 	private final String fName;
 	private final boolean fSpectatorSound;
