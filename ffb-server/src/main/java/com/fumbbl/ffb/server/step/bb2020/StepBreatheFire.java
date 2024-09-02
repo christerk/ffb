@@ -12,6 +12,8 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.bb2020.ReportBreatheFire;
@@ -117,6 +119,8 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					result = null;
 				}
 			}
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 			if (result == null) {
 				boolean reRolled = ((getReRolledAction() == ReRolledActions.BREATHE_FIRE) && (getReRollSource() != null));
 
@@ -136,13 +140,13 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 				}
 
 				if (successful) {
-					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess,
 							game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 					getResult().setNextAction(StepAction.NEXT_STEP);
+					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 				} else {
 					if (getReRolledAction() != ReRolledActions.BREATHE_FIRE && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 						ReRolledActions.BREATHE_FIRE, minimumRoll, Arrays.asList(result.getMessage(), "You need a " + proneRoll + "+ to place your opponent prone. "))) {
@@ -153,21 +157,23 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 			switch (result) {
 				case FAILURE: {
-					FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), null,
-						actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+						actingPlayer.getPlayer(), playerCoordinate, null, null, ApothecaryMode.ATTACKER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 						new DropPlayerContext(injuryResultAttacker, true, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, false)));
 					getResult().setNextAction(StepAction.NEXT_STEP);
+					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, playerCoordinate));
 					break;
 				}
 				case NO_EFFECT:
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
 					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
+					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 					break;
 				case PRONE:
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
 					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.PRONE).removeAllTargetSelections());
+					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 					break;
 				default:
 					// SUCCESS is already handled above

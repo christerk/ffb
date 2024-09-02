@@ -136,9 +136,8 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 
 		fFieldLayer.clear(fLastIconBounds, true);
 
-		double scale;
 		boolean stopAnimation = animationProjector.updateCurrentDimension();
-		scale = animationProjector.findScale(fAnimationType);
+		double scale = animationProjector.findScale(fAnimationType);
 
 		fLastIconBounds = fFieldLayer.drawCenteredAndScaled(fAnimatedIcon, animationProjector.getCurrentDimension().width, animationProjector.getCurrentDimension().height, 1.0f, scale, scale);
 		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
