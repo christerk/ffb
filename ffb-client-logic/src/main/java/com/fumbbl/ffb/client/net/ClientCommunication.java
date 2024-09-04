@@ -103,6 +103,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
@@ -317,6 +318,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendUseConsummateReRollForBlock(int proIndex) {
 		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
+	}
+
+	public void sendUseSingleBlockDieReRollForBlock(int index) {
+		send(new ClientCommandUseSingleBlockDieReRoll(index));
 	}
 
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {

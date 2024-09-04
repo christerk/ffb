@@ -31,6 +31,7 @@ public class ReRollSources {
 	public static final ReRollSource THINKING_MANS_TROLL = new ReRollSource("Thinking Man's Troll");
 	public static final ReRollSource HALFLING_LUCK = new ReRollSource("Halfling Luck");
 	public static final ReRollSource BOUNDING_LEAP = new ReRollSource("Bounding Leap");
+	public static final ReRollSource UNSTOPPABLE_MOMENTUM = new ReRollSource("Unstoppable Momentum");
 
 	private final Map<String, ReRollSource> values;
 

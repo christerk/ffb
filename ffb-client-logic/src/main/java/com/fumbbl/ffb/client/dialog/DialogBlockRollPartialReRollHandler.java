@@ -86,6 +86,8 @@ public class DialogBlockRollPartialReRollHandler extends DialogHandler {
 						communication.sendUseProReRollForBlock(blockRollDialog.getProIndex());
 					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleDieReRollSource()) {
 						communication.sendUseConsummateReRollForBlock(blockRollDialog.getProIndex());
+					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleBlockDieReRollSource()) {
+						communication.sendUseSingleBlockDieReRollForBlock(blockRollDialog.getProIndex());
 					} else {
 						communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
 					}

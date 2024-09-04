@@ -65,6 +65,7 @@ public class ReRolledActions {
 	public static final ReRolledAction SINGLE_DIE = new ReRolledAction("Single Die");
 	public static final ReRolledAction ALL_YOU_CAN_EAT = new ReRolledAction("All You Can Eat");
 	public static final ReRolledAction CATCH_OF_THE_DAY = new ReRolledAction(CatchOfTheDay.class);
+	public static final ReRolledAction SINGLE_BLOCK_DIE = new ReRolledAction("Single Block Die");
 
 	private final Map<String, ReRolledAction> values;
 

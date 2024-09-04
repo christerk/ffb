@@ -70,6 +70,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
@@ -151,7 +152,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_KICK_OFF_RESULT_CHOICE("clientKickOffResultChoice"), CLIENT_BLOODLUST_ACTION("clientBloodlustAction"),
 	SERVER_UPDATE_LOCAL_PLAYER_MARKERS("serverUpdateLocalPlayerMarkers"),
 	INTERNAL_SERVER_ADD_LOADED_TEAM("internalServerAddLoadedTeam"),
-	INTERNAL_APPLY_AUTOMATIC_PLAYER_MARKINGS("internalApplyAutomaticPlayerMarkings");
+	INTERNAL_APPLY_AUTOMATIC_PLAYER_MARKINGS("internalApplyAutomaticPlayerMarkings"), CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL("clientUseSingleBlockDieReRoll");
 
 	private final String fName;
 
@@ -356,6 +357,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandKickOffResultChoice();
 			case CLIENT_BLOODLUST_ACTION:
 				return new ClientCommandBloodlustAction();
+			case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
+				return new ClientCommandUseSingleBlockDieReRoll();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
