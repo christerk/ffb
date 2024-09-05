@@ -15,6 +15,8 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.30.0")
 			.addFeature("Breathe Fire")
 			.addBugfix("Multiple Block: Projectile Vomit was available")
+			.addFeature("Unstoppable Momentum")
+			.addImprovement("Re-roll buttons in block dialogs now display the mnemonic explicitly")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")

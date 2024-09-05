@@ -155,7 +155,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       boolean doRoll = true;
       if (ReRolledActions.BLOCK == getReRolledAction()) {
         if ((getReRollSource() == null)
-          || (getReRollSource() != ReRollSources.BRAWLER && !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
+          || (getReRollSource() != ReRollSources.BRAWLER && getReRollSource() != ReRollSources.UNSTOPPABLE_MOMENTUM && !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
           doRoll = false;
           if (getReRollSource() == ReRollSources.PRO) {
             reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
@@ -200,6 +200,15 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
             fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
             fBlockRoll[proIndex] = reRolledWithPro[0];
             reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
+          } else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM)  {
+            int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
+            getResult().addReport(new ReportBlockReRoll(new int[]{rerolledDie}, actingPlayer.getPlayerId(), getReRollSource()));
+            if (dieIndex >= 0) {
+              actingPlayer.markSkillUsed(NamedProperties.canRerollSingleBlockDieDuringBlitz);
+              fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
+              fBlockRoll[dieIndex] = rerolledDie;
+              this.reRolledDiceIndexes = add(reRolledDiceIndexes, dieIndex);
+            }
           } else {
             fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
           }
