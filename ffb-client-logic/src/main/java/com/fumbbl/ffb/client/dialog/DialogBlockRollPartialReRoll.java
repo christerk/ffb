@@ -140,7 +140,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
       if (getDialogParameter().getNrOfDice() == 1) {
         if (getDialogParameter().hasProReRollOption()) {
-          fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll",  KeyEvent.VK_P);
+          fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", KeyEvent.VK_P);
           fButtonProReRoll.addActionListener(this);
           fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
           fButtonProReRoll.addKeyListener(this);
@@ -148,7 +148,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
         }
 
         if (getDialogParameter().hasConsummateOption() && singleDieReRollSource != null) {
-          consummateButton = new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()),KeyEvent.VK_C);
+          consummateButton = new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
           consummateButton.addActionListener(this);
           consummateButton.setMnemonic(KeyEvent.VK_C);
           consummateButton.addKeyListener(this);
@@ -156,7 +156,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
         }
 
         if (singleBlockDieReRollSource != null) {
-          singleDieButton = new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()),KeyEvent.VK_U);
+          singleDieButton = new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
           singleDieButton.addActionListener(this);
           singleDieButton.setMnemonic(KeyEvent.VK_U);
           singleDieButton.addKeyListener(this);
@@ -165,7 +165,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
       }
 
       if (getDialogParameter().hasBrawlerOption()) {
-        brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll", KeyEvent.VK_B );
+        brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll", KeyEvent.VK_B);
         brawlerButton.addActionListener(this);
         brawlerButton.setMnemonic(KeyEvent.VK_B);
         brawlerButton.addKeyListener(this);
@@ -231,7 +231,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
     for (int i = 1; i <= diceCount; i++) {
       int finalI = i;
       if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-        JButton button = singleDieButton(i, mnemonics.get(0));
+        JButton button = singleDieButton(i, mnemonics.get(i - 1));
         switch (i) {
           case 1:
             singleDieButton1 = button;
@@ -270,7 +270,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
     for (int i = 1; i <= diceCount; i++) {
       int finalI = i;
       if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-        JButton button = singleDieButton(i, proMnemonics.get(0));
+        JButton button = singleDieButton(i, proMnemonics.get(i - 1));
         switch (i) {
           case 1:
             proButton1 = button;
@@ -309,7 +309,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
     for (int i = 1; i <= diceCount; i++) {
       int finalI = i;
       if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-        JButton button = singleDieButton(i, consummateMnemonics.get(0));
+        JButton button = singleDieButton(i, consummateMnemonics.get(i - 1));
         switch (i) {
           case 1:
             consummateButton1 = button;
