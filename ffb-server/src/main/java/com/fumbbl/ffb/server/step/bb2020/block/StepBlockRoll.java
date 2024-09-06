@@ -258,7 +258,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       singleDieReRollSource = singleDieRrSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
     }
 
-    Skill singleBlockDieRrSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
+    Skill singleBlockDieRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBlockDieDuringBlitz);
     ReRollSource singleBlockDieReRollSource = null;
     if (singleBlockDieRrSkill != null) {
       singleBlockDieReRollSource = singleBlockDieRrSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
@@ -295,7 +295,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
       }
     }
 
-    boolean singleBlockDieOption = actingPlayer.getPlayerAction().isBlitzing() && singleBlockDieRrSkill != null && (getReRollSource() == null || getReRollSource() != ReRollSources.TEAM_RE_ROLL) && fBlockRoll.length > reRolledDiceIndexes.length;
+    boolean singleBlockDieOption = actingPlayer.getPlayerAction().isBlitzing() && UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz) != null && (getReRollSource() == null || getReRollSource() != ReRollSources.TEAM_RE_ROLL) && fBlockRoll.length > reRolledDiceIndexes.length;
 
     String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
     if ((fNrOfDice < 0) && (noReRollUsed || (!teamReRollOption && !proReRollOption && !brawlerOption && !singleUseReRollOption && !consummateOption && !singleBlockDieOption))) {
