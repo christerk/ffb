@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Multiple Block: Projectile Vomit was available")
 			.addFeature("Unstoppable Momentum")
 			.addImprovement("Re-roll buttons in block dialogs now display the mnemonic explicitly")
+			.addFeature("Toxin Connoisseur")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")
