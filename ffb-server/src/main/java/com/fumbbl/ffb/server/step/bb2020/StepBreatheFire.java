@@ -143,7 +143,8 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 				} else {
 					if (getReRolledAction() != ReRolledActions.BREATHE_FIRE && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-						ReRolledActions.BREATHE_FIRE, minimumRoll, Arrays.asList(result.getMessage(), "You need a " + proneRoll + "+ to place your opponent prone. "))) {
+						ReRolledActions.BREATHE_FIRE, 0, Arrays.asList(result.getMessage(), "You need a:", "  - 6 to knock your opponent down",
+							"  - " + proneRoll + "+ to place your opponent prone", "  - " + minimumRoll + "+ to avoid a turnover"))) {
 						return;
 					}
 				}
