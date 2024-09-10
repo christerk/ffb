@@ -18,6 +18,7 @@ public class ChangeList {
 			.addFeature("Unstoppable Momentum")
 			.addImprovement("Re-roll buttons in block dialogs now display the mnemonic explicitly")
 			.addFeature("Toxin Connoisseur")
+			.addBugfix("Pile Driver: Could be used after special block actions like Projectile Vomit")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")
