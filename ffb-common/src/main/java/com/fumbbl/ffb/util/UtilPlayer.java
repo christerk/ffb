@@ -512,6 +512,14 @@ public class UtilPlayer {
 	}
 
 	public static boolean isNextMovePossible(Game pGame, boolean jumping) {
+		ActingPlayer actingPlayer = pGame.getActingPlayer();
+		if (actingPlayer.isHeldInPlace()) {
+			return false;
+		}
+		return hasMoveLeft(pGame, jumping);
+
+	}
+	public static boolean hasMoveLeft(Game pGame, boolean jumping) {
 		boolean movePossible = false;
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(actingPlayer.getPlayer());

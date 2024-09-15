@@ -275,7 +275,7 @@ public class StepEndBlocking extends AbstractStep {
         && defenderState.canBeBlocked() && attackerPosition.isAdjacent(defenderPosition)
         && attackerState.hasTacklezones() && fDefenderPushed
         && (actingPlayer.getPlayerAction() != PlayerAction.MULTIPLE_BLOCK)
-        && UtilPlayer.isNextMovePossible(game, false)) {
+        && UtilPlayer.hasMoveLeft(game, false)) {
 
         TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
         Skill addBlockDieSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);

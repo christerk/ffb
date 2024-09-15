@@ -19,6 +19,7 @@ public class ChangeList {
 			.addImprovement("Re-roll buttons in block dialogs now display the mnemonic explicitly")
 			.addFeature("Toxin Connoisseur")
 			.addBugfix("Pile Driver: Could be used after special block actions like Projectile Vomit")
+			.addBugfix("Tentacles: When player was held in place during blitz action the block was skipped even if the target player was already adjacent")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")

@@ -159,7 +159,7 @@ public class UtilClientStateBlocking {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		// rooted players can not move but still spend movement for the blitz action
-		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
+		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.hasMoveLeft(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)

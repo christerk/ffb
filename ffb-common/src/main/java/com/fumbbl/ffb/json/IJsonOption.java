@@ -216,6 +216,7 @@ public interface IJsonOption {
 	JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
 	JsonIntOption HEAT_ROLL = new JsonIntOption("heatRoll");
+	JsonBooleanOption HELD_IN_PLACE = new JsonBooleanOption("heldInPlace");
 	JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
 	JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
 	JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
