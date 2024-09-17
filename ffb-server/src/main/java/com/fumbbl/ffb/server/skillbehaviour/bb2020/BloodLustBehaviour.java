@@ -47,14 +47,15 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 
 				Game game = step.getGameState().getGame();
 				if (state.status == ActionStatus.WAIT_FOR_ACTION_CHANGE) {
-					if (game.getActingPlayer().getPlayerAction() == STAND_UP) {
-						step.publishParameter(StepParameter.from(StepParameterKey.DISPATCH_PLAYER_ACTION, STAND_UP));
+					PlayerAction playerAction = game.getActingPlayer().getPlayerAction();
+					if (playerAction.isStandingUp()) {
+						step.publishParameter(StepParameter.from(StepParameterKey.DISPATCH_PLAYER_ACTION, playerAction));
 					} else {
 						step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
 					}
 					step.publishParameter(StepParameter.from(StepParameterKey.BLOOD_LUST_ACTION, state.bloodlustAction));
 					if (StringTool.isProvided(state.goToLabelOnFailure)
-						&& (state.bloodlustAction != null || game.getActingPlayer().getPlayerAction().isPassing())) {
+						&& (state.bloodlustAction != null || playerAction.isPassing())) {
 						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 					} else {
 						step.getResult().setNextAction(StepAction.NEXT_STEP);

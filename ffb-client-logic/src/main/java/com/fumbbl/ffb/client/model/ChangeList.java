@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Toxin Connoisseur")
 			.addBugfix("Pile Driver: Could be used after special block actions like Projectile Vomit")
 			.addBugfix("Tentacles: When player was held in place during blitz action the block was skipped even if the target player was already adjacent")
+			.addBugfix("Bloodlust: When using blitz action to stand up and end activation the blitz action was not actually used when failing bloodlust and not changing action")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")
