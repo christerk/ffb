@@ -103,8 +103,8 @@ public class ClientStateFoul extends ClientStateMove {
 		getClient().getCommunication().sendFoul(actingPlayer.getPlayerId(), defender, usingChainsaw);
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			ClientCommunication communication = getClient().getCommunication();
@@ -114,25 +114,25 @@ public class ClientStateFoul extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_JUMP:
 					if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(),
+						communication.sendActingPlayer(player, actingPlayer.getPlayerAction(),
 							!actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
 					if (actingPlayer.isSufferingBloodLust()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, actingPlayer.isJumping());
+						communication.sendActingPlayer(player, PlayerAction.MOVE, actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FOUL:
-					foul(pPlayer, false);
+					foul(player, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
-					foul(pPlayer, true);
+					foul(player, true);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					if (isTreacherousAvailable(actingPlayer)) {
-						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-						communication.sendUseSkill(skill, true, pPlayer.getId());
+						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_WISDOM:
@@ -142,37 +142,43 @@ public class ClientStateFoul extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
 					if (isRaidingPartyAvailable(actingPlayer)) {
-						Skill raidingSkill = pPlayer.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-						communication.sendUseSkill(raidingSkill, true, pPlayer.getId());
+						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
+						communication.sendUseSkill(raidingSkill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-					if (isLookIntoMyEyesAvailable(pPlayer)) {
-						UtilCards.getUnusedSkillWithProperty(pPlayer, NamedProperties.canStealBallFromOpponent)
-							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, pPlayer.getId()));
+					if (isLookIntoMyEyesAvailable(player)) {
+						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
+							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
 					if (isBalefulHexAvailable(actingPlayer)) {
-						Skill balefulSkill = pPlayer.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-						communication.sendUseSkill(balefulSkill, true, pPlayer.getId());
+						Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
+						communication.sendUseSkill(balefulSkill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
 					if (isBlackInkAvailable(actingPlayer)) {
-						Skill blackInkSkill = pPlayer.getSkillWithProperty(NamedProperties.canGazeAutomatically);
-						communication.sendUseSkill(blackInkSkill, true, pPlayer.getId());
+						Skill blackInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomatically);
+						communication.sendUseSkill(blackInkSkill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
 					if (isCatchOfTheDayAvailable(actingPlayer)) {
-						Skill skill = pPlayer.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-						communication.sendUseSkill(skill, true, pPlayer.getId());
+						Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
 					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
 						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
+					break;
+				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
+					if (isThenIStartedBlastinAvailable(actingPlayer)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
 					break;
 				default:
 					break;

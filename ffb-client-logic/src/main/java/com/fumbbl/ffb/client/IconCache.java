@@ -335,7 +335,7 @@ public class IconCache {
 				});
 
 			} catch (Exception pAny) {
-				getClient().logWithOutGameId(pAny);
+				getClient().logError(0, pAny.getMessage());
 				// This should catch issues where the image is broken...
 				getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 			}
@@ -547,7 +547,7 @@ public class IconCache {
 			});
 
 		} catch (Exception pAny) {
-			getClient().logWithOutGameId(pAny);
+			getClient().logError(0, pAny.getMessage());
 			// This should catch issues where the image is broken...
 			getClient().getUserInterface().getStatusReport().reportIconLoadFailure(pitchUrl);
 		}

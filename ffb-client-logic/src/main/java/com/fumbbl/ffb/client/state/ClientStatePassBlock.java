@@ -60,8 +60,8 @@ public class ClientStatePassBlock extends ClientStateMove {
 		}
 	}
 
-	public void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	public void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			ClientCommunication communication = getClient().getCommunication();
@@ -69,11 +69,11 @@ public class ClientStatePassBlock extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_JUMP:
 					if ((actingPlayer.getPlayer() != null)
 						&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
+						communication.sendActingPlayer(player, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
-					communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
+					communication.sendActingPlayer(player, PlayerAction.MOVE, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_END_MOVE:
 					communication.sendActingPlayer(null, null, false);

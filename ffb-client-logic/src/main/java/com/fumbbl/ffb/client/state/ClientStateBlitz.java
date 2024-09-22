@@ -68,8 +68,8 @@ public class ClientStateBlitz extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -79,12 +79,12 @@ public class ClientStateBlitz extends ClientStateMove {
 					break;
 				case IPlayerPopupMenuKeys.KEY_JUMP:
 					if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						communication.sendActingPlayer(pPlayer, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
+						communication.sendActingPlayer(player, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_MOVE:
 					if (actingPlayer.isSufferingBloodLust()) {
-						getClient().getCommunication().sendActingPlayer(pPlayer, moveAction(), actingPlayer.isJumping());
+						getClient().getCommunication().sendActingPlayer(player, moveAction(), actingPlayer.isJumping());
 					}
 					break;
 				case IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE:
@@ -95,7 +95,7 @@ public class ClientStateBlitz extends ClientStateMove {
 						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
 					break;
 				default:
-					UtilClientStateBlocking.menuItemSelected(this, pPlayer, pMenuKey);
+					UtilClientStateBlocking.menuItemSelected(this, player, pMenuKey);
 					break;
 			}
 		}

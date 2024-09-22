@@ -41,6 +41,7 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.step.generator.bb2020.RaidingParty;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -129,6 +130,12 @@ public class StepSelectGazeTarget extends AbstractStep {
 							BlackInk generator = (BlackInk) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.BlackInk.name());
 							generator.pushSequence(new BlackInk.SequenceParams(getGameState(), gotoLabelOnEnd, playerState));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canBlastRemotePlayer)) {
+							getGameState().pushCurrentStepOnStack();
+							ThenIStartedBlastin generator = (ThenIStartedBlastin) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.ThenIStartedBlastin.name());
+							generator.pushSequence(new ThenIStartedBlastin.SequenceParams(getGameState()));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGetBallOnGround)) {
 							getGameState().pushCurrentStepOnStack();

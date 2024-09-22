@@ -20,8 +20,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +70,12 @@ public class UtilClientStateBlocking {
 				break;
 			case PLAYER_ACTION_GORED:
 				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
+				return true;
+			case PLAYER_ACTION_BLACK_INK:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+				return true;
+			case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
 			case PLAYER_ACTION_BREATHE_FIRE:
 				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
@@ -140,7 +145,13 @@ public class UtilClientStateBlocking {
 					break;
 				case IPlayerPopupMenuKeys.KEY_BREATHE_FIRE:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false,false,  true);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, false, true);
+					break;
+				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
+					if (pClientState.isThenIStartedBlastinAvailable(actingPlayer)) {
+						Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
+					}
 					break;
 				default:
 					break;
@@ -193,7 +204,7 @@ public class UtilClientStateBlocking {
 			menuItemList.add(chainsawAction);
 		}
 		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
-		if (vomitSkill.isPresent()  && !multiBlock) {
+		if (vomitSkill.isPresent() && !multiBlock) {
 			JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);

@@ -593,6 +593,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		teamState = TeamState.SKELETON;
 	}
 
+	public boolean playingTeamHasActingPLayer() {
+		return getActingTeam().hasPlayer(fActingPlayer.getPlayer());
+	}
+
 	// transformation
 
 	public Game transform() {

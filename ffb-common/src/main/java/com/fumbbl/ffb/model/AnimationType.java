@@ -20,6 +20,7 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_VERY_SUNNY("kickoffVerySunny"), HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
 	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXPLOSION("bombExplosion"), CARD("card"),
 	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg"), TRICKSTER("trickster"), BREATHE_FIRE("breatheFire"),
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
 	PRAYER_TREACHEROUS_TRAPDOOR("prayerTrapdoor"), PRAYER_BAD_HABITS("badhabits"), PRAYER_BLESSED_STATUE_OF_NUFFLE("blessedStatueOfNuffle"),
 	PRAYER_FAN_INTERACTION("fanInteraction"), PRAYER_FOULING_FRENZY("foulingFrenzy"), PRAYER_FRIENDS_WITH_THE_REF("friendsWithTheRef"),
 	PRAYER_GREASY_CLEATS("greasyCleats"), PRAYER_INTENSIVE_TRAINING("intensiveTraining"), PRAYER_IRON_MAN("ironMan"),

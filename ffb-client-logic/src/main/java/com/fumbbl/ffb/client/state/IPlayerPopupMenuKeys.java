@@ -52,4 +52,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_CATCH_OF_THE_DAY = KeyEvent.VK_D;
 	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
 	int KEY_BREATHE_FIRE = KeyEvent.VK_T;
+	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;
 }

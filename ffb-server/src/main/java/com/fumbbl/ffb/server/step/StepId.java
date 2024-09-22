@@ -60,13 +60,14 @@ public enum StepId implements INamedObject {
 	END_FOULING("endFouling"), // action.foul
 	END_GAME("endGame"), // game.end
 	END_INDUCEMENT("endInducement"), // phase.inducement
+	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
 	END_KICKOFF("endKickoff"), // phase.kickoff
 	END_MOVING("endMoving"), // action.move
 	END_PASSING("endPassing"), // action.pass
 	END_SCATTER_PLAYER("endScatterPlayer"), // action.ttm
 	END_SELECTING("endSelecting"), // action.select
 	END_THROW_TEAM_MATE("endThrowTeamMate"), // action.ttm
-	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
+	END_THEN_I_STARTED_BLASTIN("endThenIStartedBlastin"),
 	END_THROW_KEG("endThrowKeg"), // action.special
 	END_TURN("endTurn"), // action.common
 	FALL_DOWN("fallDown"), // action.common
@@ -167,6 +168,7 @@ public enum StepId implements INamedObject {
 	TAKE_ROOT("takeRoot"), // action.common
 	TENTACLES("tentacles"), // action.move
 	TEST("test"), // test
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
 	THROW_KEG("throwKeg"), // action.special
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common

@@ -96,6 +96,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceSpecialEffect.createAnimationFumbledKeg(pAnimation.getStartCoordinate());
 			case TRICKSTER:
 				return AnimationSequenceChained.createAnimationSequenceTrickster(pClient, pAnimation);
+			case THEN_I_STARTED_BLASTIN:
+				return AnimationSequenceChained.createAnimationSequenceBlastin(pClient, pAnimation);
 			case PRAYER_TREACHEROUS_TRAPDOOR:
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_TRAPDOOR, dimensionProvider.isPitchPortrait());
 			case PRAYER_BAD_HABITS:

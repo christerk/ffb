@@ -42,6 +42,7 @@ import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
 import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.ThrowKeg;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.step.generator.bb2020.MultiBlock;
@@ -423,7 +424,12 @@ public final class StepEndSelecting extends AbstractStep {
         CatchOfTheDay cotdGenerator = (CatchOfTheDay) factory.forName(SequenceGenerator.Type.CatchOfTheDay.name());
         cotdGenerator.pushSequence(cotdParams);
         break;
-
+      case THEN_I_STARTED_BLASTIN:
+        selectGenerator.pushSequence(selectParams);
+        ThenIStartedBlastin.SequenceParams tisbParams = new ThenIStartedBlastin.SequenceParams(getGameState());
+        ThenIStartedBlastin tisbGenerator = (ThenIStartedBlastin) factory.forName(SequenceGenerator.Type.ThenIStartedBlastin.name());
+        tisbGenerator.pushSequence(tisbParams);
+        break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
     }
