@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
@@ -197,8 +198,9 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 		FieldCoordinate targetCoordinate = fieldModel.getPlayerCoordinate(hitPlayer);
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(this, new InjuryTypeThenIStartedBlastin(), null, hitPlayer, targetCoordinate,
 			null, null, ApothecaryMode.DEFENDER);
+		boolean endTurn = UtilPlayer.hasBall(game, hitPlayer) && game.getActingTeam().hasPlayer(hitPlayer);
 		publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,
-			new DropPlayerContext(injuryResult, false, true, null, hitPlayer.getId(), ApothecaryMode.DEFENDER, true)));
+			new DropPlayerContext(injuryResult, endTurn, true, null, hitPlayer.getId(), ApothecaryMode.DEFENDER, true)));
 		getResult().setSound(SoundId.EXPLODE);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		restoreTurnModes(game);

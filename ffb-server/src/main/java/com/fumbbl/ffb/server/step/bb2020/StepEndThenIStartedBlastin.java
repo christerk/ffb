@@ -14,7 +14,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -27,7 +26,7 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 		super(pGameState);
 	}
 
-	private boolean endPlayerAction;
+	private boolean endPlayerAction, endTurn;
 
 	@Override
 	public StepId getId() {
@@ -37,9 +36,15 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null) {
-			if (parameter.getKey() == StepParameterKey.END_PLAYER_ACTION) {
-				endPlayerAction = toPrimitive((Boolean) parameter.getValue());
-				return true;
+			switch (parameter.getKey()) {
+				case END_PLAYER_ACTION:
+					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
+					return true;
+				case END_TURN:
+					endTurn = toPrimitive((Boolean) parameter.getValue());
+					return true;
+				default:
+					break;
 			}
 		}
 
@@ -57,11 +62,11 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		Game game = getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
-		if (endPlayerAction || playerState.isProneOrStunned() || playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT) {
+		if (endTurn || endPlayerAction || playerState.isProneOrStunned() || playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT) {
 			getGameState().getStepStack().clear();
 
 			EndPlayerAction endPlayerActionGenerator = (EndPlayerAction) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.EndPlayerAction.name());
-			EndPlayerAction.SequenceParams params = new EndPlayerAction.SequenceParams(getGameState(), false, endPlayerAction, false);
+			EndPlayerAction.SequenceParams params = new EndPlayerAction.SequenceParams(getGameState(), false, endPlayerAction, endTurn);
 
 			endPlayerActionGenerator.pushSequence(params);
 		} else {
@@ -74,6 +79,7 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
+		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		return jsonObject;
 	}
 
@@ -82,6 +88,7 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}
 }
