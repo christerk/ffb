@@ -57,7 +57,8 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		Game game = getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
-		if (endPlayerAction || playerState.isProneOrStunned()) {
+		if (endPlayerAction || playerState.isProneOrStunned() || playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT) {
+			getGameState().getStepStack().clear();
 
 			EndPlayerAction endPlayerActionGenerator = (EndPlayerAction) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.EndPlayerAction.name());
 			EndPlayerAction.SequenceParams params = new EndPlayerAction.SequenceParams(getGameState(), false, endPlayerAction, false);
