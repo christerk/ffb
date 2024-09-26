@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Bloodlust: When using blitz action to stand up and end activation the blitz action was not actually used when failing bloodlust and not changing action")
 			.addBugfix("For some skill when waiting on the opponent it was possible to open the action menu on the acting player")
 			.addFeature("\"Then I Started Blastin'!\"")
+			.addRuleChange("Iron Hard Skin now ignores all kinds of armour modifications")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")

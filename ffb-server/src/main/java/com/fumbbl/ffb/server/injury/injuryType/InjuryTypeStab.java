@@ -14,6 +14,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
 
@@ -53,9 +54,13 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 			Set<ArmorModifier> modifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
 			injuryContext.addArmorModifiers(modifiers);
 
-			Skill chainsaw = addDefenderChainsaw ? pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
-			if (chainsaw != null) {
-				injuryContext.addArmorModifiers(chainsaw.getArmorModifiers());
+			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+			} else {
+				Skill chainsaw = addDefenderChainsaw ? pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
+				if (chainsaw != null) {
+					injuryContext.addArmorModifiers(chainsaw.getArmorModifiers());
+				}
 			}
 
 			if (roll) {

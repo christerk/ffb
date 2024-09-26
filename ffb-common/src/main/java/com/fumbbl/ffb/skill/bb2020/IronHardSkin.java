@@ -17,6 +17,9 @@ public class IronHardSkin extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.reducesArmourToFixedValue));
+		registerProperty(NamedProperties.ignoresArmourModifiersFromFouls);
+		registerProperty(NamedProperties.ignoresArmourModifiersFromSkills);
+		registerProperty(NamedProperties.ignoresArmourModifiersFromSpecialEffects);
 		registerModifier(new StaticArmourModifier("Iron Hard Skin", 0, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {

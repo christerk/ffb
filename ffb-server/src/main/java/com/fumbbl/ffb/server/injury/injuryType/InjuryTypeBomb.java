@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
 
@@ -24,16 +25,21 @@ public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 
 	@Override
 	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                         ApothecaryMode pApothecaryMode) {
+													 Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
+													 ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {
-			Optional<Skill> chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
 
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			chainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+
+			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+			} else {
+				Optional<Skill> chainsaw = Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
+				chainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			}
 
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}

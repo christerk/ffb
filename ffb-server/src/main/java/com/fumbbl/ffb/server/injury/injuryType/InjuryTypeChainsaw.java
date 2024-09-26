@@ -12,6 +12,7 @@ import com.fumbbl.ffb.modifiers.StaticArmourModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 
@@ -37,14 +38,18 @@ public class InjuryTypeChainsaw extends ModificationAwareInjuryTypeServer<Chains
 			if (roll) {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 			}
-			if (Arrays.stream(injuryContext.getArmorModifiers())
-				.noneMatch(armorModifier -> armorModifier instanceof StaticArmourModifier
-					&& ((StaticArmourModifier) armorModifier).isChainsaw())) {
-				SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
-				factory.getSkills().stream()
-					.filter(skill -> skill.hasSkillProperty(NamedProperties.blocksLikeChainsaw))
-					.flatMap(skill -> skill.getArmorModifiers().stream())
-					.forEach(injuryContext::addArmorModifier);
+			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+			} else {
+				if (Arrays.stream(injuryContext.getArmorModifiers())
+					.noneMatch(armorModifier -> armorModifier instanceof StaticArmourModifier
+						&& ((StaticArmourModifier) armorModifier).isChainsaw())) {
+					SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+					factory.getSkills().stream()
+						.filter(skill -> skill.hasSkillProperty(NamedProperties.blocksLikeChainsaw))
+						.flatMap(skill -> skill.getArmorModifiers().stream())
+						.forEach(injuryContext::addArmorModifier);
+				}
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}

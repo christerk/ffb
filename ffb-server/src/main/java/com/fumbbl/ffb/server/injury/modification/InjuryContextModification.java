@@ -11,9 +11,11 @@ import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Objects;
 import java.util.Set;
@@ -32,7 +34,11 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 	public boolean modifyArmour(GameState gameState, InjuryContext injuryContext, InjuryType injuryType) {
 		ModifiedInjuryContext newContext = context(injuryContext);
 		T params = params(gameState, newContext, injuryType);
-		if (allowedForAttackerAndDefenderTeams(gameState.getGame(), newContext)
+
+		Player<?> defender = gameState.getGame().getPlayerById(injuryContext.fDefenderId);
+
+		if (!UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.ignoresArmourModifiersFromSkills)
+			&& allowedForAttackerAndDefenderTeams(gameState.getGame(), newContext)
 			&& tryArmourRollModification(params)
 			&& modifyArmourInternal(params)) {
 			newContext.setModification(InjuryModification.ARMOUR);

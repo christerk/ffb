@@ -37,7 +37,7 @@ public class InjuryTypeBombWithModifier extends InjuryTypeServer<Bomb> {
 		injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
 		if (!injuryContext.isArmorBroken()) {
-			((ArmorModifierFactory) game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER)).specialEffectArmourModifiers(SpecialEffect.BOMB)
+			((ArmorModifierFactory) game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER)).specialEffectArmourModifiers(SpecialEffect.BOMB, pDefender)
 				.forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}

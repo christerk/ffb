@@ -16,6 +16,7 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -66,9 +67,12 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
-			Skill chainsaw = allowAttackerChainsaw ? pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
-			if (chainsaw == null) {
-				chainsaw = pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+			Skill chainsaw = null;
+			if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				chainsaw = allowAttackerChainsaw ? pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
+				if (chainsaw == null) {
+					chainsaw = pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw);
+				}
 			}
 
 			if (roll) {

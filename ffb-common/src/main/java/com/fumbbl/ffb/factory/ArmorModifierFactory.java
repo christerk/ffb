@@ -17,6 +17,7 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +43,10 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	public Set<ArmorModifier> findArmorModifiers(Game game, Player<?> attacker, Player<?> defender, boolean isStab,
 	                                             boolean isFoul) {
 
+		if (UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+			return new HashSet<>(defender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+		}
+
 		ArmorModifierContext context = new ArmorModifierContext(game, attacker, defender, isStab, isFoul);
 		Set<ArmorModifier> armorModifiers = getArmorModifiers(attacker, context);
 
@@ -56,7 +61,11 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 		return armorModifiers;
 	}
 
-	public Set<SpecialEffectArmourModifier> specialEffectArmourModifiers(SpecialEffect specialEffect) {
+	public Set<ArmorModifier> specialEffectArmourModifiers(SpecialEffect specialEffect, Player<?> defender) {
+		if (UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+			return new HashSet<>(defender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+		}
+
 		return armorModifiers.values().filter(modifier -> modifier instanceof SpecialEffectArmourModifier)
 			.map(modifier -> (SpecialEffectArmourModifier) modifier)
 			.filter(modifier -> modifier.getEffect() == specialEffect)
@@ -64,6 +73,10 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 	}
 
 	public Set<ArmorModifier> getFoulAssist(ArmorModifierContext context) {
+		if (UtilCards.hasUnusedSkillWithProperty(context.getDefender(), NamedProperties.ignoresArmourModifiersFromSkills)) {
+			return new HashSet<>(context.getDefender().getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+		}
+
 		return armorModifiers.values().filter(modifier -> !(modifier instanceof SpecialEffectArmourModifier) && modifier.appliesToContext(context)).collect(Collectors.toSet());
 	}
 
@@ -93,5 +106,4 @@ public class ArmorModifierFactory implements INamedObjectFactory<ArmorModifier> 
 			.filter(modifier -> modifier.appliesToContext(context))
 			.collect(Collectors.toSet());
 	}
-
 }
