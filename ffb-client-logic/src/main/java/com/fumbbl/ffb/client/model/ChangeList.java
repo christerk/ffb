@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("For some skill when waiting on the opponent it was possible to open the action menu on the acting player")
 			.addFeature("\"Then I Started Blastin'!\"")
 			.addRuleChange("Iron Hard Skin now ignores all kinds of armour modifications")
+			.addFeature("Savage Blow")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")

@@ -104,6 +104,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
+	public static final ISkillProperty canReRollAnyNumberOfBlockDice = new NamedProperty("Can Re-Roll Any Number Of Block Dice");
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
 	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");

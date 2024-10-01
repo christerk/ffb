@@ -68,6 +68,7 @@ public class ReRolledActions {
 	public static final ReRolledAction CATCH_OF_THE_DAY = new ReRolledAction(CatchOfTheDay.class);
 	public static final ReRolledAction SINGLE_BLOCK_DIE = new ReRolledAction("Single Block Die");
 	public static final ReRolledAction THEN_I_STARTED_BLASTIN = new ReRolledAction(ThenIStartedBlastin.class);
+	public static final ReRolledAction MULTI_BLOCK_DICE = new ReRolledAction("Multi Block Dice");
 
 	private final Map<String, ReRolledAction> values;
 

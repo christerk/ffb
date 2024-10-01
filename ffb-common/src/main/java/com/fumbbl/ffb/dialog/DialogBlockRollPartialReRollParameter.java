@@ -1,13 +1,19 @@
 package com.fumbbl.ffb.dialog;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
@@ -16,7 +22,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
   private int[] fBlockRoll, reRolledDiceIndexes;
   private boolean fTeamReRollOption, fProReRollOption, brawlerOption, consummateOption;
   private ReRollSource singleUseReRollSource;
-  private Skill reRollSingleDieSkill;
+  private List<Skill> reRollExplicitDieSkills;
 
   public DialogBlockRollPartialReRollParameter() {
     super();
@@ -24,7 +30,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
 
   public DialogBlockRollPartialReRollParameter(String pChoosingTeamId, int pNrOfDice, int[] pBlockRoll, boolean pTeamReRollOption,
                                                boolean pProReRollOption, boolean brawlerOption, boolean consummateOption,
-                                               int[] reRolledDiceIndexes, ReRollSource singleUseReRollSource, Skill reRollSingleDieSkill) {
+                                               int[] reRolledDiceIndexes, ReRollSource singleUseReRollSource, List<Skill> reRollExplicitDieSkills) {
     fChoosingTeamId = pChoosingTeamId;
     fNrOfDice = pNrOfDice;
     fBlockRoll = pBlockRoll;
@@ -34,7 +40,7 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
     this.consummateOption = consummateOption;
     this.reRolledDiceIndexes = reRolledDiceIndexes;
     this.singleUseReRollSource = singleUseReRollSource;
-    this.reRollSingleDieSkill = reRollSingleDieSkill;
+    this.reRollExplicitDieSkills = reRollExplicitDieSkills;
   }
 
   public DialogId getId() {
@@ -77,14 +83,14 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
     return consummateOption;
   }
 
-  public Skill getReRollSingleDieSkill() {
-    return reRollSingleDieSkill;
+  public List<Skill> getReRollExplicitDieSkills() {
+    return reRollExplicitDieSkills;
   }
 // transformation
 
   public IDialogParameter transform() {
     return new DialogBlockRollPartialReRollParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), hasTeamReRollOption(),
-      hasProReRollOption(), brawlerOption, consummateOption, reRolledDiceIndexes, singleUseReRollSource, reRollSingleDieSkill);
+      hasProReRollOption(), brawlerOption, consummateOption, reRolledDiceIndexes, singleUseReRollSource, reRollExplicitDieSkills);
   }
 
   // JSON serialization
@@ -101,7 +107,11 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
     IJsonOption.BRAWLER_OPTION.addTo(jsonObject, brawlerOption);
     IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
     IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateOption);
-    IJsonOption.SKILL.addTo(jsonObject, reRollSingleDieSkill);
+    JsonArray skillArray = new JsonArray();
+    for (Skill skill : reRollExplicitDieSkills) {
+      skillArray.add(UtilJson.toJsonValue(skill));
+    }
+    IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
     return jsonObject;
   }
 
@@ -119,7 +129,12 @@ public class DialogBlockRollPartialReRollParameter implements IDialogParameter {
       consummateOption = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
     }
     singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
-    reRollSingleDieSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
+    reRollExplicitDieSkills = new ArrayList<>();
+    JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
+    for (int i = 0; i < skillArray.size(); i++) {
+      SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
+      reRollExplicitDieSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
+    }
     return this;
   }
 
