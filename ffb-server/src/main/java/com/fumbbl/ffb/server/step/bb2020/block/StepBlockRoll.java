@@ -174,7 +174,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						&& !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
 					doRoll = false;
 					if (getReRollSource() == ReRollSources.PRO) {
-						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
+						proIndex = -1;
 					}
 					showBlockRollDialog(getReRollSource() == null);
 				}
@@ -297,12 +297,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		if (anyBlockDiceRrSkill != null) {
 			anyBlockDiceReRollSource = anyBlockDiceRrSkill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE);
 		}
+		boolean proWasWasted = getReRollSource() == ReRollSources.PRO && proIndex == -1;
 
 		boolean singleBlockDieRrUsed = getReRollSource() == singleBlockDieReRollSource && singleBlockDieReRollSource != null;
 		boolean anyBlockDiceRrUsed = getReRollSource() == anyBlockDiceReRollSource && anyBlockDiceReRollSource != null;
 		boolean singleDieRrUsed = getReRollSource() == singleDieReRollSource && singleDieReRollSource != null;
-		boolean teamReRollOption = getReRollSource() == null && UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
-		boolean singleUseReRollOption = getReRollSource() == null && UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
+		boolean teamReRollOption = (getReRollSource() == null || proWasWasted) && UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
+		boolean singleUseReRollOption = (getReRollSource() == null || proWasWasted) && UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		boolean proReRollOption = (getReRollSource() == null ||
 			((getReRollSource() == ReRollSources.BRAWLER || singleDieRrUsed || singleBlockDieRrUsed || anyBlockDiceRrUsed)
 				&& fBlockRoll.length > reRolledDiceIndexes.length))
