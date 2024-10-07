@@ -26,6 +26,7 @@ public class ChangeList {
 			.addRuleChange("Iron Hard Skin now ignores all kinds of armour modifications")
 			.addFeature("Savage Blow")
 			.addBugfix("Pro: When pro roll failed for re-rolling a block die that die was still considered having been re-rolled")
+			.addFeature("Quick Bite")
 		);
 
 		versions.add(new VersionChangeList("2.29.0")

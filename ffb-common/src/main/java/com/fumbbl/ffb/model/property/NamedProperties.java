@@ -27,6 +27,7 @@ public class NamedProperties {
 	public static final ISkillProperty canAddStrengthToDodge = new NamedProperty("Can Add Strength To Dodge");
 	public static final ISkillProperty canAddStrengthToPass = new NamedProperty("Can Add Strength To Pass");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
+	public static final ISkillProperty canAttackOpponentForBallAfterCatch = new NamedProperty("Can Attack Opponent For Ball After Catch");
 	public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty(
 		"Can Attempt Catch In Adjacent Squares");
 	public static final ISkillProperty canAttemptToTackleDodgingPlayer = new NamedProperty(

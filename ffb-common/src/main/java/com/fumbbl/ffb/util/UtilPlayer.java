@@ -71,22 +71,30 @@ public class UtilPlayer {
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
 																																		ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		return findAdjacentOpposingPlayersWithProperty(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pProperty, pCheckAbleToMove);
+		return findAdjacentOpposingPlayersWithProperty(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pProperty, pCheckAbleToMove, false);
 	}
 
-	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate, ISkillProperty pProperty, boolean pCheckAbleToMove) {
+	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate,
+																																		ISkillProperty pProperty, boolean pCheckAbleToMove, boolean requireUnusedSkill) {
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
-		Set<Player<?>> shadowingPlayers = new HashSet<>();
+		Set<Player<?>> foundPlayers = new HashSet<>();
 		for (Player<?> opponent : opponents) {
 			PlayerState opponentState = pGame.getFieldModel().getPlayerState(opponent);
+			boolean skillCheck;
+			if (requireUnusedSkill) {
+				skillCheck = opponent.hasUnusedSkillProperty(pProperty);
+			} else {
+				skillCheck = opponent.hasSkillProperty(pProperty);
+			}
+
 			if ((opponentState != null) && opponentState.hasTacklezones()
-				&& opponent.hasSkillProperty(pProperty)
+				&& skillCheck
 				&& (!pCheckAbleToMove || opponentState.isAbleToMove())) {
-				shadowingPlayers.add(opponent);
+				foundPlayers.add(opponent);
 			}
 		}
-		Player<?>[] playerArray = shadowingPlayers.toArray(new Player[0]);
+		Player<?>[] playerArray = foundPlayers.toArray(new Player[0]);
 		UtilPlayer.sortByPlayerNr(playerArray);
 		return playerArray;
 	}
@@ -519,6 +527,7 @@ public class UtilPlayer {
 		return hasMoveLeft(pGame, jumping);
 
 	}
+
 	public static boolean hasMoveLeft(Game pGame, boolean jumping) {
 		boolean movePossible = false;
 		ActingPlayer actingPlayer = pGame.getActingPlayer();

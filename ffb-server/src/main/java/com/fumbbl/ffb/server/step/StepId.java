@@ -137,6 +137,7 @@ public enum StepId implements INamedObject {
 	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
 	PUSHBACK("pushback"), // action.block
+	QUICK_BITE("quickBite"),
 	RAIDING_PARTY("raidingParty"),
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
