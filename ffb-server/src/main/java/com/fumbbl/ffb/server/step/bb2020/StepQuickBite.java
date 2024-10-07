@@ -169,6 +169,13 @@ public class StepQuickBite extends AbstractStep {
 				if (game.getTurnMode() == TurnMode.KICKOFF
 					&& !bounds.isInBounds(game.getFieldModel().getBallCoordinate())) {
 					publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
+				} else {
+					publishParameter(StepParameter.from(StepParameterKey.CATCHER_ID, playerId));
+					if (player.getTeam() == game.getActingTeam()) {
+						// slightly hacky but we have to prevent the turnover in case of passes/hand-offs only
+						// since we do not persist this parameter as a separate field we can later change this logic if we have to
+						publishParameter(StepParameter.from(StepParameterKey.REVERT_END_TURN, true));
+					}
 				}
 			}
 			getResult().setSound(SoundId.BLOCK);

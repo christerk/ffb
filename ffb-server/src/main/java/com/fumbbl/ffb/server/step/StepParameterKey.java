@@ -119,6 +119,7 @@ public enum StepParameterKey {
 	RESET_FOR_FAILED_BLOCK, // Boolean
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean
+	REVERT_END_TURN, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare

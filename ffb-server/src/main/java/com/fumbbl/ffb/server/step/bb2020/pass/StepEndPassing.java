@@ -116,6 +116,10 @@ public final class StepEndPassing extends AbstractStep {
 					bloodlustAction = (PlayerAction) parameter.getValue();
 					consume(parameter);
 					return true;
+				case REVERT_END_TURN:
+					fEndTurn = false;
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
