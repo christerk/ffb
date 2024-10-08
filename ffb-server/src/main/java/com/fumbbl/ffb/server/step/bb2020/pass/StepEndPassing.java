@@ -6,7 +6,6 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -56,6 +55,7 @@ public final class StepEndPassing extends AbstractStep {
 
 	private String fInterceptorId;
 	private String fCatcherId;
+	private String ballSnatcherId;
 	private boolean fPassAccurate;
 	private boolean fPassFumble;
 	private boolean fEndTurn;
@@ -64,6 +64,7 @@ public final class StepEndPassing extends AbstractStep {
 	private boolean dontDropFumble;
 	private PassingDistance passingDistance;
 	private PlayerAction bloodlustAction;
+	private FieldCoordinate originalLandingSquare;
 
 	public StepEndPassing(GameState pGameState) {
 		super(pGameState);
@@ -119,6 +120,14 @@ public final class StepEndPassing extends AbstractStep {
 					return true;
 				case REVERT_END_TURN:
 					fEndTurn = false;
+					consume(parameter);
+					return true;
+				case PLAYER_ID:
+					ballSnatcherId = (String) parameter.getValue();
+					consume(parameter);
+					return true;
+				case COORDINATE_FROM:
+					originalLandingSquare = (FieldCoordinate) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -188,16 +197,23 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
-		if ((game.getThrower() != null) && UtilPlayer.hasBall(game, catcher)
+		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
+		FieldCoordinate endCoordinate;
+		if (ballWasSnatched) {
+			endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+		} else {
+			endCoordinate = originalLandingSquare;
+		}
+
+		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher) || ballWasSnatched)
 			&& game.getThrower().getTeam().hasPlayer(catcher)
-			&& game.getFieldModel().getPlayerCoordinate(catcher).equals(game.getPassCoordinate())
+			&& endCoordinate.equals(game.getPassCoordinate())
 		) {
 			PlayerResult throwerResult = game.getGameResult().getPlayerResult(game.getThrower());
 			if (fPassAccurate) {
 				getGameState().getPrayerState().addCompletion(throwerResult);
 			}
 			FieldCoordinate startCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-			FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 			int deltaX;
 			boolean eastIsForward = game.isHomePlaying();
 			if (TurnMode.DUMP_OFF == game.getTurnMode()) {
@@ -225,8 +241,7 @@ public final class StepEndPassing extends AbstractStep {
 				if (!isBomb) {
 					if (state.isInterceptionSuccessful()) {
 						catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
-						PlayerState playerState = game.getFieldModel().getPlayerState(catcher);
-						if (!playerState.isProneOrStunned() && !playerState.isCasualty() && playerState.getBase() != PlayerState.KNOCKED_OUT) {
+						if (!ballWasSnatched) {
 							// this means the interceptor has been knocked down, e.g. by Quick Bite and the ball is already set to the correct position
 							FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 							game.getFieldModel().setBallCoordinate(interceptorCoordinate);
@@ -237,7 +252,12 @@ public final class StepEndPassing extends AbstractStep {
 					}
 				}
 			}
-			catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+
+			if (ballWasSnatched) {
+				catcher = game.getPlayerById(fCatcherId);
+			} else {
+				catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+			}
 			if (game.getThrower() == actingPlayer.getPlayer()) {
 				fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
 					|| (catcher == null)
@@ -276,6 +296,8 @@ public final class StepEndPassing extends AbstractStep {
 		IServerJsonOption.DONT_DROP_FUMBLE.addTo(jsonObject, dontDropFumble);
 		IServerJsonOption.PASSING_DISTANCE.addTo(jsonObject, passingDistance);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, ballSnatcherId);
+		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, originalLandingSquare);
 		return jsonObject;
 	}
 
@@ -292,6 +314,8 @@ public final class StepEndPassing extends AbstractStep {
 		dontDropFumble = IServerJsonOption.DONT_DROP_FUMBLE.getFrom(source, jsonObject);
 		passingDistance = (PassingDistance) IServerJsonOption.PASSING_DISTANCE.getFrom(source, jsonObject);
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
+		ballSnatcherId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		originalLandingSquare = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
 		return this;
 	}
 

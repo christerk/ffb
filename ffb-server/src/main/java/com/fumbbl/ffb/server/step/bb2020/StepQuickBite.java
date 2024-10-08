@@ -170,7 +170,9 @@ public class StepQuickBite extends AbstractStep {
 					&& !bounds.isInBounds(game.getFieldModel().getBallCoordinate())) {
 					publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
 				} else {
-					publishParameter(StepParameter.from(StepParameterKey.CATCHER_ID, playerId));
+					publishParameter(StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
+					publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM,
+						game.getFieldModel().getPlayerCoordinate(catcher)));
 					if (player.getTeam() == game.getActingTeam()) {
 						// slightly hacky but we have to prevent the turnover in case of passes/hand-offs only
 						// since we do not persist this parameter as a separate field we can later change this logic if we have to
