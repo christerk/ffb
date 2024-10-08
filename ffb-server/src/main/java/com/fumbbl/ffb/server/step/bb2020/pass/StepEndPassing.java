@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -224,8 +225,12 @@ public final class StepEndPassing extends AbstractStep {
 				if (!isBomb) {
 					if (state.isInterceptionSuccessful()) {
 						catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
-						FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-						game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+						PlayerState playerState = game.getFieldModel().getPlayerState(catcher);
+						if (!playerState.isProneOrStunned() && !playerState.isCasualty() && playerState.getBase() != PlayerState.KNOCKED_OUT) {
+							// this means the interceptor has been knocked down, e.g. by Quick Bite and the ball is already set to the correct position
+							FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+							game.getFieldModel().setBallCoordinate(interceptorCoordinate);
+						}
 						game.getFieldModel().setBallMoving(false);
 					} else {
 						catcherResult.setDeflections(catcherResult.getDeflections() + 1);
