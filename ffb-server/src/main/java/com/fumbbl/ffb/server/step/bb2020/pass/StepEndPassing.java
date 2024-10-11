@@ -64,7 +64,6 @@ public final class StepEndPassing extends AbstractStep {
 	private boolean dontDropFumble;
 	private PassingDistance passingDistance;
 	private PlayerAction bloodlustAction;
-	private FieldCoordinate originalLandingSquare;
 
 	public StepEndPassing(GameState pGameState) {
 		super(pGameState);
@@ -124,10 +123,6 @@ public final class StepEndPassing extends AbstractStep {
 					return true;
 				case PLAYER_ID:
 					ballSnatcherId = (String) parameter.getValue();
-					consume(parameter);
-					return true;
-				case COORDINATE_FROM:
-					originalLandingSquare = (FieldCoordinate) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -198,12 +193,7 @@ public final class StepEndPassing extends AbstractStep {
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
-		FieldCoordinate endCoordinate;
-		if (ballWasSnatched) {
-			endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-		} else {
-			endCoordinate = originalLandingSquare;
-		}
+		FieldCoordinate endCoordinate =  game.getFieldModel().getPlayerCoordinate(catcher);
 
 		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher) || ballWasSnatched)
 			&& game.getThrower().getTeam().hasPlayer(catcher)
@@ -297,7 +287,6 @@ public final class StepEndPassing extends AbstractStep {
 		IServerJsonOption.PASSING_DISTANCE.addTo(jsonObject, passingDistance);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, ballSnatcherId);
-		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, originalLandingSquare);
 		return jsonObject;
 	}
 
@@ -315,7 +304,6 @@ public final class StepEndPassing extends AbstractStep {
 		passingDistance = (PassingDistance) IServerJsonOption.PASSING_DISTANCE.getFrom(source, jsonObject);
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		ballSnatcherId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
-		originalLandingSquare = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
 		return this;
 	}
 
