@@ -36,6 +36,7 @@ public enum SoundId implements INamedObject {
 		return fName;
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isSpectatorSound() {
 		return fSpectatorSound;
 	}

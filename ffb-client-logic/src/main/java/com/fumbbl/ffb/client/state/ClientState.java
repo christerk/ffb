@@ -35,13 +35,8 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -423,13 +418,17 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		return menuItem;
 	}
 
-	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
-		String endMoveActionLabel = playerActivationUsed() ? "End Action" : "Deselect Player";
+	protected void 	addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
+		String endMoveActionLabel = playerActivationUsed() ? "End Action" : deselectPlayerLabel();
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
+	}
+
+	protected String deselectPlayerLabel() {
+		return "Deselect Player";
 	}
 
 	protected boolean playerActivationUsed() {
@@ -544,6 +543,28 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
 		return menuItem;
 	}
+
+	public boolean isThenIStartedBlastinAvailable(ActingPlayer player) {
+		return !player.hasActed() && isThenIStartedBlastinAvailable(player.getPlayer());
+	}
+
+	protected boolean isThenIStartedBlastinAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canBlastRemotePlayer) &&
+			Arrays.stream(game.getOtherTeam(game.getActingTeam()).getPlayers()).anyMatch(
+			opponent -> fieldModel.getPlayerCoordinate(opponent).distanceInSteps(playerCoordinate) <= 3);
+	}
+
+	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
+		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN)));
+		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
+		return blastinItem;
+	}
+
 
 	public DimensionProvider dimensionProvider() {
 		return getClient().getUserInterface().getDimensionProvider();

@@ -161,8 +161,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		for (int die = 1; die <= diceCount; die++) {
 			int finalDie = die;
 			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalDie - 1)) {
-				JButton proButton = new JButton(dimensionProvider());
-				proButton.setText("Die " + die);
+				JButton proButton = new JButton(dimensionProvider(), "Die " + die, mnemonics.get(0));
 				proButton.addActionListener(e -> consumer.accept(target, finalDie - 1));
 				proButton.setMnemonic(mnemonics.get(0));
 				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
@@ -195,7 +194,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	}
 
 	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(dimensionProvider(), buttonName);
+		JButton button = new JButton(dimensionProvider(), buttonName, mnemonic);
 		button.addActionListener(e -> handleReRollUse(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

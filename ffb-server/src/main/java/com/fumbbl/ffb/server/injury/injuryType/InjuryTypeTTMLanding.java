@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
 
@@ -31,8 +32,12 @@ public class InjuryTypeTTMLanding extends InjuryTypeServer<TTMLanding> {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
-				.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+			} else {
+				Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
+					.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 
@@ -40,7 +45,7 @@ public class InjuryTypeTTMLanding extends InjuryTypeServer<TTMLanding> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, null,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			setInjury(pDefender, gameState, diceRoller);
 

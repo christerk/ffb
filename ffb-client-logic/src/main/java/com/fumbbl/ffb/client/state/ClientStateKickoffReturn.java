@@ -53,12 +53,12 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		}
 	}
 
-	public void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	public void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 			case IPlayerPopupMenuKeys.KEY_MOVE:
-				communication.sendActingPlayer(pPlayer, PlayerAction.MOVE, false);
+				communication.sendActingPlayer(player, PlayerAction.MOVE, false);
 				break;
 			case IPlayerPopupMenuKeys.KEY_END_MOVE:
 				communication.sendActingPlayer(null, null, false);

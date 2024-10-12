@@ -64,23 +64,26 @@ public class ClientStateSelectBlockKind extends ClientState {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, true, false, false);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, true, false, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
+					break;
+				case IPlayerPopupMenuKeys.KEY_BREATHE_FIRE:
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false, true);
 					break;
 				case IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL:
 					Skill goredSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
 					if (UtilClientStateBlocking.isGoredAvailable(this) && goredSkill != null) {
 						getClient().getCommunication().sendUseSkill(goredSkill, true, actingPlayer.getPlayerId());
 					}
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, false, false);
 					break;
 				default:
 					break;

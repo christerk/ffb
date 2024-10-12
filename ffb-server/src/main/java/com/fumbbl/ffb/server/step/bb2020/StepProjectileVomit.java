@@ -76,7 +76,6 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter parameter) {
 		if (parameter != null && parameter.getKey() == StepParameterKey.USING_VOMIT) {
 			usingVomit = (boolean) parameter.getValue();
-			consume(parameter);
 			return true;
 		}
 

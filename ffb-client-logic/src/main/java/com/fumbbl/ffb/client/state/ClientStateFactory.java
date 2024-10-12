@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
+import com.fumbbl.ffb.client.state.bb2020.ClientStateThenIStartedBlastin;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
 import com.fumbbl.ffb.client.state.bb2020.ClientStateTrickster;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -92,6 +93,7 @@ public class ClientStateFactory {
 		register(new ClientStateKickEmBlitz(pClient));
 		register(new ClientStateKickEmBlock(pClient));
 		register(new ClientStateTrickster(pClient));
+		register(new ClientStateThenIStartedBlastin(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -358,13 +360,32 @@ public class ClientStateFactory {
 					}
 					break;
 				case RAIDING_PARTY:
-					clientStateId = ClientStateId.RAIDING_PARTY;
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.RAIDING_PARTY;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
 					break;
 				case SELECT_BLOCK_KIND:
-					clientStateId = ClientStateId.SELECT_BLOCK_KIND;
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.SELECT_BLOCK_KIND;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
 					break;
 				case TRICKSTER:
-					clientStateId = ClientStateId.TRICKSTER;
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.TRICKSTER;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+				case THEN_I_STARTED_BLASTIN:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.THEN_I_STARTED_BLASTIN;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
 					break;
 				default:
 					break;

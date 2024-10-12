@@ -31,7 +31,7 @@ public class ClientStateKickEmBlock extends ClientStateBlock {
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
 			&& game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()
 			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(pPlayer))) {
-			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
+			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
 		}
 	}
 

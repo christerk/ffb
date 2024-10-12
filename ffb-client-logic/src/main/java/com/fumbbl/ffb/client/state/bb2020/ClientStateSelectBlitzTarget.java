@@ -21,8 +21,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +111,9 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			menuItemList.add(createThenIStartedBlastinItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -149,6 +151,9 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 				return true;
 			case PLAYER_ACTION_CATCH_OF_THE_DAY:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+				return true;
+			case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
 			default:
 				actionHandled = false;
@@ -202,6 +207,13 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
 					if (isCatchOfTheDayAvailable(player)) {
 						Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
+
+				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
+					if (isThenIStartedBlastinAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;

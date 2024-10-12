@@ -151,20 +151,20 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		super.menuItemSelected(pPlayer, pMenuKey);
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
+		super.menuItemSelected(player, pMenuKey);
 
-		if (pPlayer != null) {
+		if (player != null) {
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 
 			ClientCommunication communication = getClient().getCommunication();
 			switch (pMenuKey) {
 			case IPlayerPopupMenuKeys.KEY_SHORT:
-				communication.sendKickTeamMate(actingPlayer.getPlayerId(), pPlayer.getId(), 1);
+				communication.sendKickTeamMate(actingPlayer.getPlayerId(), player.getId(), 1);
 				break;
 			case IPlayerPopupMenuKeys.KEY_LONG:
-				communication.sendKickTeamMate(actingPlayer.getPlayerId(), pPlayer.getId(), 2);
+				communication.sendKickTeamMate(actingPlayer.getPlayerId(), player.getId(), 2);
 				break;
 			}
 		}

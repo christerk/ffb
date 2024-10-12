@@ -51,7 +51,7 @@ public abstract class FieldLayer {
 		return updatedArea;
 	}
 
-	protected Rectangle draw(BufferedImage pImage, int pX, int pY, float pAlpha) {
+	public Rectangle draw(BufferedImage pImage, int pX, int pY, float pAlpha) {
 		Graphics2D g2d = fImage.createGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pAlpha));
 		g2d.drawImage(pImage, pX, pY, null);

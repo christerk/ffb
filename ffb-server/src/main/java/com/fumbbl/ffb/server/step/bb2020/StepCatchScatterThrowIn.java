@@ -60,6 +60,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.generator.QuickBite;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.SpikedBallApo;
 import com.fumbbl.ffb.server.util.UtilServerCards;
@@ -397,6 +398,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 						: null;
 				} else {
 					catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+					if (catcher != null) {
+						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, game.getFieldModel().getBallCoordinate(),
+							NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
+						if (ArrayTool.isProvided(opponents)) {
+							SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
+							((QuickBite) factory.forName(SequenceGenerator.Type.QuickBite.name()))
+								.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+						}
+					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, (catcher != null) ? catcher.getId() : null));
 				deactivateCards();

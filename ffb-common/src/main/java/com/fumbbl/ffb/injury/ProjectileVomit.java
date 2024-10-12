@@ -9,7 +9,7 @@ public class ProjectileVomit extends InjuryType {
 	}
 
 	@Override
-	public boolean isVomit() {
+	public boolean isVomitLike() {
 		return true;
 	}
 

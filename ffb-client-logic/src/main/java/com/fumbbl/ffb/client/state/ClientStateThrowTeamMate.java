@@ -172,12 +172,12 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
 		if (pMenuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
 			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
 			fRangeGridHandler.refreshRangeGrid();
 		} else {
-			super.menuItemSelected(pPlayer, pMenuKey);
+			super.menuItemSelected(player, pMenuKey);
 		}
 	}
 

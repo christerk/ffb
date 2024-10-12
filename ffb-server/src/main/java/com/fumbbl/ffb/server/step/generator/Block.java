@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.server.step.generator;
 
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 
 public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
@@ -59,12 +58,17 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			params.askForBlockKind = askForBlockKind;
 			return this;
 		}
+
+		public Builder useBreatheFire(boolean useBreatheFire) {
+			params.usingBreatheFire = useBreatheFire;
+			return this;
+		}
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private String blockDefenderId;
 		private String multiBlockDefenderId;
-		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender;
+		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender, usingBreatheFire;
 
 		private SequenceParams(GameState gameState) {
 			super(gameState);
@@ -100,6 +104,10 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isPublishDefender() {
 			return publishDefender;
+		}
+
+		public boolean isUsingBreatheFire() {
+			return usingBreatheFire;
 		}
 	}
 }

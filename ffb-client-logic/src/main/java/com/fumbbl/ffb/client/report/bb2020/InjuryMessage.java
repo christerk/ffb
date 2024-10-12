@@ -24,7 +24,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ReportMessageType(ReportId.INJURY)
 @RulesCollection(Rules.BB2020)
@@ -56,10 +57,14 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 			int armorModifierTotal = 0;
 			boolean usingClaws = Arrays.stream(report.getArmorModifiers())
 				.anyMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue));
-			Optional<Skill> cancelingClaws = Arrays.stream(report.getArmorModifiers())
+			Set<Skill> cancelingAvModifiers = Arrays.stream(report.getArmorModifiers())
 				.map(IRegistrationAwareModifier::getRegisteredTo)
 				.filter(Objects::nonNull)
-				.filter(skill -> skill.canCancel(NamedProperties.reducesArmourToFixedValue)).findFirst();
+				.filter(skill ->
+					skill.hasSkillProperty(NamedProperties.ignoresArmourModifiersFromSkills)
+						|| skill.hasSkillProperty(NamedProperties.ignoresArmourModifiersFromSpecialEffects)
+						|| skill.hasSkillProperty(NamedProperties.ignoresArmourModifiersFromFouls)
+				).collect(Collectors.toSet());
 
 			for (ArmorModifier armorModifier : report.getArmorModifiers()) {
 				if (armorModifier.getModifier(attacker, defender) != 0) {
@@ -84,9 +89,9 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 				println(getIndent() + 1, " uses Claws to reduce opponent's armour to 8+.");
 			}
 			if (defender != null) {
-				if (cancelingClaws.isPresent()) {
+				if (!cancelingAvModifiers.isEmpty()) {
 					print(getIndent() + 1, false, defender);
-					println(getIndent() + 1, " uses " + cancelingClaws.get().getName() + " to cancel opponent's Claws.");
+					println(getIndent() + 1, " ignores armour modifiers due to " + cancelingAvModifiers.stream().map(Skill::getName).collect(Collectors.joining(", ")));
 				}
 				if (report.isArmorBroken()) {
 					print(getIndent() + 1, "The armour of ");
@@ -103,47 +108,47 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 
 		// report injury roll
 		if (report.isArmorBroken()) {
-				boolean thickSkullUsed = false;
-				boolean stuntyUsed = false;
+			boolean thickSkullUsed = false;
+			boolean stuntyUsed = false;
+			status = new StringBuilder();
+			int[] injuryRoll = report.getInjuryRoll();
+			if (ArrayTool.isProvided(injuryRoll) && !report.getSkip().isInjury()) {
+				status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
+				println(getIndent(), TextStyle.ROLL, status.toString());
 				status = new StringBuilder();
-				int[] injuryRoll = report.getInjuryRoll();
-				if (ArrayTool.isProvided(injuryRoll) && !report.getSkip().isInjury()) {
-					status.append("Injury Roll [ ").append(injuryRoll[0]).append(" ][ ").append(injuryRoll[1]).append(" ]");
-					println(getIndent(), TextStyle.ROLL, status.toString());
-					status = new StringBuilder();
-					int rolledTotal = injuryRoll[0] + injuryRoll[1];
-					status.append("Rolled Total of ").append(rolledTotal);
-					int injuryModifierTotal = 0;
-					for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
-						int modifierValue = injuryModifier.getModifier(attacker, defender);
-						injuryModifierTotal += modifierValue;
-						if (modifierValue == 0) {
-							thickSkullUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
-							stuntyUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
-						} else if (modifierValue > 0) {
-							status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
-						} else {
-							status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
-						}
-					}
-					if (injuryModifierTotal != 0) {
-						status.append(" = ").append(rolledTotal + injuryModifierTotal);
-					}
-					println(getIndent() + 1, status.toString());
-					if (stuntyUsed) {
-						print(getIndent() + 1, false, defender);
-						status = new StringBuilder();
-						status.append(" is Stunty and more easily hurt because of that.");
-						println(getIndent() + 1, status.toString());
-					}
-					if (thickSkullUsed) {
-						print(getIndent() + 1, false, defender);
-						status = new StringBuilder();
-						status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative())
-							.append(" to stay on the pitch.");
-						println(getIndent() + 1, status.toString());
+				int rolledTotal = injuryRoll[0] + injuryRoll[1];
+				status.append("Rolled Total of ").append(rolledTotal);
+				int injuryModifierTotal = 0;
+				for (InjuryModifier injuryModifier : report.getInjuryModifiers()) {
+					int modifierValue = injuryModifier.getModifier(attacker, defender);
+					injuryModifierTotal += modifierValue;
+					if (modifierValue == 0) {
+						thickSkullUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.convertKOToStunOn8);
+						stuntyUsed |= injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily);
+					} else if (modifierValue > 0) {
+						status.append(" + ").append(modifierValue).append(" ").append(injuryModifier.getName());
+					} else {
+						status.append(" ").append(modifierValue).append(" ").append(injuryModifier.getName());
 					}
 				}
+				if (injuryModifierTotal != 0) {
+					status.append(" = ").append(rolledTotal + injuryModifierTotal);
+				}
+				println(getIndent() + 1, status.toString());
+				if (stuntyUsed) {
+					print(getIndent() + 1, false, defender);
+					status = new StringBuilder();
+					status.append(" is Stunty and more easily hurt because of that.");
+					println(getIndent() + 1, status.toString());
+				}
+				if (thickSkullUsed && defender != null) {
+					print(getIndent() + 1, false, defender);
+					status = new StringBuilder();
+					status.append("'s Thick Skull helps ").append(defender.getPlayerGender().getDative())
+						.append(" to stay on the pitch.");
+					println(getIndent() + 1, status.toString());
+				}
+			}
 			if (ArrayTool.isProvided(report.getCasualtyRoll()) && !report.getSkip().isCas()) {
 				print(getIndent() + 1, false, defender);
 				println(getIndent() + 1, " suffers a casualty.");
@@ -155,30 +160,30 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 				} else {
 					int[] casualtyRoll = report.getCasualtyRoll();
 					status = new StringBuilder();
-						status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ]");
-						println(getIndent(), TextStyle.ROLL, status.toString());
-						if (!report.getCasualtyModifiers().isEmpty()) {
-							int modifiers = 0;
-							status = new StringBuilder("Rolled ").append(casualtyRoll[0]);
-							List<String> reportStrings = new ArrayList<>();
-							for (CasualtyModifier modifier : report.getCasualtyModifiers()) {
-								reportStrings.add(modifier.reportString());
-								modifiers += modifier.getModifier();
-							}
-							reportStrings.sort(Comparator.naturalOrder());
-							for (String reportString : reportStrings) {
-								status.append(" + ");
-								status.append(reportString);
-							}
-							status.append(" = ").append(casualtyRoll[0] + modifiers);
-							println(getIndent() + 1, TextStyle.NONE, status.toString());
+					status.append("Casualty Roll [ ").append(casualtyRoll[0]).append(" ]");
+					println(getIndent(), TextStyle.ROLL, status.toString());
+					if (!report.getCasualtyModifiers().isEmpty()) {
+						int modifiers = 0;
+						status = new StringBuilder("Rolled ").append(casualtyRoll[0]);
+						List<String> reportStrings = new ArrayList<>();
+						for (CasualtyModifier modifier : report.getCasualtyModifiers()) {
+							reportStrings.add(modifier.reportString());
+							modifiers += modifier.getModifier();
 						}
+						reportStrings.sort(Comparator.naturalOrder());
+						for (String reportString : reportStrings) {
+							status.append(" + ");
+							status.append(reportString);
+						}
+						status.append(" = ").append(casualtyRoll[0] + modifiers);
+						println(getIndent() + 1, TextStyle.NONE, status.toString());
+					}
 					reportInjury(defender, report.getInjury(), report.getSeriousInjury(), casualtyRoll[1], report.getOriginalInjury());
 				}
 			} else if (report.getInjury() != null && !report.getSkip().isInjury()) {
 				reportInjury(defender, report.getInjury(), null, 0, null);
 			}
-			}
+		}
 	}
 
 	private void reportInjury(Player<?> pDefender, PlayerState pInjury, SeriousInjury pSeriousInjury, int siRoll, SeriousInjury originalInury) {

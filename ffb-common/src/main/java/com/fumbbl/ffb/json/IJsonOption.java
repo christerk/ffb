@@ -61,6 +61,8 @@ public interface IJsonOption {
 	JsonStringOption BLITZ_STATUS = new JsonStringOption("blitzStatus");
 	JsonObjectOption BLITZ_TURN_STATE = new JsonObjectOption("blitzTurnState");
 	JsonBooleanOption BLITZ_USED = new JsonBooleanOption("blitzUsed");
+	JsonIntOption BLOCK_DIE_INDEX = new JsonIntOption("blockDieIndex");
+	JsonIntArrayOption BLOCK_DICE_INDEXES = new JsonIntArrayOption("blockDiceIndexes");
 	JsonStringOption BLOCK_KIND = new JsonStringOption("blockKind");
 	JsonEnumWithNameOption BLOCK_RESULT = new JsonEnumWithNameOption("blockResult", Factory.BLOCK_RESULT);
 	JsonIntArrayOption BLOCK_ROLL = new JsonIntArrayOption("blockRoll");
@@ -215,6 +217,7 @@ public interface IJsonOption {
 	JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
 	JsonIntOption HEAT_ROLL = new JsonIntOption("heatRoll");
+	JsonBooleanOption HELD_IN_PLACE = new JsonBooleanOption("heldInPlace");
 	JsonBooleanOption HOME_CHOICE = new JsonBooleanOption("homeChoice");
 	JsonBooleanOption HOME_DATA = new JsonBooleanOption("homeData");
 	JsonBooleanOption HOME_FIRST_OFFENSE = new JsonBooleanOption("homeFirstOffense");
@@ -500,11 +503,13 @@ public interface IJsonOption {
 	JsonFieldCoordinateOption START_COORDINATE = new JsonFieldCoordinateOption("startCoordinate");
 	JsonDateOption STARTED = new JsonDateOption("started");
 	JsonObjectOption STAT_BASED_ROLL_MODIFIER = new JsonObjectOption("statBasedRollModifier");
+	JsonStringOption STATUS = new JsonStringOption("status");
 	JsonBooleanOption STAYS_ON_PITCH = new JsonBooleanOption("staysOnPitch");
 	JsonStringOption STEP_PARAMETER_KEY = new JsonStringOption("stepParameterKey");
 	JsonStringArrayOption STEP_PARAMETER_KEYS = new JsonStringArrayOption("stepParameterKeys");
 	JsonObjectOption STEP_STATE = new JsonObjectOption("stepState");
 	JsonIntOption STRENGTH = new JsonIntOption("strength");
+	JsonBooleanOption STRONG_OPPONENT = new JsonBooleanOption("strongOpponent");
 	JsonBooleanOption SUCCESSFUL = new JsonBooleanOption("successful");
 	JsonBooleanOption SUCCESSFUL_DAUNTLESS = new JsonBooleanOption("successfulDauntless");
 	JsonBooleanOption SUFFERING_ANIMOSITY = new JsonBooleanOption("sufferingAnimosity");
@@ -586,6 +591,7 @@ public interface IJsonOption {
 	JsonIntOption USES = new JsonIntOption("uses");
 	JsonBooleanOption USES_A_TEAM_REROLL = new JsonBooleanOption("usesATeamReroll");
 	JsonBooleanOption USES_TREASURY = new JsonBooleanOption("usesTreasury");
+	JsonBooleanOption USING_BREATHE_FIRE = new JsonBooleanOption("usingBreatheFire");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");

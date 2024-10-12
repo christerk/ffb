@@ -179,6 +179,8 @@ public interface IIconProperty {
 	String ACTION_KICK_EM_BLOCK = "action.kickEmBlock";
 	String ACTION_KICK_EM_BLITZ = "action.kickEmBlitz";
 	String ACTION_CATCH_OF_THE_DAY = "action.catchOfTheDay";
+	String ACTION_BREATHE_FIRE = "action.breatheFire";
+	String ACTION_STARTED_BLASTIN = "action.startedBlastin";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
@@ -203,6 +205,8 @@ public interface IIconProperty {
 	String CURSOR_BOMB = "cursor.bomb";
 	String CURSOR_KEG = "cursor.keg";
 	String CURSOR_INVALID_KEG = "cursor.invalidkeg";
+	String CURSOR_BLASTIN = "cursor.blastin";
+	String CURSOR_INVALID_BLASTIN = "cursor.invalidblastin";
 	String CURSOR_RAID = "cursor.raid";
 	String CURSOR_INVALID_RAID = "cursor.invalidraid";
 	String CURSOR_HIT_AND_RUN = "cursor.hitandrun";
@@ -268,6 +272,13 @@ public interface IIconProperty {
 	String ANIMATION_TRICKSTER_GLOW_4 = "animation.trickster.glow.4";
 	String ANIMATION_TRICKSTER_EXPLOSION_1 = "animation.trickster.explosion.1";
 	String ANIMATION_TRICKSTER_EXPLOSION_2 = "animation.trickster.explosion.2";
+
+	String ANIMATION_BLASTIN_SMOKE_1 = "animation.blastin.smoke.1";
+	String ANIMATION_BLASTIN_SMOKE_2 = "animation.blastin.smoke.2";
+	String ANIMATION_BLASTIN_SMOKE_3 = "animation.blastin.smoke.3";
+	String ANIMATION_BLASTIN_SMOKE_4 = "animation.blastin.smoke.4";
+	String ANIMATION_BLASTIN_EXPLOSION_1 = "animation.blastin.explosion.1";
+	String ANIMATION_BLASTIN_EXPLOSION_2 = "animation.blastin.explosion.2";
 
 	String ANIMATION_KICKOFF_BLITZ = "animation.kickoff.blitz";
 	String ANIMATION_KICKOFF_BLIZZARD = "animation.kickoff.blizzard";

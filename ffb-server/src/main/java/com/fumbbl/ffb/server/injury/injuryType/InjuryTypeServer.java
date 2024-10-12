@@ -64,8 +64,8 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return injuryType.isFoul();
 	}
 
-	public boolean isVomit() {
-		return injuryType.isVomit();
+	public boolean isVomitLike() {
+		return injuryType.isVomitLike();
 	}
 
 	public boolean stunIsTreatedAsKo() {

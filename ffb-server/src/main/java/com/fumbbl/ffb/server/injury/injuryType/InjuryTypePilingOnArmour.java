@@ -78,7 +78,7 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 
 			if (!UtilGameOption.isOptionEnabled(game, GameOptionId.PILING_ON_DOES_NOT_STACK)) {
 				Set<InjuryModifier> armorModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
-					pDefender, isStab(), isFoul(), isVomit());
+					pDefender, isStab(), isFoul(), isVomitLike());
 				injuryContext.addInjuryModifiers(armorModifiers);
 			}
 			setInjury(pDefender, gameState, diceRoller);

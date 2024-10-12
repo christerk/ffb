@@ -11,18 +11,18 @@ public class InjuryModifierContext {
 	private final Player<?> defender;
 	private final boolean isStab;
 	private final boolean isFoul;
-	private final boolean isVomit;
+	private final boolean isVomitLike;
 	private Mode mode;
 
 	public InjuryModifierContext(Game game, InjuryContext injuryContext, Player<?> attacker, Player<?> defender,
-	                             boolean isStab, boolean isFoul, boolean isVomit) {
+	                             boolean isStab, boolean isFoul, boolean isVomitLike) {
 		this.game = game;
 		this.injuryContext = injuryContext;
 		this.attacker = attacker;
 		this.defender = defender;
 		this.isStab = isStab;
 		this.isFoul = isFoul;
-		this.isVomit = isVomit;
+		this.isVomitLike = isVomitLike;
 		this.mode = Mode.ATTACKER;
 	}
 
@@ -50,8 +50,8 @@ public class InjuryModifierContext {
 		return isFoul;
 	}
 
-	public boolean isVomit() {
-		return isVomit;
+	public boolean isVomitLike() {
+		return isVomitLike;
 	}
 
 	public void setDefenderMode() {

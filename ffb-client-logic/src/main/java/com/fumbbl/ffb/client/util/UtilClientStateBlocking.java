@@ -20,8 +20,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +71,15 @@ public class UtilClientStateBlocking {
 			case PLAYER_ACTION_GORED:
 				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 				return true;
+			case PLAYER_ACTION_BLACK_INK:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+				return true;
+			case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+				return true;
+			case PLAYER_ACTION_BREATHE_FIRE:
+				menuItemSelected(pClientState, player, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
+				return true;
 			default:
 				FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 				FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -92,19 +100,19 @@ public class UtilClientStateBlocking {
 			switch (pMenuKey) {
 				case IPlayerPopupMenuKeys.KEY_BLOCK:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, false);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_STAB:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, true, false, false);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, true, false, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_CHAINSAW:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, true, false);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT:
 					handled = true;
-					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
 					break;
 				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
 					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
@@ -135,6 +143,16 @@ public class UtilClientStateBlocking {
 							communication.sendUseSkill(goredSkill, true, actingPlayer.getPlayerId()));
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_BREATHE_FIRE:
+					handled = true;
+					block(pClientState, actingPlayer.getPlayerId(), pPlayer, false, false, false, true);
+					break;
+				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
+					if (pClientState.isThenIStartedBlastinAvailable(actingPlayer)) {
+						Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -152,14 +170,14 @@ public class UtilClientStateBlocking {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		// rooted players can not move but still spend movement for the blitz action
-		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
+		if (UtilPlayer.isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.hasMoveLeft(game, false))) {
 			handled = true;
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)
 				|| (isGoredAvailable(pClientState) && pDoBlitz)) {
 				createAndShowBlockOptionsPopupMenu(pClientState, actingPlayer.getPlayer(), pDefender, false);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false);
+				block(pClientState, actingPlayer.getPlayerId(), pDefender, false, false, false, false);
 			} else {
 				handled = false;
 			}
@@ -186,12 +204,21 @@ public class UtilClientStateBlocking {
 			menuItemList.add(chainsawAction);
 		}
 		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
-		if (vomitSkill.isPresent()) {
+		if (vomitSkill.isPresent() && !multiBlock) {
 			JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
 			menuItemList.add(projectileVomit);
+		}
+
+		Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
+		if (fireSkill.isPresent() && !multiBlock) {
+			JMenuItem breatheFire = new JMenuItem(dimensionProvider, fireSkill.get().getName(),
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE)));
+			breatheFire.setMnemonic(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
+			breatheFire.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, 0));
+			menuItemList.add(breatheFire);
 		}
 
 		if (isGoredAvailable(pClientState)) {
@@ -208,9 +235,9 @@ public class UtilClientStateBlocking {
 	}
 
 	public static void block(ClientState pClientState, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
-													 boolean usingChainsaw, boolean usingVomit) {
+													 boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
 		pClientState.getClient().getUserInterface().getFieldComponent().refresh();
-		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
+		pClientState.getClient().getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire);
 	}
 
 	public static boolean isGoredAvailable(ClientState pClientState) {
