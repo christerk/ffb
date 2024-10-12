@@ -12,6 +12,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.30.1")
+			.addBugfix("Breathe Fire: Ball did not bounce for placed prone or knock down results without av breaks")
+		);
+
 		versions.add(new VersionChangeList("2.30.0")
 			.addFeature("Breathe Fire")
 			.addBugfix("Multiple Block: Projectile Vomit was available")
