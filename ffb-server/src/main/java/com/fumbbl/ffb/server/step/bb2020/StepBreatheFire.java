@@ -138,7 +138,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess,
-							game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
+							game.getDefenderId(), ApothecaryMode.DEFENDER, false)));
 					getResult().setNextAction(StepAction.NEXT_STEP);
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 				} else {
@@ -167,7 +167,9 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					break;
 				case PRONE:
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
-					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.changeBase(PlayerState.PRONE).removeAllTargetSelections());
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
+					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(game.getDefenderId()),
+						ApothecaryMode.DEFENDER, true));
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 					break;
 				default:
