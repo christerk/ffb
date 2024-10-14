@@ -224,10 +224,11 @@ public class StepEndBlocking extends AbstractStep {
 
     fieldModel.clearMultiBlockTargets();
 
-    UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
-      .ifPresent(skill -> game.getDefender().markUsed(skill, game));
-
     boolean regularBlock = !fUsingStab && !usingChainsaw && !usingVomit && !usingBreatheFire;
+    if (regularBlock) {
+      UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
+        .ifPresent(skill -> game.getDefender().markUsed(skill, game));
+    }
 
     if (fEndTurn || fEndPlayerAction) {
       if (actingPlayer.getPlayerAction().isKickingDowned()) {

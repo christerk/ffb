@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Multiple Block & Pile Driver: When both opponents were available as Pile Driver targets it was not able to skip Pile Driver usage")
 			.addBugfix("Pathfinding: Moving through the opposing endzone did reduce the available movement range (only for the shown path, not the actual movement)")
 			.addBehaviorChange("The opposing endzone now has the same \"weight\" as regular squares, so when trying to score when suffering from bloodlust make sure not to enter the endzone to early as the auto path might enter it when not next to a thrall")
+			.addBugfix("Watch Out!: Special actions like Stab did use up the skill even though they are not a block action but replace it")
 		);
 
 		versions.add(new VersionChangeList("2.30.1")
