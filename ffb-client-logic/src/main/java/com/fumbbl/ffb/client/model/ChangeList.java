@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.30.2")
+			.addBugfix("Breathe Fire: B&C injuries did not trigger if player was only placed prone")
 		);
 
 		versions.add(new VersionChangeList("2.30.1")

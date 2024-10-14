@@ -166,7 +166,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 					break;
 				case PRONE:
-					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
+					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
 					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
 					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(game.getDefenderId()),
 						ApothecaryMode.DEFENDER, true));
@@ -206,6 +206,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, fGotoLabelOnSuccess);
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, fGotoLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, gotoOnEnd);
 		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
 		if (result != null) {
 			IServerJsonOption.STATUS.addTo(jsonObject, result.name());
@@ -219,6 +220,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fGotoLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
 		fGotoLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		gotoOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		usingBreatheFire = IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
 		if (IServerJsonOption.STATUS.isDefinedIn(jsonObject)) {
 			result = BreatheFireResult.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
