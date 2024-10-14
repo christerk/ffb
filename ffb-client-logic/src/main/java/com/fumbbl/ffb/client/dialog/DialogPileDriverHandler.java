@@ -6,6 +6,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.ArrayTool;
 
 public class DialogPileDriverHandler extends DialogHandler {
 
@@ -49,9 +50,11 @@ public class DialogPileDriverHandler extends DialogHandler {
 				selectedPlayer = dialog.getPlayerId();
 			}
 		}
-		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
+		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE) && pDialog instanceof DialogPlayerChoice) {
 			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-			selectedPlayer = playerChoiceDialog.getSelectedPlayers()[0].getId();
+			if (ArrayTool.isProvided(playerChoiceDialog.getSelectedPlayers())) {
+				selectedPlayer = playerChoiceDialog.getSelectedPlayers()[0].getId();
+			}
 		}
 
 		getClient().getCommunication().sendPileDriver(selectedPlayer);

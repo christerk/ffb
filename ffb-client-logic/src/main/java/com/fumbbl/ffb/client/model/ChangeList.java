@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.30.2")
 			.addBugfix("Breathe Fire: B&C injuries did not trigger if player was only placed prone")
 			.addBugfix("Breathe Fire: Blitz activation did not end automatically")
+			.addBugfix("Multiple Block & Pile Driver: When both opponents were available as Pile Driver targets it was not able to skip Pile Driver usage")
 		);
 
 		versions.add(new VersionChangeList("2.30.1")
