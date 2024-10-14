@@ -298,9 +298,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 				if (StringTool.isProvided(fCatcherId)) {
 					PlayerState catcherState = game.getFieldModel().getPlayerState(game.getPlayerById(fCatcherId));
-					if ((catcherState != null) && catcherState.hasTacklezones() && game.getFieldModel().isBallInPlay()
-						&& game.getFieldModel().isBallMoving()) {
-						fCatchScatterThrowInMode = catchBall();
+					if ((catcherState != null) && game.getFieldModel().isBallInPlay() && game.getFieldModel().isBallMoving()) {
+						if (catcherState.hasTacklezones()) {
+							fCatchScatterThrowInMode = catchBall();
+						} else {
+							fCatchScatterThrowInMode = CatchScatterThrowInMode.FAILED_CATCH;
+						}
 						if (fCatchScatterThrowInMode == null && deflectedPass && getGameState().getPassState().isDeflectionSuccessful()) {
 							getGameState().getPassState().setInterceptionSuccessful(true);
 						} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH && deflectedPass) {
