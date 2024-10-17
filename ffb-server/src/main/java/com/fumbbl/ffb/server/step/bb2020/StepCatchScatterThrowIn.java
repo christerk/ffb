@@ -656,6 +656,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if (playerState.hasTacklezones()) {
 					fCatcherId = player.getId();
 					return CatchScatterThrowInMode.CATCH_SCATTER;
+				} else {
+					return CatchScatterThrowInMode.FAILED_CATCH;
 				}
 			}
 			return CatchScatterThrowInMode.SCATTER_BALL;
@@ -699,7 +701,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					fCatcherId = player.getId();
 					return CatchScatterThrowInMode.CATCH_SCATTER;
 				} else {
-					return CatchScatterThrowInMode.SCATTER_BALL;
+					return CatchScatterThrowInMode.FAILED_CATCH;
 				}
 			}
 		} else {
