@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBehaviorChange("The opposing endzone now has the same \"weight\" as regular squares, so when trying to score when suffering from bloodlust make sure not to enter the endzone to early as the auto path might enter it when not next to a thrall")
 			.addBugfix("Watch Out!: Special actions like Stab did use up the skill even though they are not a block action but replace it")
 			.addBugfix("Spiked Ball: Did not trigger when ball was passed to player without tacklezones")
+			.addBugfix("All roster were able to hire raised positions as mercs if the fallback was defined in the ruleset")
 		);
 
 		versions.add(new VersionChangeList("2.30.1")
