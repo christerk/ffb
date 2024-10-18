@@ -23,9 +23,10 @@ public class RosterSkeleton implements IXmlSerializable, IJsonSerializable {
 	public static final String XML_TAG = "roster";
 
 	private static final String _XML_ATTRIBUTE_ID = "id";
+	private static final String _XML_ATTRIBUTE_TEAM = "team";
 
 	private String fId;
-
+	private String fTeamId;
 
 	public String getId() {
 		return fId;
@@ -33,6 +34,14 @@ public class RosterSkeleton implements IXmlSerializable, IJsonSerializable {
 
 	public void setId(String pId) {
 		fId = pId;
+	}
+
+	public String getTeamId() {
+		return fTeamId;
+	}
+
+	public void setTeamId(String pTeamId) {
+		fTeamId = pTeamId;
 	}
 
 // XML serialization
@@ -55,6 +64,9 @@ public class RosterSkeleton implements IXmlSerializable, IJsonSerializable {
 		if (XML_TAG.equals(pXmlTag)) {
 			if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_ID))) {
 				fId = pXmlAttributes.getValue(_XML_ATTRIBUTE_ID).trim();
+			}
+			if (StringTool.isProvided(pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM))) {
+				fTeamId = pXmlAttributes.getValue(_XML_ATTRIBUTE_TEAM).trim();
 			}
 		}
 		return this;

@@ -251,6 +251,9 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 					.add(new FumbblRequestLoadTeamList(pGameState, pJoinApprovedCommand.getCoach(), pSession));
 		} else {
 			TeamList teamList = new TeamList();
+			// In STANDALONE mode, we need to initialize the rules before we start parsing teams.
+			pGameState.initRulesDependentMembers();
+			pGameState.getGame().initializeRules();
 			Team[] teams = getServer().getGameCache().getTeamsForCoach(pJoinApprovedCommand.getCoach(), pGameState.getGame());
 			for (Team team : teams) {
 				TeamListEntry teamEntry = new TeamListEntry();
