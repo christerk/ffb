@@ -299,11 +299,6 @@ public class PathFinderWithPassBlockSupport {
 				if (!context.allowExitEndzoneWithBall && hasBall && isInEndzone && !endzoneBounds.isInBounds(neighbourCoord))
 					continue;
 
-				// make the opposing endzone a bit more expensive so it is entered at the last possible square
-				if (isInEndzone) {
-					distance++;
-				}
-
 				if (neighbour == null) {
 					// This square has not been touched at all yet
 					neighbour = new PathFindNode(neighbourState, neighbourCoord, current.distance + distance, false, pEndCoords,

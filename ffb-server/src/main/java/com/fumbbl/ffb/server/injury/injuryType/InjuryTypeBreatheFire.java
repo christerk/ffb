@@ -17,7 +17,6 @@ public class InjuryTypeBreatheFire extends ModificationAwareInjuryTypeServer<Bre
 
 	public InjuryTypeBreatheFire() {
 		super(new BreatheFire());
-		super.setFailedArmourPlacesProne(false);
 	}
 
 	@Override

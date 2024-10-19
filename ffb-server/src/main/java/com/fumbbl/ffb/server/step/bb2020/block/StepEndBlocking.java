@@ -224,10 +224,11 @@ public class StepEndBlocking extends AbstractStep {
 
     fieldModel.clearMultiBlockTargets();
 
-    UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
-      .ifPresent(skill -> game.getDefender().markUsed(skill, game));
-
     boolean regularBlock = !fUsingStab && !usingChainsaw && !usingVomit && !usingBreatheFire;
+    if (regularBlock) {
+      UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
+        .ifPresent(skill -> game.getDefender().markUsed(skill, game));
+    }
 
     if (fEndTurn || fEndPlayerAction) {
       if (actingPlayer.getPlayerAction().isKickingDowned()) {
@@ -381,55 +382,57 @@ public class StepEndBlocking extends AbstractStep {
           }
 
           // go-for-it
-        } else if (isBlitz && !fUsingStab
-          && !usingChainsaw
-          && attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
-          String actingPlayerId = activePlayer.getId();
-          if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-            UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
-          } else {
-            UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
-          }
-          UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-          ServerUtilBlock.updateDiceDecorations(game);
-          moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-          // this may happen for ball and chain
-        } else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
-          && UtilPlayer.isNextMovePossible(game, false)) {
-          UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-          ServerUtilBlock.updateDiceDecorations(game);
-          moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
         } else {
-          boolean blitzWithMoveLeft = isBlitz && UtilPlayer.isNextMovePossible(game, false);
-          Player<?>[] opponents = null;
-          if (game.getDefender() != null) {
-            opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
-          }
-
-          boolean hasValidOpponent = ArrayTool.isProvided(opponents);
-          boolean hasValidOtherOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
-
-          game.setDefenderId(null);
-          if (attackerState.hasTacklezones() && allowSecondBlockAction && hasValidOpponent) {
-            allowSecondBlockAction = false;
-            actingPlayer.setHasBlocked(false);
-            actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
-            blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
-            ServerUtilBlock.updateDiceDecorations(game);
-          } else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
-            && attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
-            game.setLastDefenderId(defenderId);
-            UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
-            if (isBlitz) {
-              blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
+          boolean canMoveOn = !fUsingStab && !usingChainsaw && !usingBreatheFire;
+          if (isBlitz && canMoveOn
+            && attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
+            String actingPlayerId = activePlayer.getId();
+            if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+              UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
             } else {
-              blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(true).publishDefender(true).build());
+              UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+            }
+            UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+            ServerUtilBlock.updateDiceDecorations(game);
+            moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+            // this may happen for ball and chain
+          } else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
+            && UtilPlayer.isNextMovePossible(game, false)) {
+            UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+            ServerUtilBlock.updateDiceDecorations(game);
+            moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+          } else {
+            boolean blitzWithMoveLeft = isBlitz && UtilPlayer.isNextMovePossible(game, false);
+            Player<?>[] opponents = null;
+            if (game.getDefender() != null) {
+              opponents = UtilPlayer.findAdjacentBlockablePlayers(game, game.getDefender().getTeam(), game.getFieldModel().getPlayerCoordinate(activePlayer));
             }
 
-          } else {
+            boolean hasValidOpponent = ArrayTool.isProvided(opponents);
+            boolean hasValidOtherOpponent = ArrayTool.isProvided(opponents) && (opponents.length > 1 || opponents[0] != game.getDefender());
 
-            game.setLastDefenderId(null);
-            endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
+            game.setDefenderId(null);
+            if (attackerState.hasTacklezones() && allowSecondBlockAction && hasValidOpponent) {
+              allowSecondBlockAction = false;
+              actingPlayer.setHasBlocked(false);
+              actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
+              blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
+              ServerUtilBlock.updateDiceDecorations(game);
+            } else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
+              && attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+              game.setLastDefenderId(defenderId);
+              UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
+              if (isBlitz) {
+                blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), true, true));
+              } else {
+                blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(true).publishDefender(true).build());
+              }
+
+            } else {
+
+              game.setLastDefenderId(null);
+              endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, false));
+            }
           }
         }
       }

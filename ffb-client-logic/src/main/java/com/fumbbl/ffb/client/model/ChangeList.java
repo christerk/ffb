@@ -12,6 +12,17 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.30.2")
+			.addBugfix("Breathe Fire: B&C injuries did not trigger if player was only placed prone")
+			.addBugfix("Breathe Fire: Blitz activation did not end automatically")
+			.addBugfix("Multiple Block & Pile Driver: When both opponents were available as Pile Driver targets it was not able to skip Pile Driver usage")
+			.addBugfix("Pathfinding: Moving through the opposing endzone did reduce the available movement range (only for the shown path, not the actual movement)")
+			.addBehaviorChange("The opposing endzone now has the same \"weight\" as regular squares, so when trying to score when suffering from bloodlust make sure not to enter the endzone to early as the auto path might enter it when not next to a thrall")
+			.addBugfix("Watch Out!: Special actions like Stab did use up the skill even though they are not a block action but replace it")
+			.addBugfix("Spiked Ball: Did not trigger when ball was passed to player without tacklezones")
+			.addBugfix("All roster were able to hire raised positions as mercs if the fallback was defined in the ruleset")
+		);
+
 		versions.add(new VersionChangeList("2.30.1")
 			.addBugfix("Breathe Fire: Ball did not bounce for placed prone or knock down results without av breaks")
 		);
