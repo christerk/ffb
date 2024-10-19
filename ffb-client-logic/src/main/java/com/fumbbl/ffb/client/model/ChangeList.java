@@ -12,6 +12,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.30.3")
+			.addBugfix("Rioutous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
+		);
+
 		versions.add(new VersionChangeList("2.30.2")
 			.addBugfix("Breathe Fire: B&C injuries did not trigger if player was only placed prone")
 			.addBugfix("Breathe Fire: Blitz activation did not end automatically")
