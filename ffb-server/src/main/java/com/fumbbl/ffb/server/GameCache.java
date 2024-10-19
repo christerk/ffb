@@ -243,7 +243,7 @@ public class GameCache {
 
 	private Team updateRoster(Team team, Game game) {
 		if (ServerMode.STANDALONE == getServer().getMode()) {
-			team.updateRoster(rosterCache.getRosterById(team.getRosterId(), game), game.getRules());
+			team.updateRoster(rosterCache.getRosterForTeam(team, game), game.getRules());
 			team.setTeamValue(UtilTeamValue.findTeamValue(team));
 		}
 		return team;
