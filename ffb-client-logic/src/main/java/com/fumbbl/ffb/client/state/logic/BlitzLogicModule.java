@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BlitzLogicModule extends MoveLogicModule {
-  private final BlockLogicExtension extension;
+  protected final BlockLogicExtension extension;
 
   public BlitzLogicModule(FantasyFootballClient client) {
     super(client);

@@ -37,7 +37,7 @@ public class BlockLogicModule extends LogicModule {
     } else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
       return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
     } else {
-      extension.block(client, actingPlayer.getPlayerId(), player, false, false, false);
+      extension.block(actingPlayer.getPlayerId(), player, false, false, false, false);
     }
     return new InteractionResult(InteractionResult.Kind.IGNORE);
   }

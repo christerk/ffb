@@ -34,6 +34,7 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
 						&& game.getFieldModel().getPlayerState(player).isProneOrStunned()
 						&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(player))) {
+						extension.block(actingPlayer.getPlayerId(), player, false, true, false, false);
 						return new InteractionResult(InteractionResult.Kind.PERFORM);
 					}
 				}
@@ -101,5 +102,5 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 	}
 }
 	 */
-	 */
+
 }

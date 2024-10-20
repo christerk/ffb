@@ -5,9 +5,6 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlitz;
 import com.fumbbl.ffb.client.state.logic.bb2020.KickEmBlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 public class ClientStateKickEmBlitz extends AbstractClientStateBlitz<KickEmBlitzLogicModule> {
@@ -21,8 +18,6 @@ public class ClientStateKickEmBlitz extends AbstractClientStateBlitz<KickEmBlitz
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 
 		switch (result.getKind()) {
@@ -31,9 +26,6 @@ public class ClientStateKickEmBlitz extends AbstractClientStateBlitz<KickEmBlitz
 				break;
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
-				break;
-			case PERFORM:
-				UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
 				break;
 			default:
 				break;
