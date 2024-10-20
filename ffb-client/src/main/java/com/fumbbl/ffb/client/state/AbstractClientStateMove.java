@@ -151,6 +151,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
 			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
+			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
 	}
 
@@ -244,6 +245,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
+		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
+			menuItemList.add(createThenIStartedBlastinItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 	}
@@ -320,6 +324,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					return true;
 				case PLAYER_ACTION_BOUNDING_LEAP:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
+					return true;
+				case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					return true;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey);

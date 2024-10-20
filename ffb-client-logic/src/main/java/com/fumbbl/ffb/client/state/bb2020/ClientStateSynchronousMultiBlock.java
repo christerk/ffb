@@ -174,6 +174,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 				case PLAYER_ACTION_CATCH_OF_THE_DAY:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 					return true;
+				case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+					return true;
 				default:
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
@@ -252,6 +255,12 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
+					if (isThenIStartedBlastinAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -293,6 +302,9 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		}
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			menuItemList.add(createThenIStartedBlastinItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());

@@ -112,6 +112,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_JUMPS_WITHOUT_MODIFIERS:
 				pGame.getActingPlayer().setJumpsWithoutModifiers((Boolean) pModelChange.getValue());
 				return true;
+			case ACTING_PLAYER_SET_HELD_IN_PLACE:
+				pGame.getActingPlayer().setHeldInPlace((Boolean) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_ADD_BLOOD_SPOT:
 				pGame.getFieldModel().add((BloodSpot) pModelChange.getValue());
 				return true;

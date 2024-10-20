@@ -6,9 +6,11 @@ import com.fumbbl.ffb.skill.JumpUp;
 import com.fumbbl.ffb.skill.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
+import com.fumbbl.ffb.skill.bb2020.BreatheFire;
 import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
 import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
 import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
+import com.fumbbl.ffb.skill.bb2020.special.ThenIStartedBlastin;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -53,6 +55,7 @@ public class ReRolledActions {
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
 	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction(ProjectileVomit.class);
+	public static final ReRolledAction BREATHE_FIRE = new ReRolledAction(BreatheFire.class);
 	public static final ReRolledAction TRAP_DOOR = new ReRolledAction("Trapdoor");
 	public static final ReRolledAction ARGUE_THE_CALL = new ReRolledAction("Argue the Call");
 	public static final ReRolledAction OLD_PRO = new ReRolledAction("Old Pro");
@@ -63,6 +66,9 @@ public class ReRolledActions {
 	public static final ReRolledAction SINGLE_DIE = new ReRolledAction("Single Die");
 	public static final ReRolledAction ALL_YOU_CAN_EAT = new ReRolledAction("All You Can Eat");
 	public static final ReRolledAction CATCH_OF_THE_DAY = new ReRolledAction(CatchOfTheDay.class);
+	public static final ReRolledAction SINGLE_BLOCK_DIE = new ReRolledAction("Single Block Die");
+	public static final ReRolledAction THEN_I_STARTED_BLASTIN = new ReRolledAction(ThenIStartedBlastin.class);
+	public static final ReRolledAction MULTI_BLOCK_DICE = new ReRolledAction("Multi Block Dice");
 
 	private final Map<String, ReRolledAction> values;
 

@@ -11,6 +11,9 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Kalimar
  */
@@ -24,6 +27,7 @@ public class DialogReRollParameter implements IDialogParameter {
 	private boolean fFumble;
 	private ReRollSource singleUseReRollSource;
 	private Skill reRollSkill, modifyingSkill;
+	private List<String> messages;
 
 	private CommonProperty menuProperty;
 
@@ -34,7 +38,7 @@ public class DialogReRollParameter implements IDialogParameter {
 	public DialogReRollParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll,
 															 boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble,
 															 Skill reRollSkill, ReRollSource singleUseReRollSource, Skill modifyingSkill,
-															 CommonProperty menuProperty, String defaultValueKey) {
+															 CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
 		fPlayerId = pPlayerId;
 		fReRolledAction = pReRolledAction;
 		fMinimumRoll = pMinimumRoll;
@@ -46,6 +50,7 @@ public class DialogReRollParameter implements IDialogParameter {
 		this.modifyingSkill = modifyingSkill;
 		this.menuProperty = menuProperty;
 		this.defaultValueKey = defaultValueKey;
+		this.messages = messages;
 	}
 
 	public DialogId getId() {
@@ -96,11 +101,15 @@ public class DialogReRollParameter implements IDialogParameter {
 		return defaultValueKey;
 	}
 
+	public List<String> getMessages() {
+		return messages;
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(),
-			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource, modifyingSkill, menuProperty, defaultValueKey);
+			isProReRollOption(), isFumble(), reRollSkill, singleUseReRollSource, modifyingSkill, menuProperty, defaultValueKey, messages);
 	}
 
 	// JSON serialization
@@ -121,6 +130,9 @@ public class DialogReRollParameter implements IDialogParameter {
 		if (menuProperty != null) {
 			IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty.getKey());
 		}
+		if (messages != null) {
+			IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
+		}
 		return jsonObject;
 	}
 
@@ -140,6 +152,9 @@ public class DialogReRollParameter implements IDialogParameter {
 			menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
 		}
 		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
+		if (IJsonOption.MESSAGE_ARRAY.isDefinedIn(jsonObject)) {
+			messages = Arrays.asList(IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

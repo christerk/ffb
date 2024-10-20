@@ -111,6 +111,12 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 			messagePanel.add(new JLabel(dimensionProvider(), "Current roll is a FUMBLE."));
 		}
 
+		if (pDialogParameter.getMessages() != null) {
+			for (String additionalMessage : pDialogParameter.getMessages()) {
+				messagePanel.add(Box.createVerticalStrut(5));
+				messagePanel.add(new JLabel(dimensionProvider(), additionalMessage));
+			}
+		}
 		Game game = getClient().getGame();
 		Player<?> reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
 		if ((reRollingPlayer != null)

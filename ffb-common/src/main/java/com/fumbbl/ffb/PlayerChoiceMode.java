@@ -12,7 +12,8 @@ public enum PlayerChoiceMode implements INamedObject {
 	ASSIGN_TOUCHDOWN("assignTouchdown", false), BRIBERY_AND_CORRUPTION("briberyAndCorruption", false),
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
-	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk");
+	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
+	QUICK_BITE("quickBite");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -112,6 +113,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BLACK_INK:
 				header.append("Select opponent to lose tacklezone");
 				break;
+			case QUICK_BITE:
+				header.append("Select player to take a quick bite");
+				break;
 			default:
 				break;
 		}
@@ -187,6 +191,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case BLACK_INK:
 				title.append("Black Ink");
 				break;
+			case QUICK_BITE:
+				title.append("Quick Bite");
+				break;
 			default:
 				break;
 		}
@@ -261,6 +268,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case BLACK_INK:
 				message.append("Waiting for coach to select player to lose tacklezone");
+				break;
+			case QUICK_BITE:
+				message.append("Waiting for coach to select player for a quick bite");
 				break;
 			default:
 				break;

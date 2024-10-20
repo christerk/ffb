@@ -60,6 +60,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.generator.QuickBite;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.SpikedBallApo;
 import com.fumbbl.ffb.server.util.UtilServerCards;
@@ -297,9 +298,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 				if (StringTool.isProvided(fCatcherId)) {
 					PlayerState catcherState = game.getFieldModel().getPlayerState(game.getPlayerById(fCatcherId));
-					if ((catcherState != null) && catcherState.hasTacklezones() && game.getFieldModel().isBallInPlay()
-						&& game.getFieldModel().isBallMoving()) {
-						fCatchScatterThrowInMode = catchBall();
+					if ((catcherState != null) && game.getFieldModel().isBallInPlay() && game.getFieldModel().isBallMoving()) {
+						if (catcherState.hasTacklezones()) {
+							fCatchScatterThrowInMode = catchBall();
+						} else {
+							fCatchScatterThrowInMode = CatchScatterThrowInMode.FAILED_CATCH;
+						}
 						if (fCatchScatterThrowInMode == null && deflectedPass && getGameState().getPassState().isDeflectionSuccessful()) {
 							getGameState().getPassState().setInterceptionSuccessful(true);
 						} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH && deflectedPass) {
@@ -397,6 +401,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 						: null;
 				} else {
 					catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+					if (catcher != null) {
+						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, game.getFieldModel().getBallCoordinate(),
+							NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
+						if (ArrayTool.isProvided(opponents)) {
+							SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
+							((QuickBite) factory.forName(SequenceGenerator.Type.QuickBite.name()))
+								.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+						}
+					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, (catcher != null) ? catcher.getId() : null));
 				deactivateCards();
@@ -643,6 +656,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				if (playerState.hasTacklezones()) {
 					fCatcherId = player.getId();
 					return CatchScatterThrowInMode.CATCH_SCATTER;
+				} else {
+					return CatchScatterThrowInMode.FAILED_CATCH;
 				}
 			}
 			return CatchScatterThrowInMode.SCATTER_BALL;
@@ -686,7 +701,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					fCatcherId = player.getId();
 					return CatchScatterThrowInMode.CATCH_SCATTER;
 				} else {
-					return CatchScatterThrowInMode.SCATTER_BALL;
+					return CatchScatterThrowInMode.FAILED_CATCH;
 				}
 			}
 		} else {

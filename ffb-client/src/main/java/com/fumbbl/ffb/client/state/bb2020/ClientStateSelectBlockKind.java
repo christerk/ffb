@@ -67,6 +67,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
 				put(IPlayerPopupMenuKeys.KEY_CHAINSAW, ClientAction.CHAINSAW);
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
+				put(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, ClientAction.BREATHE_FIRE);
 				put(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, ClientAction.GORED_BY_THE_BULL);
 			}};
 		}
@@ -91,6 +92,9 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 			case PLAYER_ACTION_BLOCK:
 			case PLAYER_ACTION_GORED:
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BLOCK);
+				break;
+			case PLAYER_ACTION_BREATHE_FIRE:
+				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
 				break;
 			default:
 				return super.actionKeyPressed(pActionKey);

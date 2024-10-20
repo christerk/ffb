@@ -339,6 +339,13 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		).anyMatch(prop -> prop.equals(property));
 	}
 
+	public boolean hasUnusedSkillProperty(ISkillProperty property) {
+		return Stream.concat(
+			getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill)).flatMap(skill -> skill.getSkillProperties().stream()),
+			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+		).anyMatch(prop -> prop.equals(property));
+	}
+
 	public boolean hasSkill(ISkillProperty property) {
 		return Stream.concat(
 			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),

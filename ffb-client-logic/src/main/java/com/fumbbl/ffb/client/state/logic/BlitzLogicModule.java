@@ -19,10 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BlitzLogicModule extends MoveLogicModule {
-  private final BlockLogicExtension extension = new BlockLogicExtension();
+  private final BlockLogicExtension extension;
 
   public BlitzLogicModule(FantasyFootballClient client) {
     super(client);
+    extension = new BlockLogicExtension(client);
   }
 
   @Override
@@ -49,7 +50,7 @@ public class BlitzLogicModule extends MoveLogicModule {
             || (isGoredAvailable(game))) {
             return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
           } else {
-            extension.block(client, actingPlayer.getPlayerId(), player, false, false, false);
+            extension.block(actingPlayer.getPlayerId(), player, false, false, false, false);
           }
         }
       }
@@ -85,7 +86,7 @@ public class BlitzLogicModule extends MoveLogicModule {
       add(ClientAction.FUMBLEROOSKIE);
       add(ClientAction.BOUNDING_LEAP);
       add(ClientAction.GORED_BY_THE_BULL);
-      addAll(extension.genericBlockActions());
+      addAll(extension.availableActions());
     }};
   }
 
@@ -124,7 +125,7 @@ public class BlitzLogicModule extends MoveLogicModule {
           }
           break;
         default:
-          extension.performBlockAction(client, player, action);
+          extension.performAvailableAction(player, action);
           break;
       }
     }

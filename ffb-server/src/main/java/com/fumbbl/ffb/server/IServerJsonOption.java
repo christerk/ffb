@@ -137,7 +137,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonIntArrayOption OLD_PLAYER_STATES = new JsonIntArrayOption("oldPlayerStates");
     JsonEnumWithNameOption OLD_TURN_MODE = new JsonEnumWithNameOption("oldTurnMode", Factory.TURN_MODE);
     JsonStringOption ORIGINAL_BOMBER = new JsonStringOption("originalBomber");
-    JsonBooleanOption OUT_OF_BOUNDS = new JsonBooleanOption("outOfBounds");
     JsonBooleanOption PASS_ACCURATE = new JsonBooleanOption("passAccurate");
     JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");
     JsonBooleanOption PASS_SKILL_USED = new JsonBooleanOption("passSkillUsed");
@@ -165,7 +164,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
 
     JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
-    JsonStringOption STATUS = new JsonStringOption("status");
     JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
     JsonStringOption STEP_PHASE = new JsonStringOption("stepPhase");
     JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");

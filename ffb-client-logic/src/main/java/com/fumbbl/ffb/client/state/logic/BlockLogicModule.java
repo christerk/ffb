@@ -14,10 +14,11 @@ import java.util.Set;
 
 public class BlockLogicModule extends LogicModule {
 
-  private final BlockLogicExtension extension = new BlockLogicExtension();
+  private final BlockLogicExtension extension;
 
   public BlockLogicModule(FantasyFootballClient client) {
     super(client);
+    extension = new BlockLogicExtension(client);
   }
 
   @Override
@@ -56,7 +57,7 @@ public class BlockLogicModule extends LogicModule {
     return new HashSet<ClientAction>() {{
       add(ClientAction.MOVE);
       add(ClientAction.END_MOVE);
-      addAll(extension.genericBlockActions());
+      addAll(extension.availableActions());
     }};
   }
 
@@ -70,7 +71,7 @@ public class BlockLogicModule extends LogicModule {
         client.getCommunication().sendActingPlayer(player, PlayerAction.MOVE, client.getGame().getActingPlayer().isJumping());
         break;
       default:
-        extension.performBlockAction(client, player, action);
+        extension.performAvailableAction(player, action);
         break;
     }
   }

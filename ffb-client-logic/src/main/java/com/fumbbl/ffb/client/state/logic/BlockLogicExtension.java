@@ -18,11 +18,14 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlockLogicExtension {
+public class BlockLogicExtension extends LogicModule {
 
 
+  public BlockLogicExtension(FantasyFootballClient client) {
+    super(client);
+  }
 
-  public Set<ClientAction> genericBlockActions() {
+  public Set<ClientAction> availableActions() {
     return new HashSet<ClientAction>() {{
       add(ClientAction.BLOCK);
       add(ClientAction.STAB);
@@ -34,24 +37,26 @@ public class BlockLogicExtension {
       add(ClientAction.LOOK_INTO_MY_EYES);
       add(ClientAction.BALEFUL_HEX);
       add(ClientAction.BLACK_INK);
+      add(ClientAction.BREATHE_FIRE);
+      add(ClientAction.THEN_I_STARTED_BLASTIN);
     }};
   }
 
-  protected void performBlockAction(FantasyFootballClient client, Player<?> player, ClientAction action) {
+  protected void performAvailableAction(Player<?> player, ClientAction action) {
     ClientCommunication communication = client.getCommunication();
     ActingPlayer actingPlayer = client.getGame().getActingPlayer();
     switch (action) {
       case BLOCK:
-        block(client, actingPlayer.getPlayerId(), player, false, false, false);
+        block(actingPlayer.getPlayerId(), player, false, false, false, false);
         break;
       case STAB:
-        block(client, actingPlayer.getPlayerId(), player, true, false, false);
+        block(actingPlayer.getPlayerId(), player, true, false, false, false);
         break;
       case CHAINSAW:
-        block(client, actingPlayer.getPlayerId(), player, false, true, false);
+        block(actingPlayer.getPlayerId(), player, false, true, false, false);
         break;
       case PROJECTILE_VOMIT:
-        block(client, actingPlayer.getPlayerId(), player, false, false, true);
+        block(actingPlayer.getPlayerId(), player, false, false, true, false);
         break;
       case TREACHEROUS:
         Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
@@ -76,17 +81,26 @@ public class BlockLogicExtension {
         Skill blackInk = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically);
         communication.sendUseSkill(blackInk, true, actingPlayer.getPlayerId());
         break;
+      case BREATHE_FIRE:
+        block(actingPlayer.getPlayerId(), player, false, false, false, true);
+        break;
+      case THEN_I_STARTED_BLASTIN:
+        if (isThenIStartedBlastinAvailable(actingPlayer)) {
+          Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+          communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
+        }
+        break;
       default:
         break;
 
     }
   }
 
-  public void block(FantasyFootballClient client, String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
-                           boolean usingChainsaw, boolean usingVomit) {
+  public void block(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
+                           boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
     // TODO is this needed? Was in place in old structure
     //pClientState.getClient().getUserInterface().getFieldComponent().refresh();
-    client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit);
+    client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire);
   }
 
 
@@ -103,7 +117,7 @@ public class BlockLogicExtension {
     if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
        if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-        block(pClientState.getClient(), actingPlayer.getPlayerId(), pDefender, false, false, false);
+        block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
         return new InteractionResult(InteractionResult.Kind.HANDLED);
       }
     }

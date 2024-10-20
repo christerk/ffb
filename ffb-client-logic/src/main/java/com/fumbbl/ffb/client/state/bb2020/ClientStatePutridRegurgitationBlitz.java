@@ -43,15 +43,15 @@ public class ClientStatePutridRegurgitationBlitz extends ClientStateBlitz {
 			} else {
 				if (PlayerAction.PUTRID_REGURGITATION_BLITZ == actingPlayer.getPlayerAction()
 					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true);
+					UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
-		if (pPlayer != null) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (player != null) {
 			ClientCommunication communication = getClient().getCommunication();
 			Game game = getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -64,11 +64,11 @@ public class ClientStatePutridRegurgitationBlitz extends ClientStateBlitz {
 						communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
 						break;
 					default:
-						super.menuItemSelected(pPlayer, pMenuKey);
+						super.menuItemSelected(player, pMenuKey);
 						break;
 				}
 			} else {
-				super.menuItemSelected(pPlayer, pMenuKey);
+				super.menuItemSelected(player, pMenuKey);
 			}
 		}
 	}

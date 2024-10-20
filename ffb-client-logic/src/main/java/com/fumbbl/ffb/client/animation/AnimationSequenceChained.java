@@ -65,6 +65,29 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 	}
 
 
+	public static AnimationSequenceChained createAnimationSequenceBlastin(FantasyFootballClient client, Animation animation) {
+		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+
+		return new AnimationSequenceChained(
+			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),
+				new AnimationFrame[]{
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_1, 0.8f, 0.5d, 60, SoundId.BLUNDER),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_1, 1.0f, 0.35d, 60),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_2, 1.0f, 0.15d,60),
+				}),
+			new AnimationData(dimensionProvider.mapToLocal(animation.getEndCoordinate(), true),
+				new AnimationFrame[]{
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_1, 0.8f, 0.6d,  120, SoundId.EXPLODE),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_EXPLOSION_2, 0.6f, 0.6d, 120),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_1, 1.0f, 0.35d,  120),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_2, 1.0f, 0.35d, 120),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_3, 0.7f, 0.35d, 120),
+					new AnimationFrame(IIconProperty.ANIMATION_BLASTIN_SMOKE_4, 0.5f, 0.35d, 120),
+				})
+		);
+	}
+
+
 	private AnimationFrame[] frames;
 	private final AnimationData[] dataFrames;
 

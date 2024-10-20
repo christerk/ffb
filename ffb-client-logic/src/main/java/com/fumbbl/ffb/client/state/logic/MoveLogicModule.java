@@ -11,6 +11,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -55,6 +56,7 @@ public class MoveLogicModule extends LogicModule {
 			add(ClientAction.BLOCK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.BOUNDING_LEAP);
+			add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
 	}
 
@@ -170,6 +172,13 @@ public class MoveLogicModule extends LogicModule {
 				case BOUNDING_LEAP:
 					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
 						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
+					break;
+				case THEN_I_STARTED_BLASTIN:
+					if (isThenIStartedBlastinAvailable(actingPlayer)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -219,7 +228,8 @@ public class MoveLogicModule extends LogicModule {
 			|| isBalefulHexAvailable(actingPlayer)
 			|| isPutridRegurgitationAvailable()
 			|| isCatchOfTheDayAvailable(actingPlayer)
-			|| isBlackInkAvailable(actingPlayer);
+			|| isBlackInkAvailable(actingPlayer)
+			|| isThenIStartedBlastinAvailable(actingPlayer);
 	}
 
 	public boolean isPassAnySquareAvailable(ActingPlayer actingPlayer, Game game) {

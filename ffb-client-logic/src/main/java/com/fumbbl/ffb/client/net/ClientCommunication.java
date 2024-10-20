@@ -100,9 +100,11 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseConsummateReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.net.commands.ClientCommandUseMultiBlockDiceReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
 import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
@@ -319,6 +321,14 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
 	}
 
+	public void sendUseSingleBlockDieReRollForBlock(int index) {
+		send(new ClientCommandUseSingleBlockDieReRoll(index));
+	}
+
+	public void sendUseMultiBlockDiceReRoll(int[] indexes) {
+		send(new ClientCommandUseMultiBlockDiceReRoll(indexes));
+	}
+
 	public void sendUseSkill(Skill pSkill, boolean pSkillUsed, String playerId) {
 		sendUseSkill(pSkill, pSkillUsed, playerId, null);
 	}
@@ -358,9 +368,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPass(pActingPlayerId, pTargetCoordinate));
 	}
 
-	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit) {
+	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw,
+												boolean usingVomit, boolean usingBreatheFire) {
 		String defenderId = (pDefender != null) ? pDefender.getId() : null;
-		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit));
+		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire));
 	}
 
 	public void sendFoul(String pActingPlayerId, Player<?> pDefender, boolean usingChainsaw) {

@@ -16,6 +16,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul(), isVomit());
+			pDefender, isStab(), isFoul(), isVomitLike());
 		injuryContext.addInjuryModifiers(injuryModifiers);
 
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
@@ -43,7 +44,7 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 
 	@Override
 	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-	                          DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+														DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		// Blatant Foul breaks armor without roll
 		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)) {
 			injuryContext.setArmorBroken(true);
@@ -56,8 +57,12 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 			}
 
 			if (useChainsaw) {
-				Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
-				attackerHasChainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+				if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+					injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+				} else {
+					Optional<Skill> attackerHasChainsaw = Optional.ofNullable(pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw));
+					attackerHasChainsaw.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+				}
 			}
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);

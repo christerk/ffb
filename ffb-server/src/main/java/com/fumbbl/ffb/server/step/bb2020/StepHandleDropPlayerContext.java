@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -152,6 +153,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 				if (StringTool.isProvided(dropPlayerContext.getLabel())) {
 					getResult().setNextAction(StepAction.GOTO_LABEL, dropPlayerContext.getLabel());
 				}
+				UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 			}
 		}
 	}

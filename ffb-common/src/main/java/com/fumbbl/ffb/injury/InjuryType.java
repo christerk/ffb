@@ -68,7 +68,7 @@ public abstract class InjuryType implements INamedObject {
 		return false;
 	}
 
-	public boolean isVomit() {
+	public boolean isVomitLike() {
 		return false;
 	}
 

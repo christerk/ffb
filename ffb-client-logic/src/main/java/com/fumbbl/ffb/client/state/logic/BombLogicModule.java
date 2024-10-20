@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -20,6 +21,8 @@ import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN;
 
 public class BombLogicModule extends LogicModule {
 
@@ -42,6 +45,7 @@ public class BombLogicModule extends LogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
+			add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
 	}
 
@@ -109,6 +113,12 @@ public class BombLogicModule extends LogicModule {
 			case CATCH_OF_THE_DAY:
 				if (isCatchOfTheDayAvailable(actingPlayer)) {
 					Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
+					client.getCommunication().sendUseSkill(skill, true, player.getId());
+				}
+				break;
+			case THEN_I_STARTED_BLASTIN:
+				if (isThenIStartedBlastinAvailable(actingPlayer)) {
+					Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 					client.getCommunication().sendUseSkill(skill, true, player.getId());
 				}
 				break;

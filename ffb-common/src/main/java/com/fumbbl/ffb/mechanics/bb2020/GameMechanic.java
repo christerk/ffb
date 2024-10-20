@@ -256,7 +256,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public RosterPosition riotousRookiesPosition(Roster roster) {
-		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16).collect(Collectors.toList());
+		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
+			.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
 		if (rosterPositions.isEmpty()) {
 			return null;
 		}

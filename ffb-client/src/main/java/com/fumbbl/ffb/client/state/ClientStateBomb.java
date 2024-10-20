@@ -180,6 +180,9 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
+		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
+			menuItemList.add(createThenIStartedBlastinItem(iconCache));
+		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 		showPopupMenuForPlayer(actingPlayer.getPlayer());
 
@@ -225,6 +228,9 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 				return true;
 			case PLAYER_ACTION_CATCH_OF_THE_DAY:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+				return true;
+			case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey);

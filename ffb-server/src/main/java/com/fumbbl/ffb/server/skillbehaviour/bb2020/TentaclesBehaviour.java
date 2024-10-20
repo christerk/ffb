@@ -9,7 +9,6 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2020.ReportTentaclesShadowingRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -116,14 +115,9 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 					}
 					if (doNextStep) {
 						if (state.usingTentacles) {
-							actingPlayer.setGoingForIt(true);
 							actingPlayer.setDodging(false);
 							actingPlayer.setJumping(false);
-							int rushes = 2;
-							if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi)) {
-								rushes++;
-							}
-							actingPlayer.setCurrentMove(actingPlayer.getPlayer().getMovementWithModifiers() + rushes);
+							actingPlayer.setHeldInPlace(true);
 							UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
 							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));

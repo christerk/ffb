@@ -27,6 +27,7 @@ public class NamedProperties {
 	public static final ISkillProperty canAddStrengthToDodge = new NamedProperty("Can Add Strength To Dodge");
 	public static final ISkillProperty canAddStrengthToPass = new NamedProperty("Can Add Strength To Pass");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
+	public static final ISkillProperty canAttackOpponentForBallAfterCatch = new NamedProperty("Can Attack Opponent For Ball After Catch");
 	public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty(
 		"Can Attempt Catch In Adjacent Squares");
 	public static final ISkillProperty canAttemptToTackleDodgingPlayer = new NamedProperty(
@@ -37,6 +38,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBeThrownIfStrengthIs3orLess = new NamedProperty("Can Be Thrown If Strength is 3 Or Less");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
 	public static final ISkillProperty canBiteOpponents = new NamedProperty("Can Bite Opponents");
+	public static final ISkillProperty canBlastRemotePlayer = new NamedProperty("Can Blast Remote Player");
 	public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
 	public static final ISkillProperty canBlockTwoAtOnce = new NamedProperty("Can Block Two At Once");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
@@ -94,6 +96,8 @@ public class NamedProperties {
 		"Can Perform Armour Roll Instead Of Block");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFail = new NamedProperty(
 		"Can Perform Armour Roll Instead Of Block That Might Fail");
+	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover = new NamedProperty(
+		"Can Perform Armour Roll Instead Of Block That Might Fail With Turnover");
 	public static final ISkillProperty canPerformSecondChainsawAttack = new NamedProperty("Can Perform Second Chainsaw Attack");
 	public static final ISkillProperty canPerformTwoBlocksAfterFailedFury = new NamedProperty("Can Perform Two Blocks After Failed Fury");
 	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");
@@ -101,12 +105,14 @@ public class NamedProperties {
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
+	public static final ISkillProperty canReRollAnyNumberOfBlockDice = new NamedProperty("Can Re-Roll Any Number Of Block Dice");
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
 	public static final ISkillProperty canReRollHmpScatter = new NamedProperty("Can ReRoll Hmp Scatter");
 	public static final ISkillProperty canReRollOnesOnKORecovery = new NamedProperty("Can Re-Roll Ones On KO Recovery");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
 	public static final ISkillProperty canRerollSingleDieOncePerPeriod = new NamedProperty("Can Reroll Single Die Once Per Period");
+	public static final ISkillProperty canRerollSingleBlockDieDuringBlitz = new NamedProperty("Can Reroll Single Block Die During Blitz");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
@@ -152,6 +158,9 @@ public class NamedProperties {
 	public static final ISkillProperty hasNoTacklezoneForDodging = new NamedProperty("Has No Tacklezone For Dodging");
 	public static final ISkillProperty hasToRollToPassBallOn = new NamedProperty("Has To Roll To Pass Ball On");
 	public static final ISkillProperty hasToRollToUseTeamReroll = new NamedProperty("Has To Roll To Use Team Reroll");
+	public static final ISkillProperty ignoresArmourModifiersFromFouls = new NamedProperty("Ignores Armour Modifiers From Fouls");
+	public static final ISkillProperty ignoresArmourModifiersFromSkills = new NamedProperty("Ignores Armour Modifiers From Skills");
+	public static final ISkillProperty ignoresArmourModifiersFromSpecialEffects = new NamedProperty("Ignores Armour Modifiers From Special Effects");
 	public static final ISkillProperty ignoreBlockAssists = new NamedProperty(
 		"Ignore Block Assists");
 	public static final ISkillProperty ignoreDefenderStumblesResult = new NamedProperty(
@@ -215,7 +224,7 @@ public class NamedProperties {
 	public static final ISkillProperty providesFoulingAlternative = new NamedProperty("Provides Fouling Alternative");
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
-	public static final ISkillProperty providesMultipleBlockAlternative = new NamedProperty("Provides Muiltiple Block Alternative");
+	public static final ISkillProperty providesMultipleBlockAlternative = new NamedProperty("Provides Multiple Block Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty reducesLonerRollIfPartnerIsHurt = new NamedProperty("Reduces Loner If Partner Is Hurt");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");

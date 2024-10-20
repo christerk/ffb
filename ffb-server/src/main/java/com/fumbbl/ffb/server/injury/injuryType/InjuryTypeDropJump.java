@@ -15,6 +15,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
@@ -46,8 +47,12 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 
 		if (!injuryContext.isArmorBroken()) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());
-			Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
-				.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
+			} else {
+				Optional.ofNullable(pDefender.getSkillWithProperty(NamedProperties.blocksLikeChainsaw))
+					.ifPresent(skill -> skill.getArmorModifiers().forEach(injuryContext::addArmorModifier));
+			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
 
@@ -63,15 +68,17 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 				players.add(shadowingOrDtPlayer);
 			}
 
-			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
-				.filter(Objects::nonNull).findFirst().orElseGet(() -> {
+			if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+				avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
+					.filter(Objects::nonNull).findFirst().orElseGet(() -> {
 
-					if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
-						return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
-					}
+						if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
+							return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
+						}
 
-					return null;
-				});
+						return null;
+					});
+			}
 		}
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {
@@ -84,7 +91,7 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomit()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 			if (avOrInjModifierSkill != null) {
 				avOrInjModifierSkill.getInjuryModifiers().forEach(injuryContext::addInjuryModifier);
 			}

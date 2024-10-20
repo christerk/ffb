@@ -6,20 +6,15 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.dialog.DialogBlockRollPartialReRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -27,6 +22,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -40,10 +36,14 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 	private JButton fButtonNoReRoll;
 	private final ReRollSource singleUseReRollSource;
 	private JButton brawlerButton, proButton1, proButton2, proButton3,
-		consummateButton, consummateButton1, consummateButton2, consummateButton3;
+		consummateButton, consummateButton1, consummateButton2, consummateButton3,
+		singleDieButton, singleDieButton1, singleDieButton2, singleDieButton3, anyDieButton;
 
-	private int fDiceIndex, proIndex;
-	private ReRollSource fReRollSource, singleDieReRollSource;
+	private JCheckBox[] diceBoxes;
+
+	private int fDiceIndex;
+	private final List<Integer> reRollIndexes = new ArrayList<>();
+	private ReRollSource fReRollSource, singleDieReRollSource, singleBlockDieReRollSource, anyBlockDiceReRollSource;
 	private JButton buttonSingleUseReRoll;
 
 	private final DialogBlockRollPartialReRollParameter fDialogParameter;
@@ -61,6 +61,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			singleDieReRollSource = singleDieReRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
 		}
 
+		Optional<Skill> anyBlockDiceReRollSkill = getDialogParameter().getReRollExplicitDieSkills().stream().filter(skill -> skill.hasSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice)).findFirst();
+		anyBlockDiceReRollSkill.ifPresent(skill -> anyBlockDiceReRollSource = skill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE));
+
+		Optional<Skill> singleBlockDieReRollSkill = getDialogParameter().getReRollExplicitDieSkills().stream().filter(skill -> skill.hasSkillProperty(NamedProperties.canRerollSingleBlockDieDuringBlitz)).findFirst();
+		singleBlockDieReRollSkill.ifPresent(skill -> singleBlockDieReRollSource = skill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
+
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
 		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOpponentChoice : colorOwnChoice);
@@ -70,8 +76,15 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 		int[] blockRoll = getDialogParameter().getBlockRoll();
 		fBlockDice = new JButton[blockRoll.length];
+		if (blockRoll.length > 1) {
+			diceBoxes = new JCheckBox[blockRoll.length];
+		}
+
 		boolean ownChoice = ((fDialogParameter.getNrOfDice() > 0)
-			|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption() && !fDialogParameter.hasBrawlerOption()));
+			|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()
+			&& !fDialogParameter.hasBrawlerOption() && !fDialogParameter.hasConsummateOption()
+			&& fDialogParameter.getSingleUseReRollSource() == null
+			&& fDialogParameter.getReRollExplicitDieSkills().isEmpty()));
 		for (int i = 0; i < fBlockDice.length; i++) {
 			fBlockDice[i] = new JButton(dimensionProvider());
 			fBlockDice[i].setOpaque(false);
@@ -83,7 +96,37 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			if ((getDialogParameter().hasProReRollOption() || getDialogParameter().hasBrawlerOption()) && Arrays.stream(fDialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
 				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
 			}
-			blockRollPanel.add(fBlockDice[i]);
+			if (anyBlockDiceReRollSource == null || blockRoll.length == 1) {
+				blockRollPanel.add(fBlockDice[i]);
+			} else {
+				JPanel checkboxPanel = new JPanel();
+				checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+				checkboxPanel.setOpaque(false);
+				checkboxPanel.add(fBlockDice[i]);
+				int mnemonic;
+				String mnemonicString;
+				switch (i) {
+					case 0:
+						mnemonic = KeyEvent.VK_F1;
+						mnemonicString = "F1";
+						break;
+					case 1:
+						mnemonic = KeyEvent.VK_F2;
+						mnemonicString = "F2";
+						break;
+					default:
+						mnemonic = KeyEvent.VK_F3;
+						mnemonicString = "F3";
+						break;
+				}
+				diceBoxes[i] = new JCheckBox(dimensionProvider(), "( " + mnemonicString + " )");
+				diceBoxes[i].setMnemonic(mnemonic);
+				diceBoxes[i].setOpaque(false);
+				diceBoxes[i].setEnabled(Arrays.stream(pDialogParameter.getReRolledDiceIndexes()).noneMatch(value -> value == finalI));
+				diceBoxes[i].addItemListener(e -> anyDieButton.setEnabled(Arrays.stream(diceBoxes).anyMatch(AbstractButton::isSelected)));
+				checkboxPanel.add(diceBoxes[i]);
+				blockRollPanel.add(checkboxPanel);
+			}
 			if (ownChoice) {
 				fBlockDice[i].addActionListener(this);
 				if (i == 0) {
@@ -106,18 +149,18 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 
 		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || getDialogParameter().hasConsummateOption()
-			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null) {
+			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null || singleBlockDieReRollSource != null) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);
 			reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
 
-			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll");
+			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll", KeyEvent.VK_T);
 			fButtonTeamReRoll.addActionListener(this);
 			fButtonTeamReRoll.setMnemonic(KeyEvent.VK_T);
 			fButtonTeamReRoll.addKeyListener(this);
 
-			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
+			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll", KeyEvent.VK_N);
 			fButtonNoReRoll.addActionListener(this);
 			fButtonNoReRoll.setMnemonic(KeyEvent.VK_N);
 			fButtonNoReRoll.addKeyListener(this);
@@ -131,7 +174,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			}
 
 			if (singleUseReRollSource != null) {
-				buttonSingleUseReRoll = new JButton(dimensionProvider(), singleUseReRollSource.getName(getClient().getGame()));
+				buttonSingleUseReRoll = new JButton(dimensionProvider(), singleUseReRollSource.getName(getClient().getGame()), KeyEvent.VK_L);
 				buttonSingleUseReRoll.addActionListener(this);
 				buttonSingleUseReRoll.setMnemonic(KeyEvent.VK_L);
 				buttonSingleUseReRoll.addKeyListener(this);
@@ -140,7 +183,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 			if (getDialogParameter().getNrOfDice() == 1) {
 				if (getDialogParameter().hasProReRollOption()) {
-					fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
+					fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", KeyEvent.VK_P);
 					fButtonProReRoll.addActionListener(this);
 					fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
 					fButtonProReRoll.addKeyListener(this);
@@ -148,16 +191,34 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 				}
 
 				if (getDialogParameter().hasConsummateOption() && singleDieReRollSource != null) {
-					consummateButton = new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()));
+					consummateButton = new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
 					consummateButton.addActionListener(this);
 					consummateButton.setMnemonic(KeyEvent.VK_C);
 					consummateButton.addKeyListener(this);
 					reRollPanel.add(consummateButton);
 				}
+
+				if (singleBlockDieReRollSource != null) {
+					singleDieButton = new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
+					singleDieButton.addActionListener(this);
+					singleDieButton.setMnemonic(KeyEvent.VK_U);
+					singleDieButton.addKeyListener(this);
+					reRollPanel.add(singleDieButton);
+				}
+
+			}
+
+			if (anyBlockDiceReRollSource != null) {
+				anyDieButton = new JButton(dimensionProvider(), anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
+				anyDieButton.addActionListener(this);
+				anyDieButton.setMnemonic(KeyEvent.VK_V);
+				anyDieButton.addKeyListener(this);
+				anyDieButton.setEnabled(blockRoll.length == 1);
+				reRollPanel.add(anyDieButton);
 			}
 
 			if (getDialogParameter().hasBrawlerOption()) {
-				brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll");
+				brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll", KeyEvent.VK_B);
 				brawlerButton.addActionListener(this);
 				brawlerButton.setMnemonic(KeyEvent.VK_B);
 				brawlerButton.addKeyListener(this);
@@ -185,6 +246,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
+
+				if (singleBlockDieReRollSource != null) {
+					centerPanel.add(singleBlockDiePanel(Math.abs(pDialogParameter.getNrOfDice())));
+					centerPanel.add(Box.createVerticalStrut(3));
+
+				}
 			}
 		}
 
@@ -198,6 +265,45 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 	public DialogId getId() {
 		return DialogId.BLOCK_ROLL_PARTIAL_RE_ROLL;
+	}
+
+	private JPanel singleBlockDiePanel(int diceCount) {
+		List<Integer> mnemonics = new ArrayList<>();
+		mnemonics.add(KeyEvent.VK_U);
+		mnemonics.add(KeyEvent.VK_S);
+		mnemonics.add(KeyEvent.VK_A);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(textPanel(singleBlockDieReRollSource.getName(getClient().getGame())));
+		panel.setOpaque(false);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		for (int i = 1; i <= diceCount; i++) {
+			int finalI = i;
+			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
+				JButton button = singleDieButton(i, mnemonics.get(i - 1));
+				switch (i) {
+					case 1:
+						singleDieButton1 = button;
+						break;
+					case 2:
+						singleDieButton2 = button;
+						break;
+					default:
+						singleDieButton3 = button;
+						break;
+				}
+				buttonPanel.add(button);
+			}
+
+			panel.add(buttonPanel);
+		}
+		mnemonics.remove(0);
+
+		return panel;
 	}
 
 	private JPanel proPanel(int diceCount) {
@@ -217,7 +323,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		for (int i = 1; i <= diceCount; i++) {
 			int finalI = i;
 			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-				JButton button = singleDieButton(i, proMnemonics.get(0));
+				JButton button = singleDieButton(i, proMnemonics.get(i - 1));
 				switch (i) {
 					case 1:
 						proButton1 = button;
@@ -256,7 +362,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		for (int i = 1; i <= diceCount; i++) {
 			int finalI = i;
 			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-				JButton button = singleDieButton(i, consummateMnemonics.get(0));
+				JButton button = singleDieButton(i, consummateMnemonics.get(i - 1));
 				switch (i) {
 					case 1:
 						consummateButton1 = button;
@@ -280,8 +386,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 
 
 	private JButton singleDieButton(int dieNumber, int keyEvent) {
-		JButton singleDieButton = new JButton(dimensionProvider());
-		singleDieButton.setText("Die " + dieNumber);
+		JButton singleDieButton = new JButton(dimensionProvider(), "Die " + dieNumber, keyEvent);
 		singleDieButton.addActionListener(this);
 		singleDieButton.setMnemonic(keyEvent);
 		singleDieButton.addKeyListener(this);
@@ -301,37 +406,56 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		if (pActionEvent.getSource() == buttonSingleUseReRoll) {
 			fReRollSource = singleUseReRollSource;
 		}
+		if (pActionEvent.getSource() == anyDieButton) {
+			evaluateCheckboxes();
+		}
+		if (pActionEvent.getSource() == singleDieButton) {
+			fReRollSource = singleBlockDieReRollSource;
+			reRollIndexes.add(0);
+		}
+		if (pActionEvent.getSource() == singleDieButton1) {
+			fReRollSource = singleBlockDieReRollSource;
+			reRollIndexes.add(0);
+		}
+		if (pActionEvent.getSource() == singleDieButton2) {
+			fReRollSource = singleBlockDieReRollSource;
+			reRollIndexes.add(1);
+		}
+		if (pActionEvent.getSource() == singleDieButton3) {
+			fReRollSource = singleBlockDieReRollSource;
+			reRollIndexes.add(2);
+		}
 		if (pActionEvent.getSource() == consummateButton) {
 			fReRollSource = singleDieReRollSource;
-			proIndex = 0;
+			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == consummateButton1) {
 			fReRollSource = singleDieReRollSource;
-			proIndex = 0;
+			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == consummateButton2) {
 			fReRollSource = singleDieReRollSource;
-			proIndex = 1;
+			reRollIndexes.add(1);
 		}
 		if (pActionEvent.getSource() == consummateButton3) {
 			fReRollSource = singleDieReRollSource;
-			proIndex = 2;
+			reRollIndexes.add(2);
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
 			fReRollSource = ReRollSources.PRO;
-			proIndex = 0;
+			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == proButton1) {
 			fReRollSource = ReRollSources.PRO;
-			proIndex = 0;
+			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == proButton2) {
 			fReRollSource = ReRollSources.PRO;
-			proIndex = 1;
+			reRollIndexes.add(1);
 		}
 		if (pActionEvent.getSource() == proButton3) {
 			fReRollSource = ReRollSources.PRO;
-			proIndex = 2;
+			reRollIndexes.add(2);
 		}
 		if (pActionEvent.getSource() == brawlerButton) {
 			setBrawler();
@@ -353,6 +477,19 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 	}
 
+	private void evaluateCheckboxes() {
+		fReRollSource = anyBlockDiceReRollSource;
+		if (diceBoxes == null) {
+			reRollIndexes.add(0);
+		} else {
+			for (int i = 0; i < diceBoxes.length; i++) {
+				if (diceBoxes[i].isSelected()) {
+					reRollIndexes.add(i);
+				}
+			}
+		}
+	}
+
 	public void keyTyped(KeyEvent pKeyEvent) {
 	}
 
@@ -368,12 +505,16 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		return fDialogParameter;
 	}
 
-	public int getProIndex() {
-		return proIndex;
+	public List<Integer> getReRollIndexes() {
+		return reRollIndexes;
 	}
 
 	public ReRollSource getSingleDieReRollSource() {
 		return singleDieReRollSource;
+	}
+
+	public ReRollSource getSingleBlockDieReRollSource() {
+		return singleBlockDieReRollSource;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {
@@ -418,42 +559,63 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 				if (getDialogParameter().hasProReRollOption()) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
-					proIndex = 0;
+					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_R:
 				if (getDialogParameter().hasProReRollOption()) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
-					proIndex = 1;
+					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_E:
 				if (getDialogParameter().hasProReRollOption()) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
-					proIndex = 2;
+					reRollIndexes.add(2);
 				}
 				break;
 			case KeyEvent.VK_C:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
-					proIndex = 0;
+					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_O:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
-					proIndex = 1;
+					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_M:
 				if (getDialogParameter().hasConsummateOption()) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
-					proIndex = 2;
+					reRollIndexes.add(2);
+				}
+				break;
+			case KeyEvent.VK_U:
+				if (singleBlockDieReRollSource != null) {
+					keyHandled = true;
+					fReRollSource = singleBlockDieReRollSource;
+					reRollIndexes.add(0);
+				}
+				break;
+			case KeyEvent.VK_S:
+				if (singleBlockDieReRollSource != null) {
+					keyHandled = true;
+					fReRollSource = singleBlockDieReRollSource;
+					reRollIndexes.add(1);
+				}
+				break;
+			case KeyEvent.VK_A:
+				if (singleBlockDieReRollSource != null) {
+					keyHandled = true;
+					fReRollSource = singleBlockDieReRollSource;
+					reRollIndexes.add(2);
 				}
 				break;
 			case KeyEvent.VK_N:
@@ -466,6 +628,12 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 					setBrawler();
 				}
 				break;
+			case KeyEvent.VK_V:
+				if (anyDieButton != null && anyDieButton.isEnabled()) {
+					keyHandled = true;
+					evaluateCheckboxes();
+				}
+				break;
 			default:
 				break;
 		}
@@ -476,4 +644,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 	}
 
+	public ReRollSource getAnyBlockDiceReRollSource() {
+		return anyBlockDiceReRollSource;
+	}
 }

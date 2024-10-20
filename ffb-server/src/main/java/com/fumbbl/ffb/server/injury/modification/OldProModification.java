@@ -76,7 +76,7 @@ public class OldProModification extends InjuryContextModification<OldProModifica
 
 		boolean hurtTeamMate = attacker != null && defender != null && attacker.getTeam() == defender.getTeam();
 
-		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomit() || injuryType.isChainsaw()))
+		return (!StringTool.isProvided(injuryContext.fAttackerId) && (injuryType.isVomitLike() || injuryType.isChainsaw()))
 			|| (hurtTeamMate && injuryContext.getApothecaryMode() != ApothecaryMode.ANIMAL_SAVAGERY);
 	}
 

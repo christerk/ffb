@@ -242,6 +242,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.USING_STAB, blockCommand.isUsingStab()));
 						publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, blockCommand.isUsingChainsaw()));
 						publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, blockCommand.isUsingVomit()));
+						publishParameter(new StepParameter(StepParameterKey.USING_BREATHE_FIRE, blockCommand.isUsingBreatheFire()));
 						publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
 						if (targetSelectionState != null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ;
@@ -375,6 +376,10 @@ public final class StepInitSelecting extends AbstractStep {
 							forceGotoOnDispatch = true;
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGetBallOnGround)) {
 							fDispatchPlayerAction = PlayerAction.CATCH_OF_THE_DAY;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canBlastRemotePlayer)) {
+							fDispatchPlayerAction = PlayerAction.THEN_I_STARTED_BLASTIN;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {

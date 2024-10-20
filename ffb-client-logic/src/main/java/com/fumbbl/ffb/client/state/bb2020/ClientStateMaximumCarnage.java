@@ -42,7 +42,7 @@ public class ClientStateMaximumCarnage extends ClientState {
 			createAndShowPopupMenuForBlockingPlayer();
 
 		} else if (!pPlayer.getId().equalsIgnoreCase(game.getLastDefenderId()) && !game.getActingTeam().hasPlayer(pPlayer)) {
-			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false);
+			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
 		}
 	}
 

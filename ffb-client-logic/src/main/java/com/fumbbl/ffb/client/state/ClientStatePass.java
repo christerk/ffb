@@ -273,6 +273,9 @@ public class ClientStatePass extends ClientStateMove {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			menuItemList.add(createThenIStartedBlastinItem(iconCache));
+		}
 		addEndActionLabel(iconCache, menuItemList);
 
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
@@ -280,7 +283,7 @@ public class ClientStatePass extends ClientStateMove {
 
 	}
 
-	protected void menuItemSelected(Player<?> pPlayer, int pMenuKey) {
+	protected void menuItemSelected(Player<?> player, int pMenuKey) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		ClientCommunication communication = getClient().getCommunication();
@@ -292,10 +295,10 @@ public class ClientStatePass extends ClientStateMove {
 			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS:
 				if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
 					if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(pPlayer, PlayerAction.PASS, actingPlayer.isJumping());
+						communication.sendActingPlayer(player, PlayerAction.PASS, actingPlayer.isJumping());
 						fShowRangeRuler = true;
 					} else {
-						communication.sendActingPlayer(pPlayer, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
+						communication.sendActingPlayer(player, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
 						fShowRangeRuler = false;
 					}
 					if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
@@ -304,7 +307,7 @@ public class ClientStatePass extends ClientStateMove {
 				}
 				break;
 			default:
-				super.menuItemSelected(pPlayer, pMenuKey);
+				super.menuItemSelected(player, pMenuKey);
 		}
 	}
 

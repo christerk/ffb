@@ -20,7 +20,7 @@ public enum TurnMode implements INamedObject {
 	SELECT_GAZE_TARGET("selectGazeTarget"), SAFE_PAIR_OF_HANDS("safePairOfHands"),
 	SELECT_BLOCK_KIND("selectBlockKind"), BETWEEN_TURNS("betweenTurns", true),
 	TRICKSTER("trickster"),
-	RAIDING_PARTY("raidingParty"), HIT_AND_RUN("hitAndRun");
+	RAIDING_PARTY("raidingParty"), HIT_AND_RUN("hitAndRun"), THEN_I_STARTED_BLASTIN("thenIStartedBlastin");
 
 	private final String fName;
 	private final boolean checkForActivePlayers;

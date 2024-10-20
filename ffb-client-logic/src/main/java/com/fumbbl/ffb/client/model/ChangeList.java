@@ -12,6 +12,42 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.30.3")
+			.addBugfix("Rioutous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
+		);
+
+		versions.add(new VersionChangeList("2.30.2")
+			.addBugfix("Breathe Fire: B&C injuries did not trigger if player was only placed prone")
+			.addBugfix("Breathe Fire: Blitz activation did not end automatically")
+			.addBugfix("Multiple Block & Pile Driver: When both opponents were available as Pile Driver targets it was not able to skip Pile Driver usage")
+			.addBugfix("Pathfinding: Moving through the opposing endzone did reduce the available movement range (only for the shown path, not the actual movement)")
+			.addBehaviorChange("The opposing endzone now has the same \"weight\" as regular squares, so when trying to score when suffering from bloodlust make sure not to enter the endzone to early as the auto path might enter it when not next to a thrall")
+			.addBugfix("Watch Out!: Special actions like Stab did use up the skill even though they are not a block action but replace it")
+			.addBugfix("Spiked Ball: Did not trigger when ball was passed to player without tacklezones")
+			.addBugfix("All roster were able to hire raised positions as mercs if the fallback was defined in the ruleset")
+		);
+
+		versions.add(new VersionChangeList("2.30.1")
+			.addBugfix("Breathe Fire: Ball did not bounce for placed prone or knock down results without av breaks")
+		);
+
+		versions.add(new VersionChangeList("2.30.0")
+			.addFeature("Breathe Fire")
+			.addBugfix("Multiple Block: Projectile Vomit was available")
+			.addFeature("Unstoppable Momentum")
+			.addImprovement("Re-roll buttons in block dialogs now display the mnemonic explicitly")
+			.addFeature("Toxin Connoisseur")
+			.addBugfix("Pile Driver: Could be used after special block actions like Projectile Vomit")
+			.addBugfix("Tentacles: When player was held in place during blitz action the block was skipped even if the target player was already adjacent")
+			.addBugfix("Bloodlust: When using blitz action to stand up and end activation the blitz action was not actually used when failing bloodlust and not changing action")
+			.addBugfix("For some skill when waiting on the opponent it was possible to open the action menu on the acting player")
+			.addFeature("\"Then I Started Blastin'!\"")
+			.addRuleChange("Iron Hard Skin now ignores all kinds of armour modifications")
+			.addFeature("Savage Blow")
+			.addBugfix("Pro: When pro roll failed for re-rolling a block die that die was still considered having been re-rolled")
+			.addFeature("Quick Bite")
+		);
+
 		versions.add(new VersionChangeList("2.29.0")
 			.addBugfix("Auto Marking: Skill and stat changes of some prayers did not get applied")
 			.addRuleChange("Bloodlust: Allow changing blitz and gaze to move actions in case of failed bloodlust so FA rolls are avoided")

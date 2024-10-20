@@ -6,7 +6,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -134,6 +134,18 @@ public class AnimationFrame {
 		if (fIcon2 != null) {
 			addUpdatedArea(fFieldLayer.draw(fIcon2, pCoordinate, fAlpha2));
 		}
+	}
+
+	public void draw(FieldLayer pFieldLayer, Dimension dimension, double scale) {
+		fFieldLayer = pFieldLayer;
+		getIcons();
+		if (fIcon1 != null) {
+			addUpdatedArea(fFieldLayer.drawCenteredAndScaled(fIcon1, dimension.width, dimension.height, fAlpha1, scale, scale));
+		}
+		if (fIcon2 != null) {
+			addUpdatedArea(fFieldLayer.drawCenteredAndScaled(fIcon2, dimension.width, dimension.height, fAlpha2, scale, scale));
+		}
+		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
 	public void clear() {

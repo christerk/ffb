@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -85,6 +86,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.FOUL);
       add(ClientAction.CHAINSAW);
       add(ClientAction.BLACK_INK);
+      add(ClientAction.THEN_I_STARTED_BLASTIN);
     }};
   }
 
@@ -160,6 +162,12 @@ public class FoulLogicModule extends MoveLogicModule {
         case BOUNDING_LEAP:
           isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
             communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
+          break;
+        case THEN_I_STARTED_BLASTIN:
+          if (isThenIStartedBlastinAvailable(actingPlayer)) {
+            Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+            communication.sendUseSkill(skill, true, player.getId());
+          }
           break;
         default:
           break;

@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
+import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -180,6 +181,15 @@ public class StepEndMoving extends AbstractStep {
 		Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 		BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
 
+		boolean adjacentTarget = false;
+		if (game.getFieldModel().getTargetSelectionState() != null ) {
+			String targetId = game.getFieldModel().getTargetSelectionState().getSelectedPlayerId();
+			if (StringTool.isProvided(targetId)) {
+				FieldCoordinate targetCoord = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetId));
+				adjacentTarget = targetCoord != null && targetCoord.isAdjacent(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
+			}
+		}
+
 		if (fEndTurn || fEndPlayerAction) {
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			// block defender set by ball and chain
@@ -214,9 +224,12 @@ public class StepEndMoving extends AbstractStep {
 				|| ((PlayerAction.FOUL_MOVE == playerAction) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
 				|| ((PlayerAction.GAZE_MOVE == playerAction) && UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
 				|| ((PlayerAction.KICK_TEAM_MATE_MOVE == playerAction) && UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
-				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))) {
+				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) && UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))
+				|| playerAction != null && playerAction.isBlitzMove() && adjacentTarget
+			) {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				if (playerAction != null && playerAction.isBlitzMove()) {
+					ServerUtilBlock.updateDiceDecorations(game);
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 				} else {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));

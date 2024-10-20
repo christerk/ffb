@@ -124,7 +124,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 		PlayerIconFactory playerIconFactory = fDialog.getClient().getUserInterface().getPlayerIconFactory();
 		List<Object[]> mercenaryList = new ArrayList<>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
-			if (PlayerType.STAR != pos.getType() && PlayerType.INFAMOUS_STAFF != pos.getType()) {
+			if (PlayerType.STAR != pos.getType() && PlayerType.INFAMOUS_STAFF != pos.getType() && PlayerType.IRREGULAR != pos.getType()) {
 				int playerInReplacedPosition = 0;
 				if (StringTool.isProvided(pos.getReplacesPosition())) {
 					RosterPosition replacedPosition = fDialog.getRoster().getPositionById(pos.getReplacesPosition());

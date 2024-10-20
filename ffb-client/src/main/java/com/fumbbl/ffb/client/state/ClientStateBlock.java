@@ -149,6 +149,9 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
     if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
       menuItemList.add(createCatchOfTheDayItem(iconCache));
     }
+    if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
+      menuItemList.add(createThenIStartedBlastinItem(iconCache));
+    }
     createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
     showPopupMenuForPlayer(actingPlayer.getPlayer());
   }
