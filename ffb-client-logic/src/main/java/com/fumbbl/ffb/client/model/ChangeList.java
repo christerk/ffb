@@ -12,6 +12,8 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.31.0"));
+
 		versions.add(new VersionChangeList("2.30.3")
 			.addBugfix("Rioutous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
 		);
