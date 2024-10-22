@@ -22,6 +22,7 @@ import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -164,6 +165,11 @@ public class ClientStateSelect extends ClientState {
 				case IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ:
 					if (isKickEmBlitzAvailable(pPlayer)) {
 						communication.sendActingPlayer(pPlayer, PlayerAction.KICK_EM_BLITZ, false);
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE:
+					if (isFlashingBladeAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.THE_FLASHING_BLADE, false);
 					}
 					break;
 				default:
@@ -312,6 +318,9 @@ public class ClientStateSelect extends ClientState {
 			kickEmItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ, 0));
 			menuItemList.add(kickEmItem);
 		}
+		if (isFlashingBladeAvailable(pPlayer)) {
+			menuItemList.add(createFlashingBladeItem(iconCache));
+		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem(dimensionProvider(), "Recover from Confusion & End Move",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
@@ -429,6 +438,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_KICK_EM_BLITZ:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ);
+				break;
+			case PLAYER_ACTION_THE_FLASHING_BLADE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE);
 				break;
 			default:
 				actionHandled = false;
@@ -679,6 +691,27 @@ public class ClientStateSelect extends ClientState {
 			}
 		}
 		return false;
+	}
+
+	protected boolean isFlashingBladeAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+		return (playerState != null) && playerState.isActive()
+			&& mechanic.isBlockActionAllowed(game.getTurnMode())
+			&& (playerState.getBase() != PlayerState.PRONE)
+			&& player.hasUnusedSkillProperty(NamedProperties.canStabAndMoveAfterwards)
+			&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player)));
+	}
+
+	protected JMenuItem createFlashingBladeItem(IconCache iconCache) {
+		JMenuItem item = new JMenuItem(dimensionProvider(), "The Flashing Blade",
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_THE_FLASHING_BLADE)));
+		item.setMnemonic(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE);
+		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, 0));
+		return item;
 	}
 
 }

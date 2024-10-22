@@ -53,4 +53,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
 	int KEY_BREATHE_FIRE = KeyEvent.VK_T;
 	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;
+	int KEY_THE_FLASHING_BLADE = KeyEvent.VK_D;
 }

@@ -51,8 +51,12 @@ public class ClientStateBlock extends ClientState {
 				createAndShowPopupMenuForBlockingPlayer();
 			}
 		} else {
-			UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, false);
+			block(pPlayer);
 		}
+	}
+
+	protected void block(Player<?> pPlayer) {
+		UtilClientStateBlocking.showPopupOrBlockPlayer(this, pPlayer, false);
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
