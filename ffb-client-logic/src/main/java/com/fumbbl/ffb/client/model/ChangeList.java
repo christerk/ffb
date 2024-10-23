@@ -14,6 +14,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.31.0")
 			.addFeature("The Flashing Blade")
+			.addBugfix("Bloodlust: When a player that lost their tacklezone due to a failed Bloodlust roll in a previous turn used gaze or blitz action, failed Bloodlust again and then changed their action to a move action the target of that action lost their tacklezone.")
 		);
 
 		versions.add(new VersionChangeList("2.30.3")

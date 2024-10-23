@@ -104,7 +104,7 @@ public class PlayerState {
 		return this;
 	}
 
-	private PlayerState removeSelectedBlitzTarget() {
+	public PlayerState removeSelectedBlitzTarget() {
 		if (hasBit(_BIT_SELECTED_BLITZ_TARGET)) {
 			return changeBit(_BIT_SELECTED_BLITZ_TARGET, false);
 		}

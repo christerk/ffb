@@ -23,7 +23,7 @@ public class TargetSelectionState implements IJsonSerializable {
 	private Status status = Status.STARTED;
 	private String selectedPlayerId;
 	private boolean committed;
-	private PlayerState oldPlayerState;
+	private PlayerState oldActingPlayerState;
 	private final Set<Skill> usedSkills = new HashSet<>();
 
 	public TargetSelectionState() {
@@ -88,12 +88,12 @@ public class TargetSelectionState implements IJsonSerializable {
 		}
 	}
 
-	public PlayerState getOldPlayerState() {
-		return oldPlayerState;
+	public PlayerState getOldActingPlayerState() {
+		return oldActingPlayerState;
 	}
 
-	public void setOldPlayerState(PlayerState oldPlayerState) {
-		this.oldPlayerState = oldPlayerState;
+	public void setOldActingPlayerState(PlayerState oldActingPlayerState) {
+		this.oldActingPlayerState = oldActingPlayerState;
 	}
 
 	public Set<Skill> getUsedSkills() {
@@ -123,7 +123,7 @@ public class TargetSelectionState implements IJsonSerializable {
 		if (status != that.status) return false;
 		if (!Objects.equals(selectedPlayerId, that.selectedPlayerId))
 			return false;
-		if (!Objects.equals(oldPlayerState, that.oldPlayerState))
+		if (!Objects.equals(oldActingPlayerState, that.oldActingPlayerState))
 			return false;
 		return usedSkills.equals(that.usedSkills);
 	}
@@ -133,7 +133,7 @@ public class TargetSelectionState implements IJsonSerializable {
 		int result = status.hashCode();
 		result = 31 * result + (selectedPlayerId != null ? selectedPlayerId.hashCode() : 0);
 		result = 31 * result + (committed ? 1 : 0);
-		result = 31 * result + (oldPlayerState != null ? oldPlayerState.hashCode() : 0);
+		result = 31 * result + (oldActingPlayerState != null ? oldActingPlayerState.hashCode() : 0);
 		result = 31 * result + usedSkills.hashCode();
 		return result;
 	}
@@ -156,7 +156,7 @@ public class TargetSelectionState implements IJsonSerializable {
 		}
 
 		if (IJsonOption.PLAYER_STATE_OLD.isDefinedIn(jsonObject)) {
-			oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
+			oldActingPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		}
 
 		if (IJsonOption.USED_SKILLS.isDefinedIn(jsonObject)) {
@@ -175,7 +175,7 @@ public class TargetSelectionState implements IJsonSerializable {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, selectedPlayerId);
 		IJsonOption.TARGET_SELECTION_STATUS.addTo(jsonObject, status.name());
 		IJsonOption.TARGET_SELECTION_STATUS_IS_COMMITTED.addTo(jsonObject, committed);
-		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
+		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldActingPlayerState);
 		JsonArray skillArray = new JsonArray();
 		for (Skill skill : usedSkills) {
 			skillArray.add(UtilJson.toJsonValue(skill));

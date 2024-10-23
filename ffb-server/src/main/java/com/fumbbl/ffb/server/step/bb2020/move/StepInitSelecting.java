@@ -180,8 +180,8 @@ public final class StepInitSelecting extends AbstractStep {
 								if (actingPlayer.getPlayerAction().isBlitzing()) {
 									game.getTurnData().setBlitzUsed(false);
 								}
-								if (targetSelectionState.getOldPlayerState() != null) {
-									PlayerState oldState = targetSelectionState.getOldPlayerState();
+								if (targetSelectionState.getOldActingPlayerState() != null) {
+									PlayerState oldState = targetSelectionState.getOldActingPlayerState();
 									if (onlyMarkedAsStandingUp) {
 										oldState = oldState.changeBase(PlayerState.PRONE);
 									}
