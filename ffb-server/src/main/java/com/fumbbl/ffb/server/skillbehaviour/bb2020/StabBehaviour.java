@@ -7,6 +7,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
@@ -40,7 +41,7 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 			public boolean handleExecuteStepHook(StepStab step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (UtilCards.hasSkill(actingPlayer, skill) && (state.usingStab != null) && state.usingStab) {
+				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformArmourRollInsteadOfBlock) && (state.usingStab != null) && state.usingStab) {
 					step.getResult().setSound(SoundId.STAB);
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(true),

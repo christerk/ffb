@@ -383,15 +383,24 @@ public class StepEndBlocking extends AbstractStep {
 
           // go-for-it
         } else {
+
+          boolean flashesBlade = actingPlayer.getPlayerAction() == PlayerAction.THE_FLASHING_BLADE;
+          if (flashesBlade) {
+            actingPlayer.markSkillUsed(NamedProperties.canStabAndMoveAfterwards);
+          }
           boolean canMoveOn = !fUsingStab && !usingChainsaw && !usingBreatheFire;
-          if (isBlitz && canMoveOn
+          if (((isBlitz && canMoveOn) || flashesBlade)
             && attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
             String actingPlayerId = activePlayer.getId();
-            if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-              UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
+            PlayerAction newAction;
+            if (flashesBlade) {
+              newAction = PlayerAction.MOVE;
+            } else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+              newAction = PlayerAction.PUTRID_REGURGITATION_MOVE;
             } else {
-              UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
+              newAction = PlayerAction.BLITZ_MOVE;
             }
+            UtilServerGame.changeActingPlayer(this, actingPlayerId, newAction, actingPlayer.isJumping());
             UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
             ServerUtilBlock.updateDiceDecorations(game);
             moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
