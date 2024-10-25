@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -10,6 +11,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
@@ -144,4 +146,20 @@ public class BlockLogicExtension extends LogicModule {
     return false;
   }
 
+  public boolean isGoredAvailable(Game game) {
+    ActingPlayer actingPlayer = game.getActingPlayer();
+    TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+    if (targetSelectionState != null && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie)) {
+      FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
+      FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+      DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
+      Player<?> defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
+      boolean opponentCanMove = UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.canMoveBeforeBeingBlocked);
+      return diceDecoration != null
+        && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove))
+        && targetCoordinate.isAdjacent(playerCoordinate);
+    }
+
+    return false;
+  }
 }
