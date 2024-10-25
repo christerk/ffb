@@ -3,11 +3,11 @@ package com.fumbbl.ffb.marking;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.bb2020.SeriousInjury;
 import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.mechanics.bb2020.StatsMechanic;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.GameRules;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -38,6 +38,7 @@ class MarkerGeneratorTest {
 	private static final String WRECKLE_MARKING = "Q";
 	private static final String MA_MARKING = "Ma";
 	private static final String AG_MARKING = "Ag";
+	private static final String NI_MARKING = "Ni";
 	private static final String TACKLE_MARKING = "T";
 	private static final String WRESTLE_MARKING = "W";
 	public static final String OTHER_MARKING = "O";
@@ -106,6 +107,7 @@ class MarkerGeneratorTest {
 		given(position.getPassing()).willReturn(PASSING);
 		given(position.getArmour()).willReturn(ARMOUR);
 
+		given(player.getLastingInjuries()).willReturn(new SeriousInjury[]{SeriousInjury.HEAD_INJURY, SeriousInjury.SERIOUS_INJURY});
 	}
 
 	@Test
@@ -453,6 +455,24 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(game, player, config, true);
 
 		assertEquals(MA_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreStatInjuries() {
+		markings.add(builder.withInjury(InjuryAttribute.AV).withMarking("Some marking").build());
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertTrue(marking.isEmpty());
+	}
+
+	@Test
+	public void generateNigglingMarker() {
+		markings.add(builder.withInjury(InjuryAttribute.NI).withMarking(NI_MARKING).build());
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals(NI_MARKING, marking);
 	}
 
 	@Test
