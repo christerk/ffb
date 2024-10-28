@@ -42,6 +42,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_PITCH_LANDSCAPE = "pitchLandscape";
 	String SETTING_PITCH_PORTRAIT = "pitchPortrait";
 	String SETTING_LAYOUT_SQUARE = "layoutSquare";
+	String SETTING_LAYOUT_WIDE = "layoutWide";
 
 	String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
 	String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";

@@ -145,6 +145,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem pitchLandscapeMenuItem;
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
+	private JRadioButtonMenuItem layoutWideMenuItem;
 
 	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -529,6 +530,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		layoutSquareMenuItem.addActionListener(this);
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
+
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
+		layoutWideMenuItem.addActionListener(this);
+		orientationGroup.add(layoutWideMenuItem);
+		orientationMenu.add(layoutWideMenuItem);
 
 		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
 		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
@@ -1050,6 +1056,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		pitchLandscapeMenuItem.setSelected(true);
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
+		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
 
 		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
@@ -1279,6 +1286,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
 					layout = DimensionProvider.ClientLayout.SQUARE;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
+					layout = DimensionProvider.ClientLayout.WIDE;
 					break;
 				default:
 					break;
@@ -1944,7 +1954,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			getClient().saveUserSettings(true);
 		}
-
+		if (source == layoutWideMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_WIDE);
+			getClient().saveUserSettings(true);
+		}
 		if (source == showCratersAndBloodsptsMenuItem) {
 			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
 			getClient().saveUserSettings(true);
