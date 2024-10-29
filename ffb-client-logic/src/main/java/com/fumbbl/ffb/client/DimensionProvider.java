@@ -207,7 +207,8 @@ public class DimensionProvider {
 	}
 
 	public enum Component {
-		FIELD(new Dimension(782, 452), new Dimension(452, 782), new Dimension(1484, 857)),
+		FIELD_SQUARE(new Dimension(30, 30), new Dimension(57, 57)),
+		FIELD(fieldDimension(ClientLayout.LANDSCAPE), fieldDimension(ClientLayout.PORTRAIT), fieldDimension(ClientLayout.WIDE)),
 		CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
 		LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
 		REPLAY_CONTROL(new Dimension(389, 26), new Dimension(389, 26), new Dimension(260, 26), new Dimension(389, 26)),
@@ -229,7 +230,6 @@ public class DimensionProvider {
 		SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96), new Dimension(1486, 32)),
 		REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0), new Dimension(10, 0)),
 		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0), new Dimension(36, 0)),
-		FIELD_SQUARE(new Dimension(30, 30), new Dimension(30, 30)),
 		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
 		RESOURCE_SLOT(new Dimension(46, 40)),
 		MAX_ICON(new Dimension(40, 40), new Dimension(76, 76)),
@@ -261,6 +261,26 @@ public class DimensionProvider {
 		private static int sidebarHeight(ClientLayout layout) {
 			return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
 				.map(comp -> comp.dimension(layout)).mapToDouble(Dimension::getHeight).sum();
+		}
+
+		private static int fieldLongSide(ClientLayout layout) {
+			return FIELD_SQUARE.dimension(layout).width * 26 + 2;
+		}
+
+		private static int fieldShortSide(ClientLayout layout) {
+			return FIELD_SQUARE.dimension(layout).width * 15 + 2;
+		}
+
+		private static int fieldWidth(ClientLayout layout) {
+			return layout.portrait ? fieldShortSide(layout) : fieldLongSide(layout);
+		}
+
+		private static int fieldHeight(ClientLayout layout) {
+			return layout.portrait ? fieldLongSide(layout) : fieldShortSide(layout);
+		}
+
+		private static Dimension fieldDimension(ClientLayout layout) {
+			return new Dimension(fieldWidth(layout), fieldHeight(layout));
 		}
 
 		private Dimension dimension(ClientLayout layout) {
