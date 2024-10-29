@@ -207,15 +207,15 @@ public class DimensionProvider {
 	}
 
 	public enum Component {
-		FIELD(new Dimension(782, 452), new Dimension(452, 782), new Dimension(1484, 885)),
-		CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 111)),
-		LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 111)),
+		FIELD(new Dimension(782, 452), new Dimension(452, 782), new Dimension(1484, 857)),
+		CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
+		LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
 		REPLAY_CONTROL(new Dimension(389, 26), new Dimension(389, 26), new Dimension(260, 26), new Dimension(389, 26)),
-		TURN_DICE_STATUS(new Dimension(SIDEBAR_WIDTH_L, 92), new Dimension(SIDEBAR_WIDTH_P, 101), new Dimension(SIDEBAR_WIDTH_L, 139)),
-		RESOURCE(new Dimension(SIDEBAR_WIDTH_L, 168), new Dimension(SIDEBAR_WIDTH_P, 185), new Dimension(SIDEBAR_WIDTH_L, 243)),
-		BUTTON_BOX(new Dimension(SIDEBAR_WIDTH_L, 22), new Dimension(SIDEBAR_WIDTH_P, 24), new Dimension(SIDEBAR_WIDTH_L, 30)),
-		BOX(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 616)),
-		PLAYER_DETAIL(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 646)),
+		TURN_DICE_STATUS(new Dimension(SIDEBAR_WIDTH_L, 92), new Dimension(SIDEBAR_WIDTH_P, 101), new Dimension(SIDEBAR_WIDTH_L, 92)),
+		RESOURCE(new Dimension(SIDEBAR_WIDTH_L, 168), new Dimension(SIDEBAR_WIDTH_P, 185), new Dimension(SIDEBAR_WIDTH_L, 484)),
+		BUTTON_BOX(new Dimension(SIDEBAR_WIDTH_L, 22), new Dimension(SIDEBAR_WIDTH_P, 24), new Dimension(SIDEBAR_WIDTH_L, 22)),
+		BOX(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 430)),
+		PLAYER_DETAIL(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 430)),
 		SIDEBAR(new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.LANDSCAPE)), new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(ClientLayout.PORTRAIT)), new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.WIDE))),
 		PLAYER_PORTRAIT(new Dimension(121, 147), new Dimension(133, 162), new Dimension(121, 147)),
 		PLAYER_PORTRAIT_OFFSET(new Dimension(3, 32), new Dimension(13, 32), new Dimension(3, 32)),
