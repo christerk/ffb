@@ -35,12 +35,15 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	private final List<String> fInputLog;
 	private int fInputLogPosition;
-
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private final FantasyFootballClient fClient;
 
 	public ChatComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
@@ -106,7 +109,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public void initLayout() {
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);

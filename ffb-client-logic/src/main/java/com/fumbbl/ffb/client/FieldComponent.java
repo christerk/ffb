@@ -64,9 +64,12 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private FieldCoordinate fBombCoordinate;
 	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
 
+	private final DimensionProvider dimensionProvider;
+
 	public FieldComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
 
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
 		fLayerField = new FieldLayerPitch(pClient, dimensionProvider, fontCache);
 		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, dimensionProvider, fontCache);
 		fLayerBloodspots = new FieldLayerBloodspots(pClient, dimensionProvider, fontCache);
@@ -89,18 +92,18 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 
-		fLayerField.initLayout(dimensionProvider);
-		fLayerTeamLogo.initLayout(dimensionProvider);
-		fLayerBloodspots.initLayout(dimensionProvider);
-		fLayerRangeGrid.initLayout(dimensionProvider);
-		fLayerMarker.initLayout(dimensionProvider);
-		fLayerUnderPlayers.initLayout(dimensionProvider);
-		fLayerPlayers.initLayout(dimensionProvider);
-		fLayerOverPlayers.initLayout(dimensionProvider);
-		fLayerRangeRuler.initLayout(dimensionProvider);
-		layerEnhancements.initLayout(dimensionProvider);
+		fLayerField.initLayout();
+		fLayerTeamLogo.initLayout();
+		fLayerBloodspots.initLayout();
+		fLayerRangeGrid.initLayout();
+		fLayerMarker.initLayout();
+		fLayerUnderPlayers.initLayout();
+		fLayerPlayers.initLayout();
+		fLayerOverPlayers.initLayout();
+		fLayerRangeRuler.initLayout();
+		layerEnhancements.initLayout();
 
 		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
@@ -184,10 +187,6 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		g2d.drawImage(getLayerPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerOverPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerRangeRuler().getImage(), 0, 0, null);
-
-		// g2d.setColor(Color.RED);
-		// g2d.drawRect(pUpdatedArea.x, pUpdatedArea.y, pUpdatedArea.width - 1,
-		// pUpdatedArea.height - 1);
 
 		g2d.dispose();
 

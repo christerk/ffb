@@ -113,11 +113,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDesktop = new JDesktopPane();
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
-		fFieldComponent.initLayout(dimensionProvider);
-		fLog.initLayout(dimensionProvider, styleProvider);
-		fChat.initLayout(dimensionProvider, styleProvider);
-		fSideBarHome.initLayout(dimensionProvider);
-		fSideBarAway.initLayout(dimensionProvider);
+		fFieldComponent.initLayout();
+		fLog.initLayout();
+		fChat.initLayout();
+		fSideBarHome.initLayout();
+		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
 		JPanel panelContent;
