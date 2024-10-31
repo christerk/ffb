@@ -8,6 +8,7 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -110,13 +111,13 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.TURN_DICE_STATUS);
+		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		Dimension buttonDimension = dimensionProvider.dimension(DimensionProvider.Component.END_TURN_BUTTON);
+		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON);
 		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
 	}
 

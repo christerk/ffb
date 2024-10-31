@@ -4,10 +4,13 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.ClientLayout;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -45,6 +48,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private Font turnTextFont;
 
 	private final DimensionProvider dimensionProvider;
+	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 	private Rectangle weatherLocation;
 	private Rectangle spectatorLocation;
@@ -71,6 +75,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 													 StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+		this.layoutSettings = dimensionProvider.getLayoutSettings();
 		this.styleProvider = styleProvider;
 		setLayout(null);
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -83,13 +88,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Graphics2D g2d = fImage.createGraphics();
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			String scorebarBackground = dimensionProvider.getLayout() ==
-				DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
+			String scorebarBackground = layoutSettings.getLayout() ==
+				ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
 			BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
 			g2d.drawImage(background, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
-			Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+			Dimension dimension = dimensionProvider.dimension(Component.SCORE_BOARD);
 			g2d.fillRect(0, 0, dimension.width, dimension.height);
 		}
 		g2d.dispose();
@@ -109,7 +114,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		int x;
 		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - dimensionProvider.scale(40);
 		int y = ((lineHeight() + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			y += lineHeight();
 		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
@@ -148,7 +153,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Rectangle2D halfBounds = metricsText.getStringBounds(half, g2d);
 
 		int x;
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + dimensionProvider.scale(20));
 			x = (getWidth() - length) / 2;
 		} else {
@@ -241,15 +246,15 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+		Dimension size = dimensionProvider.dimension(Component.SCORE_BOARD);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
-		int unscaledWidth = dimensionProvider.unscaledDimension(DimensionProvider.Component.SCORE_BOARD).width;
+		int unscaledWidth = dimensionProvider.unscaledDimension(Component.SCORE_BOARD).width;
 
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			weatherLocation = dimensionProvider.scale(new Rectangle(159, 64, 100, 32));
 			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 130, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle(1, 0, 36, 32));

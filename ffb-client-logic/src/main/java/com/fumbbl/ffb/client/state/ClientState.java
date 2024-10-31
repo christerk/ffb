@@ -10,6 +10,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -120,10 +121,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		int x = pMouseEvent.getX();
 		int y = pMouseEvent.getY();
 		DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-		Dimension field = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		Dimension field = dimensionProvider.dimension(Component.FIELD);
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			coordinate = new FieldCoordinate((int) ((x / dimensionProvider().getScale()) / dimensionProvider.unscaledFieldSquare()),
-				(int) ((y / dimensionProvider.getScale()) / dimensionProvider.unscaledFieldSquare()));
+			coordinate = new FieldCoordinate((int) ((x / dimensionProvider().getLayoutSettings().getScale()) / dimensionProvider.unscaledFieldSquare()),
+				(int) ((y / dimensionProvider.getLayoutSettings().getScale()) / dimensionProvider.unscaledFieldSquare()));
 			coordinate = getClient().getUserInterface().getDimensionProvider().mapToGlobal(coordinate);
 		}
 		return coordinate;

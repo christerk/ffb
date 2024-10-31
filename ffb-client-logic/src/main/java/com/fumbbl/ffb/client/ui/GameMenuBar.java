@@ -14,10 +14,12 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
@@ -239,6 +241,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
+	private final LayoutSettings layoutSettings;
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -266,6 +269,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fClient = pClient;
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
+		this.layoutSettings = dimensionProvider.getLayoutSettings();
 
 		init();
 
@@ -1233,15 +1237,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void increaseScaling() {
-		updateScaleProperty(dimensionProvider.largerScale());
+		updateScaleProperty(layoutSettings.largerScale());
 	}
 
 	public void decreaseScaling() {
-		updateScaleProperty(dimensionProvider.smallerScale());
+		updateScaleProperty(layoutSettings.smallerScale());
 	}
 
 	public void resetScaling() {
-		updateScaleProperty(DimensionProvider.BASE_SCALE_FACTOR);
+		updateScaleProperty(LayoutSettings.BASE_SCALE_FACTOR);
 	}
 
 
@@ -1258,8 +1262,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (StringTool.isProvided(factorValue)) {
 			try {
 				double factor = Double.parseDouble(factorValue);
-				if (dimensionProvider.getScale() != factor) {
-					dimensionProvider.setScale(factor);
+				if (layoutSettings.getScale() != factor) {
+					layoutSettings.setScale(factor);
 					getClient().getUserInterface().getIconCache().clear();
 					FontCache fontCache = getClient().getUserInterface().getFontCache();
 					fontCache.clear();
@@ -1275,28 +1279,28 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private boolean updateOrientation() {
 
-		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
+		ClientLayout layout = ClientLayout.LANDSCAPE;
 
 		String orientation = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
 
 		if (orientation != null) {
 			switch (orientation) {
 				case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
-					layout = DimensionProvider.ClientLayout.PORTRAIT;
+					layout = ClientLayout.PORTRAIT;
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-					layout = DimensionProvider.ClientLayout.SQUARE;
+					layout = ClientLayout.SQUARE;
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
-					layout = DimensionProvider.ClientLayout.WIDE;
+					layout = ClientLayout.WIDE;
 					break;
 				default:
 					break;
 			}
 		}
 
-		if (layout != dimensionProvider.getLayout()) {
-			dimensionProvider.setLayout(layout);
+		if (layout != layoutSettings.getLayout()) {
+			layoutSettings.setLayout(layout);
 			return true;
 		}
 

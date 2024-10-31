@@ -5,6 +5,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
@@ -60,9 +61,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.BUTTON_BOX);
+		size = dimensionProvider.dimension(Component.BUTTON_BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-		Dimension button = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
+		Dimension button = dimensionProvider.dimension(Component.BOX_BUTTON);
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.OUT,

@@ -10,26 +10,17 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DimensionProvider {
 
-	public static final double MIN_SCALE_FACTOR = 0.5;
-	public static final double MAX_SCALE_FACTOR = 3;
-	public static final double BASE_SCALE_FACTOR = 1.0;
+	private final LayoutSettings layoutSettings;
 
+	public DimensionProvider(LayoutSettings layoutSettings) {
+		this.layoutSettings = layoutSettings;
+	}
 
-	private static final int SIDEBAR_WIDTH_L = 145;
-	private static final int SIDEBAR_WIDTH_P = 165;
-	private final double scaleStep = 0.05;
-	private double scale;
-	private ClientLayout layout;
-
-	public DimensionProvider(ClientLayout layout, double scale) {
-		this.layout = layout;
-		this.scale = scale;
+	public LayoutSettings getLayoutSettings() {
+		return layoutSettings;
 	}
 
 	public Dimension dimension(Component component) {
@@ -42,27 +33,11 @@ public class DimensionProvider {
 	}
 
 	public Dimension unscaledDimension(Component component) {
-		return component.dimension(layout);
+		return component.dimension(layoutSettings.getLayout());
 	}
 
 	public boolean isPitchPortrait() {
-		return layout.portrait;
-	}
-
-	public ClientLayout getLayout() {
-		return layout;
-	}
-
-	public void setLayout(ClientLayout layout) {
-		this.layout = layout;
-	}
-
-	public double getScale() {
-		return scale;
-	}
-
-	public void setScale(double scale) {
-		this.scale = scale;
+		return layoutSettings.getLayout().isPortrait();
 	}
 
 	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {
@@ -138,7 +113,7 @@ public class DimensionProvider {
 	}
 
 	public int scale(int size) {
-		return scale(size, scale);
+		return scale(size, layoutSettings.getScale());
 	}
 
 	public int scale(int size, double scale) {
@@ -146,7 +121,7 @@ public class DimensionProvider {
 	}
 
 	public double scale(double size) {
-		return (size * scale);
+		return (size * layoutSettings.getScale());
 	}
 
 	public Rectangle scale(Rectangle rectangle) {
@@ -154,13 +129,13 @@ public class DimensionProvider {
 	}
 
 	public BufferedImage scaleImage(BufferedImage pImage) {
-		if (scale == 1) {
+		if (layoutSettings.getScale() == 1) {
 			return pImage;
 		}
 
 		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
-		at.scale(scale, scale);
+		at.scale(layoutSettings.getScale(), layoutSettings.getScale());
 		AffineTransformOp scaleOp =
 			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 
@@ -188,103 +163,4 @@ public class DimensionProvider {
 		return border;
 	}
 
-	public double largerScale() {
-		return Math.min(MAX_SCALE_FACTOR, scale + scaleStep);
-	}
-
-	public double smallerScale() {
-		return Math.max(MIN_SCALE_FACTOR, scale - scaleStep);
-	}
-
-	public enum ClientLayout {
-		LANDSCAPE(false), PORTRAIT(true), SQUARE(true), WIDE(false);
-
-		private final boolean portrait;
-
-		ClientLayout(boolean portrait) {
-			this.portrait = portrait;
-		}
-	}
-
-	public enum Component {
-		FIELD_SQUARE(new Dimension(30, 30), new Dimension(57, 57)),
-		FIELD(fieldDimension(ClientLayout.LANDSCAPE), fieldDimension(ClientLayout.PORTRAIT), fieldDimension(ClientLayout.WIDE)),
-		CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
-		LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
-		REPLAY_CONTROL(new Dimension(389, 26), new Dimension(389, 26), new Dimension(260, 26), new Dimension(389, 26)),
-		TURN_DICE_STATUS(new Dimension(SIDEBAR_WIDTH_L, 92), new Dimension(SIDEBAR_WIDTH_P, 101), new Dimension(SIDEBAR_WIDTH_L, 92)),
-		RESOURCE(new Dimension(SIDEBAR_WIDTH_L, 168), new Dimension(SIDEBAR_WIDTH_P, 185), new Dimension(SIDEBAR_WIDTH_L, 484)),
-		BUTTON_BOX(new Dimension(SIDEBAR_WIDTH_L, 22), new Dimension(SIDEBAR_WIDTH_P, 24), new Dimension(SIDEBAR_WIDTH_L, 22)),
-		BOX(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 430)),
-		PLAYER_DETAIL(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 430)),
-		SIDEBAR(new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.LANDSCAPE)), new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(ClientLayout.PORTRAIT)), new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.WIDE))),
-		PLAYER_PORTRAIT(new Dimension(121, 147), new Dimension(133, 162), new Dimension(121, 147)),
-		PLAYER_PORTRAIT_OFFSET(new Dimension(3, 32), new Dimension(13, 32), new Dimension(3, 32)),
-		PLAYER_STAT_OFFSET(new Dimension(3, 179), new Dimension(4, 198), new Dimension(3, 179)),
-		PLAYER_STAT_BOX(new Dimension(28, 29), new Dimension(31, 30), new Dimension(28, 29)),
-		PLAYER_STAT_BOX_MISC(new Dimension(0, 14), new Dimension(0, 15), new Dimension(0, 14)),
-		PLAYER_SPP_OFFSET(new Dimension(8, 222), new Dimension(10, 245), new Dimension(8, 222)),
-		PLAYER_SKILL_OFFSET(new Dimension(8, 246), new Dimension(10, 270), new Dimension(8, 246)),
-		BOX_BUTTON(new Dimension(72, 22), new Dimension(82, 22), new Dimension(72, 22)),
-		END_TURN_BUTTON(new Dimension(143, 31), new Dimension(163, 34),new Dimension(143, 31)),
-		SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96), new Dimension(1486, 32)),
-		REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0), new Dimension(10, 0)),
-		REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0), new Dimension(36, 0)),
-		INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
-		RESOURCE_SLOT(new Dimension(46, 40)),
-		MAX_ICON(new Dimension(40, 40), new Dimension(76, 76)),
-		ABOUT_DIALOG(new Dimension(813, 542)),
-		CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834), new Dimension(1920, 1080)),
-		BOX_SQUARE(new Dimension(39, 39));
-
-		private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
-
-		Component(Dimension landscape, Dimension portrait, Dimension square, Dimension wide) {
-			dimensions.put(ClientLayout.LANDSCAPE, landscape);
-			dimensions.put(ClientLayout.PORTRAIT, portrait);
-			dimensions.put(ClientLayout.SQUARE, square);
-			dimensions.put(ClientLayout.WIDE, wide);
-		}
-
-		Component(Dimension landscape, Dimension portrait, Dimension wide) {
-			this(landscape, portrait, portrait, wide);
-		}
-
-		Component(Dimension landscape, Dimension wide) {
-			this(landscape, landscape, landscape, wide);
-		}
-
-		Component(Dimension landscape) {
-			this(landscape, landscape, landscape, landscape);
-		}
-
-		private static int sidebarHeight(ClientLayout layout) {
-			return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
-				.map(comp -> comp.dimension(layout)).mapToDouble(Dimension::getHeight).sum();
-		}
-
-		private static int fieldLongSide(ClientLayout layout) {
-			return FIELD_SQUARE.dimension(layout).width * 26 + 2;
-		}
-
-		private static int fieldShortSide(ClientLayout layout) {
-			return FIELD_SQUARE.dimension(layout).width * 15 + 2;
-		}
-
-		private static int fieldWidth(ClientLayout layout) {
-			return layout.portrait ? fieldShortSide(layout) : fieldLongSide(layout);
-		}
-
-		private static int fieldHeight(ClientLayout layout) {
-			return layout.portrait ? fieldLongSide(layout) : fieldShortSide(layout);
-		}
-
-		private static Dimension fieldDimension(ClientLayout layout) {
-			return new Dimension(fieldWidth(layout), fieldHeight(layout));
-		}
-
-		private Dimension dimension(ClientLayout layout) {
-			return dimensions.get(layout);
-		}
-	}
 }

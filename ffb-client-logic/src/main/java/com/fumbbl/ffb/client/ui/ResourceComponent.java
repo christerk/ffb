@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.StyleProvider;
@@ -60,7 +61,7 @@ public class ResourceComponent extends JPanel {
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.RESOURCE);
+		size = dimensionProvider.dimension(Component.RESOURCE);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -70,7 +71,7 @@ public class ResourceComponent extends JPanel {
 
 	private ResourceSlot[] createResourceSlots() {
 		ResourceSlot[] resourceSlots;
-		Dimension dimension = dimensionProvider.unscaledDimension(DimensionProvider.Component.RESOURCE_SLOT);
+		Dimension dimension = dimensionProvider.unscaledDimension(Component.RESOURCE_SLOT);
 		if (getSideBar().isHomeSide()) {
 			resourceSlots = new ResourceSlot[]{
 				new ResourceSlot(new Rectangle(0, 3 * (dimension.height + 2), dimension.width, dimension.height)),
@@ -161,12 +162,12 @@ public class ResourceComponent extends JPanel {
 		BufferedImage counter = iconCache.getUnscaledIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
 			.getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
-		Dimension counterSize = dimensionProvider.dimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		Dimension counterSize = dimensionProvider.dimension(Component.INDUCEMENT_COUNTER_SIZE);
 		g2d.drawImage(counter, dimensionProvider.scale(x + offset.width), dimensionProvider.scale(y + offset.height), counterSize.width, counterSize.height, null);
 	}
 
 	private Dimension offset(Rectangle location, int index) {
-		Dimension counterSize = dimensionProvider.unscaledDimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		Dimension counterSize = dimensionProvider.unscaledDimension(Component.INDUCEMENT_COUNTER_SIZE);
 		int width = index % 2 == 0 ? location.width - counterSize.width - 5 : 0;
 		int height = index < 2 ? location.height - counterSize.height : 0;
 		return new Dimension(width, height);
@@ -175,7 +176,7 @@ public class ResourceComponent extends JPanel {
 	private Rectangle counterCrop(int elementIndex) {
 		int row = elementIndex / 4;
 		int column = elementIndex % 4;
-		Dimension counterSize = dimensionProvider.unscaledDimension(DimensionProvider.Component.INDUCEMENT_COUNTER_SIZE);
+		Dimension counterSize = dimensionProvider.unscaledDimension(Component.INDUCEMENT_COUNTER_SIZE);
 		return new Rectangle(column * counterSize.width, row * counterSize.height, counterSize.width, counterSize.height);
 	}
 

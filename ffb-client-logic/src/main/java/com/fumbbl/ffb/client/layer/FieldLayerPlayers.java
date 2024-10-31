@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -40,7 +41,7 @@ public class FieldLayerPlayers extends FieldLayer {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
-			Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+			Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 			int x = dimension.width - (maxIconSize.width / 2);
 			int y = dimension.height - (maxIconSize.height / 2);
 			clear(x, y, maxIconSize.width, maxIconSize.height, true); // also adds updated area

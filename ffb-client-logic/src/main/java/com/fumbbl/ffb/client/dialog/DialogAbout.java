@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -54,7 +55,7 @@ public class DialogAbout extends Dialog {
 
 	private ImageIcon createAboutImageIcon(FantasyFootballClient pClient) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.ABOUT_DIALOG);
+		Dimension dimension = dimensionProvider.dimension(Component.ABOUT_DIALOG);
 
 		BufferedImage aboutImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
 

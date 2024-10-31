@@ -40,7 +40,7 @@ public class PlayerIconFactory {
 		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 		IconCache iconCache = client.getUserInterface().getIconCache();
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty), maxIconSize);
 	}
 
@@ -204,7 +204,7 @@ public class PlayerIconFactory {
 			}
 		}
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
 		icon = decorateIcon(icon, null, maxIconSize);
 
@@ -323,7 +323,7 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
-		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(Component.MAX_ICON);
 
 		if (decorationProperty1 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);

@@ -44,7 +44,7 @@ public class ClientParameters {
 	private int fPort;
 	private String fServer;
 	private String fBuild;
-	private DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
+	private ClientLayout layout = ClientLayout.LANDSCAPE;
 
 	public ClientMode getMode() {
 		return fMode;
@@ -94,7 +94,7 @@ public class ClientParameters {
 		return fBuild;
 	}
 
-	public DimensionProvider.ClientLayout getLayout() {
+	public ClientLayout getLayout() {
 		return layout;
 	}
 
@@ -135,7 +135,7 @@ public class ClientParameters {
 				} else if (_ARGUMENT_BUILD.equalsIgnoreCase(argument)) {
 					fBuild = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_LAYOUT.equalsIgnoreCase(argument)) {
-					layout = DimensionProvider.ClientLayout.valueOf(fetchArgument(pArguments, pos++));
+					layout = ClientLayout.valueOf(fetchArgument(pArguments, pos++));
 				} else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}

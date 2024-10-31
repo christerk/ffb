@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.client.ActionKeyGroup;
 import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
@@ -50,7 +51,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
+		Dimension size = dimensionProvider.dimension(Component.LOG);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

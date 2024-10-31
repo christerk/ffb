@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.UserInterface;
@@ -23,8 +24,8 @@ public class UtilClientPlayerDrag {
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
-		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
+		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
@@ -61,8 +62,8 @@ public class UtilClientPlayerDrag {
 
 	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension boxSquareSie = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
-		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		Dimension boxSquareSie = dimensionProvider.dimension(Component.BOX_SQUARE);
+		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
 		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
 			int y = (((pMouseY - boxTitleOffset) / boxSquareSie.height) * 3)

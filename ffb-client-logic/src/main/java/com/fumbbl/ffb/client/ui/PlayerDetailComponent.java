@@ -11,6 +11,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
@@ -93,7 +94,7 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_DETAIL);
+		size = dimensionProvider.dimension(Component.PLAYER_DETAIL);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -169,7 +170,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerPortraitAndPosition() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_PORTRAIT_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
@@ -195,7 +196,7 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
-			Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
+			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + metrics.getAscent() + x);
@@ -206,7 +207,7 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
-		Dimension portraitDimension = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_PORTRAIT);
+		Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 		int canvasWidth = portraitDimension.width;
 		int canvasHeight = portraitDimension.height;
 		int portraitWidth = playerPortrait.getWidth();
@@ -234,7 +235,7 @@ public class PlayerDetailComponent extends JPanel {
 
 		if (fPlayer != null) {
 
-			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
@@ -263,7 +264,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
-			int statBoxWidth = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX).width;
+			int statBoxWidth = dimensionProvider.dimension(Component.PLAYER_STAT_BOX).width;
 			int[] statSpacings;
 			if (dimensionProvider.isPitchPortrait()) {
 				statSpacings = new int[]{1, 1, 3, 4};
@@ -348,7 +349,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSpps() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SPP_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SPP_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(sppFont);
@@ -379,7 +380,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSkills() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_SKILL_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SKILL_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
@@ -500,8 +501,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier, String suffix) {
 		if (fPlayer != null) {
-			Dimension statBox = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX);
-			int innerHeight = dimensionProvider.dimension(DimensionProvider.Component.PLAYER_STAT_BOX_MISC).height;
+			Dimension statBox = dimensionProvider.dimension(Component.PLAYER_STAT_BOX);
+			int innerHeight = dimensionProvider.dimension(Component.PLAYER_STAT_BOX_MISC).height;
 
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(statFont);

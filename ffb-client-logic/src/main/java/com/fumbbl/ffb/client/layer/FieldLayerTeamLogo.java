@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -152,7 +153,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
   private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
-      Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+      Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
       IconCache iconCache = getClient().getUserInterface().getIconCache();
       BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
       if (teamLogo != null) {

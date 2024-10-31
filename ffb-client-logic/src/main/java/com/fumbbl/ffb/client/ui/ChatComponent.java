@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.client.ActionKeyGroup;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
@@ -110,7 +111,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
+		Dimension size = dimensionProvider.dimension(Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

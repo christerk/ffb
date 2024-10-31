@@ -58,6 +58,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final MouseEntropySource fMouseEntropySource;
 
 	private final DimensionProvider dimensionProvider;
+	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -73,7 +74,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			}
 		}
 
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout(), scale);
+		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+		dimensionProvider = new DimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient(), dimensionProvider);
 		fIconCache.init();
 		fontCache = new FontCache(dimensionProvider);
@@ -121,7 +123,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fScoreBar.initLayout();
 
 		JPanel panelContent;
-		switch (dimensionProvider.getLayout()) {
+		switch (layoutSettings.getLayout()) {
 			case PORTRAIT:
 				panelContent = portraitContent();
 				break;

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
@@ -110,7 +111,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 				offsetX = -1;
 			}
 
-			Dimension sidebarSize = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
+			Dimension sidebarSize = dimensionProvider.dimension(Component.SIDEBAR);
 			Dimension onPitch = dimensionProvider.mapToLocal(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
 			int x = sidebarSize.width + onPitch.width;
 			int y = onPitch.height;
