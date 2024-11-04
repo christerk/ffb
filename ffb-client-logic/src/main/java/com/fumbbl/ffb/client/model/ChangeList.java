@@ -16,6 +16,7 @@ public class ChangeList {
 			.addFeature("The Flashing Blade")
 			.addBugfix("Bloodlust: When a player that lost their tacklezone due to a failed Bloodlust roll in a previous turn used gaze or blitz action, failed Bloodlust again and then changed their action to a move action the target of that action lost their tacklezone.")
 			.addBugfix("Automarking: Markings for niggling injuries were not applied")
+			.addBugfix("Multiple Block: Special states like confusion (e.g. Bone-Head) where transferred from the first target to the second")
 		);
 
 		versions.add(new VersionChangeList("2.30.3")

@@ -3,14 +3,12 @@ package com.fumbbl.ffb.server.step.bb2020.multiblock;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.BlockTarget;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.IStepLabel;
@@ -42,6 +40,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 		add(StepParameterKey.DEFENDER_PUSHED);
 		add(StepParameterKey.FOLLOWUP_CHOICE);
 		add(StepParameterKey.USING_STAB);
+		add(StepParameterKey.OLD_DEFENDER_STATE);
 	}};
 
 	public StepMultipleBlockFork(GameState pGameState) {
