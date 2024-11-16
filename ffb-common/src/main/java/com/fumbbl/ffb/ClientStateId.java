@@ -18,7 +18,7 @@ public enum ClientStateId implements INamedObject {
 	RAIDING_PARTY("raidingParty"), SELECT_BLOCK_KIND("selectBlockKind"), MAXIMUM_CARNAGE("maximumCarnage"),
 	HIT_AND_RUN("hitAndRun"), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz"), TRICKSTER("trickster"),
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock"), KICK_EM_BLOCK("kickEmBlock"), KICK_EM_BLITZ("kickEmBlitz"),
-	THEN_I_STARTED_BLASTIN("thenIStartedBlastin");
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"), STAB("stab");
 
 	private final String fName;
 

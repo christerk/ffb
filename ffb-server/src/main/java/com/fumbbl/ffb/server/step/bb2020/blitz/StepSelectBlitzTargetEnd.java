@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -90,7 +91,8 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
         if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
           Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
           Player<?> target = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
-          game.getFieldModel().setPlayerState(target, targetSelectionState.getOldPlayerState());
+          PlayerState targetPlayerState = game.getFieldModel().getPlayerState(target);
+          game.getFieldModel().setPlayerState(target, targetPlayerState.removeSelectedBlitzTarget());
           game.setDefenderId(null);
           ServerUtilBlock.updateDiceDecorations(game);
           UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);

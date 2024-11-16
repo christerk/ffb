@@ -2,6 +2,7 @@ package com.fumbbl.ffb.marking;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -40,6 +41,8 @@ public class MarkerGenerator {
                 }
             }
         }
+
+        injuries.addAll(Arrays.stream(player.getLastingInjuries()).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
 
         Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
 

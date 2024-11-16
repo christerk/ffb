@@ -118,6 +118,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
 		"Can Sneak Extra Players Onto Pitch");
+	public static final ISkillProperty canStabAndMoveAfterwards = new NamedProperty("Can Stab And Move Afterwards");
 	public static final ISkillProperty canStabTeamMateForBall = new NamedProperty("Can Stab Team Mate For Ball");
 	public static final ISkillProperty canStandUpForFree = new NamedProperty("Can Stand Up For Free");
 	public static final ISkillProperty canStandUpTeamMates = new NamedProperty("Can Stand Up Team-Mates");

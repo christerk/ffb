@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -83,7 +84,8 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 				if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
 					Move moveGenerator = (Move) factory.forName(SequenceGenerator.Type.Move.name());
 					Player<?> target = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
-					game.getFieldModel().setPlayerState(target, targetSelectionState.getOldPlayerState());
+					PlayerState targetPlayerState = game.getFieldModel().getPlayerState(target);
+					game.getFieldModel().setPlayerState(target, targetPlayerState.changeSelectedGazeTarget(false));
 					game.setDefenderId(null);
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));

@@ -162,12 +162,12 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 				}
 				case NO_EFFECT:
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoOnEnd);
-					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeSelectedBlitzTarget());
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));
 					break;
 				case PRONE:
 					getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnSuccess);
-					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeAllTargetSelections());
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeSelectedBlitzTarget());
 					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(game.getDefenderId()),
 						ApothecaryMode.DEFENDER, true));
 					getResult().setAnimation(new Animation(AnimationType.BREATHE_FIRE, playerCoordinate, game.getFieldModel().getPlayerCoordinate(game.getDefender())));

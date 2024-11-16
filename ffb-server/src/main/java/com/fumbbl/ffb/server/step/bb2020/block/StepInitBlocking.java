@@ -184,9 +184,6 @@ public class StepInitBlocking extends AbstractStep {
 		if (game.getTurnMode() == TurnMode.SELECT_BLOCK_KIND) {
 			game.setTurnMode(game.getLastTurnMode());
 		}
-		if (actingPlayer.getPlayerAction() != null && actingPlayer.getPlayerAction().isKickingDowned()) {
-			actingPlayer.markSkillUsed(NamedProperties.canUseChainsawOnDownedOpponents);
-		}
 		if (fEndTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
@@ -202,8 +199,16 @@ public class StepInitBlocking extends AbstractStep {
 					game.setTurnMode(TurnMode.SELECT_BLOCK_KIND);
 					askForBlockKind = false;
 				} else {
-					if (actingPlayer.getPlayerAction().isPutrid()) {
-						actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
+
+					if (actingPlayer.getPlayerAction() != null) {
+						if (actingPlayer.getPlayerAction().isKickingDowned()) {
+							actingPlayer.markSkillUsed(NamedProperties.canUseChainsawOnDownedOpponents);
+						}
+
+						if (actingPlayer.getPlayerAction().isPutrid()) {
+							actingPlayer.markSkillUsed(NamedProperties.canUseVomitAfterBlock);
+						}
+
 					}
 
 					game.setDefenderId(defender.getId());
