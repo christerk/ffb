@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.fumbbl.ffb.client.LayoutSettings.BASE_SQUARE_SIZE;
 import static com.fumbbl.ffb.client.LayoutSettings.SIDEBAR_WIDTH_L;
 import static com.fumbbl.ffb.client.LayoutSettings.SIDEBAR_WIDTH_P;
 
 public enum Component {
 
-	FIELD_SQUARE(new Dimension(30, 30), new Dimension(57, 57)),
+	FIELD_SQUARE(new Dimension(BASE_SQUARE_SIZE, BASE_SQUARE_SIZE), new Dimension(57, 57)),
 	FIELD(fieldDimension(ClientLayout.LANDSCAPE), fieldDimension(ClientLayout.PORTRAIT), fieldDimension(ClientLayout.WIDE)),
 	CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
 	LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
@@ -35,7 +36,8 @@ public enum Component {
 	REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0), new Dimension(36, 0)),
 	INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
 	RESOURCE_SLOT(new Dimension(46, 40)),
-	MAX_ICON(new Dimension(40, 40), new Dimension(76, 76)),
+	MAX_ICON_PITCH(new Dimension(40, 40), new Dimension(76, 76)),
+	MAX_ICON_UI(new Dimension(40, 40)),
 	ABOUT_DIALOG(new Dimension(813, 542)),
 	CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834), new Dimension(1920, 1080)),
 	BOX_SQUARE(new Dimension(39, 39));

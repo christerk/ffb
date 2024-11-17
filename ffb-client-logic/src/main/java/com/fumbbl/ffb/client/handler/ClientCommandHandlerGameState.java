@@ -5,6 +5,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -143,7 +144,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 	private void addIconUrl(Set<String> pIconUrls, String pIconUrl) {
 		if (StringTool.isProvided(pIconUrl)) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			if (iconCache.getIconByUrl(pIconUrl) == null) {
+			if (iconCache.getIconByUrl(pIconUrl, RenderContext.UI) == null) {
 				pIconUrls.add(pIconUrl);
 			}
 		}

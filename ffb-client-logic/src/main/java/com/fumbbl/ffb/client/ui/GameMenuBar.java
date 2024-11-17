@@ -21,6 +21,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
@@ -1167,8 +1168,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		refreshUi |= updateOrientation();
 		refreshUi |= updateScaling();
+		refreshUi |= updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
@@ -1301,6 +1302,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (layout != layoutSettings.getLayout()) {
 			layoutSettings.setLayout(layout);
+			if (getClient().getUserInterface() != null) {
+				getClient().getUserInterface().getIconCache().clear();
+				FontCache fontCache = getClient().getUserInterface().getFontCache();
+				fontCache.clear();
+				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+			}
 			return true;
 		}
 
@@ -1752,7 +1759,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		UserInterface userInterface = getClient().getUserInterface();
 		PlayerIconFactory playerIconFactory = userInterface.getPlayerIconFactory();
-		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer));
+		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer, RenderContext.UI));
 		JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon);
 		playersMenuItem.addMouseListener(new MenuPlayerMouseListener(pPlayer));
 		pPlayersMenu.add(playersMenuItem);

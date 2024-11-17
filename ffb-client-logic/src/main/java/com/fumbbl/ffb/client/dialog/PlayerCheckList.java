@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -40,7 +41,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		for (int i = 0; i < playerIds.length; i++) {
 			Player<?> player = game.getPlayerById(playerIds[i]);
 			if (player != null) {
-				BufferedImage playerIcon = playerIconFactory.getIcon(client, player, true);
+				BufferedImage playerIcon = playerIconFactory.getIcon(client, player, true, RenderContext.ON_PITCH);
 				StringBuilder text = new StringBuilder();
 				text.append(player.getName());
 				if (ArrayTool.isProvided(descriptions)) {

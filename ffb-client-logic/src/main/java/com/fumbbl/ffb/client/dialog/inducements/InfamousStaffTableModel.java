@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
@@ -96,7 +97,7 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 				player.setName(pos.getName());
 				Object[] staff = new Object[5];
 				staff[0] = Boolean.FALSE;
-				staff[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
+				staff[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false, RenderContext.ON_PITCH));
 				staff[2] = pos.getName();
 				staff[3] = StringTool.formatThousands(pos.getCost());
 				staff[4] = player;

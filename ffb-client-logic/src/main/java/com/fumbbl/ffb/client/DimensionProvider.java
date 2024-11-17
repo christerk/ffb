@@ -4,9 +4,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 
 import javax.swing.border.TitledBorder;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -108,12 +106,25 @@ public class DimensionProvider {
 		return direction;
 	}
 
+	protected double effectiveScale(RenderContext renderContext) {
+		switch (renderContext) {
+			case ON_PITCH:
+				return layoutSettings.getScale() * Component.FIELD_SQUARE.dimension(layoutSettings.getLayout()).width / LayoutSettings.BASE_SQUARE_SIZE;
+			default:
+				return layoutSettings.getScale();
+		}
+	}
+
 	public Dimension scale(Dimension dimension) {
 		return new Dimension(scale(dimension.width), scale(dimension.height));
 	}
 
 	public int scale(int size) {
-		return scale(size, layoutSettings.getScale());
+		return scale(size, RenderContext.UI);
+	}
+
+	public int scale(int size, RenderContext renderContext) {
+		return scale(size, effectiveScale(renderContext));
 	}
 
 	public int scale(int size, double scale) {
@@ -121,21 +132,22 @@ public class DimensionProvider {
 	}
 
 	public double scale(double size) {
-		return (size * layoutSettings.getScale());
+		return (size * effectiveScale(RenderContext.UI));
 	}
 
 	public Rectangle scale(Rectangle rectangle) {
 		return new Rectangle(scale(rectangle.x), scale(rectangle.y), scale(rectangle.width), scale(rectangle.height));
 	}
 
-	public BufferedImage scaleImage(BufferedImage pImage) {
-		if (layoutSettings.getScale() == 1) {
+	public BufferedImage scaleImage(BufferedImage pImage, RenderContext renderContext) {
+		double effectiveScale = effectiveScale(renderContext);
+		if (effectiveScale == 1.0) {
 			return pImage;
 		}
 
-		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth()), scale(pImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage scaledImage = new BufferedImage(scale(pImage.getWidth(), renderContext), scale(pImage.getHeight(), renderContext), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
-		at.scale(layoutSettings.getScale(), layoutSettings.getScale());
+		at.scale(effectiveScale, effectiveScale);
 		AffineTransformOp scaleOp =
 			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 

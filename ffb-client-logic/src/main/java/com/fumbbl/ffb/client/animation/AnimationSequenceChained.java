@@ -8,6 +8,7 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
@@ -27,7 +28,7 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
 		Player<?> player = client.getGame().getPlayerById(animation.getThrownPlayerId());
-		BufferedImage icon = playerIconFactory.getIcon(client, player);
+		BufferedImage icon = playerIconFactory.getIcon(client, player, RenderContext.ON_PITCH);
 
 		return new AnimationSequenceChained(
 			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),

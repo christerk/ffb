@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Player;
@@ -141,7 +142,7 @@ public class MercenaryTableModel extends AbstractTableModel {
 						Object[] mercenary = new Object[6];
 						mercenary[0] = Boolean.FALSE;
 						mercenary[1] = new ImageIcon(
-							playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
+							playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false, RenderContext.ON_PITCH));
 						mercenary[2] = pos.getName();
 						mercenary[3] = StringTool.formatThousands(pos.getCost() + mercExtraCost);
 						mercenary[4] = "";

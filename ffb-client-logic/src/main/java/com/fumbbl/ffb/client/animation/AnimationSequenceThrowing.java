@@ -8,6 +8,7 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
@@ -103,7 +104,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
 		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
 		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,
-			pAnimation.isWithBall(), false);
+			pAnimation.isWithBall(), false, RenderContext.ON_PITCH);
 		return new AnimationSequenceThrowing(AnimationType.THROW_TEAM_MATE, playerIcon, pAnimation.getStartCoordinate(),
 			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH, pClient.getUserInterface().getDimensionProvider());
 	}

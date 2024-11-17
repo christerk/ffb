@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
@@ -189,7 +190,7 @@ public class PlayerDetailComponent extends JPanel {
 			String positionNameString = positionName.toString();
 			g2d.setFont(positionFont);
 			FontMetrics metrics = g2d.getFontMetrics();
-			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl);
+			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, RenderContext.UI);
 			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
 			if (playerPortrait != null) {
 				drawPortrait(x, y, g2d, playerPortrait);

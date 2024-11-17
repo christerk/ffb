@@ -9,6 +9,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
@@ -119,7 +120,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pBoxSlot.getPlayer());
 			if (playerCoordinate != null) {
-				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer());
+				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer(), RenderContext.UI);
 				if (icon != null) {
 					Graphics2D g2d = fImage.createGraphics();
 					int x = pBoxSlot.getLocation().x + ((pBoxSlot.getLocation().width - icon.getWidth()) / 2);

@@ -155,6 +155,7 @@ public class IconCache {
 			try (FileReader fileReader = new FileReader(mapFileName);
 					 BufferedReader reader = new BufferedReader(fileReader)) {
 
+				//noinspection deprecation
 				JsonObject jsonObject = JsonObject.readFrom(reader);
 				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
 
@@ -256,25 +257,26 @@ public class IconCache {
 
 	}
 
-	public BufferedImage getIconByProperty(String pIconProperty) {
+	public BufferedImage getIconByProperty(String pIconProperty, RenderContext renderContext) {
 		if (!StringTool.isProvided(pIconProperty)) {
 			return null;
 		}
 		String iconUrl = getClient().getProperty(pIconProperty);
-		BufferedImage icon = getIconByUrl(iconUrl);
+		BufferedImage icon = getIconByUrl(iconUrl, renderContext);
 		if ((icon == null) && loadIconFromArchive(iconUrl)) {
-			icon = getIconByUrl(iconUrl);
+			icon = getIconByUrl(iconUrl, renderContext);
 		}
 		return icon;
 	}
 
-	public BufferedImage getIconByUrl(String pUrl) {
-		BufferedImage bufferedImage = scaledIcons.get(pUrl);
+	public BufferedImage getIconByUrl(String pUrl, RenderContext renderContext) {
+		String key = pUrl + "_" + renderContext.name();
+		BufferedImage bufferedImage = scaledIcons.get(key);
 		if (bufferedImage == null) {
 			bufferedImage = fIconByKey.get(pUrl);
 			if (bufferedImage != null) {
-				bufferedImage = dimensionProvider.scaleImage(bufferedImage);
-				scaledIcons.put(pUrl, bufferedImage);
+				bufferedImage = dimensionProvider.scaleImage(bufferedImage, renderContext);
+				scaledIcons.put(key, bufferedImage);
 			}
 		}
 		return bufferedImage;
@@ -298,9 +300,9 @@ public class IconCache {
 
 
 	public BufferedImage getPitch(Game pGame, Weather pWeather) {
-		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather));
+		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather), RenderContext.UI);
 		if (pWeather == Weather.INTRO || weatherPitch == null) {
-			return getIconByProperty(IIconProperty.PITCH_INTRO);
+			return getIconByProperty(IIconProperty.PITCH_INTRO, RenderContext.UI);
 		} else {
 			return weatherPitch;
 		}
@@ -426,42 +428,42 @@ public class IconCache {
 		if (selected) {
 			switch (direction) {
 				case NORTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED, RenderContext.ON_PITCH);
 				case NORTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED, RenderContext.ON_PITCH);
 				case EAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED, RenderContext.ON_PITCH);
 				case SOUTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED, RenderContext.ON_PITCH);
 				case SOUTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED, RenderContext.ON_PITCH);
 				case SOUTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED, RenderContext.ON_PITCH);
 				case WEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED, RenderContext.ON_PITCH);
 				case NORTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED, RenderContext.ON_PITCH);
 				default:
 					return null;
 			}
 		} else {
 			switch (direction) {
 				case NORTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH, RenderContext.ON_PITCH);
 				case NORTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST, RenderContext.ON_PITCH);
 				case EAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST, RenderContext.ON_PITCH);
 				case SOUTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST, RenderContext.ON_PITCH);
 				case SOUTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH, RenderContext.ON_PITCH);
 				case SOUTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST, RenderContext.ON_PITCH);
 				case WEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST, RenderContext.ON_PITCH);
 				case NORTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST, RenderContext.ON_PITCH);
 				default:
 					return null;
 			}
@@ -498,7 +500,7 @@ public class IconCache {
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
-		return getIconByProperty(iconProperty);
+		return getIconByProperty(iconProperty, RenderContext.ON_PITCH);
 	}
 
 	private String findPitchUrl(Game pGame, Weather pWeather) {
@@ -617,7 +619,7 @@ public class IconCache {
 				break;
 		}
 		if (iconProperty != null) {
-			return getIconByProperty(iconProperty);
+			return getIconByProperty(iconProperty, RenderContext.ON_PITCH);
 		} else {
 			return null;
 		}
@@ -626,17 +628,17 @@ public class IconCache {
 	public BufferedImage getDiceIcon(int pRoll) {
 		switch (pRoll) {
 			case 1:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_1);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_1, RenderContext.ON_PITCH);
 			case 2:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_2);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_2, RenderContext.ON_PITCH);
 			case 3:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_3);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_3, RenderContext.ON_PITCH);
 			case 4:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_4);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_4, RenderContext.ON_PITCH);
 			case 5:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_5);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_5, RenderContext.ON_PITCH);
 			case 6:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_6);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_6, RenderContext.ON_PITCH);
 			default:
 				break;
 		}

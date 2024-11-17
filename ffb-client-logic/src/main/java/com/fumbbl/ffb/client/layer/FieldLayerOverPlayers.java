@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -60,7 +61,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
 			boolean homePlayer = pGame.getTeamHome().hasPlayer(pThrownPlayer);
 			BufferedImage icon = playerIconFactory.getBasicIcon(getClient(), pThrownPlayer, homePlayer, false, pWithBall,
-					false);
+					false, RenderContext.ON_PITCH);
 			if (icon != null) {
 				g2d.drawImage(icon, findCenteredIconUpperLeftX(icon, pCoordinate),
 						findCenteredIconUpperLeftY(icon, pCoordinate), null);

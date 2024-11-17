@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
@@ -137,7 +138,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				player.setName(pos.getName());
 				Object[] star = new Object[5];
 				star[0] = Boolean.FALSE;
-				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
+				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false, RenderContext.ON_PITCH));
 				star[2] = pos.getName();
 				star[3] = StringTool.formatThousands(pos.getCost());
 				star[4] = player;

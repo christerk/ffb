@@ -198,7 +198,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(150));
 			fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100));
 			fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(dimensionProvider.scale(120));
-			fTableMercenaries.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON).height + 2);
+			fTableMercenaries.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH).height + 2);
 			fTableMercenaries.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, 148)));
 			JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
 			JPanel mecLabel = new JPanel();
@@ -236,7 +236,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		playerTable.getColumnModel().getColumn(1).setPreferredWidth(dimensionProvider.scale(50));
 		playerTable.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(270));
 		playerTable.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100));
-		playerTable.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON).height + 2);
+		playerTable.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH).height + 2);
 		playerTable.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, height)));
 		JScrollPane scrollPane = new JScrollPane(playerTable);
 

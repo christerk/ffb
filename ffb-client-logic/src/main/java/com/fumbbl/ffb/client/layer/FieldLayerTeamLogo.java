@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.util.StringTool;
@@ -155,7 +156,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
       Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
       IconCache iconCache = getClient().getUserInterface().getIconCache();
-      BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam));
+      BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam), RenderContext.ON_PITCH);
       if (teamLogo != null) {
         Graphics2D g2d = getImage().createGraphics();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
