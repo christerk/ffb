@@ -36,7 +36,7 @@ public class PlayerIconFactory {
 		IconCache iconCache = client.getUserInterface().getIconCache();
 
 		Dimension maxIconSize = dimensionProvider.dimension(renderContext.getMaxIconComponent());
-		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty), maxIconSize);
+		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty, renderContext), maxIconSize);
 	}
 
 	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
@@ -205,17 +205,17 @@ public class PlayerIconFactory {
 
 		if (pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED, renderContext), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB, renderContext), maxIconSize);
 			}
 		}
 
 		if (pWithBall && !pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED, renderContext), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL, renderContext), maxIconSize);
 			}
 		}
 		return icon;
@@ -321,16 +321,16 @@ public class PlayerIconFactory {
 		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(renderContext.getMaxIconComponent());
 
 		if (decorationProperty1 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1, renderContext), maxIconSize);
 		}
 		if (decorationProperty2 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2), maxIconSize);
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2, renderContext), maxIconSize);
 		}
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
 				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, renderContext), maxIconSize);
 			}
 		}
 

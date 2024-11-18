@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.UserInterface;
 
 /**
@@ -14,7 +15,7 @@ import com.fumbbl.ffb.client.UserInterface;
 public final class UtilClientCursor {
 
 	public static void setCustomCursor(UserInterface pUserInterface, String pCursorIconProperty) {
-		BufferedImage customCursorIcon = pUserInterface.getIconCache().getIconByProperty(pCursorIconProperty);
+		BufferedImage customCursorIcon = pUserInterface.getIconCache().getIconByProperty(pCursorIconProperty, RenderContext.ON_PITCH);
 		Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(customCursorIcon, new Point(0, 0),
 				"CustomCursor");
 		pUserInterface.getFieldComponent().setCursor(customCursor);

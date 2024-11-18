@@ -2,10 +2,7 @@ package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.inducement.Card;
@@ -79,7 +76,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 
 	private static BufferedImage createCardFront(FantasyFootballClient pClient, Card pCard) {
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
-		BufferedImage frontIcon = iconCache.getIconByProperty(pCard.getType().getCardFront());
+		BufferedImage frontIcon = iconCache.getIconByProperty(pCard.getType().getCardFront(), RenderContext.ON_PITCH);
 		if (frontIcon == null) {
 			return null;
 		}

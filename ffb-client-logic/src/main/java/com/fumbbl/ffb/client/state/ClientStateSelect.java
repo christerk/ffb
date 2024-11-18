@@ -1,13 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.CardEffect;
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
@@ -185,27 +178,27 @@ public class ClientStateSelect extends ClientState {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (isBlockActionAvailable(pPlayer)) {
 			JMenuItem blockAction = new JMenuItem(dimensionProvider(), blockActionLabel(pPlayer),
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_BLOCK));
 			blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 			blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
 			menuItemList.add(blockAction);
 		}
 		if (isMultiBlockActionAvailable(pPlayer)) {
 			JMenuItem multiBlockAction = new JMenuItem(dimensionProvider(), "Multiple Block",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MUTIPLE_BLOCK)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MUTIPLE_BLOCK));
 			multiBlockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
 			multiBlockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK, 0));
 			menuItemList.add(multiBlockAction);
 		}
 		if (isThrowBombActionAvailable(pPlayer)) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Throw Bomb Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_BOMB));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOMB);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOMB, 0));
 			menuItemList.add(moveAction);
 			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
 				JMenuItem stnAction = new JMenuItem(dimensionProvider(), "Shot To Nothing Bomb",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BOMB)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_BOMB));
 				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB);
 				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, 0));
 				menuItemList.add(stnAction);
@@ -213,34 +206,34 @@ public class ClientStateSelect extends ClientState {
 		}
 		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isHypnoticGazeActionAvailable(true, pPlayer, NamedProperties.canGainGaze)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze (Zoat)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isMoveActionAvailable(pPlayer)) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
 		}
 		if (isBlitzActionAvailable(pPlayer)) {
 			JMenuItem blitzAction = new JMenuItem(dimensionProvider(), "Blitz Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
 			blitzAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLITZ);
 			blitzAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLITZ, 0));
 			menuItemList.add(blitzAction);
 			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainFrenzyForBlitz)) {
 				JMenuItem blitzWithFrenzyAction = new JMenuItem(dimensionProvider(), "Frenzied Rush Blitz",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
 				blitzWithFrenzyAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
 				blitzWithFrenzyAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, 0));
 				menuItemList.add(blitzWithFrenzyAction);
@@ -248,7 +241,7 @@ public class ClientStateSelect extends ClientState {
 		}
 		if (isFoulActionAvailable(pPlayer)) {
 			JMenuItem foulAction = new JMenuItem(dimensionProvider(), "Foul Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_FOUL));
 			foulAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FOUL);
 			foulAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FOUL, 0));
 			menuItemList.add(foulAction);
@@ -257,13 +250,13 @@ public class ClientStateSelect extends ClientState {
 		String suffix = treacherousAvailable ? " (Treacherous)" : "";
 		if (isPassActionAvailable(pPlayer, treacherousAvailable)) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Action" + suffix,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 			if (UtilCards.hasUnusedSkillWithProperty(pPlayer, NamedProperties.canGainHailMary)) {
 				JMenuItem stnAction = new JMenuItem(dimensionProvider(), "Shot To Nothing",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
 				stnAction.setMnemonic(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
 				stnAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, 0));
 				menuItemList.add(stnAction);
@@ -271,49 +264,49 @@ public class ClientStateSelect extends ClientState {
 		}
 		if (isHandOverActionAvailable(pPlayer, treacherousAvailable)) {
 			JMenuItem handOverAction = new JMenuItem(dimensionProvider(), "Hand Over Action" + suffix,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HAND_OVER)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER));
 			handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
 			handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
 			menuItemList.add(handOverAction);
 		}
 		if (isThrowTeamMateActionAvailable(pPlayer)) {
 			JMenuItem throwTeamMateAction = new JMenuItem(dimensionProvider(), "Throw Team-Mate Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
 			throwTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE);
 			throwTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE, 0));
 			menuItemList.add(throwTeamMateAction);
 		}
 		if (isKickTeamMateActionAvailable(pPlayer)) {
 			JMenuItem kickTeamMateAction = new JMenuItem(dimensionProvider(), "Kick Team-Mate Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
 			kickTeamMateAction.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE);
 			kickTeamMateAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, 0));
 			menuItemList.add(kickTeamMateAction);
 		}
 		if (isBeerBarrelBashAvailable(pPlayer)) {
 			JMenuItem beerBashItem = new JMenuItem(dimensionProvider(), "Beer Barrel Bash",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_BEER_BARREL_BASH));
 			beerBashItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH);
 			beerBashItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, 0));
 			menuItemList.add(beerBashItem);
 		}
 		if (isAllYouCanEatAvailable(pPlayer)) {
 			JMenuItem allYouCanEatItem = new JMenuItem(dimensionProvider(), "All You Can Eat",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_ALL_YOU_CAN_EAT)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_ALL_YOU_CAN_EAT));
 			allYouCanEatItem.setMnemonic(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT);
 			allYouCanEatItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT, 0));
 			menuItemList.add(allYouCanEatItem);
 		}
 		if (isKickEmBlockAvailable(pPlayer)) {
 			JMenuItem kickEmItem = new JMenuItem(dimensionProvider(), "Kick 'em while they are down! (Block)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_KICK_EM_BLOCK)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_KICK_EM_BLOCK));
 			kickEmItem.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK);
 			kickEmItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK, 0));
 			menuItemList.add(kickEmItem);
 		}
 		if (isKickEmBlitzAvailable(pPlayer)) {
 			JMenuItem kickEmItem = new JMenuItem(dimensionProvider(), "Kick 'em while they are down! (Blitz)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_KICK_EM_BLITZ)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_KICK_EM_BLITZ));
 			kickEmItem.setMnemonic(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ);
 			kickEmItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ, 0));
 			menuItemList.add(kickEmItem);
@@ -323,14 +316,14 @@ public class ClientStateSelect extends ClientState {
 		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem(dimensionProvider(), "Recover from Confusion & End Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAND_UP));
 			confusionAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RECOVER);
 			confusionAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RECOVER, 0));
 			menuItemList.add(confusionAction);
 		}
 		if (isRecoverFromGazeActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem(dimensionProvider(), "Recover from Gaze & End Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAND_UP));
 			confusionAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RECOVER);
 			confusionAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RECOVER, 0));
 			menuItemList.add(confusionAction);
@@ -339,14 +332,14 @@ public class ClientStateSelect extends ClientState {
 			&& pPlayer.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
 			&& !game.getTurnData().isBlitzUsed()) {
 			JMenuItem standUpAction = new JMenuItem(dimensionProvider(), "Stand Up & End Move (using Blitz)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAND_UP));
 			standUpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ);
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ, 0));
 			menuItemList.add(standUpAction);
 		}
 		if (isStandUpActionAvailable(pPlayer)) {
 			JMenuItem standUpAction = new JMenuItem(dimensionProvider(), "Stand Up & End Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAND_UP)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAND_UP));
 			standUpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAND_UP);
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP, 0));
 			menuItemList.add(standUpAction);
@@ -708,7 +701,7 @@ public class ClientStateSelect extends ClientState {
 
 	protected JMenuItem createFlashingBladeItem(IconCache iconCache) {
 		JMenuItem item = new JMenuItem(dimensionProvider(), "The Flashing Blade",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_THE_FLASHING_BLADE)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_THE_FLASHING_BLADE));
 		item.setMnemonic(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE);
 		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, 0));
 		return item;

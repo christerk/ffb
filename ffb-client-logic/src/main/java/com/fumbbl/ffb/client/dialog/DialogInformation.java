@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -85,7 +86,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
-			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
+			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, RenderContext.ON_PITCH);
 			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}

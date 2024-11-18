@@ -9,6 +9,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -130,7 +131,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 
 	private void drawSweetSpot(String iconProperty, FieldCoordinate coordinate) {
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty, RenderContext.ON_PITCH);
 		draw(icon, coordinate, 1.0f);
 	}
 }

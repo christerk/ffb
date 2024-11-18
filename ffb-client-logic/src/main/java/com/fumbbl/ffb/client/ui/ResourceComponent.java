@@ -4,10 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -121,9 +118,9 @@ public class ResourceComponent extends JPanel {
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED, RenderContext.UI);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE, RenderContext.UI);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -140,7 +137,7 @@ public class ResourceComponent extends JPanel {
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.drawImage(scaledSlot.resourceIcon, scaledSlot.area.x, scaledSlot.area.y, scaledSlot.area.width, scaledSlot.area.height, null);
 			if (!pSlot.isEnabled()) {
-				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED);
+				BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED, RenderContext.UI);
 				g2d.drawImage(disabledIcon, scaledSlot.area.x + (scaledSlot.area.width - disabledIcon.getWidth()) / 2,
 					scaledSlot.area.y + (scaledSlot.area.height - disabledIcon.getHeight()) / 2, null);
 			}

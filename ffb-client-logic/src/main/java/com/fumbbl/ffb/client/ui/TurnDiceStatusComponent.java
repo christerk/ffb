@@ -6,15 +6,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogEndTurn;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -143,9 +135,9 @@ public class TurnDiceStatusComponent extends JPanel
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED, RenderContext.UI);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE, RenderContext.UI);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -206,7 +198,7 @@ public class TurnDiceStatusComponent extends JPanel
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage buttonImage = iconCache.getIconByProperty(
-					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON);
+					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, RenderContext.UI);
 			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.setFont(buttonFont);
 			g2d.setColor(Color.BLACK);
@@ -223,7 +215,7 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fTurnMode != null) && (fTurnMode != TurnMode.START_GAME) && (fFinished == null)) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING);
+			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING, RenderContext.UI);
 			g2d.drawImage(playingImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.dispose();
 		}
@@ -243,7 +235,7 @@ public class TurnDiceStatusComponent extends JPanel
 				break;
 			}
 			if (imageProperty != null) {
-				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty);
+				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty, RenderContext.UI);
 				g2d.drawImage(statusImage, buttonArea.x, buttonArea.y, buttonArea.width, size.height, null);
 			}
 			g2d.setColor(Color.BLACK);

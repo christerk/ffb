@@ -191,14 +191,14 @@ public class UtilClientStateBlocking {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
 			JMenuItem stabAction = new JMenuItem(dimensionProvider, "Stab Opponent",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+				pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_STAB));
 			stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);
 			stabAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAB, 0));
 			menuItemList.add(stabAction);
 		}
 		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
 			JMenuItem chainsawAction = new JMenuItem(dimensionProvider, "Chainsaw",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
+					pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_CHAINSAW));
 			chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
 			chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
 			menuItemList.add(chainsawAction);
@@ -206,7 +206,7 @@ public class UtilClientStateBlocking {
 		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
 		if (vomitSkill.isPresent() && !multiBlock) {
 			JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
+					pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_VOMIT));
 			projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
 			projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
 			menuItemList.add(projectileVomit);
@@ -215,7 +215,7 @@ public class UtilClientStateBlocking {
 		Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
 		if (fireSkill.isPresent() && !multiBlock) {
 			JMenuItem breatheFire = new JMenuItem(dimensionProvider, fireSkill.get().getName(),
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE)));
+					pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_BREATHE_FIRE));
 			breatheFire.setMnemonic(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
 			breatheFire.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, 0));
 			menuItemList.add(breatheFire);
@@ -226,7 +226,7 @@ public class UtilClientStateBlocking {
 		}
 
 		JMenuItem blockAction = new JMenuItem(dimensionProvider, "Block Opponent",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
+				pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_BLOCK));
 		blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
 		blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
 		menuItemList.add(blockAction);
@@ -262,7 +262,7 @@ public class UtilClientStateBlocking {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
 		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
 		JMenuItem menuItem = new JMenuItem(dimensionProvider, "Gored By The Bull",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+				pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
 		return menuItem;

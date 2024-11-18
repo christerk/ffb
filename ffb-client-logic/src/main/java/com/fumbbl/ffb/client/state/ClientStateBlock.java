@@ -16,8 +16,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,7 +137,7 @@ public class ClientStateBlock extends ClientState {
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		if (actingPlayer.isSufferingBloodLust()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);

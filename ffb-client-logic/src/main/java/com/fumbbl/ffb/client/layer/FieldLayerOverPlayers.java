@@ -215,7 +215,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty);
+			BufferedImage spellIcon = iconCache.getIconByProperty(iconProperty, RenderContext.ON_PITCH);
 			if (pFaded) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 			}
@@ -238,7 +238,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			Dimension dimension = dimensionProvider.mapToLocal(fMarkerCoordinate);
 			Graphics2D g2d = getImage().createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL);
+			BufferedImage fireballIcon = iconCache.getIconByProperty(IIconProperty.GAME_FIREBALL_SMALL, RenderContext.ON_PITCH);
 			if (pFaded) {
 				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f));
 			}

@@ -15,23 +15,14 @@ import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlockKind;
-import com.fumbbl.ffb.model.BlockTarget;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientStateSynchronousMultiBlock extends ClientState {
@@ -276,7 +267,7 @@ public class ClientStateSynchronousMultiBlock extends ClientState {
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		if (actingPlayer.isSufferingBloodLust()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);

@@ -5,6 +5,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 
@@ -60,7 +61,7 @@ public class DialogAbout extends Dialog {
 		BufferedImage aboutImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g2d = aboutImage.createGraphics();
-		g2d.drawImage(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_SPLASH_SCREEN), 0, 0,
+		g2d.drawImage(pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_SPLASH_SCREEN, RenderContext.ON_PITCH), 0, 0,
 			aboutImage.getWidth(), aboutImage.getHeight(), null);
 
 		g2d.setColor(Color.WHITE);

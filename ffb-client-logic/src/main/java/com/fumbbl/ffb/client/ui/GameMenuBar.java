@@ -1482,7 +1482,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Game game = getClient().getGame();
 		Arrays.sort(pCards, Card.createComparator());
 		Icon cardIcon = new ImageIcon(
-			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, RenderContext.UI));
 		for (Card card : pCards) {
 			Player<?> player = null;
 			if (card.getTarget().isPlayedOnPlayer()) {
@@ -1677,7 +1677,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				JMenu cardMenu = new JMenu(dimensionProvider, cardTypeText.toString());
 				pInducementMenu.add(cardMenu);
 				ImageIcon cardIcon = new ImageIcon(
-					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, RenderContext.UI));
 				for (Card card : cardList) {
 					if (pInducementSet.isAvailable(card)) {
 						String cardText = "<html>" +

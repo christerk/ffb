@@ -118,9 +118,9 @@ public class PlayerDetailComponent extends JPanel {
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED, RenderContext.UI);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE, RenderContext.UI);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -135,9 +135,9 @@ public class PlayerDetailComponent extends JPanel {
 				homePlayer = !homePlayer;
 			}
 			if (homePlayer) {
-				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_RED);
+				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_RED, RenderContext.UI);
 			} else {
-				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE);
+				overlay = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_DETAIL_BLUE, RenderContext.UI);
 			}
 			g2d.drawImage(overlay, 0, 0, size.width, size.height, null);
 		}
@@ -191,7 +191,7 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.setFont(positionFont);
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, RenderContext.UI);
-			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT);
+			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, RenderContext.UI);
 			if (playerPortrait != null) {
 				drawPortrait(x, y, g2d, playerPortrait);
 			} else {
@@ -342,7 +342,7 @@ public class PlayerDetailComponent extends JPanel {
 		if (ArrayTool.isProvided(game.getFieldModel().getCards(getPlayer()))) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage overlayCard = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD);
+			BufferedImage overlayCard = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, RenderContext.UI);
 			g2d.drawImage(overlayCard, 76, 36, null);
 			g2d.dispose();
 		}

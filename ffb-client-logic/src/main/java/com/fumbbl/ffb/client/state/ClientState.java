@@ -9,13 +9,8 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -365,10 +360,14 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAB));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
 		return menuItem;
+	}
+
+	public ImageIcon createMenuIcon(IconCache iconCache, String iconProperty) {
+		return new ImageIcon(iconCache.getIconByProperty(iconProperty, RenderContext.ON_PITCH));
 	}
 
 	protected boolean isCatchOfTheDayAvailable(ActingPlayer actingPlayer) {
@@ -386,7 +385,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_CATCH_OF_THE_DAY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
 		return menuItem;
@@ -413,7 +412,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_WISDOM));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
 		return menuItem;
@@ -422,7 +421,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected void 	addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = playerActivationUsed() ? "End Action" : deselectPlayerLabel();
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
@@ -471,7 +470,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
@@ -492,7 +491,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
 		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_LOOK_INTO_MY_EYES));
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
 		return lookItem;
@@ -516,7 +515,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_BALEFUL_HEX));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
 		return menuItem;
@@ -539,7 +538,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBlackInkItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
 		return menuItem;
@@ -560,7 +559,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
 		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_STARTED_BLASTIN));
 		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
 		return blastinItem;

@@ -159,11 +159,11 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage icon;
 			if (isActive()) {
-				icon = iconCache.getIconByProperty(fIconPropertyActive);
+				icon = iconCache.getIconByProperty(fIconPropertyActive, RenderContext.UI);
 			} else if (isSelected()) {
-				icon = iconCache.getIconByProperty(fIconPropertySelected);
+				icon = iconCache.getIconByProperty(fIconPropertySelected, RenderContext.UI);
 			} else {
-				icon = iconCache.getIconByProperty(fIconProperty);
+				icon = iconCache.getIconByProperty(fIconProperty, RenderContext.UI);
 			}
 			pGraphics2D.drawImage(icon, fPosition.x, fPosition.y, null);
 		}

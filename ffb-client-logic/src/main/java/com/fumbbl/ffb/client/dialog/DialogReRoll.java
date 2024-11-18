@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -133,7 +134,7 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, RenderContext.ON_PITCH);
 		infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 		infoPanel.add(Box.createHorizontalStrut(5));
 		infoPanel.add(messagePanel);

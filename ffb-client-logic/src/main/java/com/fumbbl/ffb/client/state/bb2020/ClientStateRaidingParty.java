@@ -16,8 +16,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +87,7 @@ public class ClientStateRaidingParty extends ClientState {
 
 	protected JMenuItem createCancelRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Raiding Party",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;

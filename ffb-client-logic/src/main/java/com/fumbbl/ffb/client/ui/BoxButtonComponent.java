@@ -5,11 +5,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.FieldModel;
 
 import javax.swing.JPanel;
@@ -117,9 +113,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED, RenderContext.UI);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE, RenderContext.UI);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -136,9 +132,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			Rectangle buttonLocation = fButtonLocations.get(pBox);
 			BufferedImage buttonImage;
 			if ((pBox == fOpenBox) || (pBox == fSelectedBox)) {
-				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON_SELECTED);
+				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON_SELECTED, RenderContext.UI);
 			} else {
-				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON);
+				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON, RenderContext.UI);
 			}
 			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, buttonLocation.width, buttonLocation.height, null);
 			g2d.setFont(buttonFont);

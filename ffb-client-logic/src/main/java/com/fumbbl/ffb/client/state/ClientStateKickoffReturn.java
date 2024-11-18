@@ -1,11 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
@@ -18,8 +13,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +69,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
@@ -83,13 +77,13 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		if (actingPlayer.getPlayer() == pPlayer) {
 			String endMoveActionLabel = game.getActingPlayer().hasActed() ? "End Move" : "Deselect Player";
 			JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);
 		}
 		if (menuItemList.size() > 0) {
-			createPopupMenu(menuItemList.toArray(new JMenuItem[menuItemList.size()]));
+			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}
 	}

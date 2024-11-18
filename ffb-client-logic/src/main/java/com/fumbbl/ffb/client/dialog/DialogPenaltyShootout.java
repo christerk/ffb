@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -175,7 +176,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 
 	private Icon icon(int roll) {
-		return new ImageIcon(getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty(roll)));
+		return new ImageIcon(getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty(roll), RenderContext.ON_PITCH));
 	}
 
 	private String iconProperty(int roll) {

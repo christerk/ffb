@@ -40,7 +40,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequencePass(FantasyFootballClient pClient,
 																																			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.PASS,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -48,7 +48,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceThrowBomb(FantasyFootballClient pClient,
 			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.THROW_BOMB,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -56,7 +56,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceThrowARock(FantasyFootballClient pClient,
 			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.THROW_A_ROCK,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -64,7 +64,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceKick(FantasyFootballClient pClient,
 																																			Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.KICK,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.KICK, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -74,7 +74,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceHailMaryPass(FantasyFootballClient pClient,
 																																							Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_PASS,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -93,7 +93,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient,
 																																							Animation pAnimation) {
 		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_BOMB,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}
@@ -112,7 +112,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	public static AnimationSequenceThrowing createAnimationSequenceThrowKeg(FantasyFootballClient pClient,
 																																					Animation pAnimation) {
 		return new AnimationSequenceThrowing(pAnimation.getAnimationType(),
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH, RenderContext.ON_PITCH),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
 			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
 	}

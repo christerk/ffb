@@ -15,8 +15,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +86,7 @@ public class ClientStateHitAndRun extends ClientState {
 
 	protected JMenuItem createCancelItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Hit And Run",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HIT_AND_RUN)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_HIT_AND_RUN));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN, 0));
 		return menuItem;

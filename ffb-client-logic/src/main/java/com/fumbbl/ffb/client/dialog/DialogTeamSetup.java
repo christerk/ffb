@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JList;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
@@ -60,7 +61,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		fButtonCancel.addActionListener(this);
 
 		BufferedImage deleteIcon = getClient().getUserInterface().getIconCache()
-				.getIconByProperty(IIconProperty.GAME_DELETE);
+				.getIconByProperty(IIconProperty.GAME_DELETE, RenderContext.ON_PITCH);
 		fButtonDelete = new JButton(dimensionProvider(), new ImageIcon(deleteIcon));
 		fButtonDelete.addActionListener(this);
 

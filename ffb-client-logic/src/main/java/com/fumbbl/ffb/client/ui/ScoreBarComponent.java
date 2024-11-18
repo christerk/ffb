@@ -3,15 +3,7 @@ package com.fumbbl.ffb.client.ui;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.ClientLayout;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -90,7 +82,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			String scorebarBackground = layoutSettings.getLayout() ==
 				ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
-			BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
+			BufferedImage background = iconCache.getIconByProperty(scorebarBackground, RenderContext.UI);
 			g2d.drawImage(background, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
@@ -175,7 +167,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (spectatorCount > 0) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS);
+			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS, RenderContext.UI);
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(spectatorFont);
 			String spectatorString = Integer.toString(spectatorCount);
@@ -189,11 +181,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			if (fCoachBannedHome) {
-				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME);
+				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME, RenderContext.UI);
 				g2d.drawImage(coachBannedImage, coachBannedHome.x, coachBannedHome.y, null);
 			}
 			if (fCoachBannedAway) {
-				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY);
+				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY, RenderContext.UI);
 				g2d.drawImage(coachBannedImage, coachBannedAway.x, coachBannedAway.y, null);
 			}
 			g2d.dispose();
@@ -225,7 +217,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			}
 			if (StringTool.isProvided(weatherIconProperty)) {
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
-				BufferedImage weatherIcon = iconCache.getIconByProperty(weatherIconProperty);
+				BufferedImage weatherIcon = iconCache.getIconByProperty(weatherIconProperty, RenderContext.UI);
 				Graphics2D g2d = fImage.createGraphics();
 				g2d.drawImage(weatherIcon, weatherLocation.x, weatherLocation.y, null);
 				g2d.dispose();
