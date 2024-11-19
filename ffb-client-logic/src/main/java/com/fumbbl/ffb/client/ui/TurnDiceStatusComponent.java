@@ -103,13 +103,13 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS);
+		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON);
+		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON, RenderContext.UI);
 		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
 	}
 
@@ -118,7 +118,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private int statusTextWidth() {
-		return size.width - dimensionProvider.scale(10);
+		return size.width - dimensionProvider.scale(10, RenderContext.UI);
 	}
 
 	private void drawBackground() {
@@ -258,7 +258,7 @@ public class TurnDiceStatusComponent extends JPanel
 				if (y <= 3 * fontMetrics.getHeight()) {
 					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20)); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20, RenderContext.UI)); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -266,7 +266,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int lineHeight = dimensionProvider.scale(38);
+		int lineHeight = dimensionProvider.scale(38, RenderContext.UI);
 		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
 		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
@@ -279,13 +279,13 @@ public class TurnDiceStatusComponent extends JPanel
 				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
-				int dieWidth = dimensionProvider.scale(39);
+				int dieWidth = dimensionProvider.scale(39, RenderContext.UI);
 				if (length > 2) {
-					x = dimensionProvider.scale(15) + (dieWidth * i);
+					x = dimensionProvider.scale(15, RenderContext.UI) + (dieWidth * i);
 				} else if (length > 1) {
-					x = dimensionProvider.scale(34) + (dieWidth * i);
+					x = dimensionProvider.scale(34, RenderContext.UI) + (dieWidth * i);
 				} else {
-					x = dimensionProvider.scale(53);
+					x = dimensionProvider.scale(53, RenderContext.UI);
 				}
 				g2d.drawImage(diceIcon, x, y, null);
 			}
@@ -324,11 +324,11 @@ public class TurnDiceStatusComponent extends JPanel
 
 		FontCache fontCache = client.getUserInterface().getFontCache();
 
-		buttonFont = fontCache.font(Font.BOLD, 14);
+		buttonFont = fontCache.font(Font.BOLD, 14, RenderContext.UI);
 
-		diceFont = fontCache.font(Font.BOLD, 11);
-		statusTitleFont = fontCache.font(Font.BOLD, 12);
-		statusMessageFont = fontCache.font(Font.PLAIN, 12);
+		diceFont = fontCache.font(Font.BOLD, 11, RenderContext.UI);
+		statusTitleFont = fontCache.font(Font.BOLD, 12, RenderContext.UI);
+		statusMessageFont = fontCache.font(Font.PLAIN, 12, RenderContext.UI);
 
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (!StringTool.isEqual(fStatusTitle, clientData.getStatusTitle())

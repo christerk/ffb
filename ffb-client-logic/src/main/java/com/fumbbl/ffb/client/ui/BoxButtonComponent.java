@@ -57,9 +57,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.BUTTON_BOX);
+		size = dimensionProvider.dimension(Component.BUTTON_BOX, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-		Dimension button = dimensionProvider.dimension(Component.BOX_BUTTON);
+		Dimension button = dimensionProvider.dimension(Component.BOX_BUTTON, RenderContext.UI);
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.OUT,
@@ -156,7 +156,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void refresh() {
-		buttonFont = fontCache.font(Font.BOLD, 11);
+		buttonFont = fontCache.font(Font.BOLD, 11, RenderContext.UI);
 
 		drawBackground();
 		drawButton(BoxType.RESERVES);

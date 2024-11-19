@@ -72,7 +72,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.BOX);
+		size = dimensionProvider.dimension(Component.BOX, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -107,7 +107,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
-		boxFont = fontCache.font(Font.BOLD, 12);
+		boxFont = fontCache.font(Font.BOLD, 12, RenderContext.UI);
 
 		drawBackground();
 		drawPlayers();
@@ -158,7 +158,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int drawPlayersInBox(int pXCoordinate, int pYPosition) {
 		FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 		PlayerState boxState = findPlayerStateForXCoordinate(pXCoordinate);
-		Dimension dimension = dimensionProvider.dimension(Component.BOX_SQUARE);
+		Dimension dimension = dimensionProvider.dimension(Component.BOX_SQUARE, RenderContext.UI);
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
@@ -227,7 +227,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(Component.FIELD).width - dimensionProvider.scale(135);
+					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5, RenderContext.UI) : dimensionProvider.dimension(Component.FIELD, RenderContext.UI).width - dimensionProvider.scale(135, RenderContext.UI);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}

@@ -21,8 +21,8 @@ public class DimensionProvider {
 		return layoutSettings;
 	}
 
-	public Dimension dimension(Component component) {
-		return scale(unscaledDimension(component));
+	public Dimension dimension(Component component, RenderContext renderContext) {
+		return scale(unscaledDimension(component), renderContext);
 	}
 
 	public Dimension dimension(Component component, double scale) {
@@ -46,31 +46,29 @@ public class DimensionProvider {
 		return fieldCoordinate;
 	}
 
-	public int fieldSquareSize() {
-		return fieldSquareSize(1);
+	public int fieldSquareSize(RenderContext renderContext) {
+		return fieldSquareSize(1, renderContext);
 	}
 
-	public int fieldSquareSize(double factor) {
-		return (int) scale(unscaledFieldSquare() * factor);
+	public int fieldSquareSize(double factor, RenderContext renderContext) {
+		return (int) scale(unscaledFieldSquare() * factor, renderContext);
 	}
 
 	public int unscaledFieldSquare() {
 		return unscaledDimension(Component.FIELD_SQUARE).width;
 	}
 
-	public int imageOffset() {
-		return fieldSquareSize() / 2;
+	public int imageOffset(RenderContext renderContext) {
+		return fieldSquareSize(renderContext) / 2;
 	}
 
 	public Dimension mapToLocal(int x, int y, boolean addImageOffset) {
 		int offset = addImageOffset ? unscaledFieldSquare() / 2 : 0;
 
-
 		if (isPitchPortrait()) {
-			return scale(new Dimension(y * unscaledFieldSquare() + offset, (25 - x) * unscaledFieldSquare() + offset));
+			return scale(new Dimension(y * unscaledFieldSquare() + offset, (25 - x) * unscaledFieldSquare() + offset), RenderContext.ON_PITCH);
 		}
-		return scale(new Dimension(x * unscaledFieldSquare() + offset, y * unscaledFieldSquare() + offset));
-
+		return scale(new Dimension(x * unscaledFieldSquare() + offset, y * unscaledFieldSquare() + offset), RenderContext.ON_PITCH);
 	}
 
 	public Dimension mapToLocal(FieldCoordinate fieldCoordinate) {
@@ -115,28 +113,24 @@ public class DimensionProvider {
 		}
 	}
 
-	public Dimension scale(Dimension dimension) {
-		return new Dimension(scale(dimension.width), scale(dimension.height));
-	}
-
-	public int scale(int size) {
-		return scale(size, RenderContext.UI);
+	public Dimension scale(Dimension dimension, RenderContext renderContext) {
+		return new Dimension(scale(dimension.width, renderContext), scale(dimension.height, renderContext));
 	}
 
 	public int scale(int size, RenderContext renderContext) {
 		return scale(size, effectiveScale(renderContext));
 	}
 
-	public int scale(int size, double scale) {
+	private int scale(int size, double scale) {
 		return (int) (size * scale);
 	}
 
-	public double scale(double size) {
-		return (size * effectiveScale(RenderContext.UI));
+	public double scale(double size, RenderContext renderContext) {
+		return (size * effectiveScale(renderContext));
 	}
 
-	public Rectangle scale(Rectangle rectangle) {
-		return new Rectangle(scale(rectangle.x), scale(rectangle.y), scale(rectangle.width), scale(rectangle.height));
+	public Rectangle scale(Rectangle rectangle, RenderContext renderContext) {
+		return new Rectangle(scale(rectangle.x, renderContext), scale(rectangle.y, renderContext), scale(rectangle.width, renderContext), scale(rectangle.height, renderContext));
 	}
 
 	public BufferedImage scaleImage(BufferedImage pImage, RenderContext renderContext) {
@@ -159,18 +153,18 @@ public class DimensionProvider {
 		return scaledImage;
 	}
 
-	public void scaleFont(java.awt.Component component) {
+	public void scaleFont(java.awt.Component component, RenderContext renderContext) {
 		Font font = component.getFont();
 		if (font != null) {
-			component.setFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
+			component.setFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize(), renderContext)));
 		}
 	}
 
 
-	public TitledBorder scaleFont(TitledBorder border) {
+	public TitledBorder scaleFont(TitledBorder border, RenderContext renderContext) {
 		Font font = border.getTitleFont();
 		if (font != null) {
-			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize())));
+			border.setTitleFont(new Font(font.getFamily(), font.getStyle(), scale(font.getSize(), renderContext)));
 		}
 		return border;
 	}

@@ -35,7 +35,7 @@ public class PlayerIconFactory {
 		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 		IconCache iconCache = client.getUserInterface().getIconCache();
 
-		Dimension maxIconSize = dimensionProvider.dimension(renderContext.getMaxIconComponent());
+		Dimension maxIconSize = dimensionProvider.dimension(renderContext.getMaxIconComponent(), RenderContext.UI);
 		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty, renderContext), maxIconSize);
 	}
 
@@ -56,11 +56,11 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer) {
+	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, RenderContext renderContext) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
 			g2d.setColor(homePlayer ? styleProvider.getPlayerMarkerHome() : styleProvider.getPlayerMarkerAway());
-			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			g2d.setFont(fontCache.font(Font.BOLD, 12, renderContext));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
 			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
@@ -183,7 +183,7 @@ public class PlayerIconFactory {
 					FontCache fontCache = pClient.getUserInterface().getFontCache();
 					Graphics2D g2d = icon.createGraphics();
 					g2d.drawImage(playerIcon, 2, 2, null);
-					g2d.setFont(fontCache.font(Font.BOLD, fontSize));
+					g2d.setFont(fontCache.font(Font.BOLD, fontSize, renderContext));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
 					int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2;
@@ -199,7 +199,7 @@ public class PlayerIconFactory {
 			}
 		}
 
-		Dimension maxIconSize = dimensionProvider.dimension(renderContext.getMaxIconComponent());
+		Dimension maxIconSize = dimensionProvider.dimension(renderContext.getMaxIconComponent(), RenderContext.UI);
 
 		icon = decorateIcon(icon, null, maxIconSize);
 
@@ -318,7 +318,7 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
-		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(renderContext.getMaxIconComponent());
+		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(renderContext.getMaxIconComponent(), RenderContext.UI);
 
 		if (decorationProperty1 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1, renderContext), maxIconSize);
@@ -337,7 +337,7 @@ public class PlayerIconFactory {
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
 			String homeText = playerMarker.getHomeText();
-			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer);
+			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer, renderContext);
 		}
 
 		return icon;

@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -92,7 +93,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
 		centerPanel.add(leftPanel);
-		int ten = dimensionProvider.scale(10);
+		int ten = dimensionProvider.scale(10, RenderContext.ON_PITCH);
 		centerPanel.add(Box.createHorizontalStrut(ten));
 		centerPanel.add(rightPanel);
 
@@ -102,12 +103,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	}
 
 	protected JPanel buttonPanel() {
-		resetButton = new JButton(dimensionProvider(), "Reset");
+		resetButton = new JButton(dimensionProvider(), "Reset", RenderContext.ON_PITCH);
 		resetButton.addActionListener(this);
 		resetButton.addKeyListener(this);
 		resetButton.setMnemonic((int) 'R');
 
-		okButton = new JButton(dimensionProvider(), "Buy & Close");
+		okButton = new JButton(dimensionProvider(), "Buy & Close", RenderContext.ON_PITCH);
 		okButton.addActionListener(this);
 		okButton.addKeyListener(this);
 		okButton.setMnemonic((int) 'B');
@@ -115,7 +116,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(okButton);
-		int five = dimensionProvider.scale(5);
+		int five = dimensionProvider.scale(5, RenderContext.ON_PITCH);
 		buttonPanel.add(Box.createHorizontalStrut(five));
 		buttonPanel.add(resetButton);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(five, five, five, five));
@@ -125,14 +126,14 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	private JPanel buildLeftPanel(GameOptions gameOptions) {
 
-		int verticalStrut = dimensionProvider.scale(10);
+		int verticalStrut = dimensionProvider.scale(10, RenderContext.ON_PITCH);
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-		labelPanel.add(new JLabel(dimensionProvider(), "Inducements:"));
+		labelPanel.add(new JLabel(dimensionProvider(), "Inducements:", RenderContext.ON_PITCH));
 		labelPanel.add(Box.createHorizontalGlue());
 
 		leftPanel.add(labelPanel);
@@ -166,7 +167,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		tableModelInfamousStaff = new InfamousStaffTableModel(this, gameOptions);
 		int maxStaff = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STAFF_MAX)).getValue();
 
-		int verticalStrut = dimensionProvider.scale(10);
+		int verticalStrut = dimensionProvider.scale(10, RenderContext.ON_PITCH);
 		if (maxStaff > 0) {
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
 			tableInfamousStaff = new InfamousStaffTable(dimensionProvider, tableModelInfamousStaff);
@@ -193,17 +194,17 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			DefaultTableCellRenderer mercAlignedRenderer = new DefaultTableCellRenderer();
 			mercAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
 			fTableMercenaries.getColumnModel().getColumn(3).setCellRenderer(mercAlignedRenderer);
-			fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(dimensionProvider.scale(30));
-			fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(dimensionProvider.scale(50));
-			fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(150));
-			fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100));
-			fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(dimensionProvider.scale(120));
-			fTableMercenaries.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH).height + 2);
-			fTableMercenaries.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, 148)));
+			fTableMercenaries.getColumnModel().getColumn(0).setPreferredWidth(dimensionProvider.scale(30, RenderContext.ON_PITCH));
+			fTableMercenaries.getColumnModel().getColumn(1).setPreferredWidth(dimensionProvider.scale(50, RenderContext.ON_PITCH));
+			fTableMercenaries.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(150, RenderContext.ON_PITCH));
+			fTableMercenaries.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100, RenderContext.ON_PITCH));
+			fTableMercenaries.getColumnModel().getColumn(4).setPreferredWidth(dimensionProvider.scale(120, RenderContext.ON_PITCH));
+			fTableMercenaries.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH, RenderContext.UI).height + 2);
+			fTableMercenaries.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, 148), RenderContext.ON_PITCH));
 			JScrollPane scrollPaneMec = new JScrollPane(fTableMercenaries);
 			JPanel mecLabel = new JPanel();
 			mecLabel.setLayout(new BoxLayout(mecLabel, BoxLayout.X_AXIS));
-			mecLabel.add(new JLabel(dimensionProvider(), "Mercenaries (varying Gold):"));
+			mecLabel.add(new JLabel(dimensionProvider(), "Mercenaries (varying Gold):", RenderContext.ON_PITCH));
 			mecLabel.add(Box.createHorizontalGlue());
 
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
@@ -232,21 +233,21 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		DefaultTableCellRenderer rightAlignedRenderer = new DefaultTableCellRenderer();
 		rightAlignedRenderer.setHorizontalAlignment(JLabel.RIGHT);
 		playerTable.getColumnModel().getColumn(3).setCellRenderer(rightAlignedRenderer);
-		playerTable.getColumnModel().getColumn(0).setPreferredWidth(dimensionProvider.scale(30));
-		playerTable.getColumnModel().getColumn(1).setPreferredWidth(dimensionProvider.scale(50));
-		playerTable.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(270));
-		playerTable.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100));
-		playerTable.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH).height + 2);
-		playerTable.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, height)));
+		playerTable.getColumnModel().getColumn(0).setPreferredWidth(dimensionProvider.scale(30, RenderContext.ON_PITCH));
+		playerTable.getColumnModel().getColumn(1).setPreferredWidth(dimensionProvider.scale(50, RenderContext.ON_PITCH));
+		playerTable.getColumnModel().getColumn(2).setPreferredWidth(dimensionProvider.scale(270, RenderContext.ON_PITCH));
+		playerTable.getColumnModel().getColumn(3).setPreferredWidth(dimensionProvider.scale(100, RenderContext.ON_PITCH));
+		playerTable.setRowHeight(dimensionProvider.dimension(Component.MAX_ICON_PITCH, RenderContext.UI).height + 2);
+		playerTable.setPreferredScrollableViewportSize(dimensionProvider.scale(new Dimension(350, height), RenderContext.ON_PITCH));
 		JScrollPane scrollPane = new JScrollPane(playerTable);
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-		labelPanel.add(new JLabel(dimensionProvider(), label));
+		labelPanel.add(new JLabel(dimensionProvider(), label, RenderContext.ON_PITCH));
 		labelPanel.add(Box.createHorizontalGlue());
 
 		rightPanel.add(labelPanel);
-		rightPanel.add(Box.createVerticalStrut(dimensionProvider.scale(10)));
+		rightPanel.add(Box.createVerticalStrut(dimensionProvider.scale(10, RenderContext.ON_PITCH)));
 		rightPanel.add(scrollPane);
 		rightPanel.add(Box.createVerticalGlue());
 	}

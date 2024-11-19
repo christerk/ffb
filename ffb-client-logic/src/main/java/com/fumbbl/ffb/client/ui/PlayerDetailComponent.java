@@ -95,7 +95,7 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.PLAYER_DETAIL);
+		size = dimensionProvider.dimension(Component.PLAYER_DETAIL, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -171,7 +171,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerPortraitAndPosition() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(Component.PLAYER_PORTRAIT_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_PORTRAIT_OFFSET, RenderContext.UI);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
@@ -197,7 +197,7 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
 				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
-			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
+			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT, RenderContext.UI);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + metrics.getAscent() + x);
@@ -208,7 +208,7 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
-		Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
+		Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT, RenderContext.UI);
 		int canvasWidth = portraitDimension.width;
 		int canvasHeight = portraitDimension.height;
 		int portraitWidth = playerPortrait.getWidth();
@@ -236,7 +236,7 @@ public class PlayerDetailComponent extends JPanel {
 
 		if (fPlayer != null) {
 
-			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET, RenderContext.UI);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
@@ -265,7 +265,7 @@ public class PlayerDetailComponent extends JPanel {
 				}
 			}
 
-			int statBoxWidth = dimensionProvider.dimension(Component.PLAYER_STAT_BOX).width;
+			int statBoxWidth = dimensionProvider.dimension(Component.PLAYER_STAT_BOX, RenderContext.UI).width;
 			int[] statSpacings;
 			if (dimensionProvider.isPitchPortrait()) {
 				statSpacings = new int[]{1, 1, 3, 4};
@@ -279,19 +279,19 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = strength - position.getStrength();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0]) + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0], RenderContext.UI) + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = agility - position.getAgility();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1], RenderContext.UI) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassingWithModifiers(game);
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2], RenderContext.UI) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3]) + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3], RenderContext.UI) + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -350,7 +350,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSpps() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SPP_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SPP_OFFSET, RenderContext.UI);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(sppFont);
@@ -381,7 +381,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawPlayerSkills() {
 		if (fPlayer != null) {
-			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SKILL_OFFSET);
+			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SKILL_OFFSET, RenderContext.UI);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			Game game = getSideBar().getClient().getGame();
@@ -502,8 +502,8 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawStatBox(Graphics2D pG2d, int pX, int pY, int pValue, boolean pStatIsRed, StatsDrawingModifier modifier, String suffix) {
 		if (fPlayer != null) {
-			Dimension statBox = dimensionProvider.dimension(Component.PLAYER_STAT_BOX);
-			int innerHeight = dimensionProvider.dimension(Component.PLAYER_STAT_BOX_MISC).height;
+			Dimension statBox = dimensionProvider.dimension(Component.PLAYER_STAT_BOX, RenderContext.UI);
+			int innerHeight = dimensionProvider.dimension(Component.PLAYER_STAT_BOX_MISC, RenderContext.UI).height;
 
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(statFont);
@@ -559,12 +559,12 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void refresh() {
-		nameFont = fontCache.font(Font.PLAIN, 12);
-		statFont = fontCache.font(Font.BOLD, 13);
-		positionFont = fontCache.font(Font.PLAIN, 11);
-		sppFont = fontCache.font(Font.BOLD, 11);
-		skillFont = fontCache.font(Font.BOLD, 11);
-		skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, 11);
+		nameFont = fontCache.font(Font.PLAIN, 12, RenderContext.UI);
+		statFont = fontCache.font(Font.BOLD, 13, RenderContext.UI);
+		positionFont = fontCache.font(Font.PLAIN, 11, RenderContext.UI);
+		sppFont = fontCache.font(Font.BOLD, 11, RenderContext.UI);
+		skillFont = fontCache.font(Font.BOLD, 11, RenderContext.UI);
+		skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, 11, RenderContext.UI);
 
 		ClientData clientData = getSideBar().getClient().getClientData();
 		int displayMode = findDisplayMode();

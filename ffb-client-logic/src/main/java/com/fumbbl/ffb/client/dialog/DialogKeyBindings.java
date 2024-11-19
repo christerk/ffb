@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.BoxLayout;
@@ -28,8 +29,8 @@ public class DialogKeyBindings extends Dialog {
 		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\">";
 
 		JScrollPane keyBindingsPane = new JScrollPane(createKeyBindingsEditorPane());
-		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider().scale(20),
-			dimensionProvider().scale(500)));
+		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider().scale(20, RenderContext.UI),
+			dimensionProvider().scale(500, RenderContext.UI)));
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));

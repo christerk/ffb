@@ -2,10 +2,7 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.*;
 
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
@@ -37,7 +34,7 @@ public abstract class FieldLayer {
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.FIELD);
+		size = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}
@@ -133,7 +130,7 @@ public abstract class FieldLayer {
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			int fieldX = dimension.width;
 			int fieldY = dimension.height;
-			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize(), pUpdateArea);
+			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), pUpdateArea);
 		}
 	}
 

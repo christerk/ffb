@@ -46,7 +46,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 	}
 
 	public void initLayout(DimensionProvider dimensionProvider) {
-		size = dimensionProvider.dimension(Component.REPLAY_CONTROL);
+		size = dimensionProvider.dimension(Component.REPLAY_CONTROL, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
 		setLayout(null);
@@ -54,8 +54,8 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		setPreferredSize(size);
 		setMaximumSize(size);
 
-		iconGap = dimensionProvider.dimension(Component.REPLAY_ICON_GAP).width;
-		iconWidth = dimensionProvider.dimension(Component.REPLAY_ICON).width;
+		iconGap = dimensionProvider.dimension(Component.REPLAY_ICON_GAP, RenderContext.UI).width;
+		iconWidth = dimensionProvider.dimension(Component.REPLAY_ICON, RenderContext.UI).width;
 
 		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
 			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
@@ -94,7 +94,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		if (replayer.isRunning()) {
 			g2d.setColor(Color.BLACK);
 			FontCache fontCache = getClient().getUserInterface().getFontCache();
-			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			g2d.setFont(fontCache.font(Font.BOLD, 12, RenderContext.UI));
 			String speed = ((replayer.getReplaySpeed() > 0) ? replayer.getReplaySpeed() : "0.5") +
 				"x";
 			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(speed, g2d);

@@ -33,7 +33,7 @@ public class DialogAbout extends Dialog {
 
 		super(pClient, "About Fantasy Football", true);
 
-		JLabel aboutLabel = new JLabel(dimensionProvider(), createAboutImageIcon(pClient));
+		JLabel aboutLabel = new JLabel(dimensionProvider(), createAboutImageIcon(pClient), RenderContext.ON_PITCH);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(aboutLabel, BorderLayout.CENTER);
@@ -56,7 +56,7 @@ public class DialogAbout extends Dialog {
 
 	private ImageIcon createAboutImageIcon(FantasyFootballClient pClient) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension dimension = dimensionProvider.dimension(Component.ABOUT_DIALOG);
+		Dimension dimension = dimensionProvider.dimension(Component.ABOUT_DIALOG, RenderContext.ON_PITCH);
 
 		BufferedImage aboutImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
 
@@ -66,7 +66,7 @@ public class DialogAbout extends Dialog {
 
 		g2d.setColor(Color.WHITE);
 
-		g2d.setFont(fontCache().font(Font.BOLD, 17));
+		g2d.setFont(fontCache().font(Font.BOLD, 17, RenderContext.ON_PITCH));
 
 		String versionInfo = getClient().getParameters().getBuild();
 		if (versionInfo == null) {
@@ -77,36 +77,36 @@ public class DialogAbout extends Dialog {
 		int offsetBoldLine = 24;
 		int offsetLine = 19;
 		Rectangle2D versionBounds = g2d.getFontMetrics().getStringBounds(versionInfo, g2d);
-		g2d.drawString(versionInfo, dimension.width - dimensionProvider.scale(offsetBoldLine) - (int) versionBounds.getWidth(), dimensionProvider.scale(155));
+		g2d.drawString(versionInfo, dimension.width - dimensionProvider.scale(offsetBoldLine, RenderContext.ON_PITCH) - (int) versionBounds.getWidth(), dimensionProvider.scale(155, RenderContext.ON_PITCH));
 
 		int y = 130;
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Headcoach: BattleLore");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for providing ideas, encouragement and the occasional kick in the butt.");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += 0, RenderContext.ON_PITCH), "Headcoach: BattleLore");
+		drawText(g2d, dimensionProvider.scale(offsetLine, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "thank you for providing ideas, encouragement and the occasional kick in the butt.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Assistant Coaches: WhatBall, Garion and Lakrillo");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for helping to to pull the cart along.");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH), "Assistant Coaches: WhatBall, Garion and Lakrillo");
+		drawText(g2d, dimensionProvider.scale(offsetLine, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "thank you for helping to to pull the cart along.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Sports Director: Christer");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for the patience and energy to tackle the long road with me.");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH), "Sports Director: Christer");
+		drawText(g2d, dimensionProvider.scale(offsetLine, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "thank you for the patience and energy to tackle the long road with me.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Lifetime Luxury Suite Owner: SkiJunkie");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you doing it first and giving a vision to follow.");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH), "Lifetime Luxury Suite Owner: SkiJunkie");
+		drawText(g2d, dimensionProvider.scale(offsetLine, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "thank you doing it first and giving a vision to follow.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Grounds Keepers: Java, Tussock");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH), "Grounds Keepers: Java, Tussock");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine),
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH),
 			"Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Official supplier of game balls: Qaz");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Thanks for the hats: ArrestedDevelopment");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you all for making FFB look and sound great.");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "Official supplier of game balls: Qaz");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "Thanks for the hats: ArrestedDevelopment");
+		drawText(g2d, dimensionProvider.scale(offsetLine, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetLine, RenderContext.ON_PITCH), "thank you all for making FFB look and sound great.");
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Cheerleaders & Pest Control:");
+		drawBold(g2d, dimensionProvider.scale(10, RenderContext.ON_PITCH), dimensionProvider.scale(y += offsetBoldLine, RenderContext.ON_PITCH), "Cheerleaders & Pest Control:");
 
 		y += 3;
 		for (String playtester : _PLAYTESTERS) {
-			drawSmallText(g2d, dimensionProvider.scale(18), dimensionProvider.scale(y += 13), playtester);
+			drawSmallText(g2d, dimensionProvider.scale(18, RenderContext.ON_PITCH), dimensionProvider.scale(y += 13, RenderContext.ON_PITCH), playtester);
 		}
 
 		g2d.dispose();
@@ -117,7 +117,7 @@ public class DialogAbout extends Dialog {
 
 
 	private void drawSizedText(Graphics2D pG2d, int pX, int pY, String pText, int size) {
-		pG2d.setFont(fontCache().font(Font.PLAIN, size));
+		pG2d.setFont(fontCache().font(Font.PLAIN, size, RenderContext.ON_PITCH));
 		pG2d.drawString(pText, pX, pY);
 	}
 
@@ -130,7 +130,7 @@ public class DialogAbout extends Dialog {
 	}
 
 	private void drawBold(Graphics2D pG2d, int pX, int pY, String pText) {
-		pG2d.setFont(fontCache().font(Font.BOLD, 12));
+		pG2d.setFont(fontCache().font(Font.BOLD, 12, RenderContext.ON_PITCH));
 		pG2d.drawString(pText, pX, pY);
 	}
 

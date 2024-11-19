@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
@@ -24,14 +25,14 @@ public class DialogChatCommands extends Dialog {
 
 		super(pClient, "Chat Commands", true);
 
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
-		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11) + "px\"><b>";
-		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\">";
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\">";
 
 		JScrollPane aboutPane = new JScrollPane(createEditorPane());
 
 		Game game = getClient().getGame();
-		int offset = dimensionProvider().scale(150);
+		int offset = dimensionProvider().scale(150, RenderContext.UI);
 		Dimension clientDimension = getClient().getUserInterface().getSize();
 
 		if (game.isTesting()) {

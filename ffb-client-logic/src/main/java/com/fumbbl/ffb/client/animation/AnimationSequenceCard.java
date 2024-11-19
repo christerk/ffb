@@ -43,7 +43,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 	public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
 		String cardBackProperty = pAnimation.getCard().getType().getCardBack();
 		BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
-		return new AnimationSequenceCard(pClient.getUserInterface().getDimensionProvider().dimension(Component.FIELD),
+		return new AnimationSequenceCard(pClient.getUserInterface().getDimensionProvider().dimension(Component.FIELD, RenderContext.UI),
 			new AnimationFrame[]{new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
 				new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100), new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
 				new AnimationFrame(cardBackProperty, 0.8f, 0.6, 100), new AnimationFrame(cardBackProperty, 0.9f, 0.7, 100),
@@ -87,7 +87,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 		g2d.drawImage(frontIcon, 0, 0, null);
 		g2d.setColor(Color.BLACK);
 		FontCache fontCache = pClient.getUserInterface().getFontCache();
-		g2d.setFont(fontCache.font(Font.BOLD, 22));
+		g2d.setFont(fontCache.font(Font.BOLD, 2, RenderContext.ON_PITCH));
 		FontMetrics metrics = g2d.getFontMetrics();
 		for (int i = 0; i < lines.length; i++) {
 			Rectangle2D textBounds = metrics.getStringBounds(lines[i], g2d);

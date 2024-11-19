@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -54,8 +51,8 @@ public class ChatLogDocument extends DefaultStyledDocument {
 
 		// initStyles
 
-		int defaultFontSize = dimensionProvider.scale(12);
-		int largerSize = dimensionProvider.scale(14);
+		int defaultFontSize = dimensionProvider.scale(12, RenderContext.UI);
+		int largerSize = dimensionProvider.scale(14, RenderContext.UI);
 
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
 
