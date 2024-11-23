@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JTable;
 import com.fumbbl.ffb.factory.SkillFactory;
@@ -18,10 +19,12 @@ import java.util.List;
 public class MercenaryTable extends JTable {
 
 	private final DimensionProvider dimensionProvider;
+	private final RenderContext renderContext;
 
-	public MercenaryTable(DimensionProvider dimensionProvider, MercenaryTableModel ab) {
-		super(dimensionProvider, ab);
+	public MercenaryTable(DimensionProvider dimensionProvider, MercenaryTableModel ab, RenderContext renderContext) {
+		super(dimensionProvider, ab, renderContext);
 		this.dimensionProvider = dimensionProvider;
+		this.renderContext = renderContext;
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class MercenaryTable extends JTable {
 				.map(Skill::getName)
 				.forEach(skills::add);
 
-			JComboBox<String> box = new JComboBox<String>(dimensionProvider, skills.toArray(new String[0]));
+			JComboBox<String> box = new JComboBox<>(dimensionProvider, skills.toArray(new String[0]), renderContext);
 			return new DefaultCellEditor(box);
 		}
 		return super.getCellEditor(row, column);

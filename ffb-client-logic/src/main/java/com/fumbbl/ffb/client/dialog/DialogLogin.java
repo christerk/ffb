@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JPasswordField;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
@@ -60,20 +61,20 @@ public class DialogLogin extends Dialog {
 		boolean askForPassword = (fPasswordLength >= 0);
 
 		JPanel teamHomePanel = new JPanel();
-		JTextField teamHomeField = new JTextField(dimensionProvider, StringTool.print(pTeamHomeName));
+		JTextField teamHomeField = new JTextField(dimensionProvider, StringTool.print(pTeamHomeName), RenderContext.ON_PITCH);
 		teamHomeField.setEditable(false);
 		teamHomePanel.setLayout(new BoxLayout(teamHomePanel, BoxLayout.X_AXIS));
 		teamHomePanel.add(teamHomeField);
 		teamHomePanel.setBorder(createTitledBorder(dimensionProvider, "Team"));
 
 		JPanel teamAwayPanel = new JPanel();
-		JTextField teamAwayField = new JTextField(dimensionProvider, StringTool.print(pTeamAwayName));
+		JTextField teamAwayField = new JTextField(dimensionProvider, StringTool.print(pTeamAwayName), RenderContext.ON_PITCH);
 		teamAwayField.setEditable(false);
 		teamAwayPanel.setLayout(new BoxLayout(teamAwayPanel, BoxLayout.X_AXIS));
 		teamAwayPanel.add(teamAwayField);
 		teamAwayPanel.setBorder(createTitledBorder(dimensionProvider, "Opponent"));
 
-		fFieldCoach = new JTextField(dimensionProvider, 20);
+		fFieldCoach = new JTextField(dimensionProvider, 20, RenderContext.ON_PITCH);
 		fFieldCoach.setText(pClient.getParameters().getCoach());
 		fFieldCoach.setEditable(false);
 
@@ -110,7 +111,7 @@ public class DialogLogin extends Dialog {
 		passwordPanel.add(fFieldPassword);
 		passwordPanel.setBorder(createTitledBorder(dimensionProvider, "Password"));
 
-		fFieldGame = new JTextField(dimensionProvider, 20);
+		fFieldGame = new JTextField(dimensionProvider, 20, RenderContext.ON_PITCH);
 		fFieldGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent pActionEvent) {
 				fButtonCreate.requestFocus();
@@ -128,16 +129,16 @@ public class DialogLogin extends Dialog {
 		gamePanel.add(fFieldGame);
 		gamePanel.setBorder(createTitledBorder(dimensionProvider, "Game"));
 
-		fButtonList = new JButton(dimensionProvider, "List Open Games");
+		fButtonList = new JButton(dimensionProvider, "List Open Games", RenderContext.ON_PITCH);
 		fButtonList.addActionListener(pActionEvent -> {
 			fListGames = true;
 			checkAndCloseDialog();
 		});
 
 		if (ClientMode.PLAYER == getClient().getMode()) {
-			fButtonCreate = new JButton(dimensionProvider, fShowGameName ? "Start New Game" : "Start Game");
+			fButtonCreate = new JButton(dimensionProvider, fShowGameName ? "Start New Game" : "Start Game", RenderContext.ON_PITCH);
 		} else {
-			fButtonCreate = new JButton(dimensionProvider, "Spectate Game");
+			fButtonCreate = new JButton(dimensionProvider, "Spectate Game", RenderContext.ON_PITCH);
 		}
 		fButtonCreate.addActionListener(pActionEvent -> {
 			fListGames = false;
@@ -253,7 +254,7 @@ public class DialogLogin extends Dialog {
 	}
 
 	private CompoundBorder createTitledBorder(DimensionProvider dimensionProvider, String title) {
-		return BorderFactory.createCompoundBorder(ScaledBorderFactory.createTitledBorder(dimensionProvider, title),
+		return BorderFactory.createCompoundBorder(ScaledBorderFactory.createTitledBorder(dimensionProvider, title, RenderContext.ON_PITCH),
 			BorderFactory.createEmptyBorder(0, 2, 2, 2));
 	}
 

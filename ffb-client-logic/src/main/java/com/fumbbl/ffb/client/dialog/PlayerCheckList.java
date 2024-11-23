@@ -75,9 +75,9 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		public PlayerCheckListRenderer(DimensionProvider dimensionProvider) {
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			fCheckBox = new JCheckBox(dimensionProvider);
+			fCheckBox = new JCheckBox(dimensionProvider, RenderContext.ON_PITCH);
 			add(fCheckBox);
-			fLabel = new JLabel(dimensionProvider);
+			fLabel = new JLabel(dimensionProvider, RenderContext.ON_PITCH);
 			add(fLabel);
 		}
 

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 
@@ -76,8 +77,8 @@ public class CommonPropertyCheckList extends JList<CommonPropertyCheckListItem> 
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			this.dimensionProvider = dimensionProvider;
-			fLabel = new JLabel(dimensionProvider);
-			categoryLabel = new JLabel(dimensionProvider);
+			fLabel = new JLabel(dimensionProvider, RenderContext.ON_PITCH);
+			categoryLabel = new JLabel(dimensionProvider, RenderContext.ON_PITCH);
 			Font oldFont = categoryLabel.getFont();
 			categoryLabel.setFont(new Font(oldFont.getFontName(), Font.BOLD, oldFont.getSize()));
 		}
@@ -91,7 +92,7 @@ public class CommonPropertyCheckList extends JList<CommonPropertyCheckListItem> 
 
 			if (pValue.getProperty() != null) {
 				setEnabled(pList.isEnabled());
-				JCheckBox fCheckBox = new JCheckBox(dimensionProvider);
+				JCheckBox fCheckBox = new JCheckBox(dimensionProvider, RenderContext.ON_PITCH);
 				add(fCheckBox);
 				fCheckBox.setBackground(pList.getBackground());
 				fCheckBox.setSelected(pValue.isSelected());

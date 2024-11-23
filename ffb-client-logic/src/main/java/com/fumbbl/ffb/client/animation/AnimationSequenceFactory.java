@@ -4,6 +4,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.model.Animation;
 
 import java.awt.Dimension;
@@ -28,7 +29,7 @@ public class AnimationSequenceFactory {
 			return null;
 		}
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
+		Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
 
 		switch (pAnimation.getAnimationType()) {
 			case KICKOFF_BLITZ:

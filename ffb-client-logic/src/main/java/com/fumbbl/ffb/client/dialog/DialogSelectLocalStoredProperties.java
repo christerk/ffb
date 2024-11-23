@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -30,13 +31,13 @@ public class DialogSelectLocalStoredProperties extends Dialog implements ActionL
 
 		super(client, "Locally Stored Properties", false);
 
-		fButtonSelect = new JButton(dimensionProvider(), "Select");
+		fButtonSelect = new JButton(dimensionProvider(), "Select", RenderContext.ON_PITCH);
 		fButtonSelect.setToolTipText("Select the checked properties");
 		fButtonSelect.addActionListener(this);
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled(true);
 
-		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
 		fButtonCancel.setToolTipText("Do not change selection");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'C');
@@ -52,7 +53,7 @@ public class DialogSelectLocalStoredProperties extends Dialog implements ActionL
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-		JLabel headerLabel = new JLabel(dimensionProvider(), "Select properties to be stored locally only");
+		JLabel headerLabel = new JLabel(dimensionProvider(), "Select properties to be stored locally only", RenderContext.ON_PITCH);
 		headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, headerLabel.getFont().getSize()));
 		headerPanel.add(headerLabel);
 		headerPanel.add(Box.createHorizontalGlue());

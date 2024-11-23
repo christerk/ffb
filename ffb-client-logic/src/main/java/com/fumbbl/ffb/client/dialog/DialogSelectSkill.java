@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -31,13 +32,13 @@ public class DialogSelectSkill extends Dialog implements ActionListener {
 		super(client, "Skill Choice", false);
 		this.minSelects = minSelects;
 
-		fButtonSelect = new JButton(dimensionProvider(), "Select");
+		fButtonSelect = new JButton(dimensionProvider(), "Select", RenderContext.ON_PITCH);
 		fButtonSelect.setToolTipText("Select the checked skill(s)");
 		fButtonSelect.addActionListener(this);
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled((skills.size() == 1) || preSelected);
 
-		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
 		fButtonCancel.setToolTipText("Do not select any skill");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'C');
@@ -51,7 +52,7 @@ public class DialogSelectSkill extends Dialog implements ActionListener {
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-		JLabel headerLabel = new JLabel(dimensionProvider(), header);
+		JLabel headerLabel = new JLabel(dimensionProvider(), header, RenderContext.ON_PITCH);
 		headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, headerLabel.getFont().getSize()));
 		headerPanel.add(headerLabel);
 		headerPanel.add(Box.createHorizontalGlue());

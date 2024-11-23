@@ -80,7 +80,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fIconCache.init();
 		fontCache = new FontCache(dimensionProvider);
 		fSoundEngine = new SoundEngine(getClient());
-		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, RenderContext.UI));
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();

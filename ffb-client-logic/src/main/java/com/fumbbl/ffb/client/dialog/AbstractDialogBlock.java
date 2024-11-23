@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 
 import javax.swing.BorderFactory;
@@ -35,7 +36,7 @@ public abstract class AbstractDialogBlock extends Dialog {
 		JPanel textPanel = new JPanel();
 		textPanel.setOpaque(false);
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
-		JLabel label = new JLabel(dimensionProvider(), text);
+		JLabel label = new JLabel(dimensionProvider(), text, RenderContext.ON_PITCH);
 		label.setFont(
 			new Font(label.getFont().getName(), Font.BOLD, label.getFont().getSize()));
 		textPanel.add(label);

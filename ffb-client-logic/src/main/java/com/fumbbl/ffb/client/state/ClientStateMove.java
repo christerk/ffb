@@ -309,7 +309,7 @@ public class ClientStateMove extends ClientState {
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS), RenderContext.ON_PITCH);
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
@@ -320,7 +320,7 @@ public class ClientStateMove extends ClientState {
 			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true))) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID), RenderContext.ON_PITCH);
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
@@ -331,13 +331,13 @@ public class ClientStateMove extends ClientState {
 		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			} else {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
@@ -346,7 +346,7 @@ public class ClientStateMove extends ClientState {
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
-						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
 					menuItemList.add(specialJumpAction);
@@ -355,14 +355,14 @@ public class ClientStateMove extends ClientState {
 		}
 		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze",
-				createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
+				createMenuIcon(iconCache, IIconProperty.ACTION_GAZE), RenderContext.ON_PITCH);
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (isFumblerooskieAvailable()) {
 			JMenuItem fumblerooskieAction = new JMenuItem(dimensionProvider(), "Fumblerooskie",
-				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS), RenderContext.ON_PITCH);
 			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
 			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
 			menuItemList.add(fumblerooskieAction);
@@ -403,7 +403,7 @@ public class ClientStateMove extends ClientState {
 
 	protected JMenuItem createMoveMenuItem(IconCache iconCache) {
 		JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-			createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+			createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 		moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 		moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 		return moveAction;

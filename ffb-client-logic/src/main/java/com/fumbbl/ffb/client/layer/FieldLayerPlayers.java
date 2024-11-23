@@ -42,7 +42,7 @@ public class FieldLayerPlayers extends FieldLayer {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
-			Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON_PITCH);
+			Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON_PITCH, RenderContext.ON_PITCH);
 			int x = dimension.width - (maxIconSize.width / 2);
 			int y = dimension.height - (maxIconSize.height / 2);
 			clear(x, y, maxIconSize.width, maxIconSize.height, true); // also adds updated area

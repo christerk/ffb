@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.TeamList;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JTable;
 import com.fumbbl.ffb.client.util.UtilClientJTable;
@@ -94,7 +95,7 @@ public class DialogTeamChoice extends Dialog {
 			tableModel.setValueAt(StringTool.formatThousands(teamListEntries[i].getTreasury() / 1000) + "k", i, 4);
 		}
 
-		fTable = new JTable(dimensionProvider(), tableModel);
+		fTable = new JTable(dimensionProvider(), tableModel, RenderContext.ON_PITCH);
 		UtilClientReflection.setFillsViewportHeight(fTable, true);
 		UtilClientReflection.setAutoCreateRowSorter(fTable, true);
 		fTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -154,7 +155,7 @@ public class DialogTeamChoice extends Dialog {
 		inputPanel.add(scrollPane);
 		inputPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		JButton fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		JButton fButtonCancel = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
 		fButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent pActionEvent) {
 				fSelectedIndex = -1;
@@ -162,7 +163,7 @@ public class DialogTeamChoice extends Dialog {
 			}
 		});
 
-		fButtonOk = new JButton(dimensionProvider(), "Play");
+		fButtonOk = new JButton(dimensionProvider(), "Play", RenderContext.ON_PITCH);
 		fButtonOk.addActionListener(pActionEvent -> checkAndCloseDialog(false));
 
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

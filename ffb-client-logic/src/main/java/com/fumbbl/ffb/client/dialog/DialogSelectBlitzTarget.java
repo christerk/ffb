@@ -34,16 +34,16 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		this.dialogId = dialogId;
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;
-		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again", RenderContext.ON_PITCH);
 
-		JButton fButton = new JButton(dimensionProvider(), "Ok");
+		JButton fButton = new JButton(dimensionProvider(), "Ok", RenderContext.ON_PITCH);
 		fButton.addActionListener(this);
 
 		JPanel[] messagePanels = new JPanel[pMessages.length];
 		for (int i = 0; i < pMessages.length; i++) {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
-			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i]));
+			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i], RenderContext.ON_PITCH));
 			messagePanels[i].add(Box.createHorizontalGlue());
 		}
 
@@ -60,7 +60,7 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, RenderContext.ON_PITCH);
-			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon), RenderContext.ON_PITCH));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

@@ -105,7 +105,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerRangeRuler.initLayout();
 		layerEnhancements.initLayout();
 
-		Dimension size = dimensionProvider.dimension(Component.FIELD);
+		Dimension size = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
 		setMinimumSize(size);

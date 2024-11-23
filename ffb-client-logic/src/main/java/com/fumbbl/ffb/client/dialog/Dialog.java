@@ -133,7 +133,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			selectedValue = entries.get(defaultValueKey);
 		}
 
-		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
+		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]), RenderContext.ON_PITCH);
 		box.setSelectedItem(selectedValue);
 		box.addActionListener(event -> {
 			String newValue = box.getItemAt(box.getSelectedIndex());
@@ -148,7 +148,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
 		boxPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		boxPanel.add(new JLabel(dimensionProvider(), name));
+		boxPanel.add(new JLabel(dimensionProvider(), name, RenderContext.ON_PITCH));
 		boxPanel.add(Box.createHorizontalStrut(5));
 		boxPanel.add(box);
 

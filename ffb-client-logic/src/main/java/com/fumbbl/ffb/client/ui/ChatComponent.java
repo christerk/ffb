@@ -1,13 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.ReplayControl;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 
 import javax.swing.JPanel;
@@ -52,7 +45,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
-		fChatInputField = new JTextField(dimensionProvider, 35);
+		fChatInputField = new JTextField(dimensionProvider, 35, RenderContext.UI );
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 
@@ -111,7 +104,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(Component.CHAT);
+		Dimension size = dimensionProvider.dimension(Component.CHAT, RenderContext.UI);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

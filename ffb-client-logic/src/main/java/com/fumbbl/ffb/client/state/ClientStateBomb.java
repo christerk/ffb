@@ -139,7 +139,7 @@ public class ClientStateBomb extends ClientState {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 				: "Use Hail Mary Pass";
 			JMenuItem hailMaryBombAction = new JMenuItem(dimensionProvider(), text,
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB), RenderContext.ON_PITCH);
 			hailMaryBombAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB);
 			hailMaryBombAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB, 0));
 			menuItemList.add(hailMaryBombAction);
@@ -147,7 +147,7 @@ public class ClientStateBomb extends ClientState {
 
 		if (isRangeGridAvailable()) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID), RenderContext.ON_PITCH);
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);

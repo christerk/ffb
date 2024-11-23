@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.marking.FieldMarker;
@@ -89,11 +90,11 @@ public class UtilClientMarker {
 	private static JTextField createMarkerPopup(FieldComponent pFieldComponent, JPopupMenu pPopupMenu, String pTitle,
 			String pMarkerText, int pX, int pY) {
 		if (StringTool.isProvided(pTitle)) {
-			pPopupMenu.add(new JLabel(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), pTitle));
+			pPopupMenu.add(new JLabel(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), pTitle, RenderContext.UI));
 		}
 		pPopupMenu.setLayout(new BoxLayout(pPopupMenu, BoxLayout.X_AXIS));
 		pPopupMenu.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		JTextField markerField = new JTextField(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), 7);
+		JTextField markerField = new JTextField(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), 7, RenderContext.UI);
 		if (StringTool.isProvided(pMarkerText)) {
 			markerField.setText(pMarkerText);
 		}

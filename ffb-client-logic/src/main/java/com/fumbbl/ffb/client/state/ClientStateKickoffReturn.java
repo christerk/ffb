@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -69,7 +66,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
-				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
@@ -77,7 +74,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		if (actingPlayer.getPlayer() == pPlayer) {
 			String endMoveActionLabel = game.getActingPlayer().hasActed() ? "End Move" : "Deselect Player";
 			JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-				createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
+				createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE), RenderContext.ON_PITCH);
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);

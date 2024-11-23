@@ -155,8 +155,7 @@ public class IconCache {
 			try (FileReader fileReader = new FileReader(mapFileName);
 					 BufferedReader reader = new BufferedReader(fileReader)) {
 
-				//noinspection deprecation
-				JsonObject jsonObject = JsonObject.readFrom(reader);
+				@SuppressWarnings("deprecation") JsonObject jsonObject = JsonObject.readFrom(reader);
 				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
 
 				List<String> urlsToRemove = new ArrayList<>();

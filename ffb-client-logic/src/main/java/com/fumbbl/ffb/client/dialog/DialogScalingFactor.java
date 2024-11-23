@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -45,11 +46,11 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 		fSlider.setValue((int) (factor * SLIDER_FACTOR));
 		fSlider.addChangeListener(this);
 
-		fSettingLabel = new JLabel(dimensionProvider(), "500%");
+		fSettingLabel = new JLabel(dimensionProvider(), "500%", RenderContext.ON_PITCH);
 
 		fSettingLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-		JButton fTestButton = new JButton(dimensionProvider(), "Apply");
+		JButton fTestButton = new JButton(dimensionProvider(), "Apply", RenderContext.ON_PITCH);
 		fTestButton.addActionListener(this);
 
 		JPanel settingPanel = new JPanel();

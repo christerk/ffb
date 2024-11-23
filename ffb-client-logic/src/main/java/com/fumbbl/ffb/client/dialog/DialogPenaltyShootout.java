@@ -51,7 +51,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		this.parameter = parameter;
 		this.handler = handler;
 
-		closeButton = new JButton(dimensionProvider(), ClientMode.PLAYER.equals(pClient.getMode()) ? "Proceed to MVPs and upload" : "Close");
+		closeButton = new JButton(dimensionProvider(), ClientMode.PLAYER.equals(pClient.getMode()) ? "Proceed to MVPs and upload" : "Close", RenderContext.ON_PITCH);
 		closeButton.setAlignmentX(CENTER_ALIGNMENT);
 		closeButton.setMargin(new Insets(3, 5, 3, 5));
 		closeButton.addActionListener(this);
@@ -67,11 +67,11 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 		Border outerBorder = BorderFactory.createLineBorder(Color.WHITE, 5);
 		framedPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, BorderFactory.createCompoundBorder(middleBorder, innerBorder)));
 
-		JLabel penaltyShootout = new JLabel(dimensionProvider(), "Penalty Shootout");
+		JLabel penaltyShootout = new JLabel(dimensionProvider(), "Penalty Shootout", RenderContext.ON_PITCH);
 		penaltyShootout.setAlignmentX(CENTER_ALIGNMENT);
 		framedPanel.add(penaltyShootout);
 		if (ClientMode.PLAYER.equals(pClient.getMode())) {
-			JLabel close = new JLabel(dimensionProvider(), "Close to continue");
+			JLabel close = new JLabel(dimensionProvider(), "Close to continue", RenderContext.ON_PITCH);
 			close.setAlignmentX(CENTER_ALIGNMENT);
 			framedPanel.add(close);
 		}
@@ -99,7 +99,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 		List<JLabel> labels = new ArrayList<>();
 		labels.add(headerLabel("Home", true));
-		labels.add(new JLabel(dimensionProvider()));
+		labels.add(new JLabel(dimensionProvider(), RenderContext.ON_PITCH));
 		labels.add(headerLabel("Away", false));
 
 		for (int i = 0; i < currentLimit; i++) {
@@ -114,9 +114,9 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 			rootPanel.add(Box.createVerticalStrut(5));
 
 		} else {
-			labels.add(new JLabel(dimensionProvider(), "X"));
-			labels.add(new JLabel(dimensionProvider(), "Score"));
-			labels.add(new JLabel(dimensionProvider(), "X"));
+			labels.add(new JLabel(dimensionProvider(), "X", RenderContext.ON_PITCH));
+			labels.add(new JLabel(dimensionProvider(), "Score", RenderContext.ON_PITCH));
+			labels.add(new JLabel(dimensionProvider(), "X", RenderContext.ON_PITCH));
 		}
 
 		labels.forEach(this::addDecorated);
@@ -146,7 +146,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	private JLabel headerLabel(String text, boolean home) {
 		StyleProvider styleProvider = getClient().getUserInterface().getStyleProvider();
-		JLabel label = new JLabel(dimensionProvider(), text);
+		JLabel label = new JLabel(dimensionProvider(), text, RenderContext.ON_PITCH);
 		label.setForeground(home ? styleProvider.getHome() : styleProvider.getAway());
 		return label;
 	}
@@ -154,9 +154,9 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	private List<JLabel> summaryLabels(int homeRoll, int awayRoll, boolean homeWin) {
 		List<JLabel> labels = new ArrayList<>();
-		labels.add(new JLabel(dimensionProvider(), String.valueOf(homeRoll)));
-		labels.add(new JLabel(dimensionProvider(), "Score"));
-		labels.add(new JLabel(dimensionProvider(), String.valueOf(awayRoll)));
+		labels.add(new JLabel(dimensionProvider(), String.valueOf(homeRoll), RenderContext.ON_PITCH));
+		labels.add(new JLabel(dimensionProvider(), "Score", RenderContext.ON_PITCH));
+		labels.add(new JLabel(dimensionProvider(), String.valueOf(awayRoll), RenderContext.ON_PITCH));
 
 		JLabel loserLabel = labels.get(homeWin ? 2 : 0);
 		loserLabel.setForeground(Color.LIGHT_GRAY);
@@ -165,9 +165,9 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 	private List<JLabel> rollLabels(int home, int away, boolean homeWin, String description) {
 		List<JLabel> labels = new ArrayList<>();
-		labels.add(new JLabel(dimensionProvider(), icon(home)));
-		labels.add(new JLabel(dimensionProvider(), description));
-		labels.add(new JLabel(dimensionProvider(), icon(away)));
+		labels.add(new JLabel(dimensionProvider(), icon(home), RenderContext.ON_PITCH));
+		labels.add(new JLabel(dimensionProvider(), description, RenderContext.ON_PITCH));
+		labels.add(new JLabel(dimensionProvider(), icon(away), RenderContext.ON_PITCH));
 		JLabel winnerLabel = labels.get(homeWin ? 0 : 2);
 		winnerLabel.setBackground(HIGHLIGHT);
 		winnerLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));

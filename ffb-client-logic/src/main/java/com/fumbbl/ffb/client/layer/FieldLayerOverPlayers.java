@@ -136,7 +136,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			Graphics2D g2d = getImage().createGraphics();
 
 			g2d.setPaint(COLOR_MOVE_SQUARE);
-			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize() - 4, dimensionProvider.fieldSquareSize() - 4);
+			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 4, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 4);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
 			g2d.setColor(COLOR_TARGET_NUMBER);
@@ -148,7 +148,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 				} else {
 					numberGoForIt.append(6);
 				}
-				g2d.setFont(fontCache.font(Font.PLAIN, 10));
+				g2d.setFont(fontCache.font(Font.PLAIN, 10, RenderContext.ON_PITCH));
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D numberBounds = metrics.getStringBounds(numberGoForIt.toString(), g2d);
 				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) - 5;
@@ -161,7 +161,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 
 				StringBuilder numberDodge = new StringBuilder();
 				numberDodge.append(pMoveSquare.getMinimumRollDodge()).append("+");
-				g2d.setFont(fontCache.font(Font.PLAIN, 10));
+				g2d.setFont(fontCache.font(Font.PLAIN, 10, RenderContext.ON_PITCH));
 				metrics = g2d.getFontMetrics();
 				numberBounds = metrics.getStringBounds(numberDodge.toString(), g2d);
 				x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 7;
@@ -178,7 +178,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 					} else {
 						number.append(6);
 					}
-					g2d.setFont(fontCache.font(Font.PLAIN, 11));
+					g2d.setFont(fontCache.font(Font.PLAIN, 11, RenderContext.ON_PITCH));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D numberBounds = metrics.getStringBounds(number.toString(), g2d);
 					x = dimensionWithOffset.width - (int) (numberBounds.getWidth() / 2) + 1;
@@ -273,7 +273,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 		if (pCoordinate != null) {
 			clear(pCoordinate, true);
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(dimension.width + 1, dimension.height + 1, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

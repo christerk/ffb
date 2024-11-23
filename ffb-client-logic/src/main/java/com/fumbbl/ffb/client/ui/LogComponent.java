@@ -1,13 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.ClientReplayer;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
@@ -51,7 +44,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(Component.LOG);
+		Dimension size = dimensionProvider.dimension(Component.LOG, RenderContext.UI);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

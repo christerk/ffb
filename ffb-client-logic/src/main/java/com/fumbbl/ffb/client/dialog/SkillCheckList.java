@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -55,19 +56,6 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		}
 		return selectedSkills.toArray(new Skill[0]);
 	}
-
-	public List<Integer> getSelectedIndexes() {
-		List<Integer> selectedIndexes = new ArrayList<>();
-		for (int i = 0; i < getModel().getSize(); i++) {
-			SkillCheckListItem item = getModel().getElementAt(i);
-			if (item.isSelected()) {
-				selectedIndexes.add(i);
-			}
-		}
-
-		return selectedIndexes;
-	}
-
 	private int findNrOfSelectedItems() {
 		int nrOfSelectedItems = 0;
 		for (int i = 0; i < getModel().getSize(); i++) {
@@ -87,9 +75,9 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		public SkillCheckListRenderer(DimensionProvider dimensionProvider) {
 			super();
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			fCheckBox = new JCheckBox(dimensionProvider);
+			fCheckBox = new JCheckBox(dimensionProvider, RenderContext.ON_PITCH);
 			add(fCheckBox);
-			fLabel = new JLabel(dimensionProvider);
+			fLabel = new JLabel(dimensionProvider, RenderContext.ON_PITCH);
 			add(fLabel);
 		}
 

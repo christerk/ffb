@@ -4,10 +4,7 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerChoiceMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -87,7 +84,7 @@ public class ClientStateRaidingParty extends ClientState {
 
 	protected JMenuItem createCancelRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Raiding Party",
-			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;

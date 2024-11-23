@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.util;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -24,8 +20,8 @@ public class UtilClientPlayerDrag {
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
-		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
+		Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
+		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX, RenderContext.UI);
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
 			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
@@ -54,7 +50,7 @@ public class UtilClientPlayerDrag {
 
 		if ((actualX >= 0) && (actualX < fieldDimension.width) && (actualY >= 0)
 			&& (actualY < fieldDimension.height)) {
-			return new FieldCoordinate((actualX / dimensionProvider.fieldSquareSize()), (actualY / dimensionProvider.fieldSquareSize()));
+			return new FieldCoordinate((actualX / dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH)), (actualY / dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH)));
 		} else {
 			return null;
 		}
@@ -62,8 +58,8 @@ public class UtilClientPlayerDrag {
 
 	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
 		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension boxSquareSie = dimensionProvider.dimension(Component.BOX_SQUARE);
-		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
+		Dimension boxSquareSie = dimensionProvider.dimension(Component.BOX_SQUARE, RenderContext.UI);
+		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX, RenderContext.UI);
 		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
 			int y = (((pMouseY - boxTitleOffset) / boxSquareSie.height) * 3)

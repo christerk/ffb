@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -53,7 +54,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 		fBoxes = new ArrayList<>();
 		for (int i = 0; i < fPositionIds.length; i++) {
-			fBoxes.add(new JComboBox<>(dimensionProvider()));
+			fBoxes.add(new JComboBox<>(dimensionProvider(), RenderContext.ON_PITCH));
 		}
 		refreshModels();
 
@@ -71,7 +72,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 			boxLabelPanel.add(Box.createHorizontalGlue());
 			boxLabelPanel
 				.add(new JLabel(dimensionProvider(), StringTool.isProvided(rosterPosition.getDisplayName()) ? rosterPosition.getDisplayName()
-					: rosterPosition.getName()));
+					: rosterPosition.getName(), RenderContext.ON_PITCH));
 			boxPanel.add(boxLabelPanel);
 			JPanel boxSelectPanel = new JPanel();
 			boxSelectPanel.setLayout(new BoxLayout(boxSelectPanel, BoxLayout.X_AXIS));
@@ -82,7 +83,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 
 		String oldTeamValueText = "Current Team Value is " + StringTool.formatThousands(fOldTeamValue / 1000) +
 			"k.";
-		JLabel labelOldTeamValue = new JLabel(dimensionProvider(), oldTeamValueText);
+		JLabel labelOldTeamValue = new JLabel(dimensionProvider(), oldTeamValueText, RenderContext.ON_PITCH);
 		labelOldTeamValue
 			.setFont(new Font(labelOldTeamValue.getFont().getName(), Font.BOLD, labelOldTeamValue.getFont().getSize()));
 
@@ -91,7 +92,7 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 		oldTeamValuePanel.add(labelOldTeamValue);
 		oldTeamValuePanel.add(Box.createHorizontalGlue());
 
-		fLabelNewTeamValue = new JLabel(dimensionProvider());
+		fLabelNewTeamValue = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
 		fLabelNewTeamValue
 			.setFont(new Font(fLabelNewTeamValue.getFont().getName(), Font.BOLD, fLabelNewTeamValue.getFont().getSize()));
 		updateLabelNewTeamValue();
@@ -101,14 +102,14 @@ public class DialogJourneymen extends Dialog implements ActionListener, KeyListe
 		newTeamValuePanel.add(fLabelNewTeamValue);
 		newTeamValuePanel.add(Box.createHorizontalGlue());
 
-		JLabel infoLabel = new JLabel(dimensionProvider(), "You may hire up to " + fSlotsAvailable + " Journeymen.");
+		JLabel infoLabel = new JLabel(dimensionProvider(), "You may hire up to " + fSlotsAvailable + " Journeymen.", RenderContext.ON_PITCH);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.add(infoLabel);
 		infoPanel.add(Box.createHorizontalGlue());
 
-		fButtonHire = new JButton(dimensionProvider(), "Hire");
+		fButtonHire = new JButton(dimensionProvider(), "Hire", RenderContext.ON_PITCH);
 		fButtonHire.addActionListener(this);
 		fButtonHire.addKeyListener(this);
 		fButtonHire.setMnemonic((int) 'H');

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.ChatLogScrollPane;
@@ -67,7 +68,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		fAvailableGold = pParameter.getAvailableGold();
-		fLabelAvailableGold = new JLabel(dimensionProvider());
+		fLabelAvailableGold = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
 		updateAvailableGoldLabel();
 
 		JPanel panelGold = new JPanel();
@@ -78,7 +79,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.add(Box.createVerticalStrut(5));
 
 		fAvailableCards = pParameter.getAvailableCards();
-		fLabelAvailableCards = new JLabel(dimensionProvider());
+		fLabelAvailableCards = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
 		updateAvailableCardsLabel();
 
 		JPanel panelCards = new JPanel();
@@ -111,7 +112,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
 
 		for (CardType cardType: cardTypes) {
-			JButton button = new JButton(dimensionProvider());
+			JButton button = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
 			button.addActionListener(this);
 			fButtonPerType.put(cardType, button);
 			fNrOfCardsPerType.put(cardType, pParameter.getNrOfCards(cardType));
@@ -134,7 +135,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		JPanel panelButtons = new JPanel();
 		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
-		fButtonContinue = new JButton(dimensionProvider(), "Continue");
+		fButtonContinue = new JButton(dimensionProvider(), "Continue", RenderContext.ON_PITCH);
 		fButtonContinue.addActionListener(this);
 
 		panelButtons.add(Box.createHorizontalGlue());
@@ -185,14 +186,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private void updateAvailableGoldLabel() {
 
 		fLabelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(fAvailableGold));
-		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12));
+		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12, RenderContext.ON_PITCH));
 
 	}
 
 	private void updateAvailableCardsLabel() {
 
 		fLabelAvailableCards.setText("Available Cards: " + fAvailableCards);
-		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12));
+		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12, RenderContext.ON_PITCH));
 
 	}
 

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 
@@ -63,7 +64,7 @@ public class FieldLayerRangeGrid extends FieldLayer {
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width;
 			int y = dimension.height;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(x + 1, y + 1, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

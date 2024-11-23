@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.IntegerField;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -53,23 +54,23 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 
 		JPanel panelTreasury = new JPanel();
 		panelTreasury.setLayout(new BoxLayout(panelTreasury, BoxLayout.X_AXIS));
-		fLabelTreasury = new JLabel(dimensionProvider(), createTreasuryText());
+		fLabelTreasury = new JLabel(dimensionProvider(), createTreasuryText(), RenderContext.ON_PITCH);
 		panelTreasury.add(fLabelTreasury);
 		panelTreasury.add(Box.createHorizontalGlue());
 
 		JPanel panelTeamValue = new JPanel();
 		panelTeamValue.setLayout(new BoxLayout(panelTeamValue, BoxLayout.X_AXIS));
-		fLabelTeamValue = new JLabel(dimensionProvider(), createTeamValueText());
+		fLabelTeamValue = new JLabel(dimensionProvider(), createTeamValueText(), RenderContext.ON_PITCH);
 		panelTeamValue.add(fLabelTeamValue);
 		panelTeamValue.add(Box.createHorizontalGlue());
 
 		JPanel panelOpponentTeamValue = new JPanel();
 		panelOpponentTeamValue.setLayout(new BoxLayout(panelOpponentTeamValue, BoxLayout.X_AXIS));
-		JLabel fLabelOpponentTeamValue = new JLabel(dimensionProvider(), createOpponentTeamValueText());
+		JLabel fLabelOpponentTeamValue = new JLabel(dimensionProvider(), createOpponentTeamValueText(), RenderContext.ON_PITCH);
 		panelOpponentTeamValue.add(fLabelOpponentTeamValue);
 		panelOpponentTeamValue.add(Box.createHorizontalGlue());
 
-		fIntegerFieldPettyCash = new IntegerField(dimensionProvider(), 5);
+		fIntegerFieldPettyCash = new IntegerField(dimensionProvider(), 5, RenderContext.ON_PITCH);
 		fIntegerFieldPettyCash.setText("0");
 		fIntegerFieldPettyCash.setHorizontalAlignment(JTextField.RIGHT);
 		fIntegerFieldPettyCash.selectAll();
@@ -97,24 +98,24 @@ public class DialogPettyCash extends Dialog implements ActionListener, KeyListen
 
 		JPanel panelPettyCash = new JPanel();
 		panelPettyCash.setLayout(new BoxLayout(panelPettyCash, BoxLayout.X_AXIS));
-		JLabel labelLeading = new JLabel(dimensionProvider(), "Petty Cash");
+		JLabel labelLeading = new JLabel(dimensionProvider(), "Petty Cash", RenderContext.ON_PITCH);
 		labelLeading.setFont(labelLeading.getFont().deriveFont(Font.BOLD));
 		panelPettyCash.add(labelLeading);
 		panelPettyCash.add(Box.createHorizontalStrut(5));
 		panelPettyCash.add(fIntegerFieldPettyCash);
 		panelPettyCash.add(Box.createHorizontalStrut(5));
-		JLabel labelTrailing = new JLabel(dimensionProvider(), "k gold");
+		JLabel labelTrailing = new JLabel(dimensionProvider(), "k gold", RenderContext.ON_PITCH);
 		labelTrailing.setFont(labelTrailing.getFont().deriveFont(Font.BOLD));
 		panelPettyCash.add(labelTrailing);
 		panelPettyCash.add(Box.createHorizontalGlue());
 
 		JPanel panelInducements = new JPanel();
 		panelInducements.setLayout(new BoxLayout(panelInducements, BoxLayout.X_AXIS));
-		fLabelInducements = new JLabel(dimensionProvider(), createInducementsText());
+		fLabelInducements = new JLabel(dimensionProvider(), createInducementsText(), RenderContext.ON_PITCH);
 		panelInducements.add(fLabelInducements);
 		panelInducements.add(Box.createHorizontalGlue());
 
-		JButton fButtonTransfer = new JButton(dimensionProvider(), "Transfer");
+		JButton fButtonTransfer = new JButton(dimensionProvider(), "Transfer", RenderContext.ON_PITCH);
 		fButtonTransfer.addActionListener(this);
 		fButtonTransfer.addKeyListener(this);
 		fButtonTransfer.setMnemonic(KeyEvent.VK_T);

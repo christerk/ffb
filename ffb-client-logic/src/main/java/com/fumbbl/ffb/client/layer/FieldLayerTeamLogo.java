@@ -47,7 +47,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
   private void drawRowMarker(int pY) {
     String distanceString = LETTERS[pY];
     Graphics2D g2d = getImage().createGraphics();
-    g2d.setFont(fontCache.font(Font.BOLD, 12));
+    g2d.setFont(fontCache.font(Font.BOLD, 12, RenderContext.ON_PITCH));
     FontMetrics metrics = g2d.getFontMetrics();
     Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
@@ -60,9 +60,9 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
     if (dimensionProvider.isPitchPortrait()) {
       x -= (int) (distanceBounds.getWidth() / 2) + 1;
-      y += (int) (distanceBounds.getHeight() / 2) + dimensionProvider.scale(4);
+      y += (int) (distanceBounds.getHeight() / 2) + dimensionProvider.scale(4, RenderContext.ON_PITCH);
     } else {
-      x -= (int) (distanceBounds.getWidth() / 2) + dimensionProvider.scale(4);
+      x -= (int) (distanceBounds.getWidth() / 2) + dimensionProvider.scale(4, RenderContext.ON_PITCH);
       y += (int) (distanceBounds.getHeight() / 2) - 1;
     }
 
@@ -82,9 +82,9 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
     if (dimensionProvider.isPitchPortrait()) {
       x -= (int) (distanceBounds.getWidth() / 2) + 1;
-      y += (int) (distanceBounds.getHeight() / 2) - dimensionProvider.scale(8);
+      y += (int) (distanceBounds.getHeight() / 2) - dimensionProvider.scale(8, RenderContext.ON_PITCH);
     } else {
-      x -= (int) (distanceBounds.getWidth() / 2) - dimensionProvider.scale(4);
+      x -= (int) (distanceBounds.getWidth() / 2) - dimensionProvider.scale(4, RenderContext.ON_PITCH);
       y += (int) (distanceBounds.getHeight() / 2) - 1;
     }
 
@@ -100,7 +100,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
     int distance = (pX >= 13) ? (25 - pX) : pX;
     String distanceString = Integer.toString(distance);
     Graphics2D g2d = getImage().createGraphics();
-    g2d.setFont(fontCache.font(Font.BOLD, 12));
+    g2d.setFont(fontCache.font(Font.BOLD, 12, RenderContext.ON_PITCH));
     FontMetrics metrics = g2d.getFontMetrics();
     Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);
     Color distanceColor;
@@ -120,11 +120,11 @@ public class FieldLayerTeamLogo extends FieldLayer {
     int y = dimension.height;
 
     if (dimensionProvider.isPitchPortrait()) {
-      x -= (int) (distanceBounds.getWidth() / 2) + dimensionProvider.scale(4);
+      x -= (int) (distanceBounds.getWidth() / 2) + dimensionProvider.scale(4, RenderContext.ON_PITCH);
       y += (int) (distanceBounds.getHeight() / 2) - 1;
     } else {
       x -= (int) (distanceBounds.getWidth() / 2) + 1;
-      y += (int) (distanceBounds.getHeight() / 2) - dimensionProvider.scale(8);
+      y += (int) (distanceBounds.getHeight() / 2) - dimensionProvider.scale(8, RenderContext.ON_PITCH);
     }
 
     g2d.setColor(shadowColor);
@@ -138,11 +138,11 @@ public class FieldLayerTeamLogo extends FieldLayer {
     y = dimension.height;
 
     if (dimensionProvider.isPitchPortrait()) {
-      x -= (int) (distanceBounds.getWidth() / 2) - dimensionProvider.scale(4);
+      x -= (int) (distanceBounds.getWidth() / 2) - dimensionProvider.scale(4, RenderContext.ON_PITCH);
       y += (int) (distanceBounds.getHeight() / 2) - 1;
     } else {
       x -= (int) (distanceBounds.getWidth() / 2) + 1;
-      y += (int) (distanceBounds.getHeight() / 2) + dimensionProvider.scale(4);
+      y += (int) (distanceBounds.getHeight() / 2) + dimensionProvider.scale(4, RenderContext.ON_PITCH);
     }
 
     g2d.setColor(shadowColor);
@@ -154,7 +154,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
   private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
-      Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD);
+      Dimension fieldDimension = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
       IconCache iconCache = getClient().getUserInterface().getIconCache();
       BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam), RenderContext.ON_PITCH);
       if (teamLogo != null) {
@@ -163,22 +163,22 @@ public class FieldLayerTeamLogo extends FieldLayer {
         int x, y;
         if (dimensionProvider.isPitchPortrait()) {
           if (pHomeTeam) {
-            y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - dimensionProvider.imageOffset();
+            y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - dimensionProvider.imageOffset(RenderContext.ON_PITCH);
           } else {
-            y = (fieldDimension.height / 4) - (teamLogo.getHeight() / 2) + dimensionProvider.imageOffset();
+            y = (fieldDimension.height / 4) - (teamLogo.getHeight() / 2) + dimensionProvider.imageOffset(RenderContext.ON_PITCH);
           }
           x = (fieldDimension.width / 2) - (teamLogo.getWidth() / 2);
-          g2d.setClip(0, pHomeTeam ? fieldDimension.height / 2 : dimensionProvider.fieldSquareSize(),
-            fieldDimension.width, (fieldDimension.height / 2) - dimensionProvider.fieldSquareSize());
+          g2d.setClip(0, pHomeTeam ? fieldDimension.height / 2 : dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH),
+            fieldDimension.width, (fieldDimension.height / 2) - dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH));
         } else {
           if (pHomeTeam) {
-            x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + dimensionProvider.imageOffset();
+            x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + dimensionProvider.imageOffset(RenderContext.ON_PITCH);
           } else {
-            x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - dimensionProvider.imageOffset();
+            x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - dimensionProvider.imageOffset(RenderContext.ON_PITCH);
           }
           y = (fieldDimension.height / 2) - (teamLogo.getHeight() / 2);
-          g2d.setClip(pHomeTeam ? dimensionProvider.fieldSquareSize() : fieldDimension.width / 2, 0,
-            (fieldDimension.width / 2) - dimensionProvider.fieldSquareSize(), fieldDimension.height);
+          g2d.setClip(pHomeTeam ? dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) : fieldDimension.width / 2, 0,
+            (fieldDimension.width / 2) - dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), fieldDimension.height);
         }
         g2d.drawImage(teamLogo, x, y, null);
         g2d.dispose();

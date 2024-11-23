@@ -140,7 +140,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width + 1;
 			int y = dimension.height + 1;
-			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2);
 
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
@@ -155,7 +155,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 			DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 			Dimension dimension = dimensionProvider.mapToLocal(fSelectSquareCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH));
 			fieldComponent.refresh(bounds);
 			fSelectSquareCoordinate = null;
 		}
@@ -360,7 +360,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
-				createMenuIcon(iconCache, IIconProperty.ACTION_STAB));
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAB), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
 		return menuItem;
@@ -385,7 +385,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
-				createMenuIcon(iconCache, IIconProperty.ACTION_CATCH_OF_THE_DAY));
+				createMenuIcon(iconCache, IIconProperty.ACTION_CATCH_OF_THE_DAY), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
 		return menuItem;
@@ -412,16 +412,16 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
-			createMenuIcon(iconCache, IIconProperty.ACTION_WISDOM));
+			createMenuIcon(iconCache, IIconProperty.ACTION_WISDOM), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
 		return menuItem;
 	}
 
-	protected void 	addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
+	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = playerActivationUsed() ? "End Action" : deselectPlayerLabel();
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
+			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE), RenderContext.ON_PITCH);
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
@@ -470,7 +470,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
-			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
@@ -491,7 +491,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
 		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
-			createMenuIcon(iconCache, IIconProperty.ACTION_LOOK_INTO_MY_EYES));
+			createMenuIcon(iconCache, IIconProperty.ACTION_LOOK_INTO_MY_EYES), RenderContext.ON_PITCH);
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
 		return lookItem;
@@ -515,7 +515,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
-			createMenuIcon(iconCache, IIconProperty.ACTION_BALEFUL_HEX));
+			createMenuIcon(iconCache, IIconProperty.ACTION_BALEFUL_HEX), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
 		return menuItem;
@@ -538,7 +538,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBlackInkItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
-			createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
+			createMenuIcon(iconCache, IIconProperty.ACTION_GAZE), RenderContext.ON_PITCH);
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
 		return menuItem;
@@ -559,7 +559,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
 		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
-			createMenuIcon(iconCache, IIconProperty.ACTION_STARTED_BLASTIN));
+			createMenuIcon(iconCache, IIconProperty.ACTION_STARTED_BLASTIN), RenderContext.ON_PITCH);
 		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
 		return blastinItem;

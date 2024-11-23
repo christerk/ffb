@@ -184,7 +184,7 @@ public class ClientStatePass extends ClientStateMove {
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS), RenderContext.ON_PITCH);
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
@@ -196,7 +196,7 @@ public class ClientStatePass extends ClientStateMove {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 				: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(dimensionProvider(), text,
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS), RenderContext.ON_PITCH);
 			hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
 			hailMaryPassAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, 0));
 			menuItemList.add(hailMaryPassAction);
@@ -207,15 +207,15 @@ public class ClientStatePass extends ClientStateMove {
 			JMenuItem specialJumpAction = null;
 			if (actingPlayer.isJumping()) {
 				jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 			} else {
 				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
-						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
 				}
@@ -230,7 +230,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (!actingPlayer.hasPassed()) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID), RenderContext.ON_PITCH);
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
@@ -239,7 +239,7 @@ public class ClientStatePass extends ClientStateMove {
 		if (!actingPlayer.hasPassed()) {
 			if (!actingPlayer.isSufferingAnimosity()) {
 				JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 				moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 				moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 				menuItemList.add(moveAction);

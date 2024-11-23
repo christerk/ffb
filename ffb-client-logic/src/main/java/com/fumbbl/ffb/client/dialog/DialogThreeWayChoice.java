@@ -64,19 +64,19 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		this.choiceTwoMnemonic = choiceTwoMnemonic;
 		this.choiceThreeMnemonic = choiceThreeMnemonic;
 
-		buttonChoiceOne = new JButton(dimensionProvider, choiceOneText);
+		buttonChoiceOne = new JButton(dimensionProvider, choiceOneText, RenderContext.ON_PITCH);
 		buttonChoiceOne.addActionListener(this);
 		buttonChoiceOne.addKeyListener(this);
 		buttonChoiceOne.setMnemonic(choiceOneMnemonic);
 
 		if (StringTool.isProvided(choiceTwoText)) {
-			buttonChoiceTwo = new JButton(dimensionProvider, choiceTwoText);
+			buttonChoiceTwo = new JButton(dimensionProvider, choiceTwoText, RenderContext.ON_PITCH);
 			buttonChoiceTwo.addActionListener(this);
 			buttonChoiceTwo.addKeyListener(this);
 			buttonChoiceTwo.setMnemonic(choiceTwoMnemonic);
 		}
 
-		JButton buttonChoiceThree = new JButton(dimensionProvider, choiceThreeText);
+		JButton buttonChoiceThree = new JButton(dimensionProvider, choiceThreeText, RenderContext.ON_PITCH);
 		buttonChoiceThree.addActionListener(this);
 		buttonChoiceThree.addKeyListener(this);
 		buttonChoiceThree.setMnemonic(choiceThreeMnemonic);
@@ -92,7 +92,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 				}
 				JPanel messagePanel = new JPanel();
 				messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-				JLabel messageLabel = new JLabel(dimensionProvider(), pMessages[i]);
+				JLabel messageLabel = new JLabel(dimensionProvider(), pMessages[i], RenderContext.ON_PITCH);
 				if (i == 0) {
 					messageLabel.setFont(new Font(messageLabel.getFont().getName(), Font.BOLD, messageLabel.getFont().getSize()));
 				}
@@ -106,7 +106,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
 			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, RenderContext.ON_PITCH);
-			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon), RenderContext.ON_PITCH));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.state.bb2016;
 
 import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.ClientStateMove;
@@ -54,13 +51,13 @@ public class ClientStateKickTeamMate extends ClientStateMove {
 				List<JMenuItem> menuItemList = new ArrayList<>();
 
 				JMenuItem shortKick = new JMenuItem(dimensionProvider(), "Short Kick",
-					createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
+					createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ), RenderContext.ON_PITCH);
 				shortKick.setMnemonic(IPlayerPopupMenuKeys.KEY_SHORT);
 				shortKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHORT, 0));
 				menuItemList.add(shortKick);
 
 				JMenuItem longKick = new JMenuItem(dimensionProvider(), "Long Kick",
-					createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ));
+					createMenuIcon(iconCache, IIconProperty.ACTION_BLITZ), RenderContext.ON_PITCH);
 				longKick.setMnemonic(IPlayerPopupMenuKeys.KEY_LONG);
 				longKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LONG, 0));
 				menuItemList.add(longKick);

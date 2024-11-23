@@ -51,18 +51,18 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		fLoadDialog = pLoadDialog;
 
 		if (isLoadDialog()) {
-			fButtonLoadSave = new JButton(dimensionProvider(), "Load");
+			fButtonLoadSave = new JButton(dimensionProvider(), "Load", RenderContext.ON_PITCH);
 		} else {
-			fButtonLoadSave = new JButton(dimensionProvider(), "Save");
+			fButtonLoadSave = new JButton(dimensionProvider(), "Save", RenderContext.ON_PITCH);
 		}
 		fButtonLoadSave.addActionListener(this);
 
-		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
 		fButtonCancel.addActionListener(this);
 
 		BufferedImage deleteIcon = getClient().getUserInterface().getIconCache()
 				.getIconByProperty(IIconProperty.GAME_DELETE, RenderContext.ON_PITCH);
-		fButtonDelete = new JButton(dimensionProvider(), new ImageIcon(deleteIcon));
+		fButtonDelete = new JButton(dimensionProvider(), new ImageIcon(deleteIcon), RenderContext.ON_PITCH);
 		fButtonDelete.addActionListener(this);
 
 		DefaultListModel<String> fSetupListModel = new DefaultListModel<>();
@@ -72,7 +72,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 			}
 		}
 
-		fSetupList = new JList<>(dimensionProvider(), fSetupListModel);
+		fSetupList = new JList<>(dimensionProvider(), fSetupListModel, RenderContext.ON_PITCH);
 		fSetupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		fSetupList.setVisibleRowCount(Math.min(7, Math.max(3, pSetups.length)));
 		fSetupList.addListSelectionListener(this);
@@ -94,7 +94,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		buttonPanel.add(fButtonCancel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
-		fTextfieldSetupName = new JTextField(dimensionProvider(), 20);
+		fTextfieldSetupName = new JTextField(dimensionProvider(), 20, RenderContext.ON_PITCH);
 		JPanel editPanel = new JPanel();
 		editPanel.setLayout(new BoxLayout(editPanel, BoxLayout.X_AXIS));
 		editPanel.add(fTextfieldSetupName);

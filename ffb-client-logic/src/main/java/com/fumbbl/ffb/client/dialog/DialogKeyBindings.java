@@ -24,9 +24,9 @@ public class DialogKeyBindings extends Dialog {
 
 		super(pClient, "Key Bindings", true);
 
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
-		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11) + "px\"><b>";
-		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\">";
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\">";
 
 		JScrollPane keyBindingsPane = new JScrollPane(createKeyBindingsEditorPane());
 		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider().scale(20, RenderContext.UI),
@@ -165,6 +165,7 @@ public class DialogKeyBindings extends Dialog {
 		html.append("</tr>\n");
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void addDescriptionWithAlternativeProperty(StringBuilder html, String text, String property, String alternateProperty) {
 		addDescriptionWithAlternative(html, text, property, getClient().getProperty(alternateProperty));
 	}

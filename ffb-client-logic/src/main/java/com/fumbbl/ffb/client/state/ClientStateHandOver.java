@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -110,13 +107,13 @@ public class ClientStateHandOver extends ClientStateMove {
 		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 			if ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())) {
 				JMenuItem handOverAction = new JMenuItem(dimensionProvider(), "Hand Over Ball (any player)",
-					createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER));
+					createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER), RenderContext.ON_PITCH);
 				handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
 				handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
 				menuItemList.add(handOverAction);
 			} else if (PlayerAction.HAND_OVER == actingPlayer.getPlayerAction()) {
 				JMenuItem handOverAction = new JMenuItem(dimensionProvider(), "Regular Hand Over / Move",
-					createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER));
+					createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER), RenderContext.ON_PITCH);
 				handOverAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAND_OVER);
 				handOverAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAND_OVER, 0));
 				menuItemList.add(handOverAction);
@@ -126,13 +123,13 @@ public class ClientStateHandOver extends ClientStateMove {
 		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			} else {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
@@ -140,7 +137,7 @@ public class ClientStateHandOver extends ClientStateMove {
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
-						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
+						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP), RenderContext.ON_PITCH);
 					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
 					menuItemList.add(specialJumpAction);

@@ -52,38 +52,38 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
 
-		fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll");
+		fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll", RenderContext.ON_PITCH);
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
 
 		if (singleUseReRollSource != null) {
-			buttonSingleUseReRoll = new JButton(dimensionProvider(), singleUseReRollSource.getName(pClient.getGame()));
+			buttonSingleUseReRoll = new JButton(dimensionProvider(), singleUseReRollSource.getName(pClient.getGame()), RenderContext.ON_PITCH);
 			buttonSingleUseReRoll.addActionListener(this);
 			buttonSingleUseReRoll.addKeyListener(this);
 			buttonSingleUseReRoll.setMnemonic('L');
 		}
 
-		fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
+		fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", RenderContext.ON_PITCH);
 		fButtonProReRoll.addActionListener(this);
 		fButtonProReRoll.addKeyListener(this);
 		fButtonProReRoll.setMnemonic((int) 'P');
 
 		if (pDialogParameter.getReRollSkill() != null) {
-			buttonSkillReRoll = new JButton(dimensionProvider(), pDialogParameter.getReRollSkill().getName());
+			buttonSkillReRoll = new JButton(dimensionProvider(), pDialogParameter.getReRollSkill().getName(), RenderContext.ON_PITCH);
 			buttonSkillReRoll.addActionListener(this);
 			buttonSkillReRoll.addKeyListener(this);
 			buttonSkillReRoll.setMnemonic((int) 'S');
 		}
 
 		if (pDialogParameter.getModifyingSkill() != null) {
-			buttonModifyingSkill = new JButton(dimensionProvider(), pDialogParameter.getModifyingSkill().getName());
+			buttonModifyingSkill = new JButton(dimensionProvider(), pDialogParameter.getModifyingSkill().getName(), RenderContext.ON_PITCH);
 			buttonModifyingSkill.addActionListener(this);
 			buttonModifyingSkill.addKeyListener(this);
 			buttonModifyingSkill.setMnemonic((int) 'M');
 		}
 
-		fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
+		fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll", RenderContext.ON_PITCH);
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
 		fButtonNoReRoll.setMnemonic((int) 'N');
@@ -105,17 +105,17 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
-		messagePanel.add(new JLabel(dimensionProvider(), message.toString()));
+		messagePanel.add(new JLabel(dimensionProvider(), message.toString(), RenderContext.ON_PITCH));
 
 		if (pDialogParameter.isFumble()) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel(dimensionProvider(), "Current roll is a FUMBLE."));
+			messagePanel.add(new JLabel(dimensionProvider(), "Current roll is a FUMBLE.", RenderContext.ON_PITCH));
 		}
 
 		if (pDialogParameter.getMessages() != null) {
 			for (String additionalMessage : pDialogParameter.getMessages()) {
 				messagePanel.add(Box.createVerticalStrut(5));
-				messagePanel.add(new JLabel(dimensionProvider(), additionalMessage));
+				messagePanel.add(new JLabel(dimensionProvider(), additionalMessage, RenderContext.ON_PITCH));
 			}
 		}
 		Game game = getClient().getGame();
@@ -123,19 +123,19 @@ public class DialogReRoll extends Dialog implements ActionListener, KeyListener 
 		if ((reRollingPlayer != null)
 			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel(dimensionProvider(), "Player is a LONER - the Re-Roll is not guaranteed to help."));
+			messagePanel.add(new JLabel(dimensionProvider(), "Player is a LONER - the Re-Roll is not guaranteed to help.", RenderContext.ON_PITCH));
 		}
 
 		if (fDialogParameter.getMinimumRoll() > 0) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed."));
+			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed.", RenderContext.ON_PITCH));
 		}
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, RenderContext.ON_PITCH);
-		infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
+		infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon), RenderContext.ON_PITCH));
 		infoPanel.add(Box.createHorizontalStrut(5));
 		infoPanel.add(messagePanel);
 		infoPanel.add(Box.createHorizontalGlue());

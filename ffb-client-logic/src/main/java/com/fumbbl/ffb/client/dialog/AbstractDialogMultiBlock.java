@@ -5,6 +5,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.model.BlockRoll;
@@ -50,7 +51,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 	private JButton dieButton(int blockRoll, boolean markAsReRolled) {
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
-		JButton button = new JButton(dimensionProvider());
+		JButton button = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
 		button.setOpaque(false);
 		button.setBounds(0, 0, 45, 45);
 		button.setFocusPainted(false);
@@ -103,7 +104,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 
 	protected JPanel namePanel(String target) {
 		Player<?> defender = getClient().getGame().getPlayerById(target);
-		JLabel nameLabel = new JLabel(dimensionProvider(), "<html>" + defender.getName() + "</html>");
+		JLabel nameLabel = new JLabel(dimensionProvider(), "<html>" + defender.getName() + "</html>", RenderContext.ON_PITCH);
 		nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		nameLabel.setOpaque(false);
 		JPanel panel = new JPanel();

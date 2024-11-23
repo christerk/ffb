@@ -4,10 +4,7 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
@@ -137,7 +134,7 @@ public class ClientStateBlock extends ClientState {
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		if (actingPlayer.isSufferingBloodLust()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);

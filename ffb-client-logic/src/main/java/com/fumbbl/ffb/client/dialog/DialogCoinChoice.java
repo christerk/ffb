@@ -25,7 +25,6 @@ import java.awt.event.KeyListener;
 public class DialogCoinChoice extends Dialog implements ActionListener, KeyListener {
 
 	private final JButton fButtonHeads;
-	private final JButton fButtonTails;
 	private boolean fChoiceHeads;
 
 	public DialogCoinChoice(FantasyFootballClient pClient) {
@@ -39,20 +38,20 @@ public class DialogCoinChoice extends Dialog implements ActionListener, KeyListe
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		ImageIcon iconHeads = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_HEADS, RenderContext.ON_PITCH));
-		fButtonHeads = new JButton(dimensionProvider(), iconHeads);
+		fButtonHeads = new JButton(dimensionProvider(), iconHeads, RenderContext.ON_PITCH);
 		fButtonHeads.addActionListener(this);
 		fButtonHeads.addKeyListener(this);
 		panelButtons.add(fButtonHeads);
 
 		ImageIcon iconTails = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_TAILS, RenderContext.ON_PITCH));
-		fButtonTails = new JButton(dimensionProvider(), iconTails);
+		JButton fButtonTails = new JButton(dimensionProvider(), iconTails, RenderContext.ON_PITCH);
 		fButtonTails.addActionListener(this);
 		fButtonTails.addKeyListener(this);
 		panelButtons.add(fButtonTails);
 
 		JPanel panelText = new JPanel();
 		panelText.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JLabel label = new JLabel(dimensionProvider(), "Heads or Tails?");
+		JLabel label = new JLabel(dimensionProvider(), "Heads or Tails?", RenderContext.ON_PITCH);
 		label.setFont(new Font(label.getFont().getName(), Font.BOLD, label.getFont().getSize()));
 		panelText.add(label);
 

@@ -160,7 +160,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		if (maxStars > 0) {
 
-			fTableStarPlayers = new StarPlayerTable(dimensionProvider, fTableModelStarPlayers);
+			fTableStarPlayers = new StarPlayerTable(dimensionProvider, fTableModelStarPlayers, RenderContext.ON_PITCH);
 			configureTable(rightPanel, fTableStarPlayers, fTableModelStarPlayers, "Star Players (varying Gold 0-" + maxStars + "):", 148);
 		}
 
@@ -170,7 +170,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		int verticalStrut = dimensionProvider.scale(10, RenderContext.ON_PITCH);
 		if (maxStaff > 0) {
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
-			tableInfamousStaff = new InfamousStaffTable(dimensionProvider, tableModelInfamousStaff);
+			tableInfamousStaff = new InfamousStaffTable(dimensionProvider, tableModelInfamousStaff, RenderContext.ON_PITCH);
 			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff, "Infamous Coaching Staff (varying Gold 0-" + maxStaff + "):", 55);
 		}
 
@@ -179,7 +179,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX))
 			.getValue();
 		if (maxMercs > 0) {
-			fTableMercenaries = new MercenaryTable(dimensionProvider, fTableModelMercenaries);
+			fTableMercenaries = new MercenaryTable(dimensionProvider, fTableModelMercenaries, RenderContext.ON_PITCH);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			fTableMercenaries.getSelectionModel().addListSelectionListener(pE -> {
 				if (!pE.getValueIsAdjusting()) {

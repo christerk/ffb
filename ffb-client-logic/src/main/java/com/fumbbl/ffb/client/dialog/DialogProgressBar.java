@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JProgressBar;
@@ -32,7 +33,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 
 		super(pClient, pTitle, false);
 
-		JButton fButton = new JButton(dimensionProvider(), "Cancel");
+		JButton fButton = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
 		fButton.addActionListener(this);
 
 		fProgressBar = new JProgressBar(dimensionProvider(), pMinValue, pMaxValue);
@@ -41,7 +42,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-		fMessageLabel = new JLabel(dimensionProvider(), "Initializing.");
+		fMessageLabel = new JLabel(dimensionProvider(), "Initializing.", RenderContext.ON_PITCH);
 		messagePanel.add(fMessageLabel);
 		messagePanel.add(Box.createHorizontalGlue());
 		messagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

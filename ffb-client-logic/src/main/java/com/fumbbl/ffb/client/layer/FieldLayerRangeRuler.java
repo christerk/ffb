@@ -8,6 +8,7 @@ import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.FieldModel;
@@ -104,7 +105,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 					// [ 0 0 1 ]
 
 					g2d.transform(new AffineTransform(cosPhi, -sinPhi, sinPhi, cosPhi, startCenter.x, startCenter.y));
-					g2d.setFont(fontCache.font(Font.BOLD, 32));
+					g2d.setFont(fontCache.font(Font.BOLD, 32, RenderContext.ON_PITCH));
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.0f));
 
 					drawRulerModifier(g2d, (int) length, pRangeRuler.getMinimumRoll());
@@ -163,7 +164,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 		if (pMaxLength > 0) {
 
-			int halfRulerWidth = (int) (dimensionProvider.fieldSquareSize() * UtilPassing.RULER_WIDTH / 2);
+			int halfRulerWidth = (int) (dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) * UtilPassing.RULER_WIDTH / 2);
 			Point point1 = new Point(pStartCenter.x, pStartCenter.y - halfRulerWidth);
 			point1 = rotate(point1, pStartCenter, pSinPhi, pCosPhi);
 			Point point2 = new Point(pStartCenter.x, pStartCenter.y + halfRulerWidth);
@@ -196,7 +197,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH));
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
