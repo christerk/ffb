@@ -32,7 +32,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 		fAnimationType = pAnimationType;
 		fAnimatedIcon = pAnimatedIcon;
 		fSound = pSound;
-		fTimer = new Timer((int) (20 / dimensionProvider.getLayoutSettings().getScale()), this);
+		fTimer = new Timer((int) (20 / (dimensionProvider.getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale())), this);
 		this.animationProjector = new AnimationProjector(pStartCoordinate, pEndCoordinate, pInterceptorCoordinate, dimensionProvider,
 			new CoordinateBasedSteppingStrategy(pStartCoordinate, pEndCoordinate));
 	}

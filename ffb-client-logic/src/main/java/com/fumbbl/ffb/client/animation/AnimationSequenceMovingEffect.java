@@ -52,7 +52,7 @@ public class AnimationSequenceMovingEffect implements IAnimationSequence, Action
 
   protected AnimationSequenceMovingEffect(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate,
                                           DimensionProvider dimensionProvider, long duration, AnimationFrame[] frames) {
-    timerDelay = (int) (20 / dimensionProvider.getLayoutSettings().getScale());
+    timerDelay = (int) (20 / (dimensionProvider.getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale()));
     fTimer = new Timer(timerDelay, this);
     this.frames = frames;
     this.duration = duration;
