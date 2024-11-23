@@ -11,7 +11,7 @@ import static com.fumbbl.ffb.client.LayoutSettings.SIDEBAR_WIDTH_P;
 
 public enum Component {
 
-	FIELD_SQUARE(new Dimension(BASE_SQUARE_SIZE, BASE_SQUARE_SIZE), new Dimension(57, 57)),
+	FIELD_SQUARE(new Dimension(BASE_SQUARE_SIZE, BASE_SQUARE_SIZE)),
 	FIELD(fieldDimension(ClientLayout.LANDSCAPE), fieldDimension(ClientLayout.PORTRAIT), fieldDimension(ClientLayout.WIDE)),
 	CHAT(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
 	LOG(new Dimension(389, 226), new Dimension(389, 153), new Dimension(260, 343), new Dimension(741, 139)),
@@ -68,11 +68,11 @@ public enum Component {
 	}
 
 	private static int fieldLongSide(ClientLayout layout) {
-		return FIELD_SQUARE.dimension(layout).width * 26 + 2;
+		return (int) (FIELD_SQUARE.dimension(layout).width * 26 * layout.getPitchScale() + 2);
 	}
 
 	private static int fieldShortSide(ClientLayout layout) {
-		return FIELD_SQUARE.dimension(layout).width * 15 + 2;
+		return (int) (FIELD_SQUARE.dimension(layout).width * 15 * layout.getPitchScale() + 2);
 	}
 
 	private static int fieldWidth(ClientLayout layout) {

@@ -107,7 +107,7 @@ public class DimensionProvider {
 	protected double effectiveScale(RenderContext renderContext) {
 		switch (renderContext) {
 			case ON_PITCH:
-				return layoutSettings.getScale() * Component.FIELD_SQUARE.dimension(layoutSettings.getLayout()).width / LayoutSettings.BASE_SQUARE_SIZE;
+				return layoutSettings.getScale() * layoutSettings.getLayout().getPitchScale();
 			default:
 				return layoutSettings.getScale();
 		}
