@@ -3,14 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -124,7 +117,9 @@ public class StepHitAndRun extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canMoveAfterBlock);
-		if (skill != null) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
+
+		if (skill != null && !playerState.isRooted()) {
 
 			if (endTurn || endPlayerAction) {
 				resetState(game);
