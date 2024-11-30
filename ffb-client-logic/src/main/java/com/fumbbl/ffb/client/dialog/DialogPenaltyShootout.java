@@ -10,19 +10,9 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPenaltyShootoutParameter;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -175,7 +165,7 @@ public class DialogPenaltyShootout extends Dialog implements ActionListener {
 
 
 	private Icon icon(int roll) {
-		return new ImageIcon(getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty(roll)));
+		return new ImageIcon(getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty(roll), dimensionProvider()));
 	}
 
 	private String iconProperty(int roll) {

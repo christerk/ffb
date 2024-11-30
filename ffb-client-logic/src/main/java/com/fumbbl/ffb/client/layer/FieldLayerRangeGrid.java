@@ -4,9 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 
@@ -22,8 +20,8 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private FieldCoordinate fCenterCoordinate;
 
-	public FieldLayerRangeGrid(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerRangeGrid(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {
@@ -60,10 +58,10 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private void markSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width;
 			int y = dimension.height;
-			Rectangle bounds = new Rectangle(x + 1, y + 1, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(x + 1, y + 1, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

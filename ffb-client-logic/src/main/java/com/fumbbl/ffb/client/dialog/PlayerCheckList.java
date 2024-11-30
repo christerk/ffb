@@ -10,13 +10,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -34,13 +29,14 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 			throw new IllegalArgumentException("Argument players must not be empty or null.");
 		}
 
+		DimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
 		Game game = client.getGame();
 		List<PlayerCheckListItem> checkListItems = new ArrayList<>();
 		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
 		for (int i = 0; i < playerIds.length; i++) {
 			Player<?> player = game.getPlayerById(playerIds[i]);
 			if (player != null) {
-				BufferedImage playerIcon = playerIconFactory.getIcon(client, player, true);
+				BufferedImage playerIcon = playerIconFactory.getIcon(client, player, true, dimensionProvider);
 				StringBuilder text = new StringBuilder();
 				text.append(player.getName());
 				if (ArrayTool.isProvided(descriptions)) {
@@ -58,7 +54,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 		setListData(checkListItems.toArray(new PlayerCheckListItem[0]));
 
 		// Use a CheckListRenderer (see below) to renderer list cells
-		setCellRenderer(new PlayerCheckListRenderer(client.getUserInterface().getDimensionProvider()));
+		setCellRenderer(new PlayerCheckListRenderer(dimensionProvider));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		// Add a mouse listener to handle changing selection

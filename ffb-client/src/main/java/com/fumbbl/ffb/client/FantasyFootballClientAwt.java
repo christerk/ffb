@@ -98,7 +98,6 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		}
 
 		setGame(new Game(getFactorySource(), factoryManager));
-		fStateFactory = new ClientStateFactory(this);
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
 		fReplayer = new ClientReplayer(this);
@@ -107,6 +106,7 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 
+		fStateFactory = new ClientStateFactory(this);
 		fCommandEndpoint = new CommandEndpoint(this);
 
 		fCommunication = new ClientCommunication(this);

@@ -1,26 +1,17 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.GameResult;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 
 public class DialogGameStatistics extends Dialog {
 
@@ -39,12 +30,13 @@ public class DialogGameStatistics extends Dialog {
 
 		super(pClient, "Game Statistics", true);
 
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
-		fontLargeBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
-		fontBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
-		fontLargeBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
-		fontRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9) + "px\"><b>";
-		fontLargeRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(13) + "px\"><b>";
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		fontLargeBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(13) + "px\"><b>";
+		fontBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		fontLargeBlueBoldOpen = "<font color=\"#0000ff\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(13) + "px\"><b>";
+		fontRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		fontLargeRedBoldOpen = "<font color=\"#ff0000\" face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(13) + "px\"><b>";
 
 		Game game = getClient().getGame();
 
@@ -396,9 +388,11 @@ public class DialogGameStatistics extends Dialog {
 	}
 
 	private void setPreferredSize(Component component) {
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
+
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
-		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - dimensionProvider().scale(150)));
+		component.setPreferredSize(new Dimension(this.getPreferredSize().width, frameSize.height - menuBarSize.height - dimensionProvider.scale(150)));
 	}
 
 	protected void setLocationToCenter() {

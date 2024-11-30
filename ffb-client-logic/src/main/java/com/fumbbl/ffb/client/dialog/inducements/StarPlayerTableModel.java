@@ -1,17 +1,15 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.model.GameOptions;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Position;
-import com.fumbbl.ffb.model.RosterPlayer;
-import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,7 +126,9 @@ public class StarPlayerTableModel extends AbstractTableModel {
 	}
 
 	private Object[][] buildRowData() {
-		PlayerIconFactory playerIconFactory = fDialog.getClient().getUserInterface().getPlayerIconFactory();
+		UserInterface userInterface = fDialog.getClient().getUserInterface();
+		PlayerIconFactory playerIconFactory = userInterface.getPlayerIconFactory();
+		DimensionProvider dimensionProvider = userInterface.getPitchDimensionProvider();
 		List<Object[]> starPlayerList = new ArrayList<>();
 		for (RosterPosition pos : fDialog.getRoster().getPositions()) {
 			if (PlayerType.STAR == pos.getType()) {
@@ -137,7 +137,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 				player.setName(pos.getName());
 				Object[] star = new Object[5];
 				star[0] = Boolean.FALSE;
-				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false));
+				star[1] = new ImageIcon(playerIconFactory.getBasicIcon(fDialog.getClient(), player, true, false, false, false, dimensionProvider));
 				star[2] = pos.getName();
 				star[3] = StringTool.formatThousands(pos.getCost());
 				star[4] = player;

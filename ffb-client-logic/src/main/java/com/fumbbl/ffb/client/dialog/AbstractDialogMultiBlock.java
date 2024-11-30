@@ -55,7 +55,7 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 		button.setBounds(0, 0, 45, 45);
 		button.setFocusPainted(false);
 		button.setMargin(new Insets(5, 5, 5, 5));
-		button.setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll)));
+		button.setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll, dimensionProvider())));
 		if (markAsReRolled) {
 			button.setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
 		}

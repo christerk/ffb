@@ -3,10 +3,7 @@ package com.fumbbl.ffb.client.state.bb2020;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -15,8 +12,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +83,7 @@ public class ClientStateHitAndRun extends ClientState {
 
 	protected JMenuItem createCancelItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Hit And Run",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HIT_AND_RUN)));
+			createMenuIcon(iconCache, IIconProperty.ACTION_HIT_AND_RUN));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN, 0));
 		return menuItem;

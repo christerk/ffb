@@ -6,14 +6,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogEndTurn;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -110,13 +103,13 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.TURN_DICE_STATUS);
+		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		Dimension buttonDimension = dimensionProvider.dimension(DimensionProvider.Component.END_TURN_BUTTON);
+		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON);
 		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
 	}
 
@@ -142,9 +135,9 @@ public class TurnDiceStatusComponent extends JPanel
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED, dimensionProvider);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE, dimensionProvider);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -205,7 +198,7 @@ public class TurnDiceStatusComponent extends JPanel
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage buttonImage = iconCache.getIconByProperty(
-					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON);
+					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, dimensionProvider);
 			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.setFont(buttonFont);
 			g2d.setColor(Color.BLACK);
@@ -222,7 +215,7 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fTurnMode != null) && (fTurnMode != TurnMode.START_GAME) && (fFinished == null)) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING);
+			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING, dimensionProvider);
 			g2d.drawImage(playingImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.dispose();
 		}
@@ -242,7 +235,7 @@ public class TurnDiceStatusComponent extends JPanel
 				break;
 			}
 			if (imageProperty != null) {
-				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty);
+				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty, dimensionProvider);
 				g2d.drawImage(statusImage, buttonArea.x, buttonArea.y, buttonArea.width, size.height, null);
 			}
 			g2d.setColor(Color.BLACK);
@@ -282,7 +275,7 @@ public class TurnDiceStatusComponent extends JPanel
 			int length = blockRoll.getBlockRoll().length;
 			for (int i = 0; i < length; i++) {
 				g2d.setComposite(oldComposite);
-				BufferedImage diceIcon = iconCache.getDiceIcon(blockRoll.getBlockRoll()[i]);
+				BufferedImage diceIcon = iconCache.getDiceIcon(blockRoll.getBlockRoll()[i], dimensionProvider);
 				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
@@ -331,11 +324,11 @@ public class TurnDiceStatusComponent extends JPanel
 
 		FontCache fontCache = client.getUserInterface().getFontCache();
 
-		buttonFont = fontCache.font(Font.BOLD, 14);
+		buttonFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
 
-		diceFont = fontCache.font(Font.BOLD, 11);
-		statusTitleFont = fontCache.font(Font.BOLD, 12);
-		statusMessageFont = fontCache.font(Font.PLAIN, 12);
+		diceFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
+		statusTitleFont = fontCache.font(Font.BOLD, 12, dimensionProvider);
+		statusMessageFont = fontCache.font(Font.PLAIN, 12, dimensionProvider);
 
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (!StringTool.isEqual(fStatusTitle, clientData.getStatusTitle())

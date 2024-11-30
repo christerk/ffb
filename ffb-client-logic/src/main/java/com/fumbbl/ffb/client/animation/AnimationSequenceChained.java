@@ -5,9 +5,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
@@ -24,10 +22,10 @@ import java.awt.image.BufferedImage;
 public class AnimationSequenceChained implements IAnimationSequence, ActionListener {
 
 	public static AnimationSequenceChained createAnimationSequenceTrickster(FantasyFootballClient client, Animation animation) {
-		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+		PitchDimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
 		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
 		Player<?> player = client.getGame().getPlayerById(animation.getThrownPlayerId());
-		BufferedImage icon = playerIconFactory.getIcon(client, player);
+		BufferedImage icon = playerIconFactory.getIcon(client, player, dimensionProvider);
 
 		return new AnimationSequenceChained(
 			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),
@@ -66,7 +64,7 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 
 
 	public static AnimationSequenceChained createAnimationSequenceBlastin(FantasyFootballClient client, Animation animation) {
-		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+		PitchDimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
 
 		return new AnimationSequenceChained(
 			new AnimationData(dimensionProvider.mapToLocal(animation.getStartCoordinate(), true),

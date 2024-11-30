@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 
@@ -23,14 +20,14 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerPitch extends FieldLayer {
 
-	public FieldLayerPitch(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerPitch(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
 	public void drawWeather(Weather pWeather) {
 		if (pWeather != null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather);
+			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather, uiDimensionProvider);
 			if (fieldImage != null) {
 				drawPitch(fieldImage);
 			}
@@ -41,7 +38,7 @@ public class FieldLayerPitch extends FieldLayer {
 	protected void drawPitch(BufferedImage pImage) {
 		Graphics2D g2d = fImage.createGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1.0));
-		if (dimensionProvider.isPitchPortrait()) {
+		if (uiDimensionProvider.isPitchPortrait()) {
 			g2d.translate(0, size.height);
 			g2d.rotate(-Math.PI / 2);
 			g2d.drawImage(pImage, 0, 0, fImage.getHeight(), fImage.getWidth(),null);
@@ -69,12 +66,12 @@ public class FieldLayerPitch extends FieldLayer {
 			Rectangle2D teamNameBounds = metrics.getStringBounds(teamNameHome, g2d);
 			int translateX;
 			int translateY;
-			if (dimensionProvider.isPitchPortrait()) {
+			if (pitchDimensionProvider.isPitchPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) (dimensionProvider.fieldSquareSize(25.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) (pitchDimensionProvider.fieldSquareSize(25.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) (dimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(-Math.PI / 2.0);
@@ -85,12 +82,12 @@ public class FieldLayerPitch extends FieldLayer {
 			g2d = getGraphicsWithFontAndColor();
 			metrics = g2d.getFontMetrics();
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
-			if (dimensionProvider.isPitchPortrait()) {
+			if (pitchDimensionProvider.isPitchPortrait()) {
 				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
-				translateY = (int) (dimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateY = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
-				translateX = (int) (dimensionProvider.fieldSquareSize(25) + (teamNameBounds.getHeight() / 2)) - 4;
+				translateX = (int) (pitchDimensionProvider.fieldSquareSize(25) + (teamNameBounds.getHeight() / 2)) - 4;
 				translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(Math.PI / 2.0);
@@ -106,7 +103,7 @@ public class FieldLayerPitch extends FieldLayer {
 		Graphics2D g2d = getImage().createGraphics();
 		g2d.setColor(Color.WHITE);
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-		g2d.setFont(fontCache.font(Font.BOLD, 20));
+		g2d.setFont(fontCache.font(Font.BOLD, 20, pitchDimensionProvider));
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		return g2d;
 	}

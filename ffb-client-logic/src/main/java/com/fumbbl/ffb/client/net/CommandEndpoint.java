@@ -68,7 +68,7 @@ public class CommandEndpoint {
 			return;
 		}
 
-		JsonValue jsonValue = JsonValue
+		@SuppressWarnings("deprecation") JsonValue jsonValue = JsonValue
 			.readFrom(fCommandCompression ? LZString.decompressFromUTF16(pTextMessage) : pTextMessage);
 
 		synchronized (this) {
@@ -98,6 +98,7 @@ public class CommandEndpoint {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@OnClose
 	public void onClose(Session ignoredUnused, CloseReason ignored) {
 		fClient.getUserInterface().getStatusReport().reportSocketClosed();
@@ -109,15 +110,15 @@ public class CommandEndpoint {
 		return fCloseLatch.await(duration, unit);
 	}
 
-	public boolean send(NetCommand pCommand) throws IOException {
+	public void send(NetCommand pCommand) throws IOException {
 
 		if ((pCommand == null) || !isOpen()) {
-			return false;
+			return;
 		}
 
 		JsonValue jsonValue = pCommand.toJsonValue();
 		if (jsonValue == null) {
-			return false;
+			return;
 		}
 
 		String textMessage = jsonValue.toString();
@@ -126,12 +127,11 @@ public class CommandEndpoint {
 		}
 
 		if (!StringTool.isProvided(textMessage)) {
-			return false;
+			return;
 		}
 
 		// fSession.getAsyncRemote().sendText(textMessage);
 		fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)));
-		return true;
 
 	}
 

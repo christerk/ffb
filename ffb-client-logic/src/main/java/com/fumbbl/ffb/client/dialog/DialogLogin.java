@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.PasswordChallenge;
-import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JPasswordField;
@@ -52,7 +51,6 @@ public class DialogLogin extends Dialog {
 
 		super(pClient, (ClientMode.PLAYER == pClient.getMode()) ? "Start Game as Player" : "Start Game as Spectator",
 			false);
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
 
 		fPasswordLength = pPasswordLength;
 		fEncodedPassword = pEncodedPassword;
@@ -60,29 +58,29 @@ public class DialogLogin extends Dialog {
 		boolean askForPassword = (fPasswordLength >= 0);
 
 		JPanel teamHomePanel = new JPanel();
-		JTextField teamHomeField = new JTextField(dimensionProvider, StringTool.print(pTeamHomeName));
+		JTextField teamHomeField = new JTextField(dimensionProvider(), StringTool.print(pTeamHomeName));
 		teamHomeField.setEditable(false);
 		teamHomePanel.setLayout(new BoxLayout(teamHomePanel, BoxLayout.X_AXIS));
 		teamHomePanel.add(teamHomeField);
-		teamHomePanel.setBorder(createTitledBorder(dimensionProvider, "Team"));
+		teamHomePanel.setBorder(createTitledBorder("Team"));
 
 		JPanel teamAwayPanel = new JPanel();
-		JTextField teamAwayField = new JTextField(dimensionProvider, StringTool.print(pTeamAwayName));
+		JTextField teamAwayField = new JTextField(dimensionProvider(), StringTool.print(pTeamAwayName));
 		teamAwayField.setEditable(false);
 		teamAwayPanel.setLayout(new BoxLayout(teamAwayPanel, BoxLayout.X_AXIS));
 		teamAwayPanel.add(teamAwayField);
-		teamAwayPanel.setBorder(createTitledBorder(dimensionProvider, "Opponent"));
+		teamAwayPanel.setBorder(createTitledBorder("Opponent"));
 
-		fFieldCoach = new JTextField(dimensionProvider, 20);
+		fFieldCoach = new JTextField(dimensionProvider(), 20);
 		fFieldCoach.setText(pClient.getParameters().getCoach());
 		fFieldCoach.setEditable(false);
 
 		JPanel coachPanel = new JPanel();
 		coachPanel.setLayout(new BoxLayout(coachPanel, BoxLayout.X_AXIS));
 		coachPanel.add(fFieldCoach);
-		coachPanel.setBorder(createTitledBorder(dimensionProvider, "Coach"));
+		coachPanel.setBorder(createTitledBorder("Coach"));
 
-		fFieldPassword = new JPasswordField(dimensionProvider, 20);
+		fFieldPassword = new JPasswordField(dimensionProvider(), 20);
 		if (fEncodedPassword != null) {
 			fFieldPassword.setText(_PASSWORD_DEFAULT.substring(0, fPasswordLength));
 		}
@@ -108,9 +106,9 @@ public class DialogLogin extends Dialog {
 		JPanel passwordPanel = new JPanel();
 		passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.X_AXIS));
 		passwordPanel.add(fFieldPassword);
-		passwordPanel.setBorder(createTitledBorder(dimensionProvider, "Password"));
+		passwordPanel.setBorder(createTitledBorder("Password"));
 
-		fFieldGame = new JTextField(dimensionProvider, 20);
+		fFieldGame = new JTextField(dimensionProvider(), 20);
 		fFieldGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent pActionEvent) {
 				fButtonCreate.requestFocus();
@@ -126,18 +124,18 @@ public class DialogLogin extends Dialog {
 		JPanel gamePanel = new JPanel();
 		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.X_AXIS));
 		gamePanel.add(fFieldGame);
-		gamePanel.setBorder(createTitledBorder(dimensionProvider, "Game"));
+		gamePanel.setBorder(createTitledBorder("Game"));
 
-		fButtonList = new JButton(dimensionProvider, "List Open Games");
+		fButtonList = new JButton(dimensionProvider(), "List Open Games");
 		fButtonList.addActionListener(pActionEvent -> {
 			fListGames = true;
 			checkAndCloseDialog();
 		});
 
 		if (ClientMode.PLAYER == getClient().getMode()) {
-			fButtonCreate = new JButton(dimensionProvider, fShowGameName ? "Start New Game" : "Start Game");
+			fButtonCreate = new JButton(dimensionProvider(), fShowGameName ? "Start New Game" : "Start Game");
 		} else {
-			fButtonCreate = new JButton(dimensionProvider, "Spectate Game");
+			fButtonCreate = new JButton(dimensionProvider(), "Spectate Game");
 		}
 		fButtonCreate.addActionListener(pActionEvent -> {
 			fListGames = false;
@@ -252,8 +250,8 @@ public class DialogLogin extends Dialog {
 		}
 	}
 
-	private CompoundBorder createTitledBorder(DimensionProvider dimensionProvider, String title) {
-		return BorderFactory.createCompoundBorder(ScaledBorderFactory.createTitledBorder(dimensionProvider, title),
+	private CompoundBorder createTitledBorder(String title) {
+		return BorderFactory.createCompoundBorder(ScaledBorderFactory.createTitledBorder(dimensionProvider(), title),
 			BorderFactory.createEmptyBorder(0, 2, 2, 2));
 	}
 

@@ -5,10 +5,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.FieldModel;
 
 import javax.swing.JPanel;
@@ -60,9 +57,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.BUTTON_BOX);
+		size = dimensionProvider.dimension(Component.BUTTON_BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-		Dimension button = dimensionProvider.dimension(DimensionProvider.Component.BOX_BUTTON);
+		Dimension button = dimensionProvider.dimension(Component.BOX_BUTTON);
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.OUT,
@@ -116,9 +113,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_RED, dimensionProvider);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX_BUTTONS_BLUE, dimensionProvider);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -135,9 +132,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 			Rectangle buttonLocation = fButtonLocations.get(pBox);
 			BufferedImage buttonImage;
 			if ((pBox == fOpenBox) || (pBox == fSelectedBox)) {
-				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON_SELECTED);
+				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON_SELECTED, dimensionProvider);
 			} else {
-				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON);
+				buttonImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BOX_BUTTON, dimensionProvider);
 			}
 			g2d.drawImage(buttonImage, buttonLocation.x, buttonLocation.y, buttonLocation.width, buttonLocation.height, null);
 			g2d.setFont(buttonFont);
@@ -159,7 +156,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void refresh() {
-		buttonFont = fontCache.font(Font.BOLD, 11);
+		buttonFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
 
 		drawBackground();
 		drawButton(BoxType.RESERVES);

@@ -12,18 +12,14 @@ import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -143,7 +139,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 	private void addIconUrl(Set<String> pIconUrls, String pIconUrl) {
 		if (StringTool.isProvided(pIconUrl)) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			if (iconCache.getIconByUrl(pIconUrl) == null) {
+			if (iconCache.getIconByUrl(pIconUrl, getClient().getUserInterface().getUiDimensionProvider()) == null) {
 				pIconUrls.add(pIconUrl);
 			}
 		}

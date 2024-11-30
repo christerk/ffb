@@ -3,12 +3,7 @@ package com.fumbbl.ffb.client.ui;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -45,6 +40,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private Font turnTextFont;
 
 	private final DimensionProvider dimensionProvider;
+	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 	private Rectangle weatherLocation;
 	private Rectangle spectatorLocation;
@@ -71,6 +67,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 													 StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
+		this.layoutSettings = dimensionProvider.getLayoutSettings();
 		this.styleProvider = styleProvider;
 		setLayout(null);
 		ToolTipManager.sharedInstance().registerComponent(this);
@@ -83,13 +80,13 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Graphics2D g2d = fImage.createGraphics();
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			String scorebarBackground = dimensionProvider.getLayout() ==
-				DimensionProvider.ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
-			BufferedImage background = iconCache.getIconByProperty(scorebarBackground);
+			String scorebarBackground = layoutSettings.getLayout() ==
+				ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
+			BufferedImage background = iconCache.getIconByProperty(scorebarBackground, dimensionProvider);
 			g2d.drawImage(background, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
-			Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+			Dimension dimension = dimensionProvider.dimension(Component.SCORE_BOARD);
 			g2d.fillRect(0, 0, dimension.width, dimension.height);
 		}
 		g2d.dispose();
@@ -109,7 +106,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		int x;
 		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - dimensionProvider.scale(40);
 		int y = ((lineHeight() + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			y += lineHeight();
 		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
@@ -148,7 +145,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Rectangle2D halfBounds = metricsText.getStringBounds(half, g2d);
 
 		int x;
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + dimensionProvider.scale(20));
 			x = (getWidth() - length) / 2;
 		} else {
@@ -170,7 +167,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (spectatorCount > 0) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS);
+			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS, dimensionProvider);
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(spectatorFont);
 			String spectatorString = Integer.toString(spectatorCount);
@@ -184,11 +181,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			if (fCoachBannedHome) {
-				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME);
+				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_HOME, dimensionProvider);
 				g2d.drawImage(coachBannedImage, coachBannedHome.x, coachBannedHome.y, null);
 			}
 			if (fCoachBannedAway) {
-				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY);
+				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY, dimensionProvider);
 				g2d.drawImage(coachBannedImage, coachBannedAway.x, coachBannedAway.y, null);
 			}
 			g2d.dispose();
@@ -220,7 +217,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			}
 			if (StringTool.isProvided(weatherIconProperty)) {
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
-				BufferedImage weatherIcon = iconCache.getIconByProperty(weatherIconProperty);
+				BufferedImage weatherIcon = iconCache.getIconByProperty(weatherIconProperty, dimensionProvider);
 				Graphics2D g2d = fImage.createGraphics();
 				g2d.drawImage(weatherIcon, weatherLocation.x, weatherLocation.y, null);
 				g2d.dispose();
@@ -241,15 +238,15 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SCORE_BOARD);
+		Dimension size = dimensionProvider.dimension(Component.SCORE_BOARD);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
-		int unscaledWidth = dimensionProvider.unscaledDimension(DimensionProvider.Component.SCORE_BOARD).width;
+		int unscaledWidth = dimensionProvider.unscaledDimension(Component.SCORE_BOARD).width;
 
-		if (dimensionProvider.getLayout() == DimensionProvider.ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
 			weatherLocation = dimensionProvider.scale(new Rectangle(159, 64, 100, 32));
 			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 130, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle(1, 0, 36, 32));
@@ -263,11 +260,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void refresh() {
-		scoreFont = fontCache.font(Font.BOLD, 24);
-		turnNumberFont = fontCache.font(Font.BOLD, 22);
-		turnTextFont = fontCache.font(Font.BOLD, 14);
+		scoreFont = fontCache.font(Font.BOLD, 24, dimensionProvider);
+		turnNumberFont = fontCache.font(Font.BOLD, 22, dimensionProvider);
+		turnTextFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
 
-		spectatorFont = fontCache.font(Font.BOLD, 14);
+		spectatorFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
 
 		Game game = getClient().getGame();
 		if (game.getHalf() > 0) {

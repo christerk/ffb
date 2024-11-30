@@ -35,18 +35,20 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 	private int iconGap;
 
 	private int iconWidth;
+	private final UiDimensionProvider dimensionProvider;
 
-	public ReplayControl(FantasyFootballClient pClient) {
+	public ReplayControl(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider) {
 
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
-		size = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_CONTROL);
+	public void initLayout() {
+		size = dimensionProvider.dimension(Component.REPLAY_CONTROL);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
 		setLayout(null);
@@ -54,8 +56,8 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		setPreferredSize(size);
 		setMaximumSize(size);
 
-		iconGap = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON_GAP).width;
-		iconWidth = dimensionProvider.dimension(DimensionProvider.Component.REPLAY_ICON).width;
+		iconGap = dimensionProvider.dimension(Component.REPLAY_ICON_GAP).width;
+		iconWidth = dimensionProvider.dimension(Component.REPLAY_ICON).width;
 
 		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
 			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
@@ -94,7 +96,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		if (replayer.isRunning()) {
 			g2d.setColor(Color.BLACK);
 			FontCache fontCache = getClient().getUserInterface().getFontCache();
-			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			g2d.setFont(fontCache.font(Font.BOLD, 12, dimensionProvider));
 			String speed = ((replayer.getReplaySpeed() > 0) ? replayer.getReplaySpeed() : "0.5") +
 				"x";
 			Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(speed, g2d);
@@ -159,11 +161,11 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage icon;
 			if (isActive()) {
-				icon = iconCache.getIconByProperty(fIconPropertyActive);
+				icon = iconCache.getIconByProperty(fIconPropertyActive, dimensionProvider);
 			} else if (isSelected()) {
-				icon = iconCache.getIconByProperty(fIconPropertySelected);
+				icon = iconCache.getIconByProperty(fIconPropertySelected, dimensionProvider);
 			} else {
-				icon = iconCache.getIconByProperty(fIconProperty);
+				icon = iconCache.getIconByProperty(fIconProperty, dimensionProvider);
 			}
 			pGraphics2D.drawImage(icon, fPosition.x, fPosition.y, null);
 		}

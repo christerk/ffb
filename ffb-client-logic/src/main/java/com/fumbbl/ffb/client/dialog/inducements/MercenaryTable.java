@@ -39,7 +39,7 @@ public class MercenaryTable extends JTable {
 				.map(Skill::getName)
 				.forEach(skills::add);
 
-			JComboBox<String> box = new JComboBox<String>(dimensionProvider, skills.toArray(new String[0]));
+			JComboBox<String> box = new JComboBox<>(dimensionProvider, skills.toArray(new String[0]));
 			return new DefaultCellEditor(box);
 		}
 		return super.getCellEditor(row, column);
