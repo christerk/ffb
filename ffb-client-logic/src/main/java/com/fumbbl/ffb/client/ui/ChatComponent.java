@@ -33,7 +33,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	private final StyleProvider styleProvider;
 	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
@@ -99,7 +99,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatInputField.addMouseMotionListener(this);
 
 		fReplayShown = false;
-		fReplayControl = new ReplayControl(getClient());
+		fReplayControl = new ReplayControl(getClient(), dimensionProvider);
 
 	}
 

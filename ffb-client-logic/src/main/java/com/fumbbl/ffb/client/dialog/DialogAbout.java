@@ -28,7 +28,8 @@ public class DialogAbout extends Dialog {
 
 		super(pClient, "About Fantasy Football", true);
 
-		JLabel aboutLabel = new JLabel(dimensionProvider(), createAboutImageIcon(pClient));
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		JLabel aboutLabel = new JLabel(dimensionProvider, createAboutImageIcon(pClient, dimensionProvider));
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(aboutLabel, BorderLayout.CENTER);
@@ -49,8 +50,7 @@ public class DialogAbout extends Dialog {
 		}
 	}
 
-	private ImageIcon createAboutImageIcon(FantasyFootballClient pClient) {
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+	private ImageIcon createAboutImageIcon(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
 		Dimension dimension = dimensionProvider.dimension(Component.ABOUT_DIALOG);
 
 		BufferedImage aboutImage = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
@@ -76,32 +76,32 @@ public class DialogAbout extends Dialog {
 
 		int y = 130;
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Headcoach: BattleLore");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for providing ideas, encouragement and the occasional kick in the butt.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Headcoach: BattleLore", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for providing ideas, encouragement and the occasional kick in the butt.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Assistant Coaches: WhatBall, Garion and Lakrillo");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for helping to to pull the cart along.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Assistant Coaches: WhatBall, Garion and Lakrillo", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for helping to to pull the cart along.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Sports Director: Christer");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for the patience and energy to tackle the long road with me.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Sports Director: Christer", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for the patience and energy to tackle the long road with me.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Lifetime Luxury Suite Owner: SkiJunkie");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you doing it first and giving a vision to follow.");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Lifetime Luxury Suite Owner: SkiJunkie", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you doing it first and giving a vision to follow.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Grounds Keepers: Java, Tussock");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Grounds Keepers: Java, Tussock", dimensionProvider);
 
 		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine),
-			"Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Official supplier of game balls: Qaz");
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Thanks for the hats: ArrestedDevelopment");
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you all for making FFB look and sound great.");
+			"Light Show by: Cowhead, F_alk, FreeRange, Harvestmouse, Knut_Rockie, MisterFurious and Ryanfitz", dimensionProvider);
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Playing the Stadium Organ: VocalVoodoo and Minenbonnie", dimensionProvider);
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Official supplier of game balls: Qaz", dimensionProvider);
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetLine), "Thanks for the hats: ArrestedDevelopment", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you all for making FFB look and sound great.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Cheerleaders & Pest Control:");
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Cheerleaders & Pest Control:", dimensionProvider);
 
 		y += 3;
 		for (String playtester : _PLAYTESTERS) {
-			drawSmallText(g2d, dimensionProvider.scale(18), dimensionProvider.scale(y += 13), playtester);
+			drawSmallText(g2d, dimensionProvider.scale(18), dimensionProvider.scale(y += 13), playtester, dimensionProvider);
 		}
 
 		g2d.dispose();
@@ -111,21 +111,21 @@ public class DialogAbout extends Dialog {
 	}
 
 
-	private void drawSizedText(Graphics2D pG2d, int pX, int pY, String pText, int size) {
-		pG2d.setFont(fontCache().font(Font.PLAIN, size, dimensionProvider()));
+	private void drawSizedText(Graphics2D pG2d, int pX, int pY, String pText, int size, DimensionProvider dimensionProvider) {
+		pG2d.setFont(fontCache().font(Font.PLAIN, size, dimensionProvider));
 		pG2d.drawString(pText, pX, pY);
 	}
 
-	private void drawText(Graphics2D pG2d, int pX, int pY, String pText) {
-		drawSizedText(pG2d, pX, pY, pText, 12);
+	private void drawText(Graphics2D pG2d, int pX, int pY, String pText, DimensionProvider dimensionProvider) {
+		drawSizedText(pG2d, pX, pY, pText, 12, dimensionProvider);
 	}
 
-	private void drawSmallText(Graphics2D pG2d, int pX, int pY, String pText) {
-		drawSizedText(pG2d, pX, pY, pText, 10);
+	private void drawSmallText(Graphics2D pG2d, int pX, int pY, String pText, DimensionProvider dimensionProvider) {
+		drawSizedText(pG2d, pX, pY, pText, 10, dimensionProvider);
 	}
 
-	private void drawBold(Graphics2D pG2d, int pX, int pY, String pText) {
-		pG2d.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider()));
+	private void drawBold(Graphics2D pG2d, int pX, int pY, String pText, DimensionProvider dimensionProvider) {
+		pG2d.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider));
 		pG2d.drawString(pText, pX, pY);
 	}
 

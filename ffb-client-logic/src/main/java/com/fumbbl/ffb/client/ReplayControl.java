@@ -37,10 +37,10 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 	private int iconWidth;
 	private final UiDimensionProvider dimensionProvider;
 
-	public ReplayControl(FantasyFootballClient pClient) {
+	public ReplayControl(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider) {
 
 		fClient = pClient;
-		dimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		this.dimensionProvider = dimensionProvider;
 
 		addMouseListener(this);
 		addMouseMotionListener(this);
