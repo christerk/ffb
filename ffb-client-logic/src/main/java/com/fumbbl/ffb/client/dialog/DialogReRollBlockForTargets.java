@@ -4,7 +4,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsParameter;
@@ -162,7 +161,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 		for (int die = 1; die <= diceCount; die++) {
 			int finalDie = die;
 			if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalDie - 1)) {
-				JButton proButton = new JButton(dimensionProvider(), "Die " + die, mnemonics.get(0), RenderContext.ON_PITCH);
+				JButton proButton = new JButton(dimensionProvider(), "Die " + die, mnemonics.get(0));
 				proButton.addActionListener(e -> consumer.accept(target, finalDie - 1));
 				proButton.setMnemonic(mnemonics.get(0));
 				this.addKeyListener(new PressedKeyListener(mnemonics.get(0)) {
@@ -195,7 +194,7 @@ public class DialogReRollBlockForTargets extends AbstractDialogMultiBlock {
 	}
 
 	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(dimensionProvider(), buttonName, mnemonic, RenderContext.ON_PITCH);
+		JButton button = new JButton(dimensionProvider(), buttonName, mnemonic);
 		button.addActionListener(e -> handleReRollUse(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

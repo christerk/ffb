@@ -64,22 +64,22 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private FieldCoordinate fBombCoordinate;
 	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
 
-	private final DimensionProvider dimensionProvider;
+	private final UiDimensionProvider uiDimensionProvider;
 
-	public FieldComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
 
 		fClient = pClient;
-		this.dimensionProvider = dimensionProvider;
-		fLayerField = new FieldLayerPitch(pClient, dimensionProvider, fontCache);
-		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, dimensionProvider, fontCache);
-		fLayerBloodspots = new FieldLayerBloodspots(pClient, dimensionProvider, fontCache);
-		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, dimensionProvider, fontCache);
-		fLayerMarker = new FieldLayerMarker(pClient, dimensionProvider, fontCache);
-		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, dimensionProvider, fontCache);
-		fLayerPlayers = new FieldLayerPlayers(pClient, dimensionProvider, fontCache);
-		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, dimensionProvider, fontCache);
-		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, dimensionProvider, fontCache);
-		layerEnhancements = new FieldLayerEnhancements(pClient, dimensionProvider, fontCache);
+		this.uiDimensionProvider = uiDimensionProvider;
+		fLayerField = new FieldLayerPitch(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerBloodspots = new FieldLayerBloodspots(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerMarker = new FieldLayerMarker(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerPlayers = new FieldLayerPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
@@ -105,7 +105,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerRangeRuler.initLayout();
 		layerEnhancements.initLayout();
 
-		Dimension size = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
+		Dimension size = uiDimensionProvider.dimension(Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
 		setMinimumSize(size);

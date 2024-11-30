@@ -1,20 +1,17 @@
 package com.fumbbl.ffb.client.layer;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.RenderContext;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import java.awt.image.BufferedImage;
 
 public class FieldLayerEnhancements extends FieldLayer {
-	public FieldLayerEnhancements(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerEnhancements(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
 	public void addEnhancement(OnPitchEnhancement enhancement) {
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(enhancement.getIconProperty(), RenderContext.ON_PITCH);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(enhancement.getIconProperty(), pitchDimensionProvider);
 		draw(icon, enhancement.getCoordinate(), 1.0f);
 	}
 

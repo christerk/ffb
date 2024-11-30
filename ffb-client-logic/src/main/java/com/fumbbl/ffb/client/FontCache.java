@@ -9,17 +9,12 @@ public class FontCache {
 
 	private final Map<Key, Font> fonts = new HashMap<>();
 
-	private final DimensionProvider dimensionProvider;
 
-	public FontCache(DimensionProvider dimensionProvider) {
-		this.dimensionProvider = dimensionProvider;
-	}
-
-	public Font font(int style, int size, RenderContext renderContext) {
-		Key key = new Key(style, size, renderContext);
+	public Font font(int style, int size, DimensionProvider dimensionProvider) {
+		Key key = new Key(style, size, dimensionProvider.getRenderContext());
 		if (!fonts.containsKey(key)) {
 			//noinspection MagicConstant
-			fonts.put(key, new Font(key.getFace().getName(), key.getStyle(), dimensionProvider.scale(key.getSize(), renderContext)));
+			fonts.put(key, new Font(key.getFace().getName(), key.getStyle(), dimensionProvider.scale(key.getSize())));
 		}
 		return fonts.get(key);
 	}
@@ -65,10 +60,6 @@ public class FontCache {
 
 		public int getSize() {
 			return size;
-		}
-
-		public RenderContext getRenderContext() {
-			return renderContext;
 		}
 
 		@Override

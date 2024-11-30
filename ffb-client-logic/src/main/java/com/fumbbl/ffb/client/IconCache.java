@@ -75,15 +75,13 @@ public class IconCache {
 	private final Map<String, Integer> fCurrentIndexPerKey;
 
 	private final FantasyFootballClient fClient;
-	private final DimensionProvider dimensionProvider;
 	private final Map<String, String> localCacheMap = new HashMap<>();
 	private MessageDigest digest;
 	private String localCacheFolder;
 	private final HttpClient httpClient;
 
-	public IconCache(FantasyFootballClient pClient, DimensionProvider dimensionProvider) {
+	public IconCache(FantasyFootballClient pClient) {
 		fClient = pClient;
-		this.dimensionProvider = dimensionProvider;
 		fIconByKey = new HashMap<>();
 		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
@@ -256,25 +254,25 @@ public class IconCache {
 
 	}
 
-	public BufferedImage getIconByProperty(String pIconProperty, RenderContext renderContext) {
+	public BufferedImage getIconByProperty(String pIconProperty, DimensionProvider dimensionProvider) {
 		if (!StringTool.isProvided(pIconProperty)) {
 			return null;
 		}
 		String iconUrl = getClient().getProperty(pIconProperty);
-		BufferedImage icon = getIconByUrl(iconUrl, renderContext);
+		BufferedImage icon = getIconByUrl(iconUrl, dimensionProvider);
 		if ((icon == null) && loadIconFromArchive(iconUrl)) {
-			icon = getIconByUrl(iconUrl, renderContext);
+			icon = getIconByUrl(iconUrl, dimensionProvider);
 		}
 		return icon;
 	}
 
-	public BufferedImage getIconByUrl(String pUrl, RenderContext renderContext) {
-		String key = pUrl + "_" + renderContext.name();
+	public BufferedImage getIconByUrl(String pUrl, DimensionProvider dimensionProvider) {
+		String key = pUrl + "_" + dimensionProvider.cacheKey();
 		BufferedImage bufferedImage = scaledIcons.get(key);
 		if (bufferedImage == null) {
 			bufferedImage = fIconByKey.get(pUrl);
 			if (bufferedImage != null) {
-				bufferedImage = dimensionProvider.scaleImage(bufferedImage, renderContext);
+				bufferedImage = dimensionProvider.scaleImage(bufferedImage);
 				scaledIcons.put(key, bufferedImage);
 			}
 		}
@@ -298,10 +296,10 @@ public class IconCache {
 	}
 
 
-	public BufferedImage getPitch(Game pGame, Weather pWeather) {
-		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather), RenderContext.UI);
+	public BufferedImage getPitch(Game pGame, Weather pWeather, DimensionProvider dimensionProvider) {
+		BufferedImage weatherPitch = getIconByUrl(findPitchUrl(pGame, pWeather), dimensionProvider);
 		if (pWeather == Weather.INTRO || weatherPitch == null) {
-			return getIconByProperty(IIconProperty.PITCH_INTRO, RenderContext.UI);
+			return getIconByProperty(IIconProperty.PITCH_INTRO, dimensionProvider);
 		} else {
 			return weatherPitch;
 		}
@@ -423,53 +421,53 @@ public class IconCache {
 
 	}
 
-	public BufferedImage getPushbackIcon(Direction direction, boolean selected) {
+	public BufferedImage getPushbackIcon(Direction direction, boolean selected, DimensionProvider dimensionProvider) {
 		if (selected) {
 			switch (direction) {
 				case NORTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH_SELECTED, dimensionProvider);
 				case NORTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST_SELECTED, dimensionProvider);
 				case EAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST_SELECTED, dimensionProvider);
 				case SOUTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST_SELECTED, dimensionProvider);
 				case SOUTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH_SELECTED, dimensionProvider);
 				case SOUTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST_SELECTED, dimensionProvider);
 				case WEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST_SELECTED, dimensionProvider);
 				case NORTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST_SELECTED, dimensionProvider);
 				default:
 					return null;
 			}
 		} else {
 			switch (direction) {
 				case NORTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTH, dimensionProvider);
 				case NORTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHEAST, dimensionProvider);
 				case EAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_EAST, dimensionProvider);
 				case SOUTHEAST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHEAST, dimensionProvider);
 				case SOUTH:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTH, dimensionProvider);
 				case SOUTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_SOUTHWEST, dimensionProvider);
 				case WEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_WEST, dimensionProvider);
 				case NORTHWEST:
-					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST, RenderContext.ON_PITCH);
+					return getIconByProperty(IIconProperty.GAME_PUSHBACK_NORTHWEST, dimensionProvider);
 				default:
 					return null;
 			}
 		}
 	}
 
-	public BufferedImage getIcon(BloodSpot pBloodspot) {
+	public BufferedImage getIcon(BloodSpot pBloodspot, DimensionProvider dimensionProvider) {
 		String iconProperty = pBloodspot.getIconProperty();
 		if (iconProperty == null) {
 			switch (pBloodspot.getInjury().getBase()) {
@@ -499,7 +497,7 @@ public class IconCache {
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
-		return getIconByProperty(iconProperty, RenderContext.ON_PITCH);
+		return getIconByProperty(iconProperty, dimensionProvider);
 	}
 
 	private String findPitchUrl(Game pGame, Weather pWeather) {
@@ -589,7 +587,7 @@ public class IconCache {
 		return pitchLoaded;
 	}
 
-	public BufferedImage getIcon(DiceDecoration pDiceDecoration) {
+	public BufferedImage getIcon(DiceDecoration pDiceDecoration, DimensionProvider dimensionProvider) {
 		String iconProperty = null;
 		switch (pDiceDecoration.getNrOfDice()) {
 			case -3:
@@ -618,26 +616,26 @@ public class IconCache {
 				break;
 		}
 		if (iconProperty != null) {
-			return getIconByProperty(iconProperty, RenderContext.ON_PITCH);
+			return getIconByProperty(iconProperty, dimensionProvider);
 		} else {
 			return null;
 		}
 	}
 
-	public BufferedImage getDiceIcon(int pRoll) {
+	public BufferedImage getDiceIcon(int pRoll, DimensionProvider dimensionProvider) {
 		switch (pRoll) {
 			case 1:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_1, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_1, dimensionProvider);
 			case 2:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_2, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_2, dimensionProvider);
 			case 3:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_3, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_3, dimensionProvider);
 			case 4:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_4, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_4, dimensionProvider);
 			case 5:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_5, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_5, dimensionProvider);
 			case 6:
-				return getIconByProperty(IIconProperty.DICE_BLOCK_6, RenderContext.ON_PITCH);
+				return getIconByProperty(IIconProperty.DICE_BLOCK_6, dimensionProvider);
 			default:
 				break;
 		}

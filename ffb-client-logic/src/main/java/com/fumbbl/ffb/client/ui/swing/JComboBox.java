@@ -1,16 +1,15 @@
 package com.fumbbl.ffb.client.ui.swing;
 
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.RenderContext;
 
 public class JComboBox<T> extends javax.swing.JComboBox<T> {
-	public JComboBox(DimensionProvider dimensionProvider, T[] items, RenderContext renderContext) {
+	public JComboBox(DimensionProvider dimensionProvider, T[] items) {
 		super(items);
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 
-	public JComboBox(DimensionProvider dimensionProvider, RenderContext renderContext) {
+	public JComboBox(DimensionProvider dimensionProvider) {
 		super();
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 }

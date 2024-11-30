@@ -44,7 +44,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(Component.LOG, RenderContext.UI);
+		Dimension size = dimensionProvider.dimension(Component.LOG);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

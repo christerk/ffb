@@ -4,7 +4,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogBlockRollParameter;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -57,12 +56,12 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 		boolean ownChoice = ((fDialogParameter.getNrOfDice() > 0)
 				|| (!fDialogParameter.hasTeamReRollOption() && !fDialogParameter.hasProReRollOption()));
 		for (int i = 0; i < fBlockDice.length; i++) {
-			fBlockDice[i] = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
+			fBlockDice[i] = new JButton(dimensionProvider());
 			fBlockDice[i].setOpaque(false);
 			fBlockDice[i].setBounds(0, 0, 45, 45);
 			fBlockDice[i].setFocusPainted(false);
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
-			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i])));
+			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i], dimensionProvider())));
 			blockRollPanel.add(fBlockDice[i]);
 			if (ownChoice) {
 				fBlockDice[i].addActionListener(this);
@@ -91,17 +90,17 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			reRollPanel.setOpaque(false);
 			reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
 
-			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll", RenderContext.ON_PITCH);
+			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll");
 			fButtonTeamReRoll.addActionListener(this);
 			fButtonTeamReRoll.setMnemonic(KeyEvent.VK_T);
 			fButtonTeamReRoll.addKeyListener(this);
 
-			fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", RenderContext.ON_PITCH);
+			fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
 			fButtonProReRoll.addActionListener(this);
 			fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
 			fButtonProReRoll.addKeyListener(this);
 
-			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll", RenderContext.ON_PITCH);
+			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 			fButtonNoReRoll.addActionListener(this);
 			fButtonNoReRoll.setMnemonic(KeyEvent.VK_N);
 			fButtonNoReRoll.addKeyListener(this);

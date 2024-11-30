@@ -58,7 +58,7 @@ public class ResourceComponent extends JPanel {
     }
 
     public void initLayout() {
-        size = dimensionProvider.dimension(Component.RESOURCE, RenderContext.UI);
+        size = dimensionProvider.dimension(Component.RESOURCE);
         fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
         setLayout(null);
         setMinimumSize(size);
@@ -118,9 +118,9 @@ public class ResourceComponent extends JPanel {
                 homeSide = !homeSide;
             }
             if (homeSide) {
-                background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED, RenderContext.UI);
+                background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_RED, dimensionProvider);
             } else {
-                background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE, RenderContext.UI);
+                background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_RESOURCE_BLUE, dimensionProvider);
             }
             g2d.drawImage(background, 0, 0, size.width, size.height, null);
         } else {
@@ -137,7 +137,7 @@ public class ResourceComponent extends JPanel {
             Graphics2D g2d = fImage.createGraphics();
             g2d.drawImage(scaledSlot.resourceIcon, scaledSlot.area.x, scaledSlot.area.y, scaledSlot.area.width, scaledSlot.area.height, null);
             if (!pSlot.isEnabled()) {
-                BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED, RenderContext.UI);
+                BufferedImage disabledIcon = iconCache.getIconByProperty(IIconProperty.DECORATION_STUNNED, dimensionProvider);
                 g2d.drawImage(disabledIcon, scaledSlot.area.x + (scaledSlot.area.width - disabledIcon.getWidth()) / 2,
                         scaledSlot.area.y + (scaledSlot.area.height - disabledIcon.getHeight()) / 2, null);
             }
@@ -159,8 +159,8 @@ public class ResourceComponent extends JPanel {
         BufferedImage counter = iconCache.getUnscaledIconByProperty(IIconProperty.RESOURCE_COUNTER_SPRITE)
                 .getSubimage(counterCrop.x, counterCrop.y, counterCrop.width, counterCrop.height);
 
-        Dimension counterSize = dimensionProvider.dimension(Component.INDUCEMENT_COUNTER_SIZE, RenderContext.UI);
-        g2d.drawImage(counter, dimensionProvider.scale(x + offset.width, RenderContext.UI), dimensionProvider.scale(y + offset.height, RenderContext.UI), counterSize.width, counterSize.height, null);
+        Dimension counterSize = dimensionProvider.dimension(Component.INDUCEMENT_COUNTER_SIZE);
+        g2d.drawImage(counter, dimensionProvider.scale(x + offset.width), dimensionProvider.scale(y + offset.height), counterSize.width, counterSize.height, null);
     }
 
     private Dimension offset(Rectangle location, int index) {
@@ -310,9 +310,9 @@ public class ResourceComponent extends JPanel {
             x += 1;
         }
         y += (pSlot.getLocation().height - resourceIcon.getHeight() + 1) / 2;
-        int scaledX = dimensionProvider.scale(x, RenderContext.UI);
-        int scaledY = dimensionProvider.scale(y, RenderContext.UI);
-        Dimension resourceDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()), RenderContext.UI);
+        int scaledX = dimensionProvider.scale(x);
+        int scaledY = dimensionProvider.scale(y);
+        Dimension resourceDimension = dimensionProvider.scale(new Dimension(resourceIcon.getWidth(), resourceIcon.getHeight()));
         return new ScaledSlot(new Rectangle(scaledX, scaledY, resourceDimension.width, resourceDimension.height), resourceIcon, new Point(x, y));
     }
 

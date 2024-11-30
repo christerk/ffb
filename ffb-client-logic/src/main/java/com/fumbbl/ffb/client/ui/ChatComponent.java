@@ -45,7 +45,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
-		fChatInputField = new JTextField(dimensionProvider, 35, RenderContext.UI );
+		fChatInputField = new JTextField(dimensionProvider, 35);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 
@@ -104,11 +104,11 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void initLayout() {
-		Dimension size = dimensionProvider.dimension(Component.CHAT, RenderContext.UI);
+		Dimension size = dimensionProvider.dimension(Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		fReplayControl.initLayout(dimensionProvider);
+		fReplayControl.initLayout();
 		setBackground(styleProvider.getChatBackground());
 		fChatTextPane.setBackground(styleProvider.getChatBackground());
 		fChatScrollPane.setBackground(styleProvider.getChatBackground());

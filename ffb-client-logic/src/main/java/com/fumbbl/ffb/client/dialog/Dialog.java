@@ -73,7 +73,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	protected void setLocationToCenter() {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
-		setLocation((frameSize.width - dialogSize.width) / 2, (fClient.getUserInterface().getDimensionProvider().dimension(Component.FIELD, RenderContext.UI).height - dialogSize.height) / 2);
+		setLocation((frameSize.width - dialogSize.width) / 2, (fClient.getUserInterface().getUiDimensionProvider().dimension(Component.FIELD).height - dialogSize.height) / 2);
 	}
 
 	public void mouseEntered(MouseEvent pMouseEvent) {
@@ -133,7 +133,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			selectedValue = entries.get(defaultValueKey);
 		}
 
-		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]), RenderContext.ON_PITCH);
+		JComboBox<String> box = new JComboBox<>(dimensionProvider(), entries.values().toArray(new String[0]));
 		box.setSelectedItem(selectedValue);
 		box.addActionListener(event -> {
 			String newValue = box.getItemAt(box.getSelectedIndex());
@@ -148,7 +148,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		JPanel boxPanel = new JPanel();
 		boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
 		boxPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		boxPanel.add(new JLabel(dimensionProvider(), name, RenderContext.ON_PITCH));
+		boxPanel.add(new JLabel(dimensionProvider(), name));
 		boxPanel.add(Box.createHorizontalStrut(5));
 		boxPanel.add(box);
 
@@ -159,8 +159,8 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 	}
 
-	protected DimensionProvider dimensionProvider() {
-		return getClient().getUserInterface().getDimensionProvider();
+	protected PitchDimensionProvider dimensionProvider() {
+		return getClient().getUserInterface().getPitchDimensionProvider();
 	}
 
 	protected FontCache fontCache() {

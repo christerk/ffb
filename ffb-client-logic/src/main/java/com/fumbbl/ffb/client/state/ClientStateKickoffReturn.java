@@ -66,7 +66,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
 			JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move Action",
-				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE), RenderContext.ON_PITCH);
+				createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 			moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 			menuItemList.add(moveAction);
@@ -74,7 +74,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 		if (actingPlayer.getPlayer() == pPlayer) {
 			String endMoveActionLabel = game.getActingPlayer().hasActed() ? "End Move" : "Deselect Player";
 			JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-				createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE), RenderContext.ON_PITCH);
+				createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
 			endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 			endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 			menuItemList.add(endMoveAction);

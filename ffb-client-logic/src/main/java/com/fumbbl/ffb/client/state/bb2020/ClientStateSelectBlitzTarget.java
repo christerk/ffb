@@ -81,7 +81,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		String endMoveActionLabel = "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);

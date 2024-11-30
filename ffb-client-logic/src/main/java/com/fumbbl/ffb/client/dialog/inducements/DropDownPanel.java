@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.inducement.InducementType;
@@ -39,7 +38,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		for (int i = 0; i <= fMax && i * fCost <= pAvailableGold; i++) {
 			anzahl.add(Integer.toString(i));
 		}
-		fBox = new JComboBox<>(dimensionProvider, anzahl.toArray(new String[0]), RenderContext.ON_PITCH);
+		fBox = new JComboBox<>(dimensionProvider, anzahl.toArray(new String[0]));
 		fBox.setSelectedIndex(0);
 		fBox.setMaximumSize(fBox.getMinimumSize());
 		fBox.addActionListener(pListener);
@@ -50,7 +49,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		add(fBox);
 		add(Box.createHorizontalStrut(10));
 		JLabel label = new JLabel(dimensionProvider,
-			pText + " (Max: " + fMax + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"), RenderContext.ON_PITCH);
+			pText + " (Max: " + fMax + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
 		add(label);
 		add(Box.createHorizontalGlue());
 

@@ -1,13 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -18,14 +13,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +35,7 @@ public class DialogReRollForTargets extends Dialog {
 		dialogParameter = parameter;
 		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
 
-		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll", RenderContext.ON_PITCH);
+		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> close());
 		this.addKeyListener(new PressedKeyListener('N') {
 			@Override
@@ -84,7 +74,7 @@ public class DialogReRollForTargets extends Dialog {
 		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		mainMessages.stream().map(message -> new JLabel(dimensionProvider(), message, RenderContext.ON_PITCH)).forEach(label -> {
+		mainMessages.stream().map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			mainMessagePanel.add(label);
 			mainMessagePanel.add(Box.createVerticalStrut(5));
@@ -109,7 +99,7 @@ public class DialogReRollForTargets extends Dialog {
 					textPanel.setBackground(HIGHLIGHT);
 					Arrays.stream(new String[]{"<html>The roll against " + player.getName() + " failed</html>",
 							"<html>You will need a roll of " + parameter.getMinimumRolls().get(target) + "+ to succeed.</html>"})
-						.map(message -> new JLabel(dimensionProvider(), message, RenderContext.ON_PITCH)).forEach(label -> {
+						.map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
 							label.setHorizontalAlignment(SwingConstants.CENTER);
 							textPanel.add(label);
 						});
@@ -166,8 +156,8 @@ public class DialogReRollForTargets extends Dialog {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, RenderContext.ON_PITCH);
-		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon), RenderContext.ON_PITCH);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, dimensionProvider());
+		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);
 		infoPanel.add(Box.createHorizontalStrut(5));
@@ -184,7 +174,7 @@ public class DialogReRollForTargets extends Dialog {
 	}
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(dimensionProvider(), buttonName, RenderContext.ON_PITCH);
+		JButton button = new JButton(dimensionProvider(), buttonName);
 		button.addActionListener(e -> handleUserInteraction(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override

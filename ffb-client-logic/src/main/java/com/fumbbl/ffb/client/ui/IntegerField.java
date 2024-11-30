@@ -1,14 +1,13 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
-import java.awt.Toolkit;
+import java.awt.*;
 
 /**
  * This class is a <CODE>TextField</CODE> that only allows integer values to be
@@ -17,20 +16,14 @@ import java.awt.Toolkit;
  * @author <A HREF="mailto:colbell@users.sourceforge.net">Colin Bell</A>
  */
 public class IntegerField extends JTextField {
-	/**
-	 * Default ctor.
-	 */
-	public IntegerField(DimensionProvider dimensionProvider, RenderContext renderContext) {
-		super(dimensionProvider, renderContext);
-	}
 
 	/**
 	 * Ctor specifying the field width.
 	 *
 	 * @param cols Number of columns.
 	 */
-	public IntegerField(DimensionProvider dimensionProvider, int cols, RenderContext renderContext) {
-		super(dimensionProvider, cols, renderContext);
+	public IntegerField(DimensionProvider dimensionProvider, int cols) {
+		super(dimensionProvider, cols);
 	}
 
 	/**

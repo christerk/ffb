@@ -5,7 +5,6 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -13,18 +12,14 @@ import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -144,7 +139,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 	private void addIconUrl(Set<String> pIconUrls, String pIconUrl) {
 		if (StringTool.isProvided(pIconUrl)) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			if (iconCache.getIconByUrl(pIconUrl, RenderContext.UI) == null) {
+			if (iconCache.getIconByUrl(pIconUrl, getClient().getUserInterface().getUiDimensionProvider()) == null) {
 				pIconUrls.add(pIconUrl);
 			}
 		}

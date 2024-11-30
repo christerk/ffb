@@ -24,8 +24,8 @@ public class FieldLayerMarker extends FieldLayer {
 
 	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
-	public FieldLayerMarker(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerMarker(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		fFieldMarkerBounds = new HashMap<>();
 	}
 
@@ -41,13 +41,13 @@ public class FieldLayerMarker extends FieldLayer {
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setColor(styleProvider.getFieldMarker());
 			if (pFieldMarker.getHomeText().length() < 2) {
-				g2d.setFont(fontCache.font(Font.BOLD, 16, RenderContext.ON_PITCH));
+				g2d.setFont(fontCache.font(Font.BOLD, 16, pitchDimensionProvider));
 			} else {
-				g2d.setFont(fontCache.font(Font.BOLD, 12, RenderContext.ON_PITCH));
+				g2d.setFont(fontCache.font(Font.BOLD, 12, pitchDimensionProvider));
 			}
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);
-			Dimension dimension = dimensionProvider.mapToLocal(pFieldMarker.getCoordinate(), true);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pFieldMarker.getCoordinate(), true);
 			int x = dimension.width - (int) (textBounds.getWidth() / 2) + 1;
 			int y = dimension.height + (int) (textBounds.getHeight() / 2) - 2;
 			g2d.drawString(pFieldMarker.getHomeText(), x, y);

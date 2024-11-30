@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
@@ -15,16 +14,8 @@ import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -55,18 +46,18 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		superInitialized = true;
 		this.cardChoices = pParameter.getCardChoices();
 
-		addCardButton = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
-		rerollChoiceButton = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
-		selectChoiceButton = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
-		choiceOneButton = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
-		choiceTwoButton = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
-		labelAvailableGold = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
-		typeLabel = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
+		addCardButton = new JButton(dimensionProvider());
+		rerollChoiceButton = new JButton(dimensionProvider());
+		selectChoiceButton = new JButton(dimensionProvider());
+		choiceOneButton = new JButton(dimensionProvider());
+		choiceTwoButton = new JButton(dimensionProvider());
+		labelAvailableGold = new JLabel(dimensionProvider());
+		typeLabel = new JLabel(dimensionProvider());
 
 		FontCache fontCache = pClient.getUserInterface().getFontCache();
 
-		boldFont = fontCache.font(Font.BOLD, 12, RenderContext.ON_PITCH);
-		regularFont = fontCache.font(Font.PLAIN, 11, RenderContext.ON_PITCH);
+		boldFont = fontCache.font(Font.BOLD, 12, dimensionProvider());
+		regularFont = fontCache.font(Font.PLAIN, 11, dimensionProvider());
 
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
@@ -146,7 +137,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	}
 
 	private JLabel label(String text, Font font) {
-		JLabel label = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText(text);
 		label.setFont(font);
 		return label;
@@ -219,7 +210,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 	private JPanel buildAddCardPanel(DialogBuyCardsAndInducementsParameter pParameter) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		JLabel label = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
+		JLabel label = new JLabel(dimensionProvider());
 		label.setText("<html>Buy card from random<br/>deck for "
 				+ StringTool.formatThousands(pParameter.getCardPrice()) + " gp</html>");
 		label.setAlignmentX(CENTER_ALIGNMENT);
@@ -294,7 +285,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 	public void addCard(Card card) {
 		cardsListPanel.add(Box.createVerticalStrut(3));
-		cardsListPanel.add(new JLabel(dimensionProvider(), card.getName(), RenderContext.ON_PITCH));
+		cardsListPanel.add(new JLabel(dimensionProvider(), card.getName()));
 		cardSlots--;
 		setMaximumGold(getMaximumGold() - cardPrice);
 		setAvailableGold(availableGold - cardPrice);

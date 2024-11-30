@@ -51,8 +51,8 @@ public class ChatLogDocument extends DefaultStyledDocument {
 
 		// initStyles
 
-		int defaultFontSize = dimensionProvider.scale(12, RenderContext.UI);
-		int largerSize = dimensionProvider.scale(14, RenderContext.UI);
+		int defaultFontSize = dimensionProvider.scale(12);
+		int largerSize = dimensionProvider.scale(14);
 
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
 

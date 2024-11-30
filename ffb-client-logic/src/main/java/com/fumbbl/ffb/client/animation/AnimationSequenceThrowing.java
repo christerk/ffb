@@ -5,10 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.RenderContext;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.model.Animation;
@@ -28,7 +25,7 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 
 	protected AnimationSequenceThrowing(AnimationType pAnimationType, BufferedImage pAnimatedIcon,
 																			FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate, FieldCoordinate pInterceptorCoordinate,
-																			SoundId pSound, DimensionProvider dimensionProvider) {
+																			SoundId pSound, PitchDimensionProvider dimensionProvider) {
 		fAnimationType = pAnimationType;
 		fAnimatedIcon = pAnimatedIcon;
 		fSound = pSound;
@@ -37,46 +34,48 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 			new CoordinateBasedSteppingStrategy(pStartCoordinate, pEndCoordinate));
 	}
 
-	public static AnimationSequenceThrowing createAnimationSequencePass(FantasyFootballClient pClient,
-																																			Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequencePass(FantasyFootballClient pClient, Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider(); 
 		return new AnimationSequenceThrowing(AnimationType.PASS,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceThrowBomb(FantasyFootballClient pClient,
 			Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(AnimationType.THROW_BOMB,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
 	public static AnimationSequenceThrowing createAnimationSequenceThrowARock(FantasyFootballClient pClient,
 			Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(AnimationType.THROW_A_ROCK,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_ROCK, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
-	public static AnimationSequenceThrowing createAnimationSequenceKick(FantasyFootballClient pClient,
-																																			Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequenceKick(FantasyFootballClient pClient, Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(AnimationType.KICK,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.KICK, pClient.getUserInterface().getDimensionProvider());
+			SoundId.KICK, dimensionProvider);
 	}
 
 	private final AnimationType fAnimationType;
 
-	public static AnimationSequenceThrowing createAnimationSequenceHailMaryPass(FantasyFootballClient pClient,
-																																							Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequenceHailMaryPass(FantasyFootballClient pClient, Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_PASS,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL_BIG, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
 	private final BufferedImage fAnimatedIcon;
@@ -90,31 +89,31 @@ public class AnimationSequenceThrowing implements IAnimationSequence, ActionList
 	private FieldLayer fFieldLayer;
 	private IAnimationListener fListener;
 
-	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient,
-																																							Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequenceHailMaryBomb(FantasyFootballClient pClient, Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(AnimationType.HAIL_MARY_BOMB,
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BOMB_BIG, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
-	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient,
-																																							 Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequenceThrowTeamMate(FantasyFootballClient pClient, Animation pAnimation) {
 		Player<?> thrownPlayer = pClient.getGame().getPlayerById(pAnimation.getThrownPlayerId());
 		boolean homePlayer = pClient.getGame().getTeamHome().hasPlayer(thrownPlayer);
 		PlayerIconFactory playerIconFactory = pClient.getUserInterface().getPlayerIconFactory();
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		BufferedImage playerIcon = playerIconFactory.getBasicIcon(pClient, thrownPlayer, homePlayer, false,
-			pAnimation.isWithBall(), false, RenderContext.ON_PITCH);
+			pAnimation.isWithBall(), false, dimensionProvider);
 		return new AnimationSequenceThrowing(AnimationType.THROW_TEAM_MATE, playerIcon, pAnimation.getStartCoordinate(),
-			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH, pClient.getUserInterface().getDimensionProvider());
+			pAnimation.getEndCoordinate(), null, SoundId.WOOOAAAH, dimensionProvider);
 	}
 
-	public static AnimationSequenceThrowing createAnimationSequenceThrowKeg(FantasyFootballClient pClient,
-																																					Animation pAnimation) {
+	public static AnimationSequenceThrowing createAnimationSequenceThrowKeg(FantasyFootballClient pClient, Animation pAnimation) {
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		return new AnimationSequenceThrowing(pAnimation.getAnimationType(),
-			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH, RenderContext.ON_PITCH),
+			pClient.getUserInterface().getIconCache().getIconByProperty(IIconProperty.ACTION_BEER_BARREL_BASH, dimensionProvider),
 			pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), pAnimation.getInterceptorCoordinate(),
-			SoundId.THROW, pClient.getUserInterface().getDimensionProvider());
+			SoundId.THROW, dimensionProvider);
 	}
 
 	public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {

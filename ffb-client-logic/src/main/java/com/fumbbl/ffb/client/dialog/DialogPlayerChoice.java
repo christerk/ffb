@@ -2,23 +2,14 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -39,13 +30,13 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		super(client, "Player Choice", false);
 		fMinSelects = minSelects;
 
-		fButtonSelect = new JButton(dimensionProvider(), "Select", RenderContext.ON_PITCH);
+		fButtonSelect = new JButton(dimensionProvider(), "Select");
 		fButtonSelect.setToolTipText("Select the checked player(s)");
 		fButtonSelect.addActionListener(this);
 		fButtonSelect.setMnemonic((int) 'S');
 		fButtonSelect.setEnabled((playerIds.length == 1) || preSelected);
 
-		fButtonCancel = new JButton(dimensionProvider(), "Skip", RenderContext.ON_PITCH);
+		fButtonCancel = new JButton(dimensionProvider(), "Skip");
 		fButtonCancel.setToolTipText("Do not select any player");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'i');
@@ -74,7 +65,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-		JLabel headerLabel = new JLabel(dimensionProvider(), header, RenderContext.ON_PITCH);
+		JLabel headerLabel = new JLabel(dimensionProvider(), header);
 		headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, headerLabel.getFont().getSize()));
 		headerPanel.add(headerLabel);
 		headerPanel.add(Box.createHorizontalGlue());
@@ -106,14 +97,13 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
 			int offsetX = 1, offsetY = 1;
-			DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
 
-			if (dimensionProvider.isPitchPortrait()) {
+			if (dimensionProvider().isPitchPortrait()) {
 				offsetX = -1;
 			}
 
-			Dimension sidebarSize = dimensionProvider.dimension(Component.SIDEBAR, RenderContext.UI);
-			Dimension onPitch = dimensionProvider.mapToLocal(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
+			Dimension sidebarSize = getClient().getUserInterface().getUiDimensionProvider().dimension(Component.SIDEBAR);
+			Dimension onPitch = dimensionProvider().mapToLocal(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
 			int x = sidebarSize.width + onPitch.width;
 			int y = onPitch.height;
 			setLocation(x, y);

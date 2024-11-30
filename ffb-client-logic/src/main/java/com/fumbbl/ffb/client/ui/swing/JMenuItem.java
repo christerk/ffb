@@ -1,23 +1,22 @@
 package com.fumbbl.ffb.client.ui.swing;
 
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.RenderContext;
 
 import javax.swing.Icon;
 
 public class JMenuItem extends javax.swing.JMenuItem {
-	public JMenuItem(DimensionProvider dimensionProvider, String name, RenderContext renderContext) {
+	public JMenuItem(DimensionProvider dimensionProvider, String name) {
 		super(name);
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 
-	public JMenuItem(DimensionProvider dimensionProvider, String text, int mnemonic, RenderContext renderContext) {
+	public JMenuItem(DimensionProvider dimensionProvider, String text, int mnemonic) {
 		super(text, mnemonic);
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 
-	public JMenuItem(DimensionProvider dimensionProvider, String text, Icon icon, RenderContext renderContext) {
+	public JMenuItem(DimensionProvider dimensionProvider, String text, Icon icon) {
 		super(text, icon);
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 }

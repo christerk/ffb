@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.dialog.inducements;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.ChatLogScrollPane;
@@ -20,15 +19,10 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -68,7 +62,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		fAvailableGold = pParameter.getAvailableGold();
-		fLabelAvailableGold = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
+		fLabelAvailableGold = new JLabel(dimensionProvider());
 		updateAvailableGoldLabel();
 
 		JPanel panelGold = new JPanel();
@@ -79,7 +73,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		panelMain.add(Box.createVerticalStrut(5));
 
 		fAvailableCards = pParameter.getAvailableCards();
-		fLabelAvailableCards = new JLabel(dimensionProvider(), RenderContext.ON_PITCH);
+		fLabelAvailableCards = new JLabel(dimensionProvider());
 		updateAvailableCardsLabel();
 
 		JPanel panelCards = new JPanel();
@@ -112,7 +106,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 
 
 		for (CardType cardType: cardTypes) {
-			JButton button = new JButton(dimensionProvider(), RenderContext.ON_PITCH);
+			JButton button = new JButton(dimensionProvider());
 			button.addActionListener(this);
 			fButtonPerType.put(cardType, button);
 			fNrOfCardsPerType.put(cardType, pParameter.getNrOfCards(cardType));
@@ -120,7 +114,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			panelMain.add(Box.createVerticalStrut(5));
 		}
 
-		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(), pClient.getUserInterface().getDimensionProvider());
+		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(), pClient.getUserInterface().getPitchDimensionProvider());
 		ChatLogScrollPane fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
 
 		JPanel panelCardLog = new JPanel();
@@ -135,7 +129,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 		JPanel panelButtons = new JPanel();
 		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
 
-		fButtonContinue = new JButton(dimensionProvider(), "Continue", RenderContext.ON_PITCH);
+		fButtonContinue = new JButton(dimensionProvider(), "Continue");
 		fButtonContinue.addActionListener(this);
 
 		panelButtons.add(Box.createHorizontalGlue());
@@ -186,14 +180,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private void updateAvailableGoldLabel() {
 
 		fLabelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(fAvailableGold));
-		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12, RenderContext.ON_PITCH));
+		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider()));
 
 	}
 
 	private void updateAvailableCardsLabel() {
 
 		fLabelAvailableCards.setText("Available Cards: " + fAvailableCards);
-		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12, RenderContext.ON_PITCH));
+		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider()));
 
 	}
 

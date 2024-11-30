@@ -2,18 +2,13 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -51,16 +46,16 @@ public class DialogInformation extends Dialog implements ActionListener {
 
 		super(pClient, pTitle, false);
 		fOptionType = pOptionType;
-		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again", RenderContext.ON_PITCH);
+		doNotShowAgainCheckbox = new JCheckBox(dimensionProvider(), "Do not show this panel again");
 
 		this.panelProperty = panelProperty;
 		this.panelOffValue = panelOffValue;
 
 		JButton fButton;
 		if (getOptionType() == OK_DIALOG) {
-			fButton = new JButton(dimensionProvider(), "Ok", RenderContext.ON_PITCH);
+			fButton = new JButton(dimensionProvider(), "Ok");
 		} else {
-			fButton = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
+			fButton = new JButton(dimensionProvider(), "Cancel");
 		}
 		fButton.addActionListener(this);
 
@@ -68,7 +63,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		for (int i = 0; i < pMessages.length; i++) {
 			messagePanels[i] = new JPanel();
 			messagePanels[i].setLayout(new BoxLayout(messagePanels[i], BoxLayout.X_AXIS));
-			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i], RenderContext.ON_PITCH));
+			messagePanels[i].add(new JLabel(dimensionProvider(), pMessages[i]));
 			if (!pCenteredText) {
 				messagePanels[i].add(Box.createHorizontalGlue());
 			}
@@ -86,8 +81,8 @@ public class DialogInformation extends Dialog implements ActionListener {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
-			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, RenderContext.ON_PITCH);
-			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon), RenderContext.ON_PITCH));
+			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, dimensionProvider());
+			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
 		infoPanel.add(textPanel);

@@ -1,16 +1,13 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.dialog.DialogId;
 
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Dimension;
+import java.awt.*;
 
 public class DialogKeyBindings extends Dialog {
 
@@ -24,13 +21,14 @@ public class DialogKeyBindings extends Dialog {
 
 		super(pClient, "Key Bindings", true);
 
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\"><b>";
-		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px\"><b>";
-		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\">";
+		DimensionProvider dimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(11) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\">";
 
 		JScrollPane keyBindingsPane = new JScrollPane(createKeyBindingsEditorPane());
-		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider().scale(20, RenderContext.UI),
-			dimensionProvider().scale(500, RenderContext.UI)));
+		keyBindingsPane.setPreferredSize(new Dimension(keyBindingsPane.getPreferredSize().width + dimensionProvider.scale(20),
+			dimensionProvider.scale(500)));
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));

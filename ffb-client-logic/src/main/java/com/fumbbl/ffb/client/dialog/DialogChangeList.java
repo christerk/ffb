@@ -1,17 +1,14 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.model.ChangeList;
 import com.fumbbl.ffb.client.model.VersionChangeList;
 import com.fumbbl.ffb.dialog.DialogId;
 
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +21,11 @@ public class DialogChangeList extends Dialog {
 		JScrollPane mainPane = new JScrollPane(createEditorPane());
 
 		Dimension clientDimension = getClient().getUserInterface().getSize();
-		int offset = dimensionProvider().scale(150, RenderContext.UI);
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
+		int offset = dimensionProvider.scale(150);
 		mainPane.setPreferredSize(new Dimension(clientDimension.width - offset, clientDimension.height - offset));
 
-		dimensionProvider().scaleFont(this, RenderContext.UI);
+		dimensionProvider.scaleFont(this);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -53,6 +51,7 @@ public class DialogChangeList extends Dialog {
 	}
 
 	private JEditorPane createEditorPane() {
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
 
 		JEditorPane contentPane = new JEditorPane();
 		contentPane.setEditable(false);
@@ -63,10 +62,10 @@ public class DialogChangeList extends Dialog {
 			.map(this::renderVersionChanges)
 			.collect(Collectors.joining());
 
-		String info = "<div style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px;padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
-			"<div style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px;padding-bottom:" + dimensionProvider().scale(10, RenderContext.UI) + "px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
+		String info = "<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
+			"<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:" + dimensionProvider.scale(10) + "px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
 
-		contentPane.setText("<div style=\"padding:" + dimensionProvider().scale(10, RenderContext.UI) + "px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
+		contentPane.setText("<div style=\"padding:" + dimensionProvider.scale(10) + "px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
 
 		return contentPane;
@@ -74,12 +73,13 @@ public class DialogChangeList extends Dialog {
 	}
 
 	private String renderVersionChanges(VersionChangeList list) {
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider().scale(18, RenderContext.UI)).append("px\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
+		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider.scale(18)).append("px\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
 
 		if (list.hasDescription()) {
-			builder.append("div style=\"font-size:").append(dimensionProvider().scale(11, RenderContext.UI)).append("px\">").append(list.getDescription()).append("</div>");
+			builder.append("div style=\"font-size:").append(dimensionProvider.scale(11)).append("px\">").append(list.getDescription()).append("</div>");
 		}
 
 		if (list.hasBehaviorChanges()) {
@@ -110,11 +110,12 @@ public class DialogChangeList extends Dialog {
 	}
 
 	private String renderEntries(String title, List<String> entries) {
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider().scale(14, RenderContext.UI)).append("px\"> <b>").append(title).append("</b> </font>").append("<ul>");
+		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider.scale(14)).append("px\"> <b>").append(title).append("</b> </font>").append("<ul>");
 
-		entries.stream().map(entry -> "<li style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px;padding-bottom::" + dimensionProvider().scale(3, RenderContext.UI) + "px;list-style-type:decimal\">" + entry + "</li>").forEach(builder::append);
+		entries.stream().map(entry -> "<li style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom::" + dimensionProvider.scale(3) + "px;list-style-type:decimal\">" + entry + "</li>").forEach(builder::append);
 
 		builder.append("</ul>");
 		return builder.toString();

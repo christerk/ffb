@@ -1,41 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.ConcedeGameStatus;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.ClientLayout;
-import com.fumbbl.ffb.client.ClientReplayer;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.RenderContext;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogAbout;
-import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
-import com.fumbbl.ffb.client.dialog.DialogChangeList;
-import com.fumbbl.ffb.client.dialog.DialogChatCommands;
-import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
-import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
-import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
-import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
-import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
-import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.dialog.*;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -45,43 +12,20 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.InducementSet;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuBar;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -265,7 +209,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 
-		setFont(fontCache.font(Font.PLAIN, 12, RenderContext.UI));
+		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
 		fClient = pClient;
 		this.styleProvider = styleProvider;
@@ -277,60 +221,60 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createHelpMenu() {
-		JMenu fHelpMenu = new JMenu(dimensionProvider, "Help", RenderContext.UI);
+		JMenu fHelpMenu = new JMenu(dimensionProvider, "Help");
 		fHelpMenu.setMnemonic(KeyEvent.VK_H);
 		add(fHelpMenu);
 
-		fAboutMenuItem = new JMenuItem(dimensionProvider, "About", KeyEvent.VK_A, RenderContext.UI);
+		fAboutMenuItem = new JMenuItem(dimensionProvider, "About", KeyEvent.VK_A);
 		fAboutMenuItem.addActionListener(this);
 		fHelpMenu.add(fAboutMenuItem);
 
-		fChatCommandsMenuItem = new JMenuItem(dimensionProvider, "Chat Commands", KeyEvent.VK_C, RenderContext.UI);
+		fChatCommandsMenuItem = new JMenuItem(dimensionProvider, "Chat Commands", KeyEvent.VK_C);
 		fChatCommandsMenuItem.addActionListener(this);
 		fHelpMenu.add(fChatCommandsMenuItem);
 
-		changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_W, RenderContext.UI);
+		changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_W);
 		changeListItem.addActionListener(this);
 		fHelpMenu.add(changeListItem);
 
-		autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_M, RenderContext.UI);
+		autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_M);
 		autoMarkingItem.addActionListener(this);
 		fHelpMenu.add(autoMarkingItem);
 
-		fKeyBindingsMenuItem = new JMenuItem(dimensionProvider, "Key Bindings", KeyEvent.VK_K, RenderContext.UI);
+		fKeyBindingsMenuItem = new JMenuItem(dimensionProvider, "Key Bindings", KeyEvent.VK_K);
 		fKeyBindingsMenuItem.addActionListener(this);
 		fHelpMenu.add(fKeyBindingsMenuItem);
 	}
 
 	private void createGameStatusMenus() {
-		fMissingPlayersMenu = new JMenu(dimensionProvider, "Missing Players", RenderContext.UI);
+		fMissingPlayersMenu = new JMenu(dimensionProvider, "Missing Players");
 		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
 		fMissingPlayersMenu.setEnabled(false);
 		add(fMissingPlayersMenu);
 
-		fInducementsMenu = new JMenu(dimensionProvider, "Inducements", RenderContext.UI);
+		fInducementsMenu = new JMenu(dimensionProvider, "Inducements");
 		fInducementsMenu.setMnemonic(KeyEvent.VK_I);
 		fInducementsMenu.setEnabled(false);
 		add(fInducementsMenu);
 
-		fActiveCardsMenu = new JMenu(dimensionProvider, "Active Cards", RenderContext.UI);
+		fActiveCardsMenu = new JMenu(dimensionProvider, "Active Cards");
 		fActiveCardsMenu.setMnemonic(KeyEvent.VK_C);
 		fActiveCardsMenu.setEnabled(false);
 		add(fActiveCardsMenu);
 
-		prayersMenu = new JMenu(dimensionProvider, "Prayers", RenderContext.UI);
+		prayersMenu = new JMenu(dimensionProvider, "Prayers");
 		prayersMenu.setMnemonic(KeyEvent.VK_P);
 		prayersMenu.setEnabled(false);
 		add(prayersMenu);
 
-		fGameOptionsMenu = new JMenu(dimensionProvider, "Game Options", RenderContext.UI);
+		fGameOptionsMenu = new JMenu(dimensionProvider, "Game Options");
 		fGameOptionsMenu.setMnemonic(KeyEvent.VK_O);
 		fGameOptionsMenu.setEnabled(false);
 		add(fGameOptionsMenu);
 	}
 
 	private void createUserSettingsMenu() {
-		JMenu fUserSettingsMenu = new JMenu(dimensionProvider, "User Settings", RenderContext.UI);
+		JMenu fUserSettingsMenu = new JMenu(dimensionProvider, "User Settings");
 		fUserSettingsMenu.setMnemonic(KeyEvent.VK_U);
 		add(fUserSettingsMenu);
 
@@ -355,29 +299,29 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createRestoreMenu(JMenu fUserSettingsMenu) {
-		fRestoreDefaultsMenuItem = new JMenuItem(dimensionProvider, "Restore Defaults", RenderContext.UI);
+		fRestoreDefaultsMenuItem = new JMenuItem(dimensionProvider, "Restore Defaults");
 		fRestoreDefaultsMenuItem.addActionListener(this);
 		fRestoreDefaultsMenuItem.setEnabled(false);
 		fUserSettingsMenu.add(fRestoreDefaultsMenuItem);
 
-		resetColors = new JMenuItem(dimensionProvider, "Reset all colors", RenderContext.UI);
+		resetColors = new JMenuItem(dimensionProvider, "Reset all colors");
 		resetColors.addActionListener(this);
 		resetColors.setEnabled(true);
 		fUserSettingsMenu.add(resetColors);
 
-		resetBackgroundColors = new JMenuItem(dimensionProvider, "Reset background colors", RenderContext.UI);
+		resetBackgroundColors = new JMenuItem(dimensionProvider, "Reset background colors");
 		resetBackgroundColors.addActionListener(this);
 		resetBackgroundColors.setEnabled(true);
 		fUserSettingsMenu.add(resetBackgroundColors);
 
-		resetFontColors = new JMenuItem(dimensionProvider, "Reset font colors", RenderContext.UI);
+		resetFontColors = new JMenuItem(dimensionProvider, "Reset font colors");
 		resetFontColors.addActionListener(this);
 		resetFontColors.setEnabled(true);
 		fUserSettingsMenu.add(resetFontColors);
 	}
 
 	private void createBackgroundMenu(JMenu fUserSettingsMenu) {
-		JMenu backgroundStyles = new JMenu(dimensionProvider, "Background styles", RenderContext.UI);
+		JMenu backgroundStyles = new JMenu(dimensionProvider, "Background styles");
 		backgroundStyles.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(backgroundStyles);
 		addColorItem(SETTING_BACKGROUND_CHAT, styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
@@ -386,7 +330,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createFontMenu(JMenu userSettings) {
-		JMenu fontStyles = new JMenu(dimensionProvider, "Font colors", RenderContext.UI);
+		JMenu fontStyles = new JMenu(dimensionProvider, "Font colors");
 		fontStyles.setMnemonic(KeyEvent.VK_F);
 		userSettings.add(fontStyles);
 		addColorItem(SETTING_FONT_COLOR_TEXT, styleProvider.getText(), fontStyles, (item) -> textFontColor = item);
@@ -404,213 +348,213 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createMarkingMenu(JMenu fUserSettingsMenu) {
-		playerMarkingMenu = new JMenu(dimensionProvider, SETTING_PLAYER_MARKING_TYPE, RenderContext.UI);
+		playerMarkingMenu = new JMenu(dimensionProvider, SETTING_PLAYER_MARKING_TYPE);
 		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
 		fUserSettingsMenu.add(playerMarkingMenu);
 
 		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic", RenderContext.UI);
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic");
 		playersMarkingAutoMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoMenuItem);
 
-		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual", RenderContext.UI);
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual");
 		playersMarkingManualMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingManualMenuItem);
 		playerMarkingMenu.add(playersMarkingManualMenuItem);
 	}
 
 	private void createMarkUsedPlayerMenu(JMenu fUserSettingsMenu) {
-		JMenu markUsedPlayersMenu = new JMenu(dimensionProvider, SETTING_MARK_USED_PLAYERS, RenderContext.UI);
+		JMenu markUsedPlayersMenu = new JMenu(dimensionProvider, SETTING_MARK_USED_PLAYERS);
 		markUsedPlayersMenu.setMnemonic(KeyEvent.VK_M);
 		fUserSettingsMenu.add(markUsedPlayersMenu);
 
 		ButtonGroup markUsedPlayersGroup = new ButtonGroup();
 
-		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Fade only", RenderContext.UI);
+		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Fade only");
 		markUsedPlayersDefaultMenuItem.addActionListener(this);
 		markUsedPlayersGroup.add(markUsedPlayersDefaultMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersDefaultMenuItem);
 
-		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Green check mark", RenderContext.UI);
+		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Green check mark");
 		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
 		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
 	}
 
 	private void createRangegridMenu(JMenu fUserSettingsMenu) {
-		JMenu fRangeGridMenu = new JMenu(dimensionProvider, SETTING_RANGEGRID, RenderContext.UI);
+		JMenu fRangeGridMenu = new JMenu(dimensionProvider, SETTING_RANGEGRID);
 		fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
 		fUserSettingsMenu.add(fRangeGridMenu);
 
 		ButtonGroup rangeGridGroup = new ButtonGroup();
 
-		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid always on", RenderContext.UI);
+		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid always on");
 		fRangeGridAlwaysOnMenuItem.addActionListener(this);
 		rangeGridGroup.add(fRangeGridAlwaysOnMenuItem);
 		fRangeGridMenu.add(fRangeGridAlwaysOnMenuItem);
 
-		fRangeGridToggleMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid toggle", RenderContext.UI);
+		fRangeGridToggleMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid toggle");
 		fRangeGridToggleMenuItem.addActionListener(this);
 		rangeGridGroup.add(fRangeGridToggleMenuItem);
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
 	}
 
 	private void createPitchMenu(JMenu fUserSettingsMenu) {
-		JMenu fPitchMenu = new JMenu(dimensionProvider, "Pitch", RenderContext.UI);
+		JMenu fPitchMenu = new JMenu(dimensionProvider, "Pitch");
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		fUserSettingsMenu.add(fPitchMenu);
 
-		JMenu fPitchCustomizationMenu = new JMenu(dimensionProvider, SETTING_PITCH_CUSTOMIZATION, RenderContext.UI);
+		JMenu fPitchCustomizationMenu = new JMenu(dimensionProvider, SETTING_PITCH_CUSTOMIZATION);
 		fPitchCustomizationMenu.setMnemonic(KeyEvent.VK_C);
 		fPitchMenu.add(fPitchCustomizationMenu);
 
 		ButtonGroup pitchCustomGroup = new ButtonGroup();
 
-		fCustomPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Custom Pitch", RenderContext.UI);
+		fCustomPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Custom Pitch");
 		fCustomPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fCustomPitchMenuItem);
 		fPitchCustomizationMenu.add(fCustomPitchMenuItem);
 
-		fDefaultPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Default Pitch", RenderContext.UI);
+		fDefaultPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Default Pitch");
 		fDefaultPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fDefaultPitchMenuItem);
 		fPitchCustomizationMenu.add(fDefaultPitchMenuItem);
 
-		fBasicPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Basic Pitch", RenderContext.UI);
+		fBasicPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Basic Pitch");
 		fBasicPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fBasicPitchMenuItem);
 		fPitchCustomizationMenu.add(fBasicPitchMenuItem);
 
-		JMenu fPitchMarkingsMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS, RenderContext.UI);
+		JMenu fPitchMarkingsMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS);
 		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);
 		fPitchMenu.add(fPitchMarkingsMenu);
 
 		ButtonGroup tdDistanceGroup = new ButtonGroup();
 
-		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings on", RenderContext.UI);
+		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings on");
 		fPitchMarkingsOnMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOnMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOnMenuItem);
 
-		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings off", RenderContext.UI);
+		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings off");
 		fPitchMarkingsOffMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOffMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOffMenuItem);
 
-		JMenu fPitchMarkingsRowMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS_ROW, RenderContext.UI);
+		JMenu fPitchMarkingsRowMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS_ROW);
 		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_R);
 		fPitchMenu.add(fPitchMarkingsRowMenu);
 
 		ButtonGroup rowMarkingsGroup = new ButtonGroup();
 
-		fPitchMarkingsRowOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings on", RenderContext.UI);
+		fPitchMarkingsRowOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings on");
 		fPitchMarkingsRowOnMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOnMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOnMenuItem);
 
-		fPitchMarkingsRowOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings off", RenderContext.UI);
+		fPitchMarkingsRowOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings off");
 		fPitchMarkingsRowOffMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOffMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOffMenuItem);
 
-		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_PITCH_ORIENTATION, RenderContext.UI);
+		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_PITCH_ORIENTATION);
 		orientationMenu.setMnemonic(KeyEvent.VK_O);
 		fPitchMenu.add(orientationMenu);
 
 		ButtonGroup orientationGroup = new ButtonGroup();
 
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape", RenderContext.UI);
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
 		pitchLandscapeMenuItem.addActionListener(this);
 		orientationGroup.add(pitchLandscapeMenuItem);
 		orientationMenu.add(pitchLandscapeMenuItem);
 
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait", RenderContext.UI);
+		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
 		pitchPortraitMenuItem.addActionListener(this);
 		orientationGroup.add(pitchPortraitMenuItem);
 		orientationMenu.add(pitchPortraitMenuItem);
 
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square", RenderContext.UI);
+		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
 		layoutSquareMenuItem.addActionListener(this);
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide", RenderContext.UI);
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
 
-		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS, RenderContext.UI);
+		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
 		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
 		fPitchMenu.add(cratersAndBloodspotsMenu);
 
 		ButtonGroup cratersAndBloodspotsGroup = new ButtonGroup();
 
-		showCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show", RenderContext.UI);
+		showCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show");
 		showCratersAndBloodsptsMenuItem.addActionListener(this);
 		cratersAndBloodspotsGroup.add(showCratersAndBloodsptsMenuItem);
 		cratersAndBloodspotsMenu.add(showCratersAndBloodsptsMenuItem);
 
-		hideCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Hide", RenderContext.UI);
+		hideCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Hide");
 		hideCratersAndBloodsptsMenuItem.addActionListener(this);
 		cratersAndBloodspotsGroup.add(hideCratersAndBloodsptsMenuItem);
 		cratersAndBloodspotsMenu.add(hideCratersAndBloodsptsMenuItem);
 
-		JMenu sweetSpotMenu = new JMenu(dimensionProvider, SETTING_SWEET_SPOT, RenderContext.UI);
+		JMenu sweetSpotMenu = new JMenu(dimensionProvider, SETTING_SWEET_SPOT);
 		sweetSpotMenu.setMnemonic(KeyEvent.VK_S);
 		fPitchMenu.add(sweetSpotMenu);
 
 		ButtonGroup sweetSpotGroup = new ButtonGroup();
 
-		sweetSpotOff = new JRadioButtonMenuItem(dimensionProvider, "Off", RenderContext.UI);
+		sweetSpotOff = new JRadioButtonMenuItem(dimensionProvider, "Off");
 		sweetSpotOff.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotOff);
 		sweetSpotMenu.add(sweetSpotOff);
 
-		sweetSpotBlack = new JRadioButtonMenuItem(dimensionProvider, "Black", RenderContext.UI);
+		sweetSpotBlack = new JRadioButtonMenuItem(dimensionProvider, "Black");
 		sweetSpotBlack.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotBlack);
 		sweetSpotMenu.add(sweetSpotBlack);
 
-		sweetSpotWhite = new JRadioButtonMenuItem(dimensionProvider, "White", RenderContext.UI);
+		sweetSpotWhite = new JRadioButtonMenuItem(dimensionProvider, "White");
 		sweetSpotWhite.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotWhite);
 		sweetSpotMenu.add(sweetSpotWhite);
 
-		JMenu fTeamLogoMenu = new JMenu(dimensionProvider, SETTING_TEAM_LOGOS, RenderContext.UI);
+		JMenu fTeamLogoMenu = new JMenu(dimensionProvider, SETTING_TEAM_LOGOS);
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
 
 		ButtonGroup teamLogoGroup = new ButtonGroup();
 
-		fTeamLogoBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show both Team-Logos", RenderContext.UI);
+		fTeamLogoBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show both Team-Logos");
 		fTeamLogoBothMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoBothMenuItem);
 		fTeamLogoMenu.add(fTeamLogoBothMenuItem);
 
-		fTeamLogoOwnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show my Team-Logo only", RenderContext.UI);
+		fTeamLogoOwnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show my Team-Logo only");
 		fTeamLogoOwnMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoOwnMenuItem);
 		fTeamLogoMenu.add(fTeamLogoOwnMenuItem);
 
-		fTeamLogoNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show no Team-Logos", RenderContext.UI);
+		fTeamLogoNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show no Team-Logos");
 		fTeamLogoNoneMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoNoneMenuItem);
 		fTeamLogoMenu.add(fTeamLogoNoneMenuItem);
 
-		JMenu fPitchWeatherMenu = new JMenu(dimensionProvider, SETTING_PITCH_WEATHER, RenderContext.UI);
+		JMenu fPitchWeatherMenu = new JMenu(dimensionProvider, SETTING_PITCH_WEATHER);
 		fPitchWeatherMenu.setMnemonic(KeyEvent.VK_W);
 		fPitchMenu.add(fPitchWeatherMenu);
 
 		ButtonGroup pitchWeatherGroup = new ButtonGroup();
 
-		fPitchWeatherOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Change pitch with weather", RenderContext.UI);
+		fPitchWeatherOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Change pitch with weather");
 		fPitchWeatherOnMenuItem.addActionListener(this);
 		pitchWeatherGroup.add(fPitchWeatherOnMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOnMenuItem);
 
-		fPitchWeatherOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always show nice weather pitch", RenderContext.UI);
+		fPitchWeatherOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always show nice weather pitch");
 		fPitchWeatherOffMenuItem.addActionListener(this);
 		pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
@@ -618,30 +562,30 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private void createBallAndChainMenu(JMenu fUserSettingsMenu) {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
-		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN, RenderContext.UI);
+		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN);
 		exposedMenus.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(reRollBallAndChainPanelMenu);
 
-		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always", RenderContext.UI);
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always");
 		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
 		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
-		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent", RenderContext.UI);
+		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent");
 		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
 		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
-		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate", RenderContext.UI);
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate");
 		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
 		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
 
-		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never", RenderContext.UI);
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never");
 		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
 		reRollBallAndChainNeverMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
@@ -650,26 +594,26 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private void createRightClickMenu(JMenu fUserSettingsMenu) {
 		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
-		JMenu rightClickEndActionPanelMenu = new JMenu(dimensionProvider, SETTING_RIGHT_CLICK_END_ACTION, RenderContext.UI);
+		JMenu rightClickEndActionPanelMenu = new JMenu(dimensionProvider, SETTING_RIGHT_CLICK_END_ACTION);
 		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
 		fUserSettingsMenu.add(rightClickEndActionPanelMenu);
 
-		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Ends Action/Selection", RenderContext.UI);
+		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Ends Action/Selection");
 		rightClickEndActionOnMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
 
-		rightClickLegacyModeItem = new JRadioButtonMenuItem(dimensionProvider, "Works like Left Click (Legacy)", RenderContext.UI);
+		rightClickLegacyModeItem = new JRadioButtonMenuItem(dimensionProvider, "Works like Left Click (Legacy)");
 		rightClickLegacyModeItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickLegacyModeItem);
 		rightClickEndActionPanelMenu.add(rightClickLegacyModeItem);
 
-		rightClickOpensContextMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Selects Player/Opens Context Menu", RenderContext.UI);
+		rightClickOpensContextMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Selects Player/Opens Context Menu");
 		rightClickOpensContextMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickOpensContextMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickOpensContextMenuItem);
 
-		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disabled", RenderContext.UI);
+		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disabled");
 		rightClickEndActionOffMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
@@ -677,16 +621,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private void createGazePanelMenu(JMenu fUserSettingsMenu) {
 		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
-		JMenu gazeTargetPanelMenu = new JMenu(dimensionProvider, SETTING_GAZE_TARGET_PANEL, RenderContext.UI);
+		JMenu gazeTargetPanelMenu = new JMenu(dimensionProvider, SETTING_GAZE_TARGET_PANEL);
 		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
 		fUserSettingsMenu.add(gazeTargetPanelMenu);
 
-		gazePanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", RenderContext.UI);
+		gazePanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
 		gazePanelOnMenuItem.addActionListener(this);
 		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
 		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
 
-		gazePanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", RenderContext.UI);
+		gazePanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
 		gazePanelOffMenuItem.addActionListener(this);
 		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
 		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
@@ -694,34 +638,34 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private void createBlitzPanelMenu(JMenu fUserSettingsMenu) {
 		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
-		JMenu blitzTargetPanelMenu = new JMenu(dimensionProvider, SETTING_BLITZ_TARGET_PANEL, RenderContext.UI);
+		JMenu blitzTargetPanelMenu = new JMenu(dimensionProvider, SETTING_BLITZ_TARGET_PANEL);
 		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
 		fUserSettingsMenu.add(blitzTargetPanelMenu);
 
-		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", RenderContext.UI);
+		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
 		fBlitzPanelOnMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOnMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOnMenuItem);
 
-		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", RenderContext.UI);
+		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
 		fBlitzPanelOffMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
 	}
 
 	private void createAutomoveMenu(JMenu fUserSettingsMenu) {
-		JMenu fAutomoveMenu = new JMenu(dimensionProvider, SETTING_AUTOMOVE, RenderContext.UI);
+		JMenu fAutomoveMenu = new JMenu(dimensionProvider, SETTING_AUTOMOVE);
 		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
 		fUserSettingsMenu.add(fAutomoveMenu);
 
 		ButtonGroup automoveGroup = new ButtonGroup();
 
-		fAutomoveOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", RenderContext.UI);
+		fAutomoveOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
 		fAutomoveOnMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOnMenuItem);
 		fAutomoveMenu.add(fAutomoveOnMenuItem);
 
-		fAutomoveOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", RenderContext.UI);
+		fAutomoveOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
@@ -732,11 +676,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createSoundMenu(JMenu fUserSettingsMenu) {
-		JMenu fSoundMenu = new JMenu(dimensionProvider, SETTING_SOUND_MODE, RenderContext.UI);
+		JMenu fSoundMenu = new JMenu(dimensionProvider, SETTING_SOUND_MODE);
 		fSoundMenu.setMnemonic(KeyEvent.VK_S);
 		fUserSettingsMenu.add(fSoundMenu);
 
-		fSoundVolumeItem = new JMenuItem(dimensionProvider, SETTING_SOUND_VOLUME.getValue(), RenderContext.UI);
+		fSoundVolumeItem = new JMenuItem(dimensionProvider, SETTING_SOUND_VOLUME.getValue());
 		fSoundVolumeItem.setMnemonic(KeyEvent.VK_V);
 		fSoundVolumeItem.addActionListener(this);
 		fSoundMenu.add(fSoundVolumeItem);
@@ -745,42 +689,42 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ButtonGroup soundGroup = new ButtonGroup();
 
-		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on", RenderContext.UI);
+		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on");
 		fSoundOnMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOnMenuItem);
 		fSoundMenu.add(fSoundOnMenuItem);
 
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators", RenderContext.UI);
+		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators");
 		fSoundMuteSpectatorsMenuItem.addActionListener(this);
 		soundGroup.add(fSoundMuteSpectatorsMenuItem);
 		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
 
-		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off", RenderContext.UI);
+		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off");
 		fSoundOffMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
 	}
 
 	private void createScaleItem(JMenu fUserSettingsMenu) {
-		scalingItem = new JMenuItem(dimensionProvider, SETTING_SCALE_FACTOR.getValue(), RenderContext.UI);
+		scalingItem = new JMenuItem(dimensionProvider, SETTING_SCALE_FACTOR.getValue());
 		scalingItem.setMnemonic(KeyEvent.VK_E);
 		scalingItem.addActionListener(this);
 		fUserSettingsMenu.add(scalingItem);
 	}
 
 	private void createLocalPropertiesItem(JMenu fUserSettingsMenu) {
-		localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue(), RenderContext.UI);
+		localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue());
 		localPropertiesItem.setMnemonic(KeyEvent.VK_L);
 		localPropertiesItem.addActionListener(this);
 		fUserSettingsMenu.add(localPropertiesItem);
 	}
 
 	private void createTeamSetupMenu() {
-		JMenu fTeamSetupMenu = new JMenu(dimensionProvider, "Team Setup", RenderContext.UI);
+		JMenu fTeamSetupMenu = new JMenu(dimensionProvider, "Team Setup");
 		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
 		add(fTeamSetupMenu);
 
-		fLoadSetupMenuItem = new JMenuItem(dimensionProvider, "Load Setup", KeyEvent.VK_L, RenderContext.UI);
+		fLoadSetupMenuItem = new JMenuItem(dimensionProvider, "Load Setup", KeyEvent.VK_L);
 		String menuSetupLoad = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
 		if (StringTool.isProvided(menuSetupLoad)) {
 			fLoadSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupLoad));
@@ -788,7 +732,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fLoadSetupMenuItem.addActionListener(this);
 		fTeamSetupMenu.add(fLoadSetupMenuItem);
 
-		fSaveSetupMenuItem = new JMenuItem(dimensionProvider, "Save Setup", KeyEvent.VK_S, RenderContext.UI);
+		fSaveSetupMenuItem = new JMenuItem(dimensionProvider, "Save Setup", KeyEvent.VK_S);
 		String menuSetupSave = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_SAVE);
 		if (StringTool.isProvided(menuSetupSave)) {
 			fSaveSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupSave));
@@ -798,7 +742,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createGameMenu() {
-		JMenu fGameMenu = new JMenu(dimensionProvider, "Game", RenderContext.UI);
+		JMenu fGameMenu = new JMenu(dimensionProvider, "Game");
 		fGameMenu.setMnemonic(KeyEvent.VK_G);
 		add(fGameMenu);
 
@@ -807,7 +751,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			replaying = getClient().getReplayer().isReplaying();
 		}
 
-		fGameReplayMenuItem = new JMenuItem(dimensionProvider, replaying ? _REPLAY_MODE_OFF : _REPLAY_MODE_ON, KeyEvent.VK_R, RenderContext.UI);
+		fGameReplayMenuItem = new JMenuItem(dimensionProvider, replaying ? _REPLAY_MODE_OFF : _REPLAY_MODE_ON, KeyEvent.VK_R);
 		String keyMenuReplay = getClient().getProperty(IClientProperty.KEY_MENU_REPLAY);
 		if (StringTool.isProvided(keyMenuReplay)) {
 			fGameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
@@ -815,12 +759,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameReplayMenuItem.addActionListener(this);
 		fGameMenu.add(fGameReplayMenuItem);
 
-		fGameConcessionMenuItem = new JMenuItem(dimensionProvider, "Concede Game", KeyEvent.VK_C, RenderContext.UI);
+		fGameConcessionMenuItem = new JMenuItem(dimensionProvider, "Concede Game", KeyEvent.VK_C);
 		fGameConcessionMenuItem.addActionListener(this);
 		fGameConcessionMenuItem.setEnabled(false);
 		fGameMenu.add(fGameConcessionMenuItem);
 
-		fGameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S, RenderContext.UI);
+		fGameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
 		fGameStatisticsMenuItem.addActionListener(this);
 		fGameStatisticsMenuItem.setEnabled(false);
 		fGameMenu.add(fGameStatisticsMenuItem);
@@ -831,7 +775,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void addColorItem(CommonProperty title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
-		JMenuItem item = new JMenuItem(dimensionProvider, title.getValue(), createColorIcon(color), RenderContext.UI);
+		JMenuItem item = new JMenuItem(dimensionProvider, title.getValue(), createColorIcon(color));
 		item.addActionListener(this);
 		parent.add(item);
 		setter.accept(item);
@@ -839,12 +783,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenu createFrameBackgroundMenu() {
 
-		JMenu menu = new JMenu(dimensionProvider, SETTING_BACKGROUND_FRAME, RenderContext.UI);
+		JMenu menu = new JMenu(dimensionProvider, SETTING_BACKGROUND_FRAME);
 		ButtonGroup group = new ButtonGroup();
-		frameBackgroundIcons = new JRadioButtonMenuItem(dimensionProvider, "Graphics", RenderContext.UI);
+		frameBackgroundIcons = new JRadioButtonMenuItem(dimensionProvider, "Graphics");
 		frameBackgroundIcons.addActionListener(this);
 
-		frameBackgroundColor = new JRadioButtonMenuItem(dimensionProvider, "Color", createColorIcon(styleProvider.getFrameBackground()), RenderContext.UI);
+		frameBackgroundColor = new JRadioButtonMenuItem(dimensionProvider, "Color", createColorIcon(styleProvider.getFrameBackground()));
 		frameBackgroundColor.addActionListener(this);
 
 		menu.add(frameBackgroundIcons);
@@ -875,31 +819,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createIconsMenu(JMenu fUserSettingsMenu) {
-		JMenu fIconsMenu = new JMenu(dimensionProvider, SETTING_ICONS, RenderContext.UI);
+		JMenu fIconsMenu = new JMenu(dimensionProvider, SETTING_ICONS);
 		fIconsMenu.setMnemonic(KeyEvent.VK_I);
 		fUserSettingsMenu.add(fIconsMenu);
 
 		ButtonGroup iconsGroup = new ButtonGroup();
 
-		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons", RenderContext.UI);
+		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons");
 		fIconsTeam.setMnemonic(KeyEvent.VK_T);
 		fIconsTeam.addActionListener(this);
 		iconsGroup.add(fIconsTeam);
 		fIconsMenu.add(fIconsTeam);
 
-		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)", RenderContext.UI);
+		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)");
 		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
 		fIconsRosterOpponent.addActionListener(this);
 		iconsGroup.add(fIconsRosterOpponent);
 		fIconsMenu.add(fIconsRosterOpponent);
 
-		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)", RenderContext.UI);
+		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)");
 		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
 		fIconsRosterBoth.addActionListener(this);
 		iconsGroup.add(fIconsRosterBoth);
 		fIconsMenu.add(fIconsRosterBoth);
 
-		fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons", RenderContext.UI);
+		fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons");
 		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
 		fIconsAbstract.addActionListener(this);
 		iconsGroup.add(fIconsAbstract);
@@ -907,43 +851,43 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		fIconsMenu.addSeparator();
 
-		JMenu swapTeamColorsMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_SWAP_TEAM_COLORS, RenderContext.UI);
+		JMenu swapTeamColorsMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_SWAP_TEAM_COLORS);
 		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
 		fIconsMenu.add(swapTeamColorsMenu);
 
 		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
 
-		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", RenderContext.UI);
+		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
 		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		swapTeamColorsOffMenuItem.addActionListener(this);
 		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
 		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
 
-		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", RenderContext.UI);
+		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
 		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		swapTeamColorsOnMenuItem.addActionListener(this);
 		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
 		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
 
-		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE, RenderContext.UI);
+		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE);
 		localIconCacheMenu.setMnemonic(KeyEvent.VK_L);
 		fIconsMenu.add(localIconCacheMenu);
 
 		ButtonGroup localIconCacheGroup = new ButtonGroup();
 
-		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", RenderContext.UI);
+		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
 		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		localIconCacheOffMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOffMenuItem);
 		localIconCacheMenu.add(localIconCacheOffMenuItem);
 
-		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", RenderContext.UI);
+		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
 		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		localIconCacheOnMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOnMenuItem);
 		localIconCacheMenu.add(localIconCacheOnMenuItem);
 
-		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder", RenderContext.UI);
+		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
 		localIconCacheSelectMenuItem.setMnemonic(KeyEvent.VK_S);
 		localIconCacheSelectMenuItem.addActionListener(this);
 		localIconCacheMenu.add(localIconCacheSelectMenuItem);
@@ -1268,7 +1212,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 					getClient().getUserInterface().getIconCache().clear();
 					FontCache fontCache = getClient().getUserInterface().getFontCache();
 					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, RenderContext.UI));
+					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
 					return true;
 				}
 			} catch (Exception ignored) {
@@ -1306,7 +1250,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				getClient().getUserInterface().getIconCache().clear();
 				FontCache fontCache = getClient().getUserInterface().getFontCache();
 				fontCache.clear();
-				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, RenderContext.UI));
+				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
 			}
 			return true;
 		}
@@ -1321,14 +1265,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		int optionsAdded = 0;
 		if (getClient().getGame().isTesting()) {
 			JMenuItem optionItem = new JMenuItem(dimensionProvider,
-				"* Game is in TEST mode. No results will be uploaded. See help for available test commands.", RenderContext.UI);
+				"* Game is in TEST mode. No results will be uploaded. See help for available test commands.");
 			fGameOptionsMenu.add(optionItem);
 			optionsAdded++;
 		}
 		for (IGameOption option : gameOptions) {
 			if (option.isChanged() && (option.getId() != GameOptionId.TEST_MODE)
 				&& StringTool.isProvided(option.getDisplayMessage())) {
-				JMenuItem optionItem = new JMenuItem(dimensionProvider, "* " + option.getDisplayMessage(), RenderContext.UI);
+				JMenuItem optionItem = new JMenuItem(dimensionProvider, "* " + option.getDisplayMessage());
 				fGameOptionsMenu.add(optionItem);
 				optionsAdded++;
 			}
@@ -1384,7 +1328,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			fInducementsMenu.removeAll();
 
 			if (fCurrentInducementTotalHome > 0) {
-				fInducementsHomeMenu = new JMenu(dimensionProvider, totalInducementHome + " Home Team", RenderContext.UI);
+				fInducementsHomeMenu = new JMenu(dimensionProvider, totalInducementHome + " Home Team");
 				fInducementsHomeMenu.setForeground(Color.RED);
 				fInducementsHomeMenu.setMnemonic(KeyEvent.VK_H);
 				fInducementsMenu.add(fInducementsHomeMenu);
@@ -1392,7 +1336,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			if (fCurrentInducementTotalAway > 0) {
-				fInducementsAwayMenu = new JMenu(dimensionProvider, totalInducementAway + " Away Team", RenderContext.UI);
+				fInducementsAwayMenu = new JMenu(dimensionProvider, totalInducementAway + " Away Team");
 				fInducementsAwayMenu.setForeground(Color.BLUE);
 				fInducementsAwayMenu.setMnemonic(KeyEvent.VK_A);
 				fInducementsMenu.add(fInducementsAwayMenu);
@@ -1439,7 +1383,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			fActiveCardsMenu.removeAll();
 
 			if (ArrayTool.isProvided(fCurrentActiveCardsHome)) {
-				JMenu fActiveCardsHomeMenu = new JMenu(dimensionProvider, fCurrentActiveCardsHome.length + " Home Team", RenderContext.UI);
+				JMenu fActiveCardsHomeMenu = new JMenu(dimensionProvider, fCurrentActiveCardsHome.length + " Home Team");
 				fActiveCardsHomeMenu.setForeground(Color.RED);
 				fActiveCardsHomeMenu.setMnemonic(KeyEvent.VK_H);
 				fActiveCardsMenu.add(fActiveCardsHomeMenu);
@@ -1447,7 +1391,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			if (ArrayTool.isProvided(fCurrentActiveCardsAway)) {
-				JMenu fActiveCardsAwayMenu = new JMenu(dimensionProvider, fCurrentActiveCardsAway.length + " Away Team", RenderContext.UI);
+				JMenu fActiveCardsAwayMenu = new JMenu(dimensionProvider, fCurrentActiveCardsAway.length + " Away Team");
 				fActiveCardsAwayMenu.setForeground(Color.BLUE);
 				fActiveCardsAwayMenu.setMnemonic(KeyEvent.VK_A);
 				fActiveCardsMenu.add(fActiveCardsAwayMenu);
@@ -1482,7 +1426,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Game game = getClient().getGame();
 		Arrays.sort(pCards, Card.createComparator());
 		Icon cardIcon = new ImageIcon(
-			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, RenderContext.UI));
+			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider));
 		for (Card card : pCards) {
 			Player<?> player = null;
 			if (card.getTarget().isPlayedOnPlayer()) {
@@ -1499,7 +1443,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			if (player != null) {
 				addPlayerMenuItem(pCardsMenu, player, cardText.toString());
 			} else {
-				JMenuItem cardMenuItem = new JMenuItem(dimensionProvider, cardText.toString(), cardIcon, RenderContext.UI);
+				JMenuItem cardMenuItem = new JMenuItem(dimensionProvider, cardText.toString(), cardIcon);
 				pCardsMenu.add(cardMenuItem);
 			}
 		}
@@ -1531,7 +1475,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			prayersMenu.removeAll();
 
 			if (!currentPrayersHome.isEmpty()) {
-				JMenu prayersHomeMenu = new JMenu(dimensionProvider, currentPrayersHome.size() + " Home Team", RenderContext.UI);
+				JMenu prayersHomeMenu = new JMenu(dimensionProvider, currentPrayersHome.size() + " Home Team");
 				prayersHomeMenu.setForeground(Color.RED);
 				prayersHomeMenu.setMnemonic(KeyEvent.VK_H);
 				prayersMenu.add(prayersHomeMenu);
@@ -1539,7 +1483,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 
 			if (!currentPrayersAway.isEmpty()) {
-				JMenu prayersAwayMenu = new JMenu(dimensionProvider, currentPrayersAway.size() + " Away Team", RenderContext.UI);
+				JMenu prayersAwayMenu = new JMenu(dimensionProvider, currentPrayersAway.size() + " Away Team");
 				prayersAwayMenu.setForeground(Color.BLUE);
 				prayersAwayMenu.setMnemonic(KeyEvent.VK_A);
 				prayersMenu.add(prayersAwayMenu);
@@ -1570,7 +1514,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				"<b>" + prayer.getName() + "</b>" +
 				"<br>" + prayer.getDuration().getDescription() + ": " + prayer.getDescription() +
 				"</html>";
-			JMenuItem menuItem = new JMenuItem(dimensionProvider, text, RenderContext.UI);
+			JMenuItem menuItem = new JMenuItem(dimensionProvider, text);
 			prayerMenu.add(menuItem);
 		}
 	}
@@ -1588,7 +1532,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 					} else {
 						inducementText.append(inducement.getType().getSingular());
 					}
-					JMenuItem inducementItem = new JMenuItem(dimensionProvider, inducementText.toString(), RenderContext.UI);
+					JMenuItem inducementItem = new JMenuItem(dimensionProvider, inducementText.toString());
 					pInducementMenu.add(inducementItem);
 				}
 			}
@@ -1610,7 +1554,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			} else {
 				starPlayerMenuText.append(" Star Players");
 			}
-			JMenu starPlayerMenu = new JMenu(dimensionProvider, starPlayerMenuText.toString(), RenderContext.UI);
+			JMenu starPlayerMenu = new JMenu(dimensionProvider, starPlayerMenuText.toString());
 			pInducementMenu.add(starPlayerMenu);
 			for (Player<?> player : starPlayers) {
 				addPlayerMenuItem(starPlayerMenu, player, player.getName());
@@ -1631,7 +1575,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			} else {
 				mercenaryMenuText.append(" Mercenaries");
 			}
-			JMenu mercenaryMenu = new JMenu(dimensionProvider, mercenaryMenuText.toString(), RenderContext.UI);
+			JMenu mercenaryMenu = new JMenu(dimensionProvider, mercenaryMenuText.toString());
 			pInducementMenu.add(mercenaryMenu);
 			for (Player<?> player : mercenaries) {
 				addPlayerMenuItem(mercenaryMenu, player, player.getName());
@@ -1646,7 +1590,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (staff.size() > 0) {
 			String staffText = staff.size() + " Infamous Staff";
-			JMenu staffMenu = new JMenu(dimensionProvider, staffText, RenderContext.UI);
+			JMenu staffMenu = new JMenu(dimensionProvider, staffText);
 			pInducementMenu.add(staffMenu);
 			for (Player<?> player : staff) {
 				addPlayerMenuItem(staffMenu, player, player.getName());
@@ -1674,22 +1618,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			cardTypeText.append((available > 0) ? available : "None");
 			cardTypeText.append(" available)");
 			if (pInducementSet.getTurnData().isHomeData() && (getClient().getMode() == ClientMode.PLAYER)) {
-				JMenu cardMenu = new JMenu(dimensionProvider, cardTypeText.toString(), RenderContext.UI);
+				JMenu cardMenu = new JMenu(dimensionProvider, cardTypeText.toString());
 				pInducementMenu.add(cardMenu);
 				ImageIcon cardIcon = new ImageIcon(
-					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, RenderContext.UI));
+					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider));
 				for (Card card : cardList) {
 					if (pInducementSet.isAvailable(card)) {
 						String cardText = "<html>" +
 							"<b>" + card.getName() + "</b>" +
 							"<br>" + card.getHtmlDescriptionWithPhases() +
 							"</html>";
-						JMenuItem cardItem = new JMenuItem(dimensionProvider, cardText, cardIcon, RenderContext.UI);
+						JMenuItem cardItem = new JMenuItem(dimensionProvider, cardText, cardIcon);
 						cardMenu.add(cardItem);
 					}
 				}
 			} else {
-				JMenuItem cardItem = new JMenuItem(dimensionProvider, cardTypeText.toString(), RenderContext.UI);
+				JMenuItem cardItem = new JMenuItem(dimensionProvider, cardTypeText.toString());
 				pInducementMenu.add(cardItem);
 			}
 		}
@@ -1759,8 +1703,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		UserInterface userInterface = getClient().getUserInterface();
 		PlayerIconFactory playerIconFactory = userInterface.getPlayerIconFactory();
-		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer, RenderContext.UI));
-		JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon, RenderContext.UI);
+		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer, dimensionProvider));
+		JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon);
 		playersMenuItem.addMouseListener(new MenuPlayerMouseListener(pPlayer));
 		pPlayersMenu.add(playersMenuItem);
 	}

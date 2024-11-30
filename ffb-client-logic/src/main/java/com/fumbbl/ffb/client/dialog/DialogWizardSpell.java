@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -37,7 +36,7 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 		this.teamId = teamId;
 		JPanel panelText = new JPanel();
 		panelText.setLayout(new BoxLayout(panelText, BoxLayout.X_AXIS));
-		panelText.add(new JLabel(dimensionProvider(), "Which spell should your wizard cast?", RenderContext.ON_PITCH));
+		panelText.add(new JLabel(dimensionProvider(), "Which spell should your wizard cast?"));
 
 		JPanel panelButtons = new JPanel();
 		panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.X_AXIS));
@@ -45,27 +44,27 @@ public class DialogWizardSpell extends Dialog implements ActionListener, KeyList
 		panelButtons.add(Box.createHorizontalGlue());
 
 		if (spellEnabled(SpecialEffect.LIGHTNING)) {
-			fButtonLightning = new JButton(dimensionProvider(), "Lightning", RenderContext.ON_PITCH);
+			fButtonLightning = new JButton(dimensionProvider(), "Lightning");
 			fButtonLightning.addActionListener(this);
 			fButtonLightning.addKeyListener(this);
 			panelButtons.add(fButtonLightning);
 		}
 
 		if (spellEnabled(SpecialEffect.FIREBALL)) {
-			fButtonFireball = new JButton(dimensionProvider(), "Fireball", RenderContext.ON_PITCH);
+			fButtonFireball = new JButton(dimensionProvider(), "Fireball");
 			fButtonFireball.addActionListener(this);
 			fButtonFireball.addKeyListener(this);
 			panelButtons.add(fButtonFireball);
 		}
 
 		if (spellEnabled(SpecialEffect.ZAP)) {
-			buttonZap = new JButton(dimensionProvider(), "Zap", RenderContext.ON_PITCH);
+			buttonZap = new JButton(dimensionProvider(), "Zap");
 			buttonZap.addActionListener(this);
 			buttonZap.addKeyListener(this);
 			panelButtons.add(buttonZap);
 		}
 
-		fButtonCancel = new JButton(dimensionProvider(), "Cancel", RenderContext.ON_PITCH);
+		fButtonCancel = new JButton(dimensionProvider(), "Cancel");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.addKeyListener(this);
 		panelButtons.add(fButtonCancel);

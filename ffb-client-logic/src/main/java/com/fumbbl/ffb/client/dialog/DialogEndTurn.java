@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -32,12 +31,12 @@ public class DialogEndTurn extends Dialog implements ActionListener, KeyListener
 
 		super(pClient, "End Turn", false);
 
-		fButtonYes = new JButton(dimensionProvider(), "Yes", RenderContext.ON_PITCH);
+		fButtonYes = new JButton(dimensionProvider(), "Yes");
 		fButtonYes.addActionListener(this);
 		fButtonYes.addKeyListener(this);
 		fButtonYes.setMnemonic('Y');
 
-		fButtonNo = new JButton(dimensionProvider(), "No", RenderContext.ON_PITCH);
+		fButtonNo = new JButton(dimensionProvider(), "No");
 		fButtonNo.addActionListener(this);
 		fButtonNo.addKeyListener(this);
 		fButtonNo.setMnemonic('N');
@@ -46,7 +45,7 @@ public class DialogEndTurn extends Dialog implements ActionListener, KeyListener
 		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
-		JLabel messageLabel = new JLabel(dimensionProvider(), "Do you really want to end your turn?", RenderContext.ON_PITCH);
+		JLabel messageLabel = new JLabel(dimensionProvider(), "Do you really want to end your turn?");
 		messageLabel.setFont(new Font(messageLabel.getFont().getName(), Font.BOLD, messageLabel.getFont().getSize()));
 		messagePanel.add(messageLabel);
 		messagePanel.add(Box.createHorizontalGlue());

@@ -57,7 +57,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
 
-	private final DimensionProvider dimensionProvider;
+	private final UiDimensionProvider uiDimensionProvider;
+	private final PitchDimensionProvider pitchDimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 
@@ -75,16 +76,17 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
-		dimensionProvider = new DimensionProvider(layoutSettings);
-		fIconCache = new IconCache(getClient(), dimensionProvider);
+		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
+		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		fIconCache = new IconCache(getClient());
 		fIconCache.init();
-		fontCache = new FontCache(dimensionProvider);
+		fontCache = new FontCache();
 		fSoundEngine = new SoundEngine(getClient());
-		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, RenderContext.UI));
+		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider, fontCache));
+		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -95,12 +97,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider, fontCache);
-		fFieldComponent = new FieldComponent(getClient(), dimensionProvider, fontCache);
-		fLog = new LogComponent(getClient(), styleProvider, dimensionProvider);
-		fChat = new ChatComponent(getClient(), dimensionProvider, styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider, styleProvider, fontCache);
-		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider, styleProvider, fontCache);
+		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
+		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
+		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, styleProvider, fontCache);
+		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, styleProvider, fontCache);
 
 		initComponents(false);
 
@@ -247,8 +249,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		return styleProvider;
 	}
 
-	public DimensionProvider getDimensionProvider() {
-		return dimensionProvider;
+	public UiDimensionProvider getUiDimensionProvider() {
+		return uiDimensionProvider;
+	}
+
+	public PitchDimensionProvider getPitchDimensionProvider() {
+		return pitchDimensionProvider;
 	}
 
 	public FieldComponent getFieldComponent() {

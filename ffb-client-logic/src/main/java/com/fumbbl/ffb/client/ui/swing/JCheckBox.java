@@ -2,16 +2,15 @@ package com.fumbbl.ffb.client.ui.swing;
 
 
 import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.RenderContext;
 
 public class JCheckBox extends javax.swing.JCheckBox {
-	public JCheckBox(DimensionProvider dimensionProvider, String text, RenderContext renderContext) {
+	public JCheckBox(DimensionProvider dimensionProvider, String text) {
 		super(text);
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 
-	public JCheckBox(DimensionProvider dimensionProvider, RenderContext renderContext) {
+	public JCheckBox(DimensionProvider dimensionProvider) {
 		super();
-		dimensionProvider.scaleFont(this, renderContext);
+		dimensionProvider.scaleFont(this);
 	}
 }

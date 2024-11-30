@@ -103,13 +103,13 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS, RenderContext.UI);
+		size = dimensionProvider.dimension(Component.TURN_DICE_STATUS);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON, RenderContext.UI);
+		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON);
 		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
 	}
 
@@ -118,7 +118,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private int statusTextWidth() {
-		return size.width - dimensionProvider.scale(10, RenderContext.UI);
+		return size.width - dimensionProvider.scale(10);
 	}
 
 	private void drawBackground() {
@@ -135,9 +135,9 @@ public class TurnDiceStatusComponent extends JPanel
 				homeSide = !homeSide;
 			}
 			if (homeSide) {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED, RenderContext.UI);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_RED, dimensionProvider);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE, RenderContext.UI);
+				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_TURN_DICE_STATUS_BLUE, dimensionProvider);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -198,7 +198,7 @@ public class TurnDiceStatusComponent extends JPanel
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage buttonImage = iconCache.getIconByProperty(
-					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, RenderContext.UI);
+					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, dimensionProvider);
 			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.setFont(buttonFont);
 			g2d.setColor(Color.BLACK);
@@ -215,7 +215,7 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fTurnMode != null) && (fTurnMode != TurnMode.START_GAME) && (fFinished == null)) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING, RenderContext.UI);
+			BufferedImage playingImage = iconCache.getIconByProperty(IIconProperty.SIDEBAR_STATUS_PLAYING, dimensionProvider);
 			g2d.drawImage(playingImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.dispose();
 		}
@@ -235,7 +235,7 @@ public class TurnDiceStatusComponent extends JPanel
 				break;
 			}
 			if (imageProperty != null) {
-				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty, RenderContext.UI);
+				BufferedImage statusImage = iconCache.getIconByProperty(imageProperty, dimensionProvider);
 				g2d.drawImage(statusImage, buttonArea.x, buttonArea.y, buttonArea.width, size.height, null);
 			}
 			g2d.setColor(Color.BLACK);
@@ -258,7 +258,7 @@ public class TurnDiceStatusComponent extends JPanel
 				if (y <= 3 * fontMetrics.getHeight()) {
 					layoutLine = measurer.nextLayout(statusTextWidth());
 				} else {
-					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20, RenderContext.UI)); // hourglass icon
+					layoutLine = measurer.nextLayout(statusTextWidth() - dimensionProvider.scale(20)); // hourglass icon
 				}
 			}
 			g2d.dispose();
@@ -266,7 +266,7 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int lineHeight = dimensionProvider.scale(38, RenderContext.UI);
+		int lineHeight = dimensionProvider.scale(38);
 		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
 		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
@@ -275,17 +275,17 @@ public class TurnDiceStatusComponent extends JPanel
 			int length = blockRoll.getBlockRoll().length;
 			for (int i = 0; i < length; i++) {
 				g2d.setComposite(oldComposite);
-				BufferedImage diceIcon = iconCache.getDiceIcon(blockRoll.getBlockRoll()[i]);
+				BufferedImage diceIcon = iconCache.getDiceIcon(blockRoll.getBlockRoll()[i], dimensionProvider);
 				if (!blockRoll.needsSelection() && (blockRoll.getSelectedIndex() != i)) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 				}
-				int dieWidth = dimensionProvider.scale(39, RenderContext.UI);
+				int dieWidth = dimensionProvider.scale(39);
 				if (length > 2) {
-					x = dimensionProvider.scale(15, RenderContext.UI) + (dieWidth * i);
+					x = dimensionProvider.scale(15) + (dieWidth * i);
 				} else if (length > 1) {
-					x = dimensionProvider.scale(34, RenderContext.UI) + (dieWidth * i);
+					x = dimensionProvider.scale(34) + (dieWidth * i);
 				} else {
-					x = dimensionProvider.scale(53, RenderContext.UI);
+					x = dimensionProvider.scale(53);
 				}
 				g2d.drawImage(diceIcon, x, y, null);
 			}
@@ -324,11 +324,11 @@ public class TurnDiceStatusComponent extends JPanel
 
 		FontCache fontCache = client.getUserInterface().getFontCache();
 
-		buttonFont = fontCache.font(Font.BOLD, 14, RenderContext.UI);
+		buttonFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
 
-		diceFont = fontCache.font(Font.BOLD, 11, RenderContext.UI);
-		statusTitleFont = fontCache.font(Font.BOLD, 12, RenderContext.UI);
-		statusMessageFont = fontCache.font(Font.PLAIN, 12, RenderContext.UI);
+		diceFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
+		statusTitleFont = fontCache.font(Font.BOLD, 12, dimensionProvider);
+		statusMessageFont = fontCache.font(Font.PLAIN, 12, dimensionProvider);
 
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (!StringTool.isEqual(fStatusTitle, clientData.getStatusTitle())

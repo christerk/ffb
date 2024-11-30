@@ -36,8 +36,7 @@ public enum Component {
 	REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0), new Dimension(36, 0)),
 	INDUCEMENT_COUNTER_SIZE(new Dimension(15, 15)),
 	RESOURCE_SLOT(new Dimension(46, 40)),
-	MAX_ICON_PITCH(new Dimension(40, 40), new Dimension(76, 76)),
-	MAX_ICON_UI(new Dimension(40, 40)),
+	MAX_ICON(new Dimension(40, 40)),
 	ABOUT_DIALOG(new Dimension(813, 542)),
 	CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834), new Dimension(1920, 1080)),
 	BOX_SQUARE(new Dimension(39, 39));
@@ -52,10 +51,6 @@ public enum Component {
 
 	Component(Dimension landscape, Dimension portrait, Dimension wide) {
 		this(landscape, portrait, portrait, wide);
-	}
-
-	Component(Dimension landscape, Dimension wide) {
-		this(landscape, landscape, landscape, wide);
 	}
 
 	Component(Dimension landscape) {

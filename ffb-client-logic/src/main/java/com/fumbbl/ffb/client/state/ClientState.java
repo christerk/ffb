@@ -54,6 +54,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	}};
 
 	private final FantasyFootballClient fClient;
+	private final UiDimensionProvider uiDimensionProvider;
+	private final PitchDimensionProvider pitchDimensionProvider;
 
 	private FieldCoordinate fSelectSquareCoordinate;
 
@@ -66,6 +68,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	public ClientState(FantasyFootballClient pClient) {
 		fClient = pClient;
 		setClickable(true);
+		uiDimensionProvider = fClient.getUserInterface().getUiDimensionProvider();
+		pitchDimensionProvider = fClient.getUserInterface().getPitchDimensionProvider();
 	}
 
 	public abstract ClientStateId getId();
@@ -115,12 +119,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		FieldCoordinate coordinate = null;
 		int x = pMouseEvent.getX();
 		int y = pMouseEvent.getY();
-		DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-		Dimension field = dimensionProvider.dimension(Component.FIELD, RenderContext.UI);
+		Dimension field = uiDimensionProvider.dimension(Component.FIELD);
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			coordinate = new FieldCoordinate((int) ((x / (dimensionProvider().getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / dimensionProvider.unscaledFieldSquare()),
-				(int) ((y / (dimensionProvider.getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / dimensionProvider.unscaledFieldSquare()));
-			coordinate = getClient().getUserInterface().getDimensionProvider().mapToGlobal(coordinate);
+			coordinate = new FieldCoordinate((int) ((x / (dimensionProvider().getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()),
+				(int) ((y / (pitchDimensionProvider.getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()));
+			coordinate = pitchDimensionProvider.mapToGlobal(coordinate);
 		}
 		return coordinate;
 	}
@@ -136,11 +139,10 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 		if (pCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 
-			DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width + 1;
 			int y = dimension.height + 1;
-			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH) - 2);
+			Rectangle bounds = new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
 
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
@@ -153,9 +155,8 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	public void hideSelectSquare() {
 		if (fSelectSquareCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-			DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
-			Dimension dimension = dimensionProvider.mapToLocal(fSelectSquareCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH), dimensionProvider.fieldSquareSize(RenderContext.ON_PITCH));
+			Dimension dimension = pitchDimensionProvider.mapToLocal(fSelectSquareCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
 			fieldComponent.refresh(bounds);
 			fSelectSquareCoordinate = null;
 		}
@@ -201,13 +202,12 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 				hideSelectSquare();
 				if (player != null) {
 					int offsetX = 1, offsetY = 1;
-					DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 
-					if (dimensionProvider.isPitchPortrait()) {
+					if (pitchDimensionProvider.isPitchPortrait()) {
 						offsetX = -1;
 					}
 
-					Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+					Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 					UtilClientMarker.showMarkerPopup(getClient(), player, dimension.width, dimension.height);
 
 				} else {
@@ -251,12 +251,11 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 			if (coordinate != null) {
 				hideSelectSquare();
 				int offsetX = 1, offsetY = 1;
-				DimensionProvider dimensionProvider = fClient.getUserInterface().getDimensionProvider();
 
-				if (dimensionProvider.isPitchPortrait()) {
+				if (pitchDimensionProvider.isPitchPortrait()) {
 					offsetX = -1;
 				}
-				Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 				fPopupMenu.show(fClient.getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 			}
 		}
@@ -360,14 +359,14 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
-				createMenuIcon(iconCache, IIconProperty.ACTION_STAB), RenderContext.ON_PITCH);
+				createMenuIcon(iconCache, IIconProperty.ACTION_STAB));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
 		return menuItem;
 	}
 
 	public ImageIcon createMenuIcon(IconCache iconCache, String iconProperty) {
-		return new ImageIcon(iconCache.getIconByProperty(iconProperty, RenderContext.ON_PITCH));
+		return new ImageIcon(iconCache.getIconByProperty(iconProperty, pitchDimensionProvider));
 	}
 
 	protected boolean isCatchOfTheDayAvailable(ActingPlayer actingPlayer) {
@@ -385,7 +384,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
-				createMenuIcon(iconCache, IIconProperty.ACTION_CATCH_OF_THE_DAY), RenderContext.ON_PITCH);
+				createMenuIcon(iconCache, IIconProperty.ACTION_CATCH_OF_THE_DAY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
 		return menuItem;
@@ -412,7 +411,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
-			createMenuIcon(iconCache, IIconProperty.ACTION_WISDOM), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_WISDOM));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
 		return menuItem;
@@ -421,7 +420,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = playerActivationUsed() ? "End Action" : deselectPlayerLabel();
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
@@ -470,7 +469,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
-			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
@@ -491,7 +490,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
 		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
-			createMenuIcon(iconCache, IIconProperty.ACTION_LOOK_INTO_MY_EYES), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_LOOK_INTO_MY_EYES));
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
 		return lookItem;
@@ -515,7 +514,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
-			createMenuIcon(iconCache, IIconProperty.ACTION_BALEFUL_HEX), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_BALEFUL_HEX));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
 		return menuItem;
@@ -538,7 +537,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createBlackInkItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
-			createMenuIcon(iconCache, IIconProperty.ACTION_GAZE), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_GAZE));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
 		return menuItem;
@@ -559,7 +558,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
 		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
-			createMenuIcon(iconCache, IIconProperty.ACTION_STARTED_BLASTIN), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_STARTED_BLASTIN));
 		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
 		return blastinItem;
@@ -567,7 +566,7 @@ public abstract class ClientState implements INetCommandHandler, MouseListener, 
 
 
 	public DimensionProvider dimensionProvider() {
-		return getClient().getUserInterface().getDimensionProvider();
+		return pitchDimensionProvider;
 	}
 
 }

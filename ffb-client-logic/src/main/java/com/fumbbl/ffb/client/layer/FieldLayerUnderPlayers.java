@@ -6,10 +6,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.RenderContext;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -30,8 +27,8 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 	private FieldCoordinate[] fMovePath;
 
-	public FieldLayerUnderPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerUnderPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
 	public void drawTrackNumber(TrackNumber pTrackNumber) {
@@ -75,10 +72,10 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			clear(pCoordinate, true);
 			String numberString = Integer.toString(pNumber);
 			Graphics2D g2d = getImage().createGraphics();
-			g2d.setFont(fontCache.font(Font.BOLD, 15, RenderContext.ON_PITCH));
+			g2d.setFont(fontCache.font(Font.BOLD, 15, pitchDimensionProvider));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
 			int baselineX = dimension.width - (int) (numberBounds.getWidth() / 2) + 1;
 			int baselineY = dimension.height + (int) (numberBounds.getHeight() / 2) - 2;
 			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
@@ -131,7 +128,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 
 	private void drawSweetSpot(String iconProperty, FieldCoordinate coordinate) {
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty, RenderContext.ON_PITCH);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty, pitchDimensionProvider);
 		draw(icon, coordinate, 1.0f);
 	}
 }

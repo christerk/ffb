@@ -1,17 +1,14 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.RenderContext;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
-import javax.swing.BoxLayout;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Dimension;
+import java.awt.*;
 
 public class DialogChatCommands extends Dialog {
 
@@ -24,15 +21,16 @@ public class DialogChatCommands extends Dialog {
 	public DialogChatCommands(FantasyFootballClient pClient) {
 
 		super(pClient, "Chat Commands", true);
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
 
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\"><b>";
-		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(11, RenderContext.UI) + "px\"><b>";
-		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider().scale(9, RenderContext.UI) + "px\">";
+		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(11) + "px\"><b>";
+		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\">";
 
 		JScrollPane aboutPane = new JScrollPane(createEditorPane());
 
 		Game game = getClient().getGame();
-		int offset = dimensionProvider().scale(150, RenderContext.UI);
+		int offset = dimensionProvider.scale(150);
 		Dimension clientDimension = getClient().getUserInterface().getSize();
 
 		if (game.isTesting()) {

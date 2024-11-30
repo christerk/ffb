@@ -5,7 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.RenderContext;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.marking.FieldMarker;
@@ -32,7 +32,7 @@ public class UtilClientMarker {
 			PlayerMarker playerMarker = persistMarker ? pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId()) : pClient.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 			String markerText = (playerMarker != null) ? playerMarker.getHomeText() : null;
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface().getFieldComponent(), markerPopupMenu,
-				"Mark Player", StringTool.print(markerText), pX, pY);
+				"Mark Player", StringTool.print(markerText), pX, pY, pClient.getUserInterface().getUiDimensionProvider());
 			markerField.addActionListener(pActionEvent -> {
 				String text = StringTool.print(markerField.getText());
 				if (persistMarker) {
@@ -61,11 +61,11 @@ public class UtilClientMarker {
 			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
 			FieldMarker fieldMarker = persistMarker ? game.getFieldModel().getFieldMarker(pCoordinate) : game.getFieldModel().getTransientFieldMarker(pCoordinate);
 			String markerText = (fieldMarker != null) ? fieldMarker.getHomeText() : null;
-			DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
+			PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate.getX(), pCoordinate.getY(), false);
 
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface().getFieldComponent(), markerPopupMenu,
-				"Mark Field", StringTool.print(markerText), dimension.width, dimension.height);
+				"Mark Field", StringTool.print(markerText), dimension.width, dimension.height, dimensionProvider);
 			markerField.addActionListener(pActionEvent -> {
 				String text = StringTool.print(markerField.getText());
 				if (persistMarker) {
@@ -88,13 +88,13 @@ public class UtilClientMarker {
 	}
 
 	private static JTextField createMarkerPopup(FieldComponent pFieldComponent, JPopupMenu pPopupMenu, String pTitle,
-			String pMarkerText, int pX, int pY) {
+			String pMarkerText, int pX, int pY, DimensionProvider dimensionProvider) {
 		if (StringTool.isProvided(pTitle)) {
-			pPopupMenu.add(new JLabel(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), pTitle, RenderContext.UI));
+			pPopupMenu.add(new JLabel(dimensionProvider, pTitle));
 		}
 		pPopupMenu.setLayout(new BoxLayout(pPopupMenu, BoxLayout.X_AXIS));
 		pPopupMenu.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		JTextField markerField = new JTextField(pFieldComponent.getClient().getUserInterface().getDimensionProvider(), 7, RenderContext.UI);
+		JTextField markerField = new JTextField(dimensionProvider, 7);
 		if (StringTool.isProvided(pMarkerText)) {
 			markerField.setText(pMarkerText);
 		}

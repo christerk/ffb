@@ -83,7 +83,7 @@ public class ClientStateHitAndRun extends ClientState {
 
 	protected JMenuItem createCancelItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Hit And Run",
-			createMenuIcon(iconCache, IIconProperty.ACTION_HIT_AND_RUN), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_HIT_AND_RUN));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN, 0));
 		return menuItem;

@@ -24,7 +24,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	private final TurnDiceStatusComponent fTurnDiceStatusComponent;
 	private final DimensionProvider dimensionProvider;
 
-	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, DimensionProvider dimensionProvider,
+	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, UiDimensionProvider dimensionProvider,
 													StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
@@ -50,7 +50,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fResourceComponent.initLayout();
 		fTurnDiceStatusComponent.initLayout();
 
-		Dimension size = dimensionProvider.dimension(Component.SIDEBAR, RenderContext.UI);
+		Dimension size = dimensionProvider.dimension(Component.SIDEBAR);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

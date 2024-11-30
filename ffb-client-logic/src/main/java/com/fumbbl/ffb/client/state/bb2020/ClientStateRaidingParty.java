@@ -84,7 +84,7 @@ public class ClientStateRaidingParty extends ClientState {
 
 	protected JMenuItem createCancelRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Raiding Party",
-			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY), RenderContext.ON_PITCH);
+			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
