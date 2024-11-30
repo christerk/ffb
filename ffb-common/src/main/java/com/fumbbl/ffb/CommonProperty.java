@@ -28,7 +28,6 @@ public enum CommonProperty {
 	SETTING_TEAM_LOGOS("setting.pitch.teamLogos", "Team Logo", "Graphics"),
 	SETTING_PITCH_WEATHER("setting.pitch.weather", "Pitch Weather", "Graphics"),
 	SETTING_RANGEGRID("setting.rangegrid", "Range Grid", "Gameplay"),
-	SETTING_PITCH_ORIENTATION("setting.pitch.orientation", "Pitch Orientation", "Gameplay"),
 	SETTING_MARK_USED_PLAYERS("setting.mark.used.players", "Mark used players", "Gameplay"),
 	SETTING_SHOW_AUTO_MARKING_DIALOG("setting.show.autoMarkingDialog", "Show automarking dialog", "Configuration"),
 	SETTING_SWAP_TEAM_COLORS("setting.swap.team.colors", "Swap team colors", "Graphics"),
@@ -56,9 +55,13 @@ public enum CommonProperty {
 	SETTING_SWEET_SPOT("setting.sweet.spot", "Show Sweet Spot", "Configuration"),
 	SETTING_LOCAL_ICON_CACHE("setting.localIconCache", "Local Icon Cache", "Configuration"),
 	SETTING_LOCAL_ICON_CACHE_PATH("setting.localIconCache.path", "Local Icon Cache Folder", "Configuration"),
-	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration");
+	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration"),
+	// usually this should now be called differently, but changing the key would reset the setting
+	SETTING_UI_LAYOUT("setting.pitch.orientation", "Client Layout", "Configuration"),
+	SETTING_UI("setting.ui", "Client UI", "Configuration")
+	;
 
-	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_PITCH_ORIENTATION,
+	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_UI_LAYOUT,
 		SETTING_SOUND_VOLUME, SETTING_ICONS, SETTING_RIGHT_CLICK_END_ACTION,
 		SETTING_AUTOMOVE, SETTING_BLITZ_TARGET_PANEL, SETTING_GAZE_TARGET_PANEL, SETTING_PITCH_CUSTOMIZATION,
 		SETTING_PITCH_MARKINGS, SETTING_PITCH_MARKINGS_ROW, SETTING_TEAM_LOGOS, SETTING_PITCH_WEATHER,

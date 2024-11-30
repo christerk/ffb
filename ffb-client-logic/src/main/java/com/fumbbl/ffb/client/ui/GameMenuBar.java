@@ -291,11 +291,46 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createMarkingMenu(fUserSettingsMenu);
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
-		createScaleItem(fUserSettingsMenu);
+		createClientUiMenu(fUserSettingsMenu);
 		createLocalPropertiesItem(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
+	}
+
+	private void createClientUiMenu(JMenu fUserSettingsMenu) {
+		JMenu uiMenu = new JMenu(dimensionProvider, SETTING_UI);
+		uiMenu.setMnemonic(KeyEvent.VK_U);
+		fUserSettingsMenu.add(uiMenu);
+
+		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_UI_LAYOUT);
+		orientationMenu.setMnemonic(KeyEvent.VK_O);
+		uiMenu.add(orientationMenu);
+
+		ButtonGroup orientationGroup = new ButtonGroup();
+
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
+		pitchLandscapeMenuItem.addActionListener(this);
+		orientationGroup.add(pitchLandscapeMenuItem);
+		orientationMenu.add(pitchLandscapeMenuItem);
+
+		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
+		pitchPortraitMenuItem.addActionListener(this);
+		orientationGroup.add(pitchPortraitMenuItem);
+		orientationMenu.add(pitchPortraitMenuItem);
+
+		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
+		layoutSquareMenuItem.addActionListener(this);
+		orientationGroup.add(layoutSquareMenuItem);
+		orientationMenu.add(layoutSquareMenuItem);
+
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
+		layoutWideMenuItem.addActionListener(this);
+		orientationGroup.add(layoutWideMenuItem);
+		orientationMenu.add(layoutWideMenuItem);
+
+		createScaleItem(uiMenu);
+
 	}
 
 	private void createRestoreMenu(JMenu fUserSettingsMenu) {
@@ -458,32 +493,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchMarkingsRowOffMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOffMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOffMenuItem);
-
-		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_PITCH_ORIENTATION);
-		orientationMenu.setMnemonic(KeyEvent.VK_O);
-		fPitchMenu.add(orientationMenu);
-
-		ButtonGroup orientationGroup = new ButtonGroup();
-
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
-		pitchLandscapeMenuItem.addActionListener(this);
-		orientationGroup.add(pitchLandscapeMenuItem);
-		orientationMenu.add(pitchLandscapeMenuItem);
-
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
-		pitchPortraitMenuItem.addActionListener(this);
-		orientationGroup.add(pitchPortraitMenuItem);
-		orientationMenu.add(pitchPortraitMenuItem);
-
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
-		layoutSquareMenuItem.addActionListener(this);
-		orientationGroup.add(layoutSquareMenuItem);
-		orientationMenu.add(layoutSquareMenuItem);
-
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
-		layoutWideMenuItem.addActionListener(this);
-		orientationGroup.add(layoutWideMenuItem);
-		orientationMenu.add(layoutWideMenuItem);
 
 		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
 		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
@@ -1001,9 +1010,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchMarkingsRowOffMenuItem.setSelected(true);
 		fPitchMarkingsRowOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON.equals(pitchMarkingsRowSetting));
 
-		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
+		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
 		pitchLandscapeMenuItem.setSelected(true);
-		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
+		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
 
@@ -1226,11 +1235,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		ClientLayout layout = ClientLayout.LANDSCAPE;
 
-		String orientation = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
+		String orientation = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
 
 		if (orientation != null) {
 			switch (orientation) {
-				case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
+				case IClientPropertyValue.SETTING_LAYOUT_PORTRAIT:
 					layout = ClientLayout.PORTRAIT;
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
@@ -1898,19 +1907,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchLandscapeMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchPortraitMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_PORTRAIT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == layoutSquareMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == layoutWideMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_WIDE);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == showCratersAndBloodsptsMenuItem) {

@@ -607,7 +607,7 @@ public class AdminServlet extends HttpServlet {
 		DbUserSettingsQuery listQuery = (DbUserSettingsQuery) getServer().getDbQueryFactory()
 			.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 		listQuery.execute(coach);
-		boolean isPortrait = IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(listQuery.getSettingValue(CommonProperty.SETTING_PITCH_ORIENTATION));
+		boolean isPortrait = IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(listQuery.getSettingValue(CommonProperty.SETTING_UI_LAYOUT));
 		UtilXml.addValueElement(handler, "isPortrait", isPortrait);
 
 		return true;
