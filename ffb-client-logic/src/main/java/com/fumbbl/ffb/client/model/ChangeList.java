@@ -12,8 +12,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.31.1")
-				.addBugfix("Hit And Run: Rooted players were able to use Hit And Run after performing a block")
+		versions.add(new VersionChangeList("2.32.0")
+			.addBugfix("Hit And Run: Rooted players were able to use Hit And Run after performing a block")
+			.addFeature("Wide Layout: More streaming friendly layout with larger horizontal pitch, requested by Christer")
+			.addBehaviorChange("\"Pitch Orientation\" submenu is now called \"Client Layout\" and moved from \"Pitch Customization\" to new \"Client UI\" submenu")
+			.addBehaviorChange("\"Client Size\" menu entry moved to new \"Client UI\" submenu")
 		);
 
 		versions.add(new VersionChangeList("2.31.0")
@@ -25,7 +28,7 @@ public class ChangeList {
 		);
 
 		versions.add(new VersionChangeList("2.30.3")
-			.addBugfix("Rioutous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
+			.addBugfix("Riotous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
 		);
 
 		versions.add(new VersionChangeList("2.30.2")
