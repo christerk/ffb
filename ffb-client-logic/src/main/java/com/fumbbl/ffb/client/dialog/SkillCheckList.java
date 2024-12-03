@@ -55,19 +55,6 @@ public class SkillCheckList extends JList<SkillCheckListItem> {
 		}
 		return selectedSkills.toArray(new Skill[0]);
 	}
-
-	public List<Integer> getSelectedIndexes() {
-		List<Integer> selectedIndexes = new ArrayList<>();
-		for (int i = 0; i < getModel().getSize(); i++) {
-			SkillCheckListItem item = getModel().getElementAt(i);
-			if (item.isSelected()) {
-				selectedIndexes.add(i);
-			}
-		}
-
-		return selectedIndexes;
-	}
-
 	private int findNrOfSelectedItems() {
 		int nrOfSelectedItems = 0;
 		for (int i = 0; i < getModel().getSize(); i++) {

@@ -1,12 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.ReplayControl;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 
 import javax.swing.JPanel;
@@ -35,12 +29,15 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	private final List<String> fInputLog;
 	private int fInputLogPosition;
-
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 	private final FantasyFootballClient fClient;
 
-	public ChatComponent(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider) {
 
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
@@ -102,16 +99,16 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatInputField.addMouseMotionListener(this);
 
 		fReplayShown = false;
-		fReplayControl = new ReplayControl(getClient());
+		fReplayControl = new ReplayControl(getClient(), dimensionProvider);
 
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.CHAT);
+	public void initLayout() {
+		Dimension size = dimensionProvider.dimension(Component.CHAT);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
-		fReplayControl.initLayout(dimensionProvider);
+		fReplayControl.initLayout();
 		setBackground(styleProvider.getChatBackground());
 		fChatTextPane.setBackground(styleProvider.getChatBackground());
 		fChatScrollPane.setBackground(styleProvider.getChatBackground());

@@ -1,19 +1,14 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -57,25 +52,24 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 
 		super(pClient, pTitle, false);
 
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
 
 		this.choiceOneMnemonic = choiceOneMnemonic;
 		this.choiceTwoMnemonic = choiceTwoMnemonic;
 		this.choiceThreeMnemonic = choiceThreeMnemonic;
 
-		buttonChoiceOne = new JButton(dimensionProvider, choiceOneText);
+		buttonChoiceOne = new JButton(dimensionProvider(), choiceOneText);
 		buttonChoiceOne.addActionListener(this);
 		buttonChoiceOne.addKeyListener(this);
 		buttonChoiceOne.setMnemonic(choiceOneMnemonic);
 
 		if (StringTool.isProvided(choiceTwoText)) {
-			buttonChoiceTwo = new JButton(dimensionProvider, choiceTwoText);
+			buttonChoiceTwo = new JButton(dimensionProvider(), choiceTwoText);
 			buttonChoiceTwo.addActionListener(this);
 			buttonChoiceTwo.addKeyListener(this);
 			buttonChoiceTwo.setMnemonic(choiceTwoMnemonic);
 		}
 
-		JButton buttonChoiceThree = new JButton(dimensionProvider, choiceThreeText);
+		JButton buttonChoiceThree = new JButton(dimensionProvider(), choiceThreeText);
 		buttonChoiceThree.addActionListener(this);
 		buttonChoiceThree.addKeyListener(this);
 		buttonChoiceThree.setMnemonic(choiceThreeMnemonic);
@@ -104,7 +98,7 @@ public abstract class DialogThreeWayChoice extends Dialog implements ActionListe
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
-			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
+			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, dimensionProvider());
 			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}

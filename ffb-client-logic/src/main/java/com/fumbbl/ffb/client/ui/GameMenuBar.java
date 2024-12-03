@@ -1,38 +1,8 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.ConcedeGameStatus;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.ClientReplayer;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogAbout;
-import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
-import com.fumbbl.ffb.client.dialog.DialogChangeList;
-import com.fumbbl.ffb.client.dialog.DialogChatCommands;
-import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
-import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
-import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
-import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
-import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
-import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.dialog.*;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -42,43 +12,20 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.InducementSet;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuBar;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -145,6 +92,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem pitchLandscapeMenuItem;
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
+	private JRadioButtonMenuItem layoutWideMenuItem;
 
 	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -238,6 +186,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
+	private final LayoutSettings layoutSettings;
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -260,11 +209,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 
-		setFont(fontCache.font(Font.PLAIN, 12));
+		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
 		fClient = pClient;
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
+		this.layoutSettings = dimensionProvider.getLayoutSettings();
 
 		init();
 
@@ -283,11 +233,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fChatCommandsMenuItem.addActionListener(this);
 		fHelpMenu.add(fChatCommandsMenuItem);
 
-		changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_L);
+		changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_W);
 		changeListItem.addActionListener(this);
 		fHelpMenu.add(changeListItem);
 
-		autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_L);
+		autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_M);
 		autoMarkingItem.addActionListener(this);
 		fHelpMenu.add(autoMarkingItem);
 
@@ -341,11 +291,46 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createMarkingMenu(fUserSettingsMenu);
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
-		createScaleItem(fUserSettingsMenu);
+		createClientUiMenu(fUserSettingsMenu);
 		createLocalPropertiesItem(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
+	}
+
+	private void createClientUiMenu(JMenu fUserSettingsMenu) {
+		JMenu uiMenu = new JMenu(dimensionProvider, SETTING_UI);
+		uiMenu.setMnemonic(KeyEvent.VK_U);
+		fUserSettingsMenu.add(uiMenu);
+
+		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_UI_LAYOUT);
+		orientationMenu.setMnemonic(KeyEvent.VK_O);
+		uiMenu.add(orientationMenu);
+
+		ButtonGroup orientationGroup = new ButtonGroup();
+
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
+		pitchLandscapeMenuItem.addActionListener(this);
+		orientationGroup.add(pitchLandscapeMenuItem);
+		orientationMenu.add(pitchLandscapeMenuItem);
+
+		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
+		pitchPortraitMenuItem.addActionListener(this);
+		orientationGroup.add(pitchPortraitMenuItem);
+		orientationMenu.add(pitchPortraitMenuItem);
+
+		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
+		layoutSquareMenuItem.addActionListener(this);
+		orientationGroup.add(layoutSquareMenuItem);
+		orientationMenu.add(layoutSquareMenuItem);
+
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
+		layoutWideMenuItem.addActionListener(this);
+		orientationGroup.add(layoutWideMenuItem);
+		orientationMenu.add(layoutWideMenuItem);
+
+		createScaleItem(uiMenu);
+
 	}
 
 	private void createRestoreMenu(JMenu fUserSettingsMenu) {
@@ -508,27 +493,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchMarkingsRowOffMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOffMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOffMenuItem);
-
-		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_PITCH_ORIENTATION);
-		orientationMenu.setMnemonic(KeyEvent.VK_O);
-		fPitchMenu.add(orientationMenu);
-
-		ButtonGroup orientationGroup = new ButtonGroup();
-
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
-		pitchLandscapeMenuItem.addActionListener(this);
-		orientationGroup.add(pitchLandscapeMenuItem);
-		orientationMenu.add(pitchLandscapeMenuItem);
-
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
-		pitchPortraitMenuItem.addActionListener(this);
-		orientationGroup.add(pitchPortraitMenuItem);
-		orientationMenu.add(pitchPortraitMenuItem);
-
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
-		layoutSquareMenuItem.addActionListener(this);
-		orientationGroup.add(layoutSquareMenuItem);
-		orientationMenu.add(layoutSquareMenuItem);
 
 		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
 		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
@@ -1046,10 +1010,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fPitchMarkingsRowOffMenuItem.setSelected(true);
 		fPitchMarkingsRowOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON.equals(pitchMarkingsRowSetting));
 
-		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
+		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
 		pitchLandscapeMenuItem.setSelected(true);
-		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_PORTRAIT.equals(orientationSetting));
+		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
+		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
 
 		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
@@ -1156,8 +1121,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		refreshUi |= updateOrientation();
 		refreshUi |= updateScaling();
+		refreshUi |= updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
@@ -1226,15 +1191,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void increaseScaling() {
-		updateScaleProperty(dimensionProvider.largerScale());
+		updateScaleProperty(layoutSettings.largerScale());
 	}
 
 	public void decreaseScaling() {
-		updateScaleProperty(dimensionProvider.smallerScale());
+		updateScaleProperty(layoutSettings.smallerScale());
 	}
 
 	public void resetScaling() {
-		updateScaleProperty(DimensionProvider.BASE_SCALE_FACTOR);
+		updateScaleProperty(LayoutSettings.BASE_SCALE_FACTOR);
 	}
 
 
@@ -1251,12 +1216,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (StringTool.isProvided(factorValue)) {
 			try {
 				double factor = Double.parseDouble(factorValue);
-				if (dimensionProvider.getScale() != factor) {
-					dimensionProvider.setScale(factor);
+				if (layoutSettings.getScale() != factor) {
+					layoutSettings.setScale(factor);
 					getClient().getUserInterface().getIconCache().clear();
 					FontCache fontCache = getClient().getUserInterface().getFontCache();
 					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
 					return true;
 				}
 			} catch (Exception ignored) {
@@ -1268,25 +1233,34 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private boolean updateOrientation() {
 
-		DimensionProvider.ClientLayout layout = DimensionProvider.ClientLayout.LANDSCAPE;
+		ClientLayout layout = ClientLayout.LANDSCAPE;
 
-		String orientation = getClient().getProperty(CommonProperty.SETTING_PITCH_ORIENTATION);
+		String orientation = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
 
 		if (orientation != null) {
 			switch (orientation) {
-				case IClientPropertyValue.SETTING_PITCH_PORTRAIT:
-					layout = DimensionProvider.ClientLayout.PORTRAIT;
+				case IClientPropertyValue.SETTING_LAYOUT_PORTRAIT:
+					layout = ClientLayout.PORTRAIT;
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-					layout = DimensionProvider.ClientLayout.SQUARE;
+					layout = ClientLayout.SQUARE;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
+					layout = ClientLayout.WIDE;
 					break;
 				default:
 					break;
 			}
 		}
 
-		if (layout != dimensionProvider.getLayout()) {
-			dimensionProvider.setLayout(layout);
+		if (layout != layoutSettings.getLayout()) {
+			layoutSettings.setLayout(layout);
+			if (getClient().getUserInterface() != null) {
+				getClient().getUserInterface().getIconCache().clear();
+				FontCache fontCache = getClient().getUserInterface().getFontCache();
+				fontCache.clear();
+				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+			}
 			return true;
 		}
 
@@ -1461,7 +1435,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		Game game = getClient().getGame();
 		Arrays.sort(pCards, Card.createComparator());
 		Icon cardIcon = new ImageIcon(
-			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider));
 		for (Card card : pCards) {
 			Player<?> player = null;
 			if (card.getTarget().isPlayedOnPlayer()) {
@@ -1656,7 +1630,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				JMenu cardMenu = new JMenu(dimensionProvider, cardTypeText.toString());
 				pInducementMenu.add(cardMenu);
 				ImageIcon cardIcon = new ImageIcon(
-					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD));
+					userInterface.getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider));
 				for (Card card : cardList) {
 					if (pInducementSet.isAvailable(card)) {
 						String cardText = "<html>" +
@@ -1738,7 +1712,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		UserInterface userInterface = getClient().getUserInterface();
 		PlayerIconFactory playerIconFactory = userInterface.getPlayerIconFactory();
-		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer));
+		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer, dimensionProvider));
 		JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon);
 		playersMenuItem.addMouseListener(new MenuPlayerMouseListener(pPlayer));
 		pPlayersMenu.add(playersMenuItem);
@@ -1933,18 +1907,21 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchLandscapeMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_LANDSCAPE);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE);
 			getClient().saveUserSettings(true);
 		}
 		if (source == pitchPortraitMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_PITCH_PORTRAIT);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_PORTRAIT);
 			getClient().saveUserSettings(true);
 		}
 		if (source == layoutSquareMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_PITCH_ORIENTATION, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			getClient().saveUserSettings(true);
 		}
-
+		if (source == layoutWideMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
+			getClient().saveUserSettings(true);
+		}
 		if (source == showCratersAndBloodsptsMenuItem) {
 			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
 			getClient().saveUserSettings(true);

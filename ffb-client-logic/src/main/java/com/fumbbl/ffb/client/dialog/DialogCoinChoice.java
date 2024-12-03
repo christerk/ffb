@@ -7,11 +7,8 @@ import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -24,7 +21,6 @@ import java.awt.event.KeyListener;
 public class DialogCoinChoice extends Dialog implements ActionListener, KeyListener {
 
 	private final JButton fButtonHeads;
-	private final JButton fButtonTails;
 	private boolean fChoiceHeads;
 
 	public DialogCoinChoice(FantasyFootballClient pClient) {
@@ -37,14 +33,14 @@ public class DialogCoinChoice extends Dialog implements ActionListener, KeyListe
 		panelButtons.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		ImageIcon iconHeads = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_HEADS));
+		ImageIcon iconHeads = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_HEADS, dimensionProvider()));
 		fButtonHeads = new JButton(dimensionProvider(), iconHeads);
 		fButtonHeads.addActionListener(this);
 		fButtonHeads.addKeyListener(this);
 		panelButtons.add(fButtonHeads);
 
-		ImageIcon iconTails = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_TAILS));
-		fButtonTails = new JButton(dimensionProvider(), iconTails);
+		ImageIcon iconTails = new ImageIcon(iconCache.getIconByProperty(IIconProperty.GAME_COIN_TAILS, dimensionProvider()));
+		JButton fButtonTails = new JButton(dimensionProvider(), iconTails);
 		fButtonTails.addActionListener(this);
 		fButtonTails.addKeyListener(this);
 		panelButtons.add(fButtonTails);

@@ -12,13 +12,23 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("2.32.0")
+			.addBugfix("Hit And Run: Rooted players were able to use Hit And Run after performing a block")
+			.addFeature("Wide Layout: More streaming friendly layout with larger horizontal pitch, requested by Christer")
+			.addBehaviorChange("\"Pitch Orientation\" submenu is now called \"Client Layout\" and moved from \"Pitch Customization\" to new \"Client UI\" submenu")
+			.addBehaviorChange("\"Client Size\" menu entry moved to new \"Client UI\" submenu")
+		);
+
 		versions.add(new VersionChangeList("2.31.0")
 			.addFeature("The Flashing Blade")
 			.addBugfix("Bloodlust: When a player that lost their tacklezone due to a failed Bloodlust roll in a previous turn used gaze or blitz action, failed Bloodlust again and then changed their action to a move action the target of that action lost their tacklezone.")
+			.addBugfix("Automarking: Markings for niggling injuries were not applied")
+			.addBugfix("Multiple Block: Special states like confusion (e.g. Bone-Head) where transferred from the first target to the second")
+			.addBugfix("If players with multiple use once per drive|half|game skills had more than one of these skills used the game crashed when one of these skills was reset")
 		);
 
 		versions.add(new VersionChangeList("2.30.3")
-			.addBugfix("Rioutous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
+			.addBugfix("Riotous Rookies: Plague Ridden position from ruleset was in some cases used for riotous rookies")
 		);
 
 		versions.add(new VersionChangeList("2.30.2")

@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.client.animation;
 
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 
@@ -16,7 +12,7 @@ import java.util.Arrays;
 
 public class AnimationSequenceMovingEffect implements IAnimationSequence, ActionListener {
 
-  public static AnimationSequenceMovingEffect createAnimationSequenceBreatheFire(FieldCoordinate start, FieldCoordinate end, DimensionProvider dimensionProvider) {
+  public static AnimationSequenceMovingEffect createAnimationSequenceBreatheFire(FieldCoordinate start, FieldCoordinate end, PitchDimensionProvider dimensionProvider) {
     return new AnimationSequenceMovingEffect(start, end, dimensionProvider, 1000, new AnimationFrame[]{
       new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 500, SoundId.FIREBALL),
       new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 500),
@@ -51,8 +47,8 @@ public class AnimationSequenceMovingEffect implements IAnimationSequence, Action
   private IAnimationListener fListener;
 
   protected AnimationSequenceMovingEffect(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate,
-                                          DimensionProvider dimensionProvider, long duration, AnimationFrame[] frames) {
-    timerDelay = (int) (20 / dimensionProvider.getScale());
+                                          PitchDimensionProvider dimensionProvider, long duration, AnimationFrame[] frames) {
+    timerDelay = (int) (20 / (dimensionProvider.getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale()));
     fTimer = new Timer(timerDelay, this);
     this.frames = frames;
     this.duration = duration;

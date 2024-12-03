@@ -3,24 +3,24 @@ package com.fumbbl.ffb.client;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FontCache {
 
 	private final Map<Key, Font> fonts = new HashMap<>();
 
-	private final DimensionProvider dimensionProvider;
 
-	public FontCache(DimensionProvider dimensionProvider) {
-		this.dimensionProvider = dimensionProvider;
-	}
-
-	public Font font(int style, int size) {
-		Key key = new Key(style, size);
+	public Font font(int style, int size, DimensionProvider dimensionProvider) {
+		Key key = new Key(style, size, dimensionProvider.getRenderContext());
 		if (!fonts.containsKey(key)) {
 			//noinspection MagicConstant
 			fonts.put(key, new Font(key.getFace().getName(), key.getStyle(), dimensionProvider.scale(key.getSize())));
 		}
 		return fonts.get(key);
+	}
+
+	public void clear() {
+		fonts.clear();
 	}
 
 	private enum FontFace {
@@ -41,11 +41,13 @@ public class FontCache {
 		private final FontFace face;
 		private final int style;
 		private final int size;
+		private final RenderContext renderContext;
 
-		public Key(int style, int size) {
+		public Key(int style, int size, RenderContext renderContext) {
 			this.face = FontFace.SANS_SERIF;
 			this.style = style;
 			this.size = size;
+			this.renderContext = renderContext;
 		}
 
 		public FontFace getFace() {
@@ -64,24 +66,13 @@ public class FontCache {
 		public boolean equals(Object o) {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
-
 			Key key = (Key) o;
-
-			if (style != key.style) return false;
-			if (size != key.size) return false;
-			return face == key.face;
+			return style == key.style && size == key.size && face == key.face && renderContext == key.renderContext;
 		}
 
 		@Override
 		public int hashCode() {
-			int result = face.hashCode();
-			result = 31 * result + style;
-			result = 31 * result + size;
-			return result;
+			return Objects.hash(face, style, size, renderContext);
 		}
-	}
-
-	public void clear() {
-		fonts.clear();
 	}
 }

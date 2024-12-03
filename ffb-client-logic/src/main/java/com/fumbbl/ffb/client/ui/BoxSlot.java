@@ -17,7 +17,7 @@ public class BoxSlot {
 	private final Rectangle fLocation;
 	private Player<?> fPlayer;
 
-	public BoxSlot(Rectangle pLocation, PlayerState pType) {
+	public BoxSlot(Rectangle pLocation) {
 		fLocation = pLocation;
 	}
 

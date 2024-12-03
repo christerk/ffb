@@ -14,16 +14,8 @@ import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Map;
 
@@ -64,8 +56,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		FontCache fontCache = pClient.getUserInterface().getFontCache();
 
-		boldFont = fontCache.font(Font.BOLD, 12);
-		regularFont = fontCache.font(Font.PLAIN, 11);
+		boldFont = fontCache.font(Font.BOLD, 12, dimensionProvider());
+		regularFont = fontCache.font(Font.PLAIN, 11, dimensionProvider());
 
 
 		GameOptions gameOptions = pClient.getGame().getOptions();

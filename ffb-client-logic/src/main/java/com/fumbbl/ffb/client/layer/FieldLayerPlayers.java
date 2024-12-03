@@ -4,12 +4,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -24,8 +20,8 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
-		super(pClient, dimensionProvider, fontCache);
+	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {
@@ -39,8 +35,8 @@ public class FieldLayerPlayers extends FieldLayer {
 	public void updateBallAndPlayers(FieldCoordinate pCoordinate, boolean pPlayerOverBall) {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
-			Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
+			Dimension maxIconSize = pitchDimensionProvider.dimension(Component.MAX_ICON);
 			int x = dimension.width - (maxIconSize.width / 2);
 			int y = dimension.height - (maxIconSize.height / 2);
 			clear(x, y, maxIconSize.width, maxIconSize.height, true); // also adds updated area
@@ -68,7 +64,7 @@ public class FieldLayerPlayers extends FieldLayer {
 			if (players != null) {
 				for (Player<?> player : players) {
 					PlayerIconFactory playerIconFactory = getClient().getUserInterface().getPlayerIconFactory();
-					BufferedImage icon = playerIconFactory.getIcon(getClient(), player);
+					BufferedImage icon = playerIconFactory.getIcon(getClient(), player, pitchDimensionProvider);
 					if (icon != null) {
 						pG2d.drawImage(icon, findCenteredIconUpperLeftX(icon, pCoordinate),
 							findCenteredIconUpperLeftY(icon, pCoordinate), null);
@@ -85,13 +81,13 @@ public class FieldLayerPlayers extends FieldLayer {
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
-			BufferedImage ballIcon = iconCache.getIconByProperty(IIconProperty.GAME_BALL);
+			BufferedImage ballIcon = iconCache.getIconByProperty(IIconProperty.GAME_BALL, pitchDimensionProvider);
 			if (!fieldModel.isBallInPlay()) {
 				ballIcon = PlayerIconFactory.fadeIcon(ballIcon);
 			}
 
 			if (fieldModel.isOutOfBounds() && (playerAction == null || !playerAction.isBomb())) {
-				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+				ballIcon = PlayerIconFactory.decorateIcon(getClient(), ballIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS, pitchDimensionProvider);
 			}
 			pG2d.drawImage(ballIcon, findCenteredIconUpperLeftX(ballIcon, pCoordinate),
 				findCenteredIconUpperLeftY(ballIcon, pCoordinate), null);
@@ -105,9 +101,9 @@ public class FieldLayerPlayers extends FieldLayer {
 		UserInterface userInterface = getClient().getUserInterface();
 		if (pCoordinate.equals(fieldModel.getBombCoordinate()) && fieldModel.isBombMoving()) {
 			IconCache iconCache = userInterface.getIconCache();
-			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB);
+			BufferedImage bombIcon = iconCache.getIconByProperty(IIconProperty.GAME_BOMB, pitchDimensionProvider);
 			if (fieldModel.isOutOfBounds() && playerAction != null && playerAction.isBomb()) {
-				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS);
+				bombIcon = PlayerIconFactory.decorateIcon(getClient(), bombIcon, IIconProperty.DECORATION_OUT_OF_BOUNDS, pitchDimensionProvider);
 			}
 			pG2d.drawImage(bombIcon, findCenteredIconUpperLeftX(bombIcon, pCoordinate),
 				findCenteredIconUpperLeftY(bombIcon, pCoordinate), null);

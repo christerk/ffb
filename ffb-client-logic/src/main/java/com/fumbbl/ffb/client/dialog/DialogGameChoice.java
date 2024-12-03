@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
-import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JTable;
@@ -11,28 +10,13 @@ import com.fumbbl.ffb.client.util.UtilClientJTable;
 import com.fumbbl.ffb.client.util.UtilClientReflection;
 import com.fumbbl.ffb.dialog.DialogId;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,10 +36,8 @@ public class DialogGameChoice extends Dialog {
 
 		super(pClient, "Select Game", false);
 
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-
 		fGameListEntries = pGameList.getEntriesSorted();
-		String[] columnNames = null;
+		String[] columnNames;
 		if (getClient().getParameters().getMode() == ClientMode.PLAYER) {
 			columnNames = new String[]{"My Team", "Opposing Team", "Opponent", "Started"};
 		} else {
@@ -96,7 +78,7 @@ public class DialogGameChoice extends Dialog {
 			}
 		}
 
-		fTable = new JTable(dimensionProvider, tableModel);
+		fTable = new JTable(dimensionProvider(), tableModel);
 		UtilClientReflection.setFillsViewportHeight(fTable, true);
 		UtilClientReflection.setAutoCreateRowSorter(fTable, true);
 		fTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -156,18 +138,16 @@ public class DialogGameChoice extends Dialog {
 		inputPanel.add(scrollPane);
 		inputPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		JButton fButtonCancel = new JButton(dimensionProvider, "Cancel");
-		fButtonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent pActionEvent) {
-				fSelectedIndex = -1;
-				checkAndCloseDialog(true);
-			}
+		JButton fButtonCancel = new JButton(dimensionProvider(), "Cancel");
+		fButtonCancel.addActionListener(pActionEvent -> {
+			fSelectedIndex = -1;
+			checkAndCloseDialog(true);
 		});
 
 		if (ClientMode.SPECTATOR == pClient.getMode()) {
-			fButtonOk = new JButton(dimensionProvider, "Spectate");
+			fButtonOk = new JButton(dimensionProvider(), "Spectate");
 		} else {
-			fButtonOk = new JButton(dimensionProvider, "Play");
+			fButtonOk = new JButton(dimensionProvider(), "Play");
 		}
 		fButtonOk.addActionListener(pActionEvent -> checkAndCloseDialog(false));
 
@@ -191,8 +171,9 @@ public class DialogGameChoice extends Dialog {
 			setHorizontalAlignment(pHorizontalAlignment);
 		}
 
+		@SuppressWarnings("unused")
 		public Component getTableCellRendererComponent(JTable pTable, Object pValue, boolean pIsSelected, boolean pHasFocus,
-																									 int pRow, int pColumn) {
+													   int pRow, int pColumn) {
 			return super.getTableCellRendererComponent(pTable, pValue, pIsSelected, false, pRow, pColumn);
 		}
 	}

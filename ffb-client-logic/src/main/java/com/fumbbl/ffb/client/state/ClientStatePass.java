@@ -1,17 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -24,8 +14,7 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -195,7 +184,7 @@ public class ClientStatePass extends ClientStateMove {
 		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
@@ -207,7 +196,7 @@ public class ClientStatePass extends ClientStateMove {
 			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
 				: "Use Hail Mary Pass";
 			JMenuItem hailMaryPassAction = new JMenuItem(dimensionProvider(), text,
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS));
 			hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
 			hailMaryPassAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, 0));
 			menuItemList.add(hailMaryPassAction);
@@ -218,15 +207,15 @@ public class ClientStatePass extends ClientStateMove {
 			JMenuItem specialJumpAction = null;
 			if (actingPlayer.isJumping()) {
 				jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 			} else {
 				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
 				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
 					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
 				}
@@ -241,7 +230,7 @@ public class ClientStatePass extends ClientStateMove {
 
 		if (!actingPlayer.hasPassed()) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
+				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
@@ -250,7 +239,7 @@ public class ClientStatePass extends ClientStateMove {
 		if (!actingPlayer.hasPassed()) {
 			if (!actingPlayer.isSufferingAnimosity()) {
 				JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
 				moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 				moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 				menuItemList.add(moveAction);

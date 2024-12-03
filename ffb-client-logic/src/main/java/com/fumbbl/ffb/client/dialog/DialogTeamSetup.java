@@ -8,17 +8,10 @@ import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -60,7 +53,7 @@ public class DialogTeamSetup extends Dialog implements ActionListener, ListSelec
 		fButtonCancel.addActionListener(this);
 
 		BufferedImage deleteIcon = getClient().getUserInterface().getIconCache()
-				.getIconByProperty(IIconProperty.GAME_DELETE);
+				.getIconByProperty(IIconProperty.GAME_DELETE, dimensionProvider());
 		fButtonDelete = new JButton(dimensionProvider(), new ImageIcon(deleteIcon));
 		fButtonDelete.addActionListener(this);
 

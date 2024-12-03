@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.client.ui.swing.JButton;
@@ -17,14 +13,9 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,7 +156,7 @@ public class DialogReRollForTargets extends Dialog {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, dimensionProvider());
 		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);

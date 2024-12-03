@@ -12,14 +12,9 @@ import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -115,7 +110,7 @@ public class DialogUseApothecaries extends Dialog {
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.RESOURCE_APOTHECARY);
+		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.RESOURCE_APOTHECARY, dimensionProvider());
 		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);

@@ -4,12 +4,7 @@ import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
@@ -53,11 +48,11 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
-	private final DimensionProvider dimensionProvider;
+	private final UiDimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
 	private Font boxFont;
 
-	public BoxComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
 		fBoxSlots = new ArrayList<>();
@@ -70,7 +65,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		size = dimensionProvider.dimension(Component.BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -95,7 +90,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		Graphics2D g2d = fImage.createGraphics();
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX);
+			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX, dimensionProvider);
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
@@ -105,7 +100,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
-		boxFont = fontCache.font(Font.BOLD, 12);
+		boxFont = fontCache.font(Font.BOLD, 12, dimensionProvider);
 
 		drawBackground();
 		drawPlayers();
@@ -118,7 +113,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pBoxSlot.getPlayer());
 			if (playerCoordinate != null) {
-				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer());
+				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer(), dimensionProvider);
 				if (icon != null) {
 					Graphics2D g2d = fImage.createGraphics();
 					int x = pBoxSlot.getLocation().x + ((pBoxSlot.getLocation().width - icon.getWidth()) / 2);
@@ -156,7 +151,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int drawPlayersInBox(int pXCoordinate, int pYPosition) {
 		FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 		PlayerState boxState = findPlayerStateForXCoordinate(pXCoordinate);
-		Dimension dimension = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
+		Dimension dimension = dimensionProvider.dimension(Component.BOX_SQUARE);
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
@@ -165,8 +160,8 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				row = y / 3;
 				int locationX = (y % 3) * dimension.width;
 				int locationY = yPos + (row * dimension.height);
-				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, dimension.width, dimension.height),
-					boxState);
+				BoxSlot boxSlot = new BoxSlot(new Rectangle(locationX, locationY, dimension.width, dimension.height)
+				);
 				boxSlot.setPlayer(player);
 				fBoxSlots.add(boxSlot);
 				drawBoxSlot(boxSlot);
@@ -225,7 +220,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(DimensionProvider.Component.FIELD).width - dimensionProvider.scale(135);
+					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(Component.FIELD).width - dimensionProvider.scale(135);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}

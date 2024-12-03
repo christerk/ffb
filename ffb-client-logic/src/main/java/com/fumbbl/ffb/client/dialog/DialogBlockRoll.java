@@ -61,7 +61,7 @@ public class DialogBlockRoll extends AbstractDialogBlock implements ActionListen
 			fBlockDice[i].setBounds(0, 0, 45, 45);
 			fBlockDice[i].setFocusPainted(false);
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
-			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i])));
+			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i], dimensionProvider())));
 			blockRollPanel.add(fBlockDice[i]);
 			if (ownChoice) {
 				fBlockDice[i].addActionListener(this);

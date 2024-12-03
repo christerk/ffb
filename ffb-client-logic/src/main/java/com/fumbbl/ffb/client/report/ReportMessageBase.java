@@ -2,10 +2,7 @@ package com.fumbbl.ffb.client.report;
 
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.IKeyedItem;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StatusReport;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.IReport;
@@ -66,12 +63,12 @@ public abstract class ReportMessageBase<T extends IReport> implements IKeyedItem
 		statusReport.print(pIndent, pBold, pPlayer);
 	}
 
-	protected void printTeamName(Game pGame, boolean pBold, String pTeamId) {
+	protected void printTeamName(Game pGame, @SuppressWarnings("SameParameterValue") boolean pBold, String pTeamId) {
 		statusReport.printTeamName(pGame, pBold, pTeamId);
 	}
 
 	protected Direction mapToLocal(Direction direction) {
-		DimensionProvider dimensionProvider = statusReport.getClient().getUserInterface().getDimensionProvider();
+		PitchDimensionProvider dimensionProvider = statusReport.getClient().getUserInterface().getPitchDimensionProvider();
 		return dimensionProvider.mapToLocal(direction);
 	}
 

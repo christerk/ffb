@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.BoxType;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.BoxLayout;
@@ -26,10 +22,12 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	private final BoxButtonComponent fBoxButtons;
 	private final ResourceComponent fResourceComponent;
 	private final TurnDiceStatusComponent fTurnDiceStatusComponent;
+	private final DimensionProvider dimensionProvider;
 
-	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, DimensionProvider dimensionProvider,
+	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, UiDimensionProvider dimensionProvider,
 													StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
 		fHomeSide = pHomeSide;
 		fPlayerDetail = new PlayerDetailComponent(this, dimensionProvider, styleProvider, fontCache);
 		fBoxComponent = new BoxComponent(this, dimensionProvider, styleProvider, fontCache);
@@ -45,14 +43,14 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fTurnDiceStatusComponent.addMouseMotionListener(this);
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
+	public void initLayout() {
 		fPlayerDetail.initLayout();
 		fBoxComponent.initLayout();
 		fBoxButtons.initLayout();
 		fResourceComponent.initLayout();
 		fTurnDiceStatusComponent.initLayout();
 
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.SIDEBAR);
+		Dimension size = dimensionProvider.dimension(Component.SIDEBAR);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

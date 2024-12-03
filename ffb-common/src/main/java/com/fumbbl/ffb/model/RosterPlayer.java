@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -196,8 +197,8 @@ public class RosterPlayer extends Player<RosterPosition> {
 		}
 	}
 
-	public boolean removeSkill(Skill pSkill) {
-		return fSkills.remove(pSkill);
+	public void removeSkill(Skill pSkill) {
+		fSkills.remove(pSkill);
 	}
 
 	@Override
@@ -692,7 +693,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void applyPlayerModifiersFromBehaviours(IFactorySource factorySource, long gameId) {
-		for (Skill skill: fSkills) {
+		for (Skill skill : fSkills) {
 			ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
 			if (behaviour != null) {
 				behaviour.getPlayerModifiers().forEach(playerModifier -> playerModifier.apply(this));
@@ -851,7 +852,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
-	public  void markUnused(Skill skill, Game game) {
+	public void markUnused(Skill skill, Game game) {
 		if ((skill == null) || !isUsed(skill)) {
 			return;
 		}
@@ -862,10 +863,10 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public void resetUsedSkills(SkillUsageType type, Game game) {
-		for(Skill skill : usedSkills) {
-			if(skill.getSkillUsageType() == type) {
-				markUnused(skill, game);
-			}
+		// store skills in variable to avoid concurrent modification exceptions that occur if more than one skill is in the list
+		List<Skill> restoredSkills = usedSkills.stream().filter(skill -> skill.getSkillUsageType() == type).collect(Collectors.toList());
+		for (Skill skill : restoredSkills) {
+			markUnused(skill, game);
 		}
 	}
 }

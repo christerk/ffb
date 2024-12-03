@@ -8,11 +8,7 @@ import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -85,7 +81,7 @@ public class DialogInformation extends Dialog implements ActionListener {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		if (StringTool.isProvided(pIconProperty)) {
-			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty);
+			BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(pIconProperty, dimensionProvider());
 			infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 			infoPanel.add(Box.createHorizontalStrut(5));
 		}
