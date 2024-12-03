@@ -330,7 +330,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Treacherous",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
@@ -338,7 +338,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Catch of the Day",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
@@ -346,7 +346,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Wisdom of the White Dwarf",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
@@ -355,7 +355,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = logicModule.playerActivationUsed() ? "End Action" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
+		JMenuItem endMoveAction = new JMenuItem(pitchDimensionProvider, endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE, pitchDimensionProvider)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
@@ -363,7 +363,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Raiding Party",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
@@ -371,7 +371,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
-		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
+		JMenuItem lookItem = new JMenuItem(pitchDimensionProvider, "Look Into My Eyes",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES, pitchDimensionProvider)));
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
@@ -379,7 +379,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Baleful Hex",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
@@ -387,7 +387,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createBlackInkItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
+		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Black Ink",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
@@ -395,7 +395,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}
 
 	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
-		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
+		JMenuItem blastinItem = new JMenuItem(pitchDimensionProvider, "\"Then I Started Blastin'!\"",
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN, pitchDimensionProvider)));
 		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
