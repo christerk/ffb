@@ -99,7 +99,7 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	private JMenuItem createGoredItem() {
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Gored By The Bull",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ, dimensionProvider())));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
 		return menuItem;

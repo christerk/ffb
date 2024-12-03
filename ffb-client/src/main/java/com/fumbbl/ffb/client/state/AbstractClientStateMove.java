@@ -164,14 +164,14 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (logicModule.isPassAnySquareAvailable(actingPlayer, game)) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS, dimensionProvider())));
 			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 		}
 		if (logicModule.isRangeGridAvailable(actingPlayer, game)) {
 			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID, dimensionProvider())));
 			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
 			menuItemList.add(toggleRangeGridAction);
@@ -182,13 +182,13 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
 			} else {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP, dimensionProvider())));
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
@@ -197,7 +197,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP)));
+						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP, dimensionProvider())));
 					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
 					menuItemList.add(specialJumpAction);
@@ -206,14 +206,14 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		}
 		if (logicModule.isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
 			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE, dimensionProvider())));
 			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
 			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
 			menuItemList.add(hypnoticGazeAction);
 		}
 		if (logicModule.isFumblerooskieAvailable()) {
 			JMenuItem fumblerooskieAction = new JMenuItem(dimensionProvider(), "Fumblerooskie",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS)));
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS, dimensionProvider())));
 			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
 			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
 			menuItemList.add(fumblerooskieAction);
@@ -254,7 +254,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 
 	protected JMenuItem createMoveMenuItem(IconCache iconCache) {
 		JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
 		moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
 		moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
 		return moveAction;

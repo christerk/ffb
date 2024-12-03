@@ -121,7 +121,7 @@ public class ClientStateBlock extends ClientStateAwt<BlockLogicModule> {
     userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
     if (logicModule.isSufferingBloodLust(actingPlayer)) {
       JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
       moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
       moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
       menuItemList.add(moveAction);

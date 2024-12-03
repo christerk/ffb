@@ -129,13 +129,13 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
     List<JMenuItem> menuItemList = new ArrayList<>();
     if (attacker.hasSkillProperty(NamedProperties.providesChainsawFoulingAlternative)) {
       JMenuItem chainsawAction = new JMenuItem(dimensionProvider(), "Chainsaw",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW, dimensionProvider())));
       chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
       chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
       menuItemList.add(chainsawAction);
     }
     JMenuItem foulAction = new JMenuItem(dimensionProvider(), "Foul Opponent",
-      new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL)));
+      new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_FOUL, dimensionProvider())));
     foulAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FOUL);
     foulAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FOUL, 0));
     menuItemList.add(foulAction);
@@ -152,12 +152,12 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
       userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
       List<JMenuItem> menuItemList = new ArrayList<>();
       JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
       moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
       moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
       menuItemList.add(moveAction);
       JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), "End Move",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE, dimensionProvider())));
       endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
       endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
       menuItemList.add(endMoveAction);

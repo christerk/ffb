@@ -6,12 +6,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
@@ -47,7 +43,8 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	}};
 
 	private boolean fClickable;
-
+	private final UiDimensionProvider uiDimensionProvider;
+	private final PitchDimensionProvider pitchDimensionProvider;
 	private JPopupMenu fPopupMenu;
 
 	private Player<?> fPopupMenuPlayer;
@@ -55,6 +52,8 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	public ClientStateAwt(FantasyFootballClientAwt pClient, T logicModule) {
 		super(pClient, logicModule);
 		setClickable(true);
+		uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 	}
 
 	public abstract ClientStateId getId();
@@ -100,12 +99,11 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		FieldCoordinate coordinate = null;
 		int x = pMouseEvent.getX();
 		int y = pMouseEvent.getY();
-		DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-		Dimension field = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		Dimension field = uiDimensionProvider.dimension(Component.FIELD);
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			coordinate = new FieldCoordinate((int) ((x / dimensionProvider().getScale()) / dimensionProvider.unscaledFieldSquare()),
-				(int) ((y / dimensionProvider.getScale()) / dimensionProvider.unscaledFieldSquare()));
-			coordinate = getClient().getUserInterface().getDimensionProvider().mapToGlobal(coordinate);
+			coordinate = new FieldCoordinate((int) ((x / (pitchDimensionProvider.getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()),
+				(int) ((y / (pitchDimensionProvider.getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()));
+			coordinate = pitchDimensionProvider.mapToGlobal(coordinate);
 		}
 		return coordinate;
 	}
@@ -118,11 +116,10 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		if (pCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 
-			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width + 1;
 			int y = dimension.height + 1;
-			Rectangle bounds = new Rectangle(x, y, dimensionProvider.fieldSquareSize() - 2, dimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds = new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
 
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
@@ -135,9 +132,8 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	public void hideSelectSquare() {
 		if (fSelectSquareCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-			DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
-			Dimension dimension = dimensionProvider.mapToLocal(fSelectSquareCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize());
+			Dimension dimension = pitchDimensionProvider.mapToLocal(fSelectSquareCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
 			fieldComponent.refresh(bounds);
 			super.hideSelectSquare();
 		}
@@ -178,13 +174,12 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 				hideSelectSquare();
 				if (player.isPresent()) {
 					int offsetX = 1, offsetY = 1;
-					DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
 
-					if (dimensionProvider.isPitchPortrait()) {
+					if (pitchDimensionProvider.isPitchPortrait()) {
 						offsetX = -1;
 					}
 
-					Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+					Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 					UtilClientMarker.showMarkerPopup(getClient(), player.get(), dimension.width, dimension.height);
 
 				} else {
@@ -224,12 +219,11 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 			if (coordinate != null) {
 				hideSelectSquare();
 				int offsetX = 1, offsetY = 1;
-				DimensionProvider dimensionProvider = getClient().getUserInterface().getDimensionProvider();
 
-				if (dimensionProvider.isPitchPortrait()) {
+				if (pitchDimensionProvider.isPitchPortrait()) {
 					offsetX = -1;
 				}
-				Dimension dimension = dimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 				fPopupMenu.show(getClient().getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 			}
 		}
@@ -337,7 +331,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createTreacherousItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Treacherous",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
 		return menuItem;
@@ -345,7 +339,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Catch of the Day",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
 		return menuItem;
@@ -353,7 +347,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createWisdomItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Wisdom of the White Dwarf",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
 		return menuItem;
@@ -362,7 +356,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
 		String endMoveActionLabel = logicModule.playerActivationUsed() ? "End Action" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE, pitchDimensionProvider)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
@@ -370,7 +364,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Raiding Party",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
 		return menuItem;
@@ -378,7 +372,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
 		JMenuItem lookItem = new JMenuItem(dimensionProvider(), "Look Into My Eyes",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES, pitchDimensionProvider)));
 		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
 		return lookItem;
@@ -386,7 +380,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Baleful Hex",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
 		return menuItem;
@@ -394,7 +388,7 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createBlackInkItem(IconCache iconCache) {
 		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Black Ink",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE, pitchDimensionProvider)));
 		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
 		return menuItem;
@@ -402,14 +396,14 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 
 	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
 		JMenuItem blastinItem = new JMenuItem(dimensionProvider(), "\"Then I Started Blastin'!\"",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN)));
+			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN, pitchDimensionProvider)));
 		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
 		return blastinItem;
 	}
 
 	protected DimensionProvider dimensionProvider() {
-		return getClient().getUserInterface().getDimensionProvider();
+		return pitchDimensionProvider;
 	}
 
 }

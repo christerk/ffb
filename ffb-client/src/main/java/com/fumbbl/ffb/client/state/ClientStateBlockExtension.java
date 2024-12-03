@@ -81,14 +81,14 @@ public class ClientStateBlockExtension {
     DimensionProvider dimensionProvider = pClientState.dimensionProvider();
     if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
       JMenuItem stabAction = new JMenuItem(dimensionProvider, "Stab Opponent",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB, pClientState.dimensionProvider())));
       stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);
       stabAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAB, 0));
       menuItemList.add(stabAction);
     }
     if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
       JMenuItem chainsawAction = new JMenuItem(dimensionProvider, "Chainsaw",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW,  pClientState.dimensionProvider())));
       chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
       chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
       menuItemList.add(chainsawAction);
@@ -96,7 +96,7 @@ public class ClientStateBlockExtension {
     Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
     if (vomitSkill.isPresent() && !multiBlock) {
       JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT,  pClientState.dimensionProvider())));
       projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
       projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
       menuItemList.add(projectileVomit);
@@ -105,14 +105,14 @@ public class ClientStateBlockExtension {
     Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
     if (fireSkill.isPresent() && !multiBlock) {
       JMenuItem breatheFire = new JMenuItem(dimensionProvider, fireSkill.get().getName(),
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE)));
+        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE,  pClientState.dimensionProvider())));
       breatheFire.setMnemonic(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
       breatheFire.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, 0));
       menuItemList.add(breatheFire);
     }
 
     JMenuItem blockAction = new JMenuItem(dimensionProvider, "Block Opponent",
-      new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK)));
+      new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK,  pClientState.dimensionProvider())));
     blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
     blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
     menuItemList.add(blockAction);
