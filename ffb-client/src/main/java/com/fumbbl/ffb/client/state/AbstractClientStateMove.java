@@ -83,7 +83,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
 		if (moveSquare != null) {
-			getClient().logDebug("MOVESQUARE ON PLAYER COORDINATE!!!");
 			setCustomCursor(moveSquare);
 		} else {
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
