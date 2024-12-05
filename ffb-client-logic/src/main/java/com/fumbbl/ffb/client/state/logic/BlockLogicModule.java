@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class BlockLogicModule extends LogicModule {
 
-  private final BlockLogicExtension extension;
+  protected final BlockLogicExtension extension;
 
   public BlockLogicModule(FantasyFootballClient client) {
     super(client);
@@ -49,7 +49,7 @@ public class BlockLogicModule extends LogicModule {
       return new InteractionResult(InteractionResult.Kind.PERFORM);
     }
 
-    return new InteractionResult(InteractionResult.Kind.IGNORE);
+    return new InteractionResult(InteractionResult.Kind.RESET);
   }
 
   @Override

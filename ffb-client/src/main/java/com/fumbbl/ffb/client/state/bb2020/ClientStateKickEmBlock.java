@@ -2,20 +2,17 @@ package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.ClientStateBlock;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
+import com.fumbbl.ffb.client.state.logic.bb2020.KickEmBlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.client.util.UtilClientStateBlocking;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-public class ClientStateKickEmBlock extends ClientStateBlock {
-	public ClientStateKickEmBlock(FantasyFootballClient pClient) {
-		super(pClient);
+public class ClientStateKickEmBlock extends AbstractClientStateBlock<KickEmBlockLogicModule> {
+	public ClientStateKickEmBlock(FantasyFootballClientAwt pClient) {
+		super(pClient, new KickEmBlockLogicModule(pClient));
 	}
 
 	@Override
@@ -24,14 +21,14 @@ public class ClientStateKickEmBlock extends ClientStateBlock {
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			super.clickOnPlayer(pPlayer);
-		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
-			&& game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()
-			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(pPlayer))) {
-			UtilClientStateBlocking.block(this, actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnPlayer(pPlayer);
+				break;
+			default:
+				break;
 		}
 	}
 

@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> extends AbstractClientStateMove<T> {
 
-	protected ClientStateBlockExtension extension;
+	protected final ClientStateBlockExtension extension = new ClientStateBlockExtension();
 
 	protected AbstractClientStateBlitz(FantasyFootballClientAwt client, T logicModule) {
 		super(client, logicModule);
