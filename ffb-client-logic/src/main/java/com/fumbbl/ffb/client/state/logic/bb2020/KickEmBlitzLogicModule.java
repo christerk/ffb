@@ -50,7 +50,7 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 		if (!actingPlayer.hasBlocked() && UtilPlayer.isKickable(game, player)) {
 			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return new InteractionResult(InteractionResult.Kind.RESET);
 		}
 	}
 
