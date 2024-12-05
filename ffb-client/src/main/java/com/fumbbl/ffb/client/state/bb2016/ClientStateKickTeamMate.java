@@ -53,13 +53,13 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 				List<JMenuItem> menuItemList = new ArrayList<>();
 
 				JMenuItem shortKick = new JMenuItem(dimensionProvider(), "Short Kick",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ, dimensionProvider())));
 				shortKick.setMnemonic(IPlayerPopupMenuKeys.KEY_SHORT);
 				shortKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_SHORT, 0));
 				menuItemList.add(shortKick);
 
 				JMenuItem longKick = new JMenuItem(dimensionProvider(), "Long Kick",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ)));
+					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ, dimensionProvider())));
 				longKick.setMnemonic(IPlayerPopupMenuKeys.KEY_LONG);
 				longKick.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LONG, 0));
 				menuItemList.add(longKick);
