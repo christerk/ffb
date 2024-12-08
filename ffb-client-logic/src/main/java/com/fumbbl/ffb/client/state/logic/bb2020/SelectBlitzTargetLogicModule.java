@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.net.ClientCommunication;
@@ -48,10 +47,6 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		} else {
 			return new InteractionResult(InteractionResult.Kind.INVALID);
 		}
-	}
-
-	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
-		return new InteractionResult(InteractionResult.Kind.INVALID);
 	}
 
 	@Override

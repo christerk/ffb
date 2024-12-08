@@ -4,27 +4,27 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.ClientStateMove;
+import com.fumbbl.ffb.client.state.AbstractClientStateMove;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.bb2020.SelectBlitzTargetLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ClientStateSelectBlitzTarget extends ClientStateMove {
+public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<SelectBlitzTargetLogicModule> {
 
-	public ClientStateSelectBlitzTarget(FantasyFootballClient pClient) {
-		super(pClient);
+	public ClientStateSelectBlitzTarget(FantasyFootballClientAwt pClient) {
+		super(pClient, new SelectBlitzTargetLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -32,28 +32,34 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
-			createAndShowPopupMenuForActingPlayer();
-		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer))) {
-			getClient().getCommunication().sendTargetSelected(pPlayer.getId());
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
+				createAndShowPopupMenuForActingPlayer();
+				break;
+			default:
+				break;
+
 		}
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
-		Game game = getClient().getGame();
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
+			case PERFORM:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
+				break;
+			case INVALID:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
+				break;
+		}
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (!actingPlayer.hasBlocked() && UtilPlayer.isValidBlitzTarget(game, pPlayer)) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
-		} else {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
-		}
 
-		showShortestPath(game.getFieldModel().getPlayerCoordinate(pPlayer), game, fieldComponent, actingPlayer);
+		Game game = getClient().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		showShortestPath(game.getFieldModel().getPlayerCoordinate(pPlayer), fieldComponent, actingPlayer);
 
 		return true;
 	}
@@ -67,7 +73,7 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 
 		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
 
-		showShortestPath(pCoordinate, game, fieldComponent, actingPlayer);
+		showShortestPath(pCoordinate, fieldComponent, actingPlayer);
 
 		return true;
 	}
@@ -86,28 +92,28 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
 		menuItemList.add(endMoveAction);
 
-		if (isTreacherousAvailable(actingPlayer)) {
+		if (logicModule.isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
-		if (isWisdomAvailable(actingPlayer)) {
+		if (logicModule.isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
-		if (isRaidingPartyAvailable(actingPlayer)) {
+		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+		if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
 			menuItemList.add(createLookIntoMyEyesItem(iconCache));
 		}
-		if (isBalefulHexAvailable(actingPlayer)) {
+		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
-		if (isBlackInkAvailable(actingPlayer)) {
+		if (logicModule.isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
+		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
 			menuItemList.add(createThenIStartedBlastinItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
@@ -158,65 +164,19 @@ public class ClientStateSelectBlitzTarget extends ClientStateMove {
 		return actionHandled;
 	}
 
-	protected void menuItemSelected(Player<?> player, int pMenuKey) {
-		if (player != null) {
-			ClientCommunication communication = getClient().getCommunication();
-			switch (pMenuKey) {
-				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					getClient().getCommunication().sendTargetSelected(player.getId());
-					break;
-				case IPlayerPopupMenuKeys.KEY_TREACHEROUS:
-					if (isTreacherousAvailable(player)) {
-						Skill skill = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
-						communication.sendUseSkill(skill, true, player.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_WISDOM:
-					if (isWisdomAvailable(player)) {
-						communication.sendUseWisdom();
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_RAIDING_PARTY:
-					if (isRaidingPartyAvailable(player)) {
-						Skill raidingSkill = player.getSkillWithProperty(NamedProperties.canMoveOpenTeamMate);
-						getClient().getCommunication().sendUseSkill(raidingSkill, true, player.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES:
-					if (isLookIntoMyEyesAvailable(player)) {
-						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canStealBallFromOpponent)
-							.ifPresent(lookSkill -> communication.sendUseSkill(lookSkill, true, player.getId()));
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_BALEFUL_HEX:
-					if (isBalefulHexAvailable(player)) {
-						Skill balefulSkill = player.getSkillWithProperty(NamedProperties.canMakeOpponentMissTurn);
-						communication.sendUseSkill(balefulSkill, true, player.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_BLACK_INK:
-					if (isBlackInkAvailable(player)) {
-						Skill blackInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomatically);
-						communication.sendUseSkill(blackInkSkill, true, player.getId());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY:
-					if (isCatchOfTheDayAvailable(player)) {
-						Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-						communication.sendUseSkill(skill, true, player.getId());
-					}
-					break;
-
-				case IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN:
-					if (isThenIStartedBlastinAvailable(player)) {
-						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
-						communication.sendUseSkill(skill, true, player.getId());
-					}
-					break;
-				default:
-					break;
-			}
-		}
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
+			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
+			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+		}};
 	}
 
 	@Override
