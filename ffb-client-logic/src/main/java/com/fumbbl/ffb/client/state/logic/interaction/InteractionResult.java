@@ -44,6 +44,7 @@ public class InteractionResult {
     DRAW,
     HANDLED,
     IGNORE,
+    INVALID,
     MOVE,
     PERFORM,
     RESET,

@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
@@ -35,9 +35,7 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 
 	@Override
 	public Set<ClientAction> availableActions() {
-		return new HashSet<ClientAction>() {{
-			add(ClientAction.PROJECTILE_VOMIT);
-		}};
+		return Collections.singleton(ClientAction.PROJECTILE_VOMIT);
 	}
 
 	@Override
