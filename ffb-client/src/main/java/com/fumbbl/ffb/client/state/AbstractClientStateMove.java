@@ -39,7 +39,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		super.mouseOverField(pCoordinate);
 		Game game = getClient().getGame();
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();

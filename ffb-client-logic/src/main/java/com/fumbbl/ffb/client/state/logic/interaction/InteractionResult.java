@@ -50,6 +50,7 @@ public class InteractionResult {
     SHOW_ACTIONS,
     SHOW_ACTION_ALTERNATIVES,
     SHOW_BLOODLUST_ACTIONS,
-    SUPER
+    SUPER,
+    SUPER_DRAW
   }
 }
