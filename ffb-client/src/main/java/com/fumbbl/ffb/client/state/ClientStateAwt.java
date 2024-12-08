@@ -402,6 +402,10 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 		return blastinItem;
 	}
 
+	public ImageIcon createMenuIcon(IconCache iconCache, String iconProperty) {
+		return new ImageIcon(iconCache.getIconByProperty(iconProperty, pitchDimensionProvider));
+	}
+
 	protected DimensionProvider dimensionProvider() {
 		return pitchDimensionProvider;
 	}
