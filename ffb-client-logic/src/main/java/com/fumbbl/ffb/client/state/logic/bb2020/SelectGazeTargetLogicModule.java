@@ -1,9 +1,7 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -17,20 +15,18 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SelectBlitzTargetLogicModule extends MoveLogicModule {
-	private final BlockLogicExtension extension;
+public class SelectGazeTargetLogicModule extends MoveLogicModule {
 
-	public SelectBlitzTargetLogicModule(FantasyFootballClient pClient) {
+	public SelectGazeTargetLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
-		extension = new BlockLogicExtension(pClient);
 	}
-
+	
 	public InteractionResult playerInteraction(Player<?> pPlayer) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
 			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
-		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer))) {
+		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (isValidGazeTarget(game, pPlayer))) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
 			return new InteractionResult(InteractionResult.Kind.HANDLED);
 		}
@@ -39,14 +35,15 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		Game game = client.getGame();
-		FieldComponent fieldComponent = client.getUserInterface().getFieldComponent();
-		fieldComponent.getLayerUnderPlayers().clearMovePath();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer)) {
+		if (isValidGazeTarget(game, pPlayer)) {
 			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else {
 			return new InteractionResult(InteractionResult.Kind.INVALID);
 		}
+	}
+
+	private boolean isValidGazeTarget(Game game, Player<?> target) {
+		return !game.getActingTeam().hasPlayer(target) && (game.getFieldModel().getPlayerState(target).hasTacklezones());
 	}
 
 	@Override
