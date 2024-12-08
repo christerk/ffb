@@ -107,7 +107,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     }};
   }
 
-  private void createAndShowPopupMenuForBlockingPlayer() {
+  protected void createAndShowPopupMenuForBlockingPlayer() {
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
     List<JMenuItem> menuItemList = new ArrayList<>();

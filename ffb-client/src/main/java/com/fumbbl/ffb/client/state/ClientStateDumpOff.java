@@ -47,7 +47,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 			case PERFORM:
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
 				break;
-			case IGNORE:
+			case RESET:
 				UtilClientCursor.setDefaultCursor(userInterface);
 				selectable = true;
 				break;

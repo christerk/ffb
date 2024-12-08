@@ -83,7 +83,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 			case PERFORM:
 				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_HIT_AND_RUN);
 				break;
-			case IGNORE:
+			case RESET:
 				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_HIT_AND_RUN);
 		}
 
