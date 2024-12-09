@@ -13,15 +13,27 @@ import java.util.Arrays;
 
 public class StabLogicModule extends BlockLogicModule {
 
+	private Player<?>[] targets;
+
 	public StabLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
-	public Player<?>[] findTargets() {
+	@Override
+	public void postInit() {
+		super.postInit();
+		targets = findTargets();
+	}
+
+	private Player<?>[] findTargets() {
 		Game game = client.getGame();
 		Player<?> player = game.getActingPlayer().getPlayer();
 		Team opponentTeam = game.getOtherTeam(player.getTeam());
 		return UtilPlayer.findAdjacentBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player));
+	}
+
+	public Player<?>[] getTargets() {
+		return targets;
 	}
 
 	@Override
@@ -32,7 +44,7 @@ public class StabLogicModule extends BlockLogicModule {
 
 	@Override
 	public InteractionResult playerPeek(Player<?> player) {
-		if (Arrays.stream(findTargets()).anyMatch(target -> target.getId().equals(player.getId()))) {
+		if (Arrays.stream(targets).anyMatch(target -> target.getId().equals(player.getId()))) {
 			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else {
 			return new InteractionResult(InteractionResult.Kind.RESET);

@@ -21,7 +21,7 @@ public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
 	@Override
 	public void enterState() {
 		super.enterState();
-		targets = logicModule.findTargets();
+		targets = logicModule.getTargets();
 		markTargets();
 	}
 
