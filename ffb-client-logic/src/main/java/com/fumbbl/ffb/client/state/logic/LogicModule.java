@@ -38,6 +38,7 @@ public abstract class LogicModule {
 	public void postInit() {
 	}
 
+	public void teardown() {}
 	public final void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
 			performAvailableAction(player, action);

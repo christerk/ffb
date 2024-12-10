@@ -17,11 +17,13 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 		this.logicModule = logicModule;
 	}
 
-	public abstract void leaveState();
+	public void leaveState() {
+		logicModule.teardown();
+	}
 
 	public void enterState() {
-		initUI();
 		logicModule.postInit();
+		initUI();
 	}
 
 	public abstract void initUI();
