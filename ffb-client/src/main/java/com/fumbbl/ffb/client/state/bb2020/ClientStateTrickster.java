@@ -3,13 +3,15 @@ package com.fumbbl.ffb.client.state.bb2020;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.bb2020.TricksterLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -17,11 +19,13 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ClientStateTrickster extends ClientState {
-	public ClientStateTrickster(FantasyFootballClient pClient) {
-		super(pClient);
+public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
+	public ClientStateTrickster(FantasyFootballClientAwt pClient) {
+		super(pClient, new TricksterLogicModule(pClient));
 	}
 
 	@Override
@@ -31,16 +35,18 @@ public class ClientStateTrickster extends ClientState {
 
 	@Override
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		if (getClient().getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
-			getClient().getCommunication().sendFieldCoordinate(pCoordinate);
-		}
+		logicModule.fieldInteraction(pCoordinate);
 	}
 
 	@Override
 	protected void clickOnPlayer(Player<?> player) {
-		Game game = getClient().getGame();
-		if (player == game.getDefender()) {
-			createAndShowPopupMenuPlayer();
+		InteractionResult result = logicModule.playerInteraction(player);
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
+				createAndShowPopupMenuPlayer();
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -68,19 +74,25 @@ public class ClientStateTrickster extends ClientState {
 
 	@Override
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		if (getClient().getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_TRICKSTER);
-		} else {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		switch (result.getKind()) {
+			case PERFORM:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_TRICKSTER);
+				break;
+			case INVALID:
+				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
+				break;
+			default:
+				break;
 		}
-
 		return true;
 	}
 
-	protected void menuItemSelected(Player<?> player, int pMenuKey) {
-		if (pMenuKey == IPlayerPopupMenuKeys.KEY_END_MOVE) {
-			getClient().getCommunication().sendEndTurn(TurnMode.TRICKSTER);
-		}
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+		}};
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
