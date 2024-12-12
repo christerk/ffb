@@ -1,16 +1,21 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.logic.HandOverLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -20,10 +25,10 @@ import java.util.Optional;
 /**
  * @author Kalimar
  */
-public class ClientStateHandOver extends ClientStateMove {
+public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicModule> {
 
-	protected ClientStateHandOver(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStateHandOver(FantasyFootballClientAwt pClient) {
+		super(pClient, new HandOverLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -31,12 +36,13 @@ public class ClientStateHandOver extends ClientStateMove {
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			super.clickOnPlayer(pPlayer);
-		} else {
-			handOver(pPlayer);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnPlayer(pPlayer);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -47,7 +53,13 @@ public class ClientStateHandOver extends ClientStateMove {
 		FieldCoordinate catcherPosition = UtilClientActionKeys.findMoveCoordinate(playerPosition, pActionKey);
 		Player<?> catcher = game.getFieldModel().getPlayer(catcherPosition);
 		if (catcher != null) {
-			return handOver(catcher);
+			InteractionResult result = logicModule.playerInteraction(catcher);
+			switch (result.getKind()) {
+				case HANDLED:
+					return true;
+				default:
+					return false;
+			}
 		} else {
 			return super.actionKeyPressed(pActionKey);
 		}
@@ -55,44 +67,19 @@ public class ClientStateHandOver extends ClientStateMove {
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
-		if (canPlayerGetHandOver(pPlayer)) {
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_PASS);
-		} else {
-			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-		}
+		determineCursor(logicModule.playerPeek(pPlayer));
 		return true;
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
-		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return true;
 	}
 
-	public boolean canPlayerGetHandOver(Player<?> pCatcher) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
-			FieldModel fieldModel = game.getFieldModel();
-			FieldCoordinate throwerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-			FieldCoordinate catcherCoordinate = fieldModel.getPlayerCoordinate(pCatcher);
-			PlayerState catcherState = fieldModel.getPlayerState(pCatcher);
-			return (throwerCoordinate.isAdjacent(catcherCoordinate) && (catcherState != null)
-				&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace()))
-				&& (catcherState.hasTacklezones()
-				&& (game.getTeamHome() == pCatcher.getTeam() || actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER)));
-		}
-		return false;
-	}
-
-	private boolean handOver(Player<?> pCatcher) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && canPlayerGetHandOver(pCatcher)) {
-			getClient().getCommunication().sendHandOver(actingPlayer.getPlayerId(), pCatcher);
-			return true;
-		}
-		return false;
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_PASS;
 	}
 
 	protected void createAndShowPopupMenuForActingPlayer() {
@@ -104,7 +91,7 @@ public class ClientStateHandOver extends ClientStateMove {
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+		if (logicModule.ballInHand()) {
 			if ((PlayerAction.HAND_OVER_MOVE == actingPlayer.getPlayerAction())) {
 				JMenuItem handOverAction = new JMenuItem(dimensionProvider(), "Hand Over Ball (any player)",
 					createMenuIcon(iconCache, IIconProperty.ACTION_HAND_OVER));
@@ -120,7 +107,7 @@ public class ClientStateHandOver extends ClientStateMove {
 			}
 		}
 
-		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
+		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, true)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
@@ -133,7 +120,7 @@ public class ClientStateHandOver extends ClientStateMove {
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
-				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
@@ -147,25 +134,25 @@ public class ClientStateHandOver extends ClientStateMove {
 
 		addEndActionLabel(iconCache, menuItemList);
 
-		if (isTreacherousAvailable(actingPlayer)) {
+		if (logicModule.isTreacherousAvailable(actingPlayer)) {
 			menuItemList.add(createTreacherousItem(iconCache));
 		}
-		if (isWisdomAvailable(actingPlayer)) {
+		if (logicModule.isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
-		if (isRaidingPartyAvailable(actingPlayer)) {
+		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-		if (isBalefulHexAvailable(actingPlayer)) {
+		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
-		if (isBlackInkAvailable(actingPlayer)) {
+		if (logicModule.isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
+		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
 			menuItemList.add(createThenIStartedBlastinItem(iconCache));
 		}
 		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
