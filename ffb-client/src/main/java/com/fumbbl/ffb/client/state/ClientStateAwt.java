@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -35,7 +36,7 @@ import java.util.Set;
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -413,4 +414,30 @@ public abstract class ClientStateAwt<T  extends LogicModule> extends ClientState
 	protected String deselectPlayerLabel() {
 		return "Deselect Player";
 	}
+
+	protected void determineCursor(InteractionResult result) {
+		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+		evaluateCursorResult(result).ifPresent(property ->
+			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), property));
+	}
+
+	private Optional<String> evaluateCursorResult(InteractionResult result) {
+		switch (result.getKind()) {
+			case PERFORM:
+				return Optional.ofNullable(validCursor());
+			case INVALID:
+				return Optional.of(invalidCursor());
+			default:
+				return Optional.empty();
+		}
+	}
+
+	protected String validCursor() {
+		return null;
+	}
+
+	protected String invalidCursor() {
+		return null;
+	}
+
 }
