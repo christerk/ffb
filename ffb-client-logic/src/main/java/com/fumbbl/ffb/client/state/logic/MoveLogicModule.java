@@ -280,11 +280,11 @@ public class MoveLogicModule extends LogicModule {
 		}
 	}
 
-	public void movePlayer(FieldCoordinate pCoordinate) {
+	public boolean movePlayer(FieldCoordinate pCoordinate) {
 		if (pCoordinate == null) {
-			return;
+			return false;
 		}
-		movePlayer(new FieldCoordinate[]{pCoordinate});
+		return movePlayer(new FieldCoordinate[]{pCoordinate});
 	}
 
 	public boolean movePlayer(FieldCoordinate[] pCoordinates) {

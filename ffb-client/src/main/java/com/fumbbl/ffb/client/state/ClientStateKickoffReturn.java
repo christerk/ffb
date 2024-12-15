@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffReturnLogicModule> {
@@ -50,12 +49,20 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		logicModule.fieldInteraction(pCoordinate);
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case HANDLED:
+				getClient().getGame().getFieldModel().clearMoveSquares();
+				getClient().getUserInterface().getFieldComponent().refresh();
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
 	protected Map<Integer, ClientAction> actionMapping() {
-		return new HashMap<Integer, ClientAction>(){{
+		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 		}};
@@ -94,37 +101,37 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 		UserInterface userInterface = getClient().getUserInterface();
 		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
-		case PLAYER_SELECT:
-			if (selectedPlayer != null) {
-				createAndShowPopupMenuForPlayer(selectedPlayer);
-			}
-			break;
-		case PLAYER_CYCLE_RIGHT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_CYCLE_LEFT:
-			selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
-			if (selectedPlayer != null) {
-				hideSelectSquare();
-				FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
-				showSelectSquare(selectedCoordinate);
-				getClient().getClientData().setSelectedPlayer(selectedPlayer);
-				userInterface.refreshSideBars();
-			}
-			break;
-		case PLAYER_ACTION_MOVE:
-			menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
-			break;
-		default:
-			actionHandled = false;
-			break;
+			case PLAYER_SELECT:
+				if (selectedPlayer != null) {
+					createAndShowPopupMenuForPlayer(selectedPlayer);
+				}
+				break;
+			case PLAYER_CYCLE_RIGHT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, true);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_CYCLE_LEFT:
+				selectedPlayer = UtilClientActionKeys.cyclePlayer(game, selectedPlayer, false);
+				if (selectedPlayer != null) {
+					hideSelectSquare();
+					FieldCoordinate selectedCoordinate = game.getFieldModel().getPlayerCoordinate(selectedPlayer);
+					showSelectSquare(selectedCoordinate);
+					getClient().getClientData().setSelectedPlayer(selectedPlayer);
+					userInterface.refreshSideBars();
+				}
+				break;
+			case PLAYER_ACTION_MOVE:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
+				break;
+			default:
+				actionHandled = false;
+				break;
 		}
 		return actionHandled;
 	}

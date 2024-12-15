@@ -1,9 +1,14 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.PassBlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
@@ -15,66 +20,56 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Kalimar
  */
-public class ClientStatePassBlock extends ClientStateMove {
+public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogicModule> {
 
 	private DialogInformation fInfoDialog;
 
-	protected ClientStatePassBlock(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStatePassBlock(FantasyFootballClientAwt pClient) {
+		super(pClient, new PassBlockLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
 		return ClientStateId.PASS_BLOCK;
 	}
 
+	@Override
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
-			createAndShowPopupMenuForPlayer(pPlayer);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
+				createAndShowPopupMenuForPlayer(pPlayer);
+				break;
+			default:
+				break;
 		}
 	}
 
+	@Override
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
-		if (moveSquare != null) {
-			movePlayer(pCoordinate);
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case HANDLED:
+				getClient().getGame().getFieldModel().clearMoveSquares();
+				getClient().getUserInterface().getFieldComponent().refresh();
+				break;
+			default:
+				break;
 		}
 	}
 
-	public void menuItemSelected(Player<?> player, int pMenuKey) {
-		if (player != null) {
-			Game game = getClient().getGame();
-			ActingPlayer actingPlayer = game.getActingPlayer();
-			ClientCommunication communication = getClient().getCommunication();
-			switch (pMenuKey) {
-				case IPlayerPopupMenuKeys.KEY_JUMP:
-					if ((actingPlayer.getPlayer() != null)
-						&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-						communication.sendActingPlayer(player, actingPlayer.getPlayerAction(), !actingPlayer.isJumping());
-					}
-					break;
-				case IPlayerPopupMenuKeys.KEY_MOVE:
-					communication.sendActingPlayer(player, PlayerAction.MOVE, false);
-					break;
-				case IPlayerPopupMenuKeys.KEY_END_MOVE:
-					communication.sendActingPlayer(null, null, false);
-					break;
-				case IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP:
-					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
-						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
-				default:
-					break;
-			}
-		}
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
+			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
+		}};
 	}
 
 	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {
@@ -91,7 +86,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 			menuItemList.add(moveAction);
 		}
 		if ((actingPlayer.getPlayer() != null)
-			&& isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+			&& logicModule.isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			if (actingPlayer.isJumping()) {
 				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
 					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
@@ -104,7 +99,7 @@ public class ClientStatePassBlock extends ClientStateMove {
 				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
 				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
 				menuItemList.add(jumpAction);
-				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
@@ -188,23 +183,17 @@ public class ClientStatePassBlock extends ClientStateMove {
 	}
 
 	@Override
-	public void endTurn() {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer() != null) {
-			OnTheBallMechanic mechanic = (OnTheBallMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
-			if (!mechanic.hasReachedValidPosition(game, actingPlayer.getPlayer())) {
-				fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
-					new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},
-					DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
-				fInfoDialog.showDialog(pDialog -> fInfoDialog.hideDialog());
-				return;
-			}
+	public void postEndTurn() {
+
+		if (logicModule.isTurnEnding()) {
+			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+			sideBarHome.refresh();
+		} else {
+			fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
+				new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},
+				DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
+			fInfoDialog.showDialog(pDialog -> fInfoDialog.hideDialog());
 		}
-		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
-		getClient().getClientData().setEndTurnButtonHidden(true);
-		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-		sideBarHome.refresh();
 	}
 
 }
