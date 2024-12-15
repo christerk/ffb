@@ -1,8 +1,16 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.KickoffReturnLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
@@ -12,16 +20,18 @@ import com.fumbbl.ffb.model.Player;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Kalimar
  */
-public class ClientStateKickoffReturn extends ClientStateMove {
+public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffReturnLogicModule> {
 
-	protected ClientStateKickoffReturn(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStateKickoffReturn(FantasyFootballClientAwt pClient) {
+		super(pClient, new KickoffReturnLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -29,33 +39,26 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
-			createAndShowPopupMenuForPlayer(pPlayer);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SHOW_ACTIONS:
+				createAndShowPopupMenuForPlayer(pPlayer);
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
-		if (moveSquare != null) {
-			movePlayer(pCoordinate);
-		}
+		logicModule.fieldInteraction(pCoordinate);
 	}
 
-	public void menuItemSelected(Player<?> player, int pMenuKey) {
-		if (player != null) {
-			ClientCommunication communication = getClient().getCommunication();
-			switch (pMenuKey) {
-			case IPlayerPopupMenuKeys.KEY_MOVE:
-				communication.sendActingPlayer(player, PlayerAction.MOVE, false);
-				break;
-			case IPlayerPopupMenuKeys.KEY_END_MOVE:
-				communication.sendActingPlayer(null, null, false);
-				break;
-			}
-		}
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>(){{
+			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+		}};
 	}
 
 	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer) {
@@ -127,9 +130,7 @@ public class ClientStateKickoffReturn extends ClientStateMove {
 	}
 
 	@Override
-	public void endTurn() {
-		getClient().getCommunication().sendEndTurn(getClient().getGame().getTurnMode());
-		getClient().getClientData().setEndTurnButtonHidden(true);
+	public void postEndTurn() {
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		sideBarHome.refresh();
 	}

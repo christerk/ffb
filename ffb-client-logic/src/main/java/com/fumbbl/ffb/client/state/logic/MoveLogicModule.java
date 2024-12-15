@@ -1,17 +1,8 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -287,6 +278,13 @@ public class MoveLogicModule extends LogicModule {
 		} else {
 			return MoveSquare.Kind.MOVE;
 		}
+	}
+
+	public void movePlayer(FieldCoordinate pCoordinate) {
+		if (pCoordinate == null) {
+			return;
+		}
+		movePlayer(new FieldCoordinate[]{pCoordinate});
 	}
 
 	public boolean movePlayer(FieldCoordinate[] pCoordinates) {
