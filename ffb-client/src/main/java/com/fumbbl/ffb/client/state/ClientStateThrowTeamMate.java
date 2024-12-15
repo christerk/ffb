@@ -1,16 +1,13 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
+import com.fumbbl.ffb.client.state.logic.ThrowTeamMateLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
@@ -25,13 +22,13 @@ import com.fumbbl.ffb.util.UtilRangeRuler;
  *
  * @author Kalimar
  */
-public class ClientStateThrowTeamMate extends ClientStateMove {
+public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamMateLogicModule> {
 
 	private boolean fShowRangeRuler;
 	private final RangeGridHandler fRangeGridHandler;
 
-	protected ClientStateThrowTeamMate(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStateThrowTeamMate(FantasyFootballClientAwt pClient) {
+		super(pClient, new ThrowTeamMateLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, true);
 	}
 
@@ -39,70 +36,78 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		return ClientStateId.THROW_TEAM_MATE;
 	}
 
-	public void enterState() {
-		super.enterState();
+	@Override
+	public void initUI() {
+		super.initUI();
 		markThrowablePlayers();
 		fRangeGridHandler.refreshSettings();
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			super.clickOnPlayer(pPlayer);
-		} else {
-			if ((game.getDefender() == null) && canBeThrown(pPlayer)) {
+
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnPlayer(pPlayer);
+				break;
+			case PERFORM:
 				fShowRangeRuler = true;
-				getClient().getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pPlayer.getId());
-			}
-			if (game.getDefender() != null) {
+				break;
+			case HANDLED:
 				fShowRangeRuler = false;
 				markThrowablePlayers();
-				game.getFieldModel().setRangeRuler(null);
 				userInterface.getFieldComponent().refresh();
-				getClient().getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(),
-						game.getFieldModel().getPlayerCoordinate(pPlayer));
-			}
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		if (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE) {
-			super.clickOnField(pCoordinate);
-		} else {
-			fShowRangeRuler = false;
-			game.getFieldModel().setRangeRuler(null);
-			userInterface.getFieldComponent().refresh();
-			getClient().getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pCoordinate);
+
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnField(pCoordinate);
+				break;
+			case HANDLED:
+				fShowRangeRuler = false;
+				userInterface.getFieldComponent().refresh();
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			drawRangeRuler(pCoordinate);
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		switch (result.getKind()) {
+			case SUPER:
+				return super.mouseOverField(pCoordinate);
+			case SUPER_DRAW:
+				drawRangeRuler(pCoordinate);
+				return super.mouseOverField(pCoordinate);
+			default:
+				return false;
 		}
-		return super.mouseOverField(pCoordinate);
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
-		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
-			if (canBeThrown(pPlayer)) {
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
-			} else {
-				UtilClientCursor.setDefaultCursor(userInterface);
-			}
+
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
+			case DRAW:
+				drawRangeRuler(game.getFieldModel().getPlayerCoordinate(pPlayer));
+				break;
+			default:
+				determineCursor(result);
+				break;
 		}
-		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			drawRangeRuler(game.getFieldModel().getPlayerCoordinate(pPlayer));
-		}
-		getClient().getClientData().setSelectedPlayer(pPlayer);
 		userInterface.refreshSideBars();
 		return true;
 	}
@@ -126,19 +131,6 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
 			fieldComponent.refresh();
 		}
-	}
-
-	private boolean canBeThrown(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		// added a check so you could not throw the opponents players, maybe this should
-		// be in the server-check?
-		return mechanic.canThrow(actingPlayer.getPlayer())
-			&& mechanic.canBeThrown(game, pPlayer)
-			&& catcherCoordinate.isAdjacent(throwerCoordinate);
 	}
 
 	private void markThrowablePlayers() {
@@ -172,18 +164,15 @@ public class ClientStateThrowTeamMate extends ClientStateMove {
 		userInterface.getFieldComponent().refresh();
 	}
 
-	protected void menuItemSelected(Player<?> player, int pMenuKey) {
-		if (pMenuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
-			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-			fRangeGridHandler.refreshRangeGrid();
-		} else {
-			super.menuItemSelected(player, pMenuKey);
-		}
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_PASS;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		if (pActionKey == ActionKey.PLAYER_ACTION_RANGE_GRID) {
-			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
+			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+			fRangeGridHandler.refreshRangeGrid();
 			return true;
 		} else {
 			return super.actionKeyPressed(pActionKey);
