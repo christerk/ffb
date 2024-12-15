@@ -2,7 +2,8 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.PassLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -22,13 +23,13 @@ import java.util.Optional;
 /**
  * @author Kalimar
  */
-public class ClientStatePass extends ClientStateMove {
+public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 
 	private boolean fShowRangeRuler;
 	private final RangeGridHandler fRangeGridHandler;
 
-	protected ClientStatePass(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStatePass(FantasyFootballClientAwt pClient) {
+		super(pClient, new PassLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, false);
 	}
 
@@ -36,93 +37,93 @@ public class ClientStatePass extends ClientStateMove {
 		return ClientStateId.PASS;
 	}
 
-	public void enterState() {
-		super.enterState();
+	@Override
+	public void initUI() {
+		super.initUI();
 		fShowRangeRuler = true;
 		fRangeGridHandler.refreshSettings();
 	}
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			super.clickOnPlayer(pPlayer);
-		} else {
-			if (!actingPlayer.hasPassed() && (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()
-				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer))))) {
-				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(pPlayer));
-				getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
-				game.getFieldModel().setRangeRuler(null);
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnPlayer(pPlayer);
+				break;
+			case HANDLED:
 				userInterface.getFieldComponent().refresh();
-			}
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
-			super.clickOnField(pCoordinate);
-		} else {
-			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
-				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-				game.setPassCoordinate(pCoordinate);
-				getClient().getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
-				game.getFieldModel().setRangeRuler(null);
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case SUPER:
+				super.clickOnField(pCoordinate);
+				break;
+			case HANDLED:
 				userInterface.getFieldComponent().refresh();
-			}
+				break;
+			default:
+				break;
 		}
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {
 		boolean selectable = false;
-		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction())
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-			FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-			if ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer)) {
-				drawRangeRuler(catcherCoordinate);
-			}
-		} else {
-			game.getFieldModel().setRangeRuler(null);
-			FieldComponent fieldComponent = userInterface.getFieldComponent();
-			fieldComponent.getLayerUnderPlayers().clearMovePath();
-			fieldComponent.refresh();
-			selectable = true;
-			if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
-			} else {
-				UtilClientCursor.setDefaultCursor(userInterface);
-			}
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
+			case DRAW:
+				drawRangeRuler(result.getCoordinate());
+				break;
+			default:
+				selectable = true;
+				FieldComponent fieldComponent = userInterface.getFieldComponent();
+				fieldComponent.getLayerUnderPlayers().clearMovePath();
+				fieldComponent.refresh();
+				getClient().getClientData().setSelectedPlayer(pPlayer);
+				userInterface.refreshSideBars();
+				determineCursor(result);
+				break;
 		}
 		getClient().getClientData().setSelectedPlayer(pPlayer);
 		userInterface.refreshSideBars();
+
 		return selectable;
 	}
 
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_PASS;
+	}
+
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
 		boolean selectable = false;
-		if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-			game.getFieldModel().setRangeRuler(null);
-			userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-			userInterface.getFieldComponent().refresh();
-			selectable = true;
-			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
-		} else if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
-			game.getFieldModel().setRangeRuler(null);
-			userInterface.getFieldComponent().refresh();
-			selectable = super.mouseOverField(pCoordinate);
-		} else {
-			drawRangeRuler(pCoordinate);
+
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		determineCursor(result);
+		switch (result.getKind()) {
+			case PERFORM:
+				userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
+				userInterface.getFieldComponent().refresh();
+				selectable = true;
+				break;
+			case SUPER:
+				selectable = super.mouseOverField(pCoordinate);
+			case DRAW:
+				drawRangeRuler(pCoordinate);
+				break;
+			default:
+				break;
 		}
+
 		return selectable;
 	}
 
@@ -143,19 +144,6 @@ public class ClientStatePass extends ClientStateMove {
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
 			fieldComponent.refresh();
 		}
-	}
-
-	public boolean canPlayerGetPass(Player<?> pCatcher) {
-		boolean canGetPass = false;
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
-			PlayerState catcherState = game.getFieldModel().getPlayerState(pCatcher);
-			canGetPass = ((catcherState != null)
-				&& catcherState.hasTacklezones() && (game.getTeamHome() == pCatcher.getTeam())
-				&& (!actingPlayer.isSufferingAnimosity() || actingPlayer.getRace().equals(pCatcher.getRace())));
-		}
-		return canGetPass;
 	}
 
 	@Override
@@ -202,7 +190,7 @@ public class ClientStatePass extends ClientStateMove {
 			menuItemList.add(hailMaryPassAction);
 		}
 
-		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, false)) {
 			JMenuItem jumpAction;
 			JMenuItem specialJumpAction = null;
 			if (actingPlayer.isJumping()) {
@@ -211,7 +199,7 @@ public class ClientStatePass extends ClientStateMove {
 			} else {
 				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
 					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
-				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
 				if (boundingLeap.isPresent()) {
 					specialJumpAction = new JMenuItem(dimensionProvider(),
 						"Jump (" + boundingLeap.get().getName() + ")",
@@ -246,23 +234,23 @@ public class ClientStatePass extends ClientStateMove {
 			}
 		}
 
-		if (isWisdomAvailable(actingPlayer)) {
+		if (logicModule.isWisdomAvailable(actingPlayer)) {
 			menuItemList.add(createWisdomItem(iconCache));
 		}
 
-		if (isRaidingPartyAvailable(actingPlayer)) {
+		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
 			menuItemList.add(createRaidingPartyItem(iconCache));
 		}
-		if (isBalefulHexAvailable(actingPlayer)) {
+		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
 			menuItemList.add(createBalefulHexItem(iconCache));
 		}
-		if (isBlackInkAvailable(actingPlayer)) {
+		if (logicModule.isBlackInkAvailable(actingPlayer)) {
 			menuItemList.add(createBlackInkItem(iconCache));
 		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
+		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
 			menuItemList.add(createCatchOfTheDayItem(iconCache));
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
 			menuItemList.add(createThenIStartedBlastinItem(iconCache));
 		}
 		addEndActionLabel(iconCache, menuItemList);
@@ -272,31 +260,21 @@ public class ClientStatePass extends ClientStateMove {
 
 	}
 
-	protected void menuItemSelected(Player<?> player, int pMenuKey) {
-		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		ClientCommunication communication = getClient().getCommunication();
-		switch (pMenuKey) {
+	@Override
+	protected void postPerform(int menuKey) {
+		switch (menuKey) {
 			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
 				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
 				fRangeGridHandler.refreshRangeGrid();
 				break;
 			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS:
-				if (game.getActingPlayer().getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)) {
-					if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(player, PlayerAction.PASS, actingPlayer.isJumping());
-						fShowRangeRuler = true;
-					} else {
-						communication.sendActingPlayer(player, PlayerAction.HAIL_MARY_PASS, actingPlayer.isJumping());
-						fShowRangeRuler = false;
-					}
-					if (!fShowRangeRuler && (game.getFieldModel().getRangeRuler() != null)) {
-						game.getFieldModel().setRangeRuler(null);
-					}
+				if (logicModule.hmpAvailable()) {
+					// logicmodule sends command to deselect hmp so afterwards we have to show the ruler again
+					fShowRangeRuler = logicModule.actionIsHmp();
 				}
 				break;
 			default:
-				super.menuItemSelected(player, pMenuKey);
+				break;
 		}
 	}
 

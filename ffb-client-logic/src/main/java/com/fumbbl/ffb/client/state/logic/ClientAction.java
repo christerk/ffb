@@ -13,6 +13,7 @@ public enum ClientAction {
 	GAZE,
 	GORED_BY_THE_BULL,
 	HAIL_MARY_BOMB,
+	HAIL_MARY_PASS,
 	HIT_AND_RUN,
 	HAND_OVER,
 	JUMP,
