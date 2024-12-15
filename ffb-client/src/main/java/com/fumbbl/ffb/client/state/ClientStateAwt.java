@@ -1,13 +1,8 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -21,17 +16,9 @@ import com.fumbbl.ffb.net.NetCommand;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.awt.event.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -92,6 +79,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
+
 	}
 
 	// Helper Methods
