@@ -60,5 +60,9 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	protected void postEndTurn() {
 	}
+
+	public T getLogicModule() {
+		return logicModule;
+	}
 }
 
