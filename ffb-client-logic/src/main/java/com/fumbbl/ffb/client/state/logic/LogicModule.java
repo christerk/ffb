@@ -108,7 +108,7 @@ public abstract class LogicModule {
 		return !actingPlayer.hasActed() && isTreacherousAvailable(actingPlayer.getPlayer());
 	}
 
-	protected boolean isTreacherousAvailable(Player<?> player) {
+	public boolean isTreacherousAvailable(Player<?> player) {
 		Game game = client.getGame();
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canStabTeamMateForBall)
 			&& Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(player)))
