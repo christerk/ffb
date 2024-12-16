@@ -3,20 +3,25 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.WaitForSetupLogicModule;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.model.Game;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * 
  * @author Kalimar
  */
-public class ClientStateWaitForSetup extends ClientState {
+public class ClientStateWaitForSetup extends ClientStateAwt<WaitForSetupLogicModule> {
 
 	private boolean fReservesBoxOpened;
 
-	protected ClientStateWaitForSetup(FantasyFootballClient pClient) {
-		super(pClient);
+	protected ClientStateWaitForSetup(FantasyFootballClientAwt pClient) {
+		super(pClient, new WaitForSetupLogicModule(pClient));
 	}
 
 	public ClientStateId getId() {
@@ -39,6 +44,11 @@ public class ClientStateWaitForSetup extends ClientState {
 		if (fReservesBoxOpened && (sideBarAway.getOpenBox() == BoxType.RESERVES)) {
 			sideBarAway.closeBox();
 		}
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return Collections.emptyMap();
 	}
 
 }
