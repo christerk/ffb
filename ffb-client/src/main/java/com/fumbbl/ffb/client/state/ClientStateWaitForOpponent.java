@@ -1,0 +1,48 @@
+package com.fumbbl.ffb.client.state;
+
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.WaitForOpponentLogicModule;
+
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * @author Kalimar
+ */
+public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLogicModule> {
+
+	protected ClientStateWaitForOpponent(FantasyFootballClientAwt pClient) {
+		super(pClient, new WaitForOpponentLogicModule(pClient));
+	}
+
+	public ClientStateId getId() {
+		return ClientStateId.WAIT_FOR_OPPONENT;
+	}
+
+	public void initUI() {
+		super.initUI();
+		setClickable(false);
+	}
+
+	public boolean actionKeyPressed(ActionKey pActionKey) {
+		boolean actionHandled = true;
+		switch (pActionKey) {
+			case TOOLBAR_ILLEGAL_PROCEDURE:
+				logicModule.illegalProcedure();
+				break;
+			default:
+				actionHandled = false;
+				break;
+		}
+		return actionHandled;
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return Collections.emptyMap();
+	}
+
+}
