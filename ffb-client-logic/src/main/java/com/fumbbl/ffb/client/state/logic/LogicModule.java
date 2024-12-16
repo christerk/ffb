@@ -84,7 +84,7 @@ public abstract class LogicModule {
 	}
 
 	public InteractionResult playerPeek(Player<?> player) {
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return new InteractionResult(InteractionResult.Kind.RESET);
 	}
 
 	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
