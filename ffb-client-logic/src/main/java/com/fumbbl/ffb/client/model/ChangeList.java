@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Wide Layout: More streaming friendly layout with larger horizontal pitch, requested by Christer")
 			.addBehaviorChange("\"Pitch Orientation\" submenu is now called \"Client Layout\" and moved from \"Pitch Customization\" to new \"Client UI\" submenu")
 			.addBehaviorChange("\"Client Size\" menu entry moved to new \"Client UI\" submenu")
+			.addImprovement("Timeouts for image loading increased")
 		);
 
 		versions.add(new VersionChangeList("2.31.0")
