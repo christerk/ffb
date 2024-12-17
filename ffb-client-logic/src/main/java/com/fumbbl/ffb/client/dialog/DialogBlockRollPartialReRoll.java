@@ -91,7 +91,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 			fBlockDice[i].setBounds(0, 0, 45, 45);
 			fBlockDice[i].setFocusPainted(false);
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
-			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i])));
+			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i], dimensionProvider())));
 			int finalI = i;
 			if ((getDialogParameter().hasProReRollOption() || getDialogParameter().hasBrawlerOption()) && Arrays.stream(fDialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
 				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));

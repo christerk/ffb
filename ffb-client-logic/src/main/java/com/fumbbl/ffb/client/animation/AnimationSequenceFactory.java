@@ -1,11 +1,13 @@
 package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.model.Animation;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 /**
  * @author Kalimar
@@ -26,8 +28,9 @@ public class AnimationSequenceFactory {
 		if ((pAnimation == null) || (pAnimation.getAnimationType() == null)) {
 			return null;
 		}
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+		DimensionProvider uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		Dimension fieldDimension = uiDimensionProvider.dimension(Component.FIELD);
+		PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 
 		switch (pAnimation.getAnimationType()) {
 			case KICKOFF_BLITZ:

@@ -19,15 +19,10 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.option.GameOptionInt;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -119,7 +114,7 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			panelMain.add(Box.createVerticalStrut(5));
 		}
 
-		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(), pClient.getUserInterface().getDimensionProvider());
+		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(), pClient.getUserInterface().getPitchDimensionProvider());
 		ChatLogScrollPane fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
 
 		JPanel panelCardLog = new JPanel();
@@ -185,14 +180,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private void updateAvailableGoldLabel() {
 
 		fLabelAvailableGold.setText("Available Gold: " + StringTool.formatThousands(fAvailableGold));
-		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12));
+		fLabelAvailableGold.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider()));
 
 	}
 
 	private void updateAvailableCardsLabel() {
 
 		fLabelAvailableCards.setText("Available Cards: " + fAvailableCards);
-		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12));
+		fLabelAvailableCards.setFont(fontCache().font(Font.BOLD, 12, dimensionProvider()));
 
 	}
 

@@ -2,9 +2,7 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.*;
 
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
@@ -25,18 +23,20 @@ public abstract class FieldLayer {
 
 	protected Dimension size;
 
-	protected DimensionProvider dimensionProvider;
+	protected final UiDimensionProvider uiDimensionProvider;
+	protected final PitchDimensionProvider pitchDimensionProvider;
 
-	protected FontCache fontCache;
+	protected final FontCache fontCache;
 
-	public FieldLayer(FantasyFootballClient pClient, DimensionProvider dimensionProvider, FontCache fontCache) {
+	public FieldLayer(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
 		fClient = pClient;
-		this.dimensionProvider = dimensionProvider;
+		this.uiDimensionProvider = uiDimensionProvider;
+		this.pitchDimensionProvider = pitchDimensionProvider;
 		this.fontCache = fontCache;
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider) {
-		size = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
+	public void initLayout() {
+		size = uiDimensionProvider.dimension(Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}
@@ -114,12 +114,12 @@ public abstract class FieldLayer {
 	}
 
 	protected int findCenteredIconUpperLeftX(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+		Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
 		return dimension.width - (pImage.getWidth() / 2);
 	}
 
 	protected int findCenteredIconUpperLeftY(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = dimensionProvider.mapToLocal(pCoordinate, true);
+		Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
 		return dimension.height - (pImage.getHeight() / 2);
 	}
 
@@ -129,10 +129,10 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = dimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
 			int fieldX = dimension.width;
 			int fieldY = dimension.height;
-			clear(fieldX, fieldY, dimensionProvider.fieldSquareSize(), dimensionProvider.fieldSquareSize(), pUpdateArea);
+			clear(fieldX, fieldY, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize(), pUpdateArea);
 		}
 	}
 

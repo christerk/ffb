@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.util.StringTool;
@@ -157,11 +158,12 @@ public class AnimationFrame {
 
 	private void getIcons() {
 		IconCache iconCache = fFieldLayer.getClient().getUserInterface().getIconCache();
+		DimensionProvider dimensionProvider = fFieldLayer.getClient().getUserInterface().getPitchDimensionProvider();
 		if (StringTool.isProvided(fIconProperty1)) {
-			fIcon1 = iconCache.getIconByProperty(fIconProperty1);
+			fIcon1 = iconCache.getIconByProperty(fIconProperty1, dimensionProvider);
 		}
 		if (StringTool.isProvided(fIconProperty2)) {
-			fIcon2 = iconCache.getIconByProperty(fIconProperty2);
+			fIcon2 = iconCache.getIconByProperty(fIconProperty2, dimensionProvider);
 		}
 	}
 

@@ -10,28 +10,13 @@ import com.fumbbl.ffb.client.util.UtilClientReflection;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class DialogTeamChoice extends Dialog {
@@ -47,13 +32,6 @@ public class DialogTeamChoice extends Dialog {
 		super(pClient, "Select Team", false);
 
 		fTeamList = pTeamList;
-
-//  <division>1</division>
-//  <name>Bauernopfer</name>
-//  <rating>147</rating>
-//  <strength>152</strength>
-//  <race>Elf</race>
-//  <treasury>0</treasury>
 
 		String[] columnNames = new String[] { "Div", "Team Name", "Race", "TV", "Treasury" };
 		DefaultTableModel tableModel = new DefaultTableModel(columnNames, fTeamList.size()) {
@@ -155,11 +133,9 @@ public class DialogTeamChoice extends Dialog {
 		inputPanel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
 		JButton fButtonCancel = new JButton(dimensionProvider(), "Cancel");
-		fButtonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent pActionEvent) {
-				fSelectedIndex = -1;
-				checkAndCloseDialog(true);
-			}
+		fButtonCancel.addActionListener(pActionEvent -> {
+			fSelectedIndex = -1;
+			checkAndCloseDialog(true);
 		});
 
 		fButtonOk = new JButton(dimensionProvider(), "Play");
@@ -185,8 +161,9 @@ public class DialogTeamChoice extends Dialog {
 			setHorizontalAlignment(pHorizontalAlignment);
 		}
 
+		@SuppressWarnings("unused")
 		public Component getTableCellRendererComponent(JTable pTable, Object pValue, boolean pIsSelected, boolean pHasFocus,
-																									 int pRow, int pColumn) {
+													   int pRow, int pColumn) {
 			return super.getTableCellRendererComponent(pTable, pValue, pIsSelected, false, pRow, pColumn);
 		}
 	}

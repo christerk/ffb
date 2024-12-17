@@ -7,7 +7,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
-import java.awt.Toolkit;
+import java.awt.*;
 
 /**
  * This class is a <CODE>TextField</CODE> that only allows integer values to be
@@ -16,12 +16,6 @@ import java.awt.Toolkit;
  * @author <A HREF="mailto:colbell@users.sourceforge.net">Colin Bell</A>
  */
 public class IntegerField extends JTextField {
-	/**
-	 * Default ctor.
-	 */
-	public IntegerField(DimensionProvider dimensionProvider) {
-		super(dimensionProvider);
-	}
 
 	/**
 	 * Ctor specifying the field width.
@@ -75,6 +69,7 @@ public class IntegerField extends JTextField {
 		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 			if (str != null) {
 				try {
+					//noinspection ResultOfMethodCallIgnored
 					Integer.decode(str);
 					super.insertString(offs, str, a);
 				} catch (NumberFormatException ex) {

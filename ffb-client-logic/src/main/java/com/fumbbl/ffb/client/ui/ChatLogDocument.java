@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;

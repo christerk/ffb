@@ -57,7 +57,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
 
-	private final DimensionProvider dimensionProvider;
+	private final UiDimensionProvider uiDimensionProvider;
+	private final PitchDimensionProvider pitchDimensionProvider;
+	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -73,16 +75,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			}
 		}
 
-		dimensionProvider = new DimensionProvider(pClient.getParameters().getLayout(), scale);
-		fIconCache = new IconCache(getClient(), dimensionProvider);
+		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
+		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		fIconCache = new IconCache(getClient());
 		fIconCache.init();
-		fontCache = new FontCache(dimensionProvider);
+		fontCache = new FontCache();
 		fSoundEngine = new SoundEngine(getClient());
-		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14));
+		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		setGameMenuBar(new GameMenuBar(getClient(), dimensionProvider, styleProvider, fontCache));
+		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -93,12 +97,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		addWindowListener(this);
 		setResizable(false);
 
-		fScoreBar = new ScoreBarComponent(getClient(), dimensionProvider, styleProvider, fontCache);
-		fFieldComponent = new FieldComponent(getClient(), dimensionProvider, fontCache);
-		fLog = new LogComponent(getClient(), styleProvider, dimensionProvider);
-		fChat = new ChatComponent(getClient(), dimensionProvider, styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, dimensionProvider, styleProvider, fontCache);
-		fSideBarAway = new SideBarComponent(getClient(), false, dimensionProvider, styleProvider, fontCache);
+		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
+		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
+		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, styleProvider, fontCache);
+		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, styleProvider, fontCache);
 
 		initComponents(false);
 
@@ -113,15 +117,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDesktop = new JDesktopPane();
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
-		fFieldComponent.initLayout(dimensionProvider);
-		fLog.initLayout(dimensionProvider, styleProvider);
-		fChat.initLayout(dimensionProvider, styleProvider);
-		fSideBarHome.initLayout(dimensionProvider);
-		fSideBarAway.initLayout(dimensionProvider);
+		fFieldComponent.initLayout();
+		fLog.initLayout();
+		fChat.initLayout();
+		fSideBarHome.initLayout();
+		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
 		JPanel panelContent;
-		switch (dimensionProvider.getLayout()) {
+		switch (layoutSettings.getLayout()) {
 			case PORTRAIT:
 				panelContent = portraitContent();
 				break;
@@ -245,8 +249,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		return styleProvider;
 	}
 
-	public DimensionProvider getDimensionProvider() {
-		return dimensionProvider;
+	public UiDimensionProvider getUiDimensionProvider() {
+		return uiDimensionProvider;
+	}
+
+	public PitchDimensionProvider getPitchDimensionProvider() {
+		return pitchDimensionProvider;
 	}
 
 	public FieldComponent getFieldComponent() {

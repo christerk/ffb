@@ -1,23 +1,19 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,16 +32,16 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 
 		String property = pClient.getProperty(CommonProperty.SETTING_SCALE_FACTOR);
 		factor = StringTool.isProvided(property) ? Double.parseDouble(property) : 1.0;
-		if (factor < DimensionProvider.MIN_SCALE_FACTOR) {
-			factor = DimensionProvider.MIN_SCALE_FACTOR;
+		if (factor < LayoutSettings.MIN_SCALE_FACTOR) {
+			factor = LayoutSettings.MIN_SCALE_FACTOR;
 		}
-		if (factor > DimensionProvider.MAX_SCALE_FACTOR) {
-			factor = DimensionProvider.MAX_SCALE_FACTOR;
+		if (factor > LayoutSettings.MAX_SCALE_FACTOR) {
+			factor = LayoutSettings.MAX_SCALE_FACTOR;
 		}
 
 		fSlider = new JSlider();
-		fSlider.setMinimum((int) (DimensionProvider.MIN_SCALE_FACTOR * SLIDER_FACTOR));
-		fSlider.setMaximum((int) (DimensionProvider.MAX_SCALE_FACTOR * SLIDER_FACTOR));
+		fSlider.setMinimum((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR));
+		fSlider.setMaximum((int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
 		fSlider.setValue((int) (factor * SLIDER_FACTOR));
 		fSlider.addChangeListener(this);
 
@@ -86,15 +82,15 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 	}
 
 	private void updateSettingLabel() {
-		Dimension dimension = dimensionProvider().dimension(DimensionProvider.Component.CLIENT_SIZE, factor);
+		Dimension dimension = dimensionProvider().dimension(Component.CLIENT_SIZE, factor);
 
 		fSettingLabel.setText((int) (factor * 100) + "% - " + dimension.width + "x" + dimension.height);
 		fSlider.repaint();
 	}
 
 	public void actionPerformed(ActionEvent pE) {
-		if (factor != dimensionProvider().getScale()) {
-			dimensionProvider().setScale(factor);
+		if (factor != dimensionProvider().getLayoutSettings().getScale()) {
+			dimensionProvider().getLayoutSettings().setScale(factor);
 			appliedFactor = factor;
 			getClient().getUserInterface().getIconCache().clear();
 			getClient().getUserInterface().getFontCache().clear();

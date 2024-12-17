@@ -1,12 +1,6 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.client.ActionKeyGroup;
-import com.fumbbl.ffb.client.ClientReplayer;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
@@ -28,11 +22,15 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	private final Map<Integer, CommandHighlightArea> fCommandHighlightAreaByCommandNr;
 	private CommandHighlightArea fCurrentCommandHighlight;
 	private int fMinimumCommandNr;
+	private final DimensionProvider dimensionProvider;
+	private final StyleProvider styleProvider;
 
 	private final FantasyFootballClient fClient;
 
 	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		fClient = pClient;
+		this.dimensionProvider = dimensionProvider;
+		this.styleProvider = styleProvider;
 		fLogTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
@@ -45,8 +43,8 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		fCommandHighlightAreaByCommandNr = new HashMap<>();
 	}
 
-	public void initLayout(DimensionProvider dimensionProvider, StyleProvider styleProvider) {
-		Dimension size = dimensionProvider.dimension(DimensionProvider.Component.LOG);
+	public void initLayout() {
+		Dimension size = dimensionProvider.dimension(Component.LOG);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);

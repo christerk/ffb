@@ -1,32 +1,13 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.marking.PlayerMarker;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Position;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.ZappedPlayer;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilUrl;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -36,12 +17,11 @@ import java.awt.image.BufferedImage;
 public class PlayerIconFactory {
 
 
-	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty) {
-		DimensionProvider dimensionProvider = client.getUserInterface().getDimensionProvider();
+	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty, DimensionProvider dimensionProvider) {
 		IconCache iconCache = client.getUserInterface().getIconCache();
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
-		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty), maxIconSize);
+		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
+		return decorateIcon(icon, iconCache.getIconByProperty(iconProperty, dimensionProvider), maxIconSize);
 	}
 
 	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
@@ -61,11 +41,11 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer) {
+	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, DimensionProvider dimensionProvider) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
 			g2d.setColor(homePlayer ? styleProvider.getPlayerMarkerHome() : styleProvider.getPlayerMarkerAway());
-			g2d.setFont(fontCache.font(Font.BOLD, 12));
+			g2d.setFont(fontCache.font(Font.BOLD, 12, dimensionProvider));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
 			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
@@ -88,7 +68,7 @@ public class PlayerIconFactory {
 	}
 
 	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
-																		boolean pWithBall, boolean pWithBomb) {
+																		boolean pWithBall, boolean pWithBomb, DimensionProvider dimensionProvider) {
 
 		if ((pClient == null) || (pPlayer == null)) {
 			return null;
@@ -126,8 +106,7 @@ public class PlayerIconFactory {
 			useHomeColor = !pHomePlayer;
 		}
 
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		if (StringTool.isProvided(iconSetUrl)) {
+		if (StringTool.isProvided(iconSetUrl) && !IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(settingIcons)) {
 			BufferedImage iconSet = iconCache.getUnscaledIconByUrl(iconSetUrl);
 			if (iconSet != null) {
 				int iconSize = iconSet.getWidth() / 4;
@@ -150,7 +129,7 @@ public class PlayerIconFactory {
 			}
 		}
 
-		if ((icon == null) || IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(settingIcons)) {
+		if ((icon == null)) {
 			int fontSize;
 			Color fontColor = Color.WHITE;
 			Color shadowColor = Color.BLACK;
@@ -158,23 +137,23 @@ public class PlayerIconFactory {
 			if ((pPlayer.getPosition() != null) && (PlayerType.BIG_GUY == pPlayer.getPosition().getType())) {
 				fontSize = 17;
 				if (useHomeColor) {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_HOME);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_HOME, dimensionProvider);
 				} else {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_LARGE_AWAY, dimensionProvider);
 				}
 			} else if (pPlayer.hasSkillProperty(NamedProperties.smallIcon)) {
 				fontSize = 13;
 				if (useHomeColor) {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_HOME, dimensionProvider);
 				} else {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_AWAY);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_SMALL_AWAY, dimensionProvider);
 				}
 			} else {
 				fontSize = 15;
 				if (useHomeColor) {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_HOME);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_HOME, dimensionProvider);
 				} else {
-					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_AWAY);
+					playerIcon = iconCache.getIconByProperty(IIconProperty.PLAYER_NORMAL_AWAY, dimensionProvider);
 				}
 			}
 			if (pMoving) {
@@ -188,7 +167,7 @@ public class PlayerIconFactory {
 					FontCache fontCache = pClient.getUserInterface().getFontCache();
 					Graphics2D g2d = icon.createGraphics();
 					g2d.drawImage(playerIcon, 2, 2, null);
-					g2d.setFont(fontCache.font(Font.BOLD, fontSize));
+					g2d.setFont(fontCache.font(Font.BOLD, fontSize, dimensionProvider));
 					FontMetrics metrics = g2d.getFontMetrics();
 					Rectangle2D stringBounds = metrics.getStringBounds(shorthand, g2d);
 					int baselineX = (icon.getWidth() - (int) stringBounds.getWidth()) / 2;
@@ -204,34 +183,34 @@ public class PlayerIconFactory {
 			}
 		}
 
-		Dimension maxIconSize = dimensionProvider.dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
 		icon = decorateIcon(icon, null, maxIconSize);
 
 		if (pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED, dimensionProvider), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB, dimensionProvider), maxIconSize);
 			}
 		}
 
 		if (pWithBall && !pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED, dimensionProvider), maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL, dimensionProvider), maxIconSize);
 			}
 		}
 		return icon;
 
 	}
 
-	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer) {
-		return getIcon(pClient, pPlayer, false);
+	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, DimensionProvider dimensionProvider) {
+		return getIcon(pClient, pPlayer, false, dimensionProvider);
 	}
 
-	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean ignorePlayerState) {
+	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean ignorePlayerState, DimensionProvider dimensionProvider) {
 
 		BufferedImage icon = null;
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
@@ -248,7 +227,7 @@ public class PlayerIconFactory {
 		boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
 		if (ignorePlayerState || (playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR)) {
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
-				withBomb);
+				withBomb, dimensionProvider);
 		}
 
 		boolean fadeIcon = false;
@@ -323,26 +302,26 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
-		Dimension maxIconSize = pClient.getUserInterface().getDimensionProvider().dimension(DimensionProvider.Component.MAX_ICON);
+		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
 		if (decorationProperty1 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1), maxIconSize);
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty1, dimensionProvider), maxIconSize);
 		}
 		if (decorationProperty2 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2), maxIconSize);
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2, dimensionProvider), maxIconSize);
 		}
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
 				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider), maxIconSize);
 			}
 		}
 
 		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if ((playerMarker != null)) {
 			String homeText = playerMarker.getHomeText();
-			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer);
+			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider);
 		}
 
 		return icon;

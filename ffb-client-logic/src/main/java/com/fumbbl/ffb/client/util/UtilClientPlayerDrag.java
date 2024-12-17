@@ -3,10 +3,7 @@ package com.fumbbl.ffb.client.util;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -22,25 +19,26 @@ public class UtilClientPlayerDrag {
 
 	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
 			boolean pBoxMode) {
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension fieldDimension = dimensionProvider.dimension(DimensionProvider.Component.FIELD);
-		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+		UiDimensionProvider uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
+		Dimension fieldDimension = uiDimensionProvider.dimension(Component.FIELD);
+		Dimension boxComponentSize = uiDimensionProvider.dimension(Component.BOX);
+		PitchDimensionProvider pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		FieldCoordinate coordinate;
 		if (pBoxMode) {
-			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY());
+			coordinate = getBoxFieldCoordinate(pClient, pMouseEvent.getX(), pMouseEvent.getY(), uiDimensionProvider);
 			if ((coordinate == null) && (pMouseEvent.getX() >= boxComponentSize.width)) {
-				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY(), dimensionProvider);
+				coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX() - boxComponentSize.width, pMouseEvent.getY(), pitchDimensionProvider);
 			}
 		} else {
-			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY(), dimensionProvider);
+			coordinate = getFieldFieldCoordinate(fieldDimension, pMouseEvent.getX(), pMouseEvent.getY(), pitchDimensionProvider);
 			if ((coordinate == null) && (pMouseEvent.getX() < 0)) {
-				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY());
+				coordinate = getBoxFieldCoordinate(pClient, boxComponentSize.width + pMouseEvent.getX(), pMouseEvent.getY(), uiDimensionProvider);
 			}
 		}
 		return coordinate;
 	}
 
-	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY, DimensionProvider dimensionProvider) {
+	private static FieldCoordinate getFieldFieldCoordinate(Dimension fieldDimension, int pMouseX, int pMouseY, PitchDimensionProvider dimensionProvider) {
 
 		int actualX = pMouseX;
 		int actualY = pMouseY;
@@ -59,10 +57,9 @@ public class UtilClientPlayerDrag {
 		}
 	}
 
-	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY) {
-		DimensionProvider dimensionProvider = pClient.getUserInterface().getDimensionProvider();
-		Dimension boxSquareSie = dimensionProvider.dimension(DimensionProvider.Component.BOX_SQUARE);
-		Dimension boxComponentSize = dimensionProvider.dimension(DimensionProvider.Component.BOX);
+	private static FieldCoordinate getBoxFieldCoordinate(FantasyFootballClient pClient, int pMouseX, int pMouseY, UiDimensionProvider dimensionProvider) {
+		Dimension boxSquareSie = dimensionProvider.dimension(Component.BOX_SQUARE);
+		Dimension boxComponentSize = dimensionProvider.dimension(Component.BOX);
 		if ((pMouseX >= 0) && (pMouseX < boxComponentSize.width) && (pMouseY >= 0) && (pMouseY < boxComponentSize.height)) {
 			int boxTitleOffset = pClient.getUserInterface().getSideBarHome().getBoxComponent().getMaxTitleOffset();
 			int y = (((pMouseY - boxTitleOffset) / boxSquareSie.height) * 3)
