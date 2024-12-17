@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -29,7 +28,7 @@ public class FoulLogicModule extends MoveLogicModule {
       if (actingPlayer.isSufferingBloodLust()) {
         return new InteractionResult(InteractionResult.Kind.SHOW_BLOODLUST_ACTIONS);
       } else {
-        return new InteractionResult(InteractionResult.Kind.SUPER);
+        return super.playerInteraction(player);
       }
     } else {
       if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {

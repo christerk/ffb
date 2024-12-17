@@ -15,15 +15,15 @@ public class KickEmBlockLogicModule extends BlockLogicModule {
 		super(client);
 	}
 
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
-			&& game.getFieldModel().getPlayerState(pPlayer).isProneOrStunned()
-			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(pPlayer))) {
-			extension.block(actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
+			&& game.getFieldModel().getPlayerState(player).isProneOrStunned()
+			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(player))) {
+			extension.block(actingPlayer.getPlayerId(), player, false, true, false, false);
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}

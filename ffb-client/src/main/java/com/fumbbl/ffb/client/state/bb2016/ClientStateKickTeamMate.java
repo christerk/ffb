@@ -45,8 +45,8 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		markKickablePlayers();
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+	protected void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case PERFORM:
 				IconCache iconCache = getClient().getUserInterface().getIconCache();
@@ -65,12 +65,10 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 				menuItemList.add(longKick);
 
 				createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-				showPopupMenuForPlayer(pPlayer);
-				break;
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
+				showPopupMenuForPlayer(player);
 				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

@@ -39,15 +39,12 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	}
 
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	protected void clickOnPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
 
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		InteractionResult result = logicModule.playerInteraction(player);
 
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			case PERFORM:
 				fShowRangeRuler = true;
 				break;
@@ -57,6 +54,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 				userInterface.getFieldComponent().refresh();
 				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

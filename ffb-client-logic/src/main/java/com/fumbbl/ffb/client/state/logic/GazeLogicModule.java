@@ -12,14 +12,14 @@ public class GazeLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else {
-			if (canBeGazed(pPlayer)) {
-				client.getCommunication().sendGaze(actingPlayer.getPlayerId(), pPlayer);
+			if (canBeGazed(player)) {
+				client.getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
 				return new InteractionResult(InteractionResult.Kind.HANDLED);
 			}
 		}

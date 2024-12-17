@@ -44,17 +44,15 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	protected void clickOnPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			case HANDLED:
 				userInterface.getFieldComponent().refresh();
 				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

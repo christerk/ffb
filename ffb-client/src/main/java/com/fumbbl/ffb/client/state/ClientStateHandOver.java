@@ -35,13 +35,11 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		return ClientStateId.HAND_OVER;
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+	protected void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

@@ -21,13 +21,13 @@ public class HandOverLogicModule extends MoveLogicModule {
 	}
 	
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else {
-			return handOver(pPlayer);
+			return handOver(player);
 		}
 	}
 

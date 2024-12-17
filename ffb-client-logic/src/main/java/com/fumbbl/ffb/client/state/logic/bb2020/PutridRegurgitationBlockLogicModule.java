@@ -21,13 +21,13 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
-			extension.block(actingPlayer.getPlayerId(), pPlayer, false, false, true, false);
+			extension.block(actingPlayer.getPlayerId(), player, false, false, true, false);
 			return new InteractionResult(InteractionResult.Kind.HANDLED);
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);

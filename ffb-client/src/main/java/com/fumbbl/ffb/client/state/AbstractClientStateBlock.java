@@ -34,6 +34,10 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
 
   protected void clickOnPlayer(Player<?> pPlayer) {
     InteractionResult result = logicModule.playerInteraction(pPlayer);
+    evaluateClickOnPlayer(result, pPlayer);
+  }
+
+  protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
     switch (result.getKind()) {
       case SHOW_ACTIONS:
         createAndShowPopupMenuForBlockingPlayer();
@@ -41,11 +45,11 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
       case SHOW_ACTION_ALTERNATIVES:
         List<JMenuItem> menuItemList = new ArrayList<>();
         ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
-        extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), pPlayer, false, menuItemList);
+        extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), player, false, menuItemList);
       default:
         break;
     }
-  }
+    }
 
   protected boolean mouseOverPlayer(Player<?> player) {
     super.mouseOverPlayer(player);

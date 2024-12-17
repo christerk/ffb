@@ -42,9 +42,6 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
     InteractionResult result = logicModule.playerInteraction(player);
     switch (result.getKind()) {
 
-      case SUPER:
-        super.clickOnPlayer(player);
-        break;
       case SHOW_ACTION_ALTERNATIVES:
         createAndShowBlockOptionsPopupMenu(logicModule.getActingPlayer().getPlayer(), player);
         break;
@@ -55,6 +52,7 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
         createAndShowPopupMenuForActingPlayer();
         break;
       default:
+        super.evaluateClickOnPlayer(result, player);
         break;
 
     }

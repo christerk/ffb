@@ -112,6 +112,10 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		evaluateClickOnPlayer(result, pPlayer);
+	}
+
+	protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
@@ -125,7 +129,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			default:
 				break;
 		}
-		
 	}
 
 	@Override

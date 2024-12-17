@@ -33,20 +33,20 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else {
-			if ((game.getDefender() == null) && canBeKicked(pPlayer)) {
-				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pPlayer.getId(), true);
+			if ((game.getDefender() == null) && canBeKicked(player)) {
+				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), player.getId(), true);
 				return new InteractionResult(InteractionResult.Kind.PERFORM);
 			}
 			if (game.getDefender() != null) {
 				game.getFieldModel().setRangeRuler(null);
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(),
-					game.getFieldModel().getPlayerCoordinate(pPlayer), true);
+					game.getFieldModel().getPlayerCoordinate(player), true);
 				return new InteractionResult(InteractionResult.Kind.HANDLED);
 			}
 		}

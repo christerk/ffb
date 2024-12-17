@@ -17,17 +17,15 @@ public class ClientStateKickEmBlitz extends AbstractClientStateBlitz<KickEmBlitz
 		return ClientStateId.KICK_EM_BLITZ;
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+	public void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
 
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
 				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

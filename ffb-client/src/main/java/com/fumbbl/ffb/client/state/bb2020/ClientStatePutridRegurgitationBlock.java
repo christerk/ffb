@@ -22,13 +22,11 @@ public class ClientStatePutridRegurgitationBlock extends AbstractClientStateBloc
 		return ClientStateId.PUTRID_REGURGITATION_BLOCK;
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
+	public void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

@@ -35,10 +35,11 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 
 	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		evaluateClickOnPlayer(result, pPlayer);
+	}
+
+	protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnPlayer(pPlayer);
-				break;
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
 				break;
@@ -50,9 +51,10 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 				}
 
 				ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
-				extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), pPlayer, false, menuItemList);
+				extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), player, false, menuItemList);
 
 			default:
+				super.evaluateClickOnPlayer(result, player);
 				break;
 		}
 	}

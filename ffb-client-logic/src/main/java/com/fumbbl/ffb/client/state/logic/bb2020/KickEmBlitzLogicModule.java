@@ -26,7 +26,7 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 			Game game = client.getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			if (player == actingPlayer.getPlayer()) {
-				return new InteractionResult(InteractionResult.Kind.SUPER);
+				return super.playerInteraction(player);
 			} else {
 				if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {
 					return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);

@@ -29,16 +29,16 @@ public class PassLogicModule extends MoveLogicModule {
 	}
 	
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else {
 			if (!actingPlayer.hasPassed() && (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()
 				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
-				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer))))) {
-				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(pPlayer));
+				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(player))))) {
+				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(player));
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
 				return new InteractionResult(InteractionResult.Kind.HANDLED);

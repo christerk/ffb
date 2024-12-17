@@ -27,20 +27,20 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+		if (player == actingPlayer.getPlayer()) {
+			return super.playerInteraction(player);
 		} else {
-			if ((game.getDefender() == null) && canBeThrown(pPlayer)) {
-				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pPlayer.getId());
+			if ((game.getDefender() == null) && canBeThrown(player)) {
+				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), player.getId());
 				return new InteractionResult(InteractionResult.Kind.PERFORM);
 			}
 			if (game.getDefender() != null) {
 				game.getFieldModel().setRangeRuler(null);
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(),
-						game.getFieldModel().getPlayerCoordinate(pPlayer));
+						game.getFieldModel().getPlayerCoordinate(player));
 				return new InteractionResult(InteractionResult.Kind.HANDLED);
 
 			}
