@@ -6,8 +6,6 @@ import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,12 +39,7 @@ public class BlockLogicModule extends LogicModule {
 	}
 
 	protected InteractionResult block(Player<?> player, ActingPlayer actingPlayer) {
-		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
-		} else {
-			extension.block(actingPlayer.getPlayerId(), player, false, false, false, false);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
-		}
+		return extension.playerInteraction(player, actingPlayer.getPlayerAction().isBlitzing());
 	}
 
 

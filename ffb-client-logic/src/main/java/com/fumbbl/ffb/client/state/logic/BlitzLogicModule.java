@@ -44,12 +44,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
 			} else {
 				if (!actingPlayer.hasBlocked()) {
-					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)
-						|| (isGoredAvailable(game))) {
-						return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
-					} else {
-						extension.block(actingPlayer.getPlayerId(), player, false, false, false, false);
-					}
+					return extension.playerInteraction(player, true);
 				}
 			}
 		}

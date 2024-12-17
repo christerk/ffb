@@ -5,7 +5,6 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -106,19 +105,21 @@ public class BlockLogicExtension extends LogicModule {
   }
 
 
-  public InteractionResult playerInteraction(ClientState<?,?> pClientState, Player<?> pDefender, boolean pDoBlitz) {
+  public InteractionResult playerInteraction(Player<?> pDefender, boolean pDoBlitz) {
     if (pDefender == null) {
       return new InteractionResult(InteractionResult.Kind.IGNORE);
     }
 
-    Game game = pClientState.getClient().getGame();
+    Game game = client.getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
 
     PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
     // rooted players can not move but still spend movement for the blitz action
     if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
       FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-       if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
+      if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
+        return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
+      } else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
         block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
         return new InteractionResult(InteractionResult.Kind.HANDLED);
       }
