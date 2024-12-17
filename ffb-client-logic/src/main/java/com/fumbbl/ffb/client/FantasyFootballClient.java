@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FactoryManager;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
@@ -41,7 +37,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	private Timer fPingTimer;
 	private final transient ClientData fClientData;
 	private ClientState<? extends LogicModule, ? extends FantasyFootballClient> fState;
-	private final ClientStateFactory fStateFactory;
+	protected ClientStateFactory<? extends FantasyFootballClient> fStateFactory;
 	private final ClientCommandHandlerFactory fCommandHandlerFactory;
 	private final ClientCommunication fCommunication;
 	private Game fGame;
@@ -62,9 +58,9 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 		fCommandEndpoint = new CommandEndpoint(this);
 		fPingTimer = new Timer(true);
-		fStateFactory = new ClientStateFactory(this);
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
+		setClientStateFactory();
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
 		setGame(new Game(getFactorySource(), factoryManager));
@@ -80,6 +76,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		}
 		return 0;
 	}
+
+	protected abstract void setClientStateFactory();
 
 	public abstract UserInterface getUserInterface();
 
@@ -298,6 +296,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		logError(gameId(), message);
 	}
 
+	@SuppressWarnings("unused")
 	public void logDebug(String message) {
 		logDebug(gameId(), message);
 	}

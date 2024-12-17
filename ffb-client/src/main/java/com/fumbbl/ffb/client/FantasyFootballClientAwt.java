@@ -6,6 +6,7 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -14,11 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -53,6 +51,11 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 
+	}
+
+	@Override
+	protected void setClientStateFactory() {
+		fStateFactory = new ClientStateFactoryAwt(this);
 	}
 
 	public UserInterface getUserInterface() {
