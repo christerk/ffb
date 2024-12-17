@@ -12,7 +12,6 @@ import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.INetCommandHandler;
-import com.fumbbl.ffb.net.NetCommand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,10 +75,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			return;
 		}
 		getClient().setCurrentMouseButton(pMouseEvent.getButton());
-	}
-
-	public void handleCommand(NetCommand pNetCommand) {
-
 	}
 
 	// Helper Methods

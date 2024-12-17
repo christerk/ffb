@@ -18,10 +18,10 @@ import java.util.Map;
  */
 public class ActionKeyBindings {
 
-	private final FantasyFootballClient fClient;
+	private final FantasyFootballClientAwt fClient;
 	private final Map<ActionKeyGroup, List<ActionKeyAction>> fActionsByGroup;
 
-	public ActionKeyBindings(FantasyFootballClient pClient) {
+	public ActionKeyBindings(FantasyFootballClientAwt pClient) {
 		fClient = pClient;
 		fActionsByGroup = new HashMap<>();
 		init();
@@ -167,7 +167,7 @@ public class ActionKeyBindings {
 		}
 	}
 
-	public FantasyFootballClient getClient() {
+	public FantasyFootballClientAwt getClient() {
 		return fClient;
 	}
 

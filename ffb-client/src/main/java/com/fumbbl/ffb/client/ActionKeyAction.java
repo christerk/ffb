@@ -1,8 +1,6 @@
 package com.fumbbl.ffb.client;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -10,16 +8,16 @@ import java.awt.event.ActionEvent;
  */
 public class ActionKeyAction extends AbstractAction {
 
-	private final FantasyFootballClient fClient;
+	private final FantasyFootballClientAwt fClient;
 	private final ActionKey fActionKey;
 	private final KeyStroke fKeyStroke;
 	private final int inputMap;
 
-	public ActionKeyAction(FantasyFootballClient pClient, KeyStroke pKeyStroke, ActionKey pActionKey) {
+	public ActionKeyAction(FantasyFootballClientAwt pClient, KeyStroke pKeyStroke, ActionKey pActionKey) {
 		this(pClient, pKeyStroke, pActionKey, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 	}
 
-	public ActionKeyAction(FantasyFootballClient pClient, KeyStroke pKeyStroke, ActionKey pActionKey, int inputMap) {
+	public ActionKeyAction(FantasyFootballClientAwt pClient, KeyStroke pKeyStroke, ActionKey pActionKey, int inputMap) {
 		fClient = pClient;
 		fKeyStroke = pKeyStroke;
 		fActionKey = pActionKey;
@@ -30,7 +28,7 @@ public class ActionKeyAction extends AbstractAction {
 		getClient().getClientState().actionKeyPressed(getActionKey());
 	}
 
-	public FantasyFootballClient getClient() {
+	public FantasyFootballClientAwt getClient() {
 		return fClient;
 	}
 

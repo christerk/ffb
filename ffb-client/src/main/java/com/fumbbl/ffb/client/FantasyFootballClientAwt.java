@@ -6,7 +6,9 @@ import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -50,7 +52,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
-
+		setClientStateFactory();
 	}
 
 	@Override
@@ -224,5 +226,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		} catch (UnknownHostException pUnknownHostException) {
 			throw new FantasyFootballException(pUnknownHostException);
 		}
+	}
+
+	@Override
+	public ClientStateAwt<? extends LogicModule> getClientState() {
+		return (ClientStateAwt<? extends LogicModule>) super.getClientState();
 	}
 }

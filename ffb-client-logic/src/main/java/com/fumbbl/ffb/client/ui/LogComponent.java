@@ -33,7 +33,8 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		this.styleProvider = styleProvider;
 		fLogTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
-		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
+		// TODO reenable after moving component to UI element
+		//getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
 		add(fLogScrollPane, BorderLayout.CENTER);
 

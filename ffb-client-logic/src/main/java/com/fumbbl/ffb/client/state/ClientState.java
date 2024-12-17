@@ -2,8 +2,12 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.net.NetCommand;
+
+import java.awt.event.MouseEvent;
 
 public abstract class ClientState<T extends LogicModule, C extends FantasyFootballClient> {
 
@@ -63,6 +67,51 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	public T getLogicModule() {
 		return logicModule;
+	}
+
+	public void handleCommand(NetCommand pNetCommand) {
+
+	}
+
+	// TODO remove once components and dialogs are moved to UI module
+	public void setClickable(boolean b) {
+	}
+
+	public void mouseMoved(MouseEvent pMouseEvent) {
+	}
+
+	public void mouseDragged(MouseEvent pMouseEvent) {
+	}
+
+	public void mouseClicked(MouseEvent pMouseEvent) {
+	}
+
+	public void mouseEntered(MouseEvent pMouseEvent) {
+	}
+
+	public void mouseExited(MouseEvent pMouseEvent) {
+	}
+
+	public void mousePressed(MouseEvent pMouseEvent) {
+	}
+
+	public void mouseReleased(MouseEvent pMouseEvent) {
+	}
+
+	public boolean actionKeyPressed(ActionKey actionKey) {
+		return false;
+	}
+
+	public boolean isInitDragAllowed(FieldCoordinate pCoordinate) {
+		return true;
+	}
+
+	public boolean isDragAllowed(FieldCoordinate coordinate) {
+		return true;
+	}
+
+	public boolean isDropAllowed(FieldCoordinate dragEndPosition) {
+		return true;
 	}
 }
 

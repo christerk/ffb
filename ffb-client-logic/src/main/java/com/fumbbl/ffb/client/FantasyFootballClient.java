@@ -60,7 +60,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		fPingTimer = new Timer(true);
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
-		setClientStateFactory();
 		factoryManager = new FactoryManager();
 		factories = factoryManager.getFactoriesForContext(getContext());
 		setGame(new Game(getFactorySource(), factoryManager));
@@ -164,7 +163,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	}
 
 	// TODO remove from generic client
-	public abstract ActionKeyBindings getActionKeyBindings();
+	//public abstract ActionKeyBindings getActionKeyBindings();
 
 	public abstract ClientReplayer getReplayer();
 
