@@ -2,25 +2,12 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
@@ -31,20 +18,8 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.IStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.BlitzBlock;
-import com.fumbbl.ffb.server.step.generator.Block;
-import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Move;
-import com.fumbbl.ffb.server.step.generator.PileDriver;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.generator.*;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -230,6 +205,10 @@ public class StepEndBlocking extends AbstractStep {
         .ifPresent(skill -> game.getDefender().markUsed(skill, game));
     }
 
+    if (actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES) {
+      actingPlayer.markSkillUsed(NamedProperties.canBlockOverDistance);
+    }
+
     if (fEndTurn || fEndPlayerAction) {
       if (actingPlayer.getPlayerAction().isKickingDowned()) {
         // special case where we need to reset player state base. Otherwise, when changing the acting player to null
@@ -340,7 +319,7 @@ public class StepEndBlocking extends AbstractStep {
           useHitAndRun = false;
         }
 
-        boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction() == PlayerAction.BLOCK
+        boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction().isBlockAction()
           && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
           && ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
           && regularBlock;
@@ -428,7 +407,7 @@ public class StepEndBlocking extends AbstractStep {
               blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
               ServerUtilBlock.updateDiceDecorations(game);
             } else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
-              && attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK)) {
+                && attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction().isBlockAction())) {
               game.setLastDefenderId(defenderId);
               UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
               if (isBlitz) {

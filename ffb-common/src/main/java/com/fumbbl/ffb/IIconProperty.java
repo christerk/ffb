@@ -182,6 +182,7 @@ public interface IIconProperty {
 	String ACTION_BREATHE_FIRE = "action.breatheFire";
 	String ACTION_STARTED_BLASTIN = "action.startedBlastin";
 	String ACTION_THE_FLASHING_BLADE = "action.theFlashingBlade";
+	String ACTION_VICIOUS_VINES = "action.viciousVines";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";

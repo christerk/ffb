@@ -12,7 +12,9 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("2.33.0"));
+		versions.add(new VersionChangeList("2.33.0")
+			.addFeature("Vicious Vines")
+		);
 
 		versions.add(new VersionChangeList("2.32.0")
 			.addBugfix("Hit And Run: Rooted players were able to use Hit And Run after performing a block")

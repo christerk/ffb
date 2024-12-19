@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2016;
+package com.fumbbl.ffb.server.step.bb2016.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -12,11 +12,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.*;
 
 /**
  * Step in block sequence to handle both down block result.

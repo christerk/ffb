@@ -61,6 +61,7 @@ public interface IClientProperty {
 	String KEY_TOOLBAR_ILLEGAL_PROCEDURE = "key.toolbar.illegal.procedure";
 	String KEY_PLAYER_ACTION_ALL_YOU_CAN_EAT = "key.player.action.allYouCanEat";
 	String KEY_PLAYER_ACTION_THE_FLASHING_BLADE = "key.player.action.theFlashingBlade";
+	String KEY_PLAYER_ACTION_VICIOUS_VINES = "key.player.action.viciousVines";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";

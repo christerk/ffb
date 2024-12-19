@@ -1,14 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PushbackMode;
-import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -20,9 +13,9 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2016.StepBlockDodge;
-import com.fumbbl.ffb.server.step.bb2016.StepBlockDodge.StepState;
 import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
+import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge;
+import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.skill.Dodge;

@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRolledActions;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.factory.JumpUpModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -52,7 +48,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						&& UtilCards.hasUnusedSkill(actingPlayer, skill))
 						|| (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
 					game.setConcessionPossible(false);
-					if ((PlayerAction.BLOCK == actingPlayer.getPlayerAction())
+					if ((actingPlayer.getPlayerAction().isBlockAction())
 							|| (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
 						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)

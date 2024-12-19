@@ -41,6 +41,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBlastRemotePlayer = new NamedProperty("Can Blast Remote Player");
 	public static final ISkillProperty canBlockMoreThanOnce = new NamedProperty("Can Block More Than Once");
 	public static final ISkillProperty canBlockTwoAtOnce = new NamedProperty("Can Block Two At Once");
+	public static final ISkillProperty canBlockOverDistance = new NamedProperty("Can Block Over Distance");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
 	public static final ISkillProperty canChooseToIgnoreDodgeModifierAfterRoll = new NamedProperty("Can Choose To Ignore Dodge Modifier After Roll");
