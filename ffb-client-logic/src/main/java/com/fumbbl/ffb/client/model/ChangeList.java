@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.33.0")
 			.addFeature("Vicious Vines")
 			.addFeature("Furious Outburst")
+			.addBugfix("Multi Block and Pile Driver: If a player with both skills used multi block and was then standing next to a knocked down player the game crashed")
 		);
 
 		versions.add(new VersionChangeList("2.32.0")
