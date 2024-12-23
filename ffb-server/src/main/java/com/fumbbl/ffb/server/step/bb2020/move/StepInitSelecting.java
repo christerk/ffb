@@ -127,6 +127,12 @@ public final class StepInitSelecting extends AbstractStep {
 							} else {
 								passState.reset();
 							}
+
+							forceGotoOnDispatch = playerAction != null && playerAction.forceDispatch();
+							if (forceGotoOnDispatch) {
+								fDispatchPlayerAction = playerAction;
+							}
+
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 								playerAction, actingPlayerCommand.isJumping());
 						}

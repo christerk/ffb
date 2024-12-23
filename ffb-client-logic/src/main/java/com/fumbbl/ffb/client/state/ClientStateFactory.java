@@ -80,6 +80,7 @@ public class ClientStateFactory {
 		register(new ClientStateTrickster(pClient));
 		register(new ClientStateThenIStartedBlastin(pClient));
 		register(new ClientStateStab(pClient));
+		register(new ClientStateFuriousOutburst(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -227,6 +228,9 @@ public class ClientStateFactory {
 									break;
 								case THE_FLASHING_BLADE:
 									clientStateId = ClientStateId.STAB;
+									break;
+								case FURIOUS_OUTPBURST:
+									clientStateId = ClientStateId.FURIOUS_OUTBURST;
 									break;
 								default:
 									break;

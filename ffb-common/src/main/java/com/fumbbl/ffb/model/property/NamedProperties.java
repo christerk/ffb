@@ -125,6 +125,7 @@ public class NamedProperties {
 	public static final ISkillProperty canStandUpTeamMates = new NamedProperty("Can Stand Up Team-Mates");
 	public static final ISkillProperty canStealBallFromOpponent = new NamedProperty("Can Steal Ball From Opponent");
 	public static final ISkillProperty canTakeDownPlayersWithHimOnBothDown = new NamedProperty("Can Take Down Players With Him On Both Down");
+	public static final ISkillProperty canTeleportBeforeAndAfterAvRollAttack = new NamedProperty("Can Teleport Before And After Av Roll Attack");
 	public static final ISkillProperty canThrowTeamMates = new NamedProperty("Can Throw Team Mates");
 	public static final ISkillProperty canUseChainsawOnDownedOpponents = new NamedProperty("Can Use Chainsaw On Downed Opponents");
 	public static final ISkillProperty canUseThrowBombActionTwice = new NamedProperty("Can Use Throw Bomb Action Twice");
@@ -227,6 +228,7 @@ public class NamedProperties {
 	public static final ISkillProperty providesChainsawBlockAlternative = new NamedProperty("Provides Chainsaw Block Alternative");
 	public static final ISkillProperty providesChainsawFoulingAlternative = new NamedProperty("Provides Chainsaw Fouling Alternative");
 	public static final ISkillProperty providesMultipleBlockAlternative = new NamedProperty("Provides Multiple Block Alternative");
+	public static final ISkillProperty providesStabBlockAlternative = new NamedProperty("Provides Stab Block Alternative");
 	public static final ISkillProperty reducesArmourToFixedValue = new NamedProperty("Reduces Armour To Fixed Value");
 	public static final ISkillProperty reducesLonerRollIfPartnerIsHurt = new NamedProperty("Reduces Loner If Partner Is Hurt");
 	public static final ISkillProperty requiresSecondCasualtyRoll = new NamedProperty("Requires Second Casualty Roll");

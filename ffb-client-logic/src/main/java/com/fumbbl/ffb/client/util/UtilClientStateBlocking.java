@@ -189,7 +189,7 @@ public class UtilClientStateBlocking {
 		IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
 		DimensionProvider dimensionProvider = pClientState.dimensionProvider();
 		List<JMenuItem> menuItemList = new ArrayList<>();
-		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
+		if (attacker.hasSkillProperty(NamedProperties.providesStabBlockAlternative)) {
 			JMenuItem stabAction = new JMenuItem(dimensionProvider, "Stab Opponent",
 				pClientState.createMenuIcon(iconCache, IIconProperty.ACTION_STAB));
 			stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);

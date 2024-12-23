@@ -55,4 +55,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;
 	int KEY_THE_FLASHING_BLADE = KeyEvent.VK_D;
 	int KEY_VICIOUS_VINES = KeyEvent.VK_PLUS;
+	int KEY_FURIOUS_OUTBURST = KeyEvent.VK_ASTERISK;
 }

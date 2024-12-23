@@ -14,6 +14,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.33.0")
 			.addFeature("Vicious Vines")
+			.addFeature("Furious Outburst")
 		);
 
 		versions.add(new VersionChangeList("2.32.0")

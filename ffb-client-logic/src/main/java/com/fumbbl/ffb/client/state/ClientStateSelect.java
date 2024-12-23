@@ -170,6 +170,11 @@ public class ClientStateSelect extends ClientState {
 						communication.sendActingPlayer(pPlayer, PlayerAction.VICIOUS_VINES, false);
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST:
+					if (isFuriousOutburstAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.FURIOUS_OUTPBURST, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -321,6 +326,9 @@ public class ClientStateSelect extends ClientState {
 		}
 		if (isViciousVinesAvailable(pPlayer)) {
 			menuItemList.add(createViciousVinesItem(iconCache));
+		}
+		if (isFuriousOutburstAvailable(pPlayer)) {
+			menuItemList.add(createFuriousOutburstItem(iconCache));
 		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem(dimensionProvider(), "Recover from Confusion & End Move",
@@ -735,6 +743,26 @@ public class ClientStateSelect extends ClientState {
 			createMenuIcon(iconCache, IIconProperty.ACTION_VICIOUS_VINES));
 		item.setMnemonic(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES);
 		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, 0));
+		return item;
+	}
+
+	protected boolean isFuriousOutburstAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		return (playerState != null) && playerState.isActive()
+			&& !game.getActingPlayer().isStandingUp()
+			&& !game.getTurnData().isBlitzUsed()
+			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
+			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));
+	}
+
+	protected JMenuItem createFuriousOutburstItem(IconCache iconCache) {
+		JMenuItem item = new JMenuItem(dimensionProvider(), "Furious Outburst",
+			createMenuIcon(iconCache, IIconProperty.ACTION_FURIOUS_OUTBURST));
+		item.setMnemonic(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
+		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, 0));
 		return item;
 	}
 }
