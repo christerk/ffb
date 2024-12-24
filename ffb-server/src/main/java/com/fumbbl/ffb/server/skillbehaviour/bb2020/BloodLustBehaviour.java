@@ -112,10 +112,10 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 				}
 				if (status == ActionStatus.FAILURE) {
 					if (Arrays.asList(new PlayerAction[]
-							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE}
+							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}
 						)
 						.contains(actingPlayer.getPlayerAction())) {
-						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE}).contains(actingPlayer.getPlayerAction());
+						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}).contains(actingPlayer.getPlayerAction());
 
 						UtilServerDialog.showDialog(step.getGameState(), new DialogBloodlustActionParameter(changeToMove), false);
 						step.getResult().setNextAction(StepAction.CONTINUE);
