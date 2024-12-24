@@ -105,6 +105,7 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
+		fUserInterface.getGameMenuBar().refresh();
 
 		fStateFactory = new ClientStateFactory(this);
 		fCommandEndpoint = new CommandEndpoint(this);

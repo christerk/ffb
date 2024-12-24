@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.33.0")
+			.addBugfix("Custom font color was not applied to initial log messages")
 			.addFeature("Vicious Vines")
 			.addFeature("Furious Outburst")
 			.addBugfix("Multi Block and Pile Driver: If a player with both skills used multi block and was then standing next to a knocked down player the game crashed")
