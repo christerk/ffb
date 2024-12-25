@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.net.ServerStatus;
 
 import java.util.Collections;
 import java.util.Map;
@@ -121,6 +122,11 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		@Override
 		public IProgressListener progressListener() {
 			return this.clientStateReplay;
+		}
+
+		@Override
+		public void replayUnavailable(ServerStatus status) {
+			clientStateReplay.getClient().getUserInterface().getStatusReport().reportStatus(status);
 		}
 	}
 }

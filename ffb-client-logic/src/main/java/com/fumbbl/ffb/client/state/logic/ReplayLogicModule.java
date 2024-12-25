@@ -2,7 +2,11 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.ClientParameters;
+import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IProgressListener;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
@@ -108,7 +112,7 @@ public class ReplayLogicModule extends LogicModule {
 				ServerCommandStatus statusCommand = (ServerCommandStatus) pNetCommand;
 				if (ClientMode.REPLAY == client.getMode()) {
 					if (ServerStatus.REPLAY_UNAVAILABLE == statusCommand.getServerStatus()) {
-						client.getUserInterface().getStatusReport().reportStatus(statusCommand.getServerStatus());
+						callbacks.replayUnavailable(statusCommand.getServerStatus());
 						client.getCommunication().sendCloseSession();
 					} else {
 						startLoadingReplay(client.getReplayer(), client.getParameters());
@@ -179,5 +183,10 @@ public class ReplayLogicModule extends LogicModule {
 		 * @return progress listener allowing to react on the different stages of replay initialization
 		 */
 		IProgressListener progressListener();
+
+		/**
+		 * Called if the replay was not found on server side, connection will be closed
+		 */
+		void replayUnavailable(ServerStatus status);
 	}
 }
