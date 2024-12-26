@@ -159,6 +159,9 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 						new DropPlayerContext(injuryResultDefender, GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS.equalsIgnoreCase(chainsawOption),
 							true, fGotoLabelOnSuccess, game.getDefenderId(),
 							ApothecaryMode.DEFENDER, true, defenderState.isProneOrStunned())));
+					// we usually do not need that but in case the player can continue after a chainsaw blitz we remove the state
+					// as this can be confusing on the UI side, e.g. with Maximum Carnage
+					game.getFieldModel().setPlayerState(game.getDefender(), defenderState.removeSelectedBlitzTarget());
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),

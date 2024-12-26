@@ -51,7 +51,7 @@ public class MaximumCarnageLogicModule extends BlockLogicModule {
 	protected void performAvailableAction(Player<?> player, ClientAction action) {
 		switch (action) {
 			case END_MOVE:
-				super.perform(player, action);
+				super.performAvailableAction(player, action);
 				break;
 			default:
 				break;
