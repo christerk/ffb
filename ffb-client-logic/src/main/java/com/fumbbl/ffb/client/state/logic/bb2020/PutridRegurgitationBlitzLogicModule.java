@@ -35,7 +35,8 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
 			} else {
 				if (PlayerAction.PUTRID_REGURGITATION_BLITZ == actingPlayer.getPlayerAction()
-					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+					&& extension.isBlockable(game, player)) {
 					extension.block(actingPlayer.getPlayerId(), player, false, false, true, false);
 					return new InteractionResult(InteractionResult.Kind.HANDLED);
 				}
@@ -49,6 +50,7 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 		return new HashSet<ClientAction>() {{
 			add(ClientAction.PROJECTILE_VOMIT);
 			add(ClientAction.MOVE);
+			add(ClientAction.END_MOVE);
 		}};
 	}
 
@@ -64,6 +66,9 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 			case MOVE:
 				communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
 				break;
+			case END_MOVE:
+				super.performAvailableAction(player, action);
+				break;
 			default:
 				break;
 		}
@@ -75,5 +80,16 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return actingPlayer.hasBlocked() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
 			&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(game.getActingTeam()), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
+	}
+
+	@Override
+	public InteractionResult playerPeek(Player<?> player) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ && extension.isBlockable(game, player)) {
+			return new InteractionResult(InteractionResult.Kind.PERFORM);
+		} else {
+			return new InteractionResult(InteractionResult.Kind.RESET);
+		}
 	}
 }

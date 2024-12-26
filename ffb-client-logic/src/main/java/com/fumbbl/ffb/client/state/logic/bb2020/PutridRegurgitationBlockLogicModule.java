@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
@@ -26,7 +26,8 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
 			return super.playerInteraction(player);
-		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)) {
+		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+			&& extension.isBlockable(game, player)) {
 			extension.block(actingPlayer.getPlayerId(), player, false, false, true, false);
 			return new InteractionResult(InteractionResult.Kind.HANDLED);
 		}
@@ -35,7 +36,10 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 
 	@Override
 	public Set<ClientAction> availableActions() {
-		return Collections.singleton(ClientAction.PROJECTILE_VOMIT);
+		return new HashSet<ClientAction>() {{
+			add(ClientAction.PROJECTILE_VOMIT);
+			add(ClientAction.END_MOVE);
+		}};
 	}
 
 	@Override
@@ -47,8 +51,22 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 			case PROJECTILE_VOMIT:
 				communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUTRID_REGURGITATION_BLITZ, actingPlayer.isJumping());
 				break;
+			case END_MOVE:
+				super.performAvailableAction(player, action);
+				break;
 			default:
 				break;
+		}
+	}
+
+	@Override
+	public InteractionResult playerPeek(Player<?> player) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLOCK && extension.isBlockable(game, player)) {
+			return new InteractionResult(InteractionResult.Kind.PERFORM);
+		} else {
+			return new InteractionResult(InteractionResult.Kind.RESET);
 		}
 	}
 }

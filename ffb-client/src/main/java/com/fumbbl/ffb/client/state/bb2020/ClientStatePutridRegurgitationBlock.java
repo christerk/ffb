@@ -35,6 +35,7 @@ public class ClientStatePutridRegurgitationBlock extends AbstractClientStateBloc
 	protected Map<Integer, ClientAction> actionMapping() {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 		}};
 	}
 }
