@@ -233,6 +233,7 @@ public class StepInitMoving extends AbstractStep {
 						if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
 							// we have to reset this here since other logic would otherwise prevent the vomit attack
 							// when the target does not match the selection state data
+							// there is another line like this in StepEndBlocking#executeStep
 							game.getFieldModel().setTargetSelectionState(null);
 						}
 					} else {
