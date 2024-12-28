@@ -22,6 +22,7 @@ import com.fumbbl.ffb.net.NetCommand;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -190,7 +191,18 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 
 	@Override
 	protected Map<Integer, ClientAction> actionMapping() {
-		return null;
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE,ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB,ClientAction.HAIL_MARY_BOMB);
+			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS,ClientAction.TREACHEROUS);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM,ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY,ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES,ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX,ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK,ClientAction.BLACK_INK);
+			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY,ClientAction.CATCH_OF_THE_DAY);
+			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN,ClientAction.THEN_I_STARTED_BLASTIN);
+		}};
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

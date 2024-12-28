@@ -1,13 +1,7 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -21,8 +15,6 @@ import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN;
 
 public class BombLogicModule extends LogicModule {
 
@@ -199,7 +191,7 @@ public class BombLogicModule extends LogicModule {
 
 	public boolean isEndTurnActionAvailable() {
 		Game game = client.getGame();
-		return !game.getTurnMode().isBombTurn();
+		return !game.getTurnMode().isBombTurn() && !game.getActingPlayer().isMustCompleteAction();
 	}
 
 	public boolean playerIsAboutToThrow() {

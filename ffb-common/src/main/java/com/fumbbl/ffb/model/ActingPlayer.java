@@ -52,6 +52,7 @@ public class ActingPlayer implements IJsonSerializable {
   private boolean wasProne;
   private boolean jumpsWithoutModifiers;
   private boolean heldInPlace;
+  private boolean mustCompleteAction;
   private PlayerState oldPlayerState;
   private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
@@ -91,6 +92,7 @@ public class ActingPlayer implements IJsonSerializable {
     fumblerooskiePending = false;
     jumpsWithoutModifiers = false;
     heldInPlace = false;
+    mustCompleteAction = false;
     Player<?> player = getGame().getPlayerById(getPlayerId());
     setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
     skillsGrantedBy.clear();
@@ -120,6 +122,18 @@ public class ActingPlayer implements IJsonSerializable {
 
     fCurrentMove = pCurrentMove;
     notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);
+  }
+
+  public boolean isMustCompleteAction() {
+    return mustCompleteAction;
+  }
+
+  public void setMustCompleteAction(boolean mustCompleteAction) {
+    if (this.mustCompleteAction == mustCompleteAction) {
+      return;
+    }
+    this.mustCompleteAction = mustCompleteAction;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_MUST_COMPLETE_ACTION, this.mustCompleteAction);
   }
 
   public boolean isGoingForIt() {
@@ -409,7 +423,7 @@ public class ActingPlayer implements IJsonSerializable {
   }
 
   public boolean hasActed() {
-    return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || (fUsedSkills.size() > 0));
+    return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || (!fUsedSkills.isEmpty()));
   }
 
   public boolean hasActedIgnoringNegativeTraits() {

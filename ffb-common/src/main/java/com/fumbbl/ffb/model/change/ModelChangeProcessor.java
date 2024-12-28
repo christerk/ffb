@@ -115,6 +115,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_HELD_IN_PLACE:
 				pGame.getActingPlayer().setHeldInPlace((Boolean) pModelChange.getValue());
 				return true;
+			case ACTING_PLAYER_SET_MUST_COMPLETE_ACTION:
+				pGame.getActingPlayer().setMustCompleteAction((Boolean) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_ADD_BLOOD_SPOT:
 				pGame.getFieldModel().add((BloodSpot) pModelChange.getValue());
 				return true;
@@ -631,9 +634,6 @@ public class ModelChangeProcessor {
 				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
 					pModelChange.getValue());
 
-			default:
-				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), pModelChange.getValue());
-
 			case TEAM_RESULT_SET_CONCEDED:
 			case TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER:
 			case TEAM_RESULT_SET_FAME:
@@ -673,6 +673,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_COACH_BANNED:
 				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
 					pModelChange.getValue());
+
+			default:
+				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), pModelChange.getValue());
 
 		}
 
