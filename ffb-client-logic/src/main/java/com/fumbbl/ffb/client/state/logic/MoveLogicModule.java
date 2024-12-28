@@ -377,7 +377,8 @@ public class MoveLogicModule extends LogicModule {
 				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
 				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
 			} else {
-				return new InteractionResult(InteractionResult.Kind.DESELECT);
+				deselectActingPlayer();
+				return new InteractionResult(InteractionResult.Kind.HANDLED);
 			}
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);

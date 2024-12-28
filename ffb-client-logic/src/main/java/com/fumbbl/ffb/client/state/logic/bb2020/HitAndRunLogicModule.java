@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.state.logic.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -50,7 +49,7 @@ public class HitAndRunLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.DESELECT);
+			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
@@ -60,7 +59,7 @@ public class HitAndRunLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.DESELECT);
+			return new InteractionResult(InteractionResult.Kind.RESET);
 		} else {
 			return new InteractionResult(InteractionResult.Kind.IGNORE);
 		}

@@ -5,7 +5,6 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -32,7 +31,6 @@ public class RangeGridState {
 	}
 
 	public InteractionResult refreshRangeGrid() {
-		UserInterface userInterface = client.getUserInterface();
 		if (showRangeGrid) {
 			Game game = client.getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
@@ -48,7 +46,7 @@ public class RangeGridState {
 				return new InteractionResult(InteractionResult.Kind.PERFORM, actingPlayerCoordinate);
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.DESELECT);
+		return new InteractionResult(InteractionResult.Kind.RESET);
 	}
 
 	public InteractionResult refreshSettings() {

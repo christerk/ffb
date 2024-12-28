@@ -120,9 +120,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
 				break;
-			case DESELECT:
-				logicModule.deselectActingPlayer();
-				break;
 			case MOVE:
 				movePlayer(result.getCoordinate());
 				break;

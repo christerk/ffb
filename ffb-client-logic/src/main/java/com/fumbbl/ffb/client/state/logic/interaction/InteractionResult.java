@@ -62,7 +62,6 @@ public class InteractionResult {
   }
 
   public enum Kind {
-    DESELECT,
     DRAW,
     HANDLED,
     IGNORE,

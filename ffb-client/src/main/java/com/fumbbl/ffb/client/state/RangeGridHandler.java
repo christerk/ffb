@@ -37,7 +37,7 @@ public class RangeGridHandler {
 					userInterface.getFieldComponent().refresh();
 				}
 				break;
-			case DESELECT:
+			case RESET:
 				if (userInterface.getFieldComponent().getLayerRangeGrid().clearRangeGrid()) {
 					userInterface.getFieldComponent().refresh();
 				}
@@ -47,6 +47,7 @@ public class RangeGridHandler {
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isShowRangeGrid() {
 		return rangeGridState.isShowRangeGrid();
 	}

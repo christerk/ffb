@@ -42,7 +42,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	@Override
 	protected void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
-		if (result.getKind() == InteractionResult.Kind.DESELECT) {
+		if (result.getKind() == InteractionResult.Kind.SHOW_ACTIONS) {
 			createAndShowPopupMenuForActingPlayer();
 		}
 	}
@@ -67,7 +67,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	protected boolean mouseOverPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerPeek(player);
 		switch (result.getKind()) {
-			case DESELECT:
+			case RESET:
 				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 				break;
 			case IGNORE:
