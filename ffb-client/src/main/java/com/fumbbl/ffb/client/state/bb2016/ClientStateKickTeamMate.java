@@ -68,7 +68,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 				showPopupMenuForPlayer(player);
 				break;
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}

@@ -54,7 +54,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 				userInterface.getFieldComponent().refresh();
 				break;
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}

@@ -251,7 +251,7 @@ public class MoveLogicModule extends LogicModule {
 		client.getCommunication().sendEndTurn(game.getTurnMode());
 	}
 
-	public MoveSquare moveSquare(FieldCoordinate coordinate) {
+	private MoveSquare moveSquare(FieldCoordinate coordinate) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinate);
@@ -280,14 +280,14 @@ public class MoveLogicModule extends LogicModule {
 		}
 	}
 
-	public boolean movePlayer(FieldCoordinate pCoordinate) {
+	protected boolean movePlayer(FieldCoordinate pCoordinate) {
 		if (pCoordinate == null) {
 			return false;
 		}
 		return movePlayer(new FieldCoordinate[]{pCoordinate});
 	}
 
-	public boolean movePlayer(FieldCoordinate[] pCoordinates) {
+	private boolean movePlayer(FieldCoordinate[] pCoordinates) {
 		if (!ArrayTool.isProvided(pCoordinates)) {
 			return false;
 		}
@@ -383,8 +383,36 @@ public class MoveLogicModule extends LogicModule {
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
-			if (moveSquare != null) {
-				return new InteractionResult(InteractionResult.Kind.MOVE, position);
+			if (moveSquare != null && movePlayer(position)) {
+				return new InteractionResult(InteractionResult.Kind.PERFORM, position);
+			}
+		}
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	@Override
+	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
+		MoveSquare moveSquare = moveSquare(coordinate);
+		FieldCoordinate[] movePath = automovePath(coordinate);
+			if (ArrayTool.isProvided(movePath)) {
+				movePlayer(movePath);
+				return new InteractionResult(InteractionResult.Kind.HANDLED);
+			} else if (moveSquare != null){
+				moveSquare(coordinate);
+				return new InteractionResult(InteractionResult.Kind.HANDLED);
+			}
+		return new InteractionResult(InteractionResult.Kind.IGNORE);
+	}
+
+	@Override
+	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
+		MoveSquare moveSquare = moveSquare(coordinate);
+		if (moveSquare != null) {
+			return new InteractionResult(InteractionResult.Kind.PERFORM, moveSquare);
+		} else {
+			FieldCoordinate[] shortestPath = automovePath(coordinate);
+			if (ArrayTool.isProvided(shortestPath)) {
+				return new InteractionResult(InteractionResult.Kind.RESET, shortestPath);
 			}
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);

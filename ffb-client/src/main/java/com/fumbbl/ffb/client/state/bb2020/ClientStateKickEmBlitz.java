@@ -25,7 +25,7 @@ public class ClientStateKickEmBlitz extends AbstractClientStateBlitz<KickEmBlitz
 				createAndShowPopupMenuForActingPlayer();
 				break;
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}

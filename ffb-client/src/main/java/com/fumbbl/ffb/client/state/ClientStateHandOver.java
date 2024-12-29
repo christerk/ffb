@@ -39,7 +39,7 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}

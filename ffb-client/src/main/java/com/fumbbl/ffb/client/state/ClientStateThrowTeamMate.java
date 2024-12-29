@@ -58,7 +58,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 				userInterface.getFieldComponent().refresh();
 				break;
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}

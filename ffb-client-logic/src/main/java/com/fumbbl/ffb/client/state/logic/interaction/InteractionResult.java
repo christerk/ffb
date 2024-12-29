@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.interaction;
 
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.SpecialEffect;
+import com.fumbbl.ffb.*;
 
 public class InteractionResult {
 
@@ -12,33 +9,46 @@ public class InteractionResult {
   private final RangeRuler rangeRuler;
   private final PushbackSquare pushbackSquare;
   private final SpecialEffect specialEffect;
-
-  public InteractionResult(Kind kind, PushbackSquare pushbackSquare) {
-    this(kind, null, null, pushbackSquare, null);
-  }
+  private final MoveSquare moveSquare;
+  private final FieldCoordinate[] path;
 
   public InteractionResult(Kind kind) {
-    this(kind, null, null, null, null);
+    this(kind, null, null, null, null, null, null);
+  }
+
+  public InteractionResult(Kind kind, MoveSquare moveSquare) {
+    this(kind, null, null, null, null, moveSquare, null);
+  }
+
+  public InteractionResult(Kind kind,  FieldCoordinate[] path) {
+    this(kind, null, null, null, null, null, path);
+  }
+
+  public InteractionResult(Kind kind, PushbackSquare pushbackSquare) {
+    this(kind, null, null, pushbackSquare, null, null, null);
   }
 
   public InteractionResult(Kind kind, RangeRuler rangeRuler) {
-    this(kind, null, rangeRuler, null, null);
+    this(kind, null, rangeRuler, null, null, null, null);
   }
 
   public InteractionResult(Kind kind, FieldCoordinate coordinates) {
-    this(kind, coordinates, null, null, null);
+    this(kind, coordinates, null, null, null, null, null);
   }
 
-  public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler, PushbackSquare pushbackSquare, SpecialEffect specialEffect) {
+  public InteractionResult(Kind kind, FieldCoordinate coordinate, SpecialEffect specialEffect) {
+    this(kind, coordinate, null, null, specialEffect, null, null);
+  }
+
+
+  public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler, PushbackSquare pushbackSquare, SpecialEffect specialEffect, MoveSquare moveSquare, FieldCoordinate[] path) {
     this.kind = kind;
     this.coordinate = coordinate;
     this.rangeRuler = rangeRuler;
     this.pushbackSquare = pushbackSquare;
     this.specialEffect = specialEffect;
-  }
-
-	public InteractionResult(Kind kind, FieldCoordinate coordinate, SpecialEffect specialEffect) {
-    this(kind, coordinate, null, null, specialEffect);
+		this.moveSquare = moveSquare;
+		this.path = path;
 	}
 
 	public Kind getKind() {
@@ -61,12 +71,19 @@ public class InteractionResult {
     return specialEffect;
   }
 
+  public FieldCoordinate[] getPath() {
+    return path;
+  }
+
+  public MoveSquare getMoveSquare() {
+    return moveSquare;
+  }
+
   public enum Kind {
     DRAW,
     HANDLED,
     IGNORE,
     INVALID,
-    MOVE,
     PERFORM,
     RESET,
     SHOW_ACTIONS,

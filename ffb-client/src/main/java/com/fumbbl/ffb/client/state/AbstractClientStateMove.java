@@ -39,20 +39,21 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
-		Game game = getClient().getGame();
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		MoveSquare moveSquare = logicModule.moveSquare(pCoordinate);
-		if (moveSquare != null) {
-			setCustomCursor(moveSquare);
-		} else {
-			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-			FieldCoordinate[] shortestPath = logicModule.automovePath(pCoordinate);
-			if (ArrayTool.isProvided(shortestPath)) {
-				fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		switch (result.getKind()) {
+			case PERFORM:
+				setCustomCursor(result.getMoveSquare());
+				break;
+			case RESET:
+				Game game = getClient().getGame();
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				fieldComponent.getLayerUnderPlayers().drawMovePath(result.getPath(), actingPlayer.getCurrentMove());
 				fieldComponent.refresh();
-			}
+				break;
+			default:
+				break;
 		}
 		return super.mouseOverField(pCoordinate);
 	}
@@ -94,34 +95,33 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {
-		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-		MoveSquare moveSquare = logicModule.moveSquare(pCoordinate);
-		FieldCoordinate[] movePath = fieldComponent.getLayerUnderPlayers().getMovePath();
-		if (ArrayTool.isProvided(movePath) || (moveSquare != null)) {
-			if (ArrayTool.isProvided(movePath)) {
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case HANDLED:
+				FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 				if (fieldComponent.getLayerUnderPlayers().clearMovePath()) {
 					fieldComponent.refresh();
 				}
-				movePlayer(movePath);
-			} else {
-				movePlayer(pCoordinate);
-			}
+				playerWasMoved();
+				break;
+			default:
+				break;
 		}
 	}
 
 
 	protected void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		evaluateClickOnPlayer(result, pPlayer);
+		evaluateClick(result, pPlayer);
 	}
 
-	protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
+	protected void evaluateClick(InteractionResult result, Player<?> player) {
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
 				createAndShowPopupMenuForActingPlayer();
 				break;
-			case MOVE:
-				movePlayer(result.getCoordinate());
+			case PERFORM:
+				playerWasMoved();
 				break;
 			default:
 				break;
@@ -269,7 +269,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			MoveSquare[] moveSquares = game.getFieldModel().getMoveSquares();
 			for (MoveSquare moveSquare : moveSquares) {
 				if (moveSquare.getCoordinate().equals(moveCoordinate)) {
-					movePlayer(moveCoordinate);
+					clickOnField(moveCoordinate);
 					break;
 				}
 			}
@@ -341,18 +341,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		sideBarHome.refresh();
 	}
 
-	protected void movePlayer(FieldCoordinate pCoordinate) {
-		if (pCoordinate == null) {
-			return;
-		}
-		movePlayer(new FieldCoordinate[]{pCoordinate});
-	}
-
-	protected void movePlayer(FieldCoordinate[] pCoordinates) {
-		if (logicModule.movePlayer(pCoordinates)) {
-			getClient().getGame().getFieldModel().clearMoveSquares();
-			getClient().getUserInterface().getFieldComponent().refresh();
-		}
+	protected void playerWasMoved() {
+		getClient().getGame().getFieldModel().clearMoveSquares();
+		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
 	protected JMenuItem createPutridRegurgitationItem(@SuppressWarnings("unused") IconCache iconCache) {

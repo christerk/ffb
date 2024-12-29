@@ -52,7 +52,7 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
         createAndShowPopupMenuForActingPlayer();
         break;
       default:
-        super.evaluateClickOnPlayer(result, player);
+        super.evaluateClick(result, player);
         break;
 
     }

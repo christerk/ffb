@@ -52,7 +52,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				userInterface.getFieldComponent().refresh();
 				break;
 			default:
-				super.evaluateClickOnPlayer(result, player);
+				super.evaluateClick(result, player);
 				break;
 		}
 	}
