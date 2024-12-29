@@ -79,7 +79,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
-			case PERFORM:
+			case DRAW:
 				drawRangeRuler(pCoordinate);
 				// fall through
 			case RESET:

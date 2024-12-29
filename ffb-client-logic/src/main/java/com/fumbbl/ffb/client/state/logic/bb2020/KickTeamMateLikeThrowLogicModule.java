@@ -70,7 +70,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		Game game = client.getGame();
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return new InteractionResult(InteractionResult.Kind.DRAW);
 		}
 		return new InteractionResult(InteractionResult.Kind.RESET);
 	}
