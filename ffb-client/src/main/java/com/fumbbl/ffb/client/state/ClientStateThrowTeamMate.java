@@ -83,11 +83,12 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
-			case SUPER:
-				return super.mouseOverField(pCoordinate);
-			case SUPER_DRAW:
+			case PERFORM:
 				drawRangeRuler(pCoordinate);
-				return super.mouseOverField(pCoordinate);
+				// fall through
+			case RESET:
+				resetSidebars();
+				return true;
 			default:
 				return false;
 		}

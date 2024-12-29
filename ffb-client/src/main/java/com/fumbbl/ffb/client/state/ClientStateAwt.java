@@ -233,11 +233,15 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	protected boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
+		resetSidebars();
+		return true;
+	}
+
+	protected void resetSidebars() {
 		if (getClient().getClientData().getSelectedPlayer() != null) {
 			getClient().getClientData().setSelectedPlayer(null);
 			getClient().getUserInterface().refreshSideBars();
 		}
-		return true;
 	}
 
 	public final void menuItemSelected(Player<?> player, int pMenuKey) {
