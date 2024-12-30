@@ -55,11 +55,14 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	private Player<?> fPopupMenuPlayer;
 
+	protected PitchMenuBuilder menuBuilder;
+
 	public ClientStateAwt(FantasyFootballClientAwt pClient, T logicModule) {
 		super(pClient, logicModule);
 		setClickable(true);
 		uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
 		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
+		menuBuilder = new PitchMenuBuilder(pitchDimensionProvider, pClient.getUserInterface().getIconCache());
 	}
 
 	public void initUI() {

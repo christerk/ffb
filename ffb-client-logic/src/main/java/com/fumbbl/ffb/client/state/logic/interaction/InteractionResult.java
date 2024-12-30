@@ -12,6 +12,7 @@ public class InteractionResult {
   private final MoveSquare moveSquare;
   private final FieldCoordinate[] path;
   private ClientStateId delegate;
+  private ActionContext actionContext;
 
   public InteractionResult(Kind kind) {
     this(kind, null, null, null, null, null, null);
@@ -41,7 +42,6 @@ public class InteractionResult {
     this(kind, coordinate, null, null, specialEffect, null, null);
   }
 
-
   public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler, PushbackSquare pushbackSquare, SpecialEffect specialEffect, MoveSquare moveSquare, FieldCoordinate[] path) {
     this.kind = kind;
     this.coordinate = coordinate;
@@ -56,8 +56,17 @@ public class InteractionResult {
     return new InteractionResult(Kind.DELEGATE).with(delegate);
   }
 
+  public static InteractionResult selectAction(ActionContext actionContext) {
+    return new InteractionResult(Kind.SELECT_ACTION).with(actionContext);
+  }
+
   private InteractionResult with(ClientStateId delegate) {
     this.delegate = delegate;
+    return this;
+  }
+
+  private InteractionResult with(ActionContext actionContext) {
+    this.actionContext = actionContext;
     return this;
   }
 
@@ -93,6 +102,10 @@ public class InteractionResult {
     return delegate;
   }
 
+  public ActionContext getActionContext() {
+    return actionContext;
+  }
+
   public enum Kind {
     DELEGATE,
     DRAW,
@@ -101,6 +114,7 @@ public class InteractionResult {
     INVALID,
     PERFORM,
     RESET,
+    SELECT_ACTION,
     SHOW_ACTIONS,
     SHOW_ACTION_ALTERNATIVES,
     SHOW_BLOODLUST_ACTIONS,

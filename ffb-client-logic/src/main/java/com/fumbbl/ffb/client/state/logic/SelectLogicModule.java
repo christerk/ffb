@@ -1,8 +1,15 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -18,7 +25,9 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,11 +52,11 @@ public class SelectLogicModule extends LogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
+			return InteractionResult.selectAction(new ActionContext(availableActions(player), influencingActions(player), findAlternateBlockActions(player)));
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
@@ -206,82 +215,168 @@ public class SelectLogicModule extends LogicModule {
 		client.getClientData().setEndTurnButtonHidden(true);
 	}
 
-	public Set<String> findAlternateBlockActions(Player<?> pPlayer) {
-		return pPlayer.getSkillsIncludingTemporaryOnes().stream().filter(skill ->
-				skill.hasSkillProperty(NamedProperties.providesBlockAlternative)
-					&& SkillUsageType.REGULAR == skill.getSkillUsageType())
-			.map(Skill::getName).collect(Collectors.toSet());
+	private List<InfluencingAction> influencingActions(Player<?> player) {
+		List<InfluencingAction> actions = new ArrayList<>();
+		if (isTreacherousAvailable(player)) {
+			actions.add(InfluencingAction.TREACHEROUS);
+		}
+		return actions;
 	}
 
-	public boolean isBlockActionAvailable(Player<?> pPlayer) {
+	private List<ClientAction> availableActions(Player<?> player) {
+		List<ClientAction> actions = new ArrayList<>();
+		Game game = client.getGame();
+		if (isBlockActionAvailable(player)) {
+			actions.add(ClientAction.BLOCK);
+		}
+		if (isMultiBlockActionAvailable(player)) {
+			actions.add(ClientAction.MULTIPLE_BLOCK);
+		}
+		if (isThrowBombActionAvailable(player)) {
+			actions.add(ClientAction.BOMB);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
+				actions.add(ClientAction.SHOT_TO_NOTHING_BOMB);
+			}
+		}
+		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.inflictsConfusion)) {
+			actions.add(ClientAction.GAZE);
+		}
+		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.canGainGaze)) {
+			actions.add(ClientAction.GAZE_ZOAT);
+		}
+		if (isMoveActionAvailable(player)) {
+			actions.add(ClientAction.MOVE);
+		}
+		if (isBlitzActionAvailable(player)) {
+			actions.add(ClientAction.BLITZ);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz)) {
+				actions.add(ClientAction.FRENZIED_RUSH);
+			}
+		}
+		if (isFoulActionAvailable(player)) {
+			actions.add(ClientAction.FOUL);
+		}
+		boolean treacherousAvailable = isTreacherousAvailable(player);
+		if (isPassActionAvailable(player, treacherousAvailable)) {
+			actions.add(ClientAction.PASS);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
+				actions.add(ClientAction.SHOT_TO_NOTHING);
+			}
+		}
+		if (isHandOverActionAvailable(player, treacherousAvailable)) {
+			actions.add(ClientAction.HAND_OVER);
+		}
+		if (isThrowTeamMateActionAvailable(player)) {
+			actions.add(ClientAction.THROW_TEAM_MATE);
+		}
+		if (isKickTeamMateActionAvailable(player)) {
+			actions.add(ClientAction.KICK_TEAM_MATE);
+		}
+		if (isBeerBarrelBashAvailable(player)) {
+			actions.add(ClientAction.BEER_BARREL_BASH);
+		}
+		if (isAllYouCanEatAvailable(player)) {
+			actions.add(ClientAction.ALL_YOU_CAN_EAT);
+		}
+		if (isKickEmBlockAvailable(player)) {
+			actions.add(ClientAction.KICK_EM_BLOCK);
+		}
+		if (isKickEmBlitzAvailable(player)) {
+			actions.add(ClientAction.BLITZ);
+		}
+		if (isFlashingBladeAvailable(player)) {
+			actions.add(ClientAction.THE_FLASHING_BLADE);
+		}
+		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player)) {
+			actions.add(ClientAction.RECOVER);
+		}
+		if (isStandUpActionAvailable(player)
+			&& player.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
+			&& !game.getTurnData().isBlitzUsed()) {
+			actions.add(ClientAction.STAND_UP_BLITZ);
+		}
+		if (isStandUpActionAvailable(player)) {
+			actions.add(ClientAction.STAND_UP);
+		}
+		return actions;
+	}
+
+	private List<String> findAlternateBlockActions(Player<?> player) {
+		return player.getSkillsIncludingTemporaryOnes().stream().filter(skill ->
+				skill.hasSkillProperty(NamedProperties.providesBlockAlternative)
+					&& SkillUsageType.REGULAR == skill.getSkillUsageType())
+			.map(Skill::getName).collect(Collectors.toList());
+	}
+
+	public boolean isBlockActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& playerState.isActive() && !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlockAction)
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& playerState.isActive() && !player.hasSkillProperty(NamedProperties.preventRegularBlockAction)
 			&& mechanic.isBlockActionAllowed(game.getTurnMode())
 			&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-			&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
+			&& player.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 0);
 		}
 		return false;
 	}
 
-	public boolean isMultiBlockActionAvailable(Player<?> pPlayer) {
+	public boolean isMultiBlockActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& playerState.isActive()
-			&& ((UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockMoreThanOnce)
-			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockMoreThanOnce))
-			|| (UtilCards.hasSkillWithProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)
-			&& !UtilCards.hasSkillToCancelProperty(pPlayer, NamedProperties.canBlockTwoAtOnce)))
+			&& ((UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockMoreThanOnce)
+			&& !UtilCards.hasSkillToCancelProperty(player, NamedProperties.canBlockMoreThanOnce))
+			|| (UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockTwoAtOnce)
+			&& !UtilCards.hasSkillToCancelProperty(player, NamedProperties.canBlockTwoAtOnce)))
 			&& ((playerState.getBase() != PlayerState.PRONE) || ((playerState.getBase() == PlayerState.PRONE)
-			&& pPlayer.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
+			&& player.hasSkillProperty(NamedProperties.canStandUpForFree)))) {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			int blockablePlayers = UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
 			return (blockablePlayers > 1);
 		}
 		return false;
 	}
 
-	public boolean isThrowBombActionAvailable(Player<?> pPlayer) {
+	public boolean isThrowBombActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null)
 			&& mechanic.isBombActionAllowed(game.getTurnMode())
 			&& !game.getTurnData().isBombUsed()
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProneOrStunned()
-			&& pPlayer.hasSkillProperty(NamedProperties.enableThrowBombAction));
+			&& player.hasSkillProperty(NamedProperties.enableThrowBombAction));
 	}
 
-	public boolean isMoveActionAvailable(Player<?> pPlayer) {
+	public boolean isMoveActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null) && playerState.isAbleToMove());
 	}
 
-	public boolean isBlitzActionAvailable(Player<?> pPlayer) {
+	public boolean isBlitzActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return (!game.getTurnData().isBlitzUsed()
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED) && (playerState != null)
 			&& playerState.isActive() && (playerState.isAbleToMove() || playerState.isRooted())
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
+			&& !player.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
 	}
 
-	public boolean isFoulActionAvailable(Player<?> pPlayer) {
+	public boolean isFoulActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState != null) && !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& mechanic.isFoulActionAllowed(game.getTurnMode())
-			&& playerState.isActive() && (!game.getTurnData().isFoulUsed() || pPlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
+			&& playerState.isActive() && (!game.getTurnData().isFoulUsed() || player.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
+			&& !player.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
 				if (opponentState.canBeFouled()) {
@@ -292,38 +387,38 @@ public class SelectLogicModule extends LogicModule {
 		return false;
 	}
 
-	public boolean isPassActionAvailable(Player<?> pPlayer, boolean treacherousAvailable) {
+	public boolean isPassActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return (!game.getTurnData().isPassUsed()
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& (UtilPlayer.isBallAvailable(game, pPlayer) || treacherousAvailable) && (playerState != null)
-			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, pPlayer) || treacherousAvailable))
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularPassAction));
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
+			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
+			&& !player.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
 
-	public boolean isHandOverActionAvailable(Player<?> pPlayer, boolean treacherousAvailable) {
+	public boolean isHandOverActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return (!game.getTurnData().isHandOverUsed()
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& (UtilPlayer.isBallAvailable(game, pPlayer) || treacherousAvailable) && (playerState != null)
-			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, pPlayer) || treacherousAvailable))
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
+			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
+			&& !player.hasSkillProperty(NamedProperties.preventRegularHandOverAction));
 	}
 
-	public boolean isThrowTeamMateActionAvailable(Player<?> pPlayer) {
+	public boolean isThrowTeamMateActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((playerState == null) || pPlayer.hasSkillProperty(NamedProperties.preventThrowTeamMateAction)) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if ((playerState == null) || player.hasSkillProperty(NamedProperties.preventThrowTeamMateAction)) {
 			return false;
 		}
 
 		boolean rightStuffAvailable = false;
 		FieldModel fieldModel = client.getGame().getFieldModel();
-		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
+		Player<?>[] teamPlayers = player.getTeam().getPlayers();
 		for (Player<?> teamPlayer : teamPlayers) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayer);
 			if (mechanic.canBeThrown(game, teamPlayer)
@@ -333,26 +428,26 @@ public class SelectLogicModule extends LogicModule {
 			}
 		}
 
-		boolean rightStuffAdjacent = ArrayTool.isProvided(mechanic.findThrowableTeamMates(game, pPlayer));
+		boolean rightStuffAdjacent = ArrayTool.isProvided(mechanic.findThrowableTeamMates(game, player));
 
 		return (!game.getTurnData().isPassUsed()
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& mechanic.canThrow(pPlayer) && rightStuffAvailable
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& mechanic.canThrow(player) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
-	public boolean isKickTeamMateActionAvailable(Player<?> pPlayer) {
+	public boolean isKickTeamMateActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if (!gameMechanic.isKickTeamMateActionAllowed(game.getTurnMode()) || playerState == null || pPlayer.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if (!gameMechanic.isKickTeamMateActionAllowed(game.getTurnMode()) || playerState == null || player.hasSkillProperty(NamedProperties.preventKickTeamMateAction)) {
 			return false;
 		}
 		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 
 		boolean rightStuffAvailable = false;
 		FieldModel fieldModel = client.getGame().getFieldModel();
-		Player<?>[] teamPlayers = pPlayer.getTeam().getPlayers();
+		Player<?>[] teamPlayers = player.getTeam().getPlayers();
 		for (Player<?> teamPlayer : teamPlayers) {
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(teamPlayer);
 			if (mechanic.canBeKicked(game, teamPlayer)
@@ -363,8 +458,8 @@ public class SelectLogicModule extends LogicModule {
 		}
 
 		boolean rightStuffAdjacent = false;
-		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, pPlayer.getTeam(),
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		Player<?>[] adjacentTeamPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
 			playerCoordinate, false);
 		for (Player<?> adjacentTeamPlayer : adjacentTeamPlayers) {
 			if (mechanic.canBeKicked(game, adjacentTeamPlayer)) {
@@ -374,31 +469,31 @@ public class SelectLogicModule extends LogicModule {
 		}
 
 		return (mechanic.isKtmAvailable(game.getTurnData())
-			&& !game.getFieldModel().hasCardEffect(pPlayer, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& pPlayer.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
+			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
+			&& player.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
-	public boolean isStandUpActionAvailable(Player<?> pPlayer) {
+	public boolean isStandUpActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null) && (playerState.getBase() == PlayerState.PRONE) && playerState.isActive()
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventStandUpAction));
+			&& !player.hasSkillProperty(NamedProperties.preventStandUpAction));
 	}
 
-	public boolean isRecoverFromConfusionActionAvailable(Player<?> pPlayer) {
+	public boolean isRecoverFromConfusionActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null) && playerState.isConfused() && playerState.isActive()
 			&& (playerState.getBase() != PlayerState.PRONE)
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromConcusionAction));
+			&& !player.hasSkillProperty(NamedProperties.preventRecoverFromConcusionAction));
 	}
 
-	public boolean isRecoverFromGazeActionAvailable(Player<?> pPlayer) {
+	public boolean isRecoverFromGazeActionAvailable(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null) && playerState.isHypnotized() && (playerState.getBase() != PlayerState.PRONE)
-			&& !pPlayer.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
+			&& !player.hasSkillProperty(NamedProperties.preventRecoverFromGazeAction));
 	}
 
 	public boolean isBeerBarrelBashAvailable(Player<?> player) {
