@@ -38,7 +38,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		super(pClient, logicModule);
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
@@ -78,7 +78,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
@@ -94,7 +94,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		return super.mouseOverPlayer(pPlayer);
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:
@@ -110,7 +110,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		evaluateClick(result, pPlayer);
 	}

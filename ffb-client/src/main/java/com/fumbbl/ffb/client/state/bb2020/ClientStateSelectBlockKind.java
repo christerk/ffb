@@ -32,12 +32,12 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		showMenu();
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		showMenu();
 	}
 

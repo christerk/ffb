@@ -41,7 +41,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 
 		switch (result.getKind()) {
@@ -56,7 +56,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
@@ -67,7 +67,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
 			case PERFORM:
@@ -79,7 +79,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		boolean selectable = false;
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);

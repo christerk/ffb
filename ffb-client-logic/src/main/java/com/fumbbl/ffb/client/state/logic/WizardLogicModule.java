@@ -38,7 +38,7 @@ public class WizardLogicModule extends LogicModule {
 		if ((pCoordinate != null) && (wizardSpell != null)) {
 			return determineSpecialEffect(pCoordinate);
 		} else {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return super.fieldPeek(pCoordinate);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class WizardLogicModule extends LogicModule {
 		if ((playerCoordinate != null) && (wizardSpell != null)) {
 			return determineSpecialEffect(playerCoordinate);
 		} else {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return super.playerPeek(pPlayer);
 		}
 	}
 

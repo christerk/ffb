@@ -17,7 +17,7 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 		super(pClient, new GazeLogicModule(pClient));
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -48,13 +48,13 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 		return actionHandled;
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		determineCursor(logicModule.playerPeek(pPlayer));
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return true;

@@ -63,7 +63,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return InteractionResult.delegate(super.getId());
 		} else {
 			game.getFieldModel().setRangeRuler(null);
 			client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pCoordinate, true);

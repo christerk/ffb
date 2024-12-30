@@ -16,15 +16,15 @@ public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> 
 		super(pClient, new SwoopLogicModule(pClient));
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		logicModule.playerInteraction(pPlayer);
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		UserInterface userInterface = getClient().getUserInterface();
 		determineCursor(logicModule.playerPeek(pPlayer));
 		getClient().getClientData().setSelectedPlayer(pPlayer);

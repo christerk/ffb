@@ -29,7 +29,7 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -41,12 +41,12 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerPeek(player);
 		switch (result.getKind()) {
 			case RESET:
@@ -62,7 +62,7 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:

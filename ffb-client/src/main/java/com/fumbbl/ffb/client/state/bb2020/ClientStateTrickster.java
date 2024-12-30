@@ -28,12 +28,12 @@ public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -61,13 +61,13 @@ public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
 		return true;
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:

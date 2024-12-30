@@ -11,6 +11,7 @@ public class InteractionResult {
   private final SpecialEffect specialEffect;
   private final MoveSquare moveSquare;
   private final FieldCoordinate[] path;
+  private ClientStateId delegate;
 
   public InteractionResult(Kind kind) {
     this(kind, null, null, null, null, null, null);
@@ -51,6 +52,15 @@ public class InteractionResult {
 		this.path = path;
 	}
 
+  public static InteractionResult delegate(ClientStateId delegate) {
+    return new InteractionResult(Kind.DELEGATE).with(delegate);
+  }
+
+  private InteractionResult with(ClientStateId delegate) {
+    this.delegate = delegate;
+    return this;
+  }
+
 	public Kind getKind() {
     return kind;
   }
@@ -79,7 +89,12 @@ public class InteractionResult {
     return moveSquare;
   }
 
+  public ClientStateId getDelegate() {
+    return delegate;
+  }
+
   public enum Kind {
+    DELEGATE,
     DRAW,
     HANDLED,
     IGNORE,
@@ -89,6 +104,5 @@ public class InteractionResult {
     SHOW_ACTIONS,
     SHOW_ACTION_ALTERNATIVES,
     SHOW_BLOODLUST_ACTIONS,
-    SUPER
   }
 }

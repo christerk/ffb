@@ -158,6 +158,10 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		return fState;
 	}
 
+	public ClientState<? extends LogicModule, ? extends FantasyFootballClient> getClientState(ClientStateId id) {
+		return fStateFactory.getStateForId(id);
+	}
+
 	public ClientCommandHandlerFactory getCommandHandlerFactory() {
 		return fCommandHandlerFactory;
 	}

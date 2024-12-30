@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientProperty;
@@ -17,8 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -231,5 +235,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	@Override
 	public ClientStateAwt<? extends LogicModule> getClientState() {
 		return (ClientStateAwt<? extends LogicModule>) super.getClientState();
+	}
+
+	@Override
+	public ClientStateAwt<? extends LogicModule> getClientState(ClientStateId id) {
+		return (ClientStateAwt<? extends LogicModule>) super.getClientState(id);
 	}
 }

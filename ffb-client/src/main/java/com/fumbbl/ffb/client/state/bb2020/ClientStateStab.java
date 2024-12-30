@@ -39,7 +39,7 @@ public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		super.mouseOverPlayer(player);
 		InteractionResult result = logicModule.playerPeek(player);
 		switch (result.getKind()) {

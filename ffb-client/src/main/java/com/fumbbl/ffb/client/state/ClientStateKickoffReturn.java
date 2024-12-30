@@ -32,7 +32,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 		super(pClient, new KickoffReturnLogicModule(pClient));
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -43,7 +43,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:

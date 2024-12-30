@@ -22,7 +22,7 @@ public class ClientStateTouchback extends ClientStateAwt<TouchbackLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (isClickable()) {
 			determineCursor(logicModule.playerPeek(pPlayer));
@@ -33,7 +33,7 @@ public class ClientStateTouchback extends ClientStateAwt<TouchbackLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		if (isClickable()) {
 			determineCursor(logicModule.fieldPeek(pCoordinate));
@@ -44,14 +44,14 @@ public class ClientStateTouchback extends ClientStateAwt<TouchbackLogicModule> {
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		if (isClickable()) {
 			logicModule.playerInteraction(pPlayer);
 		}
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		if (isClickable()) {
 			logicModule.fieldInteraction(pCoordinate);
 		}

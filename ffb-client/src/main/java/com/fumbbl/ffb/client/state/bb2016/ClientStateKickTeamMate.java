@@ -40,7 +40,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		markKickablePlayers();
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case PERFORM:
@@ -68,7 +68,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		if (logicModule.fieldInteraction(pCoordinate).getKind() == InteractionResult.Kind.PERFORM) {
 			super.clickOnField(pCoordinate);
@@ -77,7 +77,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {

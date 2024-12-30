@@ -32,7 +32,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     super(pClient, logicModule);
   }
 
-  protected void clickOnPlayer(Player<?> pPlayer) {
+  public void clickOnPlayer(Player<?> pPlayer) {
     InteractionResult result = logicModule.playerInteraction(pPlayer);
     evaluateClickOnPlayer(result, pPlayer);
   }
@@ -51,7 +51,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     }
     }
 
-  protected boolean mouseOverPlayer(Player<?> player) {
+  public boolean mouseOverPlayer(Player<?> player) {
     super.mouseOverPlayer(player);
     InteractionResult result = logicModule.playerPeek(player);
     switch (result.getKind()) {
@@ -67,7 +67,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     return true;
   }
 
-  protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+  public boolean mouseOverField(FieldCoordinate pCoordinate) {
     super.mouseOverField(pCoordinate);
     UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
     return true;

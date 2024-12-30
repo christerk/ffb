@@ -43,7 +43,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
 
 		InteractionResult result = logicModule.playerInteraction(player);
@@ -63,13 +63,13 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnField(pCoordinate);
+			case DELEGATE:
+				getDelegate(result).clickOnField(pCoordinate);
 				break;
 			case HANDLED:
 				fShowRangeRuler = false;
@@ -80,7 +80,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case DRAW:
@@ -94,7 +94,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 

@@ -29,12 +29,12 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate coordinate) {
+	public void clickOnField(FieldCoordinate coordinate) {
 		logicModule.fieldInteraction(coordinate);
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		if (result.getKind() == InteractionResult.Kind.SHOW_ACTIONS) {
 			createAndShowPopupMenuForActingPlayer();
@@ -58,7 +58,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerPeek(player);
 		switch (result.getKind()) {
 			case RESET:
@@ -71,7 +71,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate coordinate) {
+	public boolean mouseOverField(FieldCoordinate coordinate) {
 		InteractionResult result = logicModule.fieldPeek(coordinate);
 		switch (result.getKind()) {
 			case PERFORM:

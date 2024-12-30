@@ -59,7 +59,7 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {

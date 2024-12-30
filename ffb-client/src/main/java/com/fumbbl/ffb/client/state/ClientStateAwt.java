@@ -235,13 +235,13 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		menuItemSelected(fPopupMenuPlayer, menuItem.getMnemonic());
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 	}
 
-	protected void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
+	public void clickOnPlayer(@SuppressWarnings("unused") Player<?> pPlayer) {
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		if (getClient().getClientData().getSelectedPlayer() != pPlayer) {
 			getClient().getClientData().setSelectedPlayer(pPlayer);
 			getClient().getUserInterface().refreshSideBars();
@@ -249,9 +249,13 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		return true;
 	}
 
-	protected boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		resetSidebars();
 		return true;
+	}
+
+	protected ClientStateAwt<? extends LogicModule> getDelegate(InteractionResult result) {
+		return getClient().getClientState(result.getDelegate());
 	}
 
 	protected void resetSidebars() {

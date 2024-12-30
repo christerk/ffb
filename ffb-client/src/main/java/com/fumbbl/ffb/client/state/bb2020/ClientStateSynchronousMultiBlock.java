@@ -33,7 +33,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 		super(pClient, new SynchronousMultiBlockLogicModule(pClient));
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -50,7 +50,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 
@@ -67,7 +67,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 		return true;

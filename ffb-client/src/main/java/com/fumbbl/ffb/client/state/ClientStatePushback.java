@@ -24,7 +24,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		super(pClient, new PushbackLogicModule(pClient));
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
@@ -37,7 +37,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
@@ -50,11 +50,11 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		logicModule.playerInteraction(pPlayer);
 	}
 

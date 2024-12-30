@@ -30,7 +30,7 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		super(pClient, new HandOverLogicModule(pClient));
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			default:
@@ -58,13 +58,13 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		determineCursor(logicModule.playerPeek(pPlayer));
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return true;

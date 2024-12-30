@@ -17,18 +17,18 @@ public class ClientStatePlaceBall extends ClientStateAwt<PlaceBallLogicModule> {
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return super.mouseOverField(pCoordinate);
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		determineCursor(logicModule.playerPeek(pPlayer));
 		return super.mouseOverPlayer(pPlayer);
 	}

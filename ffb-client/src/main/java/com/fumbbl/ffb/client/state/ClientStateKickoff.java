@@ -22,7 +22,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 		super(pClient, new KickoffLogicModule(pClient));
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:
@@ -33,7 +33,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 		}
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case HANDLED:
@@ -54,7 +54,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return true;

@@ -53,7 +53,7 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
 		if (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return InteractionResult.delegate(super.getId());
 		} else {
 			game.getFieldModel().setRangeRuler(null);
 			client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pCoordinate);

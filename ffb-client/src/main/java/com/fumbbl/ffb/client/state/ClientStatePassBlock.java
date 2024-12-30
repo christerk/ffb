@@ -41,7 +41,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -53,7 +53,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:

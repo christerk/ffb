@@ -42,7 +42,7 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 
 		switch (result.getKind()) {
@@ -54,7 +54,7 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerPeek(player);
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.refreshSideBars();
@@ -73,7 +73,7 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_KEG);
 		return super.mouseOverField(pCoordinate);

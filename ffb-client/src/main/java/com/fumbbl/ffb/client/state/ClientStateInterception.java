@@ -25,17 +25,17 @@ public class ClientStateInterception extends ClientStateAwt<InterceptionLogicMod
 		setClickable(true);
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		logicModule.playerInteraction(pPlayer);
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		determineCursor(logicModule.playerPeek(pPlayer));
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		determineCursor(logicModule.fieldPeek(pCoordinate));
 		return true;

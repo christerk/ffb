@@ -42,7 +42,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
@@ -63,7 +63,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 		return true;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		super.mouseOverField(pCoordinate);
 		Game game = getClient().getGame();
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
@@ -179,7 +179,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		// clicks on fields are ignored
 	}
 }

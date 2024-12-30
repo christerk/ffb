@@ -14,7 +14,7 @@ public class ClientStateGazeMove extends AbstractClientStateMove<GazeMoveLogicMo
   }
 
   @Override
-  protected boolean mouseOverPlayer(Player<?> player) {
+  public boolean mouseOverPlayer(Player<?> player) {
     boolean result = super.mouseOverPlayer(player);
 
     if (logicModule.playerPeek(player).getKind() == InteractionResult.Kind.PERFORM) {
@@ -25,7 +25,7 @@ public class ClientStateGazeMove extends AbstractClientStateMove<GazeMoveLogicMo
   }
 
   @Override
-  protected void clickOnPlayer(Player<?> player) {
+  public void clickOnPlayer(Player<?> player) {
 
     logicModule.playerInteraction(player);
 

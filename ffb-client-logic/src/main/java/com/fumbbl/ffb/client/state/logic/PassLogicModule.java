@@ -52,7 +52,7 @@ public class PassLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return InteractionResult.delegate(super.getId());
 		} else {
 			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
 				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
@@ -96,7 +96,7 @@ public class PassLogicModule extends MoveLogicModule {
 			return new InteractionResult(InteractionResult.Kind.PERFORM);
 		} else if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
 			game.getFieldModel().setRangeRuler(null);
-			return new InteractionResult(InteractionResult.Kind.SUPER);
+			return InteractionResult.delegate(super.getId());
 		} else {
 			return new InteractionResult(InteractionResult.Kind.DRAW, pCoordinate);
 		}

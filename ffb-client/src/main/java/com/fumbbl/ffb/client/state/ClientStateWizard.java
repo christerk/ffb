@@ -28,10 +28,10 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
-			case SUPER:
+			case RESET:
 				return super.mouseOverField(pCoordinate);
 			case PERFORM:
 				drawSpellmarker(result.getCoordinate(), result.getSpecialEffect());
@@ -43,10 +43,10 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	}
 
 	@Override
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
-			case SUPER:
+			case RESET:
 				return super.mouseOverPlayer(pPlayer);
 			case PERFORM:
 				drawSpellmarker(result.getCoordinate(), result.getSpecialEffect());
@@ -77,7 +77,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	}
 
 	@Override
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
@@ -89,7 +89,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	}
 
 	@Override
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case PERFORM:

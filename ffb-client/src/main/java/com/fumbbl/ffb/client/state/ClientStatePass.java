@@ -48,7 +48,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		fRangeGridHandler.refreshSettings();
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
@@ -61,12 +61,12 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		}
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
-			case SUPER:
-				super.clickOnField(pCoordinate);
+			case DELEGATE:
+				getDelegate(result).clickOnField(pCoordinate);
 				break;
 			case HANDLED:
 				userInterface.getFieldComponent().refresh();
@@ -76,7 +76,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		boolean selectable = false;
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.playerPeek(pPlayer);
@@ -105,7 +105,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		return IIconProperty.CURSOR_PASS;
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		boolean selectable = false;
 
@@ -117,8 +117,9 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				userInterface.getFieldComponent().refresh();
 				selectable = true;
 				break;
-			case SUPER:
-				selectable = super.mouseOverField(pCoordinate);
+			case DELEGATE:
+				selectable = getDelegate(result).mouseOverField(pCoordinate);
+				break;
 			case DRAW:
 				drawRangeRuler(pCoordinate);
 				break;

@@ -42,7 +42,7 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
-	protected void clickOnPlayer(Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SHOW_ACTIONS:
@@ -54,7 +54,7 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 	}
 
 
-	protected boolean mouseOverPlayer(Player<?> player) {
+	public boolean mouseOverPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
 
 		InteractionResult result = logicModule.playerPeek(player);
@@ -73,7 +73,7 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 	}
 
 	@Override
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		UserInterface userInterface = getClient().getUserInterface();
 		UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_BLASTIN);
 		return super.mouseOverField(pCoordinate);

@@ -20,13 +20,13 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		super(pClient, new DumpOffLogicModule(pClient));
 	}
 
-	protected void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> pPlayer) {
 		Game game = getClient().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		clickOnField(playerCoordinate);
 	}
 
-	protected void clickOnField(FieldCoordinate pCoordinate) {
+	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		if (result.getKind() == InteractionResult.Kind.PERFORM) {
 			UserInterface userInterface = getClient().getUserInterface();
@@ -34,7 +34,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		}
 	}
 
-	protected boolean mouseOverField(FieldCoordinate pCoordinate) {
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		boolean selectable = false;
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
@@ -53,7 +53,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		return selectable;
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		logicModule.playerPeek(pPlayer);
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.refreshSideBars();

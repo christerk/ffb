@@ -24,7 +24,7 @@ public class ClientStateKickEmBlock extends AbstractClientStateBlock<KickEmBlock
 		}
 	}
 
-	protected boolean mouseOverPlayer(Player<?> pPlayer) {
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		if (UtilPlayer.isKickable(getClient().getGame(), pPlayer)) {
 			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
