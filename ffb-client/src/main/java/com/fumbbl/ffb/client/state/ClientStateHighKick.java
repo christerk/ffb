@@ -34,7 +34,7 @@ public class ClientStateHighKick extends ClientStateAwt<HighKickLogicModule> {
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
-		determineCursor(logicModule.playerInteraction(pPlayer));
+		determineCursor(logicModule.playerPeek(pPlayer));
 		return true;
 	}
 
