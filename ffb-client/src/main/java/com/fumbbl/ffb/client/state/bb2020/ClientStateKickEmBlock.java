@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
@@ -13,11 +12,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class ClientStateKickEmBlock extends AbstractClientStateBlock<KickEmBlockLogicModule> {
 	public ClientStateKickEmBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new KickEmBlockLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.KICK_EM_BLOCK;
 	}
 
 	public void clickOnPlayer(Player<?> player) {

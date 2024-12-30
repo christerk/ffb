@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -27,11 +26,6 @@ import java.util.Map;
 public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicModule> {
 	public ClientStateRaidingParty(FantasyFootballClientAwt pClient) {
 		super(pClient, new RaidingPartyLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.RAIDING_PARTY;
 	}
 
 	@Override

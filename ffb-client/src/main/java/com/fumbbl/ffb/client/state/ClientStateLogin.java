@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
@@ -38,10 +37,6 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 	private ServerStatus fLastServerError;
 	protected ClientStateLogin(FantasyFootballClientAwt pClient) {
 		super(pClient, new LoginLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.LOGIN;
 	}
 
 	public void initUI() {

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.DiceDecoration;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -24,6 +25,11 @@ public class BlockLogicExtension extends LogicModule {
 
   public BlockLogicExtension(FantasyFootballClient client) {
     super(client);
+  }
+
+  @Override
+  public ClientStateId getId() {
+   throw new UnsupportedOperationException("getId not implemented for extensions");
   }
 
   public Set<ClientAction> availableActions() {

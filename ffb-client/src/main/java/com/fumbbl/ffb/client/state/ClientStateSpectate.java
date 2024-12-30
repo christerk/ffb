@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.GameTitle;
@@ -20,10 +19,6 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 
 	protected ClientStateSpectate(FantasyFootballClientAwt pClient) {
 		super(pClient, new SpectateLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.SPECTATE;
 	}
 
 	public void initUI() {

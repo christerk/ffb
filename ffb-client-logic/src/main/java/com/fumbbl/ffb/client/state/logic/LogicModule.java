@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -32,6 +33,8 @@ public abstract class LogicModule {
 	public LogicModule(FantasyFootballClient client) {
 		this.client = client;
 	}
+
+	public abstract ClientStateId getId();
 
 	public abstract Set<ClientAction> availableActions();
 

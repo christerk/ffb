@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
@@ -23,10 +22,6 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 
 	protected ClientStatePushback(FantasyFootballClientAwt pClient) {
 		super(pClient, new PushbackLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.PUSHBACK;
 	}
 
 	protected boolean mouseOverPlayer(Player<?> pPlayer) {

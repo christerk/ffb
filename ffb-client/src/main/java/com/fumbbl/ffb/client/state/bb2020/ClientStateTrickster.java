@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -26,11 +25,6 @@ import java.util.Map;
 public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
 	public ClientStateTrickster(FantasyFootballClientAwt pClient) {
 		super(pClient, new TricksterLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.TRICKSTER;
 	}
 
 	@Override

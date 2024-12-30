@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
@@ -19,6 +20,11 @@ public class DumpOffLogicModule extends MoveLogicModule {
 
 	public DumpOffLogicModule(FantasyFootballClient client) {
 		super(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.DUMP_OFF;
 	}
 
 	@Override

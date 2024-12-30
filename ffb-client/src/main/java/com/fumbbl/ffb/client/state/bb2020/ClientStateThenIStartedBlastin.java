@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -28,10 +27,6 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 
 	public ClientStateThenIStartedBlastin(FantasyFootballClientAwt pClient) {
 		super(pClient, new ThenIStartedBlastinLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.THEN_I_STARTED_BLASTIN;
 	}
 
 	@Override

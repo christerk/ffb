@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.SpecialEffect;
@@ -21,10 +20,6 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 
 	protected ClientStateWizard(FantasyFootballClientAwt pClient) {
 		super(pClient, new WizardLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.WIZARD;
 	}
 
 	public void initUI() {

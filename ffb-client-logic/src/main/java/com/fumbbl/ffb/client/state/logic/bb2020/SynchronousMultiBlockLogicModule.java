@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -26,6 +27,11 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 	public SynchronousMultiBlockLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 		this.extension = new BlockLogicExtension(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.SYNCHRONOUS_MULTI_BLOCK;
 	}
 
 	@Override

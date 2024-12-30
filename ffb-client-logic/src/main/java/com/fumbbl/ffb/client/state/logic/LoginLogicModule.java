@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.PasswordChallenge;
@@ -31,6 +32,11 @@ public class LoginLogicModule extends LogicModule {
 
 	public LoginLogicModule(FantasyFootballClient client) {
 		super(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.LOGIN;
 	}
 
 	@Override

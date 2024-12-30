@@ -1,6 +1,9 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -26,10 +29,6 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	public ClientStateKickTeamMateLikeThrow(FantasyFootballClientAwt pClient) {
 		super(pClient, new KickTeamMateLikeThrowLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, true);
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.KICK_TEAM_MATE_THROW;
 	}
 
 	public void enterState() {

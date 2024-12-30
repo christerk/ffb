@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -13,6 +14,11 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class KickEmBlockLogicModule extends BlockLogicModule {
 	public KickEmBlockLogicModule(FantasyFootballClient client) {
 		super(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.KICK_EM_BLOCK;
 	}
 
 	public InteractionResult playerInteraction(Player<?> player) {

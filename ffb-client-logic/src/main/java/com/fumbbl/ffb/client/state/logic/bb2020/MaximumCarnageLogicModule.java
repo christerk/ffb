@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -14,6 +15,11 @@ import java.util.Set;
 public class MaximumCarnageLogicModule extends BlockLogicModule {
 	public MaximumCarnageLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.MAXIMUM_CARNAGE;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -20,6 +21,11 @@ public class BlockKindLogicModule extends LogicModule {
 	public BlockKindLogicModule(FantasyFootballClient client) {
 		super(client);
 		extension = new BlockLogicExtension(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.SELECT_BLOCK_KIND;
 	}
 
 	@Override

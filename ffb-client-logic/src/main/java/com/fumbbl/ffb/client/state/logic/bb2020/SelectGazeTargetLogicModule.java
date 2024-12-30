@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -20,7 +21,12 @@ public class SelectGazeTargetLogicModule extends MoveLogicModule {
 	public SelectGazeTargetLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 	}
-	
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.SELECT_GAZE_TARGET;
+	}
+
 	public InteractionResult playerInteraction(Player<?> pPlayer) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();

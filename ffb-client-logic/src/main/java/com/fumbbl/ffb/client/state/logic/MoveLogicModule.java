@@ -26,6 +26,11 @@ public class MoveLogicModule extends LogicModule {
 	}
 
 	@Override
+	public ClientStateId getId() {
+		return ClientStateId.MOVE;
+	}
+
+	@Override
 	public Set<ClientAction> availableActions() {
 
 		return new HashSet<ClientAction>() {{

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -25,6 +26,10 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		super(client);
 	}
 
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.KICK_TEAM_MATE_THROW;
+	}
 
 	@Override
 	protected boolean showGridForKTM(Game game, ActingPlayer actingPlayer) {
@@ -98,7 +103,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
-		// added a check so you could not throw the opponents players, maybe this should
+		// added a check, so you could not throw the opponents players, maybe this should
 		// be in the server-check?
 		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canKickTeamMates)
 			&& mechanic.canBeKicked(game, pPlayer)

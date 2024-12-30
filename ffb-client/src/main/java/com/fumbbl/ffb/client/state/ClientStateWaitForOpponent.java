@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -16,10 +15,6 @@ public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLo
 
 	protected ClientStateWaitForOpponent(FantasyFootballClientAwt pClient) {
 		super(pClient, new WaitForOpponentLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.WAIT_FOR_OPPONENT;
 	}
 
 	public void initUI() {

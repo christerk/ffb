@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -17,6 +18,11 @@ public class TricksterLogicModule extends LogicModule {
 		super(pClient);
 	}
 
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.TRICKSTER;
+	}
 
 	@Override
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {

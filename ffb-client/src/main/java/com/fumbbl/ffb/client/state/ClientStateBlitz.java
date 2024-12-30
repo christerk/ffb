@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 
@@ -9,8 +8,4 @@ public class ClientStateBlitz extends AbstractClientStateBlitz<BlitzLogicModule>
 		super(client, new BlitzLogicModule(client));
 	}
 
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.BLITZ;
-	}
 }

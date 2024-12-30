@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -31,11 +30,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 
 	protected ClientStateSelect(FantasyFootballClientAwt pClient) {
 		super(pClient, new SelectLogicModule(pClient));
-	}
-
-
-	public ClientStateId getId() {
-		return ClientStateId.SELECT_PLAYER;
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
@@ -250,7 +244,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP, 0));
 			menuItemList.add(standUpAction);
 		}
-		if (menuItemList.size() > 0) {
+		if (!menuItemList.isEmpty()) {
 			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}

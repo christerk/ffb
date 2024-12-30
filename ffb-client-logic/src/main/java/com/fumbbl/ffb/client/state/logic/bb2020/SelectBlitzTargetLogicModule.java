@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.net.ClientCommunication;
@@ -23,6 +24,11 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 	public SelectBlitzTargetLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 		extension = new BlockLogicExtension(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.SELECT_BLITZ_TARGET;
 	}
 
 	public InteractionResult playerInteraction(Player<?> pPlayer) {

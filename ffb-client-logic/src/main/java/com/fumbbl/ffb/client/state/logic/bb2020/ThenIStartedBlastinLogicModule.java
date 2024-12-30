@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
@@ -22,6 +23,11 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 
 	public ThenIStartedBlastinLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.THEN_I_STARTED_BLASTIN;
 	}
 
 	@Override

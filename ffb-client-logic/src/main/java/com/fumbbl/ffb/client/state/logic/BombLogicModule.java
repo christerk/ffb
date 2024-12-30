@@ -25,6 +25,11 @@ public class BombLogicModule extends LogicModule {
 	}
 
 	@Override
+	public ClientStateId getId() {
+		return ClientStateId.BOMB;
+	}
+
+	@Override
 	public Set<ClientAction> availableActions() {
 
 		return new HashSet<ClientAction>() {{

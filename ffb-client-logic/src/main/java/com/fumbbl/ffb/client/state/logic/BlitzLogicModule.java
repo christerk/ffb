@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -22,6 +23,11 @@ public class BlitzLogicModule extends MoveLogicModule {
 	public BlitzLogicModule(FantasyFootballClient client) {
 		super(client);
 		extension = new BlockLogicExtension(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.BLITZ;
 	}
 
 	@Override

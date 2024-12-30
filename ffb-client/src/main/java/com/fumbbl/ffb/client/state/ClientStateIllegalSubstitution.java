@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.ClientData;
@@ -14,10 +13,6 @@ public class ClientStateIllegalSubstitution extends AbstractClientStateSetup<Ill
 
 	protected ClientStateIllegalSubstitution(FantasyFootballClientAwt pClient) {
 		super(pClient, new IllegalSubstitutionLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.ILLEGAL_SUBSTITUTION;
 	}
 
 	@Override

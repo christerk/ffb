@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2016;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
@@ -34,10 +33,6 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 
 	public ClientStateKickTeamMate(FantasyFootballClientAwt pClient) {
 		super(pClient, new KtmLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.KICK_TEAM_MATE;
 	}
 
 	public void initUI() {

@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
@@ -14,10 +13,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

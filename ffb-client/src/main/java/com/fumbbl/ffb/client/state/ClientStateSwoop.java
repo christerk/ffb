@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
@@ -15,10 +14,6 @@ public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> 
 
 	protected ClientStateSwoop(FantasyFootballClientAwt pClient) {
 		super(pClient, new SwoopLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.SWOOP;
 	}
 
 	protected void clickOnField(FieldCoordinate pCoordinate) {

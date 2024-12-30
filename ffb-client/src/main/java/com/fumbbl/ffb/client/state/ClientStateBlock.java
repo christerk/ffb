@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 
@@ -11,10 +10,6 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
 
   protected ClientStateBlock(FantasyFootballClientAwt pClient) {
     super(pClient, new BlockLogicModule(pClient));
-  }
-
-  public ClientStateId getId() {
-    return ClientStateId.BLOCK;
   }
 
 }

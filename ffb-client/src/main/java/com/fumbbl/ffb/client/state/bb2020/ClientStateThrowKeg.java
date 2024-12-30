@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -28,10 +27,6 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 
 	public ClientStateThrowKeg(FantasyFootballClientAwt pClient) {
 		super(pClient, new ThrowKegLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.THROW_KEG;
 	}
 
 	@Override

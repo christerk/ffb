@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -17,6 +18,11 @@ public class BlockLogicModule extends LogicModule {
 	public BlockLogicModule(FantasyFootballClient client) {
 		super(client);
 		extension = new BlockLogicExtension(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.BLOCK;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -11,6 +12,11 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class GazeMoveLogicModule extends MoveLogicModule {
   public GazeMoveLogicModule(FantasyFootballClient client) {
     super(client);
+  }
+
+  @Override
+  public ClientStateId getId() {
+    return ClientStateId.GAZE_MOVE;
   }
 
   @Override

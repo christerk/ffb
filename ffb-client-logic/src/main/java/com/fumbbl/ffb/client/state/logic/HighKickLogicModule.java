@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -20,6 +21,11 @@ public class HighKickLogicModule extends LogicModule {
 
 	public HighKickLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.HIGH_KICK;
 	}
 
 	@Override

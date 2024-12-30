@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
@@ -10,10 +9,6 @@ public class ClientStateQuickSnap extends AbstractClientStateSetup<QuickSnapLogi
 
 	protected ClientStateQuickSnap(FantasyFootballClientAwt pClient) {
 		super(pClient, new QuickSnapLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.QUICK_SNAP;
 	}
 
 	@Override

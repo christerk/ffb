@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -22,6 +23,11 @@ public class HitAndRunLogicModule extends LogicModule {
 		return new HashSet<ClientAction>() {{
 			add(ClientAction.HIT_AND_RUN);
 		}};
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.HIT_AND_RUN;
 	}
 
 	@Override

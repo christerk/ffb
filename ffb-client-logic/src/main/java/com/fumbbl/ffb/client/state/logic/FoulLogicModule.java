@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
@@ -18,6 +19,11 @@ import java.util.Set;
 public class FoulLogicModule extends MoveLogicModule {
   public FoulLogicModule(FantasyFootballClient client) {
     super(client);
+  }
+
+  @Override
+  public ClientStateId getId() {
+    return ClientStateId.FOUL;
   }
 
   @Override

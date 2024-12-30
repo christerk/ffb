@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
@@ -15,11 +14,6 @@ import java.util.Map;
 public class ClientStatePutridRegurgitationBlock extends AbstractClientStateBlock<PutridRegurgitationBlockLogicModule> {
 	public ClientStatePutridRegurgitationBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new PutridRegurgitationBlockLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.PUTRID_REGURGITATION_BLOCK;
 	}
 
 	public void clickOnPlayer(Player<?> player) {

@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IProgressListener;
@@ -27,10 +26,6 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		super(pClient, new ReplayLogicModule(pClient));
 
 		logicModule.setCallbacks(new ReplayCallbacksAwt(this));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.REPLAY;
 	}
 
 	public void initUI() {

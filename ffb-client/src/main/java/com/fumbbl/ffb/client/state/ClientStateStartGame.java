@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.BoxType;
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -18,10 +17,6 @@ public class ClientStateStartGame extends ClientStateAwt<StartGameLogicModule> {
 
 	protected ClientStateStartGame(FantasyFootballClientAwt pClient) {
 		super(pClient, new StartGameLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.START_GAME;
 	}
 
 	public void initUI() {

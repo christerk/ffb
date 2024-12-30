@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.SetupLogicModule;
@@ -16,10 +15,6 @@ public class ClientStateSetup extends AbstractClientStateSetup<SetupLogicModule>
 
 	protected ClientStateSetup(FantasyFootballClientAwt pClient) {
 		super(pClient, new SetupLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.SETUP;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

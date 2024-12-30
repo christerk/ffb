@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -17,6 +18,11 @@ public class StabLogicModule extends BlockLogicModule {
 
 	public StabLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.STAB;
 	}
 
 	@Override

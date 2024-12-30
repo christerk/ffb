@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -16,6 +17,11 @@ import java.util.Set;
 public class RaidingPartyLogicModule extends LogicModule {
 	public RaidingPartyLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.RAIDING_PARTY;
 	}
 
 	@Override

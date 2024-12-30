@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IconCache;
@@ -21,11 +20,6 @@ import java.util.Map;
 public class ClientStateMaximumCarnage extends AbstractClientStateBlock<MaximumCarnageLogicModule> {
 	public ClientStateMaximumCarnage(FantasyFootballClientAwt pClient) {
 		super(pClient, new MaximumCarnageLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.MAXIMUM_CARNAGE;
 	}
 
 	@Override

@@ -32,7 +32,9 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	public abstract void initUI();
 
-	public abstract ClientStateId getId();
+	public final ClientStateId getId() {
+		return logicModule.getId();
+	}
 
 	public C getClient() {
 		return fClient;

@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -27,11 +26,6 @@ import java.util.Map;
 public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	public ClientStateHitAndRun(FantasyFootballClientAwt client) {
 		super(client, new HitAndRunLogicModule(client));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.HIT_AND_RUN;
 	}
 
 	@Override

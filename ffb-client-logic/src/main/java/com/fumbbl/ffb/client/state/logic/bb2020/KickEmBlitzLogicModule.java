@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
@@ -14,6 +15,11 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class KickEmBlitzLogicModule extends BlitzLogicModule {
 	public KickEmBlitzLogicModule(FantasyFootballClient client) {
 		super(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.KICK_EM_BLITZ;
 	}
 
 	@Override

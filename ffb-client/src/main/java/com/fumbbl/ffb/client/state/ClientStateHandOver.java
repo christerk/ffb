@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
@@ -29,10 +28,6 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 
 	protected ClientStateHandOver(FantasyFootballClientAwt pClient) {
 		super(pClient, new HandOverLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.HAND_OVER;
 	}
 
 	protected void clickOnPlayer(Player<?> player) {

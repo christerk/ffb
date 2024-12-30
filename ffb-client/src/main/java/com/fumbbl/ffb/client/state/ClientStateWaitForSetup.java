@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.BoxType;
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -22,10 +21,6 @@ public class ClientStateWaitForSetup extends ClientStateAwt<WaitForSetupLogicMod
 
 	protected ClientStateWaitForSetup(FantasyFootballClientAwt pClient) {
 		super(pClient, new WaitForSetupLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.WAIT_FOR_SETUP;
 	}
 
 	public void initUI() {

@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
@@ -24,11 +23,6 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 
 	public ClientStateSelectBlockKind(FantasyFootballClientAwt pClient) {
 		super(pClient, new BlockKindLogicModule(pClient));
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.SELECT_BLOCK_KIND;
 	}
 
 	@Override

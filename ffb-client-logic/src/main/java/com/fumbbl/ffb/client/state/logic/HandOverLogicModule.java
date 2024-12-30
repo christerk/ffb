@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -19,7 +20,12 @@ public class HandOverLogicModule extends MoveLogicModule {
 	public HandOverLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 	}
-	
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.HAND_OVER;
+	}
+
 	@Override
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();

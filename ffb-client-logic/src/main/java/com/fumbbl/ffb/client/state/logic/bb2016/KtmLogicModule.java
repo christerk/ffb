@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2016;
 
+import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -19,6 +20,11 @@ import java.util.Set;
 public class KtmLogicModule extends MoveLogicModule {
 	public KtmLogicModule(FantasyFootballClient client) {
 		super(client);
+	}
+
+	@Override
+	public ClientStateId getId() {
+		return ClientStateId.KICK_TEAM_MATE;
 	}
 
 	public boolean canBeKicked(Player<?> player) {

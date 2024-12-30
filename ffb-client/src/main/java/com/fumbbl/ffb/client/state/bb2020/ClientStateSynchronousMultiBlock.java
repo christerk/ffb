@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
@@ -32,10 +31,6 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 
 	public ClientStateSynchronousMultiBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new SynchronousMultiBlockLogicModule(pClient));
-	}
-
-	public ClientStateId getId() {
-		return ClientStateId.SYNCHRONOUS_MULTI_BLOCK;
 	}
 
 	protected void clickOnPlayer(Player<?> player) {
