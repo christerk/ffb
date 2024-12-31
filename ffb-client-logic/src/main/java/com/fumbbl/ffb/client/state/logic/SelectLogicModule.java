@@ -5,14 +5,19 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -191,9 +196,99 @@ public class SelectLogicModule extends LogicModule {
 		}
 	}
 
+	protected ActionContext actionContext(Player<?> player) {
+		ActionContext context = new ActionContext();
+		Game game = client.getGame();
+
+		boolean treacherousAvailable = isTreacherousAvailable(player);
+		if (treacherousAvailable) {
+			context.add(Influences.BALL_ACTIONS_DUE_TO_TREACHEROUS);
+		}
+
+		if (isBlockActionAvailable(player)) {
+			findAlternateBlockActions(player).forEach(context::add);
+			context.add(ClientAction.BLOCK);
+		}
+		if (isMultiBlockActionAvailable(player)) {
+			context.add(ClientAction.MULTIPLE_BLOCK);
+		}
+		if (isThrowBombActionAvailable(player)) {
+			context.add(ClientAction.BOMB);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
+				context.add(ClientAction.SHOT_TO_NOTHING_BOMB);
+			}
+		}
+		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.inflictsConfusion)) {
+			context.add(ClientAction.GAZE);
+		}
+		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.canGainGaze)) {
+			context.add(ClientAction.GAZE_ZOAT);
+		}
+		if (isMoveActionAvailable(player)) {
+			context.add(ClientAction.MOVE);
+		}
+		if (isBlitzActionAvailable(player)) {
+			context.add(ClientAction.BLITZ);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz)) {
+				context.add(ClientAction.FRENZIED_RUSH);
+			}
+		}
+		if (isFoulActionAvailable(player)) {
+			context.add(ClientAction.FOUL);
+		}
+		if (isPassActionAvailable(player, treacherousAvailable)) {
+			context.add(ClientAction.PASS);
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
+				context.add(ClientAction.SHOT_TO_NOTHING);
+			}
+		}
+		if (isHandOverActionAvailable(player, treacherousAvailable)) {
+			context.add(ClientAction.HAND_OVER);
+		}
+		if (isThrowTeamMateActionAvailable(player)) {
+			context.add(ClientAction.THROW_TEAM_MATE);
+		}
+		if (isKickTeamMateActionAvailable(player)) {
+			context.add(ClientAction.KICK_TEAM_MATE);
+		}
+		if (isBeerBarrelBashAvailable(player)) {
+			context.add(ClientAction.BEER_BARREL_BASH);
+		}
+		if (isAllYouCanEatAvailable(player)) {
+			context.add(ClientAction.ALL_YOU_CAN_EAT);
+		}
+		if (isKickEmBlockAvailable(player)) {
+			context.add(ClientAction.KICK_EM_BLOCK);
+		}
+		if (isKickEmBlitzAvailable(player)) {
+			context.add(ClientAction.BLITZ);
+		}
+		if (isFlashingBladeAvailable(player)) {
+			context.add(ClientAction.THE_FLASHING_BLADE);
+		}
+		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player)) {
+			context.add(ClientAction.RECOVER);
+		}
+		if (isStandUpActionAvailable(player)
+			&& player.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
+			&& !game.getTurnData().isBlitzUsed()) {
+			context.add(ClientAction.STAND_UP_BLITZ);
+		}
+		if (isStandUpActionAvailable(player)) {
+			context.add(ClientAction.STAND_UP);
+		}
+		return context;
+	}
+
 	@Override
 	public void endTurn() {
 		client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
 		client.getClientData().setEndTurnButtonHidden(true);
+	}
+
+	private List<Skill> findAlternateBlockActions(Player<?> player) {
+		return player.getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative) && SkillUsageType.REGULAR == skill.getSkillUsageType())
+			.collect(Collectors.toList());
 	}
 }
