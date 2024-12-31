@@ -272,7 +272,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				break;
 			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS:
 				if (logicModule.hmpAvailable()) {
-					// logicmodule sends command to deselect hmp so afterwards we have to show the ruler again
+					// logic module sends command to deselect hmp so afterward we have to show the ruler again
 					fShowRangeRuler = logicModule.actionIsHmp();
 				}
 				break;

@@ -1,6 +1,15 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -16,7 +25,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class MoveLogicModule extends LogicModule {
@@ -181,73 +189,6 @@ public class MoveLogicModule extends LogicModule {
 		}
 	}
 
-	public boolean isEndPlayerActionAvailable() {
-		Game game = client.getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (!actingPlayer.hasActed()
-			|| !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFullMovement)
-			|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
-	}
-
-
-	public boolean isJumpAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		return mechanic.isAvailableAsNextMove(game, actingPlayer, jumping);
-	}
-
-	public Optional<Skill> isBoundingLeapAvailable(Game game, ActingPlayer actingPlayer) {
-		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-			return Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers));
-		}
-
-		return Optional.empty();
-	}
-
-	public boolean isFumblerooskieAvailable() {
-		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
-
-		return (UtilCards.hasUncanceledSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canDropBall)
-			&& actingPlayer.getPlayerAction() != null
-			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
-			&& UtilPlayer.hasBall(client.getGame(), actingPlayer.getPlayer()));
-	}
-
-	public boolean isPutridRegurgitationAvailable() {
-		return false;
-	}
-
-	public boolean isSpecialAbilityAvailable(ActingPlayer actingPlayer) {
-		return isTreacherousAvailable(actingPlayer)
-			|| isWisdomAvailable(actingPlayer)
-			|| isRaidingPartyAvailable(actingPlayer)
-			|| isLookIntoMyEyesAvailable(actingPlayer)
-			|| isBalefulHexAvailable(actingPlayer)
-			|| isPutridRegurgitationAvailable()
-			|| isCatchOfTheDayAvailable(actingPlayer)
-			|| isBlackInkAvailable(actingPlayer)
-			|| isThenIStartedBlastinAvailable(actingPlayer);
-	}
-
-	public boolean isPassAnySquareAvailable(ActingPlayer actingPlayer, Game game) {
-		return (PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer());
-	}
-
-	public boolean isRangeGridAvailable(ActingPlayer actingPlayer, Game game) {
-		return isPassAnySquareAvailable(actingPlayer, game)
-			|| showGridForKTM(game, actingPlayer)
-			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true));
-	}
-
-	public boolean isMoveAvailable(ActingPlayer actingPlayer) {
-		return PlayerAction.GAZE == actingPlayer.getPlayerAction();
-	}
-
-	protected boolean showGridForKTM(@SuppressWarnings("unused") Game game, @SuppressWarnings("unused") ActingPlayer actingPlayer) {
-		return false;
-	}
-
 	@Override
 	public void endTurn() {
 		Game game = client.getGame();
@@ -380,7 +321,7 @@ public class MoveLogicModule extends LogicModule {
 				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				deselectActingPlayer();
 				return new InteractionResult(InteractionResult.Kind.HANDLED);

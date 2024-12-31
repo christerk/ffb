@@ -4,7 +4,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.InfluencingAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 
@@ -27,7 +27,7 @@ public class PitchMenuBuilder {
 	}
 
 	protected List<JMenuItem> populateMenu(ActionContext actionContext, List<JMenuItem> menuItemList) {
-		boolean treacherousAvailable = actionContext.getInfluencingActions().contains(InfluencingAction.TREACHEROUS);
+		boolean treacherousAvailable = actionContext.getInfluences().contains(Influences.BALL_ACTIONS_DUE_TO_TREACHEROUS);
 		String suffix = treacherousAvailable ? " (Treacherous)" : "";
 
 		for (ClientAction action : actionContext.getActions()) {

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -117,8 +118,8 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 
 	protected void evaluateClick(InteractionResult result, Player<?> player) {
 		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForActingPlayer();
+			case SELECT_ACTION:
+				createAndShowPopupMenuForActingPlayer(result.getActionContext());
 				break;
 			case PERFORM:
 				playerWasMoved();
@@ -153,13 +154,23 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		}};
 	}
 
-	protected void createAndShowPopupMenuForActingPlayer() {
+	protected void createAndShowPopupMenuForActingPlayer(ActionContext actionContext) {
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();
 		IconCache iconCache = userInterface.getIconCache();
 		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
 		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (logicModule.performsRangeGridAction(actingPlayer, game)) {
+			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
+				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID, dimensionProvider())));
+			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
+			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
+			menuItemList.add(toggleRangeGridAction);
+		}
+
+		menuItemList = menuBuilder.populateMenu(actionContext, menuItemList);
+
 		if (logicModule.isPassAnySquareAvailable(actingPlayer, game)) {
 			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
 				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS, dimensionProvider())));
@@ -167,13 +178,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
 			menuItemList.add(passAction);
 		}
-		if (logicModule.isRangeGridAvailable(actingPlayer, game)) {
-			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID, dimensionProvider())));
-			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
-			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
-			menuItemList.add(toggleRangeGridAction);
-		}
+
 		if (logicModule.isMoveAvailable(actingPlayer)) {
 			menuItemList.add(createMoveMenuItem(iconCache));
 		}
@@ -276,7 +281,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		} else {
 			switch (pActionKey) {
 				case PLAYER_SELECT:
-					createAndShowPopupMenuForActingPlayer();
+					clickOnPlayer(player);
 					break;
 				case PLAYER_ACTION_HAND_OVER:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_HAND_OVER);

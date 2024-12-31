@@ -6,11 +6,14 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -21,16 +24,17 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class LogicModule {
 	protected final FantasyFootballClient client;
@@ -46,7 +50,9 @@ public abstract class LogicModule {
 	public void postInit() {
 	}
 
-	public void teardown() {}
+	public void teardown() {
+	}
+
 	public final void perform(Player<?> player, ClientAction action) {
 		if (availableActions().contains(action)) {
 			performAvailableAction(player, action);
@@ -248,82 +254,155 @@ public abstract class LogicModule {
 				opponent -> fieldModel.getPlayerCoordinate(opponent).distanceInSteps(playerCoordinate) <= 3);
 	}
 
-	protected List<ClientAction> availableActions(Player<?> player) {
-		List<ClientAction> actions = new ArrayList<>();
+	protected ActionContext actionContext(Player<?> player) {
+		ActionContext context = new ActionContext();
 		Game game = client.getGame();
+
+		boolean treacherousAvailable = isTreacherousAvailable(player);
+		if (treacherousAvailable) {
+			context.add(Influences.BALL_ACTIONS_DUE_TO_TREACHEROUS);
+		}
+
 		if (isBlockActionAvailable(player)) {
-			actions.add(ClientAction.BLOCK);
+			findAlternateBlockActions(player).forEach(context::add);
+			context.add(ClientAction.BLOCK);
 		}
 		if (isMultiBlockActionAvailable(player)) {
-			actions.add(ClientAction.MULTIPLE_BLOCK);
+			context.add(ClientAction.MULTIPLE_BLOCK);
 		}
 		if (isThrowBombActionAvailable(player)) {
-			actions.add(ClientAction.BOMB);
+			context.add(ClientAction.BOMB);
 			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
-				actions.add(ClientAction.SHOT_TO_NOTHING_BOMB);
+				context.add(ClientAction.SHOT_TO_NOTHING_BOMB);
 			}
 		}
 		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.inflictsConfusion)) {
-			actions.add(ClientAction.GAZE);
+			context.add(ClientAction.GAZE);
 		}
 		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.canGainGaze)) {
-			actions.add(ClientAction.GAZE_ZOAT);
+			context.add(ClientAction.GAZE_ZOAT);
 		}
 		if (isMoveActionAvailable(player)) {
-			actions.add(ClientAction.MOVE);
+			context.add(ClientAction.MOVE);
 		}
 		if (isBlitzActionAvailable(player)) {
-			actions.add(ClientAction.BLITZ);
+			context.add(ClientAction.BLITZ);
 			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz)) {
-				actions.add(ClientAction.FRENZIED_RUSH);
+				context.add(ClientAction.FRENZIED_RUSH);
 			}
 		}
 		if (isFoulActionAvailable(player)) {
-			actions.add(ClientAction.FOUL);
+			context.add(ClientAction.FOUL);
 		}
-		boolean treacherousAvailable = isTreacherousAvailable(player);
 		if (isPassActionAvailable(player, treacherousAvailable)) {
-			actions.add(ClientAction.PASS);
+			context.add(ClientAction.PASS);
 			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
-				actions.add(ClientAction.SHOT_TO_NOTHING);
+				context.add(ClientAction.SHOT_TO_NOTHING);
 			}
 		}
 		if (isHandOverActionAvailable(player, treacherousAvailable)) {
-			actions.add(ClientAction.HAND_OVER);
+			context.add(ClientAction.HAND_OVER);
 		}
 		if (isThrowTeamMateActionAvailable(player)) {
-			actions.add(ClientAction.THROW_TEAM_MATE);
+			context.add(ClientAction.THROW_TEAM_MATE);
 		}
 		if (isKickTeamMateActionAvailable(player)) {
-			actions.add(ClientAction.KICK_TEAM_MATE);
+			context.add(ClientAction.KICK_TEAM_MATE);
 		}
 		if (isBeerBarrelBashAvailable(player)) {
-			actions.add(ClientAction.BEER_BARREL_BASH);
+			context.add(ClientAction.BEER_BARREL_BASH);
 		}
 		if (isAllYouCanEatAvailable(player)) {
-			actions.add(ClientAction.ALL_YOU_CAN_EAT);
+			context.add(ClientAction.ALL_YOU_CAN_EAT);
 		}
 		if (isKickEmBlockAvailable(player)) {
-			actions.add(ClientAction.KICK_EM_BLOCK);
+			context.add(ClientAction.KICK_EM_BLOCK);
 		}
 		if (isKickEmBlitzAvailable(player)) {
-			actions.add(ClientAction.BLITZ);
+			context.add(ClientAction.BLITZ);
 		}
 		if (isFlashingBladeAvailable(player)) {
-			actions.add(ClientAction.THE_FLASHING_BLADE);
+			context.add(ClientAction.THE_FLASHING_BLADE);
 		}
 		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player)) {
-			actions.add(ClientAction.RECOVER);
+			context.add(ClientAction.RECOVER);
 		}
 		if (isStandUpActionAvailable(player)
 			&& player.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
 			&& !game.getTurnData().isBlitzUsed()) {
-			actions.add(ClientAction.STAND_UP_BLITZ);
+			context.add(ClientAction.STAND_UP_BLITZ);
 		}
 		if (isStandUpActionAvailable(player)) {
-			actions.add(ClientAction.STAND_UP);
+			context.add(ClientAction.STAND_UP);
 		}
-		return actions;
+		return context;
+	}
+
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext context = new ActionContext();
+		Game game = client.getGame();
+		if (isPassAnySquareAvailable(actingPlayer, game)) {
+			context.add(ClientAction.PASS);
+		}
+
+		if (isMoveAvailable(actingPlayer)) {
+			context.add(ClientAction.MOVE);
+		}
+		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
+			context.add(ClientAction.JUMP);
+			if (actingPlayer.isJumping()) {
+				context.add(Influences.IS_JUMPING);
+			} else {
+				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				if (boundingLeap.isPresent()) {
+					context.add(ClientAction.BOUNDING_LEAP);
+				}
+			}
+		}
+		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
+			context.add(ClientAction.GAZE);
+		}
+		if (isFumblerooskieAvailable()) {
+			context.add(ClientAction.FUMBLEROOSKIE);
+		}
+		if (isEndPlayerActionAvailable()) {
+			context.add(ClientAction.END_MOVE);
+		}
+		if (isTreacherousAvailable(actingPlayer)) {
+			context.add(ClientAction.TREACHEROUS);
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			context.add(ClientAction.WISDOM);
+		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			context.add(ClientAction.RAIDING_PARTY);
+		}
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			context.add(ClientAction.LOOK_INTO_MY_EYES);
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			context.add(ClientAction.BALEFUL_HEX);
+		}
+		if (isPutridRegurgitationAvailable()) {
+			context.add(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION);
+			context.add(ClientAction.PROJECTILE_VOMIT);
+		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			context.add(ClientAction.BLACK_INK);
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			context.add(ClientAction.CATCH_OF_THE_DAY);
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		return context;
+	}
+
+	private List<Skill> findAlternateBlockActions(Player<?> player) {
+		return player.getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative) && SkillUsageType.REGULAR == skill.getSkillUsageType())
+			.collect(Collectors.toList());
 	}
 
 	public boolean isBlockActionAvailable(Player<?> player) {
@@ -563,4 +642,72 @@ public abstract class LogicModule {
 			&& player.hasUnusedSkillProperty(NamedProperties.canStabAndMoveAfterwards)
 			&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player)));
 	}
+
+	protected boolean isEndPlayerActionAvailable() {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return (!actingPlayer.hasActed()
+			|| !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFullMovement)
+			|| (actingPlayer.getCurrentMove() >= actingPlayer.getPlayer().getMovementWithModifiers()));
+	}
+
+
+	public boolean isJumpAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {
+		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		return mechanic.isAvailableAsNextMove(game, actingPlayer, jumping);
+	}
+
+	public Optional<Skill> isBoundingLeapAvailable(Game game, ActingPlayer actingPlayer) {
+		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+			return Optional.ofNullable(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers));
+		}
+
+		return Optional.empty();
+	}
+
+	public boolean isFumblerooskieAvailable() {
+		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
+
+		return (UtilCards.hasUncanceledSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canDropBall)
+			&& actingPlayer.getPlayerAction() != null
+			&& actingPlayer.getPlayerAction().allowsFumblerooskie()
+			&& UtilPlayer.hasBall(client.getGame(), actingPlayer.getPlayer()));
+	}
+
+	public boolean isPutridRegurgitationAvailable() {
+		return false;
+	}
+
+	public boolean isSpecialAbilityAvailable(ActingPlayer actingPlayer) {
+		return isTreacherousAvailable(actingPlayer)
+			|| isWisdomAvailable(actingPlayer)
+			|| isRaidingPartyAvailable(actingPlayer)
+			|| isLookIntoMyEyesAvailable(actingPlayer)
+			|| isBalefulHexAvailable(actingPlayer)
+			|| isPutridRegurgitationAvailable()
+			|| isCatchOfTheDayAvailable(actingPlayer)
+			|| isBlackInkAvailable(actingPlayer)
+			|| isThenIStartedBlastinAvailable(actingPlayer);
+	}
+
+	public boolean isPassAnySquareAvailable(ActingPlayer actingPlayer, Game game) {
+		return (PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer());
+	}
+
+	public boolean performsRangeGridAction(ActingPlayer actingPlayer, Game game) {
+		return isPassAnySquareAvailable(actingPlayer, game)
+			|| showGridForKTM(game, actingPlayer)
+			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
+			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true));
+	}
+
+	public boolean isMoveAvailable(ActingPlayer actingPlayer) {
+		return PlayerAction.GAZE == actingPlayer.getPlayerAction();
+	}
+
+	protected boolean showGridForKTM(@SuppressWarnings("unused") Game game, @SuppressWarnings("unused") ActingPlayer actingPlayer) {
+		return false;
+	}
+
 }

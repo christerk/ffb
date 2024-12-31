@@ -112,7 +112,7 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 		}
 	}
 
-	private boolean isEndPlayerActionAvailable() {
+	protected boolean isEndPlayerActionAvailable() {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return !actingPlayer.hasActed();

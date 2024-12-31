@@ -5,19 +5,14 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -44,7 +39,7 @@ public class SelectLogicModule extends LogicModule {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
-			return InteractionResult.selectAction(new ActionContext(availableActions(player), influencingActions(player), findAlternateBlockActions(player)));
+			return InteractionResult.selectAction(actionContext(player));
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
@@ -194,7 +189,6 @@ public class SelectLogicModule extends LogicModule {
 					break;
 			}
 		}
-
 	}
 
 	@Override
@@ -202,20 +196,4 @@ public class SelectLogicModule extends LogicModule {
 		client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
 		client.getClientData().setEndTurnButtonHidden(true);
 	}
-
-	private List<InfluencingAction> influencingActions(Player<?> player) {
-		List<InfluencingAction> actions = new ArrayList<>();
-		if (isTreacherousAvailable(player)) {
-			actions.add(InfluencingAction.TREACHEROUS);
-		}
-		return actions;
-	}
-
-	private List<String> findAlternateBlockActions(Player<?> player) {
-		return player.getSkillsIncludingTemporaryOnes().stream().filter(skill ->
-				skill.hasSkillProperty(NamedProperties.providesBlockAlternative)
-					&& SkillUsageType.REGULAR == skill.getSkillUsageType())
-			.map(Skill::getName).collect(Collectors.toList());
-	}
-
 }
