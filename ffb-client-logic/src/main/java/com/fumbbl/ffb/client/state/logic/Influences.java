@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum Influences {
-	BALL_ACTIONS_DUE_TO_TREACHEROUS(ClientAction.PASS, ClientAction.HAND_OVER),
+	BALL_ACTIONS_DUE_TO_TREACHEROUS(ClientAction.PASS, ClientAction.HAND_OVER, ClientAction.SHOT_TO_NOTHING),
+	HAS_ACTED(ClientAction.END_MOVE),
 	IS_JUMPING(ClientAction.JUMP),
 	VOMIT_DUE_TO_PUTRID_REGURGITATION(ClientAction.PROJECTILE_VOMIT);
 

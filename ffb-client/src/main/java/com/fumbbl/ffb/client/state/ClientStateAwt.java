@@ -15,12 +15,16 @@ import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.client.util.UtilClientMarker;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.INetCommandHandler;
 
@@ -31,12 +35,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -55,14 +62,11 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	private Player<?> fPopupMenuPlayer;
 
-	protected PitchMenuBuilder menuBuilder;
-
 	public ClientStateAwt(FantasyFootballClientAwt pClient, T logicModule) {
 		super(pClient, logicModule);
 		setClickable(true);
 		uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
 		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
-		menuBuilder = new PitchMenuBuilder(pitchDimensionProvider, pClient.getUserInterface().getIconCache());
 	}
 
 	public void initUI() {
@@ -449,6 +453,63 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	protected String invalidCursor() {
 		return null;
+	}
+
+	protected JMenuItem menuItem(MenuItemConfig config) {
+		JMenuItem item = new JMenuItem(pitchDimensionProvider, config.getTitle(),
+			createMenuIcon(getClient().getUserInterface().getIconCache(), config.getIconProperty()));
+		item.setMnemonic(config.getKeyEvent());
+		item.setAccelerator(KeyStroke.getKeyStroke(config.getKeyEvent(), 0));
+		return item;
+	}
+
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		return new LinkedHashMap<>();
+	}
+
+	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+		return new HashMap<>();
+	}
+
+	protected List<JMenuItem> menuItems(ActionContext actionContext) {
+		Map<ClientAction, MenuItemConfig> configs = new HashMap<>(itemConfigs(actionContext));
+
+		influencedItemConfigs().entrySet().stream()
+			.filter(entry -> actionContext.getInfluences().contains(entry.getKey())) // filter for influences present in current context
+			.flatMap(entry -> entry.getValue().entrySet().stream() // only allow actions defined in influence to be affected
+				.filter(influenceEntry -> entry.getKey().getInfluencedActions().contains(influenceEntry.getKey())))
+			.filter(entry -> configs.containsKey(entry.getKey()))
+			.forEach(entry -> configs.put(entry.getKey(), entry.getValue()));
+
+		return actionContext.getActions().stream().map(configs::get).map(this::menuItem).collect(Collectors.toList());
+	}
+
+	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext) {
+		createAndShowPopupMenuForPlayer(pPlayer, actionContext, new ArrayList<>());
+	}
+
+	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext, List<JMenuItem> prepopulated) {
+		List<JMenuItem> menuItemList = new ArrayList<>();
+		menuItemList.addAll(prepopulated);
+		menuItemList.addAll(menuItems(actionContext));
+		if (!menuItemList.isEmpty()) {
+			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
+			showPopupMenuForPlayer(pPlayer);
+		}
+	}
+
+	protected List<JMenuItem> uiOnlyMenuItems() {
+		return new ArrayList<>();
+	}
+
+	protected void createAndShowPopupMenuForActingPlayer(ActionContext actionContext) {
+		Game game = getClient().getGame();
+		UserInterface userInterface = getClient().getUserInterface();
+		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		List<JMenuItem> menuItemList = new ArrayList<>(uiOnlyMenuItems());
+		createAndShowPopupMenuForPlayer(actingPlayer.getPlayer(), actionContext, menuItemList);
 	}
 
 }

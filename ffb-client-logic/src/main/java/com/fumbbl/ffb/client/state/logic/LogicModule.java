@@ -10,7 +10,6 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
@@ -250,67 +249,6 @@ public abstract class LogicModule {
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canBlastRemotePlayer) &&
 			Arrays.stream(game.getOtherTeam(game.getActingTeam()).getPlayers()).anyMatch(
 				opponent -> fieldModel.getPlayerCoordinate(opponent).distanceInSteps(playerCoordinate) <= 3);
-	}
-
-	protected ActionContext actionContext(ActingPlayer actingPlayer) {
-		ActionContext context = new ActionContext();
-		Game game = client.getGame();
-		if (isPassAnySquareAvailable(actingPlayer, game)) {
-			context.add(ClientAction.PASS);
-		}
-
-		if (isMoveAvailable(actingPlayer)) {
-			context.add(ClientAction.MOVE);
-		}
-		if (isJumpAvailableAsNextMove(game, actingPlayer, true)) {
-			context.add(ClientAction.JUMP);
-			if (actingPlayer.isJumping()) {
-				context.add(Influences.IS_JUMPING);
-			} else {
-				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
-				if (boundingLeap.isPresent()) {
-					context.add(ClientAction.BOUNDING_LEAP);
-				}
-			}
-		}
-		if (isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
-			context.add(ClientAction.GAZE);
-		}
-		if (isFumblerooskieAvailable()) {
-			context.add(ClientAction.FUMBLEROOSKIE);
-		}
-		if (isEndPlayerActionAvailable()) {
-			context.add(ClientAction.END_MOVE);
-		}
-		if (isTreacherousAvailable(actingPlayer)) {
-			context.add(ClientAction.TREACHEROUS);
-		}
-		if (isWisdomAvailable(actingPlayer)) {
-			context.add(ClientAction.WISDOM);
-		}
-		if (isRaidingPartyAvailable(actingPlayer)) {
-			context.add(ClientAction.RAIDING_PARTY);
-		}
-		if (isLookIntoMyEyesAvailable(actingPlayer)) {
-			context.add(ClientAction.LOOK_INTO_MY_EYES);
-		}
-		if (isBalefulHexAvailable(actingPlayer)) {
-			context.add(ClientAction.BALEFUL_HEX);
-		}
-		if (isPutridRegurgitationAvailable()) {
-			context.add(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION);
-			context.add(ClientAction.PROJECTILE_VOMIT);
-		}
-		if (isBlackInkAvailable(actingPlayer)) {
-			context.add(ClientAction.BLACK_INK);
-		}
-		if (isCatchOfTheDayAvailable(actingPlayer)) {
-			context.add(ClientAction.CATCH_OF_THE_DAY);
-		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
-		}
-		return context;
 	}
 
 	public boolean isBlockActionAvailable(Player<?> player) {

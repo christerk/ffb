@@ -1,20 +1,24 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.SelectLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,14 +69,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			put(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ, ClientAction.KICK_EM_BLITZ);
 			put(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, ClientAction.THE_FLASHING_BLADE);
 		}};
-	}
-
-	private void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext) {
-		List<JMenuItem> menuItemList = menuBuilder.populateMenu(actionContext);
-		if (!menuItemList.isEmpty()) {
-			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-			showPopupMenuForPlayer(pPlayer);
-		}
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
@@ -173,4 +169,53 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		sideBarHome.refresh();
 	}
 
+	private String blockActionLabel(List<Skill> blockActions) {
+		List<String> actions = new ArrayList<>();
+		actions.add("Block Action");
+		blockActions.stream().map(Skill::getName).forEach(actions::add);
+		return String.join("/", actions);
+	}
+
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+
+		LinkedHashMap<ClientAction, MenuItemConfig> configs = new LinkedHashMap<>();
+
+		configs.put(ClientAction.BLOCK, new MenuItemConfig(blockActionLabel(actionContext.getBlockAlternatives()), IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
+		configs.put(ClientAction.MULTIPLE_BLOCK, new MenuItemConfig("Multiple Block", IIconProperty.ACTION_MUTIPLE_BLOCK, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK));
+		configs.put(ClientAction.BOMB, new MenuItemConfig("Throw Bomb Action", IIconProperty.ACTION_BOMB, IPlayerPopupMenuKeys.KEY_BOMB));
+		configs.put(ClientAction.SHOT_TO_NOTHING_BOMB, new MenuItemConfig("Shot To Nothing Bomb", IIconProperty.ACTION_BOMB, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB));
+		configs.put(ClientAction.GAZE, new MenuItemConfig("Hypnotic Gaze", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_GAZE));
+		configs.put(ClientAction.GAZE_ZOAT, new MenuItemConfig("Hypnotic Gaze (Zoat)", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT));
+		configs.put(ClientAction.MOVE, new MenuItemConfig("Move Action", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
+		configs.put(ClientAction.BLITZ, new MenuItemConfig("Blitz Action", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_BLITZ));
+		configs.put(ClientAction.FRENZIED_RUSH, new MenuItemConfig("Frenzied Rush Blitz", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH));
+		configs.put(ClientAction.FOUL, new MenuItemConfig("Foul Action", IIconProperty.ACTION_FOUL, IPlayerPopupMenuKeys.KEY_FOUL));
+		configs.put(ClientAction.PASS, new MenuItemConfig("Pass Action", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_PASS));
+		configs.put(ClientAction.SHOT_TO_NOTHING, new MenuItemConfig("Shot To Nothing", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING));
+		configs.put(ClientAction.HAND_OVER, new MenuItemConfig("Hand Over Action", IIconProperty.ACTION_HAND_OVER, IPlayerPopupMenuKeys.KEY_HAND_OVER));
+		configs.put(ClientAction.THROW_TEAM_MATE, new MenuItemConfig("Throw Team-Mate Action", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE));
+		configs.put(ClientAction.KICK_TEAM_MATE, new MenuItemConfig("Kick Team-Mate Action", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE));
+		configs.put(ClientAction.BEER_BARREL_BASH, new MenuItemConfig("Beer Barrel Bash", IIconProperty.ACTION_BEER_BARREL_BASH, IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH));
+		configs.put(ClientAction.ALL_YOU_CAN_EAT, new MenuItemConfig("All You Can Eat", IIconProperty.ACTION_ALL_YOU_CAN_EAT, IPlayerPopupMenuKeys.KEY_ALL_YOU_CAN_EAT));
+		configs.put(ClientAction.KICK_EM_BLOCK, new MenuItemConfig("Kick 'em while they are down! (Block)", IIconProperty.ACTION_KICK_EM_BLOCK, IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK));
+		configs.put(ClientAction.KICK_EM_BLITZ, new MenuItemConfig("Kick 'em while they are down! (Blitz)", IIconProperty.ACTION_KICK_EM_BLITZ, IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ));
+		configs.put(ClientAction.THE_FLASHING_BLADE, new MenuItemConfig("The Flashing Blade", IIconProperty.ACTION_THE_FLASHING_BLADE, IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE));
+		configs.put(ClientAction.RECOVER, new MenuItemConfig("Recover tackle zone & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_RECOVER));
+		configs.put(ClientAction.STAND_UP_BLITZ, new MenuItemConfig("Stand Up & End Move (using Blitz)", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
+		configs.put(ClientAction.STAND_UP, new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
+
+		return configs;
+	}
+
+	@Override
+	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+		Map<Influences, Map<ClientAction, MenuItemConfig>> configs = new HashMap<>();
+		Map<ClientAction, MenuItemConfig> treacherous = new HashMap<>();
+		configs.put(Influences.BALL_ACTIONS_DUE_TO_TREACHEROUS, treacherous);
+		treacherous.put(ClientAction.PASS, new MenuItemConfig("Pass Action (Treacherous)", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_PASS));
+		treacherous.put(ClientAction.SHOT_TO_NOTHING, new MenuItemConfig("Shot To Nothing (Treacherous)", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING));
+		treacherous.put(ClientAction.HAND_OVER, new MenuItemConfig("Hand Over Action (Treacherous)", IIconProperty.ACTION_HAND_OVER, IPlayerPopupMenuKeys.KEY_HAND_OVER));
+		return configs;
+	}
 }

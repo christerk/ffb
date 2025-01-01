@@ -7,8 +7,8 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -19,16 +19,14 @@ import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -154,105 +152,51 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		}};
 	}
 
-	protected void createAndShowPopupMenuForActingPlayer(ActionContext actionContext) {
+	@Override
+	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
+		Map<ClientAction, MenuItemConfig> jump = new HashMap<>();
+		influences.put(Influences.IS_JUMPING, jump);
+		jump.put(ClientAction.JUMP, new MenuItemConfig("Don't Jump", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_JUMP));
+		Map<ClientAction, MenuItemConfig> hasActed = new HashMap<>();
+		influences.put(Influences.HAS_ACTED, hasActed);
+		hasActed.put(ClientAction.END_MOVE, new MenuItemConfig("End Action", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+		return influences;
+	}
+
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
+
+		itemConfigs.put(ClientAction.PASS, new MenuItemConfig("Pass Ball (any square)", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_PASS));
+		itemConfigs.put(ClientAction.MOVE, new MenuItemConfig("Move", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
+		itemConfigs.put(ClientAction.JUMP, new MenuItemConfig("Jump", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_JUMP));
+		itemConfigs.put(ClientAction.BOUNDING_LEAP, new MenuItemConfig("Jump (Bounding Leap)", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP));
+		itemConfigs.put(ClientAction.GAZE, new MenuItemConfig("Hypnotic Gaze", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_GAZE));
+		itemConfigs.put(ClientAction.FUMBLEROOSKIE, new MenuItemConfig("Fumblerooskie", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE));
+		itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+		itemConfigs.put(ClientAction.TREACHEROUS, new MenuItemConfig("Treacherous", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_TREACHEROUS));
+		itemConfigs.put(ClientAction.WISDOM, new MenuItemConfig("Wisdom of the White Dwarf", IIconProperty.ACTION_WISDOM, IPlayerPopupMenuKeys.KEY_WISDOM));
+		itemConfigs.put(ClientAction.RAIDING_PARTY, new MenuItemConfig("Raiding Party", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY));
+		itemConfigs.put(ClientAction.LOOK_INTO_MY_EYES, new MenuItemConfig("Look Into My Eyes", IIconProperty.ACTION_LOOK_INTO_MY_EYES, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES));
+		itemConfigs.put(ClientAction.BALEFUL_HEX, new MenuItemConfig("Baleful Hex", IIconProperty.ACTION_BALEFUL_HEX, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX));
+		itemConfigs.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+		itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
+		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
+		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
+
+		return itemConfigs;
+	}
+
+	@Override
+	protected List<JMenuItem> uiOnlyMenuItems() {
 		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		IconCache iconCache = userInterface.getIconCache();
-		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<>();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		List<JMenuItem> menuItems = new ArrayList<>();
 		if (logicModule.performsRangeGridAction(actingPlayer, game)) {
-			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_TOGGLE_RANGE_GRID, dimensionProvider())));
-			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
-			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
-			menuItemList.add(toggleRangeGridAction);
+			menuItems.add(menuItem(new MenuItemConfig("Range Grid on/off", IIconProperty.ACTION_TOGGLE_RANGE_GRID, IPlayerPopupMenuKeys.KEY_RANGE_GRID)));
 		}
-
-		menuItemList = menuBuilder.populateMenu(actionContext, menuItemList);
-
-		if (logicModule.isPassAnySquareAvailable(actingPlayer, game)) {
-			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS, dimensionProvider())));
-			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
-			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
-			menuItemList.add(passAction);
-		}
-
-		if (logicModule.isMoveAvailable(actingPlayer)) {
-			menuItemList.add(createMoveMenuItem(iconCache));
-		}
-		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, true)) {
-			if (actingPlayer.isJumping()) {
-				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
-				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
-				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
-				menuItemList.add(jumpAction);
-			} else {
-				JMenuItem jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP, dimensionProvider())));
-				jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
-				jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
-				menuItemList.add(jumpAction);
-
-				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
-				if (boundingLeap.isPresent()) {
-					JMenuItem specialJumpAction = new JMenuItem(dimensionProvider(),
-						"Jump (" + boundingLeap.get().getName() + ")",
-						new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_JUMP, dimensionProvider())));
-					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
-					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
-					menuItemList.add(specialJumpAction);
-				}
-			}
-		}
-		if (logicModule.isHypnoticGazeActionAvailable(false, actingPlayer.getPlayer(), NamedProperties.inflictsConfusion)) {
-			JMenuItem hypnoticGazeAction = new JMenuItem(dimensionProvider(), "Hypnotic Gaze",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE, dimensionProvider())));
-			hypnoticGazeAction.setMnemonic(IPlayerPopupMenuKeys.KEY_GAZE);
-			hypnoticGazeAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GAZE, 0));
-			menuItemList.add(hypnoticGazeAction);
-		}
-		if (logicModule.isFumblerooskieAvailable()) {
-			JMenuItem fumblerooskieAction = new JMenuItem(dimensionProvider(), "Fumblerooskie",
-				new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_PASS, dimensionProvider())));
-			fumblerooskieAction.setMnemonic(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE);
-			fumblerooskieAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, 0));
-			menuItemList.add(fumblerooskieAction);
-		}
-		if (logicModule.isEndPlayerActionAvailable()) {
-			addEndActionLabel(iconCache, menuItemList);
-		}
-		if (logicModule.isTreacherousAvailable(actingPlayer)) {
-			menuItemList.add(createTreacherousItem(iconCache));
-		}
-		if (logicModule.isWisdomAvailable(actingPlayer)) {
-			menuItemList.add(createWisdomItem(iconCache));
-		}
-		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
-			menuItemList.add(createRaidingPartyItem(iconCache));
-		}
-		if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
-			menuItemList.add(createLookIntoMyEyesItem(iconCache));
-		}
-		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
-			menuItemList.add(createBalefulHexItem(iconCache));
-		}
-		if (logicModule.isPutridRegurgitationAvailable()) {
-			menuItemList.add(createPutridRegurgitationItem(iconCache));
-		}
-		if (logicModule.isBlackInkAvailable(actingPlayer)) {
-			menuItemList.add(createBlackInkItem(iconCache));
-		}
-		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
-			menuItemList.add(createCatchOfTheDayItem(iconCache));
-		}
-		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
-			menuItemList.add(createThenIStartedBlastinItem(iconCache));
-		}
-		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-		showPopupMenuForPlayer(actingPlayer.getPlayer());
+		return menuItems;
 	}
 
 	protected JMenuItem createMoveMenuItem(IconCache iconCache) {
@@ -349,10 +293,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	protected void playerWasMoved() {
 		getClient().getGame().getFieldModel().clearMoveSquares();
 		getClient().getUserInterface().getFieldComponent().refresh();
-	}
-
-	protected JMenuItem createPutridRegurgitationItem(@SuppressWarnings("unused") IconCache iconCache) {
-		return null;
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, FieldComponent fieldComponent,
