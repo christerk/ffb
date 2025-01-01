@@ -31,17 +31,4 @@ public class ClientStatePutridRegurgitationBlitz extends AbstractClientStateBlit
 				break;
 		}
 	}
-
-	@Override
-	protected JMenuItem createPutridRegurgitationItem(IconCache iconCache) {
-		ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
-		if (PlayerAction.PUTRID_REGURGITATION_MOVE == actingPlayer.getPlayerAction()) {
-			JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Putrid Regurgitation",
-				createMenuIcon(iconCache, IIconProperty.ACTION_VOMIT));
-			menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
-			menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
-			return menuItem;
-		}
-		return createMoveMenuItem(iconCache);
-	}
 }
