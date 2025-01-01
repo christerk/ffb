@@ -326,6 +326,7 @@ public class StepInitMoving extends AbstractStep {
 					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
 					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
+					commitTargetSelection();
 					game.getTurnData().setTurnStarted(true);
 					switch (actingPlayer.getPlayerAction()) {
 						case BLITZ_MOVE:
