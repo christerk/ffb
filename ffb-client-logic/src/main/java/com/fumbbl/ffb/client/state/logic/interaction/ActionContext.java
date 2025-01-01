@@ -45,4 +45,11 @@ public class ActionContext {
 	public void add(Skill blockAlternative) {
 		blockAlternatives.add(blockAlternative);
 	}
+
+	public ActionContext merge(ActionContext other) {
+		this.actions.addAll(other.actions);
+		this.influences.addAll(other.influences);
+		this.blockAlternatives.addAll(other.blockAlternatives);
+		return this;
+	}
 }

@@ -8,7 +8,9 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -95,6 +97,18 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 	@Override
 	public Set<ClientAction> availableActions() {
 		return Collections.singleton(ClientAction.END_MOVE);
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		if (isEndPlayerActionAvailable()) {
+			if (playerActivationUsed()) {
+				actionContext.add(Influences.HAS_ACTED);
+			}
+			actionContext.add(ClientAction.END_MOVE);
+		}
+		return actionContext;
 	}
 
 	@Override

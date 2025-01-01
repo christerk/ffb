@@ -37,9 +37,10 @@ public class GazeMoveLogicModule extends MoveLogicModule {
 
     if (UtilPlayer.isAdjacentGazeTarget(game, player)) {
       client.getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
+      return new InteractionResult(InteractionResult.Kind.HANDLED);
     }
 
-    return new InteractionResult(InteractionResult.Kind.IGNORE);
+    return super.playerInteraction(player);
 
   }
 }

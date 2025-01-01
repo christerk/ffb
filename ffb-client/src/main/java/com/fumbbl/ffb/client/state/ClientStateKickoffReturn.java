@@ -32,17 +32,6 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 		super(pClient, new KickoffReturnLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForPlayer(pPlayer);
-				break;
-			default:
-				break;
-		}
-	}
-
 	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {

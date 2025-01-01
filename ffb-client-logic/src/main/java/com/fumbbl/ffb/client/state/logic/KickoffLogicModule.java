@@ -4,7 +4,9 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.Collections;
@@ -91,4 +93,10 @@ public class KickoffLogicModule extends LogicModule {
 		FieldCoordinate ballCoordinate = client.getGame().getFieldModel().getBallCoordinate();
 		return ((ballCoordinate != null) && FieldCoordinateBounds.HALF_AWAY.isInBounds(ballCoordinate));
 	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in kick off context");
+	}
+
 }

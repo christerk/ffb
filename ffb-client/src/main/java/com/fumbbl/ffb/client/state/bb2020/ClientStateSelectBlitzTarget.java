@@ -30,18 +30,6 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 		super(pClient, new SelectBlitzTargetLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForActingPlayer();
-				break;
-			default:
-				break;
-
-		}
-	}
-
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);

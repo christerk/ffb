@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -31,13 +32,13 @@ public class BlockLogicModule extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() == player) {
 			if (isSufferingBloodLust(actingPlayer)) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 				client.getCommunication().sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.BLITZ_MOVE,
 					actingPlayer.isJumping());
 				return new InteractionResult(InteractionResult.Kind.HANDLED);
 			} else {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			}
 		} else {
 			return block(player, actingPlayer);
@@ -65,6 +66,16 @@ public class BlockLogicModule extends LogicModule {
 			add(ClientAction.END_MOVE);
 			addAll(extension.availableActions());
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		if (isSufferingBloodLust(actingPlayer)) {
+			actionContext.add(ClientAction.MOVE);
+		}
+		actionContext.add(ClientAction.END_MOVE);
+		return actionContext.merge(extension.actionContext(actingPlayer));
 	}
 
 	@Override

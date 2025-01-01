@@ -6,6 +6,7 @@ import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -66,6 +67,13 @@ public class RaidingPartyLogicModule extends LogicModule {
 	@Override
 	public Set<ClientAction> availableActions() {
 		return Collections.singleton(ClientAction.RAIDING_PARTY);
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		actionContext.add(ClientAction.RAIDING_PARTY);
+		return actionContext;
 	}
 
 	@Override

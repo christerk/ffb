@@ -4,10 +4,9 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -15,11 +14,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -39,8 +34,8 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
 
   protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
     switch (result.getKind()) {
-      case SHOW_ACTIONS:
-        createAndShowPopupMenuForBlockingPlayer();
+      case SELECT_ACTION:
+        createAndShowPopupMenuForActingPlayer(result.getActionContext());
         break;
       case SHOW_ACTION_ALTERNATIVES:
         List<JMenuItem> menuItemList = new ArrayList<>();
@@ -81,7 +76,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     if (logicModule.isSufferingBloodLust(actingPlayer)) {
       switch (pActionKey) {
         case PLAYER_SELECT:
-          createAndShowPopupMenuForBlockingPlayer();
+          clickOnPlayer(player);
           break;
         case PLAYER_ACTION_MOVE:
           menuItemSelected(player, IPlayerPopupMenuKeys.KEY_MOVE);
@@ -111,48 +106,22 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
     }};
   }
 
-  protected void createAndShowPopupMenuForBlockingPlayer() {
-    Game game = getClient().getGame();
-    ActingPlayer actingPlayer = game.getActingPlayer();
-    List<JMenuItem> menuItemList = new ArrayList<>();
-    UserInterface userInterface = getClient().getUserInterface();
-    IconCache iconCache = userInterface.getIconCache();
-    userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-    if (logicModule.isSufferingBloodLust(actingPlayer)) {
-      JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
-      moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
-      moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
-      menuItemList.add(moveAction);
-    }
-    addEndActionLabel(iconCache, menuItemList);
+  @Override
+  protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+    LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
-    if (logicModule.isTreacherousAvailable(actingPlayer)) {
-      menuItemList.add(createTreacherousItem(iconCache));
-    }
-    if (logicModule.isWisdomAvailable(actingPlayer)) {
-      menuItemList.add(createWisdomItem(iconCache));
-    }
-    if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
-      menuItemList.add(createRaidingPartyItem(iconCache));
-    }
-    if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
-      menuItemList.add(createLookIntoMyEyesItem(iconCache));
-    }
-    if (logicModule.isBalefulHexAvailable(actingPlayer)) {
-      menuItemList.add(createBalefulHexItem(iconCache));
-    }
-    if (logicModule.isBlackInkAvailable(actingPlayer)) {
-      menuItemList.add(createBlackInkItem(iconCache));
-    }
-    if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
-      menuItemList.add(createCatchOfTheDayItem(iconCache));
-    }
-    if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
-      menuItemList.add(createThenIStartedBlastinItem(iconCache));
-    }
-    createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-    showPopupMenuForPlayer(actingPlayer.getPlayer());
+    itemConfigs.put(ClientAction.MOVE, new MenuItemConfig("Move", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
+    itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+    itemConfigs.put(ClientAction.TREACHEROUS, new MenuItemConfig("Treacherous", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_TREACHEROUS));
+    itemConfigs.put(ClientAction.WISDOM, new MenuItemConfig("Wisdom of the White Dwarf", IIconProperty.ACTION_WISDOM, IPlayerPopupMenuKeys.KEY_WISDOM));
+    itemConfigs.put(ClientAction.RAIDING_PARTY, new MenuItemConfig("Raiding Party", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY));
+    itemConfigs.put(ClientAction.LOOK_INTO_MY_EYES, new MenuItemConfig("Look Into My Eyes", IIconProperty.ACTION_LOOK_INTO_MY_EYES, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES));
+    itemConfigs.put(ClientAction.BALEFUL_HEX, new MenuItemConfig("Baleful Hex", IIconProperty.ACTION_BALEFUL_HEX, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX));
+    itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
+    itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
+    itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
+
+    return itemConfigs;
+
   }
-
 }

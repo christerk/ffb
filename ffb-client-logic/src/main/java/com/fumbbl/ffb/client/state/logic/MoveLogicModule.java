@@ -366,6 +366,7 @@ public class MoveLogicModule extends LogicModule {
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
+	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
 		ActionContext context = new ActionContext();
 		Game game = client.getGame();

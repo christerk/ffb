@@ -6,6 +6,8 @@ import com.fumbbl.ffb.GameListEntry;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
@@ -174,6 +176,11 @@ public class LoginLogicModule extends LogicModule {
 		}
 
 		return VersionCheck.SUCCESS;
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in login context");
 	}
 
 	public enum VersionCheck {

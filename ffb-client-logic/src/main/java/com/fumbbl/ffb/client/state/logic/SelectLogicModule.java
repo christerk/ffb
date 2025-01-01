@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -76,6 +77,11 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.KICK_EM_BLITZ);
 			add(ClientAction.THE_FLASHING_BLADE);
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in select context");
 	}
 
 	@Override

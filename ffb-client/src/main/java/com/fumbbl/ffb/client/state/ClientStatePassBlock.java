@@ -41,18 +41,6 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 	}
 
 	@Override
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForPlayer(pPlayer);
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
 	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {

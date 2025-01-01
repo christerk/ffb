@@ -43,11 +43,8 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
       case SHOW_BLOODLUST_ACTIONS:
         createAndShowPopupMenuForBloodLustPlayer();
         break;
-      case SHOW_ACTIONS:
-        createAndShowPopupMenuForActingPlayer();
-        break;
       default:
-        super.evaluateClick(result, player);
+        evaluateClick(result, player);
         break;
 
     }

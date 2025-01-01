@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.Collections;
@@ -47,6 +49,11 @@ public class SpectateLogicModule extends LogicModule {
 	public void startReplay() {
 		client.getReplayer().start();
 		client.updateClientState();
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in spectate context");
 	}
 
 }

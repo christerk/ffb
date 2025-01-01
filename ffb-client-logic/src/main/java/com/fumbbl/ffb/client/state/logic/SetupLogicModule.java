@@ -4,8 +4,10 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.dialog.DialogTeamSetupParameter;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
@@ -76,6 +78,11 @@ public class SetupLogicModule extends LogicModule {
 	public boolean squareIsValidForSetup(FieldCoordinate pCoordinate) {
 		return FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate)
 			|| (pCoordinate.getX() == FieldCoordinate.RSV_HOME_X);
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in setup context");
 	}
 
 }

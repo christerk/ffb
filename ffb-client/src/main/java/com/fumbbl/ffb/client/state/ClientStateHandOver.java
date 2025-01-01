@@ -30,15 +30,6 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		super(pClient, new HandOverLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> player) {
-		InteractionResult result = logicModule.playerInteraction(player);
-		switch (result.getKind()) {
-			default:
-				super.evaluateClick(result, player);
-				break;
-		}
-	}
-
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();

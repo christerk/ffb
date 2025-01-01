@@ -47,7 +47,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 			return super.playerInteraction(player);
 		} else {
 			if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				if (!actingPlayer.hasBlocked()) {
 					return extension.playerInteraction(player, true);

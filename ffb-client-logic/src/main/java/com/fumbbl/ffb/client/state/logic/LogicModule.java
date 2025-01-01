@@ -10,6 +10,7 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
@@ -43,6 +44,8 @@ public abstract class LogicModule {
 	public abstract ClientStateId getId();
 
 	public abstract Set<ClientAction> availableActions();
+
+	protected abstract ActionContext actionContext(ActingPlayer actingPlayer);
 
 	public void postInit() {
 	}

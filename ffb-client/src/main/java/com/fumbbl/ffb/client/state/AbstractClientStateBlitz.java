@@ -33,16 +33,8 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 		super.initUI();
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		evaluateClick(result, pPlayer);
-	}
-
 	protected void evaluateClick(InteractionResult result, Player<?> player) {
 		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForActingPlayer();
-				break;
 			case SHOW_ACTION_ALTERNATIVES:
 
 				List<JMenuItem> menuItemList = new ArrayList<>();

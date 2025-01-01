@@ -2,7 +2,9 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.RosterPlayer;
@@ -149,4 +151,10 @@ public class WizardLogicModule extends LogicModule {
 	protected void performAvailableAction(Player<?> player, ClientAction action) {
 
 	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in wizard context");
+	}
+
 }

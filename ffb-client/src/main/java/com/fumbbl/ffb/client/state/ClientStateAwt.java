@@ -370,7 +370,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
-		String endMoveActionLabel = logicModule.playerActivationUsed() ? "End Action" : deselectPlayerLabel();
+		String endMoveActionLabel = logicModule.playerActivationUsed() ? "End Action" : "Deselect Player";
 		JMenuItem endMoveAction = new JMenuItem(pitchDimensionProvider, endMoveActionLabel,
 			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE, pitchDimensionProvider)));
 		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
@@ -424,10 +424,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	protected DimensionProvider dimensionProvider() {
 		return pitchDimensionProvider;
-	}
-
-	protected String deselectPlayerLabel() {
-		return "Deselect Player";
 	}
 
 	protected void determineCursor(InteractionResult result) {

@@ -4,23 +4,18 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.RaidingPartyLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicModule> {
@@ -32,8 +27,8 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForActingPlayer();
+			case SELECT_ACTION:
+				createAndShowPopupMenuForActingPlayer(result.getActionContext());
 				break;
 			default:
 				break;
@@ -78,28 +73,11 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	}
 
 
-	protected void createAndShowPopupMenuForActingPlayer() {
-
-		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		IconCache iconCache = userInterface.getIconCache();
-		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<>();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-
-		menuItemList.add(createCancelRaidingPartyItem(iconCache));
-
-		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-		showPopupMenuForPlayer(actingPlayer.getPlayer());
-
-	}
-
-	protected JMenuItem createCancelRaidingPartyItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Raiding Party",
-			createMenuIcon(iconCache, IIconProperty.ACTION_RAIDING_PARTY));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
-		return menuItem;
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
+		itemConfigs.put(ClientAction.RAIDING_PARTY, new MenuItemConfig("Cancel Raiding Party", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY));
+		return itemConfigs;
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.logic.bb2020.KickEmBlockLogicModule;
-import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -12,16 +11,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class ClientStateKickEmBlock extends AbstractClientStateBlock<KickEmBlockLogicModule> {
 	public ClientStateKickEmBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new KickEmBlockLogicModule(pClient));
-	}
-
-	public void clickOnPlayer(Player<?> player) {
-		InteractionResult result = logicModule.playerInteraction(player);
-
-		switch (result.getKind()) {
-			default:
-				super.evaluateClickOnPlayer(result, player);
-				break;
-		}
 	}
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {

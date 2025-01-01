@@ -7,6 +7,8 @@ import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IProgressListener;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
@@ -136,6 +138,11 @@ public class ReplayLogicModule extends LogicModule {
 	@Override
 	protected void performAvailableAction(Player<?> player, ClientAction action) {
 
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in replay context");
 	}
 
 	/**

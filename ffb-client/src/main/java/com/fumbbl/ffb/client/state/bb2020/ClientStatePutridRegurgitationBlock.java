@@ -5,8 +5,6 @@ import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.PutridRegurgitationBlockLogicModule;
-import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.model.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +12,6 @@ import java.util.Map;
 public class ClientStatePutridRegurgitationBlock extends AbstractClientStateBlock<PutridRegurgitationBlockLogicModule> {
 	public ClientStatePutridRegurgitationBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new PutridRegurgitationBlockLogicModule(pClient));
-	}
-
-	public void clickOnPlayer(Player<?> player) {
-		InteractionResult result = logicModule.playerInteraction(player);
-		switch (result.getKind()) {
-			default:
-				super.evaluateClickOnPlayer(result, player);
-				break;
-		}
 	}
 
 	@Override

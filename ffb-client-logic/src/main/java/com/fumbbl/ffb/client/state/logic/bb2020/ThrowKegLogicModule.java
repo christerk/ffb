@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -169,4 +165,5 @@ public class ThrowKegLogicModule extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		return !actingPlayer.hasActed();
 	}
+
 }
