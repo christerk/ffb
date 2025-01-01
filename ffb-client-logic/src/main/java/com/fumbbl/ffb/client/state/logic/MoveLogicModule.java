@@ -260,7 +260,7 @@ public class MoveLogicModule extends LogicModule {
 		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
 	}
 
-  // TODO do we really need both path finder calls?
+	// TODO do we really need both path finder calls?
 	public FieldCoordinate[] automovePath(FieldCoordinate coordinate) {
 		String automoveProperty = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		Game game = client.getGame();
@@ -342,13 +342,13 @@ public class MoveLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
 		MoveSquare moveSquare = moveSquare(coordinate);
 		FieldCoordinate[] movePath = automovePath(coordinate);
-			if (ArrayTool.isProvided(movePath)) {
-				movePlayer(movePath);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
-			} else if (moveSquare != null){
-				moveSquare(coordinate);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
-			}
+		if (ArrayTool.isProvided(movePath)) {
+			movePlayer(movePath);
+			return new InteractionResult(InteractionResult.Kind.HANDLED);
+		} else if (moveSquare != null) {
+			movePlayer(coordinate);
+			return new InteractionResult(InteractionResult.Kind.HANDLED);
+		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
 
