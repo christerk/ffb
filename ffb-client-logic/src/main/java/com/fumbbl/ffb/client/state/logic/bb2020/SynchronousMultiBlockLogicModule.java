@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -23,7 +24,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 	private final Map<String, PlayerState> originalPlayerStates = new HashMap<>();
 
 	private final BlockLogicExtension extension;
-	
+
 	public SynchronousMultiBlockLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 		this.extension = new BlockLogicExtension(pClient);
@@ -119,6 +120,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 	@Override
 	public Set<ClientAction> availableActions() {
 		return new HashSet<ClientAction>() {{
+			add(ClientAction.MOVE);
 			add(ClientAction.END_MOVE);
 			add(ClientAction.BLOCK);
 			add(ClientAction.STAB);
@@ -131,6 +133,40 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		if (actingPlayer.isSufferingBloodLust()) {
+			actionContext.add(ClientAction.MOVE);
+		}
+		actionContext.add(ClientAction.END_MOVE);
+		if (isTreacherousAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.TREACHEROUS);
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.WISDOM);
+		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.RAIDING_PARTY);
+		}
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.LOOK_INTO_MY_EYES);
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BALEFUL_HEX);
+		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BLACK_INK);
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		return actionContext;
 	}
 
 	@Override

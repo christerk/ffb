@@ -4,23 +4,18 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.HitAndRunLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
@@ -36,25 +31,17 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	@Override
 	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
-		if (result.getKind() == InteractionResult.Kind.SHOW_ACTIONS) {
-			createAndShowPopupMenuForActingPlayer();
+		switch (result.getKind()) {
+			case SELECT_ACTION:
+				createAndShowPopupMenuForActingPlayer(result.getActionContext());
 		}
 	}
 
-	protected void createAndShowPopupMenuForActingPlayer() {
-
-		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		IconCache iconCache = userInterface.getIconCache();
-		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<>();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-
-		menuItemList.add(createCancelItem(iconCache));
-
-		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-		showPopupMenuForPlayer(actingPlayer.getPlayer());
-
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
+		itemConfigs.put(ClientAction.HIT_AND_RUN, new MenuItemConfig("Cancel Hit And Run", IIconProperty.ACTION_HIT_AND_RUN, IPlayerPopupMenuKeys.KEY_HIT_AND_RUN));
+		return itemConfigs;
 	}
 
 	@Override
@@ -82,14 +69,6 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 		}
 
 		return true;
-	}
-
-	protected JMenuItem createCancelItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Cancel Hit And Run",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_HIT_AND_RUN, dimensionProvider())));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN, 0));
-		return menuItem;
 	}
 
 	@Override

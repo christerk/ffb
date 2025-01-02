@@ -17,16 +17,6 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 		super(pClient, new GazeLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				super.clickOnPlayer(pPlayer);
-			default:
-				break;
-		}
-	}
-
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled;
 		Game game = getClient().getGame();

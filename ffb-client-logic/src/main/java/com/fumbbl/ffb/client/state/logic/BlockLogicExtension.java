@@ -47,7 +47,7 @@ public class BlockLogicExtension extends LogicModule {
 	}
 
 	@Override
-	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+	public ActionContext actionContext(ActingPlayer actingPlayer) {
 
 		ActionContext actionContext = new ActionContext();
 

@@ -43,8 +43,8 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 	public void clickOnPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
-			case SHOW_ACTIONS:
-				createAndShowPopupMenuForActingPlayer();
+			case SELECT_ACTION:
+				createAndShowPopupMenuForActingPlayer(result.getActionContext());
 				break;
 			default:
 				break;

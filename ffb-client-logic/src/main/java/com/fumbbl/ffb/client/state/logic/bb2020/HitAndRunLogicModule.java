@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -23,6 +24,13 @@ public class HitAndRunLogicModule extends LogicModule {
 		return new HashSet<ClientAction>() {{
 			add(ClientAction.HIT_AND_RUN);
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext context = new ActionContext();
+		context.add(ClientAction.HIT_AND_RUN);
+		return context;
 	}
 
 	@Override
