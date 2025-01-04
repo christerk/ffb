@@ -174,7 +174,7 @@ public class BombLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			return new InteractionResult(InteractionResult.Kind.PERFORM, playerCoordinate);

@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -50,7 +51,7 @@ public class ThrowKegLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else {
 			if (isValidTarget(player, game)) {
 				client.getCommunication().sendThrowKeg(player);
@@ -97,6 +98,40 @@ public class ThrowKegLogicModule extends LogicModule {
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		if (isEndPlayerActionAvailable()) {
+			actionContext.add(ClientAction.END_MOVE);
+		}
+
+		if (isTreacherousAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.TREACHEROUS);
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.WISDOM);
+		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.RAIDING_PARTY);
+		}
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.LOOK_INTO_MY_EYES);
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BALEFUL_HEX);
+		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BLACK_INK);
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		return actionContext;
 	}
 
 	@Override

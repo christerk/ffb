@@ -20,8 +20,8 @@ public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> 
 		logicModule.fieldInteraction(pCoordinate);
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		logicModule.playerInteraction(pPlayer);
+	public void clickOnPlayer(Player<?> player) {
+		logicModule.playerInteraction(player);
 	}
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {

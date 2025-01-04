@@ -6,7 +6,6 @@ import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
@@ -21,12 +20,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -109,9 +103,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		evaluateClick(result, pPlayer);
+	public void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
+		evaluateClick(result, player);
 	}
 
 	protected void evaluateClick(InteractionResult result, Player<?> player) {
@@ -197,14 +191,6 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			menuItems.add(menuItem(new MenuItemConfig("Range Grid on/off", IIconProperty.ACTION_TOGGLE_RANGE_GRID, IPlayerPopupMenuKeys.KEY_RANGE_GRID)));
 		}
 		return menuItems;
-	}
-
-	protected JMenuItem createMoveMenuItem(IconCache iconCache) {
-		JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_MOVE, dimensionProvider())));
-		moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
-		moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
-		return moveAction;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

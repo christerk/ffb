@@ -155,8 +155,8 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	@Override
 	protected Map<Integer, ClientAction> actionMapping() {
 		return new HashMap<Integer, ClientAction>() {{
-			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB, ClientAction.HAIL_MARY_BOMB);
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
 			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
 			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);

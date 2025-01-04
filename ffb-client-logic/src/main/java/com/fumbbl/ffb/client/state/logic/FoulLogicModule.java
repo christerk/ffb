@@ -38,7 +38,7 @@ public class FoulLogicModule extends MoveLogicModule {
       }
     } else {
       if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {
-        return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+        return InteractionResult.selectAction(actionContext(actingPlayer));
       } else {
         return playerSelected(player);
       }

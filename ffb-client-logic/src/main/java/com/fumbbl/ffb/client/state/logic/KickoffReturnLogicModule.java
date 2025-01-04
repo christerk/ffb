@@ -3,7 +3,9 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -24,11 +26,11 @@ public class KickoffReturnLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public InteractionResult playerInteraction(Player<?> pPlayer) {
+	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if (game.getTeamHome().hasPlayer(pPlayer) && playerState.isActive()) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
+			return InteractionResult.selectAction(actionContext(player));
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
@@ -74,4 +76,25 @@ public class KickoffReturnLogicModule extends MoveLogicModule {
 		client.getClientData().setEndTurnButtonHidden(true);
 	}
 
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		throw new UnsupportedOperationException("actionContext for acting player is not supported in kick off return context");
+	}
+
+	protected ActionContext actionContext(Player<?> player) {
+		ActionContext actionContext = new ActionContext();
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		if ((actingPlayer.getPlayer() == null) && (playerState != null) && playerState.isAbleToMove()) {
+			actionContext.add(ClientAction.MOVE);
+		}
+		if (actingPlayer.getPlayer() == player) {
+			if (actingPlayer.hasActed()) {
+				actionContext.add(Influences.HAS_ACTED);
+			}
+			actionContext.add(ClientAction.END_MOVE);
+		}
+		return actionContext;
+	}
 }

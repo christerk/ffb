@@ -20,9 +20,9 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		super(pClient, new DumpOffLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
+	public void clickOnPlayer(Player<?> player) {
 		Game game = getClient().getGame();
-		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 		clickOnField(playerCoordinate);
 	}
 

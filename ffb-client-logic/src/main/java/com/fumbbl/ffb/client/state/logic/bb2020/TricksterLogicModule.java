@@ -6,7 +6,9 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -37,7 +39,7 @@ public class TricksterLogicModule extends LogicModule {
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		if (player == game.getDefender()) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+			return InteractionResult.selectAction(actionContext(client.getGame().getActingPlayer()));
 		}
 		return new InteractionResult(InteractionResult.Kind.IGNORE);
 	}
@@ -64,4 +66,10 @@ public class TricksterLogicModule extends LogicModule {
 		return Collections.singleton(ClientAction.END_MOVE);
 	}
 
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		actionContext.add(ClientAction.END_MOVE);
+		return actionContext;
+	}
 }
