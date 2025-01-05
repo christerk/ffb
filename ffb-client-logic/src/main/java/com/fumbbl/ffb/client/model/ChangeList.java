@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Multi Block and Pile Driver: If a player with both skills used multi block and was then standing next to a knocked down player the game crashed")
 			.addBugfix("Multi Block and Bloodlust: It was not possible to change a multi block action to a move action after failing bloodlust")
 			.addImprovement("Local Icon Cache: Custom pitches are now cached as well")
+			.addImprovement("Updated bundled icon cache")
 		);
 
 		versions.add(new VersionChangeList("2.32.0")

@@ -1,14 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.eclipsesource.json.JsonObject;
-import com.fumbbl.ffb.BloodSpot;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.WeatherFactory;
 import com.fumbbl.ffb.json.JsonStringMapOption;
 import com.fumbbl.ffb.model.BlockKind;
@@ -38,23 +31,12 @@ import javax.imageio.stream.ImageInputStream;
 import javax.net.ssl.SSLContext;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -141,6 +123,12 @@ public class IconCache {
 
 		fIconUrlProperties = new Properties();
 		try (InputStream propertyInputStream = getClass().getResourceAsStream("/icons.ini")) {
+			fIconUrlProperties.load(propertyInputStream);
+		} catch (IOException pIoException) {
+			// empty properties
+		}
+
+		try (InputStream propertyInputStream = getClass().getResourceAsStream("/statics.ini")) {
 			fIconUrlProperties.load(propertyInputStream);
 		} catch (IOException pIoException) {
 			// empty properties
