@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -37,6 +38,11 @@ public class BlockKindLogicModule extends LogicModule {
 			add(ClientAction.CHAINSAW);
 			add(ClientAction.GORED_BY_THE_BULL);
 		}};
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		return null;
 	}
 
 	@Override

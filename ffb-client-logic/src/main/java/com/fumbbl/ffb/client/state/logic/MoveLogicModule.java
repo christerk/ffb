@@ -108,7 +108,7 @@ public class MoveLogicModule extends LogicModule {
 					if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
 						communication.sendActingPlayer(player, PlayerAction.MOVE, actingPlayer.isJumping());
 					}
-					if (PlayerAction.PASS == actingPlayer.getPlayerAction()) {
+					if (PlayerAction.PASS == actingPlayer.getPlayerAction() || PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
 						communication.sendActingPlayer(player, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
 					}
 					if (PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) {

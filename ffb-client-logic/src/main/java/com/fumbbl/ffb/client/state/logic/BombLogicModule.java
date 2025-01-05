@@ -231,13 +231,6 @@ public class BombLogicModule extends LogicModule {
 		this.showRangeRuler = showRangeRuler;
 	}
 
-	public boolean isHailMaryPassActionAvailable() {
-		Game game = client.getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
-			&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
-	}
-
 	public boolean isEndTurnActionAvailable() {
 		Game game = client.getGame();
 		return !game.getTurnMode().isBombTurn() && !game.getActingPlayer().isMustCompleteAction();

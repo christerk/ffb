@@ -46,7 +46,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() == player) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else {
 			return handlePlayerSelection(player);
 		}
@@ -59,11 +59,11 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 			client.getCommunication().sendUnsetBlockTarget(player.getId());
 			return new InteractionResult(InteractionResult.Kind.HANDLED);
 		} else {
-			return showPopupOrBlockPlayer(player);
+			return handleDefenderSelection(player);
 		}
 	}
 
-	private InteractionResult showPopupOrBlockPlayer(Player<?> defender) {
+	private InteractionResult handleDefenderSelection(Player<?> defender) {
 		if (defender == null) {
 			return new InteractionResult(InteractionResult.Kind.IGNORE);
 		}

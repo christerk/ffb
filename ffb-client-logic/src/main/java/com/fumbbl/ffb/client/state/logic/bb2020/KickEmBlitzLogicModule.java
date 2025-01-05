@@ -35,7 +35,7 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 				return super.playerInteraction(player);
 			} else {
 				if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {
-					return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+					return InteractionResult.selectAction(actionContext(actingPlayer));
 				} else {
 					if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
 						&& game.getFieldModel().getPlayerState(player).isProneOrStunned()
@@ -59,4 +59,5 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 			return new InteractionResult(InteractionResult.Kind.RESET);
 		}
 	}
+
 }

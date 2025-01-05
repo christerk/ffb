@@ -55,7 +55,7 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
 			if (game.playingTeamHasActingPLayer()) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			}
 		} else {
 			if (isValidTarget(player, game)) {

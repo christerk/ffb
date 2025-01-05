@@ -2,31 +2,26 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
-import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.PassLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommand;
-import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Kalimar
@@ -163,104 +158,36 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		fRangeGridHandler.refreshRangeGrid();
 	}
 
-	protected void createAndShowPopupMenuForActingPlayer() {
+	@Override
+	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = super.influencedItemConfigs();
 
-		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		IconCache iconCache = userInterface.getIconCache();
-		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<>();
-		ActingPlayer actingPlayer = game.getActingPlayer();
+		Map<ClientAction, MenuItemConfig> hailMary = new HashMap<>();
+		influences.put(Influences.IS_THROWING_HAIL_MARY, hailMary);
+		hailMary.put(ClientAction.HAIL_MARY_PASS, new MenuItemConfig("Don't use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS, IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS));
 
-		if ((PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
-			JMenuItem passAction = new JMenuItem(dimensionProvider(), "Pass Ball (any square)",
-				createMenuIcon(iconCache, IIconProperty.ACTION_PASS));
-			passAction.setMnemonic(IPlayerPopupMenuKeys.KEY_PASS);
-			passAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PASS, 0));
-			menuItemList.add(passAction);
-		}
+		return influences;
+	}
 
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
-			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()
-			&& !game.getFieldModel().getWeather().equals(Weather.BLIZZARD)) {
-			String text = (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) ? "Don't use Hail Mary Pass"
-				: "Use Hail Mary Pass";
-			JMenuItem hailMaryPassAction = new JMenuItem(dimensionProvider(), text,
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS));
-			hailMaryPassAction.setMnemonic(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
-			hailMaryPassAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, 0));
-			menuItemList.add(hailMaryPassAction);
-		}
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
-		if (logicModule.isJumpAvailableAsNextMove(game, actingPlayer, false)) {
-			JMenuItem jumpAction;
-			JMenuItem specialJumpAction = null;
-			if (actingPlayer.isJumping()) {
-				jumpAction = new JMenuItem(dimensionProvider(), "Don't Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
-			} else {
-				jumpAction = new JMenuItem(dimensionProvider(), "Jump",
-					createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
-				Optional<Skill> boundingLeap = logicModule.isBoundingLeapAvailable(game, actingPlayer);
-				if (boundingLeap.isPresent()) {
-					specialJumpAction = new JMenuItem(dimensionProvider(),
-						"Jump (" + boundingLeap.get().getName() + ")",
-						createMenuIcon(iconCache, IIconProperty.ACTION_JUMP));
-					specialJumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
-					specialJumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, 0));
-				}
-			}
-			jumpAction.setMnemonic(IPlayerPopupMenuKeys.KEY_JUMP);
-			jumpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_JUMP, 0));
-			menuItemList.add(jumpAction);
-			if (specialJumpAction != null) {
-				menuItemList.add(specialJumpAction);
-			}
-		}
+		itemConfigs.put(ClientAction.HAIL_MARY_PASS, new MenuItemConfig("Use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_PASS, IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS));
+		itemConfigs.put(ClientAction.PASS, new MenuItemConfig("Pass Ball (any square)", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_PASS));
+		itemConfigs.put(ClientAction.MOVE, new MenuItemConfig("Move", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
+		itemConfigs.put(ClientAction.JUMP, new MenuItemConfig("Jump", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_JUMP));
+		itemConfigs.put(ClientAction.BOUNDING_LEAP, new MenuItemConfig("Jump (Bounding Leap)", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP));
+		itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+		itemConfigs.put(ClientAction.WISDOM, new MenuItemConfig("Wisdom of the White Dwarf", IIconProperty.ACTION_WISDOM, IPlayerPopupMenuKeys.KEY_WISDOM));
+		itemConfigs.put(ClientAction.RAIDING_PARTY, new MenuItemConfig("Raiding Party", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY));
+		itemConfigs.put(ClientAction.LOOK_INTO_MY_EYES, new MenuItemConfig("Look Into My Eyes", IIconProperty.ACTION_LOOK_INTO_MY_EYES, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES));
+		itemConfigs.put(ClientAction.BALEFUL_HEX, new MenuItemConfig("Baleful Hex", IIconProperty.ACTION_BALEFUL_HEX, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX));
+		itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
+		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
+		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 
-		if (!actingPlayer.hasPassed()) {
-			JMenuItem toggleRangeGridAction = new JMenuItem(dimensionProvider(), "Range Grid on/off",
-				createMenuIcon(iconCache, IIconProperty.ACTION_TOGGLE_RANGE_GRID));
-			toggleRangeGridAction.setMnemonic(IPlayerPopupMenuKeys.KEY_RANGE_GRID);
-			toggleRangeGridAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RANGE_GRID, 0));
-			menuItemList.add(toggleRangeGridAction);
-		}
-
-		if (!actingPlayer.hasPassed()) {
-			if (!actingPlayer.isSufferingAnimosity()) {
-				JMenuItem moveAction = new JMenuItem(dimensionProvider(), "Move",
-					createMenuIcon(iconCache, IIconProperty.ACTION_MOVE));
-				moveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_MOVE);
-				moveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MOVE, 0));
-				menuItemList.add(moveAction);
-			}
-		}
-
-		if (logicModule.isWisdomAvailable(actingPlayer)) {
-			menuItemList.add(createWisdomItem(iconCache));
-		}
-
-		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
-			menuItemList.add(createRaidingPartyItem(iconCache));
-		}
-		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
-			menuItemList.add(createBalefulHexItem(iconCache));
-		}
-		if (logicModule.isBlackInkAvailable(actingPlayer)) {
-			menuItemList.add(createBlackInkItem(iconCache));
-		}
-		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
-			menuItemList.add(createCatchOfTheDayItem(iconCache));
-		}
-		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
-			menuItemList.add(createThenIStartedBlastinItem(iconCache));
-		}
-		addEndActionLabel(iconCache, menuItemList);
-
-		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-		showPopupMenuForPlayer(actingPlayer.getPlayer());
-
+		return itemConfigs;
 	}
 
 	@Override
@@ -271,7 +198,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				fRangeGridHandler.refreshRangeGrid();
 				break;
 			case IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS:
-				if (logicModule.hmpAvailable()) {
+				if (logicModule.isHailMaryPassActionAvailable()) {
 					// logic module sends command to deselect hmp so afterward we have to show the ruler again
 					fShowRangeRuler = logicModule.actionIsHmp();
 				}
@@ -293,4 +220,22 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		}
 	}
 
+	@Override
+	protected Map<Integer, ClientAction> actionMapping() {
+		return new HashMap<Integer, ClientAction>() {{
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
+			put(IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS, ClientAction.HAIL_MARY_PASS);
+			put(IPlayerPopupMenuKeys.KEY_PASS, ClientAction.PASS);
+			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
+			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
+			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
+			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+		}};
+	}
 }

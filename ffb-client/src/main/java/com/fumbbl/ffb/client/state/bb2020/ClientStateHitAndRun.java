@@ -34,6 +34,9 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 		switch (result.getKind()) {
 			case SELECT_ACTION:
 				createAndShowPopupMenuForActingPlayer(result.getActionContext());
+				break;
+			default:
+				break;
 		}
 	}
 

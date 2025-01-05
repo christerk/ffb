@@ -37,7 +37,7 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 			return super.playerInteraction(player);
 		} else {
 			if (UtilPlayer.isNextMoveGoingForIt(game) && !actingPlayer.isGoingForIt()) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				if (PlayerAction.PUTRID_REGURGITATION_BLITZ == actingPlayer.getPlayerAction()
 					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)

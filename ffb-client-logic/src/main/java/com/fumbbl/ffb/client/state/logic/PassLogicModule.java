@@ -6,13 +6,15 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -27,7 +29,7 @@ public class PassLogicModule extends MoveLogicModule {
 	public ClientStateId getId() {
 		return ClientStateId.PASS;
 	}
-	
+
 	@Override
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
@@ -129,7 +131,7 @@ public class PassLogicModule extends MoveLogicModule {
 		ClientCommunication communication = client.getCommunication();
 		switch (action) {
 			case HAIL_MARY_PASS:
-				if (hmpAvailable()) {
+				if (isHailMaryPassActionAvailable()) {
 					if (actionIsHmp()) {
 						communication.sendActingPlayer(player, PlayerAction.PASS, actingPlayer.isJumping());
 					} else {
@@ -150,9 +152,66 @@ public class PassLogicModule extends MoveLogicModule {
 		return PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction();
 	}
 
-	public boolean hmpAvailable() {
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
 		Game game = client.getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		return actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare);
+
+		if (isPassAnySquareAvailable(actingPlayer, game) && !actingPlayer.hasPassed()) {
+			actionContext.add(ClientAction.PASS);
+		}
+
+		if (isHailMaryPassActionAvailable() && UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && !actingPlayer.hasPassed()) {
+			if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
+				actionContext.add(Influences.IS_THROWING_HAIL_MARY);
+			}
+			actionContext.add(ClientAction.HAIL_MARY_PASS);
+		}
+
+		if (isJumpAvailableAsNextMove(game, actingPlayer, false)) {
+			actionContext.add(ClientAction.JUMP);
+			if (actingPlayer.isJumping()) {
+				actionContext.add(Influences.IS_JUMPING);
+			} else {
+				Optional<Skill> boundingLeap = isBoundingLeapAvailable(game, actingPlayer);
+				if (boundingLeap.isPresent()) {
+					actionContext.add(ClientAction.BOUNDING_LEAP);
+				}
+			}
+		}
+
+		if (!actingPlayer.hasPassed() && !actingPlayer.isSufferingAnimosity()
+			&& (actingPlayer.getPlayerAction() == PlayerAction.PASS || actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS)) {
+			actionContext.add(ClientAction.MOVE);
+		}
+
+		if (isWisdomAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.WISDOM);
+		}
+
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.RAIDING_PARTY);
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BALEFUL_HEX);
+		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BLACK_INK);
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		actionContext.add(ClientAction.END_MOVE);
+		if (actingPlayer.hasActed()) {
+			actionContext.add(Influences.HAS_ACTED);
+		}
+		return actionContext;
+	}
+
+	public boolean performsRangeGridAction(ActingPlayer actingPlayer, Game game) {
+		return !actingPlayer.hasPassed();
 	}
 }

@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -35,7 +36,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.SHOW_ACTIONS);
+			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer))) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
 			return new InteractionResult(InteractionResult.Kind.HANDLED);
@@ -53,6 +54,39 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		} else {
 			return new InteractionResult(InteractionResult.Kind.INVALID);
 		}
+	}
+
+	@Override
+	protected ActionContext actionContext(ActingPlayer actingPlayer) {
+		ActionContext actionContext = new ActionContext();
+		actionContext.add(ClientAction.END_MOVE);
+
+		if (isTreacherousAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.TREACHEROUS);
+		}
+		if (isWisdomAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.WISDOM);
+		}
+		if (isRaidingPartyAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.RAIDING_PARTY);
+		}
+		if (isLookIntoMyEyesAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.LOOK_INTO_MY_EYES);
+		}
+		if (isBalefulHexAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BALEFUL_HEX);
+		}
+		if (isBlackInkAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.BLACK_INK);
+		}
+		if (isCatchOfTheDayAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
+		}
+		if (isThenIStartedBlastinAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN
+			);
+		}
+		return actionContext;
 	}
 
 	@Override

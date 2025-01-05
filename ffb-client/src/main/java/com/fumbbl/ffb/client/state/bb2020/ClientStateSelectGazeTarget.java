@@ -5,23 +5,17 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.AbstractClientStateMove;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.SelectGazeTargetLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectGazeTargetLogicModule> {
@@ -70,50 +64,6 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 		// clicks on fields are ignored
 	}
 
-
-	protected void createAndShowPopupMenuForActingPlayer() {
-		Game game = getClient().getGame();
-		UserInterface userInterface = getClient().getUserInterface();
-		IconCache iconCache = userInterface.getIconCache();
-		userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-		List<JMenuItem> menuItemList = new ArrayList<>();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		String endMoveActionLabel = "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(dimensionProvider(), endMoveActionLabel,
-			createMenuIcon(iconCache, IIconProperty.ACTION_END_MOVE));
-		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-		menuItemList.add(endMoveAction);
-
-		if (logicModule.isTreacherousAvailable(actingPlayer)) {
-			menuItemList.add(createTreacherousItem(iconCache));
-		}
-		if (logicModule.isWisdomAvailable(actingPlayer)) {
-			menuItemList.add(createWisdomItem(iconCache));
-		}
-		if (logicModule.isRaidingPartyAvailable(actingPlayer)) {
-			menuItemList.add(createRaidingPartyItem(iconCache));
-		}
-		if (logicModule.isLookIntoMyEyesAvailable(actingPlayer)) {
-			menuItemList.add(createLookIntoMyEyesItem(iconCache));
-		}
-		if (logicModule.isBalefulHexAvailable(actingPlayer)) {
-			menuItemList.add(createBalefulHexItem(iconCache));
-		}
-		if (logicModule.isBlackInkAvailable(actingPlayer)) {
-			menuItemList.add(createBlackInkItem(iconCache));
-		}
-		if (logicModule.isCatchOfTheDayAvailable(actingPlayer)) {
-			menuItemList.add(createCatchOfTheDayItem(iconCache));
-		}
-		if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {
-			menuItemList.add(createThenIStartedBlastinItem(iconCache));
-		}
-		createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-		showPopupMenuForPlayer(actingPlayer.getPlayer());
-	}
-
-
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
@@ -121,7 +71,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 		Player<?> player = actingPlayer.getPlayer();
 		switch (pActionKey) {
 			case PLAYER_SELECT:
-				createAndShowPopupMenuForActingPlayer();
+				clickOnPlayer(player);
 				break;
 			case PLAYER_ACTION_END_MOVE:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);

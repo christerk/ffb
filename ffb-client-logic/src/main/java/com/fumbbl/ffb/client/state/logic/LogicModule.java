@@ -1,14 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.CardEffect;
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -559,4 +551,10 @@ public abstract class LogicModule {
 		return false;
 	}
 
+	public boolean isHailMaryPassActionAvailable() {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
+			&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
+	}
 }
