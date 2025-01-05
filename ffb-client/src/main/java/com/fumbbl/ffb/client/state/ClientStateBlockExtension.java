@@ -3,20 +3,16 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.util.UtilCards;
 
-import javax.swing.*;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ClientStateBlockExtension {
   
@@ -73,47 +69,25 @@ public class ClientStateBlockExtension {
     return false;
   }
 
-  public void createAndShowBlockOptionsPopupMenu(ClientStateAwt<?> pClientState, Player<?> attacker, Player<?> defender, boolean multiBlock, List<JMenuItem> menuItemList) {
-    IconCache iconCache = pClientState.getClient().getUserInterface().getIconCache();
-    DimensionProvider dimensionProvider = pClientState.dimensionProvider();
-    if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
-      JMenuItem stabAction = new JMenuItem(dimensionProvider, "Stab Opponent",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB, pClientState.dimensionProvider())));
-      stabAction.setMnemonic(IPlayerPopupMenuKeys.KEY_STAB);
-      stabAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAB, 0));
-      menuItemList.add(stabAction);
-    }
-    if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
-      JMenuItem chainsawAction = new JMenuItem(dimensionProvider, "Chainsaw",
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CHAINSAW,  pClientState.dimensionProvider())));
-      chainsawAction.setMnemonic(IPlayerPopupMenuKeys.KEY_CHAINSAW);
-      chainsawAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CHAINSAW, 0));
-      menuItemList.add(chainsawAction);
-    }
-    Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
-    if (vomitSkill.isPresent() && !multiBlock) {
-      JMenuItem projectileVomit = new JMenuItem(dimensionProvider, vomitSkill.get().getName(),
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_VOMIT,  pClientState.dimensionProvider())));
-      projectileVomit.setMnemonic(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
-      projectileVomit.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, 0));
-      menuItemList.add(projectileVomit);
-    }
 
-    Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
-    if (fireSkill.isPresent() && !multiBlock) {
-      JMenuItem breatheFire = new JMenuItem(dimensionProvider, fireSkill.get().getName(),
-        new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BREATHE_FIRE,  pClientState.dimensionProvider())));
-      breatheFire.setMnemonic(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
-      breatheFire.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, 0));
-      menuItemList.add(breatheFire);
-    }
+  protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+    Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
+    Map<ClientAction, MenuItemConfig> putrid = new HashMap<>();
+    influences.put(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION, putrid);
+    putrid.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+    return influences;
+  }
 
-    JMenuItem blockAction = new JMenuItem(dimensionProvider, "Block Opponent",
-      new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLOCK,  pClientState.dimensionProvider())));
-    blockAction.setMnemonic(IPlayerPopupMenuKeys.KEY_BLOCK);
-    blockAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLOCK, 0));
-    menuItemList.add(blockAction);
-    pClientState.createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
-    pClientState.showPopupMenuForPlayer(defender);
+  protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs() {
+    LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
+
+    itemConfigs.put(ClientAction.STAB, new MenuItemConfig("Stab Opponent", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_STAB));
+    itemConfigs.put(ClientAction.CHAINSAW, new MenuItemConfig("Chainsaw", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
+    itemConfigs.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Projectile Vomit", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+    itemConfigs.put(ClientAction.BREATHE_FIRE, new MenuItemConfig("Breathe Fire", IIconProperty.ACTION_BREATHE_FIRE, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
+    itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block Opponent", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
+
+    return itemConfigs;
+
   }
 }

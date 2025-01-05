@@ -5,25 +5,23 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
-import com.fumbbl.ffb.client.state.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.SynchronousMultiBlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ClientStateSynchronousMultiBlock extends ClientStateAwt<SynchronousMultiBlockLogicModule> {
-
-	private final ClientStateBlockExtension extension = new ClientStateBlockExtension();
 
 	public ClientStateSynchronousMultiBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new SynchronousMultiBlockLogicModule(pClient));
@@ -33,13 +31,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SELECT_ACTION:
-				createAndShowPopupMenuForActingPlayer(result.getActionContext());
-				break;
-			case SHOW_ACTION_ALTERNATIVES:
-				Game game = getClient().getGame();
-				ActingPlayer actingPlayer = game.getActingPlayer();
-				List<JMenuItem> menuItemList = new ArrayList<>();
-				extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), player, true, menuItemList);
+				createAndShowPopupMenuForPlayer(player, result.getActionContext());
 				break;
 			default:
 				break;
@@ -128,7 +120,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 						pActionKey);
 					Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
 					if (defender != null) {
-						logicModule.handlePlayerSelection(defender);
+						clickOnPlayer(defender);
 					}
 					break;
 			}

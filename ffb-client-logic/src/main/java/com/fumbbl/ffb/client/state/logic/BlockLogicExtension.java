@@ -15,6 +15,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class BlockLogicExtension extends LogicModule {
@@ -75,6 +76,36 @@ public class BlockLogicExtension extends LogicModule {
 		if (isThenIStartedBlastinAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
+		return actionContext;
+	}
+
+	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock) {
+		Player<?> attacker = actingPlayer.getPlayer();
+		ActionContext actionContext = new ActionContext();
+		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
+			actionContext.add(ClientAction.STAB);
+		}
+		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
+			actionContext.add(ClientAction.CHAINSAW);
+		}
+		Optional<Skill> vomitSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail);
+		if (vomitSkill.isPresent() && !multiBlock) {
+			if (vomitSkill.get().hasSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
+				actionContext.add(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION);
+			}
+			actionContext.add(ClientAction.PROJECTILE_VOMIT);
+		}
+
+		Optional<Skill> fireSkill = UtilCards.getUnusedSkillWithProperty(attacker, NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
+		if (fireSkill.isPresent() && !multiBlock) {
+			actionContext.add(ClientAction.BREATHE_FIRE);
+		}
+
+		if (isGoredAvailable()) {
+			actionContext.add(ClientAction.GORED_BY_THE_BULL);
+		}
+		actionContext.add(ClientAction.BLOCK);
+
 		return actionContext;
 	}
 
@@ -139,8 +170,12 @@ public class BlockLogicExtension extends LogicModule {
 		client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire);
 	}
 
+	@Override
+	public InteractionResult playerInteraction(Player<?> player) {
+		return playerInteraction(player, false, false);
+	}
 
-	public InteractionResult playerInteraction(Player<?> pDefender, boolean pDoBlitz) {
+	public InteractionResult playerInteraction(Player<?> pDefender, boolean pDoBlitz, boolean multiBlock) {
 		if (pDefender == null) {
 			return new InteractionResult(InteractionResult.Kind.IGNORE);
 		}
@@ -153,7 +188,7 @@ public class BlockLogicExtension extends LogicModule {
 		if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
+				return InteractionResult.selectAction(blockActionContext(actingPlayer, multiBlock));
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
 				return new InteractionResult(InteractionResult.Kind.HANDLED);
@@ -182,7 +217,8 @@ public class BlockLogicExtension extends LogicModule {
 		return false;
 	}
 
-	public boolean isGoredAvailable(Game game) {
+	public boolean isGoredAvailable() {
+		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 		if (targetSelectionState != null && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie)) {

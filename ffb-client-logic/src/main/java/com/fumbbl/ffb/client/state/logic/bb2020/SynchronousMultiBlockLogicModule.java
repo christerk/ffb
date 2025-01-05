@@ -72,7 +72,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 		if (extension.isBlockable(game, defender)) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(defender);
 			if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesMultipleBlockAlternative)) {
-				return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
+				return extension.playerInteraction(defender, false, true);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				selectPlayer(defender, BlockKind.BLOCK);
 				return new InteractionResult(InteractionResult.Kind.HANDLED);

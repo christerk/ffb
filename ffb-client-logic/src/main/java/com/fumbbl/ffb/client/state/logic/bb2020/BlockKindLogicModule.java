@@ -1,11 +1,13 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -41,8 +43,13 @@ public class BlockKindLogicModule extends LogicModule {
 	}
 
 	@Override
+	public InteractionResult playerInteraction(Player<?> player) {
+		return InteractionResult.selectAction(actionContext(client.getGame().getActingPlayer()));
+	}
+
+	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
-		return null;
+		return extension.blockActionContext(actingPlayer, actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
 	}
 
 	@Override
@@ -56,7 +63,7 @@ public class BlockKindLogicModule extends LogicModule {
 			switch (action) {
 				case GORED_BY_THE_BULL:
 					Skill goredSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canAddBlockDie);
-					if (extension.isGoredAvailable(game) && goredSkill != null) {
+					if (extension.isGoredAvailable() && goredSkill != null) {
 						client.getCommunication().sendUseSkill(goredSkill, true, actingPlayer.getPlayerId());
 					}
 					client.getCommunication().sendBlock(actingPlayer.getPlayerId(), player, false, false, false, false);

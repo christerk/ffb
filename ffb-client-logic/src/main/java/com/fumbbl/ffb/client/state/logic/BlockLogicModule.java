@@ -46,7 +46,7 @@ public class BlockLogicModule extends LogicModule {
 	}
 
 	protected InteractionResult block(Player<?> player, ActingPlayer actingPlayer) {
-		return extension.playerInteraction(player, actingPlayer.getPlayerAction().isBlitzing());
+		return extension.playerInteraction(player, actingPlayer.getPlayerAction().isBlitzing(), actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
 	}
 
 

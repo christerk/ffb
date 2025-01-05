@@ -50,7 +50,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				if (!actingPlayer.hasBlocked()) {
-					return extension.playerInteraction(player, true);
+					return extension.playerInteraction(player, true, actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK);
 				}
 			}
 		}
@@ -118,7 +118,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 					break;
 				case GORED_BY_THE_BULL:
 					//TODO almost identical to block kind logic but is not sending the block command probably because we handle frenzy blocks here?
-					if (isGoredAvailable(client.getGame())) {
+					if (isGoredAvailable()) {
 						UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie).ifPresent(goredSkill ->
 							communication.sendUseSkill(goredSkill, true, actingPlayer.getPlayerId()));
 					}
@@ -130,7 +130,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 		}
 	}
 
-	public boolean isGoredAvailable(Game game) {
-		return extension.isGoredAvailable(game);
+	public boolean isGoredAvailable() {
+		return extension.isGoredAvailable();
 	}
 }

@@ -3,19 +3,13 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,24 +25,6 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 
 	public void initUI() {
 		super.initUI();
-	}
-
-	protected void evaluateClick(InteractionResult result, Player<?> player) {
-		switch (result.getKind()) {
-			case SHOW_ACTION_ALTERNATIVES:
-
-				List<JMenuItem> menuItemList = new ArrayList<>();
-				if (logicModule.isGoredAvailable(getClient().getGame())) {
-					menuItemList.add(createGoredItem());
-				}
-
-				ActingPlayer actingPlayer = getClient().getGame().getActingPlayer();
-				extension.createAndShowBlockOptionsPopupMenu(this, actingPlayer.getPlayer(), player, false, menuItemList);
-
-			default:
-				super.evaluateClick(result, player);
-				break;
-		}
 	}
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
@@ -89,13 +65,4 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
-
-	private JMenuItem createGoredItem() {
-		IconCache iconCache = getClient().getUserInterface().getIconCache();
-		JMenuItem menuItem = new JMenuItem(dimensionProvider(), "Gored By The Bull",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BLITZ, dimensionProvider())));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, 0));
-		return menuItem;
-	}
 }

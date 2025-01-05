@@ -4,22 +4,18 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
-import com.fumbbl.ffb.client.state.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.BlockKindLogicModule;
-import com.fumbbl.ffb.client.ui.swing.JMenuItem;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
-	private final ClientStateBlockExtension extension = new ClientStateBlockExtension();
 
 	public ClientStateSelectBlockKind(FantasyFootballClientAwt pClient) {
 		super(pClient, new BlockKindLogicModule(pClient));
@@ -44,8 +40,14 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	private void showMenu() {
 		Game game = getClient().getGame();
 		if (game.isHomePlaying()) {
-			List<JMenuItem> menuItemList = new ArrayList<>();
-			extension.createAndShowBlockOptionsPopupMenu(this, game.getActingPlayer().getPlayer(), game.getDefender(), false, menuItemList);
+			InteractionResult result = logicModule.playerInteraction(null);
+			switch (result.getKind()) {
+				case SELECT_ACTION:
+					createAndShowPopupMenuForPlayer(game.getDefender(), result.getActionContext());
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

@@ -12,7 +12,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
@@ -294,7 +293,7 @@ public class SelectLogicModule extends LogicModule {
 
 	private List<Skill> findAlternateBlockActions(Player<?> player) {
 		return player.getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative) && SkillUsageType.REGULAR == skill.getSkillUsageType())
+			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative))
 			.collect(Collectors.toList());
 	}
 }
