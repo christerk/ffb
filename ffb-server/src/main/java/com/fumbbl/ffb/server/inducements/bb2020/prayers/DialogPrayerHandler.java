@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public abstract class DialogPrayerHandler extends PrayerHandler {
 
-	protected PlayerSelector selector = PlayerSelector.INSTANCE;
+	PlayerSelector selector = PlayerSelector.INSTANCE;
 
 	@Override
 	final boolean initEffect(GameState gameState, Team prayingTeam) {

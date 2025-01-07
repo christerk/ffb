@@ -15,6 +15,7 @@ import com.fumbbl.ffb.report.UtilReport;
 public class ReportPrayerWasted extends NoDiceReport {
 
 	private String name;
+	private String playerId;
 
 	public ReportPrayerWasted() {
 		super();
@@ -22,6 +23,11 @@ public class ReportPrayerWasted extends NoDiceReport {
 
 	public ReportPrayerWasted(String name) {
 		this.name = name;
+	}
+
+	public ReportPrayerWasted(String name, String playerId) {
+		this.name = name;
+		this.playerId = playerId;
 	}
 
 	public ReportId getId() {
@@ -33,10 +39,13 @@ public class ReportPrayerWasted extends NoDiceReport {
 		return name;
 	}
 
-	// transformation
+	public String getPlayerId() {
+		return playerId;
+	}
+// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportPrayerWasted(name);
+		return new ReportPrayerWasted(name, playerId);
 	}
 
 	// JSON serialization
@@ -44,6 +53,7 @@ public class ReportPrayerWasted extends NoDiceReport {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.NAME.addTo(jsonObject, name);
 		return jsonObject;
 	}
@@ -52,6 +62,7 @@ public class ReportPrayerWasted extends NoDiceReport {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		name = IJsonOption.NAME.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

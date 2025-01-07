@@ -21,6 +21,7 @@ public class ChangeList {
 			.addImprovement("Local Icon Cache: Custom pitches are now cached as well")
 			.addImprovement("Updated bundled icon cache")
 			.addBugfix("Animosity: Was applied against star players")
+			.addImprovement("In case the Intensive Training prayer is wasted on a player that can not gain any primary skills the log message is now clearer")
 		);
 
 		versions.add(new VersionChangeList("2.32.0")
