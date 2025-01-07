@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -128,6 +129,11 @@ public class StepSecondMoveFuriousOutburst extends AbstractStep {
 		}
 
 		if (coordinate == null) {
+			String selectedPlayerId = fieldModel.getTargetSelectionState().getSelectedPlayerId();
+			if (StringTool.isProvided(selectedPlayerId)) {
+				Player<?> target = game.getPlayerById(selectedPlayerId);
+				fieldModel.setPlayerState(target, fieldModel.getPlayerState(target).changeSelectedStabTarget(false));
+			}
 			eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 3, false))
 				.filter(coordinate -> fieldModel.getPlayer(coordinate) == null).collect(Collectors.toSet()));
 			fieldModel.add(eligibleSquares.stream().map(coordinate -> new MoveSquare(coordinate, 0, 0)).toArray(MoveSquare[]::new));
