@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PushbackMode;
-import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -52,8 +48,7 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 
 				if (state.sideStepping.getOrDefault(state.defender.getId(), true) && state.freeSquareAroundDefender
 					&& UtilCards.hasSkill(state.defender, skill)
-					&& !(cancellingSkill != null && !attackerHasConflictingSkill && game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())
-					.isAdjacent(game.getFieldModel().getPlayerCoordinate(state.defender)))
+					&& !(cancellingSkill != null && !attackerHasConflictingSkill)
 					&& ((state.pushbackStack.isEmpty() && (state.oldDefenderState == null || state.oldDefenderState.hasTacklezones()))
 					|| !state.pushbackStack.isEmpty() && playerState.hasTacklezones())
 				) {
