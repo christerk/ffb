@@ -153,7 +153,6 @@ public class StepSecondMoveFuriousOutburst extends AbstractStep {
 	private void bounceBall(FieldModel fieldModel) {
 		if (!withBall && coordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 	}
 
