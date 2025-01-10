@@ -167,7 +167,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	}
 
 	// TODO remove from generic client
-	//public abstract ActionKeyBindings getActionKeyBindings();
+	public abstract ActionKeyBindings getActionKeyBindings();
 
 	public abstract ClientReplayer getReplayer();
 

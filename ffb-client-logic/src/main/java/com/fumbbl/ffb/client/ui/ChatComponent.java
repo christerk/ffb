@@ -43,13 +43,13 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 		fChatTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
-		// TODO reenable after moving component to UI element
-		//getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
+		// TODO remove after moving component to UI element
+		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
 		fChatInputField = new JTextField(dimensionProvider, 35);
-		// TODO reenable after moving component to UI element
-		//getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
-		//getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
+		// TODO remove after moving component to UI element
+		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
+		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 
 		fChatInputField.addActionListener(e -> {
 			String talk = fChatInputField.getText();
@@ -58,7 +58,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 				if (talk.length() > _MAX_CHAT_LENGTH) {
 					talk = talk.substring(0, _MAX_CHAT_LENGTH);
 				}
-				if (talk.length() > 0) {
+				if (!talk.isEmpty()) {
 					getClient().getCommunication().sendTalk(talk);
 					fInputLog.add(talk);
 					if (fInputLog.size() > _MAX_INPUT_LOG_SIZE) {

@@ -115,8 +115,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			getContentPane().remove(fDesktop);
 		}
 		fDesktop = new JDesktopPane();
-		// TODO reenable after moving component to UI element
-		//fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
+		// TODO remove after moving component to UI element
+		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
 		fFieldComponent.initLayout();
 		fLog.initLayout();
@@ -216,6 +216,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
+		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);
