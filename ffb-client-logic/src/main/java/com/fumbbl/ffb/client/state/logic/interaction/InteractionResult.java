@@ -114,8 +114,6 @@ public class InteractionResult {
     INVALID,
     PERFORM,
     RESET,
-    SELECT_ACTION,
-    SHOW_ACTION_ALTERNATIVES,
-    SHOW_BLOODLUST_ACTIONS,
+    SELECT_ACTION
   }
 }

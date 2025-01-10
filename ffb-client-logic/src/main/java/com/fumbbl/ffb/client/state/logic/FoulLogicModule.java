@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -32,7 +33,7 @@ public class FoulLogicModule extends MoveLogicModule {
     ActingPlayer actingPlayer = game.getActingPlayer();
     if (player == actingPlayer.getPlayer()) {
       if (actingPlayer.isSufferingBloodLust()) {
-        return new InteractionResult(InteractionResult.Kind.SHOW_BLOODLUST_ACTIONS);
+        return InteractionResult.selectAction(bloodlustActionContext(actingPlayer));
       } else {
         return super.playerInteraction(player);
       }
@@ -60,7 +61,7 @@ public class FoulLogicModule extends MoveLogicModule {
     boolean doFoul = UtilPlayer.isFoulable(game, defender);
     if (doFoul) {
       if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesFoulingAlternative)) {
-        return new InteractionResult(InteractionResult.Kind.SHOW_ACTION_ALTERNATIVES);
+        return InteractionResult.selectAction(foulActionContext(actingPlayer));
       } else {
         foul(defender, false);
         return new InteractionResult(InteractionResult.Kind.HANDLED);
@@ -180,4 +181,21 @@ public class FoulLogicModule extends MoveLogicModule {
     }
   }
 
+  private ActionContext foulActionContext(ActingPlayer actingPlayer) {
+    ActionContext actionContext = new ActionContext();
+      if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesChainsawFoulingAlternative)) {
+        actionContext.add(ClientAction.CHAINSAW);
+      }
+      actionContext.add(ClientAction.FOUL);
+      return actionContext;
+  }
+
+  private ActionContext bloodlustActionContext(ActingPlayer actingPlayer) {
+    ActionContext actionContext = new ActionContext();
+    if (actingPlayer.isSufferingBloodLust()) {
+      actionContext.add(ClientAction.MOVE);
+      actionContext.add(ClientAction.END_MOVE);
+    }
+    return actionContext;
+  }
 }
