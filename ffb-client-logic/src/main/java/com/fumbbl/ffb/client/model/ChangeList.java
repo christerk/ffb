@@ -22,6 +22,7 @@ public class ChangeList {
 			.addImprovement("Updated bundled icon cache")
 			.addBugfix("Animosity: Was applied against star players")
 			.addImprovement("In case the Intensive Training prayer is wasted on a player that can not gain any primary skills the log message is now clearer")
+			.addBehaviorChange("Set InternalFrame.useTaskBar to false, hoping this solves issues with white bars at the client bottom for Linux users")
 		);
 
 		versions.add(new VersionChangeList("2.32.0")
