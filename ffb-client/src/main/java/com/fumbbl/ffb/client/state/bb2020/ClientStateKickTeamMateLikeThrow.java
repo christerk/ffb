@@ -78,7 +78,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
-			case DRAW:
+			case PREVIEW_THROW:
 				drawRangeRuler(pCoordinate);
 				// fall through
 			case RESET:
@@ -95,7 +95,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
-			case DRAW:
+			case PREVIEW_THROW:
 				drawRangeRuler(game.getFieldModel().getPlayerCoordinate(pPlayer));
 				break;
 			default:

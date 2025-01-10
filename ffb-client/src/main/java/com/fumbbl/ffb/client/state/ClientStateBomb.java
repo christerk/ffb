@@ -83,7 +83,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 				selectable = true;
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
 				break;
-			case DRAW:
+			case PREVIEW_THROW:
 				drawRangeRuler(result.getRangeRuler());
 				break;
 			default:

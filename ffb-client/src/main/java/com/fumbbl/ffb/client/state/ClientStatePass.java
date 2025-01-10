@@ -76,7 +76,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
-			case DRAW:
+			case PREVIEW_THROW:
 				drawRangeRuler(result.getCoordinate());
 				break;
 			default:
@@ -115,7 +115,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 			case DELEGATE:
 				selectable = getDelegate(result).mouseOverField(pCoordinate);
 				break;
-			case DRAW:
+			case PREVIEW_THROW:
 				drawRangeRuler(pCoordinate);
 				break;
 			default:

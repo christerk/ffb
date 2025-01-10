@@ -76,7 +76,7 @@ public class PassLogicModule extends MoveLogicModule {
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 			FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			if ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer)) {
-				return new InteractionResult(InteractionResult.Kind.DRAW, catcherCoordinate);
+				return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, catcherCoordinate);
 			}
 		} else {
 			game.getFieldModel().setRangeRuler(null);
@@ -100,7 +100,7 @@ public class PassLogicModule extends MoveLogicModule {
 			game.getFieldModel().setRangeRuler(null);
 			return InteractionResult.delegate(super.getId());
 		} else {
-			return new InteractionResult(InteractionResult.Kind.DRAW, pCoordinate);
+			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, pCoordinate);
 		}
 	}
 

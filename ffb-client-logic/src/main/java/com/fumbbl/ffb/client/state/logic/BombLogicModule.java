@@ -216,7 +216,7 @@ public class BombLogicModule extends LogicModule {
 			if (showRangeRuler()) {
 				RangeRuler rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), coordinate, false);
 				game.getFieldModel().setRangeRuler(rangeRuler);
-				return new InteractionResult(InteractionResult.Kind.DRAW, rangeRuler);
+				return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, rangeRuler);
 			} else {
 				return new InteractionResult(InteractionResult.Kind.IGNORE);
 			}

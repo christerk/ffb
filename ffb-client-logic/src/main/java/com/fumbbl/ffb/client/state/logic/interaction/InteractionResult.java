@@ -108,7 +108,7 @@ public class InteractionResult {
 
   public enum Kind {
     DELEGATE,
-    DRAW,
+    PREVIEW_THROW,
     HANDLED,
     IGNORE,
     INVALID,
