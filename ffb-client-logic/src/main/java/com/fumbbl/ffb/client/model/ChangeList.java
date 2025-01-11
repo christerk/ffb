@@ -12,7 +12,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.33.1")
-
+			.addBugfix("Animal Savagery: Failed Animal Savagery rolls caused the game to crash")
+			.addBugfix("AdminServlet: Logs for games without compresssed logs could not be loaded")
 		);
 
 		versions.add(new VersionChangeList("2.33.0")
