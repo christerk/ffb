@@ -11,6 +11,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.33.1")
+
+		);
 
 		versions.add(new VersionChangeList("2.33.0")
 			.addBugfix("Custom font color was not applied to initial log messages")
