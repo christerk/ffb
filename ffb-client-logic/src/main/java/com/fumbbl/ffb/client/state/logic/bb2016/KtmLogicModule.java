@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -49,7 +50,7 @@ public class KtmLogicModule extends MoveLogicModule {
 			return super.playerInteraction(player);
 		} else {
 			if ((game.getDefender() == null) && canBeKicked(player)) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.selectAction(ktmActionContext());
 			}
 			return new InteractionResult(InteractionResult.Kind.IGNORE);
 		}
@@ -101,5 +102,12 @@ public class KtmLogicModule extends MoveLogicModule {
 			default:
 				break;
 		}
+	}
+
+	private ActionContext ktmActionContext() {
+		ActionContext actionContext = new ActionContext();
+		actionContext.add(ClientAction.PASS_SHORT);
+		actionContext.add(ClientAction.PASS_LONG);
+		return actionContext;
 	}
 }
