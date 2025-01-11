@@ -29,9 +29,9 @@ public class PushbackLogicModule extends LogicModule {
 		Pushback pushback = findPushback(findUnlockedPushbackSquare(pCoordinate));
 		if (pushback != null) {
 			client.getCommunication().sendPushback(pushback);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -40,9 +40,9 @@ public class PushbackLogicModule extends LogicModule {
 		Pushback pushback = findPushback(findUnlockedPushbackSquare(playerCoordinate));
 		if (pushback != null) {
 			client.getCommunication().sendPushback(pushback);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -57,16 +57,16 @@ public class PushbackLogicModule extends LogicModule {
 			if (pCoordinate.equals(pushbackSquare.getCoordinate())) {
 				if (pushbackSquare.isHomeChoice() && !pushbackSquare.isSelected() && !pushbackSquare.isLocked()) {
 					pushbackSquare.setSelected(true);
-					return new InteractionResult(InteractionResult.Kind.HANDLED, pushbackSquare);
+					return InteractionResult.handled().with(pushbackSquare);
 				}
 			} else {
 				if (pushbackSquare.isSelected() && !pushbackSquare.isLocked()) {
 					pushbackSquare.setSelected(false);
-					return new InteractionResult(InteractionResult.Kind.HANDLED, pushbackSquare);
+					return InteractionResult.handled().with(pushbackSquare);
 				}
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private PushbackSquare findUnlockedPushbackSquare(FieldCoordinate pCoordinate) {

@@ -44,9 +44,9 @@ public class HandOverLogicModule extends MoveLogicModule {
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (canPlayerGetHandOver(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.ignore();
 		}
 	}
 
@@ -76,9 +76,9 @@ public class HandOverLogicModule extends MoveLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (UtilPlayer.hasBall(game, actingPlayer.getPlayer()) && canPlayerGetHandOver(pCatcher)) {
 			client.getCommunication().sendHandOver(actingPlayer.getPlayerId(), pCatcher);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public boolean ballInHand() {

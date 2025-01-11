@@ -55,10 +55,10 @@ public class ThrowKegLogicModule extends LogicModule {
 		} else {
 			if (isValidTarget(player, game)) {
 				client.getCommunication().sendThrowKeg(player);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public class ThrowKegLogicModule extends LogicModule {
 		Game game = client.getGame();
 		client.getClientData().setSelectedPlayer(player);
 		if (isValidTarget(player, game)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

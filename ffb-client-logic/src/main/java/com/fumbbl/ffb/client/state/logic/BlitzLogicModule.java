@@ -54,7 +54,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 				}
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -62,9 +62,9 @@ public class BlitzLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (!actingPlayer.hasBlocked() && extension.isBlockable(game, player)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

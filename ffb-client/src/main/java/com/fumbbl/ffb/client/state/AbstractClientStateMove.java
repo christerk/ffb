@@ -37,13 +37,14 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
-				setCustomCursor(result.getMoveSquare());
-				break;
-			case RESET:
-				Game game = getClient().getGame();
-				ActingPlayer actingPlayer = game.getActingPlayer();
-				fieldComponent.getLayerUnderPlayers().drawMovePath(result.getPath(), actingPlayer.getCurrentMove());
-				fieldComponent.refresh();
+				if (result.getMoveSquare() != null) {
+					setCustomCursor(result.getMoveSquare());
+				} else if (ArrayTool.isProvided(result.getPath())) {
+					Game game = getClient().getGame();
+					ActingPlayer actingPlayer = game.getActingPlayer();
+					fieldComponent.getLayerUnderPlayers().drawMovePath(result.getPath(), actingPlayer.getCurrentMove());
+					fieldComponent.refresh();
+				}
 				break;
 			default:
 				break;

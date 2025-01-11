@@ -177,7 +177,7 @@ public class BlockLogicExtension extends LogicModule {
 
 	public InteractionResult playerInteraction(Player<?> pDefender, boolean pDoBlitz, boolean multiBlock) {
 		if (pDefender == null) {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.ignore();
 		}
 
 		Game game = client.getGame();
@@ -191,10 +191,10 @@ public class BlockLogicExtension extends LogicModule {
 				return InteractionResult.selectAction(blockActionContext(actingPlayer, multiBlock));
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 

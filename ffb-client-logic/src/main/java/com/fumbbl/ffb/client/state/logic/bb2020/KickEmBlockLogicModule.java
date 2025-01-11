@@ -31,14 +31,14 @@ public class KickEmBlockLogicModule extends BlockLogicModule {
 			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(player))) {
 			extension.block(actingPlayer.getPlayerId(), player, false, true, false, false);
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (UtilPlayer.isKickable(client.getGame(), pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 }

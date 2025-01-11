@@ -52,21 +52,21 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 	}
 
 	public boolean mouseOverPlayer(Player<?> player) {
-		InteractionResult result = logicModule.playerPeek(player);
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.refreshSideBars();
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_KEG);
-				break;
-			case INVALID:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_KEG);
-				break;
-			default:
-				break;
-		}
-
+		InteractionResult result = logicModule.playerPeek(player);
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_KEG;
+	}
+
+	@Override
+	protected String invalidCursor() {
+		return IIconProperty.CURSOR_INVALID_KEG;
 	}
 
 	@Override

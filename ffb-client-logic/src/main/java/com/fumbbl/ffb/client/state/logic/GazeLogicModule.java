@@ -26,18 +26,18 @@ public class GazeLogicModule extends MoveLogicModule {
 		} else {
 			if (canBeGazed(player)) {
 				client.getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (canBeGazed(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

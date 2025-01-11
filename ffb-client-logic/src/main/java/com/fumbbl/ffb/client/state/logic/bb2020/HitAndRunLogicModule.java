@@ -49,9 +49,9 @@ public class HitAndRunLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
 		if (isValidField(coordinate)) {
 			client.getCommunication().sendFieldCoordinate(coordinate);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private boolean isValidField(FieldCoordinate coordinate) {
@@ -65,7 +65,7 @@ public class HitAndRunLogicModule extends LogicModule {
 		if (player == actingPlayer.getPlayer()) {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -73,17 +73,17 @@ public class HitAndRunLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.invalid();
 		}
 	}
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
 		if (isValidField(coordinate)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.invalid();
 	}
 }

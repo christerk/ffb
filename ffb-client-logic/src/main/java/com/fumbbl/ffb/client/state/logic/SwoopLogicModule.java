@@ -30,9 +30,9 @@ public class SwoopLogicModule extends MoveLogicModule {
 
 		if (actingPlayer.getPlayerAction() == PlayerAction.SWOOP) {
 			sendSwoop(game, actingPlayer, pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -43,18 +43,18 @@ public class SwoopLogicModule extends MoveLogicModule {
 		if (actingPlayer.getPlayerAction() == PlayerAction.SWOOP) {
 			FieldCoordinate coordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			sendSwoop(game, actingPlayer, coordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		Game game = client.getGame();
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private void sendSwoop(Game game, ActingPlayer actingPlayer, FieldCoordinate destination) {

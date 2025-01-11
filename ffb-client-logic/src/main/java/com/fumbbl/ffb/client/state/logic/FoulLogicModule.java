@@ -50,9 +50,9 @@ public class FoulLogicModule extends MoveLogicModule {
   public InteractionResult playerPeek(Player<?> player) {
     Game game = client.getGame();
     if (UtilPlayer.isFoulable(game, player)) {
-      return new InteractionResult(InteractionResult.Kind.PERFORM);
+      return InteractionResult.perform();
     }
-    return new InteractionResult(InteractionResult.Kind.IGNORE);
+    return InteractionResult.ignore();
   }
 
   public InteractionResult playerSelected(Player<?> defender) {
@@ -64,10 +64,10 @@ public class FoulLogicModule extends MoveLogicModule {
         return InteractionResult.selectAction(foulActionContext(actingPlayer));
       } else {
         foul(defender, false);
-        return new InteractionResult(InteractionResult.Kind.HANDLED);
+        return InteractionResult.handled();
       }
     }
-    return new InteractionResult(InteractionResult.Kind.IGNORE);
+    return InteractionResult.ignore();
   }
 
   public void foul(Player<?> defender, boolean usingChainsaw) {

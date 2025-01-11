@@ -57,7 +57,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 			selectedPlayers.remove(player.getId());
 			originalPlayerStates.remove(player.getId());
 			client.getCommunication().sendUnsetBlockTarget(player.getId());
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		} else {
 			return handleDefenderSelection(player);
 		}
@@ -65,7 +65,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 
 	private InteractionResult handleDefenderSelection(Player<?> defender) {
 		if (defender == null) {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.ignore();
 		}
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -75,10 +75,10 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 				return extension.playerInteraction(defender, false, true);
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				selectPlayer(defender, BlockKind.BLOCK);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private void selectPlayer(Player<?> player, BlockKind kind) {
@@ -102,9 +102,9 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (extension.isBlockable(client.getGame(), pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

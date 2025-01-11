@@ -35,17 +35,17 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		} else {
 			if ((game.getDefender() == null) && canBeThrown(player)) {
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), player.getId());
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			}
 			if (game.getDefender() != null) {
 				game.getFieldModel().setRangeRuler(null);
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(),
 						game.getFieldModel().getPlayerCoordinate(player));
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		} else {
 			game.getFieldModel().setRangeRuler(null);
 			client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
 	}
 
@@ -65,9 +65,9 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		Game game = client.getGame();
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW);
+			return InteractionResult.previewThrow();
 		}
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	@Override
@@ -76,15 +76,15 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		client.getClientData().setSelectedPlayer(pPlayer);
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
 			if (canBeThrown(pPlayer)) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			} else {
-				return new InteractionResult(InteractionResult.Kind.RESET);
+				return InteractionResult.reset();
 			}
 		}
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW);
+			return InteractionResult.previewThrow();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 	
 	private boolean canBeThrown(Player<?> pPlayer) {

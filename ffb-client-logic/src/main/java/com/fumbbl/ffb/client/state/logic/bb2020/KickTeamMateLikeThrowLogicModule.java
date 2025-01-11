@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -46,16 +42,16 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		} else {
 			if ((game.getDefender() == null) && canBeKicked(player)) {
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), player.getId(), true);
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			}
 			if (game.getDefender() != null) {
 				game.getFieldModel().setRangeRuler(null);
 				client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(),
 					game.getFieldModel().getPlayerCoordinate(player), true);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -67,7 +63,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		} else {
 			game.getFieldModel().setRangeRuler(null);
 			client.getCommunication().sendThrowTeamMate(actingPlayer.getPlayerId(), pCoordinate, true);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
 	}
 
@@ -75,9 +71,9 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		Game game = client.getGame();
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW);
+			return InteractionResult.previewThrow();
 		}
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	@Override
@@ -86,15 +82,15 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		client.getClientData().setSelectedPlayer(pPlayer);
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
 			if (canBeKicked(pPlayer)) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			} else {
-				return new InteractionResult(InteractionResult.Kind.RESET);
+				return InteractionResult.reset();
 			}
 		}
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
-			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW);
+			return InteractionResult.previewThrow();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private boolean canBeKicked(Player<?> pPlayer) {

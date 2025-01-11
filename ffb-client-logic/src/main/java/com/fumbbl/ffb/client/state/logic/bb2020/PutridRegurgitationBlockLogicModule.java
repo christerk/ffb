@@ -35,9 +35,9 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
 			&& extension.isBlockable(game, player)) {
 			extension.block(actingPlayer.getPlayerId(), player, false, false, true, false);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -70,9 +70,9 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLOCK && extension.isBlockable(game, player)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 }

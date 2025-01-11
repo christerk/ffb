@@ -43,10 +43,10 @@ public class RangeGridState {
 			)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
 				FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				return new InteractionResult(InteractionResult.Kind.PERFORM, actingPlayerCoordinate);
+				return InteractionResult.perform().with(actingPlayerCoordinate);
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	public InteractionResult refreshSettings() {
@@ -55,7 +55,7 @@ public class RangeGridState {
 			setShowRangeGrid(true);
 			return refreshRangeGrid();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 }

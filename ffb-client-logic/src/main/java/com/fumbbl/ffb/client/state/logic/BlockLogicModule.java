@@ -36,7 +36,7 @@ public class BlockLogicModule extends LogicModule {
 			} else if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 				client.getCommunication().sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.BLITZ_MOVE,
 					actingPlayer.isJumping());
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			} else {
 				return InteractionResult.selectAction(actionContext(actingPlayer));
 			}
@@ -53,10 +53,10 @@ public class BlockLogicModule extends LogicModule {
 	@Override
 	public InteractionResult playerPeek(Player<?> player) {
 		if (extension.isBlockable(client.getGame(), player)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
 
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	@Override

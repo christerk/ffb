@@ -46,7 +46,7 @@ public class SelectLogicModule extends LogicModule {
 		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
 			return InteractionResult.selectAction(actionContext(player));
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override

@@ -24,10 +24,10 @@ public class GazeMoveLogicModule extends MoveLogicModule {
     Game game = client.getGame();
 
     if (UtilPlayer.isAdjacentGazeTarget(game, player)) {
-      return new InteractionResult(InteractionResult.Kind.PERFORM);
+      return InteractionResult.perform();
     }
 
-    return new InteractionResult(InteractionResult.Kind.IGNORE);
+    return InteractionResult.ignore();
   }
 
   @Override
@@ -37,7 +37,7 @@ public class GazeMoveLogicModule extends MoveLogicModule {
 
     if (UtilPlayer.isAdjacentGazeTarget(game, player)) {
       client.getCommunication().sendGaze(actingPlayer.getPlayerId(), player);
-      return new InteractionResult(InteractionResult.Kind.HANDLED);
+      return InteractionResult.handled();
     }
 
     return super.playerInteraction(player);

@@ -66,9 +66,9 @@ public class SetupLogicModule extends LogicModule {
 		if (pNetCommand.getId() == NetCommandId.SERVER_TEAM_SETUP_LIST) {
 			ServerCommandTeamSetupList setupListCommand = (ServerCommandTeamSetupList) pNetCommand;
 			game.setDialogParameter(new DialogTeamSetupParameter(loadDialog, setupListCommand.getSetupNames()));
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public boolean squareIsEmpty(FieldCoordinate pCoordinate) {

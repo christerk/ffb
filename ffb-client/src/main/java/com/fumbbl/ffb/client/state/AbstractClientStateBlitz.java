@@ -6,7 +6,6 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.HashMap;
@@ -30,17 +29,13 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
-				break;
-			case RESET:
-				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLOCK;
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

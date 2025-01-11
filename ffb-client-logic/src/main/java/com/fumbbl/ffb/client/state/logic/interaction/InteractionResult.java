@@ -5,52 +5,18 @@ import com.fumbbl.ffb.*;
 public class InteractionResult {
 
   private final Kind kind;
-  private final FieldCoordinate coordinate;
-  private final RangeRuler rangeRuler;
-  private final PushbackSquare pushbackSquare;
-  private final SpecialEffect specialEffect;
-  private final MoveSquare moveSquare;
-  private final FieldCoordinate[] path;
+  private FieldCoordinate coordinate;
+  private RangeRuler rangeRuler;
+  private PushbackSquare pushbackSquare;
+  private SpecialEffect specialEffect;
+  private MoveSquare moveSquare;
+  private FieldCoordinate[] path;
   private ClientStateId delegate;
   private ActionContext actionContext;
 
   public InteractionResult(Kind kind) {
-    this(kind, null, null, null, null, null, null);
-  }
-
-  public InteractionResult(Kind kind, MoveSquare moveSquare) {
-    this(kind, null, null, null, null, moveSquare, null);
-  }
-
-  public InteractionResult(Kind kind,  FieldCoordinate[] path) {
-    this(kind, null, null, null, null, null, path);
-  }
-
-  public InteractionResult(Kind kind, PushbackSquare pushbackSquare) {
-    this(kind, null, null, pushbackSquare, null, null, null);
-  }
-
-  public InteractionResult(Kind kind, RangeRuler rangeRuler) {
-    this(kind, null, rangeRuler, null, null, null, null);
-  }
-
-  public InteractionResult(Kind kind, FieldCoordinate coordinates) {
-    this(kind, coordinates, null, null, null, null, null);
-  }
-
-  public InteractionResult(Kind kind, FieldCoordinate coordinate, SpecialEffect specialEffect) {
-    this(kind, coordinate, null, null, specialEffect, null, null);
-  }
-
-  public InteractionResult(Kind kind, FieldCoordinate coordinate, RangeRuler rangeRuler, PushbackSquare pushbackSquare, SpecialEffect specialEffect, MoveSquare moveSquare, FieldCoordinate[] path) {
     this.kind = kind;
-    this.coordinate = coordinate;
-    this.rangeRuler = rangeRuler;
-    this.pushbackSquare = pushbackSquare;
-    this.specialEffect = specialEffect;
-		this.moveSquare = moveSquare;
-		this.path = path;
-	}
+  }
 
   public static InteractionResult delegate(ClientStateId delegate) {
     return new InteractionResult(Kind.DELEGATE).with(delegate);
@@ -60,17 +26,71 @@ public class InteractionResult {
     return new InteractionResult(Kind.SELECT_ACTION).with(actionContext);
   }
 
-  private InteractionResult with(ClientStateId delegate) {
+  public static InteractionResult invalid() {
+    return new InteractionResult(Kind.INVALID);
+  }
+
+  public static InteractionResult reset() {
+    return new InteractionResult(Kind.RESET);
+  }
+
+  public static InteractionResult perform() {
+    return new InteractionResult(Kind.PERFORM);
+  }
+
+  public static InteractionResult ignore() {
+    return new InteractionResult(Kind.IGNORE);
+  }
+
+  public static InteractionResult handled() {
+    return new InteractionResult(Kind.HANDLED);
+  }
+
+  public static InteractionResult previewThrow() {
+    return new InteractionResult(Kind.PREVIEW_THROW);
+  }
+
+  public InteractionResult with(ClientStateId delegate) {
     this.delegate = delegate;
     return this;
   }
 
-  private InteractionResult with(ActionContext actionContext) {
+  public InteractionResult with(ActionContext actionContext) {
     this.actionContext = actionContext;
     return this;
   }
 
-	public Kind getKind() {
+  public InteractionResult with(FieldCoordinate coordinate) {
+    this.coordinate = coordinate;
+    return this;
+  }
+
+  public InteractionResult with(FieldCoordinate[] path) {
+    this.path = path;
+    return this;
+  }
+
+  public InteractionResult with(MoveSquare moveSquare) {
+    this.moveSquare = moveSquare;
+    return this;
+  }
+
+  public InteractionResult with(SpecialEffect specialEffect) {
+    this.specialEffect = specialEffect;
+    return this;
+  }
+
+  public InteractionResult with(RangeRuler rangeRuler) {
+    this.rangeRuler = rangeRuler;
+    return this;
+  }
+
+  public InteractionResult with(PushbackSquare pushbackSquare) {
+    this.pushbackSquare = pushbackSquare;
+    return this;
+  }
+
+  public Kind getKind() {
     return kind;
   }
 

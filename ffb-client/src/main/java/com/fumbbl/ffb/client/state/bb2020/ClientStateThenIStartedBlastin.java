@@ -54,20 +54,20 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 
 	public boolean mouseOverPlayer(Player<?> player) {
 		UserInterface userInterface = getClient().getUserInterface();
-
 		InteractionResult result = logicModule.playerPeek(player);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BLASTIN);
-				break;
-			case RESET:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_INVALID_BLASTIN);
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		userInterface.refreshSideBars();
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLASTIN;
+	}
+
+	@Override
+	protected String invalidCursor() {
+		return IIconProperty.CURSOR_INVALID_BLASTIN;
 	}
 
 	@Override

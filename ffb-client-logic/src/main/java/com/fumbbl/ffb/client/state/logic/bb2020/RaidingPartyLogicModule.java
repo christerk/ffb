@@ -32,7 +32,7 @@ public class RaidingPartyLogicModule extends LogicModule {
 		if (player == actingPlayer.getPlayer()) {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -40,9 +40,9 @@ public class RaidingPartyLogicModule extends LogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (player == actingPlayer.getPlayer()) {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 
@@ -50,17 +50,17 @@ public class RaidingPartyLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {
 		if (client.getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
 			client.getCommunication().sendFieldCoordinate(pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		if (client.getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

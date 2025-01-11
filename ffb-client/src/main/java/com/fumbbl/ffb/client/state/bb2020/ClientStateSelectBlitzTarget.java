@@ -27,14 +27,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
-				break;
-			case INVALID:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
-				break;
-		}
+		determineCursor(result);
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 
@@ -43,6 +36,16 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 		showShortestPath(game.getFieldModel().getPlayerCoordinate(pPlayer), fieldComponent, actingPlayer);
 
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLOCK;
+	}
+
+	@Override
+	protected String invalidCursor() {
+		return IIconProperty.CURSOR_INVALID_BLOCK;
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {

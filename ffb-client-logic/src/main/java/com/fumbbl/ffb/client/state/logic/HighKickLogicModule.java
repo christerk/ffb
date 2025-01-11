@@ -51,17 +51,17 @@ public class HighKickLogicModule extends LogicModule {
 				client.getCommunication().sendSetupPlayer(pPlayer, fOldCoordinate);
 				fOldCoordinate = null;
 			}
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (isPlayerSelectable(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

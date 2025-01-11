@@ -8,11 +8,7 @@ import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -86,19 +82,19 @@ public abstract class LogicModule {
 	}
 
 	public InteractionResult playerInteraction(Player<?> player) {
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult playerPeek(Player<?> player) {
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
-		return new InteractionResult(InteractionResult.Kind.RESET);
+		return InteractionResult.reset();
 	}
 
 	public Optional<Player<?>> getPlayer(FieldCoordinate coordinate) {

@@ -41,18 +41,13 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
-
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
-				break;
-			case RESET:
-				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLOCK;
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {

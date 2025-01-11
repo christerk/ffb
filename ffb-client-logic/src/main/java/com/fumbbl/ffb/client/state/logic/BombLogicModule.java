@@ -177,7 +177,7 @@ public class BombLogicModule extends LogicModule {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-			return new InteractionResult(InteractionResult.Kind.PERFORM, playerCoordinate);
+			return InteractionResult.perform().with(playerCoordinate);
 		}
 	}
 
@@ -192,16 +192,16 @@ public class BombLogicModule extends LogicModule {
 			game.setPassCoordinate(coordinate);
 			client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 			game.getFieldModel().setRangeRuler(null);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> player) {
 		client.getClientData().setSelectedPlayer(player);
 		Game game = client.getGame();
-		return new InteractionResult(InteractionResult.Kind.PERFORM, game.getFieldModel().getPlayerCoordinate(player));
+		return InteractionResult.perform().with(game.getFieldModel().getPlayerCoordinate(player));
 	}
 
 	@Override
@@ -211,14 +211,14 @@ public class BombLogicModule extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction()) {
 			game.getFieldModel().setRangeRuler(null);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
 			if (showRangeRuler()) {
 				RangeRuler rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), coordinate, false);
 				game.getFieldModel().setRangeRuler(rangeRuler);
-				return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, rangeRuler);
+				return InteractionResult.previewThrow().with(rangeRuler);
 			} else {
-				return new InteractionResult(InteractionResult.Kind.IGNORE);
+				return InteractionResult.ignore();
 			}
 		}
 	}

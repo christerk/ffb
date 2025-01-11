@@ -45,15 +45,15 @@ public class StabLogicModule extends BlockLogicModule {
 	@Override
 	protected InteractionResult block(Player<?> player, ActingPlayer actingPlayer) {
 		extension.block(actingPlayer.getPlayerId(), player, true, false, false, false);
-		return new InteractionResult(InteractionResult.Kind.HANDLED);
+		return InteractionResult.handled();
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> player) {
 		if (Arrays.stream(targets).anyMatch(target -> target.getId().equals(player.getId()))) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 }

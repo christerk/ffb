@@ -47,17 +47,13 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
 	public boolean mouseOverPlayer(Player<?> player) {
 		super.mouseOverPlayer(player);
 		InteractionResult result = logicModule.playerPeek(player);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLOCK);
-				return true;
-			case RESET:
-				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-				return true;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLOCK;
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {

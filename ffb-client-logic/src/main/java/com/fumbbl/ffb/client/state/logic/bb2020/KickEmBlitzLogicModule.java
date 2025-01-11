@@ -41,12 +41,12 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 						&& game.getFieldModel().getPlayerState(player).isProneOrStunned()
 						&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(player))) {
 						extension.block(actingPlayer.getPlayerId(), player, false, true, false, false);
-						return new InteractionResult(InteractionResult.Kind.PERFORM);
+						return InteractionResult.perform();
 					}
 				}
 			}
 
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.ignore();
 	}
 
 	@Override
@@ -54,9 +54,9 @@ public class KickEmBlitzLogicModule extends BlitzLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (!actingPlayer.hasBlocked() && UtilPlayer.isKickable(game, player)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

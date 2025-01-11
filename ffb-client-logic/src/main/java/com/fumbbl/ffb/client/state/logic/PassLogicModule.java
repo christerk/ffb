@@ -43,10 +43,10 @@ public class PassLogicModule extends MoveLogicModule {
 				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(player));
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -61,10 +61,10 @@ public class PassLogicModule extends MoveLogicModule {
 				game.setPassCoordinate(pCoordinate);
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -76,17 +76,17 @@ public class PassLogicModule extends MoveLogicModule {
 			&& UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
 			FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			if ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(pPlayer)) {
-				return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, catcherCoordinate);
+				return InteractionResult.previewThrow().with(catcherCoordinate);
 			}
 		} else {
 			game.getFieldModel().setRangeRuler(null);
 			if (actionIsHmp()) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			} else {
-				return new InteractionResult(InteractionResult.Kind.RESET);
+				return InteractionResult.reset();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -95,12 +95,12 @@ public class PassLogicModule extends MoveLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actionIsHmp()) {
 			game.getFieldModel().setRangeRuler(null);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else if (actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) {
 			game.getFieldModel().setRangeRuler(null);
 			return InteractionResult.delegate(super.getId());
 		} else {
-			return new InteractionResult(InteractionResult.Kind.PREVIEW_THROW, pCoordinate);
+			return InteractionResult.previewThrow().with(pCoordinate);
 		}
 	}
 

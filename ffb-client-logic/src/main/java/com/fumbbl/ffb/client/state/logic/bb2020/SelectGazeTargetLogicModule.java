@@ -35,17 +35,17 @@ public class SelectGazeTargetLogicModule extends MoveLogicModule {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (isValidGazeTarget(game, pPlayer))) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		Game game = client.getGame();
 		if (isValidGazeTarget(game, pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

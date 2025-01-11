@@ -48,9 +48,9 @@ public class KickoffLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {
 		if (!fKicked) {
 			placeBall(pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -58,9 +58,9 @@ public class KickoffLogicModule extends LogicModule {
 		if (!fKicked) {
 			FieldCoordinate playerCoordinate = client.getGame().getFieldModel().getPlayerCoordinate(pPlayer);
 			placeBall(playerCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private void placeBall(FieldCoordinate pCoordinate) {
@@ -83,9 +83,9 @@ public class KickoffLogicModule extends LogicModule {
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		if (!fKicked && (pCoordinate != null) && FieldCoordinateBounds.HALF_AWAY.isInBounds(pCoordinate)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

@@ -57,18 +57,18 @@ public class TouchbackLogicModule extends LogicModule {
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (fTouchbackToAnyField || isPlayerSelectable(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		if (fTouchbackToAnyField) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 
@@ -78,18 +78,18 @@ public class TouchbackLogicModule extends LogicModule {
 		if ((fTouchbackToAnyField || isPlayerSelectable(pPlayer))) {
 			FieldCoordinate touchBackCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 			client.getCommunication().sendTouchback(touchBackCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {
 		if (fTouchbackToAnyField) {
 			client.getCommunication().sendTouchback(pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private boolean isPlayerSelectable(Player<?> pPlayer) {

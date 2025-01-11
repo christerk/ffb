@@ -32,7 +32,7 @@ public class KickoffReturnLogicModule extends MoveLogicModule {
 		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
 			return InteractionResult.selectAction(actionContext(player));
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -41,10 +41,10 @@ public class KickoffReturnLogicModule extends MoveLogicModule {
 		MoveSquare moveSquare = game.getFieldModel().getMoveSquare(pCoordinate);
 		if (moveSquare != null) {
 			if (movePlayer(pCoordinate)) {
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override

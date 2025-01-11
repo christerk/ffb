@@ -39,9 +39,9 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer))) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
@@ -50,9 +50,9 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

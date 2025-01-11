@@ -38,18 +38,18 @@ public class InterceptionLogicModule extends LogicModule {
 	public InteractionResult playerInteraction(Player<?> pPlayer) {
 		if (isInterceptor(pPlayer)) {
 			client.getCommunication().sendInterceptorChoice(pPlayer, interceptionSkill);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 
 	@Override
 	public InteractionResult playerPeek(Player<?> pPlayer) {
 		if (isInterceptor(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

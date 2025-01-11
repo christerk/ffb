@@ -52,7 +52,7 @@ public class KtmLogicModule extends MoveLogicModule {
 			if ((game.getDefender() == null) && canBeKicked(player)) {
 				return InteractionResult.selectAction(ktmActionContext());
 			}
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.ignore();
 		}
 	}
 
@@ -61,9 +61,9 @@ public class KtmLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -72,12 +72,12 @@ public class KtmLogicModule extends MoveLogicModule {
 		client.getClientData().setSelectedPlayer(player);
 		if ((game.getDefender() == null) && (game.getPassCoordinate() == null)) {
 			if (canBeKicked(player)) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM);
+				return InteractionResult.perform();
 			} else {
-				return new InteractionResult(InteractionResult.Kind.RESET);
+				return InteractionResult.reset();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override

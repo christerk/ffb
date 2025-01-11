@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PassingDistance;
-import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -51,9 +47,9 @@ public class DumpOffLogicModule extends MoveLogicModule {
 			game.setPassCoordinate(coordinate);
 			game.getFieldModel().setRangeRuler(null);
 			client.getCommunication().sendPass(actingPlayer.getPlayerId(), coordinate);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	private boolean testCoordinateInRange(FieldCoordinate coordinate) {
@@ -72,15 +68,15 @@ public class DumpOffLogicModule extends MoveLogicModule {
 		if (testCoordinateInRange(coordinate) && (game.getPassCoordinate() == null)) {
 			RangeRuler rangeRuler = UtilRangeRuler.createRangeRuler(game, game.getThrower(), coordinate, false);
 			game.getFieldModel().setRangeRuler(rangeRuler);
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.IGNORE);
+			return InteractionResult.reset();
 		}
 	}
 
 	@Override
 	public InteractionResult playerPeek(Player<?> player) {
 		client.getClientData().setSelectedPlayer(player);
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 }

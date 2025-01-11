@@ -9,7 +9,6 @@ import com.fumbbl.ffb.client.state.logic.FoulLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -62,14 +61,13 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
   public boolean mouseOverPlayer(Player<?> player) {
     super.mouseOverPlayer(player);
     InteractionResult result = logicModule.playerPeek(player);
-    switch (result.getKind()) {
-      case PERFORM:
-        UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_FOUL);
-        break;
-      default:
-        break;
-    }
+    determineCursor(result);
     return true;
+  }
+
+  @Override
+  protected String validCursor() {
+    return IIconProperty.CURSOR_FOUL;
   }
 
   @Override

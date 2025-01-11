@@ -6,7 +6,6 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.DumpOffLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -38,12 +37,9 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		boolean selectable = false;
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		determineCursor(result);
 		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);
-				break;
 			case RESET:
-				UtilClientCursor.setDefaultCursor(userInterface);
 				selectable = true;
 				break;
 			default:
@@ -51,6 +47,11 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		}
 		userInterface.getFieldComponent().refresh();
 		return selectable;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_PASS;
 	}
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {

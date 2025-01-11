@@ -1,15 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
@@ -326,16 +317,16 @@ public class MoveLogicModule extends LogicModule {
 				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				deselectActingPlayer();
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		} else {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
 			if (moveSquare != null && movePlayer(position)) {
-				return new InteractionResult(InteractionResult.Kind.PERFORM, position);
+				return InteractionResult.perform().with(position);
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -344,26 +335,26 @@ public class MoveLogicModule extends LogicModule {
 		FieldCoordinate[] movePath = automovePath(coordinate);
 		if (ArrayTool.isProvided(movePath)) {
 			movePlayer(movePath);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		} else if (moveSquare != null) {
 			movePlayer(coordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate coordinate) {
 		MoveSquare moveSquare = moveSquare(coordinate);
 		if (moveSquare != null) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM, moveSquare);
+			return InteractionResult.perform().with(moveSquare);
 		} else {
 			FieldCoordinate[] shortestPath = automovePath(coordinate);
 			if (ArrayTool.isProvided(shortestPath)) {
-				return new InteractionResult(InteractionResult.Kind.RESET, shortestPath);
+				return InteractionResult.perform().with(shortestPath);
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override

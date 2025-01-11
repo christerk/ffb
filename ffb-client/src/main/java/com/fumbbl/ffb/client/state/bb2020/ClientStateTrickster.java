@@ -56,17 +56,18 @@ public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
 	@Override
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_TRICKSTER);
-				break;
-			case INVALID:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_TRICKSTER);
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_TRICKSTER;
+	}
+
+	@Override
+	protected String invalidCursor() {
+		return IIconProperty.CURSOR_INVALID_TRICKSTER;
 	}
 
 	@Override

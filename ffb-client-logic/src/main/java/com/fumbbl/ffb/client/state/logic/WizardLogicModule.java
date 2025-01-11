@@ -58,9 +58,9 @@ public class WizardLogicModule extends LogicModule {
 	private InteractionResult determineSpecialEffect(FieldCoordinate pCoordinate) {
 		if (spellAvailable) {
 			SpecialEffect wizardSpell = client.getClientData().getWizardSpell();
-			return new InteractionResult(InteractionResult.Kind.PERFORM, pCoordinate, wizardSpell);
+			return InteractionResult.perform().with(pCoordinate).with(wizardSpell);
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -81,31 +81,31 @@ public class WizardLogicModule extends LogicModule {
 				if (isValidLightningTarget(pCoordinate)) {
 					client.getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
 					spellAvailable = false;
-					return new InteractionResult(InteractionResult.Kind.HANDLED);
+					return InteractionResult.handled();
 				} else {
-					return new InteractionResult(InteractionResult.Kind.PERFORM);
+					return InteractionResult.perform();
 				}
 			}
 			if (SpecialEffect.ZAP == wizardSpell) {
 				if (isValidZapTarget(pCoordinate)) {
 					client.getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
 					spellAvailable = false;
-					return new InteractionResult(InteractionResult.Kind.HANDLED);
+					return InteractionResult.handled();
 				} else {
-					return new InteractionResult(InteractionResult.Kind.PERFORM);
+					return InteractionResult.perform();
 				}
 			}
 			if (SpecialEffect.FIREBALL == wizardSpell) {
 				if (isValidFireballTarget(pCoordinate)) {
 					client.getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
 					spellAvailable = false;
-					return new InteractionResult(InteractionResult.Kind.HANDLED);
+					return InteractionResult.handled();
 				} else {
-					return new InteractionResult(InteractionResult.Kind.PERFORM);
+					return InteractionResult.perform();
 				}
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 

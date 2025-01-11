@@ -7,7 +7,6 @@ import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.logic.bb2020.StabLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Player;
 
 public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
@@ -42,16 +41,12 @@ public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
 	public boolean mouseOverPlayer(Player<?> player) {
 		super.mouseOverPlayer(player);
 		InteractionResult result = logicModule.playerPeek(player);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_BLADE);
-				break;
-			case RESET:
-				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLADE;
 	}
 }

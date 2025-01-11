@@ -30,9 +30,9 @@ public class MaximumCarnageLogicModule extends BlockLogicModule {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (!pPlayer.getId().equalsIgnoreCase(game.getLastDefenderId()) && !game.getActingTeam().hasPlayer(pPlayer)) {
 			extension.block(actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -40,9 +40,9 @@ public class MaximumCarnageLogicModule extends BlockLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() == pPlayer || pPlayer.getId().equalsIgnoreCase(game.getLastDefenderId()) || game.getActingTeam().hasPlayer(pPlayer)) {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		}
 	}
 

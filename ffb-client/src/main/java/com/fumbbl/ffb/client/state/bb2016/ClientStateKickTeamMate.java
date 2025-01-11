@@ -12,7 +12,6 @@ import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2016.KtmLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -62,18 +61,14 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		UserInterface userInterface = getClient().getUserInterface();
 		InteractionResult result = logicModule.playerPeek(pPlayer);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BLOCK);
-				break;
-			case RESET:
-				UtilClientCursor.setDefaultCursor(userInterface);
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		userInterface.refreshSideBars();
 		return true;
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_BLOCK;
 	}
 
 	private void markKickablePlayers() {

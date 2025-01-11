@@ -30,9 +30,9 @@ public class TricksterLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {
 		if (client.getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
 			client.getCommunication().sendFieldCoordinate(pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
@@ -41,16 +41,16 @@ public class TricksterLogicModule extends LogicModule {
 		if (player == game.getDefender()) {
 			return InteractionResult.selectAction(actionContext(client.getGame().getActingPlayer()));
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		if (client.getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 

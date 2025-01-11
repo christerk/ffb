@@ -11,7 +11,6 @@ import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.RaidingPartyLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.HashMap;
@@ -43,35 +42,26 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 	@Override
 	public boolean mouseOverPlayer(Player<?> player) {
 		InteractionResult result = logicModule.playerPeek(player);
-		switch (result.getKind()) {
-			case RESET:
-				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-				break;
-			case INVALID:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_RAID);
-				break;
-			default:
-				break;
-		}
+		determineCursor(result);
 		return true;
 	}
 
 	@Override
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
-		switch (result.getKind()) {
-			case PERFORM:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_RAID);
-				break;
-			case INVALID:
-				UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_RAID);
-				break;
-			default:break;
-		}
-
+		determineCursor(result);
 		return true;
 	}
 
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_RAID;
+	}
+
+	@Override
+	protected String invalidCursor() {
+		return IIconProperty.CURSOR_INVALID_RAID;
+	}
 
 	@Override
 	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {

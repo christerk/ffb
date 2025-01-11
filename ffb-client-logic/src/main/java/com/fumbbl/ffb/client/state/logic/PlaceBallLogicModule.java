@@ -26,18 +26,18 @@ public class PlaceBallLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate pCoordinate) {
 		if (client.getGame().getFieldModel().getMoveSquare(pCoordinate) != null) {
 			client.getCommunication().sendFieldCoordinate(pCoordinate);
-			return new InteractionResult(InteractionResult.Kind.HANDLED);
+			return InteractionResult.handled();
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		FieldModel fieldModel = client.getGame().getFieldModel();
 		if (fieldModel.getMoveSquare(pCoordinate) != null) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.RESET);
+			return InteractionResult.reset();
 		}
 	}
 

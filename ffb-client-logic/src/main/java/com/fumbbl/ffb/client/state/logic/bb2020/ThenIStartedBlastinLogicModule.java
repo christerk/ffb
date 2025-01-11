@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2020;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.MoveSquare;
-import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -60,19 +56,19 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 		} else {
 			if (isValidTarget(player, game)) {
 				client.getCommunication().sendTargetSelected(player.getId());
-				return new InteractionResult(InteractionResult.Kind.HANDLED);
+				return InteractionResult.handled();
 			}
 		}
-		return new InteractionResult(InteractionResult.Kind.IGNORE);
+		return InteractionResult.ignore();
 	}
 
 	public InteractionResult playerPeek(Player<?> player) {
 		Game game = client.getGame();
 		client.getClientData().setSelectedPlayer(player);
 		if (isValidTarget(player, game)) {
-			return new InteractionResult(InteractionResult.Kind.PERFORM);
+			return InteractionResult.perform();
 		} else {
-			return new InteractionResult(InteractionResult.Kind.INVALID);
+			return InteractionResult.invalid();
 		}
 	}
 
