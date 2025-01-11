@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.server.admin;
 
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.GameStatus;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.PasswordChallenge;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.GameStatusFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.DebugLog;
@@ -39,24 +35,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.sax.TransformerHandler;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -275,12 +258,18 @@ public class AdminServlet extends HttpServlet {
 			List<File> zippedFiles = files.get(DebugLog.GZ_SUFFIX);
 			if (plainFiles.isEmpty() && zippedFiles.isEmpty()) {
 				setError(HttpStatus.SC_NOT_FOUND, "Logfiles do not exist for game id" + gameId, pResponse);
+			} else {
+				zippedFiles.sort(new FolderComparator());
+				plainFiles.sort(new FolderComparator());
+
+				String filename;
+				if (zippedFiles.isEmpty()) {
+					filename = plainFiles.get(0).getName();
+				} else {
+					filename = zippedFiles.get(0).getName();
+				}
+				pResponse.addHeader("Content-Disposition", "attachment; filename=" + filename);
 			}
-
-			pResponse.addHeader("Content-Disposition", "attachment; filename=" + zippedFiles.get(0).getName());
-
-			zippedFiles.sort(new FolderComparator());
-			plainFiles.sort(new FolderComparator());
 
 			try {
 				pResponse.flushBuffer();
