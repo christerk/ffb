@@ -115,7 +115,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			getContentPane().remove(fDesktop);
 		}
 		fDesktop = new JDesktopPane();
-		// TODO remove after moving component to UI element
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
 		fFieldComponent.initLayout();
