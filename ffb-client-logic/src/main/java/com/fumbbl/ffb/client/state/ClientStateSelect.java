@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -162,6 +165,16 @@ public class ClientStateSelect extends ClientState {
 						communication.sendActingPlayer(pPlayer, PlayerAction.THE_FLASHING_BLADE, false);
 					}
 					break;
+				case IPlayerPopupMenuKeys.KEY_VICIOUS_VINES:
+					if (isViciousVinesAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.VICIOUS_VINES, false);
+					}
+					break;
+				case IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST:
+					if (isFuriousOutburstAvailable(pPlayer)) {
+						communication.sendActingPlayer(pPlayer, PlayerAction.FURIOUS_OUTPBURST, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -311,6 +324,12 @@ public class ClientStateSelect extends ClientState {
 		if (isFlashingBladeAvailable(pPlayer)) {
 			menuItemList.add(createFlashingBladeItem(iconCache));
 		}
+		if (isViciousVinesAvailable(pPlayer)) {
+			menuItemList.add(createViciousVinesItem(iconCache));
+		}
+		if (isFuriousOutburstAvailable(pPlayer)) {
+			menuItemList.add(createFuriousOutburstItem(iconCache));
+		}
 		if (isRecoverFromConfusionActionAvailable(pPlayer)) {
 			JMenuItem confusionAction = new JMenuItem(dimensionProvider(), "Recover from Confusion & End Move",
 				createMenuIcon(iconCache, IIconProperty.ACTION_STAND_UP));
@@ -341,7 +360,7 @@ public class ClientStateSelect extends ClientState {
 			standUpAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_STAND_UP, 0));
 			menuItemList.add(standUpAction);
 		}
-		if (menuItemList.size() > 0) {
+		if (!menuItemList.isEmpty()) {
 			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
 			showPopupMenuForPlayer(pPlayer);
 		}
@@ -431,6 +450,9 @@ public class ClientStateSelect extends ClientState {
 				break;
 			case PLAYER_ACTION_THE_FLASHING_BLADE:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE);
+				break;
+			case PLAYER_ACTION_VICIOUS_VINES:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_VICIOUS_VINES);
 				break;
 			default:
 				actionHandled = false;
@@ -704,4 +726,43 @@ public class ClientStateSelect extends ClientState {
 		return item;
 	}
 
+	protected boolean isViciousVinesAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+		return (playerState != null) && playerState.isActive()
+			&& mechanic.isBlockActionAllowed(game.getTurnMode())
+			&& player.hasUnusedSkillProperty(NamedProperties.canBlockOverDistance)
+			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 2));
+	}
+
+	protected JMenuItem createViciousVinesItem(IconCache iconCache) {
+		JMenuItem item = new JMenuItem(dimensionProvider(), "Vicious Vines",
+			createMenuIcon(iconCache, IIconProperty.ACTION_VICIOUS_VINES));
+		item.setMnemonic(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES);
+		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, 0));
+		return item;
+	}
+
+	protected boolean isFuriousOutburstAvailable(Player<?> player) {
+		Game game = getClient().getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		return (playerState != null) && playerState.isActive()
+			&& !game.getActingPlayer().isStandingUp()
+			&& !game.getTurnData().isBlitzUsed()
+			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
+			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));
+	}
+
+	protected JMenuItem createFuriousOutburstItem(IconCache iconCache) {
+		JMenuItem item = new JMenuItem(dimensionProvider(), "Furious Outburst",
+			createMenuIcon(iconCache, IIconProperty.ACTION_FURIOUS_OUTBURST));
+		item.setMnemonic(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
+		item.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, 0));
+		return item;
+	}
 }

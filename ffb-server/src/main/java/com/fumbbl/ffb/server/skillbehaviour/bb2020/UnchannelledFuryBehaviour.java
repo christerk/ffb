@@ -1,11 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -91,7 +87,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 						boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 							|| (playerAction != null && playerAction.isKickingDowned())
 							|| (playerAction == PlayerAction.BLITZ)
-							|| (playerAction == PlayerAction.BLOCK)
+							|| (playerAction != null && playerAction.isBlockAction())
 							|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
 							|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
@@ -105,7 +101,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 								status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
 								Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
-								if (furySkill != null && playerAction == PlayerAction.BLOCK) {
+								if (furySkill != null && playerAction != null && playerAction.isBlockAction()) {
 									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
 									status = ActionStatus.WAITING_FOR_SKILL_USE;
 								} else {

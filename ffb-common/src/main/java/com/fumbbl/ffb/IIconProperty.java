@@ -182,6 +182,8 @@ public interface IIconProperty {
 	String ACTION_BREATHE_FIRE = "action.breatheFire";
 	String ACTION_STARTED_BLASTIN = "action.startedBlastin";
 	String ACTION_THE_FLASHING_BLADE = "action.theFlashingBlade";
+	String ACTION_VICIOUS_VINES = "action.viciousVines";
+	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
@@ -215,6 +217,8 @@ public interface IIconProperty {
 	String CURSOR_TRICKSTER = "cursor.trickster";
 	String CURSOR_INVALID_TRICKSTER = "cursor.invalidtrickster";
 	String CURSOR_BLADE = "cursor.blade";
+	String CURSOR_FURIOUS = "cursor.furious";
+	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
 	String BLOODSPOT_BH = "bloodspot.bh";

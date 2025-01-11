@@ -3,13 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020.multiblock;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.BlockResult;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
-import com.fumbbl.ffb.ReRolledActions;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.dialog.DialogOpponentBlockSelectionParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
@@ -17,12 +11,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlockRoll;
-import com.fumbbl.ffb.model.BlockTarget;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -34,13 +23,7 @@ import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.skillbehaviour.bb2020.SingleReRollUseState;
-import com.fumbbl.ffb.server.step.IStepLabel;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -49,14 +32,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -426,6 +402,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 
+		// these value is only used in StepEndBlocking
+		publishParameter(new StepParameter(StepParameterKey.TARGET_PLAYER_ID, blockRoll.getTargetId()));
 		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, blockRoll.getOldPlayerState()));
 		publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, blockRoll.getNrOfDice()));
 		publishParameter(new StepParameter(StepParameterKey.BLOCK_ROLL, blockRoll.getBlockRoll()));

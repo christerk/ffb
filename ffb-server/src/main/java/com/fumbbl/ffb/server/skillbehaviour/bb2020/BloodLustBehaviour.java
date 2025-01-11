@@ -86,7 +86,7 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 					boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 						|| (playerAction != null && playerAction.isKickingDowned())
 						|| (playerAction == PlayerAction.BLITZ)
-						|| (playerAction == BLOCK)
+						|| (playerAction != null && playerAction.isBlockAction())
 						|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
 						|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 					int roll = step.getGameState().getDiceRoller().rollSkill();
@@ -112,10 +112,10 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 				}
 				if (status == ActionStatus.FAILURE) {
 					if (Arrays.asList(new PlayerAction[]
-							{BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE}
+							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}
 						)
 						.contains(actingPlayer.getPlayerAction())) {
-						boolean changeToMove = Arrays.asList(new PlayerAction[]{BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE}).contains(actingPlayer.getPlayerAction());
+						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}).contains(actingPlayer.getPlayerAction());
 
 						UtilServerDialog.showDialog(step.getGameState(), new DialogBloodlustActionParameter(changeToMove), false);
 						step.getResult().setNextAction(StepAction.CONTINUE);

@@ -6,23 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateHitAndRun;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlitz;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
-import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlitz;
-import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateStab;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateThenIStartedBlastin;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateTrickster;
+import com.fumbbl.ffb.client.state.bb2020.*;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -96,6 +80,7 @@ public class ClientStateFactory {
 		register(new ClientStateTrickster(pClient));
 		register(new ClientStateThenIStartedBlastin(pClient));
 		register(new ClientStateStab(pClient));
+		register(new ClientStateFuriousOutburst(pClient));
 	}
 
 	public FantasyFootballClient getClient() {
@@ -180,6 +165,7 @@ public class ClientStateFactory {
 									break;
 								case BLITZ:
 								case BLOCK:
+								case VICIOUS_VINES:
 									clientStateId = ClientStateId.BLOCK;
 									break;
 								case MULTIPLE_BLOCK:
@@ -242,6 +228,9 @@ public class ClientStateFactory {
 									break;
 								case THE_FLASHING_BLADE:
 									clientStateId = ClientStateId.STAB;
+									break;
+								case FURIOUS_OUTPBURST:
+									clientStateId = ClientStateId.FURIOUS_OUTBURST;
 									break;
 								default:
 									break;

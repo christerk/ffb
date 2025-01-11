@@ -1,13 +1,8 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
@@ -21,23 +16,19 @@ import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
-import java.awt.Insets;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
 import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -91,8 +82,8 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			// UIManager.setLookAndFeel(NimbusLookAndFeel.class.getName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+			UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
 		} catch (Exception e) {
 			logWithOutGameId(e);
 		}
@@ -105,6 +96,7 @@ public class FantasyFootballClientAwt implements FantasyFootballClient {
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
+		fUserInterface.getGameMenuBar().refresh();
 
 		fStateFactory = new ClientStateFactory(this);
 		fCommandEndpoint = new CommandEndpoint(this);
