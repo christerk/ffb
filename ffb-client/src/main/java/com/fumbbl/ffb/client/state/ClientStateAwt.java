@@ -4,16 +4,8 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.FieldComponent;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PitchDimensionProvider;
-import com.fumbbl.ffb.client.UiDimensionProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -30,19 +22,9 @@ import com.fumbbl.ffb.net.INetCommandHandler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.awt.event.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -342,80 +324,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public boolean isDropAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		return false;
-	}
-
-
-	protected JMenuItem createTreacherousItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Treacherous",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STAB, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_TREACHEROUS);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_TREACHEROUS, 0));
-		return menuItem;
-	}
-
-	protected JMenuItem createCatchOfTheDayItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Catch of the Day",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_CATCH_OF_THE_DAY, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, 0));
-		return menuItem;
-	}
-
-	protected JMenuItem createWisdomItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Wisdom of the White Dwarf",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_WISDOM, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_WISDOM);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_WISDOM, 0));
-		return menuItem;
-	}
-
-	protected void addEndActionLabel(IconCache iconCache, List<JMenuItem> menuItemList) {
-		String endMoveActionLabel = logicModule.playerActivationUsed() ? "End Action" : "Deselect Player";
-		JMenuItem endMoveAction = new JMenuItem(pitchDimensionProvider, endMoveActionLabel,
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_END_MOVE, pitchDimensionProvider)));
-		endMoveAction.setMnemonic(IPlayerPopupMenuKeys.KEY_END_MOVE);
-		endMoveAction.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_END_MOVE, 0));
-		menuItemList.add(endMoveAction);
-	}
-
-	protected JMenuItem createRaidingPartyItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Raiding Party",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_RAIDING_PARTY, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, 0));
-		return menuItem;
-	}
-
-	protected JMenuItem createLookIntoMyEyesItem(IconCache iconCache) {
-		JMenuItem lookItem = new JMenuItem(pitchDimensionProvider, "Look Into My Eyes",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_LOOK_INTO_MY_EYES, pitchDimensionProvider)));
-		lookItem.setMnemonic(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
-		lookItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, 0));
-		return lookItem;
-	}
-
-	protected JMenuItem createBalefulHexItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Baleful Hex",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_BALEFUL_HEX, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, 0));
-		return menuItem;
-	}
-
-	protected JMenuItem createBlackInkItem(IconCache iconCache) {
-		JMenuItem menuItem = new JMenuItem(pitchDimensionProvider, "Black Ink",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_GAZE, pitchDimensionProvider)));
-		menuItem.setMnemonic(IPlayerPopupMenuKeys.KEY_BLACK_INK);
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_BLACK_INK, 0));
-		return menuItem;
-	}
-
-	protected JMenuItem createThenIStartedBlastinItem(IconCache iconCache) {
-		JMenuItem blastinItem = new JMenuItem(pitchDimensionProvider, "\"Then I Started Blastin'!\"",
-			new ImageIcon(iconCache.getIconByProperty(IIconProperty.ACTION_STARTED_BLASTIN, pitchDimensionProvider)));
-		blastinItem.setMnemonic(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
-		blastinItem.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, 0));
-		return blastinItem;
 	}
 
 	public ImageIcon createMenuIcon(IconCache iconCache, String iconProperty) {
