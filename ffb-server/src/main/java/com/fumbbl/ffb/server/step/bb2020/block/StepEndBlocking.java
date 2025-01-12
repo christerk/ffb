@@ -2,25 +2,12 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.dialog.DialogPileDriverParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
-import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
@@ -31,20 +18,8 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.IStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.BlitzBlock;
-import com.fumbbl.ffb.server.step.generator.Block;
-import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Move;
-import com.fumbbl.ffb.server.step.generator.PileDriver;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.generator.*;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -76,15 +51,16 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class StepEndBlocking extends AbstractStep {
 
+	private final List<String> targetsRegularMultibLock = new ArrayList<>(); // will be set for  multi blocks excl. special actions
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private PlayerAction bloodlustAction;
 	private boolean fUsingStab, usingChainsaw, allowSecondBlockAction, usingVomit, addBlockDieHandled, usingBreatheFire;
 	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
-	private List<String> knockedDownPlayers = new ArrayList<>();
+	private List<String> knockedDownPlayers = new ArrayList<>(); // will be set for all kinds of blocks
 	private String targetPlayerId;
-	private PlayerState oldDefenderState;
+	private PlayerState oldDefenderState; // will be set for non-multi blocks incl. special actions
 
 	public StepEndBlocking(GameState pGameState) {
 		super(pGameState);
@@ -194,6 +170,10 @@ public class StepEndBlocking extends AbstractStep {
 					usingBreatheFire = (boolean) parameter.getValue();
 					consume(parameter);
 					break;
+				case TARGET_PLAYER_ID:
+					targetsRegularMultibLock.add((String) parameter.getValue());
+					consume(parameter);
+					break;
 				default:
 					break;
 			}
@@ -230,6 +210,10 @@ public class StepEndBlocking extends AbstractStep {
 				.ifPresent(skill -> game.getDefender().markUsed(skill, game));
 		}
 
+		if (actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES) {
+			actingPlayer.markSkillUsed(NamedProperties.canBlockOverDistance);
+		}
+
 		if (fEndTurn || fEndPlayerAction) {
 			if (actingPlayer.getPlayerAction().isKickingDowned()) {
 				// special case where we need to reset player state base. Otherwise, when changing the acting player to null
@@ -240,7 +224,9 @@ public class StepEndBlocking extends AbstractStep {
 			game.setDefenderId(null); // clear defender for next multi block
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
 		} else if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
-			game.getFieldModel().setPlayerState(game.getDefender(), oldDefenderState);
+			if (oldDefenderState != null) {
+				game.getFieldModel().setPlayerState(game.getDefender(), oldDefenderState);
+			}
 			game.setDefenderId(null);
 			ServerUtilBlock.updateDiceDecorations(game);
 			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
@@ -303,7 +289,9 @@ public class StepEndBlocking extends AbstractStep {
 					publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, allowSecondBlockAction));
 				}
 			} else {
-				ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
+				if (oldDefenderState != null) {
+					ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
+				}
 				fieldModel.clearDiceDecorations();
 				actingPlayer.setGoingForIt(UtilPlayer.isNextMoveGoingForIt(game)); // auto
 				FieldCoordinate attackerCoordinate = fieldModel.getPlayerCoordinate(activePlayer);
@@ -312,14 +300,19 @@ public class StepEndBlocking extends AbstractStep {
 						PlayerState playerState = fieldModel.getPlayerState(player);
 
 						return !game.getActingTeam().hasPlayer(player) && fieldModel.getPlayerCoordinate(player).isAdjacent(attackerCoordinate)
-							&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED);
+							&& (playerState.getBase() == PlayerState.PRONE || playerState.getBase() == PlayerState.STUNNED)
+							&& (oldDefenderState != null || targetsRegularMultibLock.contains(playerId));
 					}
 				).collect(Collectors.toList());
 
 				PlayerState playerState = fieldModel.getPlayerState(activePlayer);
 
-				boolean canFoulAfterBlock = regularBlock && playerState.getBase() == PlayerState.MOVING
-					&& activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock) && !oldDefenderState.isProneOrStunned();
+				boolean canFoulAfterBlock = playerState.getBase() == PlayerState.MOVING
+					&& activePlayer.hasSkillProperty(NamedProperties.canFoulAfterBlock);
+
+				if (oldDefenderState != null) {
+					canFoulAfterBlock &= regularBlock && !oldDefenderState.isProneOrStunned();
+				}
 
 				if (!canFoulAfterBlock || knockedDownPlayers.isEmpty()
 					|| (game.getTurnData().isFoulUsed() && !activePlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
@@ -340,11 +333,10 @@ public class StepEndBlocking extends AbstractStep {
 					useHitAndRun = false;
 				}
 
-				boolean canUsePutridRegurgitation =
-					(actingPlayer.getPlayerAction() == PlayerAction.BLOCK || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ && playerState.isRooted()))
-						&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
-						&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
-						&& regularBlock;
+				boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction().isBlockAction()
+					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+					&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
+					&& regularBlock;
 
 				if (!canUsePutridRegurgitation) {
 					usePutridRegurgitation = false;
@@ -476,6 +468,8 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.ADD_BLOCK_DIE_HANDLED.addTo(jsonObject, addBlockDieHandled);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
+		IServerJsonOption.PLAYER_IDS_HIT.addTo(jsonObject, targetsRegularMultibLock);
 		return jsonObject;
 	}
 
@@ -498,6 +492,10 @@ public class StepEndBlocking extends AbstractStep {
 		addBlockDieHandled = toPrimitive(IServerJsonOption.ADD_BLOCK_DIE_HANDLED.getFrom(source, jsonObject));
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
+		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		if (IServerJsonOption.PLAYER_IDS_HIT.isDefinedIn(jsonObject)) {
+			targetsRegularMultibLock.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject)).collect(Collectors.toSet()));
+		}
 		return this;
 	}
 

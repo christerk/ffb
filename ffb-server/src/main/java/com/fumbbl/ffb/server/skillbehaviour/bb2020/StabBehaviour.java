@@ -32,8 +32,7 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 		registerModifier(new StepModifier<StepStab, StepStab.StepState>() {
 
 			@Override
-			public StepCommandStatus handleCommandHook(StepStab step, StepState state,
-																								 ClientCommandUseSkill useSkillCommand) {
+			public StepCommandStatus handleCommandHook(StepStab step, StepState state, ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 

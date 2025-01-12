@@ -553,4 +553,28 @@ public abstract class LogicModule {
 		return (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPassToAnySquare)
 			&& !(game.getFieldModel().getWeather().equals(Weather.BLIZZARD)));
 	}
+
+	protected boolean isViciousVinesAvailable(Player<?> player) {
+		Game game = client.getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+
+		return (playerState != null) && playerState.isActive()
+			&& mechanic.isBlockActionAllowed(game.getTurnMode())
+			&& player.hasUnusedSkillProperty(NamedProperties.canBlockOverDistance)
+			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 2));
+	}
+
+	protected boolean isFuriousOutburstAvailable(Player<?> player) {
+		Game game = client.getGame();
+		Team opponentTeam = game.getOtherTeam(player.getTeam());
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		return (playerState != null) && playerState.isActive()
+			&& !game.getActingPlayer().isStandingUp()
+			&& !game.getTurnData().isBlitzUsed()
+			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
+			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));
+	}
 }

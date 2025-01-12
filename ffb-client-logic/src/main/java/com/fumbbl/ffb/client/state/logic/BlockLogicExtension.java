@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
@@ -82,7 +79,7 @@ public class BlockLogicExtension extends LogicModule {
 	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock) {
 		Player<?> attacker = actingPlayer.getPlayer();
 		ActionContext actionContext = new ActionContext();
-		if (attacker.hasSkillProperty(NamedProperties.canPerformArmourRollInsteadOfBlock)) {
+		if (attacker.hasSkillProperty(NamedProperties.providesStabBlockAlternative)) {
 			actionContext.add(ClientAction.STAB);
 		}
 		if (attacker.hasSkillProperty(NamedProperties.providesChainsawBlockAlternative) && !multiBlock) {
@@ -202,7 +199,7 @@ public class BlockLogicExtension extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		return isValidBlitzTarget(game, pPlayer) && defenderCoordinate.isAdjacent(attackerCoordinate)
+		return isValidBlitzTarget(game, pPlayer) && (defenderCoordinate.isAdjacent(attackerCoordinate) || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES)
 			&& (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null);
 	}
 

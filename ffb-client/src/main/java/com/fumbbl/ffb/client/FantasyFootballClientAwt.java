@@ -1,10 +1,6 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
@@ -18,11 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -47,6 +40,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+			UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
 		} catch (Exception e) {
 			logWithOutGameId(e);
 		}
@@ -56,6 +50,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
+		fUserInterface.getGameMenuBar().refresh();
+
 		setClientStateFactory();
 	}
 

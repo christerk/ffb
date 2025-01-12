@@ -2,13 +2,7 @@ package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PushbackMode;
-import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -20,12 +14,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
@@ -146,7 +135,7 @@ public class StepBlockDodge extends AbstractStep {
 			}
 
 			PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
-			if ((actingPlayer.getPlayerAction() == PlayerAction.BLOCK)
+			if ((actingPlayer.getPlayerAction().isBlockAction())
 				&& attacker.hasSkillProperty(NamedProperties.canPushBackToAnySquare)
 				&& !game.getDefender().hasSkillProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
 				grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);

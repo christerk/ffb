@@ -13,7 +13,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
-	QUICK_BITE("quickBite");
+	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -116,6 +116,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case QUICK_BITE:
 				header.append("Select player to take a quick bite");
 				break;
+			case FURIOUS_OUTBURST:
+				header.append("Select player to attack");
+				break;
 			default:
 				break;
 		}
@@ -194,6 +197,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case QUICK_BITE:
 				title.append("Quick Bite");
 				break;
+			case FURIOUS_OUTBURST:
+				title.append("Furious Outburst");
+				break;
 			default:
 				break;
 		}
@@ -271,6 +277,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case QUICK_BITE:
 				message.append("Waiting for coach to select player for a quick bite");
+				break;
+			case FURIOUS_OUTBURST:
+				message.append("Waiting for coach to select player to attack with furious outburst");
 				break;
 			default:
 				break;

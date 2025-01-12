@@ -58,6 +58,7 @@ public enum StepId implements INamedObject {
 	END_BOMB("endBomb"), // phase.special
 	END_FEEDING("endFeeding"), // action.end
 	END_FOULING("endFouling"), // action.foul
+	END_FURIOUS_OUTBURST("endFuriousOutburst"),
 	END_GAME("endGame"), // game.end
 	END_INDUCEMENT("endInducement"), // phase.inducement
 	END_KICK_TEAM_MATE("endKickTeamMate"), // action.kickTeamMate
@@ -72,6 +73,7 @@ public enum StepId implements INamedObject {
 	END_TURN("endTurn"), // action.common
 	FALL_DOWN("fallDown"), // action.common
 	FAN_FACTOR("fanFactor"), // game.end
+	FIRST_MOVE_FURIOUS_OUTBURST("firstMoveFuriousOutburst"),
 	FOLLOWUP("followup"), // action.block
 	FOUL("foul"), // action.foul
 	FOUL_APPEARANCE("foulAppearance"), // action.block
@@ -93,6 +95,7 @@ public enum StepId implements INamedObject {
 	INIT_FEEDING("initFeeding"), // action.end
 	INIT_FOULING("initFouling"), // action.foul
 	INIT_INDUCEMENT("initInducement"), // phase.inducement
+	INIT_FURIOUS_OUTBURST("initFuriousOutburst"),
 	INIT_LOOK_INTO_MY_EYES("initLookIntoMyEyes"), // action.special
 	INIT_KICKOFF("initKickoff"), // phase.kickoff
 	INIT_MOVING("initMoving"), // action.move
@@ -150,6 +153,7 @@ public enum StepId implements INamedObject {
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),
 	SAFE_THROW("safeThrow"), // action.pass
+	SECOND_MOVE_FURIOUS_OUTBURST("secondMoveFuriousOutburst"),
 	SELECT_BLITZ_TARGET("selectBlitzTarget"),
 	SELECT_BLITZ_TARGET_END("selectBlitzTargetEnd"),
 	SELECT_GAZE_TARGET("selectGazeTarget"),

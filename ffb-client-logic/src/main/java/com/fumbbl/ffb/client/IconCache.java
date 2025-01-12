@@ -1,14 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.eclipsesource.json.JsonObject;
-import com.fumbbl.ffb.BloodSpot;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.WeatherFactory;
 import com.fumbbl.ffb.json.JsonStringMapOption;
 import com.fumbbl.ffb.model.BlockKind;
@@ -34,26 +27,16 @@ import org.apache.hc.core5.util.Timeout;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.net.ssl.SSLContext;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -145,6 +128,12 @@ public class IconCache {
 			// empty properties
 		}
 
+		try (InputStream propertyInputStream = getClass().getResourceAsStream("/statics.ini")) {
+			fIconUrlProperties.load(propertyInputStream);
+		} catch (IOException pIoException) {
+			// empty properties
+		}
+
 		if (StringTool.isProvided(localCacheFolder)) {
 			String mapFileName = localCacheFolder + LOCAL_CACHE_MAP_FILE;
 			if (!new File(mapFileName).exists()) {
@@ -220,7 +209,7 @@ public class IconCache {
 			if (iconInputStream != null) {
 				if (pitchWeather != null) {
 					zipStream = new ZipInputStream(iconInputStream);
-					return loadPitchFromStream(zipStream, myUrl);
+					return loadPitchFromStream(zipStream, myUrl, false);
 				} else {
 					BufferedImage icon = ImageIO.read(iconInputStream);
 					iconInputStream.close();
@@ -328,7 +317,7 @@ public class IconCache {
 						BufferedImage icon = ImageIO.read(entity.getContent());
 						EntityUtils.consumeQuietly(entity);
 						fIconByKey.put(pUrl, icon);
-						addLocalCacheEntry(pUrl, icon, contentType);
+						addLocalCacheEntry(pUrl, icon, getFormat(contentType));
 					}
 					return null;
 				});
@@ -342,7 +331,7 @@ public class IconCache {
 
 	}
 
-	private void addLocalCacheEntry(String iconUrl, BufferedImage icon, String contentType) {
+	private void addLocalCacheEntry(String iconUrl, BufferedImage icon, String format) {
 		if (digest == null ||
 			!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
 				.equals(getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
@@ -352,7 +341,6 @@ public class IconCache {
 		digest.reset();
 		digest.update(iconUrl.getBytes());
 		try {
-			String format = getFormat(contentType);
 			String hash = DatatypeConverter.printHexBinary(digest.digest()) + "." + format;
 			File newFile = new File(localCacheFolder + hash);
 			if (newFile.canWrite() || newFile.createNewFile()) {
@@ -364,6 +352,12 @@ public class IconCache {
 			getClient().logWithOutGameId(e);
 		}
 
+	}
+
+	private String getFormat(ImageInputStream imageInputStream) throws IOException {
+		Iterator<ImageReader> readers = ImageIO.getImageReaders(imageInputStream);
+
+		return readers.next().getFormatName();
 	}
 
 	private String getFormat(String contentType) throws IOException {
@@ -538,7 +532,7 @@ public class IconCache {
 				final HttpEntity entity = response.getEntity();
 				if (entity != null) {
 					try (ZipInputStream zipStream = new ZipInputStream(entity.getContent())) {
-						loadPitchFromStream(zipStream, pUrl);
+						loadPitchFromStream(zipStream, pUrl, true);
 						EntityUtils.consumeQuietly(entity);
 					}
 				}
@@ -552,19 +546,22 @@ public class IconCache {
 		}
 	}
 
-	private boolean loadPitchFromStream(ZipInputStream pZipIn, String pUrl) {
+	private boolean loadPitchFromStream(ZipInputStream pZipIn, String pUrl, boolean updateLocalCache) {
 		URL pitchUrl = null;
 		boolean pitchLoaded = false;
 		try {
 			pitchUrl = new URL(pUrl);
 			Properties pitchProperties = new Properties();
 			Map<String, BufferedImage> iconByName = new HashMap<>();
+			Map<String, String> typeByName = new HashMap<>();
 			ZipEntry entry;
 			while ((entry = pZipIn.getNextEntry()) != null) {
 				if ("pitch.ini".equals(entry.getName())) {
 					pitchProperties.load(pZipIn);
 				} else {
-					iconByName.put(entry.getName(), ImageIO.read(pZipIn));
+					ImageInputStream imageInputStream = ImageIO.createImageInputStream(pZipIn);
+					typeByName.put(entry.getName(), getFormat(imageInputStream));
+					iconByName.put(entry.getName(), ImageIO.read(imageInputStream));
 				}
 			}
 			for (Weather weather : Weather.values()) {
@@ -576,7 +573,11 @@ public class IconCache {
 				if (pitchIcon == null) {
 					continue;
 				}
-				fIconByKey.put(buildPitchUrl(pUrl, weather), pitchIcon);
+				String key = buildPitchUrl(pUrl, weather);
+				fIconByKey.put(key, pitchIcon);
+				if (updateLocalCache) {
+					addLocalCacheEntry(key, pitchIcon, typeByName.get(iconName));
+				}
 				pitchLoaded = true;
 			}
 		} catch (Exception pAny) {

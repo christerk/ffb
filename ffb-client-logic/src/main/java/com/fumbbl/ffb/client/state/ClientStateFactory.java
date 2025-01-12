@@ -116,6 +116,7 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 									break;
 								case BLITZ:
 								case BLOCK:
+								case VICIOUS_VINES:
 									clientStateId = ClientStateId.BLOCK;
 									break;
 								case MULTIPLE_BLOCK:
@@ -178,6 +179,9 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 									break;
 								case THE_FLASHING_BLADE:
 									clientStateId = ClientStateId.STAB;
+									break;
+								case FURIOUS_OUTPBURST:
+									clientStateId = ClientStateId.FURIOUS_OUTBURST;
 									break;
 								default:
 									break;

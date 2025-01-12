@@ -14,7 +14,7 @@ public class JsonPlayerStateOption extends JsonAbstractOption {
 		super(pKey);
 	}
 
-	public PlayerState getFrom(IFactorySource game, JsonObject pJsonObject) {
+	public PlayerState getFrom(IFactorySource ignoredGame, JsonObject pJsonObject) {
 		return UtilJson.toPlayerState(getValueFrom(pJsonObject));
 	}
 

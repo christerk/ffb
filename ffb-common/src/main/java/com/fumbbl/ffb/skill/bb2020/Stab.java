@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -29,6 +29,7 @@ public class Stab extends Skill {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 		registerProperty(NamedProperties.providesBlockAlternative);
 		registerProperty(NamedProperties.providesMultipleBlockAlternative);
+		registerProperty(NamedProperties.providesStabBlockAlternative);
 	}
 
 }

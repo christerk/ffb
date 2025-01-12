@@ -1,12 +1,7 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.ReRolledActions;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -97,7 +92,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				PlayerAction playerAction = actingPlayer.getPlayerAction();
 				if (actingPlayer.isStandingUp() &&
 					(playerAction == PlayerAction.BLITZ_MOVE
-						|| playerAction == PlayerAction.BLOCK
+						|| playerAction != null && playerAction.isBlockAction()
 						|| playerAction == PlayerAction.GAZE_MOVE
 						|| playerAction != null && playerAction.isKickingDowned())) {
 					Player<?> player = actingPlayer.getPlayer();
@@ -115,7 +110,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 					}
 				}
 
-				if (playerAction == PlayerAction.GAZE || playerAction == PlayerAction.BLOCK) {
+				if (playerAction == PlayerAction.GAZE || (playerAction != null && playerAction.isBlockAction())) {
 					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 				game.setDefenderId(null);

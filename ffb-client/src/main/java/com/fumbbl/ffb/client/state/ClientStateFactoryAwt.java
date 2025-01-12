@@ -2,23 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateGazeMove;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateHitAndRun;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlitz;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickEmBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateKickTeamMateLikeThrow;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateMaximumCarnage;
-import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlitz;
-import com.fumbbl.ffb.client.state.bb2020.ClientStatePutridRegurgitationBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateRaidingParty;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlitzTarget;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectBlockKind;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSelectGazeTarget;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateStab;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateSynchronousMultiBlock;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateThenIStartedBlastin;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateThrowKeg;
-import com.fumbbl.ffb.client.state.bb2020.ClientStateTrickster;
+import com.fumbbl.ffb.client.state.bb2020.*;
 
 /**
  * @author Kalimar
@@ -80,6 +64,7 @@ public class ClientStateFactoryAwt extends ClientStateFactory<FantasyFootballCli
 		register(new ClientStateTrickster(client));
 		register(new ClientStateThenIStartedBlastin(client));
 		register(new ClientStateStab(client));
+		register(new ClientStateFuriousOutburst(client));
 	}
 	
 }

@@ -75,7 +75,7 @@ public class LoginLogicModule extends LogicModule {
 		this.passwordLength = passwordLength;
 	}
 
-	public void init() {
+	public void initCommunication() {
 		if (StringTool.isProvided(client.getParameters().getTeamId())) {
 			teamHomeId = client.getParameters().getTeamId();
 			teamHomeName = client.getParameters().getTeamName();

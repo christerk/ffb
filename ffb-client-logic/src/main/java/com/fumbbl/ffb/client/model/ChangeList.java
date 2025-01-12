@@ -11,12 +11,30 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.33.1")
+			.addBugfix("Animal Savagery: Failed Animal Savagery rolls caused the game to crash")
+			.addBugfix("AdminServlet: Logs for games without compresssed logs could not be loaded")
+		);
+
+		versions.add(new VersionChangeList("2.33.0")
+			.addBugfix("Custom font color was not applied to initial log messages")
+			.addFeature("Vicious Vines")
+			.addFeature("Furious Outburst")
+			.addBugfix("Multi Block and Pile Driver: If a player with both skills used multi block and was then standing next to a knocked down player the game crashed")
+			.addBugfix("Multi Block and Bloodlust: It was not possible to change a multi block action to a move action after failing bloodlust")
+			.addImprovement("Local Icon Cache: Custom pitches are now cached as well")
+			.addImprovement("Updated bundled icon cache")
+			.addBugfix("Animosity: Was applied against star players")
+			.addImprovement("In case the Intensive Training prayer is wasted on a player that can not gain any primary skills the log message is now clearer")
+			.addBehaviorChange("Set InternalFrame.useTaskBar to false, hoping this solves issues with white bars at the client bottom for Linux users")
+		);
 
 		versions.add(new VersionChangeList("2.32.0")
 			.addBugfix("Hit And Run: Rooted players were able to use Hit And Run after performing a block")
 			.addFeature("Wide Layout: More streaming friendly layout with larger horizontal pitch, requested by Christer")
 			.addBehaviorChange("\"Pitch Orientation\" submenu is now called \"Client Layout\" and moved from \"Pitch Customization\" to new \"Client UI\" submenu")
 			.addBehaviorChange("\"Client Size\" menu entry moved to new \"Client UI\" submenu")
+			.addImprovement("Timeouts for image loading increased")
 		);
 
 		versions.add(new VersionChangeList("2.31.0")

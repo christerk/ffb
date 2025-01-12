@@ -25,6 +25,8 @@ import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -34,6 +36,7 @@ import java.util.Map;
  */
 public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implements IDialogCloseListener {
 
+	private static final Logger log = LoggerFactory.getLogger(ClientStateLogin.class);
 	private ServerStatus fLastServerError;
 	protected ClientStateLogin(FantasyFootballClientAwt pClient) {
 		super(pClient, new LoginLogicModule(pClient));
@@ -43,6 +46,7 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 		super.setUp();
 		hideSelectSquare();
 		setClickable(false);
+		logicModule.initCommunication();
 	}
 
 	@Override

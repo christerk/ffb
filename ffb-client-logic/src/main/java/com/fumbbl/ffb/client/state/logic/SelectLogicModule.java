@@ -75,6 +75,8 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.KICK_EM_BLOCK);
 			add(ClientAction.KICK_EM_BLITZ);
 			add(ClientAction.THE_FLASHING_BLADE);
+			add(ClientAction.VICIOUS_VINES);
+			add(ClientAction.FURIOUS_OUTBURST);
 		}};
 	}
 
@@ -195,6 +197,16 @@ public class SelectLogicModule extends LogicModule {
 						communication.sendActingPlayer(player, PlayerAction.THE_FLASHING_BLADE, false);
 					}
 					break;
+				case VICIOUS_VINES:
+					if (isViciousVinesAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.VICIOUS_VINES, false);
+					}
+					break;
+				case FURIOUS_OUTBURST:
+					if (isFuriousOutburstAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.FURIOUS_OUTPBURST, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -270,6 +282,12 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isFlashingBladeAvailable(player)) {
 			context.add(ClientAction.THE_FLASHING_BLADE);
+		}
+		if (isViciousVinesAvailable(player)) {
+			context.add(ClientAction.VICIOUS_VINES);
+		}
+		if (isFuriousOutburstAvailable(player)) {
+			context.add(ClientAction.FURIOUS_OUTBURST);
 		}
 		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player)) {
 			context.add(ClientAction.RECOVER);

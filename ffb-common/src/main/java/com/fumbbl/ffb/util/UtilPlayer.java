@@ -1,20 +1,10 @@
 package com.fumbbl.ffb.util;
 
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.RosterPlayer;
-import com.fumbbl.ffb.model.TargetSelectionState;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -22,12 +12,8 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -47,7 +33,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithSkill(Game pGame, FieldCoordinate pCenterCoordinate,
-																																 Skill pSkill, boolean pCheckAbleToMove) {
+																   Skill pSkill, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		return findAdjacentOpposingPlayersWithSkill(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pSkill, pCheckAbleToMove);
 	}
@@ -69,13 +55,13 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, FieldCoordinate pCenterCoordinate,
-																																		ISkillProperty pProperty, boolean pCheckAbleToMove) {
+																	  ISkillProperty pProperty, boolean pCheckAbleToMove) {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		return findAdjacentOpposingPlayersWithProperty(pGame, actingPlayer.getPlayer(), pCenterCoordinate, pProperty, pCheckAbleToMove, false);
 	}
 
 	public static Player<?>[] findAdjacentOpposingPlayersWithProperty(Game pGame, Player<?> player, FieldCoordinate pCenterCoordinate,
-																																		ISkillProperty pProperty, boolean pCheckAbleToMove, boolean requireUnusedSkill) {
+																	  ISkillProperty pProperty, boolean pCheckAbleToMove, boolean requireUnusedSkill) {
 		Team otherTeam = UtilPlayer.findOtherTeam(pGame, player);
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCenterCoordinate, false);
 		Set<Player<?>> foundPlayers = new HashSet<>();
@@ -116,11 +102,22 @@ public class UtilPlayer {
 		return adjacentPlayers.toArray(new Player[0]);
 	}
 
+	public static Player<?>[] findNonAdjacentBlockablePlayersWithExactDistance(Game pGame, Team pTeam, FieldCoordinate pCoordinate, int distance) {
+		Set<Player<?>> targetPlayers = Arrays.stream(UtilPlayer.findBlockablePlayers(pGame, pTeam, pCoordinate, 2)).collect(Collectors.toSet());
+		Set<Player<?>> adjacentPlayers = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(pGame, pTeam, pCoordinate)).collect(Collectors.toSet());
+		targetPlayers.removeAll(adjacentPlayers);
+		return targetPlayers.toArray(new Player<?>[0]);
+	}
+
 	public static Player<?>[] findAdjacentBlockablePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
+		return findBlockablePlayers(pGame, pTeam, pCoordinate, 1);
+	}
+
+	public static Player<?>[] findBlockablePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate, int distance) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-			1, false);
+			distance, false);
 		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
 			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
@@ -165,7 +162,7 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentPlayersWithTacklezones(Game pGame, Team pTeam, FieldCoordinate pCoordinate,
-																															 boolean pWithStartCoordinate) {
+																 boolean pWithStartCoordinate) {
 		List<Player<?>> adjacentPlayers = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentCoordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,

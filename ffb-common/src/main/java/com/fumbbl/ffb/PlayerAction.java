@@ -25,8 +25,8 @@ public enum PlayerAction implements INamedObject {
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack"),
 	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
 	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
-	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade")
-	;
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
+	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst");
 
 	private final String fName;
 	private final int fType;
@@ -109,5 +109,13 @@ public enum PlayerAction implements INamedObject {
 
 	public boolean isStandingUp() {
 		return this == STAND_UP || this == STAND_UP_BLITZ;
+	}
+
+	public boolean isBlockAction() {
+		return this == BLOCK || this == VICIOUS_VINES;
+	}
+
+	public boolean forceDispatch() {
+		return this == PlayerAction.FURIOUS_OUTPBURST;
 	}
 }

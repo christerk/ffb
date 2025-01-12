@@ -47,7 +47,7 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 		if (!skills.isEmpty()) {
 			UtilServerDialog.showDialog(gameState, new DialogSelectSkillParameter(player.getId(), skills, SkillChoiceMode.INTENSIVE_TRAINING), false);
 		} else {
-			reports.add(new ReportPrayerWasted(Prayer.INTENSIVE_TRAINING.getName()));
+			reports.add(new ReportPrayerWasted(Prayer.INTENSIVE_TRAINING.getName(), player.getId()));
 		}
 	}
 

@@ -1,18 +1,8 @@
 package com.fumbbl.ffb.server.util;
 
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.Pair;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlockKind;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.TargetSelectionState;
-import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -30,11 +20,12 @@ public class ServerUtilBlock {
 		boolean isBlitz = PlayerAction.BLITZ_MOVE == playerAction || (PlayerAction.BLITZ == playerAction && decorateForFrenzyBlitz);
 		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == playerAction;
 		boolean isPutrid = playerAction != null && playerAction.isPutrid();
-		boolean isBlock = PlayerAction.BLOCK == playerAction;
+		boolean isBlock = playerAction != null && playerAction.isBlockAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == playerAction);
 		boolean blocksDuringMove = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove);
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 		boolean kicksDowned = playerAction != null && playerAction.isKickingDowned();
+		boolean viciousVines = PlayerAction.VICIOUS_VINES == playerAction;
 
 		if ((actingPlayer.getPlayer() != null)
 			&& (blocksDuringMove
@@ -45,8 +36,15 @@ public class ServerUtilBlock {
 			pGame.getFieldModel().clearDiceDecorations();
 			FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
-			Player<?>[] adjacentPlayers = kicksDowned ? UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, coordinateAttacker) : UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker);
-			addDiceDecorations(pGame, adjacentPlayers);
+			Player<?>[] targetPlayers;
+			if (kicksDowned) {
+				targetPlayers = UtilPlayer.findAdjacentPronePlayers(pGame, otherTeam, coordinateAttacker);
+			} else if (viciousVines) {
+				targetPlayers = UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(pGame, otherTeam, coordinateAttacker, 2);
+			} else {
+				targetPlayers = UtilPlayer.findAdjacentBlockablePlayers(pGame, otherTeam, coordinateAttacker);
+			}
+			addDiceDecorations(pGame, targetPlayers);
 			if (canBlockSameTeamPlayer) {
 				addDiceDecorations(pGame,
 					UtilPlayer.findAdjacentBlockablePlayers(pGame, actingPlayer.getPlayer().getTeam(), coordinateAttacker));
@@ -125,14 +123,14 @@ public class ServerUtilBlock {
 	}
 
 	public static int findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
-																			boolean usingMultiBlock, boolean successfulDauntless) {
+										boolean usingMultiBlock, boolean successfulDauntless) {
 
 		return findNrOfBlockDice(game, attacker, defender, usingMultiBlock, successfulDauntless, false, false).getLeft();
 	}
 
 	public static Pair<Integer, Boolean> findNrOfBlockDice(Game game, Player<?> attacker, Player<?> defender,
-																												 boolean usingMultiBlock, boolean successfulDauntless,
-																												 boolean doubleTargetStrength, boolean addBlockDie) {
+														   boolean usingMultiBlock, boolean successfulDauntless,
+														   boolean doubleTargetStrength, boolean addBlockDie) {
 		int nrOfDice = 0;
 		boolean addedDie = false;
 		if ((attacker != null) && (defender != null)) {

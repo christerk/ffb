@@ -2,54 +2,20 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.DiceDecoration;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
-import com.fumbbl.ffb.net.commands.ClientCommandFoul;
-import com.fumbbl.ffb.net.commands.ClientCommandGaze;
-import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
-import com.fumbbl.ffb.net.commands.ClientCommandMove;
-import com.fumbbl.ffb.net.commands.ClientCommandPass;
-import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
-import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
-import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
-import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.*;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepException;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -161,6 +127,12 @@ public final class StepInitSelecting extends AbstractStep {
 							} else {
 								passState.reset();
 							}
+
+							forceGotoOnDispatch = playerAction != null && playerAction.forceDispatch();
+							if (forceGotoOnDispatch) {
+								fDispatchPlayerAction = playerAction;
+							}
+
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 								playerAction, actingPlayerCommand.isJumping());
 						}
@@ -483,7 +455,7 @@ public final class StepInitSelecting extends AbstractStep {
 			if ((playerAction == PlayerAction.BLITZ)
 				|| (playerAction == PlayerAction.BLITZ_MOVE)
 				|| (playerAction == PlayerAction.KICK_EM_BLITZ)
-				|| (playerAction == PlayerAction.BLOCK)
+				|| (playerAction.isBlockAction())
 				|| (playerAction == PlayerAction.MULTIPLE_BLOCK)) {
 				ServerUtilBlock.updateDiceDecorations(game);
 			}

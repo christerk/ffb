@@ -2,11 +2,7 @@ package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -19,22 +15,8 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.generator.BlitzBlock;
-import com.fumbbl.ffb.server.step.generator.BlitzMove;
-import com.fumbbl.ffb.server.step.generator.Block;
-import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
-import com.fumbbl.ffb.server.step.generator.Foul;
-import com.fumbbl.ffb.server.step.generator.Move;
-import com.fumbbl.ffb.server.step.generator.Pass;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
+import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.generator.*;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -255,6 +237,7 @@ public class StepEndMoving extends AbstractStep {
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		if (pPlayerAction != null) {
 			switch (pPlayerAction) {
+				case VICIOUS_VINES:
 				case BLOCK:
 					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
 						.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).build());

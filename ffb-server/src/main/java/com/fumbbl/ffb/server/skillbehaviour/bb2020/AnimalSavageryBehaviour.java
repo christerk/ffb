@@ -1,25 +1,12 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerChoiceMode;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.TargetSelectionState;
-import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
@@ -49,8 +36,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.fumbbl.ffb.PlayerAction.BLOCK;
 
 @RulesCollection(Rules.BB2020)
 public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
@@ -101,7 +86,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 							|| (playerAction != null && playerAction.isKickingDowned())
 							|| (playerAction == PlayerAction.BLITZ)
-							|| (playerAction == BLOCK)
+							|| (playerAction != null && playerAction.isBlockAction())
 							|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
 							|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
@@ -229,7 +214,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			TurnData turnData = game.isHomePlaying() ? game.getTurnDataHome() : game.getTurnDataAway();
 			boolean hitTargetTeamMate = player.getId().equals(state.thrownPlayerId) || player.getId().equals(state.catcherId);
 			PlayerAction action = fallbackAction(step, actingPlayer.getPlayerAction(), injuryResult.injuryContext(), turnData, game, state.blockDefenderId, hitTargetTeamMate);
-			if (action == BLOCK && !lashedOutAgainstOpponent) {
+			if (action != null && action.isBlockAction() && !lashedOutAgainstOpponent) {
 				label = state.goToLabelOnFailure;
 			} else {
 				if (action != null && hitTargetTeamMate) {
@@ -239,7 +224,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
 					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
 					additionalStateKeys = new StepParameterKey[] {StepParameterKey.OLD_DEFENDER_STATE};
-				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction() == BLOCK && action == null)) {
+				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction().isBlockAction() && action == null)) {
 					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
 					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
@@ -296,8 +281,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				fieldModel.setPlayerState(defender, fieldModel.getPlayerState(defender).removeAllTargetSelections());
 				return null;
 			case BLOCK:
+			case VICIOUS_VINES:
 				if (game.getDefenderId().equals(oldDefenderId)) {
-					return BLOCK;
+					return playerAction;
 				}
 				return null;
 			case MULTIPLE_BLOCK:

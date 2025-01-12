@@ -16,11 +16,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -68,6 +64,8 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			put(IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK, ClientAction.KICK_EM_BLOCK);
 			put(IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ, ClientAction.KICK_EM_BLITZ);
 			put(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, ClientAction.THE_FLASHING_BLADE);
+			put(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, ClientAction.VICIOUS_VINES);
+			put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
 		}};
 	}
 
@@ -156,6 +154,12 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			case PLAYER_ACTION_THE_FLASHING_BLADE:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE);
 				break;
+			case PLAYER_ACTION_VICIOUS_VINES:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_VICIOUS_VINES);
+				break;
+			case PLAYER_ACTION_FURIOUS_OUTBURST:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
+				break;
 			default:
 				actionHandled = super.actionKeyPressed(pActionKey);
 				break;
@@ -201,6 +205,8 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		configs.put(ClientAction.KICK_EM_BLOCK, new MenuItemConfig("Kick 'em while they are down! (Block)", IIconProperty.ACTION_KICK_EM_BLOCK, IPlayerPopupMenuKeys.KEY_KICK_EM_BLOCK));
 		configs.put(ClientAction.KICK_EM_BLITZ, new MenuItemConfig("Kick 'em while they are down! (Blitz)", IIconProperty.ACTION_KICK_EM_BLITZ, IPlayerPopupMenuKeys.KEY_KICK_EM_BLITZ));
 		configs.put(ClientAction.THE_FLASHING_BLADE, new MenuItemConfig("The Flashing Blade", IIconProperty.ACTION_THE_FLASHING_BLADE, IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE));
+		configs.put(ClientAction.VICIOUS_VINES, new MenuItemConfig("Vicious Vines", IIconProperty.ACTION_VICIOUS_VINES, IPlayerPopupMenuKeys.KEY_VICIOUS_VINES));
+		configs.put(ClientAction.FURIOUS_OUTBURST, new MenuItemConfig("Furious Outburst", IIconProperty.ACTION_FURIOUS_OUTBURST, IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST));
 		configs.put(ClientAction.RECOVER, new MenuItemConfig("Recover tackle zone & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_RECOVER));
 		configs.put(ClientAction.STAND_UP_BLITZ, new MenuItemConfig("Stand Up & End Move (using Blitz)", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
 		configs.put(ClientAction.STAND_UP, new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
