@@ -65,12 +65,14 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		boolean actionHandled = false;
+		boolean actionHandled;
 		if (logicModule.replayStopped(pActionKey)) {
 			actionHandled = true;
 			getClient().getReplayer().stop();
 			getClient().updateClientState();
 			getClient().getUserInterface().getGameMenuBar().refresh();
+		} else {
+			actionHandled = handleResize(pActionKey);
 		}
 		return actionHandled;
 	}

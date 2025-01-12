@@ -86,7 +86,7 @@ public class ClientStateTrickster extends ClientStateAwt<TricksterLogicModule> {
 			menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 			return true;
 		}
-		return false;
+		return handleResize(pActionKey);
 	}
 
 }

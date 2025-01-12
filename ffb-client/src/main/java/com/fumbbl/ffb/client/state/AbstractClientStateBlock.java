@@ -82,7 +82,7 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
 					break;
 				default:
-					actionHandled = false;
+					actionHandled = handleResize(pActionKey);
 					break;
 			}
 			return actionHandled;

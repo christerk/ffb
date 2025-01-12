@@ -35,11 +35,13 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
-		boolean actionHandled = false;
+		boolean actionHandled;
 		if (pActionKey == ActionKey.MENU_REPLAY) {
 			actionHandled = true;
 			logicModule.startReplay();
 			getClient().getUserInterface().getGameMenuBar().refresh();
+		} else {
+			actionHandled = handleResize(pActionKey);
 		}
 		return actionHandled;
 	}

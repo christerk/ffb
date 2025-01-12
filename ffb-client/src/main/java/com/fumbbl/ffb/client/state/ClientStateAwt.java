@@ -296,6 +296,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean actionKeyPressed(ActionKey pActionKey) {
+		return handleResize(pActionKey);
+	}
+
+	protected boolean handleResize(ActionKey pActionKey) {
 		GameMenuBar gameMenuBar = getClient().getUserInterface().getGameMenuBar();
 		switch (pActionKey) {
 			case RESIZE_LARGER:
@@ -328,10 +332,6 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public ImageIcon createMenuIcon(IconCache iconCache, String iconProperty) {
 		return new ImageIcon(iconCache.getIconByProperty(iconProperty, pitchDimensionProvider));
-	}
-
-	protected DimensionProvider dimensionProvider() {
-		return pitchDimensionProvider;
 	}
 
 	protected void determineCursor(InteractionResult result) {

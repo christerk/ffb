@@ -134,7 +134,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 				return true;
 			default:
-				actionHandled = false;
+				actionHandled = handleResize(pActionKey);
 				break;
 		}
 		return actionHandled;

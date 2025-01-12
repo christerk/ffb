@@ -87,7 +87,7 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 			menuItemSelected(player, IPlayerPopupMenuKeys.KEY_HIT_AND_RUN);
 			return true;
 		}
-		return false;
+		return handleResize(pActionKey);
 	}
 
 }

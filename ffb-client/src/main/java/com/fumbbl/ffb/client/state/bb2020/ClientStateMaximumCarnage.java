@@ -35,7 +35,7 @@ public class ClientStateMaximumCarnage extends AbstractClientStateBlock<MaximumC
 		if (pActionKey == ActionKey.PLAYER_ACTION_END_MOVE) {
 			menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_END_MOVE);
 		} else {
-			actionHandled = false;
+			actionHandled = handleResize(pActionKey);
 		}
 		return actionHandled;
 	}

@@ -63,7 +63,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		if (moveDirection != null) {
 			return logicModule.pushbackTo(moveDirection);
 		}
-		return false;
+		return handleResize(pActionKey);
 	}
 
 	@Override

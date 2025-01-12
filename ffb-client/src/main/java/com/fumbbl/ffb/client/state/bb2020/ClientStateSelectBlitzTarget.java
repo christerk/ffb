@@ -99,7 +99,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
 			default:
-				actionHandled = false;
+				actionHandled = handleResize(pActionKey);
 				break;
 		}
 		return actionHandled;

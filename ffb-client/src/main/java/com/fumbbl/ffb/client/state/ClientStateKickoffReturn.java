@@ -116,7 +116,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
 				break;
 			default:
-				actionHandled = false;
+				actionHandled = handleResize(pActionKey);
 				break;
 		}
 		return actionHandled;

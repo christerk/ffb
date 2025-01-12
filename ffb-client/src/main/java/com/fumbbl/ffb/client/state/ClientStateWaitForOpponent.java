@@ -29,7 +29,7 @@ public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLo
 				logicModule.illegalProcedure();
 				break;
 			default:
-				actionHandled = false;
+				actionHandled = handleResize(pActionKey);
 				break;
 		}
 		return actionHandled;

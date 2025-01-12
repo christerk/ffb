@@ -59,6 +59,9 @@ public class ClientStateBlockExtension {
         clientState.menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
         return true;
       default:
+        if (clientState.handleResize(pActionKey)) {
+          return true;
+        }
         FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
         FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
           pActionKey);

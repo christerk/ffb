@@ -73,7 +73,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
 				default:
-					actionHandled = false;
+					actionHandled = handleResize(pActionKey);
 					break;
 			}
 			return actionHandled;
@@ -110,6 +110,9 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					return true;
 				default:
+					if (handleResize(pActionKey)) {
+						return true;
+					}
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
 					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
 						pActionKey);
@@ -117,7 +120,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 					if (defender != null) {
 						clickOnPlayer(defender);
 					}
-					break;
+					return true;
 			}
 			return true;
 		}

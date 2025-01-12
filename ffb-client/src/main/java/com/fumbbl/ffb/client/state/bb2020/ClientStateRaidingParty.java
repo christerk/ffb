@@ -86,7 +86,7 @@ public class ClientStateRaidingParty extends ClientStateAwt<RaidingPartyLogicMod
 			menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
 			return true;
 		}
-		return false;
+		return handleResize(pActionKey);
 	}
 
 }
