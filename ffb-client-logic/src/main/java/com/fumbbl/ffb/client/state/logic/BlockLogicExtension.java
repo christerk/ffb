@@ -184,7 +184,7 @@ public class BlockLogicExtension extends LogicModule {
 		// rooted players can not move but still spend movement for the blitz action
 		if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative)) {
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative) || (isGoredAvailable() && pDoBlitz)) {
 				return InteractionResult.selectAction(blockActionContext(actingPlayer, multiBlock));
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
 				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);

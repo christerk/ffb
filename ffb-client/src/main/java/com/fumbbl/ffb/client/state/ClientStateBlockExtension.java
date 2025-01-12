@@ -81,13 +81,14 @@ public class ClientStateBlockExtension {
     return influences;
   }
 
-  protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs() {
+  public LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs() {
     LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
     itemConfigs.put(ClientAction.STAB, new MenuItemConfig("Stab Opponent", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_STAB));
     itemConfigs.put(ClientAction.CHAINSAW, new MenuItemConfig("Chainsaw", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
     itemConfigs.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Projectile Vomit", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
     itemConfigs.put(ClientAction.BREATHE_FIRE, new MenuItemConfig("Breathe Fire", IIconProperty.ACTION_BREATHE_FIRE, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
+    itemConfigs.put(ClientAction.GORED_BY_THE_BULL, new MenuItemConfig("Gored By The Bull", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL));
     itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block Opponent", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
 
     return itemConfigs;

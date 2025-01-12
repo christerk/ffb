@@ -4,18 +4,24 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2020.BlockKindLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
+
+	private final ClientStateBlockExtension extension = new ClientStateBlockExtension();
 
 	public ClientStateSelectBlockKind(FantasyFootballClientAwt pClient) {
 		super(pClient, new BlockKindLogicModule(pClient));
@@ -71,6 +77,11 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 				put(IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL, ClientAction.GORED_BY_THE_BULL);
 			}};
 		}
+
+	@Override
+	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+		return extension.itemConfigs();
+	}
 
 	@Override
 	public boolean actionKeyPressed(ActionKey pActionKey) {
