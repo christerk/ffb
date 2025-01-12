@@ -23,8 +23,8 @@ public class ClientStateHighKick extends ClientStateAwt<HighKickLogicModule> {
 		super(pClient, new HighKickLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(true);
 	}
 

@@ -24,8 +24,8 @@ public class IllegalSubstitutionLogicModule extends SetupLogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		Game game = client.getGame();
 		fFieldPlayers = new HashSet<>();
 		for (Player<?> player : game.getTeamHome().getPlayers()) {

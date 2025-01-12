@@ -17,18 +17,17 @@ public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void setUp() {
 		targets = logicModule.getTargets();
 		markTargets();
 	}
 
 	@Override
-	public void leaveState() {
-		super.leaveState();
+	public void tearDown() {
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		userInterface.getFieldComponent().refresh();
+		super.tearDown();
 	}
 
 	private void markTargets() {

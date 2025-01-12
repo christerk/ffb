@@ -17,8 +17,8 @@ public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLo
 		super(pClient, new WaitForOpponentLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(false);
 	}
 

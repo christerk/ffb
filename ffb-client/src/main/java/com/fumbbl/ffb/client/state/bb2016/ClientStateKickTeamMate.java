@@ -32,8 +32,8 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		super(pClient, new KtmLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		markKickablePlayers();
 	}
 
@@ -86,11 +86,12 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		userInterface.getFieldComponent().refresh();
+		super.tearDown();
 	}
 
 	@Override

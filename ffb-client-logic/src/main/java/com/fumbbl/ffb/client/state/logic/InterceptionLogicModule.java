@@ -30,7 +30,7 @@ public class InterceptionLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
+	public void setUp() {
 		interceptionSkill = null;
 	}
 

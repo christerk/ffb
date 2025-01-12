@@ -28,16 +28,16 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 	}
 
 	@Override
-	public void enterState() {
-		super.enterState();
+	public void setUp() {
 		getClient().getUserInterface().getFieldComponent().refresh();
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		fieldModel.clearMoveSquares();
 		getClient().getUserInterface().getFieldComponent().refresh();
+		super.tearDown();
 	}
 
 	public void clickOnPlayer(Player<?> player) {

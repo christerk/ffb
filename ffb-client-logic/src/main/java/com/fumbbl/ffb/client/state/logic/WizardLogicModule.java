@@ -29,8 +29,8 @@ public class WizardLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		spellAvailable = true;
 	}
 

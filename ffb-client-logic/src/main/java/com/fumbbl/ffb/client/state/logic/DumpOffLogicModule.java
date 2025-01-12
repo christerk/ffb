@@ -24,7 +24,7 @@ public class DumpOffLogicModule extends MoveLogicModule {
 	}
 
 	@Override
-	public void postInit() {
+	public void setUp() {
 		Game game = client.getGame();
 		game.setPassCoordinate(null);
 	}

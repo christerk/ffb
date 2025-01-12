@@ -51,14 +51,16 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 	}
 
-	public void initUI() {
+	public void setUp() {
+		super.setUp();
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getDialogManager().updateDialog();
 		UtilClientCursor.setDefaultCursor(userInterface);
 	}
 
-	public void leaveState() {
+	public void tearDown() {
 		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+		super.tearDown();
 	}
 
 	// Interface Methods

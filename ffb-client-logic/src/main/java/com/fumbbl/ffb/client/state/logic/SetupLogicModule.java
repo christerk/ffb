@@ -33,8 +33,8 @@ public class SetupLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		client.getClientData().clear();
 	}
 

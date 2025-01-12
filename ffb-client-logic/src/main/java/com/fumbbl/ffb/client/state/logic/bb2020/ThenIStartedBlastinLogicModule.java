@@ -29,8 +29,8 @@ public class ThenIStartedBlastinLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		Game game = client.getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		Player<?> player = game.playingTeamHasActingPLayer() ? game.getActingPlayer().getPlayer() : game.getDefender();

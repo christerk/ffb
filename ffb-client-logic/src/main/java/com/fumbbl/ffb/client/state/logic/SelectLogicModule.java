@@ -29,8 +29,8 @@ public class SelectLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		client.getGame().setDefenderId(null);
 		client.getClientData().clearBlockDiceResult();
 	}

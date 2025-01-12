@@ -37,8 +37,8 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 	}
 
 	@Override
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		markThrowablePlayers();
 		fRangeGridHandler.refreshSettings();
 	}
@@ -154,13 +154,14 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		userInterface.getFieldComponent().refresh();
+		super.tearDown();
 	}
 
 	@Override

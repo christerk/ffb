@@ -21,8 +21,8 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 		super(pClient, new SpectateLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(false);
 		if (logicModule.canSwitchToSpectate()) {
 			UserInterface userInterface = getClient().getUserInterface();

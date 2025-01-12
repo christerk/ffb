@@ -39,11 +39,10 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 		super(pClient, new LoginLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		hideSelectSquare();
 		setClickable(false);
-		logicModule.init();
 	}
 
 	@Override

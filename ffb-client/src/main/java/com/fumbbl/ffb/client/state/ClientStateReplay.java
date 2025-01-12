@@ -28,8 +28,8 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		logicModule.setCallbacks(new ReplayCallbacksAwt(this));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(false);
 	}
 

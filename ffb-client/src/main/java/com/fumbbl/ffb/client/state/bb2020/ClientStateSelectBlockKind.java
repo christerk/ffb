@@ -22,8 +22,8 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		showMenu();
 	}
 

@@ -31,8 +31,8 @@ public class TouchbackLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		// check if there are players on the field to give the ball to
 		Game game = client.getGame();
 		fTouchbackToAnyField = true;

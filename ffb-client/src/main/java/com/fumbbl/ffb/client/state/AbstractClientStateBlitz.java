@@ -22,10 +22,6 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 		super(client, logicModule);
 	}
 
-	public void initUI() {
-		super.initUI();
-	}
-
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);

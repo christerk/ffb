@@ -35,7 +35,7 @@ public abstract class LogicModule {
 
 	protected abstract ActionContext actionContext(ActingPlayer actingPlayer);
 
-	public void postInit() {
+	public void setUp() {
 	}
 
 	public void teardown() {

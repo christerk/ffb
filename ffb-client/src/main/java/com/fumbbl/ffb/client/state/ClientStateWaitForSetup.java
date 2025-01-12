@@ -23,8 +23,8 @@ public class ClientStateWaitForSetup extends ClientStateAwt<WaitForSetupLogicMod
 		super(pClient, new WaitForSetupLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(false);
 		Game game = getClient().getGame();
 		SideBarComponent sideBarAway = getClient().getUserInterface().getSideBarAway();
@@ -34,11 +34,12 @@ public class ClientStateWaitForSetup extends ClientStateAwt<WaitForSetupLogicMod
 		}
 	}
 
-	public void leaveState() {
+	public void tearDown() {
 		SideBarComponent sideBarAway = getClient().getUserInterface().getSideBarAway();
 		if (fReservesBoxOpened && (sideBarAway.getOpenBox() == BoxType.RESERVES)) {
 			sideBarAway.closeBox();
 		}
+		super.tearDown();
 	}
 
 	@Override

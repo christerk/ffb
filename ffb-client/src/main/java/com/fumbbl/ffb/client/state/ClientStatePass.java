@@ -37,8 +37,8 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 	}
 
 	@Override
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		fShowRangeRuler = true;
 		fRangeGridHandler.refreshSettings();
 	}
@@ -151,11 +151,12 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
 		getClient().getUserInterface().getFieldComponent().refresh();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
+		super.tearDown();
 	}
 
 	@Override

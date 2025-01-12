@@ -44,8 +44,8 @@ public class ReplayLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {

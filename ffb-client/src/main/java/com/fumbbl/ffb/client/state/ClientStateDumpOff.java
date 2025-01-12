@@ -64,9 +64,9 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
 		getClient().getUserInterface().getFieldComponent().refresh();
-		super.leaveState();
+		super.tearDown();
 	}
 }

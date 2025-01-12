@@ -23,8 +23,8 @@ public abstract class AbstractClientStateSetup<T extends SetupLogicModule> exten
 		super(pClient, logicModule);
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		if (!sideBarHome.isBoxOpen()) {
 			fReservesBoxOpened = true;
@@ -32,11 +32,12 @@ public abstract class AbstractClientStateSetup<T extends SetupLogicModule> exten
 		}
 	}
 
-	public void leaveState() {
+	public void tearDown() {
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
 		if (fReservesBoxOpened && (sideBarHome.getOpenBox() == BoxType.RESERVES)) {
 			sideBarHome.closeBox();
 		}
+		super.tearDown();
 	}
 
 	public void mousePressed(MouseEvent pMouseEvent) {

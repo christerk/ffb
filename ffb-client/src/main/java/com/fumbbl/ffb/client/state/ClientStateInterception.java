@@ -20,8 +20,8 @@ public class ClientStateInterception extends ClientStateAwt<InterceptionLogicMod
 		super(pClient, new InterceptionLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(true);
 	}
 

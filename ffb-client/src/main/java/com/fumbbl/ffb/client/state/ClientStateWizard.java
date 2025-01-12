@@ -22,8 +22,8 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 		super(pClient, new WizardLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(true);
 	}
 

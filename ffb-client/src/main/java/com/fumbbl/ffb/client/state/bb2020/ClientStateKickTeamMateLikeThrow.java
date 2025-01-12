@@ -31,8 +31,8 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 		fRangeGridHandler = new RangeGridHandler(pClient, true);
 	}
 
-	public void enterState() {
-		super.enterState();
+	@Override
+	public void setUp() {
 		markThrowablePlayers();
 		fRangeGridHandler.refreshSettings();
 	}
@@ -153,13 +153,14 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		userInterface.getFieldComponent().refresh();
+		super.tearDown();
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {

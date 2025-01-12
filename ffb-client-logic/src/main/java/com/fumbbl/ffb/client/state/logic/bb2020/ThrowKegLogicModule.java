@@ -31,8 +31,8 @@ public class ThrowKegLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		FieldModel fieldModel = client.getGame().getFieldModel();
 		Player<?> player = client.getGame().getActingPlayer().getPlayer();
 		MoveSquare[] squares = Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(player), FieldCoordinateBounds.FIELD,

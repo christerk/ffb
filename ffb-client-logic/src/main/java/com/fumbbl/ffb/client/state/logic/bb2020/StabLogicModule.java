@@ -26,8 +26,8 @@ public class StabLogicModule extends BlockLogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		targets = findTargets();
 	}
 

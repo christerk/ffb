@@ -25,8 +25,8 @@ public class SpectateLogicModule extends LogicModule {
 	}
 
 	@Override
-	public void postInit() {
-		super.postInit();
+	public void setUp() {
+		super.setUp();
 		if (canSwitchToSpectate()) {
 			client.setMode(ClientMode.SPECTATOR);
 		}

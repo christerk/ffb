@@ -33,10 +33,11 @@ public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> 
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		userInterface.getFieldComponent().refresh();
+		super.tearDown();
 	}
 }

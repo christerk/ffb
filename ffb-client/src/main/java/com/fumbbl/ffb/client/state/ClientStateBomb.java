@@ -31,7 +31,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		fRangeGridHandler = new RangeGridHandler(pClient, false);
 	}
 
-	public void initUI() {
+	public void setUp() {
 		fRangeGridHandler.refreshSettings();
 	}
 
@@ -111,11 +111,12 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	}
 
 	@Override
-	public void leaveState() {
+	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
 		getClient().getUserInterface().getFieldComponent().refresh();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
+		super.tearDown();
 	}
 
 	@Override

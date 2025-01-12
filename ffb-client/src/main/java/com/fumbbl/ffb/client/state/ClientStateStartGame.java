@@ -19,15 +19,16 @@ public class ClientStateStartGame extends ClientStateAwt<StartGameLogicModule> {
 		super(pClient, new StartGameLogicModule(pClient));
 	}
 
-	public void initUI() {
-		super.initUI();
+	public void setUp() {
+		super.setUp();
 		setClickable(false);
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getSideBarAway().openBox(BoxType.RESERVES);
 	}
 
-	public void leaveState() {
+	public void tearDown() {
 		closeAwayBox();
+		super.tearDown();
 	}
 
 	@Override
