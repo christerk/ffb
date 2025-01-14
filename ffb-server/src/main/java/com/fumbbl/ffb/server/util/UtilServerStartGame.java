@@ -1,18 +1,10 @@
 package com.fumbbl.ffb.server.util;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.CommonPropertyValue;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.GameOptionFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.ServerStatus;
-import com.fumbbl.ffb.option.GameOptionBoolean;
-import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.option.GameOptionInt;
-import com.fumbbl.ffb.option.GameOptionString;
-import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.option.*;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.ServerMode;
@@ -28,11 +20,7 @@ import com.fumbbl.ffb.server.step.generator.StartGame;
 import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -113,7 +101,7 @@ public class UtilServerStartGame {
 		userSettingsQuery.execute(pCoach);
 		Collections.addAll(settingNames, userSettingsQuery.getSettingNames());
 		Collections.addAll(settingValues, userSettingsQuery.getSettingValues());
-		if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
+		if ((!settingNames.isEmpty()) && (!settingValues.isEmpty())) {
 			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new CommonProperty[0]),
 				settingValues.toArray(new String[0]));
 		}
