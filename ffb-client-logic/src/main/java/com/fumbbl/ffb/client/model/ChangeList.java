@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.33.2")
+			.addBugfix("2016: Stab was not working anymore")
 		);
 
 		versions.add(new VersionChangeList("2.33.1")
