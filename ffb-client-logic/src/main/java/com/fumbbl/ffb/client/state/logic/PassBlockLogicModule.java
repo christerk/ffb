@@ -101,11 +101,12 @@ public class PassBlockLogicModule extends MoveLogicModule {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer() != null) {
-			if (isTurnEnding()) {
-				client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
-				client.getClientData().setEndTurnButtonHidden(true);
+			if (!isTurnEnding()) {
+				return;
 			}
 		}
+		client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
+		client.getClientData().setEndTurnButtonHidden(true);
 	}
 
 	@Override
