@@ -305,7 +305,7 @@ public class MoveLogicModule extends LogicModule {
 		if (player == actingPlayer.getPlayer()) {
 			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 			if (actingPlayer.hasActed() || mechanic.canJump(game, player, position)
-				|| player.hasSkillProperty(NamedProperties.inflictsConfusion)
+				|| player.hasSkillProperty(NamedProperties.canGazeDuringMove)
 				|| isSpecialAbilityAvailable(actingPlayer)
 				|| (player.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, player))
 				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, player))
