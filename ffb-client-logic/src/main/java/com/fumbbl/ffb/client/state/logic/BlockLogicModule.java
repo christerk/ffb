@@ -38,7 +38,13 @@ public class BlockLogicModule extends LogicModule {
 					actingPlayer.isJumping());
 				return InteractionResult.handled();
 			} else {
-				return InteractionResult.selectAction(actionContext(actingPlayer));
+				ActionContext actionContext = actionContext(actingPlayer);
+				if (actionContext.getActions().isEmpty()) {
+					deselectActingPlayer();
+					return InteractionResult.handled();
+				} else {
+				return InteractionResult.selectAction(actionContext);
+				}
 			}
 		} else {
 			return block(player, actingPlayer);
@@ -70,12 +76,17 @@ public class BlockLogicModule extends LogicModule {
 
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
-		ActionContext actionContext = new ActionContext();
+		ActionContext actionContext = new ActionContext().merge(extension.actionContext(actingPlayer));
 		if (isSufferingBloodLust(actingPlayer)) {
 			actionContext.add(ClientAction.MOVE);
 		}
-		actionContext.add(ClientAction.END_MOVE);
-		return actionContext.merge(extension.actionContext(actingPlayer));
+		if (!actionContext.getActions().isEmpty() || actingPlayer.hasActed()) {
+			actionContext.add(ClientAction.END_MOVE);
+			if (actingPlayer.hasActed()) {
+				actionContext.add(Influences.HAS_ACTED);
+			}
+		}
+		return actionContext;
 	}
 
 	@Override
