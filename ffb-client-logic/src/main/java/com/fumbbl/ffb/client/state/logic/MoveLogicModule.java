@@ -354,7 +354,7 @@ public class MoveLogicModule extends LogicModule {
 				return InteractionResult.perform().with(shortestPath);
 			}
 		}
-		return InteractionResult.ignore();
+		return InteractionResult.reset();
 	}
 
 	@Override

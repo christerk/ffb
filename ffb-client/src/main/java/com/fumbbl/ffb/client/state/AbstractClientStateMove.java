@@ -46,6 +46,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					fieldComponent.refresh();
 				}
 				break;
+			case RESET:
+				UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+				break;
 			default:
 				break;
 		}
