@@ -114,6 +114,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				break;
 			case DELEGATE:
 				selectable = getDelegate(result).mouseOverField(pCoordinate);
+				userInterface.getFieldComponent().refresh();
 				break;
 			case PREVIEW_THROW:
 				drawRangeRuler(pCoordinate);
