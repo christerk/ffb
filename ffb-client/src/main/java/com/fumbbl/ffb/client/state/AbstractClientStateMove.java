@@ -40,6 +40,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 				if (result.getMoveSquare() != null) {
 					setCustomCursor(result.getMoveSquare());
 				} else if (ArrayTool.isProvided(result.getPath())) {
+					UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_MOVE);
 					Game game = getClient().getGame();
 					ActingPlayer actingPlayer = game.getActingPlayer();
 					fieldComponent.getLayerUnderPlayers().drawMovePath(result.getPath(), actingPlayer.getCurrentMove());
