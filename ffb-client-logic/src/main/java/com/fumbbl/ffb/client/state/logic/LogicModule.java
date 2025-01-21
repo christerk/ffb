@@ -535,7 +535,7 @@ public abstract class LogicModule {
 	public boolean performsRangeGridAction(ActingPlayer actingPlayer, Game game) {
 		return isPassAnySquareAvailable(actingPlayer, game)
 			|| showGridForKTM(game, actingPlayer)
-			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
+			|| ((PlayerAction.THROW_TEAM_MATE_MOVE == actingPlayer.getPlayerAction() || PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction())
 			&& UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), true));
 	}
 

@@ -8,7 +8,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 public class RangeGridState {
 
@@ -34,14 +33,11 @@ public class RangeGridState {
 		if (showRangeGrid) {
 			Game game = client.getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
-			if ((!throwTeamMate && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-				|| (throwTeamMate &&
-				(actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE
-					|| actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE
-					|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE
-					|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
-			)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)) {
+			if (!throwTeamMate || actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE
+				|| actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE
+				|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE
+				|| actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE
+				|| actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB) {
 				FieldCoordinate actingPlayerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 				return InteractionResult.perform().with(actingPlayerCoordinate);
 			}

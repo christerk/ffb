@@ -148,6 +148,18 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 	}
 
 	@Override
+	protected void postPerform(int menuKey) {
+		switch (menuKey) {
+			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
+				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+				fRangeGridHandler.refreshRangeGrid();
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
 	public void handleCommand(NetCommand pNetCommand) {
 		fRangeGridHandler.refreshRangeGrid();
 		super.handleCommand(pNetCommand);
@@ -171,8 +183,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		if (pActionKey == ActionKey.PLAYER_ACTION_RANGE_GRID) {
-			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-			fRangeGridHandler.refreshRangeGrid();
+			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			return true;
 		} else {
 			return super.actionKeyPressed(pActionKey);
