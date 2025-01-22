@@ -29,8 +29,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 
 	@Override
 	protected boolean showGridForKTM(Game game, ActingPlayer actingPlayer) {
-		return ((PlayerAction.KICK_TEAM_MATE_MOVE == actingPlayer.getPlayerAction())
-			&& UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false));
+		return UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false);
 	}
 
 	@Override
@@ -73,7 +72,7 @@ public class KickTeamMateLikeThrowLogicModule extends MoveLogicModule {
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
 			return InteractionResult.previewThrow();
 		}
-		return InteractionResult.reset();
+		return super.fieldPeek(pCoordinate);
 	}
 
 	@Override

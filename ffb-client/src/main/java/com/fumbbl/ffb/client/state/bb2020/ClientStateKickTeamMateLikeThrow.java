@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.state.AbstractClientStateMove;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.RangeGridHandler;
 import com.fumbbl.ffb.client.state.logic.bb2020.KickTeamMateLikeThrowLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -85,7 +86,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 				resetSidebars();
 				return true;
 			default:
-				return false;
+				return evaluateHover(result);
 		}
 	}
 
@@ -153,6 +154,17 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 	}
 
 	@Override
+	protected void postPerform(int menuKey) {
+		switch (menuKey) {
+			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
+				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+				fRangeGridHandler.refreshRangeGrid();
+				break;
+			default:
+				break;
+		}	}
+
+	@Override
 	public void tearDown() {
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
@@ -165,8 +177,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		if (pActionKey == ActionKey.PLAYER_ACTION_RANGE_GRID) {
-			fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-			fRangeGridHandler.refreshRangeGrid();
+			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			return true;
 		} else {
 			return super.actionKeyPressed(pActionKey);
