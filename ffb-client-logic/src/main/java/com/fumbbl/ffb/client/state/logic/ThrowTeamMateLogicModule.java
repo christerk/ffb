@@ -67,7 +67,7 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		if ((game.getDefender() != null) && (game.getPassCoordinate() == null)) {
 			return InteractionResult.previewThrow();
 		}
-		return InteractionResult.reset();
+		return super.fieldPeek(pCoordinate);
 	}
 
 	@Override

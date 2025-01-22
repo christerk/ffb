@@ -90,7 +90,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 				resetSidebars();
 				return true;
 			default:
-				return false;
+				return evaluateHover(result);
 		}
 	}
 

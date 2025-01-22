@@ -32,9 +32,13 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		return evaluateHover(result);
+	}
+
+	protected boolean evaluateHover(InteractionResult result) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
-		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
 				if (result.getMoveSquare() != null) {
@@ -53,7 +57,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			default:
 				break;
 		}
-		return super.mouseOverField(pCoordinate);
+		return super.mouseOverField(null);
 	}
 
 	private void setCustomCursor(MoveSquare pMoveSquare) {
