@@ -59,17 +59,19 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 
 	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-		fieldComponent.getLayerOverPlayers().clearSpellMarker();
 		switch (wizardSpell) {
 			case LIGHTNING:
+				fieldComponent.getLayerOverPlayers().clearSpellMarker();
 				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_LIGHTNING_SMALL,
 					!logicModule.isValidLightningTarget(pCoordinate));
 				break;
 			case ZAP:
+				fieldComponent.getLayerOverPlayers().clearSpellMarker();
 				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_ZAP_SMALL,
 					!logicModule.isValidZapTarget(pCoordinate));
 				break;
 			case FIREBALL:
+				fieldComponent.getLayerOverPlayers().clearFireballMarker();
 				fieldComponent.getLayerOverPlayers().drawFireballMarker(pCoordinate, !logicModule.isValidFireballTarget(pCoordinate));
 				break;
 		}
@@ -80,20 +82,38 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
-			case PERFORM:
+			case RESET:
+				clearMarker();
 				redisplaySpellDialog();
+				break;
+			case HANDLED:
+				clearMarker();
 				break;
 			default:
 				break;
 		}
 	}
 
+	private void clearMarker() {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		if (getClient().getClientData().getWizardSpell() == SpecialEffect.FIREBALL) {
+			fieldComponent.getLayerOverPlayers().clearFireballMarker();
+		} else {
+			fieldComponent.getLayerOverPlayers().clearSpellMarker();
+		}
+		fieldComponent.refresh();
+	}
+
 	@Override
 	public void clickOnPlayer(Player<?> pPlayer) {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
-			case PERFORM:
+			case RESET:
+				clearMarker();
 				redisplaySpellDialog();
+				break;
+			case HANDLED:
+				clearMarker();
 				break;
 			default:
 				break;

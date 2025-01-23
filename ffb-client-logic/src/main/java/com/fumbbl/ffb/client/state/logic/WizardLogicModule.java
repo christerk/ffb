@@ -83,7 +83,7 @@ public class WizardLogicModule extends LogicModule {
 					spellAvailable = false;
 					return InteractionResult.handled();
 				} else {
-					return InteractionResult.perform();
+					return InteractionResult.reset();
 				}
 			}
 			if (SpecialEffect.ZAP == wizardSpell) {
@@ -92,7 +92,7 @@ public class WizardLogicModule extends LogicModule {
 					spellAvailable = false;
 					return InteractionResult.handled();
 				} else {
-					return InteractionResult.perform();
+					return InteractionResult.reset();
 				}
 			}
 			if (SpecialEffect.FIREBALL == wizardSpell) {
@@ -101,7 +101,7 @@ public class WizardLogicModule extends LogicModule {
 					spellAvailable = false;
 					return InteractionResult.handled();
 				} else {
-					return InteractionResult.perform();
+					return InteractionResult.reset();
 				}
 			}
 		}
