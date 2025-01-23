@@ -41,7 +41,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SELECT_ACTION:
-				createAndShowPopupMenuForPlayer(getClient().getGame().getDefender(), result.getActionContext());
+				createAndShowPopupMenuForPlayer(player, result.getActionContext());
 				break;
 			default:
 				super.evaluateClick(result, player);
@@ -99,6 +99,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_SHORT, ClientAction.PASS_SHORT);
 			put(IPlayerPopupMenuKeys.KEY_LONG, ClientAction.PASS_LONG);
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 		}};
 	}
 
@@ -107,6 +108,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 		itemConfigs.put(ClientAction.PASS_SHORT, new MenuItemConfig("Short Kick", IIconProperty.ACTION_BLITZ,IPlayerPopupMenuKeys.KEY_SHORT));
 		itemConfigs.put(ClientAction.PASS_LONG, new MenuItemConfig("Long Kick", IIconProperty.ACTION_BLITZ,IPlayerPopupMenuKeys.KEY_LONG));
+		itemConfigs.putAll(super.itemConfigs(actionContext));
 		return itemConfigs;
 	}
 }

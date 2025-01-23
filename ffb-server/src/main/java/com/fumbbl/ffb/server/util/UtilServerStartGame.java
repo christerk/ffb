@@ -113,7 +113,7 @@ public class UtilServerStartGame {
 		userSettingsQuery.execute(pCoach);
 		Collections.addAll(settingNames, userSettingsQuery.getSettingNames());
 		Collections.addAll(settingValues, userSettingsQuery.getSettingValues());
-		if ((settingNames.size() > 0) && (settingValues.size() > 0)) {
+		if ((!settingNames.isEmpty()) && (!settingValues.isEmpty())) {
 			server.getCommunication().sendUserSettings(pSession, settingNames.toArray(new CommonProperty[0]),
 				settingValues.toArray(new String[0]));
 		}

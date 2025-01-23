@@ -85,6 +85,7 @@ public class KtmLogicModule extends MoveLogicModule {
 		return new HashSet<ClientAction>() {{
 			add(ClientAction.PASS_SHORT);
 			add(ClientAction.PASS_LONG);
+			add(ClientAction.END_MOVE);
 		}};
 	}
 
@@ -100,7 +101,7 @@ public class KtmLogicModule extends MoveLogicModule {
 				communication.sendKickTeamMate(actingPlayer.getPlayerId(), player.getId(), 2);
 				break;
 			default:
-				break;
+				super.performAvailableAction(player, action);
 		}
 	}
 
