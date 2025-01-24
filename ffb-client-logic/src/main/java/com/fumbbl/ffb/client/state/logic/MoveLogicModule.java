@@ -334,11 +334,11 @@ public class MoveLogicModule extends LogicModule {
 	public InteractionResult fieldInteraction(FieldCoordinate coordinate) {
 		MoveSquare moveSquare = moveSquare(coordinate);
 		FieldCoordinate[] movePath = automovePath(coordinate);
-		if (ArrayTool.isProvided(movePath)) {
-			movePlayer(movePath);
-			return InteractionResult.handled();
-		} else if (moveSquare != null) {
+		if (moveSquare != null) {
 			movePlayer(coordinate);
+			return InteractionResult.handled();
+		} else if (ArrayTool.isProvided(movePath)) {
+			movePlayer(movePath);
 			return InteractionResult.handled();
 		}
 		return InteractionResult.ignore();
