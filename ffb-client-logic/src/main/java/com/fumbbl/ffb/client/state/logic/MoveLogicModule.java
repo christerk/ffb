@@ -49,6 +49,7 @@ public class MoveLogicModule extends LogicModule {
 			add(ClientAction.RAIDING_PARTY);
 			add(ClientAction.LOOK_INTO_MY_EYES);
 			add(ClientAction.BALEFUL_HEX);
+			add(ClientAction.BLACK_INK);
 			add(ClientAction.PROJECTILE_VOMIT);
 			add(ClientAction.BLOCK);
 			add(ClientAction.CATCH_OF_THE_DAY);
