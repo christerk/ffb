@@ -554,7 +554,7 @@ public abstract class LogicModule {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-		return (playerState != null) && playerState.isActive()
+		return (playerState != null) && playerState.isActive() && playerState.getBase() == PlayerState.STANDING
 			&& mechanic.isBlockActionAllowed(game.getTurnMode())
 			&& player.hasUnusedSkillProperty(NamedProperties.canBlockOverDistance)
 			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 2));
