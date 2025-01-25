@@ -38,6 +38,7 @@ public class BlockKindLogicModule extends LogicModule {
 			add(ClientAction.STAB);
 			add(ClientAction.PROJECTILE_VOMIT);
 			add(ClientAction.CHAINSAW);
+			add(ClientAction.BREATHE_FIRE);
 			add(ClientAction.GORED_BY_THE_BULL);
 		}};
 	}

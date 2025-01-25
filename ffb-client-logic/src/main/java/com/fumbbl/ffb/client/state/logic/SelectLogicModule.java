@@ -314,4 +314,10 @@ public class SelectLogicModule extends LogicModule {
 			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative))
 			.collect(Collectors.toList());
 	}
+
+	public boolean isMoveActionAvailable(Player<?> player) {
+		Game game = client.getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return ((playerState != null) && playerState.isAbleToMove());
+	}
 }

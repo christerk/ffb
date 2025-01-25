@@ -288,12 +288,6 @@ public abstract class LogicModule {
 			&& player.hasSkillProperty(NamedProperties.enableThrowBombAction));
 	}
 
-	public boolean isMoveActionAvailable(Player<?> player) {
-		Game game = client.getGame();
-		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return ((playerState != null) && playerState.isAbleToMove());
-	}
-
 	public boolean isBlitzActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);

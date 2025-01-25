@@ -56,6 +56,8 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 			add(ClientAction.PROJECTILE_VOMIT);
 			add(ClientAction.MOVE);
 			add(ClientAction.END_MOVE);
+			add(ClientAction.JUMP);
+			add(ClientAction.BOUNDING_LEAP);
 		}};
 	}
 
@@ -71,10 +73,8 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 			case MOVE:
 				communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUTRID_REGURGITATION_MOVE, actingPlayer.isJumping());
 				break;
-			case END_MOVE:
-				super.performAvailableAction(player, action);
-				break;
 			default:
+				super.performAvailableAction(player, action);
 				break;
 		}
 	}
@@ -83,7 +83,7 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 	public boolean isPutridRegurgitationAvailable() {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return actingPlayer.hasBlocked() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
+		return !isMoveAvailable(actingPlayer) && actingPlayer.hasBlocked() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
 			&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(game.getActingTeam()), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())));
 	}
 
@@ -96,5 +96,10 @@ public class PutridRegurgitationBlitzLogicModule extends BlitzLogicModule {
 		} else {
 			return InteractionResult.reset();
 		}
+	}
+
+	@Override
+	public boolean isMoveAvailable(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ;
 	}
 }
