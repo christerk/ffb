@@ -29,6 +29,6 @@ public class SwarmingLogicModule extends SetupLogicModule {
 			&& !FieldCoordinateBounds.LOS_HOME.isInBounds(pCoordinate)
 			&& !FieldCoordinateBounds.LOWER_WIDE_ZONE_HOME.isInBounds(pCoordinate)
 			&& !FieldCoordinateBounds.UPPER_WIDE_ZONE_HOME.isInBounds(pCoordinate) || pCoordinate.isBoxCoordinate())
-			&& getPlayer(pCoordinate).isPresent());
+			&& !getPlayer(pCoordinate).isPresent());
 	}
 }
