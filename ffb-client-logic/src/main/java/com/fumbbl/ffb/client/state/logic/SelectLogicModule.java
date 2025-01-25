@@ -278,7 +278,7 @@ public class SelectLogicModule extends LogicModule {
 			context.add(ClientAction.KICK_EM_BLOCK);
 		}
 		if (isKickEmBlitzAvailable(player)) {
-			context.add(ClientAction.BLITZ);
+			context.add(ClientAction.KICK_EM_BLITZ);
 		}
 		if (isFlashingBladeAvailable(player)) {
 			context.add(ClientAction.THE_FLASHING_BLADE);
