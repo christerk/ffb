@@ -11,14 +11,7 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -163,6 +156,7 @@ public final class UtilCards {
 	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action) {
 		return getUnusedRerollSource(actingPlayer, action, Collections.emptyNavigableSet());
 	}
+
 	public static ReRollSource getUnusedRerollSource(ActingPlayer actingPlayer, ReRolledAction action, Set<Skill> ignoreSkills) {
 
 		return Arrays.stream(UtilCards.findAllSkills(actingPlayer.getPlayer()))

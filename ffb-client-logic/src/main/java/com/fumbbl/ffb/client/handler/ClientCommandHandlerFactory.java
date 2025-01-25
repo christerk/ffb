@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.handler;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 
@@ -70,7 +71,7 @@ public class ClientCommandHandlerFactory {
 	}
 
 	private void updateClientState(NetCommand pNetCommand, boolean pNotify) {
-		ClientState clientState = getClient().updateClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> clientState = getClient().updateClientState();
 		if (clientState != null) {
 			clientState.handleCommand(pNetCommand);
 		}

@@ -443,26 +443,6 @@ public class UtilPlayer {
 			&& (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
 	}
 
-	public static boolean isBlockable(Game pGame, Player<?> pPlayer) {
-		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		FieldCoordinate defenderCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
-		FieldCoordinate attackerCoordinate = pGame.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-		return isValidBlitzTarget(pGame, pPlayer)
-			&& (defenderCoordinate.isAdjacent(attackerCoordinate) || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES)
-			&& (pGame.getFieldModel().getDiceDecoration(defenderCoordinate) != null);
-	}
-
-	public static boolean isValidBlitzTarget(Game pGame, Player<?> pPlayer) {
-		if (pPlayer != null) {
-			FieldModel fieldModel = pGame.getFieldModel();
-			PlayerState defenderState = fieldModel.getPlayerState(pPlayer);
-			FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
-			return (defenderState.canBeBlocked() && pGame.getTeamAway().hasPlayer(pPlayer) && (defenderCoordinate != null)
-				&& (fieldModel.getTargetSelectionState() == null || pPlayer.getId().equals(fieldModel.getTargetSelectionState().getSelectedPlayerId())));
-		}
-		return false;
-	}
-
 	public static boolean isFoulable(Game pGame, Player<?> pPlayer) {
 		boolean foulable = false;
 		ActingPlayer actingPlayer = pGame.getActingPlayer();

@@ -230,6 +230,12 @@ public class StepInitMoving extends AbstractStep {
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
+						if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
+							// we have to reset this here since other logic would otherwise prevent the vomit attack
+							// when the target does not match the selection state data
+							// there is another line like this in StepEndBlocking#executeStep
+							game.getFieldModel().setTargetSelectionState(null);
+						}
 					} else {
 						fEndPlayerAction = true;
 					}
@@ -320,6 +326,7 @@ public class StepInitMoving extends AbstractStep {
 					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
 					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
+					commitTargetSelection();
 					game.getTurnData().setTurnStarted(true);
 					switch (actingPlayer.getPlayerAction()) {
 						case BLITZ_MOVE:

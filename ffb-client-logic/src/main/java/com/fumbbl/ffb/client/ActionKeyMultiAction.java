@@ -1,11 +1,9 @@
 package com.fumbbl.ffb.client;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.AbstractAction;
 
 /**
  * 
@@ -13,22 +11,14 @@ import javax.swing.AbstractAction;
  */
 public class ActionKeyMultiAction extends AbstractAction {
 
-	private ActionKey fActionKey;
-	private List<ActionKeyAction> fActionKeyActions;
+	private final List<ActionKeyAction> fActionKeyActions;
 
-	public ActionKeyMultiAction(ActionKey pActionKey) {
+	public ActionKeyMultiAction() {
 		fActionKeyActions = new ArrayList<>();
-		fActionKey = pActionKey;
-	}
-
-	public ActionKey getActionKey() {
-		return fActionKey;
 	}
 
 	public void actionPerformed(ActionEvent pE) {
-		Iterator<ActionKeyAction> actionKeyActionIterator = fActionKeyActions.iterator();
-		while (actionKeyActionIterator.hasNext()) {
-			ActionKeyAction actionKeyAction = actionKeyActionIterator.next();
+		for (ActionKeyAction actionKeyAction : fActionKeyActions) {
 			actionKeyAction.actionPerformed(pE);
 		}
 	}
@@ -38,7 +28,7 @@ public class ActionKeyMultiAction extends AbstractAction {
 	}
 
 	public ActionKeyAction[] getActions() {
-		return fActionKeyActions.toArray(new ActionKeyAction[fActionKeyActions.size()]);
+		return fActionKeyActions.toArray(new ActionKeyAction[0]);
 	}
 
 }

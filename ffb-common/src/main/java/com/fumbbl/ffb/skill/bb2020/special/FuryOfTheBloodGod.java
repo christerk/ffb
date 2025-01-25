@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class FuryOfTheBloodGod extends Skill {
 
 	public FuryOfTheBloodGod() {
-		super("Fury of the Blood God", SkillCategory.EXTRAORDINARY, SkillUsageType.ONCE_PER_GAME);
+		super("Fury of the Blood God", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override

@@ -350,6 +350,10 @@ public class StepEndBlocking extends AbstractStep {
 					blockGenerator.pushSequence(new Block.Builder(getGameState()).publishDefender(true).build());
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.PUTRID_REGURGITATION_BLOCK, actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(game);
+					// always set the selection state to null in case the player action got changed from blitz_move to blitz in case of e.g. take root
+					// otherwise logic for target selection will not trigger on players other than the original target
+					// there is another line like this in StepInitMoving#handleCommand
+					fieldModel.setTargetSelectionState(null);
 					return;
 				}
 				if (useHitAndRun == null) {
@@ -420,8 +424,11 @@ public class StepEndBlocking extends AbstractStep {
 							actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
 							blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
 							ServerUtilBlock.updateDiceDecorations(game);
-						} else if (usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
-							&& attackerState.hasTacklezones() && hasValidOtherOpponent && (blitzWithMoveLeft || actingPlayer.getPlayerAction().isBlockAction())) {
+						} else if (
+							usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
+								&& attackerState.hasTacklezones() && hasValidOtherOpponent &&
+								(blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ && playerState.isRooted()))
+						) {
 							game.setLastDefenderId(defenderId);
 							UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
 							if (isBlitz) {

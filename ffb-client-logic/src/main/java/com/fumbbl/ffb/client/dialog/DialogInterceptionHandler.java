@@ -6,8 +6,8 @@ import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
-import com.fumbbl.ffb.client.state.ClientState;
-import com.fumbbl.ffb.client.state.ClientStateInterception;
+import com.fumbbl.ffb.client.state.logic.InterceptionLogicModule;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogInterceptionParameter;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -86,10 +86,10 @@ public class DialogInterceptionHandler extends DialogHandler {
 						interceptionSkill = null;
 					} else {
 						singleInterceptor = null;
-						ClientState clientState = getClient().getClientState();
+						LogicModule logicModule = getClient().getClientState().getLogicModule();
 
-						if (clientState instanceof ClientStateInterception) {
-							((ClientStateInterception) clientState).setInterceptionSkill(interceptionSkill);
+						if (logicModule instanceof InterceptionLogicModule) {
+							((InterceptionLogicModule) logicModule).setInterceptionSkill(interceptionSkill);
 						}
 
 						FieldLayerRangeRuler layerRangeRuler = getClient().getUserInterface().getFieldComponent().getLayerRangeRuler();

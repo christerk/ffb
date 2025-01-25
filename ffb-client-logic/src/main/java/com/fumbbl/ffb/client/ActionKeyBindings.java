@@ -149,7 +149,7 @@ public class ActionKeyBindings {
 						if (currentAction != null) {
 							if (currentAction instanceof ActionKeyAction) {
 								ActionKeyAction actionKeyAction = (ActionKeyAction) currentAction;
-								ActionKeyMultiAction multiAction = new ActionKeyMultiAction(actionKeyAction.getActionKey());
+								ActionKeyMultiAction multiAction = new ActionKeyMultiAction();
 								multiAction.add(actionKeyAction);
 								multiAction.add(action);
 								pComponent.getActionMap().put(action.getActionKey(), multiAction);

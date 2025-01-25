@@ -5,8 +5,7 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.bb2016.ClientStateKickTeamMate;
-import com.fumbbl.ffb.client.state.bb2020.*;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -21,81 +20,33 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
-public class ClientStateFactory {
+public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 
-	private final FantasyFootballClient fClient;
+	protected final T client;
 
-	private final Map<ClientStateId, ClientState> fClientStateById;
+	protected final Map<ClientStateId, ClientState<? extends LogicModule, T>> fClientStateById;
 
-	public ClientStateFactory(FantasyFootballClient pClient) {
-		fClient = pClient;
+	protected ClientStateFactory(T pClient) {
+		client = pClient;
 		fClientStateById = new HashMap<>();
-		register(new ClientStateLogin(pClient));
-		register(new ClientStateStartGame(pClient));
-		register(new ClientStateSpectate(pClient));
-		register(new ClientStateSelect(pClient));
-		register(new ClientStatePass(pClient));
-		register(new ClientStateHandOver(pClient));
-		register(new ClientStateMove(pClient));
-		register(new ClientStateKickoff(pClient));
-		register(new ClientStateBlock(pClient));
-		register(new ClientStatePushback(pClient));
-		register(new ClientStateInterception(pClient));
-		register(new ClientStateBlitz(pClient));
-		register(new ClientStateFoul(pClient));
-		register(new ClientStateSetup(pClient));
-		register(new ClientStateQuickSnap(pClient));
-		register(new ClientStateHighKick(pClient));
-		register(new ClientStateTouchback(pClient));
-		register(new ClientStateWaitForOpponent(pClient));
-		register(new ClientStateReplay(pClient));
-		register(new ClientStateThrowTeamMate(pClient));
-		register(new ClientStateKickTeamMateLikeThrow(pClient));
-		register(new ClientStateKickTeamMate(pClient));
-		register(new ClientStateSwoop(pClient));
-		register(new ClientStateDumpOff(pClient));
-		register(new ClientStateWaitForSetup(pClient));
-		register(new ClientStateGaze(pClient));
-		register(new ClientStateKickoffReturn(pClient));
-		register(new ClientStateSwarming(pClient));
-		register(new ClientStateWizard(pClient));
-		register(new ClientStatePassBlock(pClient));
-		register(new ClientStateBomb(pClient));
-		register(new ClientStateIllegalSubstitution(pClient));
-		register(new ClientStateSelectBlitzTarget(pClient));
-		register(new ClientStateSynchronousMultiBlock(pClient));
-		register(new ClientStatePlaceBall(pClient));
-		register(new ClientStateSolidDefence(pClient));
-		register(new ClientStateSelectGazeTarget(pClient));
-		register(new ClientStateGazeMove(pClient));
-		register(new ClientStateThrowKeg(pClient));
-		register(new ClientStateRaidingParty(pClient));
-		register(new ClientStateSelectBlockKind(pClient));
-		register(new ClientStateMaximumCarnage(pClient));
-		register(new ClientStateHitAndRun(pClient));
-		register(new ClientStatePutridRegurgitationBlitz(pClient));
-		register(new ClientStatePutridRegurgitationBlock(pClient));
-		register(new ClientStateKickEmBlitz(pClient));
-		register(new ClientStateKickEmBlock(pClient));
-		register(new ClientStateTrickster(pClient));
-		register(new ClientStateThenIStartedBlastin(pClient));
-		register(new ClientStateStab(pClient));
-		register(new ClientStateFuriousOutburst(pClient));
+		registerStates();
 	}
 
 	public FantasyFootballClient getClient() {
-		return fClient;
+		return client;
 	}
 
-	public ClientState getStateForId(ClientStateId pClientStateId) {
+	public abstract void registerStates();
+
+	public ClientState<? extends LogicModule, T> getStateForId(ClientStateId pClientStateId) {
 		return fClientStateById.get(pClientStateId);
 	}
 
-	private void register(ClientState pClientState) {
+	protected void register(ClientState<? extends LogicModule, T> pClientState) {
 		fClientStateById.put(pClientState.getId(), pClientState);
 	}
 
-	public ClientState getStateForGame() {
+	public ClientState<? extends LogicModule, T> getStateForGame() {
 		ClientStateId clientStateId = null;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
