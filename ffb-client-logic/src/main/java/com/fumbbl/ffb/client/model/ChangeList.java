@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.34.0")
 			.addImprovement("Separate client state logic from UI")
 			.addBugfix("Vicious Vines: Could be used by prone players")
+			.addBugfix("2016: Stab was not working anymore")
 		);
 
 		versions.add(new VersionChangeList("2.33.1")
