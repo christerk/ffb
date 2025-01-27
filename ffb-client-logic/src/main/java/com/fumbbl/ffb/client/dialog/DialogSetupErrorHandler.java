@@ -26,7 +26,6 @@ public class DialogSetupErrorHandler extends DialogHandler {
 			sideBarHome.openBox(BoxType.RESERVES);
 			setDialog(new DialogSetupError(getClient(), dialogSetupErrorParameter.getSetupErrors()));
 			getDialog().showDialog(this);
-			System.out.println("Setup error dialog shown");
 		}
 	}
 
