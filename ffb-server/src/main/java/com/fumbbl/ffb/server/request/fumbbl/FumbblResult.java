@@ -37,6 +37,8 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_GAME_RESULT = "gameResult";
 
 	private static final String _XML_ATTRIBUTE_REPLAY_ID = "replayId";
+	private static final String _XML_ATTRIBUTE_HALVES = "halves";
+
 
 	// --- team result tags --
 
@@ -133,6 +135,7 @@ public class FumbblResult implements IXmlWriteable {
 
 			AttributesImpl attributes = new AttributesImpl();
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_REPLAY_ID, getGame().getId());
+			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_HALVES, getGame().getHalf());
 			UtilXml.startElement(pHandler, _XML_TAG_GAME_RESULT, attributes);
 
 			addToXml(pHandler, gameResult.getTeamResultHome());
@@ -247,7 +250,7 @@ public class FumbblResult implements IXmlWriteable {
 
 			Card[] cards = pInducementSet.getAllCards();
 
-			if ((inducements.size() > 0) || (starPlayers.size() > 0) || (mercenaries.size() > 0) || staffPlayers.size() > 0
+			if ((!inducements.isEmpty()) || (!starPlayers.isEmpty()) || (!mercenaries.isEmpty()) || !staffPlayers.isEmpty()
 				|| ArrayTool.isProvided(cards)) {
 
 				UtilXml.startElement(pHandler, _XML_TAG_INDUCEMENT_LIST);
