@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Vicious Vines: Could be used by prone players")
 			.addBugfix("2016: Stab was not working anymore")
 			.addImprovement("Technical: Add half count to result xml")
+			.addBugfix("Dauntless: Natural 6 counted as success")
 		);
 
 		versions.add(new VersionChangeList("2.33.1")
