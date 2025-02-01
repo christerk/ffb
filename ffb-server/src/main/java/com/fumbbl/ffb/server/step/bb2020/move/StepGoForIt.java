@@ -199,7 +199,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 
 		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeDropGFI()));
-
+		if (fBallandChainGfi) {
+			actingPlayer.setFellFromRush(true);
+		}
 
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 	}

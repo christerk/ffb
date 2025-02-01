@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("2016: Stab was not working anymore")
 			.addImprovement("Technical: Add half count to result xml")
 			.addBugfix("Dauntless: Natural 6 counted as success")
+			.addBugfix("Ball & Chain: Failing rush into block with cas did give opponent spp")
 		);
 
 		versions.add(new VersionChangeList("2.33.1")

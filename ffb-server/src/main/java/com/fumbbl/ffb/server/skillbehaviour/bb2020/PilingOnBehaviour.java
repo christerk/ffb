@@ -19,13 +19,7 @@ import com.fumbbl.ffb.report.ReportPilingOn;
 import com.fumbbl.ffb.report.ReportWeepingDaggerRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProne;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunned;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnArmour;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnInjury;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypePilingOnKnockedOut;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.injury.injuryType.*;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -169,16 +163,21 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 					if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING)
 						&& (attackerCoordinate != null)) {
 						step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-						step.publishParameters(
-							UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-
-						InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
-							game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-						if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
-							&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
-							boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
-							if (success) {
-								step.publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));
+						InjuryResult injuryResultAttacker;
+						if (actingPlayer.isFellFromRush()) {
+							injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeDropGFI(),
+								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+						} else {
+							step.publishParameters(
+								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
+							injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
+								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+							if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
+								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {
+								boolean success = rollWeepingDagger(game.getDefender(), actingPlayer.getPlayer(), step);
+								if (success) {
+									step.publishParameter(new StepParameter(StepParameterKey.ATTACKER_POISONED, true));
+								}
 							}
 						}
 						step.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));

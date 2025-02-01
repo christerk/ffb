@@ -118,6 +118,9 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_MUST_COMPLETE_ACTION:
 				pGame.getActingPlayer().setMustCompleteAction((Boolean) pModelChange.getValue());
 				return true;
+			case ACTING_PLAYER_SET_FELL_FROM_RUSH:
+				pGame.getActingPlayer().setFellFromRush((Boolean) pModelChange.getValue());
+				return true;
 			case FIELD_MODEL_ADD_BLOOD_SPOT:
 				pGame.getFieldModel().add((BloodSpot) pModelChange.getValue());
 				return true;
