@@ -494,6 +494,7 @@ public class ActingPlayer implements IJsonSerializable {
     IJsonOption.SKILLS_GRANTED_BY.addTo(jsonObject, skillsGrantedBy);
     IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
     IJsonOption.HELD_IN_PLACE.addTo(jsonObject, heldInPlace);
+    IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
     return jsonObject;
   }
 
@@ -530,6 +531,9 @@ public class ActingPlayer implements IJsonSerializable {
     oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
     if (IJsonOption.HELD_IN_PLACE.isDefinedIn(jsonObject)) {
       heldInPlace = IJsonOption.HELD_IN_PLACE.getFrom(source, jsonObject);
+    }
+    if (IJsonOption.MUST_COMPLETE_ACTION.isDefinedIn(jsonObject)) {
+      mustCompleteAction = IJsonOption.MUST_COMPLETE_ACTION.getFrom(source, jsonObject);
     }
     return this;
   }
