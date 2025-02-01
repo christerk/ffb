@@ -321,10 +321,11 @@ public class MoveLogicModule extends LogicModule {
 				return InteractionResult.handled();
 			}
 		} else {
+			// B&C
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			MoveSquare moveSquare = game.getFieldModel().getMoveSquare(playerCoordinate);
-			if (moveSquare != null && movePlayer(position)) {
-				return InteractionResult.perform().with(position);
+			if (moveSquare != null && movePlayer(playerCoordinate)) {
+				return InteractionResult.perform().with(playerCoordinate);
 			}
 		}
 		return InteractionResult.ignore();
