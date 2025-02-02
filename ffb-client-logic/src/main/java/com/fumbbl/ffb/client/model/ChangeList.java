@@ -19,6 +19,7 @@ public class ChangeList {
 			.addImprovement("Technical: Add half count to result xml")
 			.addBugfix("Dauntless: Natural 6 counted as success")
 			.addBugfix("Ball & Chain: Failing rush into block with cas did give opponent spp")
+			.addBugfix("Grab: Also cancelled sidestep on secondary pushes")
 		);
 
 		versions.add(new VersionChangeList("2.33.1")
