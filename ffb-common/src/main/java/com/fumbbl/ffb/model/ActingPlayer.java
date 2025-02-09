@@ -47,6 +47,8 @@ public class ActingPlayer implements IJsonSerializable {
   private boolean wasProne;
   private boolean jumpsWithoutModifiers;
   private boolean heldInPlace;
+  private boolean mustCompleteAction;
+  private boolean fellFromRush;
   private PlayerState oldPlayerState;
   private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
@@ -86,6 +88,8 @@ public class ActingPlayer implements IJsonSerializable {
     fumblerooskiePending = false;
     jumpsWithoutModifiers = false;
     heldInPlace = false;
+    mustCompleteAction = false;
+    fellFromRush = false;
     Player<?> player = getGame().getPlayerById(getPlayerId());
     setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
     skillsGrantedBy.clear();
@@ -115,6 +119,30 @@ public class ActingPlayer implements IJsonSerializable {
 
     fCurrentMove = pCurrentMove;
     notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);
+  }
+
+  public boolean isMustCompleteAction() {
+    return mustCompleteAction;
+  }
+
+  public void setMustCompleteAction(boolean mustCompleteAction) {
+    if (this.mustCompleteAction == mustCompleteAction) {
+      return;
+    }
+    this.mustCompleteAction = mustCompleteAction;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_MUST_COMPLETE_ACTION, this.mustCompleteAction);
+  }
+
+  public boolean isFellFromRush() {
+    return fellFromRush;
+  }
+
+  public void setFellFromRush(boolean fellFromRush) {
+    if (this.fellFromRush == fellFromRush) {
+      return;
+    }
+    this.fellFromRush = fellFromRush;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_FELL_FROM_RUSH, this.fellFromRush);
   }
 
   public boolean isGoingForIt() {
@@ -480,6 +508,8 @@ public class ActingPlayer implements IJsonSerializable {
     IJsonOption.SKILLS_GRANTED_BY.addTo(jsonObject, skillsGrantedBy);
     IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
     IJsonOption.HELD_IN_PLACE.addTo(jsonObject, heldInPlace);
+    IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
+    IJsonOption.FELL_FROM_RUSH.addTo(jsonObject, fellFromRush);
     return jsonObject;
   }
 
@@ -516,6 +546,12 @@ public class ActingPlayer implements IJsonSerializable {
     oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
     if (IJsonOption.HELD_IN_PLACE.isDefinedIn(jsonObject)) {
       heldInPlace = IJsonOption.HELD_IN_PLACE.getFrom(source, jsonObject);
+    }
+    if (IJsonOption.MUST_COMPLETE_ACTION.isDefinedIn(jsonObject)) {
+      mustCompleteAction = IJsonOption.MUST_COMPLETE_ACTION.getFrom(source, jsonObject);
+    }
+    if (IJsonOption.FELL_FROM_RUSH.isDefinedIn(jsonObject)) {
+      fellFromRush = IJsonOption.FELL_FROM_RUSH.getFrom(source, jsonObject);
     }
     return this;
   }

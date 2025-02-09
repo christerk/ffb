@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.skill.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -28,6 +28,7 @@ public class Stab extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 		registerProperty(NamedProperties.providesBlockAlternative);
+		registerProperty(NamedProperties.providesStabBlockAlternative);
 	}
 
 }

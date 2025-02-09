@@ -12,13 +12,14 @@ import com.fumbbl.ffb.util.StringTool;
  */
 public class ClientParameters {
 
-	public static final String USAGE = "java -jar FantasyFootballClient.jar -player -coach <coach>\n"
-			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId>\n"
-			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -gameId <gameId> -teamHome <teamName> -teamAway <teamName>\n"
-			+ "java -jar FantasyFootballClient.jar -player -coach <coach> -teamId <teamId> -teamName <teamName>\n"
-			+ "java -jar FantasyFootballClient.jar -spectator -coach <coach>\n"
-			+ "java -jar FantasyFootballClient.jar -spectator -coach <coach> -gameId <gameId>\n"
-			+ "java -jar FantasyFootballClient.jar -replay -gameId <gameId>";
+	public static final String USAGE = "Supported parameter combinations:\n"
+			+ "-player -coach <coach>\n"
+			+ "-player -coach <coach> -gameId <gameId>\n"
+			+ "-player -coach <coach> -gameId <gameId> -teamHome <teamName> -teamAway <teamName>\n"
+			+ "-player -coach <coach> -teamId <teamId> -teamName <teamName>\n"
+			+ "-spectator -coach <coach>\n"
+			+ "-spectator -coach <coach> -gameId <gameId>\n"
+			+ "-replay -gameId <gameId>";
 
 	private static final String _ARGUMENT_COACH = "-coach";
 	private static final String _ARGUMENT_GAME_ID = "-gameId";
@@ -98,7 +99,7 @@ public class ClientParameters {
 		return layout;
 	}
 
-	public void initFrom(String[] pArguments) {
+	private ClientParameters(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();
 			int pos = 0;
@@ -143,7 +144,7 @@ public class ClientParameters {
 		}
 	}
 
-	public boolean validate() {
+	private boolean validate() {
 		if (getMode() == null) {
 			return false;
 		}
@@ -185,4 +186,8 @@ public class ClientParameters {
 		}
 	}
 
+	public static ClientParameters createValidParams(String[] args) {
+		ClientParameters parameters = new ClientParameters(args);
+		return parameters.validate() ? parameters : null;
+	}
 }

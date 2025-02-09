@@ -9,6 +9,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -96,6 +97,7 @@ public final class StepEndBomb extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		boolean removePassCoordinate = true;
@@ -116,7 +118,7 @@ public final class StepEndBomb extends AbstractStep {
 			PlayerState playerState = game.getFieldModel().getPlayerState(originalBomber);
 			boolean threwOnlyFirstBomb = toPrimitive(state.getThrowTwoBombs());
 
-			if (originalBomber != game.getActingPlayer().getPlayer()) {
+			if (originalBomber != actingPlayer.getPlayer()) {
 				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.THROW_BOMB, false);
 				if (playerState.isProneOrStunned()) {
 					game.getFieldModel().setPlayerState(originalBomber, playerState.changeActive(false));
@@ -125,6 +127,7 @@ public final class StepEndBomb extends AbstractStep {
 
 			if (!fEndTurn && threwOnlyFirstBomb && skill != null && originalBomber.hasUnused(skill) && playerState.hasTacklezones()) {
 				originalBomber.markUsed(skill, game);
+				actingPlayer.setMustCompleteAction(true);
 				state.setThrowTwoBombs(false);
 				((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
 			} else if (state.getThrowTwoBombs() != null && skill != null) {
@@ -144,7 +147,7 @@ public final class StepEndBomb extends AbstractStep {
 				}
 
 			} else if (!fEndTurn && allowMoveAfterPass) {
-				UtilServerSteps.changePlayerAction(this, game.getActingPlayer().getPlayerId(), PlayerAction.MOVE, false);
+				UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE, false);
 				((Move) factory.forName(SequenceGenerator.Type.Move.name()))
 					.pushSequence(new Move.SequenceParams(getGameState()));
 			} else {

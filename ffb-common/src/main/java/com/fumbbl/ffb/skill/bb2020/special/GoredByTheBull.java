@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class GoredByTheBull extends Skill {
 
 	public GoredByTheBull() {
-		super("Gored By The Bull", SkillCategory.EXTRAORDINARY, SkillUsageType.ONCE_PER_GAME);
+		super("Gored By The Bull", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override

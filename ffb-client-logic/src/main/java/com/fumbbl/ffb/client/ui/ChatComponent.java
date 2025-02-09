@@ -56,7 +56,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 				if (talk.length() > _MAX_CHAT_LENGTH) {
 					talk = talk.substring(0, _MAX_CHAT_LENGTH);
 				}
-				if (talk.length() > 0) {
+				if (!talk.isEmpty()) {
 					getClient().getCommunication().sendTalk(talk);
 					fInputLog.add(talk);
 					if (fInputLog.size() > _MAX_INPUT_LOG_SIZE) {

@@ -28,6 +28,7 @@ public class HypnoticGaze extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.inflictsConfusion);
+		registerProperty(NamedProperties.canGazeDuringMove);
 	}
 
 }

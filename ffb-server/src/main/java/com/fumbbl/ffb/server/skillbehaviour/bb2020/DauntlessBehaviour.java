@@ -55,10 +55,10 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				int defenderStrength = game.getDefender().getStrengthWithModifiers();
-				boolean lessStrengthThanDefender = (actingPlayer.getStrength() < defenderStrength);
+				boolean strengthInRange = (actingPlayer.getStrength() < defenderStrength) && (actingPlayer.getStrength() + 6 > defenderStrength);
 				boolean stopProcessing = false;
 
-				if (state.status == null && UtilCards.hasSkill(actingPlayer, skill) && lessStrengthThanDefender
+				if (state.status == null && UtilCards.hasSkill(actingPlayer, skill) && strengthInRange
 					&& !state.usesSpecialAction()) {
 					boolean doDauntless = true;
 					if (ReRolledActions.DAUNTLESS == step.getReRolledAction()) {
@@ -122,7 +122,10 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 
 			@Override
 			protected boolean requiresRoll(Player<?> actingPlayer, Player<?> opponentPlayer) {
-				return Math.max(1, actingPlayer.getStrengthWithModifiers() - 2) < opponentPlayer.getStrengthWithModifiers();
+				int effectiveStrength = Math.max(1, actingPlayer.getStrengthWithModifiers() - 2);
+				return
+					effectiveStrength < opponentPlayer.getStrengthWithModifiers()
+					&& effectiveStrength + 6 > opponentPlayer.getStrengthWithModifiers();
 			}
 
 			@Override

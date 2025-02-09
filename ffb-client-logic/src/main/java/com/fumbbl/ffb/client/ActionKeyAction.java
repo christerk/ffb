@@ -1,8 +1,6 @@
 package com.fumbbl.ffb.client;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**

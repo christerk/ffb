@@ -98,4 +98,7 @@ public final class MoveSquare implements IJsonSerializable {
 		return this;
 	}
 
+	public enum Kind {
+		RUSH, DODGE, RUSH_DODGE, MOVE
+	}
 }

@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class MaximumCarnage extends Skill {
 
 	public MaximumCarnage() {
-		super("Maximum Carnage", SkillCategory.EXTRAORDINARY, SkillUsageType.ONCE_PER_GAME);
+		super("Maximum Carnage", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
 	}
 
 	@Override

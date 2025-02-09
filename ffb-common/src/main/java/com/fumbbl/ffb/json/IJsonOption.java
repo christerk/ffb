@@ -175,6 +175,7 @@ public interface IJsonOption {
 	JsonIntOption FAN_FACTOR_MODIFIER_HOME = new JsonIntOption("fanFactorModifierHome");
 	JsonIntArrayOption FAN_FACTOR_ROLL_AWAY = new JsonIntArrayOption("fanFactorRollAway");
 	JsonIntArrayOption FAN_FACTOR_ROLL_HOME = new JsonIntArrayOption("fanFactorRollHome");
+	JsonBooleanOption FELL_FROM_RUSH = new JsonBooleanOption("fellFromRush");
 	JsonObjectOption FIELD_COORDINATE = new JsonObjectOption("fieldCoordinate");
 	JsonArrayOption FIELD_COORDINATES = new JsonArrayOption("fieldCoordinates");
 	JsonObjectOption FIELD_COORDINATE_THROWER = new JsonObjectOption("fieldCoordinateThrower");
@@ -293,6 +294,7 @@ public interface IJsonOption {
 	JsonIntOption MODIFIER = new JsonIntOption("modifier");
 	JsonArrayOption MOVE_SQUARE_ARRAY = new JsonArrayOption("moveSquareArray");
 	JsonIntOption MOVEMENT = new JsonIntOption("movement");
+	JsonBooleanOption MUST_COMPLETE_ACTION = new JsonBooleanOption("mustCompleteAction");
 	JsonStringOption NAME = new JsonStringOption("name");
 	JsonStringOption NAME_GENERATOR = new JsonStringOption("nameGenerator");
 	JsonBooleanOption NECROMANCER = new JsonBooleanOption("necromancer");

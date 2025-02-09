@@ -94,7 +94,6 @@ public class StepSelectGazeTargetEnd extends AbstractStep {
 					((Select) factory.forName(SequenceGenerator.Type.Select.name()))
 						.pushSequence(new Select.SequenceParams(getGameState(), false));
 				}
-				actingPlayer.setHasMoved(true);
 			} else {
 				Sequence sequence = new Sequence(getGameState());
 				sequence.add(StepId.END_MOVING, StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));

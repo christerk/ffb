@@ -11,6 +11,18 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+
+		versions.add(new VersionChangeList("2.34.0")
+			.addImprovement("Separate client state logic from UI")
+			.addBugfix("Vicious Vines: Could be used by prone players")
+			.addBugfix("2016: Stab was not working anymore")
+			.addImprovement("Technical: Add half count to result xml")
+			.addBugfix("Dauntless: Natural 6 counted as success")
+			.addBugfix("Ball & Chain: Failing rush into block with cas did give opponent spp")
+			.addBugfix("Grab: Also cancelled sidestep on secondary pushes")
+			.addBugfix("Pro: Reverting change from 2.30.0 - Failed pro on a block die has to prevent other re-rolls on that die")
+		);
+
 		versions.add(new VersionChangeList("2.33.1")
 			.addBugfix("Animal Savagery: Failed Animal Savagery rolls caused the game to crash")
 			.addBugfix("AdminServlet: Logs for games without compresssed logs could not be loaded")

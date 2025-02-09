@@ -40,7 +40,10 @@ public class SideStepBehaviour extends SkillBehaviour<SideStep> {
 			public boolean handleExecuteStepHook(StepPushback step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				Skill cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
+				Skill cancellingSkill = null;
+				if (state.defender.getId().equals(game.getDefenderId())) {
+					cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
+				}
 				boolean attackerHasConflictingSkill = cancellingSkill != null && cancellingSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
 
 				PlayerState playerState = game.getFieldModel().getPlayerState(state.defender);

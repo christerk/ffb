@@ -103,7 +103,6 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
             .pushSequence(new Select.SequenceParams(getGameState(), false));
         }
         game.getTurnData().setBlitzUsed(true);
-        actingPlayer.setHasMoved(true);
       } else if (targetSelectionState.isSkipped()) {
         UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ_MOVE, false);
         ((Select) factory.forName(SequenceGenerator.Type.Select.name()))
