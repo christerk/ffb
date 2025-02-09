@@ -11,6 +11,8 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.34.1")
+		);
 
 		versions.add(new VersionChangeList("2.34.0")
 			.addImprovement("Separate client state logic from UI")
