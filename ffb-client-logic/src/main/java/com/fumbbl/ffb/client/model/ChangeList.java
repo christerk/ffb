@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.34.1")
 			.addBugfix("Pushback arrows did not get updated properly")
+			.addBugfix("Chainsaw: Fouls did target the chainsaw player themself")
 		);
 
 		versions.add(new VersionChangeList("2.34.0")

@@ -8,11 +8,13 @@ import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.FoulLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,11 +25,30 @@ import java.util.Optional;
  */
 public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
 
+  private Player<?> target;
+
   protected ClientStateFoul(FantasyFootballClientAwt client) {
     super(client, new FoulLogicModule(client));
   }
 
-  public boolean actionKeyPressed(ActionKey pActionKey) {
+  @Override
+  public void setUp() {
+    target = null;
+  }
+
+  @Override
+  protected void evaluateClick(InteractionResult result, Player<?> player) {
+    super.evaluateClick(result, player);
+    switch (result.getKind()) {
+      case SELECT_ACTION:
+        target = player;
+        break;
+      default:
+        break;
+    }
+  }
+
+    public boolean actionKeyPressed(ActionKey pActionKey) {
     boolean actionHandled;
     Game game = getClient().getGame();
     ActingPlayer actingPlayer = game.getActingPlayer();
@@ -95,5 +116,11 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
     itemConfigs.put(ClientAction.FOUL, new MenuItemConfig("Foul Opponent", IIconProperty.ACTION_FOUL, IPlayerPopupMenuKeys.KEY_FOUL));
     itemConfigs.put(ClientAction.CHAINSAW, new MenuItemConfig("Chainsaw", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
     return itemConfigs;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent pActionEvent) {
+    JMenuItem menuItem = (JMenuItem) (pActionEvent.getSource());
+    menuItemSelected(target, menuItem.getMnemonic());
   }
 }
