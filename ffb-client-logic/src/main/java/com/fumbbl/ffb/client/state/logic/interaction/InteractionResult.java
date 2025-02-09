@@ -2,12 +2,14 @@ package com.fumbbl.ffb.client.state.logic.interaction;
 
 import com.fumbbl.ffb.*;
 
+import java.util.List;
+
 public class InteractionResult {
 
   private final Kind kind;
   private FieldCoordinate coordinate;
   private RangeRuler rangeRuler;
-  private PushbackSquare pushbackSquare;
+  private List<PushbackSquare> pushbackSquares;
   private SpecialEffect specialEffect;
   private MoveSquare moveSquare;
   private FieldCoordinate[] path;
@@ -85,8 +87,8 @@ public class InteractionResult {
     return this;
   }
 
-  public InteractionResult with(PushbackSquare pushbackSquare) {
-    this.pushbackSquare = pushbackSquare;
+  public InteractionResult with(List<PushbackSquare> pushbackSquares) {
+    this.pushbackSquares = pushbackSquares;
     return this;
   }
 
@@ -102,8 +104,8 @@ public class InteractionResult {
     return rangeRuler;
   }
 
-  public PushbackSquare getPushbackSquare() {
-    return pushbackSquare;
+  public List<PushbackSquare> getPushbackSquares() {
+    return pushbackSquares;
   }
 
   public SpecialEffect getSpecialEffect() {

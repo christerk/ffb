@@ -12,6 +12,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.34.1")
+			.addBugfix("Pushback arrows did not get updated properly")
 		);
 
 		versions.add(new VersionChangeList("2.34.0")

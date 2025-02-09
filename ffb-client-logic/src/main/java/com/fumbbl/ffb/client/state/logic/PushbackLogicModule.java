@@ -7,7 +7,9 @@ import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,18 +55,22 @@ public class PushbackLogicModule extends LogicModule {
 	@Override
 	public InteractionResult fieldPeek(FieldCoordinate pCoordinate) {
 		PushbackSquare[] pushbackSquares = client.getGame().getFieldModel().getPushbackSquares();
+		List<PushbackSquare> toUpdate = new ArrayList<>();
 		for (PushbackSquare pushbackSquare : pushbackSquares) {
 			if (pCoordinate.equals(pushbackSquare.getCoordinate())) {
 				if (pushbackSquare.isHomeChoice() && !pushbackSquare.isSelected() && !pushbackSquare.isLocked()) {
 					pushbackSquare.setSelected(true);
-					return InteractionResult.handled().with(pushbackSquare);
+					toUpdate.add(pushbackSquare);
 				}
 			} else {
 				if (pushbackSquare.isSelected() && !pushbackSquare.isLocked()) {
 					pushbackSquare.setSelected(false);
-					return InteractionResult.handled().with(pushbackSquare);
+					toUpdate.add(pushbackSquare);
 				}
 			}
+		}
+		if (!toUpdate.isEmpty()) {
+			return InteractionResult.handled().with(toUpdate);
 		}
 		return InteractionResult.ignore();
 	}

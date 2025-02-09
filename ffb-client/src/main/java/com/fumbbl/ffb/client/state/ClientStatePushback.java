@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.layer.FieldLayerOverPlayers;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.PushbackLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
@@ -15,7 +16,6 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
@@ -29,12 +29,18 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		switch (result.getKind()) {
 			case HANDLED:
-				FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-				fieldComponent.getLayerOverPlayers().drawPushbackSquare(result.getPushbackSquare());
+				updatePushbackSquares(result);
 				return true;
 			default:
 				return false;
 		}
+	}
+
+	private void updatePushbackSquares(InteractionResult result) {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		FieldLayerOverPlayers layerOverPlayers = fieldComponent.getLayerOverPlayers();
+		result.getPushbackSquares().forEach(layerOverPlayers::drawPushbackSquare);
+		fieldComponent.refresh();
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
@@ -42,8 +48,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:
-				FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-				fieldComponent.getLayerOverPlayers().drawPushbackSquare(result.getPushbackSquare());
+				updatePushbackSquares(result);
 				return true;
 			default:
 				return false;
