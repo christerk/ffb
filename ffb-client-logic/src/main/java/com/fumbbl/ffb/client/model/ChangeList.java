@@ -11,6 +11,10 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.34.1")
+			.addBugfix("Pushback arrows did not get updated properly")
+			.addBugfix("Chainsaw: Fouls did target the chainsaw player themself")
+		);
 
 		versions.add(new VersionChangeList("2.34.0")
 			.addImprovement("Separate client state logic from UI")
