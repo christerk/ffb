@@ -12,6 +12,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.34.2")
+			.addBugfix("Hail Mary Bomb: It was not possible to deselect a player with hail mary pass and bombardier once bomb action was selected")
 		);
 
 		versions.add(new VersionChangeList("2.34.1")

@@ -124,7 +124,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = super.influencedItemConfigs();
 		Map<ClientAction, MenuItemConfig> hailMary = new HashMap<>();
 		influences.put(Influences.IS_THROWING_HAIL_MARY, hailMary);
-		hailMary.put(ClientAction.HAIL_MARY_PASS, new MenuItemConfig("Don't use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB));
+		hailMary.put(ClientAction.HAIL_MARY_BOMB, new MenuItemConfig("Don't use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB));
 		return influences;
 	}
 
@@ -139,7 +139,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
 		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
-		itemConfigs.put(ClientAction.HAIL_MARY_PASS, new MenuItemConfig("Use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB));
+		itemConfigs.put(ClientAction.HAIL_MARY_BOMB, new MenuItemConfig("Use Hail Mary Pass", IIconProperty.ACTION_TOGGLE_HAIL_MARY_BOMB, IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB));
 		itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		itemConfigs.put(ClientAction.TREACHEROUS, new MenuItemConfig("Treacherous", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_TREACHEROUS));
 		itemConfigs.put(ClientAction.WISDOM, new MenuItemConfig("Wisdom of the White Dwarf", IIconProperty.ACTION_WISDOM, IPlayerPopupMenuKeys.KEY_WISDOM));
@@ -217,11 +217,15 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	@Override
 	protected void postPerform(int menuKey) {
 		super.postPerform(menuKey);
-		if (menuKey == IPlayerPopupMenuKeys.KEY_RANGE_GRID) {
-			if (logicModule.playerIsAboutToThrow()) {
-				fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
-				fRangeGridHandler.refreshRangeGrid();
-			}
+		switch (menuKey) {
+			case IPlayerPopupMenuKeys.KEY_RANGE_GRID:
+				if (logicModule.playerIsAboutToThrow()) {
+					fRangeGridHandler.setShowRangeGrid(!fRangeGridHandler.isShowRangeGrid());
+					fRangeGridHandler.refreshRangeGrid();
+				}
+				break;
+			default:
+				break;
 		}
 	}
 }
