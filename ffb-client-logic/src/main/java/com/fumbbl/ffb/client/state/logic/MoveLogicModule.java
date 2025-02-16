@@ -249,7 +249,7 @@ public class MoveLogicModule extends LogicModule {
 	}
 
 	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {
-		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates);
+		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates, client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
 	}
 
 	// TODO do we really need both path finder calls?

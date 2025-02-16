@@ -29,9 +29,6 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.db.DbStatementId;
-import com.fumbbl.ffb.server.db.IDbStatementFactory;
-import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -76,6 +73,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.DIRECTION;
 	private String fGotoLabelOnEnd;
 	private String fGotoLabelOnFallDown;
+	private String reRollSetting;
 	private FieldCoordinate fCoordinateFrom;
 	private FieldCoordinate fCoordinateTo;
 	private FieldCoordinate originalCoordinateTo;
@@ -125,6 +123,9 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 				case COORDINATE_TO:
 					fCoordinateTo = (FieldCoordinate) parameter.getValue();
 					originalCoordinateTo = fCoordinateTo;
+					return true;
+				case BALL_AND_CHAIN_RE_ROLL_SETTING:
+					reRollSetting = (String) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -186,12 +187,6 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 				game.getFieldModel().add(new MoveSquare(fCoordinateTo, 0, 0));
 				if (getReRollSource() == null) {
 					boolean askForReRoll = true;
-
-					IDbStatementFactory statementFactory = getGameState().getServer().getDbQueryFactory();
-					DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
-						.getStatement(DbStatementId.USER_SETTINGS_QUERY);
-					userSettingsQuery.execute(game.getActingTeam().getCoach());
-					String reRollSetting = userSettingsQuery.getSettingValue(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN);
 
 					Player<?> hitPlayer = game.getFieldModel().getPlayer(fCoordinateTo);
 
@@ -261,6 +256,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, fCoordinateTo);
 		IServerJsonOption.DIRECTION.addTo(jsonObject, playerScatter);
 		IServerJsonOption.COORDINATE.addTo(jsonObject, originalCoordinateTo);
+		IServerJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.addTo(jsonObject, reRollSetting);
 		return jsonObject;
 	}
 
@@ -276,6 +272,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			playerScatter = (Direction) IServerJsonOption.DIRECTION.getFrom(source, jsonObject);
 		}
 		originalCoordinateTo = IServerJsonOption.COORDINATE.getFrom(source, jsonObject);
+		reRollSetting = IServerJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.getFrom(source, jsonObject);
 		return this;
 	}
 

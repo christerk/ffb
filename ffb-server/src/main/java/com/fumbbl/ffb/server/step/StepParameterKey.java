@@ -17,6 +17,7 @@ public enum StepParameterKey {
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	ASK_FOR_BLOCK_KIND, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
+	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
 	BLOCK_DEFENDER_ID, // String
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult

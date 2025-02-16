@@ -23,7 +23,8 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_MOVING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
-			from(StepParameterKey.MOVE_STACK, params.getMoveStack()), from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()));
+			from(StepParameterKey.MOVE_STACK, params.getMoveStack()), from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()),
+			from(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, params.getBallAndChainRrSetting()));
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));

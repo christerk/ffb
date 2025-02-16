@@ -181,6 +181,7 @@ public final class StepInitSelecting extends AbstractStep {
 						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand)));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
 							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
+						publishParameter(new StepParameter(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, moveCommand.getBallAndChainRrSetting()));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

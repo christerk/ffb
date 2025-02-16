@@ -48,6 +48,7 @@ public interface IJsonOption {
 	JsonStringArrayOption AWAY_PLAYERS_NOMINATED = new JsonStringArrayOption("awayPlayersNominated");
 	JsonStringOption AWAY_TEXT = new JsonStringOption("awayText");
 	JsonIntOption BADLY_HURT_SUFFERED = new JsonIntOption("badlyHurtSuffered");
+	JsonStringOption BALL_AND_CHAIN_RE_ROLL_SETTING = new JsonStringOption("ballAndChainReRollSetting");
 	JsonFieldCoordinateOption BALL_COORDINATE = new JsonFieldCoordinateOption("ballCoordinate");
 	JsonFieldCoordinateOption BALL_COORDINATE_END = new JsonFieldCoordinateOption("ballCoordinateEnd");
 	JsonFieldCoordinateOption BALL_COORDINATE_WITH_KICK = new JsonFieldCoordinateOption("ballCoordinateWithKick");

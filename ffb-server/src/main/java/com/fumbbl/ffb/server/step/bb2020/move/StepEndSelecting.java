@@ -69,6 +69,7 @@ public final class StepEndSelecting extends AbstractStep {
   private int fNumDice;
   private List<BlockTarget> blockTargets = new ArrayList<>();
   private String targetPlayerId;
+  private String ballAndChainRrSetting;
 
   public StepEndSelecting(GameState pGameState) {
     super(pGameState);
@@ -184,6 +185,10 @@ public final class StepEndSelecting extends AbstractStep {
           return true;
         case BLOOD_LUST_ACTION:
           bloodlustAction = (PlayerAction) parameter.getValue();
+          consume(parameter);
+          return true;
+        case BALL_AND_CHAIN_RE_ROLL_SETTING:
+          ballAndChainRrSetting = (String) parameter.getValue();
           consume(parameter);
           return true;
         default:
@@ -326,7 +331,7 @@ public final class StepEndSelecting extends AbstractStep {
       case HAND_OVER_MOVE:
       case GAZE:
         if (pWithParameter) {
-          moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart));
+          moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart, ballAndChainRrSetting));
         } else {
           moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
         }
