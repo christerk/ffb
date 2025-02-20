@@ -11,6 +11,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.35.0")
+		);
+
 		versions.add(new VersionChangeList("2.34.2")
 			.addBugfix("Hail Mary Bomb: It was not possible to deselect a player with hail mary pass and bombardier once bomb action was selected")
 			.addBugfix("Ball & Chain: When B&C movement can be re-rolled in some cases loading the re-roll setting caused the game to crash")
