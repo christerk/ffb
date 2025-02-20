@@ -6,6 +6,7 @@ import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private Properties fProperties;
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
+	private final ClientLogger logger;
 
 	private transient int currentMouseButton;
 
@@ -35,6 +37,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	public FantasyFootballClientAwt(ClientParameters pParameters) throws IOException {
 		super(pParameters);
+		logger = new ClientLogger(getLogFolder(), logEnabled(), gameId());
+
 		fActionKeyBindings = new ActionKeyBindings(this);
 
 		try {
@@ -92,6 +96,14 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	public void setProperty(CommonProperty pProperty, String pValue) {
 		setProperty(pProperty.getKey(), pValue);
+		if (logger != null) {
+			if (pProperty == CommonProperty.SETTING_LOG_DIR) {
+				logger.updateLogPath(pValue);
+			}
+			if (pProperty == CommonProperty.SETTING_SOUND_MODE) {
+				logger.updateEnabled(logEnabled());
+			}
+		}
 	}
 
 	public void setProperty(String pProperty, String pValue) {
@@ -191,18 +203,18 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	}
 
 	@Override
-	public void logError(long gameId, String message) {
-		System.err.println(gameId + ": " + message);
+	public void logError(long unused, String message) {
+		logger.logError(message);
 	}
 
 	@Override
-	public void logDebug(long gameId, String message) {
-		System.out.println(gameId + ": " + message);
+	public void logDebug(long unused, String message) {
+		logger.logDebug(message);
 	}
 
 	@Override
 	public void logWithOutGameId(Throwable throwable) {
-		throwable.printStackTrace(System.err);
+		logger.log(throwable);
 	}
 
 	public int getCurrentMouseButton() {
@@ -236,5 +248,17 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	@Override
 	public ClientStateAwt<? extends LogicModule> getClientState(ClientStateId id) {
 		return (ClientStateAwt<? extends LogicModule>) super.getClientState(id);
+	}
+
+	private boolean logEnabled() {
+		return !IClientPropertyValue.SETTING_LOG_OFF.equals(getProperty(CommonProperty.SETTING_LOG_MODE));
+	}
+
+	@Override
+	public void setGame(Game pGame) {
+		super.setGame(pGame);
+		if (logger != null) {
+			logger.updateId(pGame.getId());
+		}
 	}
 }

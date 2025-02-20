@@ -72,4 +72,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_LOCAL_ICON_CACHE_OFF = "localIconCacheOff";
 	String SETTING_LOCAL_ICON_CACHE_ON = "localIconCacheOn";
+
+	String SETTING_LOG_ON = "logOn";
+	String SETTING_LOG_OFF = "logOff";
 }
