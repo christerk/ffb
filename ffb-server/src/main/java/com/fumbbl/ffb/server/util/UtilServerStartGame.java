@@ -238,6 +238,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean overdogSpending = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENTS_ALLOW_OVERDOG_SPENDING);
 			overdogSpending.setValue(false);
 			//game.getOptions().addOption(overdogSpending);
+			GameOptionBoolean ballAndChainRr = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL);
+			ballAndChainRr.setValue(true);
+			game.getOptions().addOption(ballAndChainRr);
 		}
 	}
 

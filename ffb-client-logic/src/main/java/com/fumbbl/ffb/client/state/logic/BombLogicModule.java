@@ -53,7 +53,7 @@ public class BombLogicModule extends LogicModule {
 
 			if (isHailMaryPassActionAvailable()) {
 				actionContext.add(ClientAction.HAIL_MARY_BOMB);
-				if (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())  {
+				if (PlayerAction.HAIL_MARY_BOMB == actingPlayer.getPlayerAction())  {
 					actionContext.add(Influences.IS_THROWING_HAIL_MARY);
 				}
 			}
@@ -239,6 +239,6 @@ public class BombLogicModule extends LogicModule {
 	public boolean playerIsAboutToThrow() {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB);
+		return actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB || actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB;
 	}
 }

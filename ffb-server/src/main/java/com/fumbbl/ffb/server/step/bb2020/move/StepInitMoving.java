@@ -49,8 +49,6 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.Objects;
-
 /**
  * Step to init the move sequence.
  * <p>
@@ -77,7 +75,7 @@ public class StepInitMoving extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
 	private FieldCoordinate[] fMoveStack;
-	private String fGazeVictimId;
+	private String fGazeVictimId, ballAndChainRrSetting;
 	private boolean fEndTurn, fEndPlayerAction;
 
 	public StepInitMoving(GameState pGameState) {
@@ -105,6 +103,9 @@ public class StepInitMoving extends AbstractStep {
 					case MOVE_STACK:
 						fMoveStack = (FieldCoordinate[]) parameter.getValue();
 						break;
+					case BALL_AND_CHAIN_RE_ROLL_SETTING:
+						ballAndChainRrSetting = (String) parameter.getValue();
+						break;
 					default:
 						break;
 				}
@@ -118,9 +119,12 @@ public class StepInitMoving extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			if (Objects.requireNonNull(parameter.getKey()) == StepParameterKey.MOVE_STACK) {
-				fMoveStack = (FieldCoordinate[]) parameter.getValue();
-				return true;
+			switch (parameter.getKey()) {
+				case MOVE_STACK:
+					fMoveStack = (FieldCoordinate[]) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -162,6 +166,7 @@ public class StepInitMoving extends AbstractStep {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
 								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
 						}
+						ballAndChainRrSetting = moveCommand.getBallAndChainRrSetting();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -310,6 +315,7 @@ public class StepInitMoving extends AbstractStep {
 			actingPlayer.setPlayerAction(PlayerAction.GAZE);
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
+			publishParameter(new StepParameter(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, ballAndChainRrSetting));
 			if (ArrayTool.isProvided(fMoveStack)) {
 				FieldCoordinate coordinateTo = fMoveStack[0];
 				FieldCoordinate[] newMoveStack = new FieldCoordinate[0];
@@ -374,6 +380,7 @@ public class StepInitMoving extends AbstractStep {
 		IServerJsonOption.GAZE_VICTIM_ID.addTo(jsonObject, fGazeVictimId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
+		IServerJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.addTo(jsonObject, ballAndChainRrSetting);
 		return jsonObject;
 	}
 
@@ -386,6 +393,7 @@ public class StepInitMoving extends AbstractStep {
 		fGazeVictimId = IServerJsonOption.GAZE_VICTIM_ID.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		ballAndChainRrSetting = IServerJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.getFrom(source, jsonObject);
 		return this;
 	}
 

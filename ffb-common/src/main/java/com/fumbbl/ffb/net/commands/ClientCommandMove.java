@@ -21,16 +21,18 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 	private String fActingPlayerId;
 	private FieldCoordinate fCoordinateFrom;
 	private final List<FieldCoordinate> fCoordinatesTo;
+	private String ballAndChainRrSetting;
 
 	public ClientCommandMove() {
 		fCoordinatesTo = new ArrayList<>();
 	}
 
-	public ClientCommandMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo) {
+	public ClientCommandMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom, FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
 		this();
 		fActingPlayerId = pActingPlayerId;
 		fCoordinateFrom = pCoordinateFrom;
 		addCoordinatesTo(pCoordinatesTo);
+		this.ballAndChainRrSetting = ballAndChainRrSetting;
 	}
 
 	public NetCommandId getId() {
@@ -63,13 +65,17 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 		return fCoordinateFrom;
 	}
 
-	// JSON serialization
+	public String getBallAndChainRrSetting() {
+		return ballAndChainRrSetting;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.ACTING_PLAYER_ID.addTo(jsonObject, fActingPlayerId);
 		IJsonOption.COORDINATE_FROM.addTo(jsonObject, fCoordinateFrom);
 		IJsonOption.COORDINATES_TO.addTo(jsonObject, fCoordinatesTo);
+		IJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.addTo(jsonObject, ballAndChainRrSetting);
 		return jsonObject;
 	}
 
@@ -79,6 +85,7 @@ public class ClientCommandMove extends ClientCommand implements ICommandWithActi
 		fActingPlayerId = IJsonOption.ACTING_PLAYER_ID.getFrom(source, jsonObject);
 		fCoordinateFrom = IJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
 		addCoordinatesTo(IJsonOption.COORDINATES_TO.getFrom(source, jsonObject));
+		ballAndChainRrSetting = IJsonOption.BALL_AND_CHAIN_RE_ROLL_SETTING.getFrom(source, jsonObject);
 		return this;
 	}
 

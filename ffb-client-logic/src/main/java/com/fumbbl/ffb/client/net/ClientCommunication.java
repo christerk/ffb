@@ -243,8 +243,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                           FieldCoordinate[] pCoordinatesTo) {
-		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
+	                           FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
+		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo, ballAndChainRrSetting));
 	}
 
 	public void sendPlayerBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
