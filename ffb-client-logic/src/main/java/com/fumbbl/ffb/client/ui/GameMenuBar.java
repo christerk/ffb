@@ -1555,7 +1555,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				starPlayers.add(player);
 			}
 		}
-		if (starPlayers.size() > 0) {
+		if (!starPlayers.isEmpty()) {
 			StringBuilder starPlayerMenuText = new StringBuilder();
 			starPlayerMenuText.append(starPlayers.size());
 			if (starPlayers.size() == 1) {
@@ -1576,7 +1576,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				mercenaries.add(player);
 			}
 		}
-		if (mercenaries.size() > 0) {
+		if (!mercenaries.isEmpty()) {
 			StringBuilder mercenaryMenuText = new StringBuilder();
 			mercenaryMenuText.append(mercenaries.size());
 			if (mercenaries.size() == 1) {
@@ -1597,7 +1597,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				staff.add(player);
 			}
 		}
-		if (staff.size() > 0) {
+		if (!staff.isEmpty()) {
 			String staffText = staff.size() + " Infamous Staff";
 			JMenu staffMenu = new JMenu(dimensionProvider, staffText);
 			pInducementMenu.add(staffMenu);
