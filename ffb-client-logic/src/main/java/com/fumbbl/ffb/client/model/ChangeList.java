@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.35.0")
 			.addFeature("Logging: Added client side logging, activated by default")
+			.addImprovement("Log sent messages in case of failure")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")

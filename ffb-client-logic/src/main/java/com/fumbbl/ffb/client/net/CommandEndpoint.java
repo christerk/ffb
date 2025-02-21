@@ -12,13 +12,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandPong;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.websocket.ClientEndpoint;
-import javax.websocket.CloseReason;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -130,8 +124,10 @@ public class CommandEndpoint {
 			return;
 		}
 
-		// fSession.getAsyncRemote().sendText(textMessage);
-		fSession.getAsyncRemote().sendBinary(ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)));
+		fSession.getAsyncRemote().sendBinary(
+			ByteBuffer.wrap(textMessage.getBytes(StandardCharsets.UTF_8)),
+			new FfbSendHandler(fClient, jsonValue.toString())
+		);
 
 	}
 
@@ -155,4 +151,23 @@ public class CommandEndpoint {
 		}
 	}
 
+	private static class FfbSendHandler implements SendHandler {
+		private final FantasyFootballClient client;
+		private final String message;
+
+		public FfbSendHandler(FantasyFootballClient client, String message) {
+			this.client = client;
+			this.message = message;
+		}
+
+		@Override
+		public void onResult(SendResult sendResult) {
+			if (!sendResult.isOK()) {
+				client.logError("Could not send message: " + message);
+				if (sendResult.getException() != null) {
+					client.logWithOutGameId(sendResult.getException());
+				}
+			}
+		}
+	}
 }
