@@ -135,6 +135,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem logOnMenuItem;
 	private JRadioButtonMenuItem logOffMenuItem;
 	private JMenuItem logSelectMenuItem;
+	private JMenuItem openLogFolderMenuItem;
 
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
@@ -318,10 +319,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		logGroup.add(logOffMenuItem);
 		logMenu.add(logOffMenuItem);
 
-		logSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
+		logSelectMenuItem = new JMenuItem(dimensionProvider, "Select log folder");
 		logSelectMenuItem.setMnemonic(KeyEvent.VK_S);
 		logSelectMenuItem.addActionListener(this);
 		logMenu.add(logSelectMenuItem);
+
+		openLogFolderMenuItem = new JMenuItem(dimensionProvider, "Open log folder");
+		openLogFolderMenuItem.setMnemonic(KeyEvent.VK_O);
+		openLogFolderMenuItem.addActionListener(this);
+		logMenu.add(openLogFolderMenuItem);
 	}
 
 	private void createClientUiMenu(JMenu fUserSettingsMenu) {
@@ -1845,6 +1851,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == logSelectMenuItem) {
 			selectLogFolder();
 			getClient().saveUserSettings(true);
+		}
+
+		if (source == openLogFolderMenuItem) {
+			try {
+				Desktop.getDesktop().open(new File(getClient().getLogFolder()));
+			} catch (IOException ex) {
+				getClient().logWithOutGameId(ex);
+			}
 		}
 
 		if (source == fAboutMenuItem) {
