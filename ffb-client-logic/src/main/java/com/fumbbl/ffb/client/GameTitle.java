@@ -130,10 +130,13 @@ public class GameTitle {
 				if (ClientMode.REPLAY == getClientMode()) {
 					title.append(" replay ");
 				}
+				if (ClientMode.SHARED_REPLAY == getClientMode()) {
+					title.append(" shared replay ");
+				}
 			}
 			title.append(getHomeCoach()).append(" vs ").append(getAwayCoach());
 		}
-		if ((ClientMode.REPLAY != getClientMode()) && (getTurnTime() >= 0)) {
+		if ((!getClientMode().isReplay()) && (getTurnTime() >= 0)) {
 			title.append(" - Turn ");
 			appendTime(title, getTurnTime(), false);
 		}
@@ -159,7 +162,7 @@ public class GameTitle {
 			builder.append(days).append("d");
 		}
 
-		int hours = 0;
+		int hours;
 		if (showHours || (days > 0) || (myMilliseconds >= _HOURS)) {
 			hours = (int) (myMilliseconds / _HOURS);
 			myMilliseconds -= hours * _HOURS;

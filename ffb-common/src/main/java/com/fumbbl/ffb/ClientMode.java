@@ -1,11 +1,14 @@
 package com.fumbbl.ffb;
 
+import java.util.ArrayList;
+
 /**
  * @author Kalimar
  */
 public enum ClientMode implements INamedObject {
 
-	PLAYER("player", "-player"), SPECTATOR("spectator", "-spectator"), REPLAY("replay", "-replay");
+	PLAYER("player", "-player"), SPECTATOR("spectator", "-spectator"),
+	REPLAY("replay", "-replay"), SHARED_REPLAY("sharedReplay", "-sharedReplay");
 
 	private final String fName;
 	private final String fArgument;
@@ -23,4 +26,10 @@ public enum ClientMode implements INamedObject {
 		return fArgument;
 	}
 
+	public boolean isReplay() {
+		return new ArrayList<ClientMode>() {{
+			add(REPLAY);
+			add(SHARED_REPLAY);
+		}}.contains(this);
+	}
 }

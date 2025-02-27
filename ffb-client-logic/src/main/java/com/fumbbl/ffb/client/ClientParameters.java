@@ -172,6 +172,7 @@ public class ClientParameters {
 			case SPECTATOR:
 				return StringTool.isProvided(getCoach());
 			case REPLAY:
+			case SHARED_REPLAY:
 				return (getGameId() > 0);
 			default:
 				return false;

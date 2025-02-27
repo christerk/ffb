@@ -52,6 +52,8 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((ClientMode.REPLAY == getClient().getMode()) || getClient().getReplayer().isReplaying()) {
 			clientStateId = ClientStateId.REPLAY;
+		} else if (ClientMode.SHARED_REPLAY == getClient().getMode()) {
+			clientStateId = ClientStateId.SHARED_REPLAY;
 		} else if (!StringTool.isProvided(game.getTeamHome().getName())) {
 			clientStateId = ClientStateId.LOGIN;
 		} else if (ClientMode.SPECTATOR == getClient().getMode()) {
