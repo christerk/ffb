@@ -10,6 +10,8 @@ import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +31,9 @@ public class HitAndRunLogicModule extends LogicModule {
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
 		ActionContext context = new ActionContext();
-		context.add(ClientAction.HIT_AND_RUN);
+		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canMoveAfterBlock)) {
+			context.add(ClientAction.HIT_AND_RUN);
+		}
 		return context;
 	}
 
