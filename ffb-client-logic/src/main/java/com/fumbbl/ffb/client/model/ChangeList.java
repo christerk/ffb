@@ -15,7 +15,7 @@ public class ChangeList {
 			.addFeature("Logging: Added client side logging, activated by default")
 			.addImprovement("Log sent messages in case of failure")
 			.addBugfix("Hit And Run: There were reported cases where turns were ended after using Hit And Run, this update includes chances that might fix that issue")
-
+			.addImprovement("Log call stacks for all end turn commands on client side")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")

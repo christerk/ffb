@@ -261,10 +261,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendEndTurn(TurnMode turnMode) {
+		getClient().logWithOutGameId(new Exception("Debug Exception"));
 		send(new ClientCommandEndTurn(turnMode, null));
 	}
 
 	public void sendEndTurn(TurnMode turnMode, Team team, FieldModel fieldModel) {
+		getClient().logWithOutGameId(new Exception("Debug Exception"));
 		send(new ClientCommandEndTurn(turnMode, playerCoordinates(team, fieldModel)));
 	}
 
