@@ -59,7 +59,7 @@ public class ServerCommandReplay extends ServerCommand {
 	}
 
 	public ServerCommand[] getReplayCommands() {
-		return fReplayCommands.toArray(new ServerCommand[fReplayCommands.size()]);
+		return fReplayCommands.toArray(new ServerCommand[0]);
 	}
 
 	public boolean isReplayable() {
