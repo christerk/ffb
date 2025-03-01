@@ -10,8 +10,8 @@ import com.fumbbl.ffb.net.NetCommandFactory;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -23,6 +23,7 @@ public class ServerCommandReplay extends ServerCommand {
 	private final List<ServerCommand> fReplayCommands;
 	private int fTotalNrOfCommands;
 	private boolean lastCommand;
+	private final Set<Integer> markingAffectingCommands;
 
 	public NetCommandId getId() {
 		return NetCommandId.SERVER_REPLAY;
@@ -30,6 +31,7 @@ public class ServerCommandReplay extends ServerCommand {
 
 	public ServerCommandReplay() {
 		fReplayCommands = new ArrayList<>();
+		markingAffectingCommands = new HashSet<>();
 	}
 
 	public void add(ServerCommand pServerCommand) {
@@ -86,6 +88,14 @@ public class ServerCommandReplay extends ServerCommand {
 		return lowestCommandNr;
 	}
 
+	public Set<Integer> getMarkingAffectingCommands() {
+		return markingAffectingCommands;
+	}
+
+	public void addMarkingAffectingCommand(int index) {
+		markingAffectingCommands.add(index);
+	}
+
 	public boolean isLastCommand() {
 		return lastCommand;
 	}
@@ -106,6 +116,7 @@ public class ServerCommandReplay extends ServerCommand {
 		}
 		IJsonOption.COMMAND_ARRAY.addTo(jsonObject, commandArray);
 		IJsonOption.LAST_COMMAND.addTo(jsonObject, lastCommand);
+		IJsonOption.MARKING_AFFECTING_COMMANDS.addTo(jsonObject, markingAffectingCommands);
 		return jsonObject;
 	}
 
@@ -121,6 +132,10 @@ public class ServerCommandReplay extends ServerCommand {
 			add(replayCommand);
 		}
 		lastCommand = IJsonOption.LAST_COMMAND.getFrom(source, jsonObject);
+		markingAffectingCommands.addAll(
+			Arrays.stream(IJsonOption.MARKING_AFFECTING_COMMANDS.getFrom(source, jsonObject))
+				.boxed()
+				.collect(Collectors.toList()));
 		return this;
 	}
 

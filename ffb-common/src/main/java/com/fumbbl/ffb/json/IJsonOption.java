@@ -270,6 +270,7 @@ public interface IJsonOption {
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
 	JsonStringOption MARKING = new JsonStringOption("marking");
+	JsonIntArrayOption MARKING_AFFECTING_COMMANDS = new JsonIntArrayOption("markingIntervalIndexes");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
