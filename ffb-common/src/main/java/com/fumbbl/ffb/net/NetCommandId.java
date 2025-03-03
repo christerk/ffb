@@ -1,103 +1,7 @@
 package com.fumbbl.ffb.net;
 
 import com.fumbbl.ffb.INamedObject;
-import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
-import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandArgueTheCall;
-import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
-import com.fumbbl.ffb.net.commands.ClientCommandBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
-import com.fumbbl.ffb.net.commands.ClientCommandBloodlustAction;
-import com.fumbbl.ffb.net.commands.ClientCommandBuyCard;
-import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
-import com.fumbbl.ffb.net.commands.ClientCommandCloseSession;
-import com.fumbbl.ffb.net.commands.ClientCommandCoinChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandConcedeGame;
-import com.fumbbl.ffb.net.commands.ClientCommandConfirm;
-import com.fumbbl.ffb.net.commands.ClientCommandDebugClientState;
-import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
-import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
-import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandFoul;
-import com.fumbbl.ffb.net.commands.ClientCommandGaze;
-import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
-import com.fumbbl.ffb.net.commands.ClientCommandIllegalProcedure;
-import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandJoin;
-import com.fumbbl.ffb.net.commands.ClientCommandJourneymen;
-import com.fumbbl.ffb.net.commands.ClientCommandKickOffResultChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandKickTeamMate;
-import com.fumbbl.ffb.net.commands.ClientCommandKickoff;
-import com.fumbbl.ffb.net.commands.ClientCommandMove;
-import com.fumbbl.ffb.net.commands.ClientCommandPass;
-import com.fumbbl.ffb.net.commands.ClientCommandPasswordChallenge;
-import com.fumbbl.ffb.net.commands.ClientCommandPettyCash;
-import com.fumbbl.ffb.net.commands.ClientCommandPileDriver;
-import com.fumbbl.ffb.net.commands.ClientCommandPing;
-import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandPushback;
-import com.fumbbl.ffb.net.commands.ClientCommandReceiveChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandReplay;
-import com.fumbbl.ffb.net.commands.ClientCommandRequestVersion;
-import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
-import com.fumbbl.ffb.net.commands.ClientCommandSelectWeather;
-import com.fumbbl.ffb.net.commands.ClientCommandSetBlockTargetSelection;
-import com.fumbbl.ffb.net.commands.ClientCommandSetMarker;
-import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
-import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
-import com.fumbbl.ffb.net.commands.ClientCommandStartGame;
-import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
-import com.fumbbl.ffb.net.commands.ClientCommandSynchronousMultiBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandTalk;
-import com.fumbbl.ffb.net.commands.ClientCommandTargetSelected;
-import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupDelete;
-import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupLoad;
-import com.fumbbl.ffb.net.commands.ClientCommandTeamSetupSave;
-import com.fumbbl.ffb.net.commands.ClientCommandThrowKeg;
-import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
-import com.fumbbl.ffb.net.commands.ClientCommandTouchback;
-import com.fumbbl.ffb.net.commands.ClientCommandUnsetBlockTargetSelection;
-import com.fumbbl.ffb.net.commands.ClientCommandUpdatePlayerMarkings;
-import com.fumbbl.ffb.net.commands.ClientCommandUseApothecaries;
-import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
-import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
-import com.fumbbl.ffb.net.commands.ClientCommandUseChainsaw;
-import com.fumbbl.ffb.net.commands.ClientCommandUseConsummateReRollForBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandUseFumblerooskie;
-import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
-import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
-import com.fumbbl.ffb.net.commands.ClientCommandUseMultiBlockDiceReRoll;
-import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
-import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
-import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.net.commands.ClientCommandUseTeamMatesWisdom;
-import com.fumbbl.ffb.net.commands.ClientCommandUserSettings;
-import com.fumbbl.ffb.net.commands.ClientCommandWizardSpell;
-import com.fumbbl.ffb.net.commands.ServerCommandAddPlayer;
-import com.fumbbl.ffb.net.commands.ServerCommandAdminMessage;
-import com.fumbbl.ffb.net.commands.ServerCommandGameList;
-import com.fumbbl.ffb.net.commands.ServerCommandGameState;
-import com.fumbbl.ffb.net.commands.ServerCommandGameTime;
-import com.fumbbl.ffb.net.commands.ServerCommandJoin;
-import com.fumbbl.ffb.net.commands.ServerCommandLeave;
-import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
-import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
-import com.fumbbl.ffb.net.commands.ServerCommandPong;
-import com.fumbbl.ffb.net.commands.ServerCommandRemovePlayer;
-import com.fumbbl.ffb.net.commands.ServerCommandReplay;
-import com.fumbbl.ffb.net.commands.ServerCommandSound;
-import com.fumbbl.ffb.net.commands.ServerCommandStatus;
-import com.fumbbl.ffb.net.commands.ServerCommandTalk;
-import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
-import com.fumbbl.ffb.net.commands.ServerCommandTeamSetupList;
-import com.fumbbl.ffb.net.commands.ServerCommandUnzapPlayer;
-import com.fumbbl.ffb.net.commands.ServerCommandUpdateLocalPlayerMarkers;
-import com.fumbbl.ffb.net.commands.ServerCommandUserSettings;
-import com.fumbbl.ffb.net.commands.ServerCommandVersion;
-import com.fumbbl.ffb.net.commands.ServerCommandZapPlayer;
+import com.fumbbl.ffb.net.commands.*;
 
 /**
  * @author Kalimar
@@ -365,6 +269,10 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseSingleBlockDieReRoll();
 			case CLIENT_USE_MULTI_BLOCK_DICE_RE_ROLL:
 				return new ClientCommandUseMultiBlockDiceReRoll();
+			case CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS:
+				return new ClientCommandLoadAutomaticPlayerMarkings();
+			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
+				return new ServerCommandAutomaticPlayerMarkings();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

@@ -10,11 +10,16 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 	
-	private final List<Game> games;
+	private List<Game> games = new ArrayList<>();
+
+	public ClientCommandLoadAutomaticPlayerMarkings() {
+		super();
+	}
 
 	public ClientCommandLoadAutomaticPlayerMarkings(List<Game> games) {
 		this.games = games;

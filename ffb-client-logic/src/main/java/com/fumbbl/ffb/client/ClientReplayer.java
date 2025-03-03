@@ -43,12 +43,14 @@ public class ClientReplayer implements ActionListener {
 	private final List<ServerCommand> fReplayList;
 	private final List<ServerCommand> fUnseenList;
 	private final List<Integer> markingAffectingCommands;
+	private final Map<Integer, Map<String, String>> markings;
 	private int fLastReplayPosition;
 	private int fReplaySpeed;
 	private boolean fReplayDirectionForward;
 	private boolean fStopping;
 	private int fUnseenPosition;
 	private boolean fSkipping;
+	private int activeMarkingCommand = -1;
 
 	private final Timer fTimer;
 
@@ -57,6 +59,7 @@ public class ClientReplayer implements ActionListener {
 		fReplayList = new ArrayList<>();
 		fUnseenList = new ArrayList<>();
 		markingAffectingCommands = new ArrayList<>();
+		markings = new HashMap<>();
 		fLastReplayPosition = -1;
 		fReplaySpeed = 1;
 		fTimer = new Timer(1000, this);
@@ -110,6 +113,8 @@ public class ClientReplayer implements ActionListener {
 		this.markingAffectingCommands.clear();
 		this.markingAffectingCommands.addAll(markingAffectingCommands);
 		Collections.sort(this.markingAffectingCommands);
+		markings.clear();
+
 		List<ServerCommand> oldReplayList = new ArrayList<>(fReplayList);
 		fReplayList.clear();
 		Collections.addAll(fReplayList, pServerCommands);
@@ -318,17 +323,23 @@ public class ClientReplayer implements ActionListener {
 			if (serverCommand != null) {
 				// System.out.println(serverCommand.toXml(0));
 				getClient().getCommandHandlerFactory().handleNetCommand(serverCommand, pMode);
-				if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-					if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
-						gameVersions.add(cloneGame(applicationSource, factoryManager));
+				if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+					if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+						if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
+							gameVersions.add(cloneGame(applicationSource, factoryManager));
+						}
 					}
+				} else {
+					applyMarkings(serverCommand.getCommandNr());
 				}
 			}
 			if (pProgressListener != null) {
 				pProgressListener.updateProgress((i - start));
 			}
 		}
-		getClient().getCommunication().sendLoadPlayerMarkings(gameVersions);
+		if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+			getClient().getCommunication().sendLoadPlayerMarkings(gameVersions);
+		}
 		fLastReplayPosition = pReplayPosition;
 		if ((serverCommand != null) && (pMode == ClientCommandHandlerMode.REPLAYING)) {
 			highlightCommand(serverCommand.getCommandNr());
@@ -498,4 +509,37 @@ public class ClientReplayer implements ActionListener {
 		return fFirstCommandNr;
 	}
 
+	public void setMarkingConfigs(List<Map<String, String>> markings) {
+		for (int i = 0; i<markingAffectingCommands.size(); i++) {
+			this.markings.put(markingAffectingCommands.get(i), markings.get(i));
+		}
+		applyMarkings(fLastReplayPosition);
+	}
+
+	private synchronized void applyMarkings(int commandNr) {
+		int relevantCommand = findMarkingAffectingCommand(commandNr);
+
+		if (relevantCommand != activeMarkingCommand) {
+			activeMarkingCommand = relevantCommand;
+			Map<String, String> currentMarkings = markings.get(activeMarkingCommand);
+			if (currentMarkings != null) {
+				Game game = getClient().getGame();
+				for (Player<?> player : game.getPlayers()) {
+					game.getFieldModel().getTransientPlayerMarker(player.getId()).setHomeText(currentMarkings.get(player.getId()));
+				}
+			}
+		}
+	}
+
+	private int findMarkingAffectingCommand(int commandNr) {
+		int relevantCommand = 0;
+		for (int mac: this.markingAffectingCommands) {
+			if (mac < commandNr) {
+				relevantCommand = mac;
+			} else {
+				break;
+			}
+		}
+		return relevantCommand;
+	}
 }

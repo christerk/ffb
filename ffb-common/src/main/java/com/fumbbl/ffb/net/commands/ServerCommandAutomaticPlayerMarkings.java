@@ -14,6 +14,10 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 
 	private List<Map<String, String>> markings;
 
+	public ServerCommandAutomaticPlayerMarkings() {
+		super();
+	}
+
 	public ServerCommandAutomaticPlayerMarkings(List<Map<String, String>> markings) {
 		this.markings = markings;
 	}
@@ -23,15 +27,24 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 		return NetCommandId.SERVER_AUTOMATIC_PLAYER_MARKINGS;
 	}
 
+	public List<Map<String, String>> getMarkings() {
+		return markings;
+	}
+
 	@Override
 	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
-		this.markings = IJsonOption.MARKINGS.getFrom(source, UtilJson.toJsonObject(jsonValue));
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
+		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
+		this.markings = IJsonOption.MARKINGS.getFrom(source, jsonObject);
 		return this;
 	}
 
 	@Override
 	public JsonValue toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
+		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
 		IJsonOption.MARKINGS.addTo(jsonObject, markings);
 		return jsonObject;
 	}

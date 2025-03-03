@@ -490,7 +490,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendMarkings(Session session, List<Map<String, String>> markings) {
-		send(session, new ServerCommandAutomaticPlayerMarkings(markings));
+		send(session, new ServerCommandAutomaticPlayerMarkings(markings), true);
 	}
 
 	public int getQueueLength() {

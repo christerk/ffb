@@ -34,6 +34,10 @@ public class ServerCommandHandlerCalculateAutomaticPlayerMarkings extends Server
 		List<Game> games = commandCalculateAutomaticPlayerMarkings.getGames();
 		AutoMarkingConfig config = commandCalculateAutomaticPlayerMarkings.getAutoMarkingConfig();
 
+		if (config.getMarkings().isEmpty()) {
+			config.getMarkings().addAll(AutoMarkingConfig.defaults(games.get(0).getRules().getSkillFactory()));
+		}
+
 		List<Map<String, String>> markings = games.stream().map(game -> handleGame(game, config)).collect(Collectors.toList());
 		getServer().getCommunication().sendMarkings(receivedCommand.getSession(), markings);
 		return true;
