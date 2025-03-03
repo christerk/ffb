@@ -195,6 +195,7 @@ public interface IJsonOption {
 	JsonBooleanOption FUMBLEROOSKIE_PENDING = new JsonBooleanOption("fumblerooskiePending");
 	JsonBooleanOption GAINED_ONLY = new JsonBooleanOption("gainedOnly");
 	JsonObjectOption GAME = new JsonObjectOption("game");
+	JsonArrayOption GAMES = new JsonArrayOption("games");
 	JsonLongOption GAME_ID = new JsonLongOption("gameId");
 	JsonObjectOption GAME_LIST = new JsonObjectOption("gameList");
 	JsonArrayOption GAME_LIST_ENTRIES = new JsonArrayOption("gameListEntries");
@@ -270,6 +271,7 @@ public interface IJsonOption {
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
 	JsonStringOption MARKING = new JsonStringOption("marking");
+	JsonStringMapListOption MARKINGS = new JsonStringMapListOption("markings");
 	JsonIntArrayOption MARKING_AFFECTING_COMMANDS = new JsonIntArrayOption("markingIntervalIndexes");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");

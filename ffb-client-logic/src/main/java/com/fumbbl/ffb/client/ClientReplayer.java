@@ -1,15 +1,11 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.SendToBoxReason;
-import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
+import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -30,10 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -47,8 +40,9 @@ public class ClientReplayer implements ActionListener {
 
 	private int fFirstCommandNr;
 
-	private List<ServerCommand> fReplayList;
+	private final List<ServerCommand> fReplayList;
 	private final List<ServerCommand> fUnseenList;
+	private final List<Integer> markingAffectingCommands;
 	private int fLastReplayPosition;
 	private int fReplaySpeed;
 	private boolean fReplayDirectionForward;
@@ -62,6 +56,7 @@ public class ClientReplayer implements ActionListener {
 		fClient = pClient;
 		fReplayList = new ArrayList<>();
 		fUnseenList = new ArrayList<>();
+		markingAffectingCommands = new ArrayList<>();
 		fLastReplayPosition = -1;
 		fReplaySpeed = 1;
 		fTimer = new Timer(1000, this);
@@ -110,9 +105,13 @@ public class ClientReplayer implements ActionListener {
 		}
 	}
 
-	public void init(ServerCommand[] pServerCommands, IProgressListener pProgressListener) {
-		List<ServerCommand> oldReplayList = fReplayList;
-		fReplayList = new ArrayList<>();
+	public void init(ServerCommand[] pServerCommands, Set<Integer> markingAffectingCommands, IProgressListener pProgressListener) {
+		markingAffectingCommands.addAll(this.markingAffectingCommands);
+		this.markingAffectingCommands.clear();
+		this.markingAffectingCommands.addAll(markingAffectingCommands);
+		Collections.sort(this.markingAffectingCommands);
+		List<ServerCommand> oldReplayList = new ArrayList<>(fReplayList);
+		fReplayList.clear();
 		Collections.addAll(fReplayList, pServerCommands);
 		fReplayList.addAll(oldReplayList);
 		getClient().getUserInterface().getLog().detachLogDocument();
@@ -310,21 +309,37 @@ public class ClientReplayer implements ActionListener {
 
 		}
 		ServerCommand serverCommand = null;
+		IFactorySource applicationSource = getClient().getGame().getApplicationSource().forContext(FactoryType.FactoryContext.APPLICATION);
+		FactoryManager factoryManager = getClient().getGame().getApplicationSource().getFactoryManager();
+		List<Game> gameVersions = new ArrayList<>();
+		gameVersions.add(cloneGame(applicationSource, factoryManager));
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
 			if (serverCommand != null) {
 				// System.out.println(serverCommand.toXml(0));
 				getClient().getCommandHandlerFactory().handleNetCommand(serverCommand, pMode);
+				if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+					if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
+						gameVersions.add(cloneGame(applicationSource, factoryManager));
+					}
+				}
 			}
 			if (pProgressListener != null) {
 				pProgressListener.updateProgress((i - start));
 			}
 		}
+		getClient().getCommunication().sendLoadPlayerMarkings(gameVersions);
 		fLastReplayPosition = pReplayPosition;
 		if ((serverCommand != null) && (pMode == ClientCommandHandlerMode.REPLAYING)) {
 			highlightCommand(serverCommand.getCommandNr());
 		}
 		refreshUserInterface();
+	}
+
+	private Game cloneGame(IFactorySource applicationSource, FactoryManager factoryManager) {
+		Game game = new Game(applicationSource, factoryManager);
+		game.initFrom(applicationSource, getClient().getGame().toJsonValue());
+		return game;
 	}
 
 	public void replayToCommand(int pCommandNr) {
@@ -443,11 +458,7 @@ public class ClientReplayer implements ActionListener {
 		LogComponent log = getClient().getUserInterface().getLog();
 		replayToCommand(log.findCommandNr(1));
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum();
-				}
-			});
+			SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
 		} catch (Exception pE) {
 			throw new FantasyFootballException(pE);
 		}
@@ -462,11 +473,7 @@ public class ClientReplayer implements ActionListener {
 		}
 		try {
 			if (!SwingUtilities.isEventDispatchThread()) {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
 			} else {
 				getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
 			}

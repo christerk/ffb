@@ -17,10 +17,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -28,6 +25,7 @@ import java.util.Set;
 public class ReplayLogicModule extends LogicModule {
 
 	private List<ServerCommand> fReplayList;
+	private Set<Integer> markingAffectingCommands;
 	private boolean replayerInitialized;
 	private ReplayCallbacks callbacks;
 
@@ -46,6 +44,8 @@ public class ReplayLogicModule extends LogicModule {
 	@Override
 	public void setUp() {
 		super.setUp();
+		markingAffectingCommands = new HashSet<>();
+		markingAffectingCommands.add(0);
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
@@ -80,6 +80,7 @@ public class ReplayLogicModule extends LogicModule {
 			case SERVER_REPLAY:
 				ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
 				callbacks.commandCount(replayCommand.getTotalNrOfCommands());
+				markingAffectingCommands.addAll(replayCommand.getMarkingAffectingCommands());
 				for (ServerCommand command : replayCommand.getReplayCommands()) {
 					fReplayList.add(command);
 					callbacks.loadedCommands(fReplayList.size());
@@ -94,7 +95,7 @@ public class ReplayLogicModule extends LogicModule {
 					}
 					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
 					callbacks.startReplayerInit();
-					replayer.init(replayCommands, callbacks.progressListener());
+					replayer.init(replayCommands, this.markingAffectingCommands, callbacks.progressListener());
 					callbacks.replayerInitialized();
 					if (ClientMode.REPLAY == client.getMode()) {
 						replayer.positionOnFirstCommand();
