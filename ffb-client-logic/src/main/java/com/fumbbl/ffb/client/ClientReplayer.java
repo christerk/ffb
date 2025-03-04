@@ -440,6 +440,9 @@ public class ClientReplayer implements ActionListener {
 				} else {
 					fieldModel.setPlayerState(player, new PlayerState(PlayerState.RESERVE));
 				}
+				playerResult.setSeriousInjury(null);
+				playerResult.setSeriousInjuryDecay(null);
+				player.getEnhancementSources().forEach(player::removeEnhancements);
 				playerResult.setCurrentSpps(pOldTeamResult.getPlayerResult(player).getCurrentSpps());
 				UtilBox.putPlayerIntoBox(pGame, player);
 			}
