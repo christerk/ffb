@@ -329,7 +329,7 @@ public class ClientReplayer implements ActionListener {
 							gameVersions.add(cloneGame(applicationSource, factoryManager));
 						}
 					}
-				} else {
+				} else if (!markings.isEmpty()) {
 					applyMarkings(serverCommand.getCommandNr());
 				}
 			}
@@ -525,8 +525,15 @@ public class ClientReplayer implements ActionListener {
 			if (currentMarkings != null) {
 				Game game = getClient().getGame();
 				for (Player<?> player : game.getPlayers()) {
-					game.getFieldModel().getTransientPlayerMarker(player.getId()).setHomeText(currentMarkings.get(player.getId()));
+					PlayerMarker playerMarker = game.getFieldModel().getTransientPlayerMarker(player.getId());
+					if (playerMarker == null) {
+						playerMarker = new PlayerMarker(player.getId());
+					}
+					playerMarker.setHomeText(currentMarkings.get(player.getId()));
+					getClient().getGame().getFieldModel().addTransient(playerMarker);
+					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 				}
+				getClient().getUserInterface().refresh();
 			}
 		}
 	}

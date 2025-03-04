@@ -122,6 +122,9 @@ public class ReplayLogicModule extends LogicModule {
 					}
 				}
 				break;
+			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
+				client.getReplayer().setMarkingConfigs(((ServerCommandAutomaticPlayerMarkings) pNetCommand).getMarkings());
+				break;
 			default:
 				break;
 		}
