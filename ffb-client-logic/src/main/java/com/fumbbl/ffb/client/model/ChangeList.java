@@ -16,6 +16,7 @@ public class ChangeList {
 			.addImprovement("Log sent messages in case of failure")
 			.addBugfix("Hit And Run: There were reported cases where turns were ended after using Hit And Run, this update includes chances that might fix that issue")
 			.addImprovement("Log call stacks for all end turn commands on client side")
+			.addBugfix("Take Root: Ending the player action after failing Take Root for a hand-off did end the turn instead")
 			.addBugfix("Replay: Show correct automarking during replay")
 			.addBugfix("Replay: Show inducement icons correctly during replay")
 			.addBugfix("Automarking: Include injuries suffered during the current game")
