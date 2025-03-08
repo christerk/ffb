@@ -23,7 +23,7 @@ public class MarkerGenerator {
         List<Skill> baseSkills = new ArrayList<>(Arrays.asList(player.getPosition().getSkills()));
         List<Skill> gainedSkills = player.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getCategory() != SkillCategory.STAT_INCREASE).collect(Collectors.toList());
         gainedSkills.removeAll(baseSkills);
-        List<InjuryAttribute> injuries = new ArrayList<>();
+        List<InjuryAttribute> injuriesAttributes = new ArrayList<>();
 
         for (PlayerStatKey key : PlayerStatKey.values()) {
             int statDiff = statDiff(game, key, player);
@@ -37,12 +37,16 @@ public class MarkerGenerator {
             } else if (statDiff < 0) {
                 InjuryAttribute injury = InjuryAttribute.forStatKey(key);
                 for (int i = 0; i < Math.abs(statDiff); i++) {
-                    injuries.add(injury);
+                    injuriesAttributes.add(injury);
                 }
             }
         }
 
-        injuries.addAll(Arrays.stream(player.getLastingInjuries()).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
+        List<SeriousInjury> injuries = new ArrayList<>();
+        injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjury());
+        injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjuryDecay());
+        injuries.addAll(Arrays.asList(player.getLastingInjuries()));
+        injuriesAttributes.addAll(injuries.stream().filter(Objects::nonNull).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
 
         Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
 
@@ -83,7 +87,7 @@ public class MarkerGenerator {
                                         .thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
                                         .thenComparing(
                                                 AutoMarkingRecord::getMarking))
-                                .map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuries, markingsToApply, finalSeparator))
+                                .map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator))
                                 .sorted()).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
 
 
