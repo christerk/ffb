@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;

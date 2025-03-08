@@ -13,8 +13,10 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.ui.LogComponent;
+import com.fumbbl.ffb.dialog.DialogCoinChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -25,6 +27,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
@@ -340,6 +343,15 @@ public class ClientReplayer implements ActionListener {
 			if (serverCommand != null) {
 				// System.out.println(serverCommand.toXml(0));
 				getClient().getCommandHandlerFactory().handleNetCommand(serverCommand, pMode);
+				if (serverCommand.getId() == NetCommandId.SERVER_MODEL_SYNC) {
+					ServerCommandModelSync modelSync = (ServerCommandModelSync) serverCommand;
+					if (Arrays.stream(modelSync.getModelChanges().getChanges())
+						.anyMatch(change -> change.getChangeId() == ModelChangeId.GAME_SET_DIALOG_PARAMETER
+							&& change.getValue() instanceof DialogCoinChoiceParameter)) {
+						reset(getClient().getGame().getTurnDataAway().getInducementSet());
+						reset(getClient().getGame().getTurnDataHome().getInducementSet());
+					}
+				}
 				if (pMode == ClientCommandHandlerMode.INITIALIZING) {
 					if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
 						if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
@@ -362,6 +374,10 @@ public class ClientReplayer implements ActionListener {
 			highlightCommand(serverCommand.getCommandNr());
 		}
 		refreshUserInterface();
+	}
+
+	private void reset(InducementSet inducementSet) {
+		inducementSet.getInducementMapping().forEach((type, inducement) -> inducementSet.addInducement(new Inducement(type, inducement.getValue())));
 	}
 
 	private Game cloneGame(IFactorySource applicationSource, FactoryManager factoryManager) {
