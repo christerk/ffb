@@ -22,7 +22,8 @@ public class ServerReplayer implements Runnable {
 		add(ModelChangeId.FIELD_MODEL_REMOVE_CARD_EFFECT);
 		add(ModelChangeId.FIELD_MODEL_ADD_PRAYER);
 		add(ModelChangeId.FIELD_MODEL_REMOVE_PRAYER);
-		add(ModelChangeId.TEAM_RESULT_SET_SERIOUS_INJURY_SUFFERED);
+		add(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY);
+		add(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY);
 	}};
 
 	private boolean fStopped;

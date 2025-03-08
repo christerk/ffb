@@ -493,8 +493,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandBloodlustAction(change));
 	}
 
-	public void sendLoadPlayerMarkings(List<Game> games) {
-		send(new ClientCommandLoadAutomaticPlayerMarkings(games));
+	public void sendLoadPlayerMarkings(int index, Game game) {
+		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game));
 	}
 
 	public FantasyFootballClient getClient() {

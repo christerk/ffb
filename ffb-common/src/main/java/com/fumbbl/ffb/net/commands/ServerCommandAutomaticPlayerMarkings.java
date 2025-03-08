@@ -7,19 +7,20 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
-import java.util.List;
 import java.util.Map;
 
 public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 
-	private List<Map<String, String>> markings;
+	private Map<String, String> markings;
+	private int index;
 
 	public ServerCommandAutomaticPlayerMarkings() {
 		super();
 	}
 
-	public ServerCommandAutomaticPlayerMarkings(List<Map<String, String>> markings) {
+	public ServerCommandAutomaticPlayerMarkings(int index, Map<String, String> markings) {
 		this.markings = markings;
+		this.index = index;
 	}
 
 	@Override
@@ -27,7 +28,11 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 		return NetCommandId.SERVER_AUTOMATIC_PLAYER_MARKINGS;
 	}
 
-	public List<Map<String, String>> getMarkings() {
+	public int getIndex() {
+		return index;
+	}
+
+	public Map<String, String> getMarkings() {
 		return markings;
 	}
 
@@ -37,6 +42,7 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		setCommandNr(IJsonOption.COMMAND_NR.getFrom(source, jsonObject));
 		this.markings = IJsonOption.MARKINGS.getFrom(source, jsonObject);
+		this.index = IJsonOption.SELECTED_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -46,6 +52,7 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.COMMAND_NR.addTo(jsonObject, getCommandNr());
 		IJsonOption.MARKINGS.addTo(jsonObject, markings);
+		IJsonOption.SELECTED_INDEX.addTo(jsonObject, index);
 		return jsonObject;
 	}
 }

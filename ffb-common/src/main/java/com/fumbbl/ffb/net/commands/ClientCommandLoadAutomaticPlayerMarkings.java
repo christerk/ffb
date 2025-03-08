@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.net.commands;
 
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
@@ -10,19 +9,18 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommandId;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
-	
-	private List<Game> games = new ArrayList<>();
+
+	private Game game;
+	private int index;
 
 	public ClientCommandLoadAutomaticPlayerMarkings() {
 		super();
 	}
 
-	public ClientCommandLoadAutomaticPlayerMarkings(List<Game> games) {
-		this.games = games;
+	public ClientCommandLoadAutomaticPlayerMarkings(int index, Game game) {
+		this.game = game;
+		this.index = index;
 	}
 
 	@Override
@@ -30,16 +28,19 @@ public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 		return NetCommandId.CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS;
 	}
 
-	public List<Game> getGames() {
-		return games;
+	public Game getGame() {
+		return game;
+	}
+
+	public int getIndex() {
+		return index;
 	}
 
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonValue = super.toJsonValue();
-		JsonArray jsonGames = new JsonArray();
-		games.stream().map(Game::toJsonValue).forEach(jsonGames::add);
-		IJsonOption.GAMES.addTo(jsonValue, jsonGames);
+		IJsonOption.SELECTED_INDEX.addTo(jsonValue, index);
+		IJsonOption.GAME.addTo(jsonValue, game.toJsonValue());
 		return jsonValue;
 	}
 
@@ -47,13 +48,10 @@ public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 	public ClientCommand initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		JsonArray jsonGames = IJsonOption.GAMES.getFrom(source, jsonObject);
-		jsonGames.values().stream().map(json -> {
-			Game game = new Game(source.forContext(FactoryType.FactoryContext.APPLICATION), source.getFactoryManager());
-			game.initFrom(source, json);
-			return game;
-		}).forEach(games::add);
-
+		JsonObject json = IJsonOption.GAME.getFrom(source, jsonObject);
+		game = new Game(source.forContext(FactoryType.FactoryContext.APPLICATION), source.getFactoryManager());
+		game.initFrom(source, json);
+		index = IJsonOption.SELECTED_INDEX.getFrom(source, jsonObject);
 		return this;
 	}
 }

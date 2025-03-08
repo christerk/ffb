@@ -11,9 +11,7 @@ import com.fumbbl.ffb.server.net.commands.InternalServerCommandCalculateAutomati
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ServerCommandHandlerCalculateAutomaticPlayerMarkings extends ServerCommandHandler {
 
@@ -31,15 +29,15 @@ public class ServerCommandHandlerCalculateAutomaticPlayerMarkings extends Server
 	@Override
 	public boolean handleCommand(ReceivedCommand receivedCommand) {
 		InternalServerCommandCalculateAutomaticPlayerMarkings commandCalculateAutomaticPlayerMarkings = (InternalServerCommandCalculateAutomaticPlayerMarkings) receivedCommand.getCommand();
-		List<Game> games = commandCalculateAutomaticPlayerMarkings.getGames();
+		Game game = commandCalculateAutomaticPlayerMarkings.getGame();
 		AutoMarkingConfig config = commandCalculateAutomaticPlayerMarkings.getAutoMarkingConfig();
 
 		if (config.getMarkings().isEmpty()) {
-			config.getMarkings().addAll(AutoMarkingConfig.defaults(games.get(0).getRules().getSkillFactory()));
+			config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
 		}
 
-		List<Map<String, String>> markings = games.stream().map(game -> handleGame(game, config)).collect(Collectors.toList());
-		getServer().getCommunication().sendMarkings(receivedCommand.getSession(), markings);
+		getServer().getCommunication().sendMarkings(receivedCommand.getSession(), commandCalculateAutomaticPlayerMarkings.getIndex(), handleGame(game, config));
+
 		return true;
 	}
 

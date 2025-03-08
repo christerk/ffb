@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
@@ -90,9 +92,11 @@ public class ReplayLogicModule extends LogicModule {
 					replayerInitialized = true;
 					callbacks.loadDone();
 					// signal server that we've received the full replay and the session can be
-					// closed
+					// closed, only if we are not waiting for auto marking responses
 					if (ClientMode.REPLAY == client.getMode()) {
-						client.getCommunication().sendCloseSession();
+						if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+							client.getCommunication().sendCloseSession();
+						}
 					}
 					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
 					callbacks.startReplayerInit();
@@ -124,7 +128,11 @@ public class ReplayLogicModule extends LogicModule {
 				}
 				break;
 			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
-				client.getReplayer().setMarkingConfigs(((ServerCommandAutomaticPlayerMarkings) pNetCommand).getMarkings());
+				ServerCommandAutomaticPlayerMarkings playerMarkings = (ServerCommandAutomaticPlayerMarkings) pNetCommand;
+				boolean complete = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
+				if (complete) {
+					client.getCommunication().sendCloseSession();
+				}
 				break;
 			default:
 				break;

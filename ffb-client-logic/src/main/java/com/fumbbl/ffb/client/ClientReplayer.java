@@ -337,6 +337,8 @@ public class ClientReplayer implements ActionListener {
 		List<Game> gameVersions = new ArrayList<>();
 		if (pMode == ClientCommandHandlerMode.INITIALIZING) {
 			gameVersions.add(cloneGame(applicationSource, factoryManager));
+			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
+
 		}
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
@@ -356,6 +358,8 @@ public class ClientReplayer implements ActionListener {
 					if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
 						if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
 							gameVersions.add(cloneGame(applicationSource, factoryManager));
+							int index = gameVersions.size() - 1;
+							getClient().getCommunication().sendLoadPlayerMarkings(index, gameVersions.get(index));
 						}
 					}
 				} else if (!markings.isEmpty()) {
@@ -365,9 +369,6 @@ public class ClientReplayer implements ActionListener {
 			if (pProgressListener != null) {
 				pProgressListener.updateProgress((i - start));
 			}
-		}
-		if (pMode == ClientCommandHandlerMode.INITIALIZING) {
-			getClient().getCommunication().sendLoadPlayerMarkings(gameVersions);
 		}
 		fLastReplayPosition = pReplayPosition;
 		if ((serverCommand != null) && (pMode == ClientCommandHandlerMode.REPLAYING)) {
@@ -548,11 +549,13 @@ public class ClientReplayer implements ActionListener {
 		return fFirstCommandNr;
 	}
 
-	public void setMarkingConfigs(List<Map<String, String>> markings) {
-		for (int i = 0; i < markingAffectingCommands.size(); i++) {
-			this.markings.put(markingAffectingCommands.get(i), markings.get(i));
+	public boolean addMarkingConfigs(int index, Map<String, String> markings) {
+		this.markings.put(markingAffectingCommands.get(index), markings);
+		if (markingAffectingCommands.size() == this.markings.size()) {
+			applyMarkings(fLastReplayPosition);
+			return true;
 		}
-		applyMarkings(fLastReplayPosition);
+		return false;
 	}
 
 	private synchronized void applyMarkings(int commandNr) {

@@ -4,7 +4,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandLoadAutomaticPlayerMarkings;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadMultiplePlayerMarkings;
+import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkingsForGameVersion;
 
 public class ServerCommandHandlerLoadAutomaticPlayerMarkings extends ServerCommandHandler {
 
@@ -20,7 +20,7 @@ public class ServerCommandHandlerLoadAutomaticPlayerMarkings extends ServerComma
 	@Override
 	public boolean handleCommand(ReceivedCommand receivedCommand) {
 		ClientCommandLoadAutomaticPlayerMarkings clientCommandLoadAutomaticPlayerMarkings = (ClientCommandLoadAutomaticPlayerMarkings) receivedCommand.getCommand();
-		getServer().getRequestProcessor().add(new FumbblRequestLoadMultiplePlayerMarkings(clientCommandLoadAutomaticPlayerMarkings.getGames(), receivedCommand.getSession()));
+		getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkingsForGameVersion(clientCommandLoadAutomaticPlayerMarkings.getGame(), clientCommandLoadAutomaticPlayerMarkings.getIndex(), receivedCommand.getSession()));
 		return true;
 	}
 }

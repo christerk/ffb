@@ -489,8 +489,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		send(session, new ServerCommandUpdateLocalPlayerMarkers(markers), true);
 	}
 
-	public void sendMarkings(Session session, List<Map<String, String>> markings) {
-		send(session, new ServerCommandAutomaticPlayerMarkings(markings), true);
+	public void sendMarkings(Session session, int index, Map<String, String> markings) {
+		send(session, new ServerCommandAutomaticPlayerMarkings(index, markings), true);
 	}
 
 	public int getQueueLength() {
