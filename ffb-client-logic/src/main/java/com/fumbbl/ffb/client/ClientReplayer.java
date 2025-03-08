@@ -1,6 +1,15 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.SendToBoxReason;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.ui.LogComponent;
@@ -11,6 +20,7 @@ import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
@@ -22,11 +32,16 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -36,7 +51,7 @@ public class ClientReplayer implements ActionListener {
 
 	private final FantasyFootballClient fClient;
 
-	private static final int[] _TIMER_SETTINGS = { 800, 400, 200, 100, 50, 25, 10 };
+	private static final int[] _TIMER_SETTINGS = {800, 400, 200, 100, 50, 25, 10};
 
 	private int fFirstCommandNr;
 
@@ -200,7 +215,7 @@ public class ClientReplayer implements ActionListener {
 
 	private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
 		if ((NetCommandId.SERVER_MODEL_SYNC == pServerCommand.getId())
-				&& (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
+			&& (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
 			return getClient().getUserInterface().getLog().hasCommandHighlight(pServerCommand.getCommandNr());
 		}
 		return false;
@@ -220,7 +235,7 @@ public class ClientReplayer implements ActionListener {
 				if (unseenCommand != null) {
 					if (unseenCommand.getId() == NetCommandId.SERVER_TALK) {
 						ClientCommandHandler commandHandler = getClient().getCommandHandlerFactory()
-								.getCommandHandler(NetCommandId.SERVER_TALK);
+							.getCommandHandler(NetCommandId.SERVER_TALK);
 						commandHandler.handleNetCommand(unseenCommand, ClientCommandHandlerMode.INITIALIZING);
 					} else {
 						synchronized (fReplayList) {
@@ -317,7 +332,9 @@ public class ClientReplayer implements ActionListener {
 		IFactorySource applicationSource = getClient().getGame().getApplicationSource().forContext(FactoryType.FactoryContext.APPLICATION);
 		FactoryManager factoryManager = getClient().getGame().getApplicationSource().getFactoryManager();
 		List<Game> gameVersions = new ArrayList<>();
-		gameVersions.add(cloneGame(applicationSource, factoryManager));
+		if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+			gameVersions.add(cloneGame(applicationSource, factoryManager));
+		}
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
 			if (serverCommand != null) {
@@ -411,6 +428,9 @@ public class ClientReplayer implements ActionListener {
 		GameResult oldGameResult = oldGame.getGameResult();
 		addTeam(game, oldGame.getTeamHome(), oldGameResult.getTeamResultHome(), true);
 		addTeam(game, oldGame.getTeamAway(), oldGameResult.getTeamResultAway(), false);
+		IFactorySource factorySource = oldGame.getRules().forContext(FactoryType.FactoryContext.GAME);
+		game.getTurnDataHome().getInducementSet().initFrom(factorySource, new InducementSet().toJsonValue());
+		game.getTurnDataAway().getInducementSet().initFrom(factorySource, new InducementSet().toJsonValue());
 		game.initializeRules();
 		return game;
 	}
@@ -513,7 +533,7 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void setMarkingConfigs(List<Map<String, String>> markings) {
-		for (int i = 0; i<markingAffectingCommands.size(); i++) {
+		for (int i = 0; i < markingAffectingCommands.size(); i++) {
 			this.markings.put(markingAffectingCommands.get(i), markings.get(i));
 		}
 		applyMarkings(fLastReplayPosition);
@@ -543,7 +563,7 @@ public class ClientReplayer implements ActionListener {
 
 	private int findMarkingAffectingCommand(int commandNr) {
 		int relevantCommand = 0;
-		for (int mac: this.markingAffectingCommands) {
+		for (int mac : this.markingAffectingCommands) {
 			if (mac < commandNr) {
 				relevantCommand = mac;
 			} else {
@@ -552,4 +572,5 @@ public class ClientReplayer implements ActionListener {
 		}
 		return relevantCommand;
 	}
+
 }

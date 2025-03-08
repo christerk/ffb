@@ -83,14 +83,22 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 
 	public Inducement get(InducementType pType) {
 		if (pType != null) {
-			return fInducements.get(pType);
+			return new Inducement(fInducements.get(pType));
 		} else {
 			return null;
 		}
 	}
 
 	public Map<InducementType, Inducement> getInducementMapping() {
-		return fInducements;
+		return copyMap();
+	}
+
+	private Map<InducementType, Inducement> copyMap() {
+		Map<InducementType, Inducement> copy = new HashMap<>();
+		for (Map.Entry<InducementType, Inducement> entry: fInducements.entrySet()) {
+			copy.put(entry.getKey(), new Inducement(entry.getValue()));
+		}
+		return copy;
 	}
 
 	public Set<InducementType> getInducementTypes() {
@@ -98,7 +106,7 @@ public class InducementSet implements IXmlSerializable, IJsonSerializable {
 	}
 
 	public Inducement[] getInducements() {
-		return fInducements.values().toArray(new Inducement[0]);
+		return copyMap().values().toArray(new Inducement[0]);
 	}
 
 	public void addInducement(Inducement pInducement) {
