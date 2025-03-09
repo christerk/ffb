@@ -37,6 +37,7 @@ public abstract class AbstractFumbblRequestLoadPlayerMarkings extends ServerRequ
 		} catch (Throwable e) {
 			server.getDebugLog().log(id, e);
 		}
+		sessionManager.addAutoMarking(session, config);
 		return config;
 	}
 }

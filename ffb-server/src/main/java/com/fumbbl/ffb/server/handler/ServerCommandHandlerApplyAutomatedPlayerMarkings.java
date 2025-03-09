@@ -45,7 +45,6 @@ public class ServerCommandHandlerApplyAutomatedPlayerMarkings extends ServerComm
 				config.getMarkings().addAll(AutoMarkingConfig.defaults(game.getRules().getSkillFactory()));
 			}
 
-			sessionManager.addAutoMarking(session, config);
 			if (sessionManager.getModeForSession(session) == ClientMode.PLAYER) {
 				markForPlayer(gameState, sessionManager, game, config, session);
 			} else if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR || sessionManager.getModeForSession(session) == ClientMode.REPLAY) {
