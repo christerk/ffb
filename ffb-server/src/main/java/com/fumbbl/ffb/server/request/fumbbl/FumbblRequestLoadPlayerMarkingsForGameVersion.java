@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.request.fumbbl;
 
 import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandCalculateAutomaticPlayerMarkings;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
@@ -20,10 +21,15 @@ public class FumbblRequestLoadPlayerMarkingsForGameVersion extends AbstractFumbb
 
 	@Override
 	public void process(ServerRequestProcessor processor) {
+		FantasyFootballServer server = processor.getServer();
 
-		AutoMarkingConfig config = loadAutomarkingConfig(processor.getServer(), game.getId(), game.getRules());
+		AutoMarkingConfig config = server.getSessionManager().getAutoMarking(session);
 
-		processor.getServer().getCommunication().handleCommand(
+		if (config == null) {
+			config = loadAutomarkingConfig(server, game.getId(), game.getRules());
+		}
+
+		server.getCommunication().handleCommand(
 			new ReceivedCommand(
 				new InternalServerCommandCalculateAutomaticPlayerMarkings(config, index, game), session));
 	}
