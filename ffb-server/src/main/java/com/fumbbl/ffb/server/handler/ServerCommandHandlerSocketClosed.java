@@ -6,7 +6,10 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.ReplayCache;
+import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.ReplaySessionManager;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -30,6 +33,14 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 	}
 
 	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		if (getServer().getReplaySessionManager().has(pReceivedCommand.getSession())) {
+			return closeReplaySession(pReceivedCommand);
+		} else {
+			return closeGameSession(pReceivedCommand);
+		}
+	}
+
+	public boolean closeGameSession(ReceivedCommand pReceivedCommand) {
 
 		SessionManager sessionManager = getServer().getSessionManager();
 		String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
@@ -74,6 +85,41 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 				if (!hideLeaveCommand) {
 					getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
 				}
+			} else {
+				getServer().getGameCache().closeGame(gameState.getId());
+			}
+
+		}
+
+		return true;
+
+	}
+
+	public boolean closeReplaySession(ReceivedCommand pReceivedCommand) {
+
+		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+		String coach = sessionManager.coach(pReceivedCommand.getSession());
+		String replayName = sessionManager.replayNameForSession(pReceivedCommand.getSession());
+		sessionManager.removeSession(pReceivedCommand.getSession());
+
+		Session[] sessions = sessionManager.sessionsForReplay(replayName);
+
+		ReplayCache replayCache = getServer().getGameCache();
+		ReplayState gameState = replayCache.getGameStateById(replayName);
+		if (gameState != null) {
+
+			List<String> spectators = new ArrayList<>();
+			for (Session session : sessions) {
+				if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
+					if (!sessionManager.isSessionAdmin(session)) {
+						spectators.add(sessionManager.getCoachForSession(session));
+					}
+				}
+			}
+
+
+			if (ArrayTool.isProvided(sessions)) {
+					getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
 			} else {
 				getServer().getGameCache().closeGame(gameState.getId());
 			}

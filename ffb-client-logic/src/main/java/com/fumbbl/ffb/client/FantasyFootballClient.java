@@ -221,7 +221,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		}
 
 		String pingIntervalProperty = getProperty(CommonProperty.CLIENT_PING_INTERVAL);
-		if (StringTool.isProvided(pingIntervalProperty) && (ClientMode.REPLAY != getMode())) {
+		if (StringTool.isProvided(pingIntervalProperty)) {
 			int pingInterval = Integer.parseInt(pingIntervalProperty);
 			ClientPingTask fClientPingTask = new ClientPingTask(this);
 			fPingTimer.schedule(fClientPingTask, 0, pingInterval);

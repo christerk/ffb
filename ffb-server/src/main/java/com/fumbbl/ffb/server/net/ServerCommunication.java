@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.net;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
@@ -48,6 +49,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.handler.IReceivedCommandHandler;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandSocketClosed;
@@ -132,21 +134,40 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		try {
 			getServer().getCommandHandlerFactory().handleCommand(command);
 		} catch (Exception any) {
-			GameState gameState = null;
-
-			// fetch the game state if available
-			try {
-				long gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
-				gameState = getServer().getGameCache().getGameStateById(gameId);
-			} catch (Exception ignored) {
-			}
-
-			getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, any);
-
-			// Attempt to shut down the game.
-			shutdownGame(gameState);
+			shutdown(command, any);
 		}
 
+		handleByState(command);
+
+	}
+
+	private void handleByState(ReceivedCommand command) {
+		if(getServer().getReplaySessionManager().has(command.getSession())) {
+			handleByReplayState(command);
+		} else {
+			handleByGameState(command);
+		}
+	}
+
+	private void handleByReplayState(ReceivedCommand command) {
+		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
+			String replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
+			ReplayState replayState = getServer().getReplayCache().replayStateById(replayName);
+			if (replayState != null) {
+				try {
+						getServer().getReplaySessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
+						replayState.handleCommand(command);
+
+				} catch (Exception any) {
+					getServer().getDebugLog().logWithOutGameId(new FantasyFootballException("Shutting down replay " + replayName, any));
+					shutdownReplay(replayState);
+				}
+			}
+		}
+	}
+
+
+	private void handleByGameState(ReceivedCommand command) {
 		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
 			long gameId;
 			if (command.isInternalCommand()) {
@@ -169,7 +190,40 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 				}
 			}
 		}
+	}
 
+	private void shutdown(ReceivedCommand command, Exception any) {
+
+		if (getServer().getReplaySessionManager().has(command.getSession())) {
+
+			ReplayState replayState = null;
+			String replayName = null;
+			try {
+				replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
+				replayState = getServer().getReplayCache().replayState(replayName);
+			} catch (Exception ignored) {
+			}
+
+			getServer().getDebugLog().logWithOutGameId(new FantasyFootballException("Shutting down replay " + replayName, any));
+
+			shutdownReplay(replayState);
+
+
+		} else {
+			GameState gameState = null;
+
+			// fetch the game state if available
+			try {
+				long gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
+				gameState = getServer().getGameCache().getGameStateById(gameId);
+			} catch (Exception ignored) {
+			}
+
+			getServer().getDebugLog().log((gameState != null) ? gameState.getId() : -1, any);
+
+			// Attempt to shut down the game.
+			shutdownGame(gameState);
+		}
 	}
 
 	private void shutdownGame(GameState gameState) {
@@ -190,6 +244,31 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// Disconnect clients
 		try {
 			for (Session session : getServer().getSessionManager().getSessionsForGameId(gameState.getId())) {
+				getServer().getCommunication().close(session);
+			}
+		} catch (Exception ignored) {
+		}
+
+	}
+
+	private void shutdownReplay(ReplayState replayState) {
+
+		// Sanity checking
+		if (replayState == null) {
+			return;
+		}
+
+		// Send out an error message
+		try {
+			ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(
+				new String[] { "This replay session has entered an invalid state and is shutting down." });
+			send(getServer().getReplaySessionManager().sessionsForReplay(replayState.getName()), messageCommand, false);
+		} catch (Exception ignored) {
+		}
+
+		// Disconnect clients
+		try {
+			for (Session session : getServer().getReplaySessionManager().sessionsForReplay(replayState.getName())) {
 				getServer().getCommunication().close(session);
 			}
 		} catch (Exception ignored) {
