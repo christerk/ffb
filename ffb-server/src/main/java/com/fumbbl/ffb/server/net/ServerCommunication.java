@@ -152,14 +152,14 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	private void handleByReplayState(ReceivedCommand command) {
 		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
 			String replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
-			ReplayState replayState = getServer().getReplayCache().replayStateById(replayName);
+			ReplayState replayState = getServer().getReplayCache().replayState(replayName);
 			if (replayState != null) {
 				try {
 						getServer().getReplaySessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
 						replayState.handleCommand(command);
 
 				} catch (Exception any) {
-					getServer().getDebugLog().logWithOutGameId(new FantasyFootballException("Shutting down replay " + replayName, any));
+					getServer().getDebugLog().logReplay(replayState.getName(), new FantasyFootballException("Shutting down replay " + replayName, any));
 					shutdownReplay(replayState);
 				}
 			}
@@ -196,15 +196,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 		if (getServer().getReplaySessionManager().has(command.getSession())) {
 
-			ReplayState replayState = null;
-			String replayName = null;
-			try {
-				replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
-				replayState = getServer().getReplayCache().replayState(replayName);
-			} catch (Exception ignored) {
-			}
+			String replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
+			ReplayState replayState = getServer().getReplayCache().replayState(replayName);
 
-			getServer().getDebugLog().logWithOutGameId(new FantasyFootballException("Shutting down replay " + replayName, any));
+			getServer().getDebugLog().logReplay(replayName, new FantasyFootballException("Shutting down replay " + replayName, any));
 
 			shutdownReplay(replayState);
 

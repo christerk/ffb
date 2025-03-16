@@ -1,8 +1,7 @@
 package com.fumbbl.ffb.server;
 
-import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.GameStatus;
-import com.fumbbl.ffb.server.net.SessionManager;
+import com.fumbbl.ffb.server.net.ReplaySessionManager;
+import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.HashMap;
@@ -21,39 +20,61 @@ public class ReplayCache {
 		return statesByName.get(name);
 	}
 
-	public synchronized void add(String name, ReplayState replayState) {
+	public synchronized void add(ReplayState replayState) {
+		String name = replayState.getName();
 		ReplayState previousState = statesByName.putIfAbsent(name, replayState);
 
 		StringBuilder log = new StringBuilder();
 
 		if (server.getDebugLog().isLogging(IServerLogLevel.WARN)) {
-		if (previousState == null) {
-			log.append("ADD REPLAY ");
-			log.append(name);
-			log.append(" cache increases to ").append(statesByName.size()).append(" replays.");
-		} else {
-			log.append("REPLAY ");
-			log.append(name);
-			log.append(" ALREADY EXISTS");
-		}
+			if (previousState == null) {
+				log.append("ADD REPLAY ");
+				log.append(name);
+				log.append(" cache increases to ").append(statesByName.size()).append(" replays.");
+			} else {
+				log.append("REPLAY ");
+				log.append(name);
+				log.append(" ALREADY EXISTS");
+			}
 
-			server.getDebugLog().log(IServerLogLevel.WARN, 0, log.toString());
+			server.getDebugLog().logReplay(IServerLogLevel.WARN, name, log.toString());
 		}
 		// remove dead games from cache if there are no connections to the session
-		SessionManager sessionManager = getServer().getSessionManager();
-		Long[] gameIds = fGameStateById.keySet().toArray(new Long[0]);
-		for (Long gameId : gameIds) {
-			GameStatus status = fGameStateById.get(gameId).getStatus();
-			if ((gameId == null) || (gameId == gameState.getId()) || (status == GameStatus.LOADING)) {
+		ReplaySessionManager sessionManager = server.getReplaySessionManager();
+
+		for (String replayName : statesByName.keySet()) {
+			if ((replayName == null) || (replayName.equals(name))) {
 				continue;
 			}
-			Session[] sessions = sessionManager.getSessionsForGameId(gameId);
-			if ((sessions.length == 0)
-				|| ((sessions.length == 1) && ((ClientMode.SPECTATOR == sessionManager.getModeForSession(sessions[0]))
-				|| (status == GameStatus.BACKUPED)))) {
-				closeGame(gameId);
+			Session[] sessions = sessionManager.sessionsForReplay(replayName);
+			if ((sessions.length == 0)) {
+				closeReplay(replayName);
 			}
 		}
+	}
 
+	public void closeReplay(String replayName) {
+		if (!StringTool.isProvided(replayName)) {
+			return;
+		}
+		ReplayState replayState = replayState(replayName);
+		if (replayState != null) {
+			ReplaySessionManager sessionManager = server.getReplaySessionManager();
+			Session[] sessions = sessionManager.sessionsForReplay(replayName);
+			for (Session session : sessions) {
+				server.getCommunication().close(session);
+			}
+			removeReplay(replayName);
+		}
+	}
+
+
+	private void removeReplay(String replayName) {
+		ReplayState cachedState = statesByName.remove(replayName);
+		if (cachedState != null) {
+			// log game 	cache size
+			server.getDebugLog().logReplay(IServerLogLevel.WARN, replayName,
+				StringTool.bind("REMOVE REPLAY cache decreases to $1 games.", statesByName.size()));
+		}
 	}
 }

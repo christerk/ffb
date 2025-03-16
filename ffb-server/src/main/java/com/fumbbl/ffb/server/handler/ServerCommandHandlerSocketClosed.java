@@ -104,24 +104,19 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 
 		Session[] sessions = sessionManager.sessionsForReplay(replayName);
 
-		ReplayCache replayCache = getServer().getGameCache();
-		ReplayState gameState = replayCache.getGameStateById(replayName);
-		if (gameState != null) {
+		ReplayCache replayCache = getServer().getReplayCache();
+		ReplayState state = replayCache.replayState(replayName);
+		if (state != null) {
 
-			List<String> spectators = new ArrayList<>();
+			List<String> joinedCoaches = new ArrayList<>();
 			for (Session session : sessions) {
-				if (sessionManager.getModeForSession(session) == ClientMode.SPECTATOR) {
-					if (!sessionManager.isSessionAdmin(session)) {
-						spectators.add(sessionManager.getCoachForSession(session));
-					}
-				}
+				joinedCoaches.add(sessionManager.coach(session));
 			}
 
-
 			if (ArrayTool.isProvided(sessions)) {
-					getServer().getCommunication().sendLeave(sessions, coach, mode, spectators);
+					getServer().getCommunication().sendLeave(sessions, coach, ClientMode.REPLAY, joinedCoaches);
 			} else {
-				getServer().getGameCache().closeGame(gameState.getId());
+				getServer().getReplayCache().closeReplay(replayName);
 			}
 
 		}
