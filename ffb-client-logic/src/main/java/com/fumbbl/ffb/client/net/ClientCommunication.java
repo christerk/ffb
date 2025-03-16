@@ -497,6 +497,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game));
 	}
 
+	public void sendReplayState(int commandNr, int speed, boolean running, boolean forward) {
+		send(new ClientCommandReplayStatus(commandNr, speed, running, forward));
+	}
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}

@@ -592,4 +592,7 @@ public class ClientReplayer implements ActionListener {
 		return relevantCommand;
 	}
 
+	private void sendReplayStatus() {
+		fClient.getCommunication().sendReplayState(fLastReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward);
+	}
 }

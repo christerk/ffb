@@ -187,6 +187,7 @@ public interface IJsonOption {
 	JsonDateOption FINISHED = new JsonDateOption("finished");
 	JsonBooleanOption FIRST_RUN = new JsonBooleanOption("firstRun");
 	JsonBooleanOption FIRST_TURN_AFTER_KICKOFF = new JsonBooleanOption("firstTurnAfterKickoff");
+	JsonBooleanOption FORWARD = new JsonBooleanOption("forward");
 	JsonBooleanOption FOUL_USED = new JsonBooleanOption("foulUsed");
 	JsonBooleanOption FOULING_PLAYER_BANNED = new JsonBooleanOption("foulingPlayerBanned");
 	JsonIntOption FOULS = new JsonIntOption("fouls");
@@ -245,7 +246,6 @@ public interface IJsonOption {
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);
 	JsonEnumWithNameOption INJURY_TYPE_SERVER = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE_SERVER);
-
 	JsonIntOption INTERCEPTIONS = new JsonIntOption("interceptions");
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
@@ -429,6 +429,7 @@ public interface IJsonOption {
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
 	JsonIntOption RIP_SUFFERED = new JsonIntOption("ripSuffered");
+	JsonBooleanOption RUNNING = new JsonBooleanOption("running");
 	JsonIntOption ROLL = new JsonIntOption("roll");
 	JsonStringOption ROLL_COUNT = new JsonStringOption("rollCount");
 	JsonIntOption ROLL_SCATTER_DIRECTION = new JsonIntOption("rollScatterDirection");
@@ -491,7 +492,6 @@ public interface IJsonOption {
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SOUND_ALTERNATIVE = new JsonEnumWithNameOption("soundAlternative", Factory.SOUND_ID);
-
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
 	JsonStringArrayOption SPECTATOR_NAMES = new JsonStringArrayOption("spectatorNames");
@@ -500,6 +500,7 @@ public interface IJsonOption {
 	JsonIntOption SPECTATORS = new JsonIntOption("spectators");
 	JsonIntOption SPECTATORS_AWAY = new JsonIntOption("spectatorsAway");
 	JsonIntOption SPECTATORS_HOME = new JsonIntOption("spectatorsHome");
+	JsonIntOption SPEED = new JsonIntOption("speed");
 	JsonIntOption SPIRALLING_EXPENSES = new JsonIntOption("spirallingExpenses");
 	JsonStringArrayOption STAFF_POSITION_IDS = new JsonStringArrayOption("staffPositionIds");
 	JsonBooleanOption STANDING_UP = new JsonBooleanOption("standingUp");
