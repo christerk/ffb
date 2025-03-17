@@ -1,12 +1,16 @@
 package com.fumbbl.ffb.server.net;
 
 import com.fumbbl.ffb.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -74,6 +78,16 @@ public class ReplaySessionManager {
 		}
 
 		return replayClient.sharedReplayName;
+	}
+
+	public synchronized Set<Session> otherSessions(Session session) {
+		String replayName = replayNameForSession(session);
+
+		if (!StringTool.isProvided(replayName)) {
+			return Collections.emptySet();
+		}
+
+		return Arrays.stream(sessionsForReplay(replayName)).filter(other -> other != session).collect(Collectors.toSet());
 	}
 
 	public synchronized boolean has(Session session) {

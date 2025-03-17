@@ -11,16 +11,12 @@ import com.fumbbl.ffb.net.NetCommandId;
  * 
  * @author Kalimar
  */
-public class ClientCommandReplayStatus extends ClientCommand {
+public class ServerCommandReplayStatus extends ServerCommand {
 
 	private int commandNr, speed;
 	private boolean running, forward;
 
-	public ClientCommandReplayStatus() {
-		super();
-	}
-
-	public ClientCommandReplayStatus(int commandNr, int speed, boolean running, boolean forward) {
+	public ServerCommandReplayStatus(int commandNr, int speed, boolean running, boolean forward) {
 		this.commandNr = commandNr;
 		this.speed = speed;
 		this.running = running;
@@ -28,7 +24,7 @@ public class ClientCommandReplayStatus extends ClientCommand {
 	}
 
 	public NetCommandId getId() {
-		return NetCommandId.CLIENT_REPLAY_STATUS;
+		return NetCommandId.SERVER_REPLAY_STATUS;
 	}
 
 	public int getCommandNr() {
@@ -50,7 +46,8 @@ public class ClientCommandReplayStatus extends ClientCommand {
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.COMMAND_NR.addTo(jsonObject, commandNr);
 		IJsonOption.RUNNING.addTo(jsonObject, running);
 		IJsonOption.FORWARD.addTo(jsonObject, forward);
@@ -58,9 +55,9 @@ public class ClientCommandReplayStatus extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandReplayStatus initFrom(IFactorySource source, JsonValue jsonValue) {
-		super.initFrom(source, jsonValue);
+	public ServerCommandReplayStatus initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		forward = IJsonOption.FORWARD.getFrom(source, jsonObject);
 		running =IJsonOption.RUNNING.getFrom(source, jsonObject);
 		commandNr = IJsonOption.COMMAND_NR.getFrom(source, jsonObject);

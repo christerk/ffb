@@ -31,6 +31,7 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
@@ -69,6 +70,7 @@ public class ClientReplayer implements ActionListener {
 	private int fUnseenPosition;
 	private boolean fSkipping;
 	private int activeMarkingCommand = -1;
+	private boolean settingDataFromCommand;
 
 	private final Timer fTimer;
 
@@ -151,6 +153,7 @@ public class ClientReplayer implements ActionListener {
 		fReplaySpeed = pReplaySpeed;
 		fTimer.setDelay(_TIMER_SETTINGS[fReplaySpeed]);
 		fTimer.setInitialDelay(_TIMER_SETTINGS[fReplaySpeed]);
+		sendReplayStatus();
 	}
 
 	public int getReplaySpeed() {
@@ -293,12 +296,14 @@ public class ClientReplayer implements ActionListener {
 	public void pause() {
 		if (isRunning()) {
 			fTimer.stop();
+			sendReplayStatus();
 		}
 	}
 
 	public void resume() {
 		if (!isRunning()) {
 			fTimer.start();
+			sendReplayStatus();
 		}
 	}
 
@@ -339,6 +344,9 @@ public class ClientReplayer implements ActionListener {
 			gameVersions.add(cloneGame(applicationSource, factoryManager));
 			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
 
+		}
+		if (pMode == ClientCommandHandlerMode.REPLAYING) {
+			sendReplayStatus(pReplayPosition);
 		}
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
@@ -593,6 +601,25 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus() {
-		fClient.getCommunication().sendReplayState(fLastReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward);
+		sendReplayStatus(fLastReplayPosition);
+	}
+
+	private void sendReplayStatus(int commandNr) {
+		if (!settingDataFromCommand) {
+			fClient.getCommunication().sendReplayState(commandNr, fReplaySpeed, isRunning(), fReplayDirectionForward);
+		}
+	}
+
+	public synchronized void handleCommand(ServerCommandReplayStatus command) {
+		settingDataFromCommand = true;
+		if (command.isRunning()) {
+			fTimer.start();
+		} else {
+			fTimer.stop();
+		}
+		fReplayDirectionForward = command.isForward();
+		fReplaySpeed = command.getSpeed();
+		replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
+		settingDataFromCommand = false;
 	}
 }

@@ -17,6 +17,7 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -133,6 +134,10 @@ public class ReplayLogicModule extends LogicModule {
 				if (complete) {
 					client.getCommunication().sendCloseSession();
 				}
+				break;
+			case SERVER_REPLAY_STATUS:
+				ServerCommandReplayStatus serverCommandReplayStatus = (ServerCommandReplayStatus) pNetCommand;
+				replayer.handleCommand(serverCommandReplayStatus);
 				break;
 			default:
 				break;
