@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Automarking: Include injuries suffered during the current game")
 			.addBugfix("Blitz & Gaze vs Foul Appearance: Canceling the action after triggering Foul Appearance did not mark the player as used")
 			.addBugfix("Furious Outburst: Stabbing the ball carrier successfully did not cause the ball to bounce")
+			.addBugfix("Arm Bar: Modifier was not applied for jumps failing with a natural 1")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")
