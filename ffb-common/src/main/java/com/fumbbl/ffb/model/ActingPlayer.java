@@ -49,6 +49,7 @@ public class ActingPlayer implements IJsonSerializable {
   private boolean heldInPlace;
   private boolean mustCompleteAction;
   private boolean fellFromRush;
+  private boolean hasTriggeredEffect;
   private PlayerState oldPlayerState;
   private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
@@ -90,6 +91,7 @@ public class ActingPlayer implements IJsonSerializable {
     heldInPlace = false;
     mustCompleteAction = false;
     fellFromRush = false;
+    hasTriggeredEffect = false;
     Player<?> player = getGame().getPlayerById(getPlayerId());
     setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
     skillsGrantedBy.clear();
@@ -328,6 +330,14 @@ public class ActingPlayer implements IJsonSerializable {
     notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_MOVED, fHasMoved);
   }
 
+  public void setHasTriggeredEffect(boolean hasTriggeredEffect) {
+    if (this.hasTriggeredEffect == hasTriggeredEffect) {
+      return;
+    }
+    this.hasTriggeredEffect = hasTriggeredEffect;
+    notifyObservers(ModelChangeId.ACTING_PLAYER_SET_HAS_TRIGGERED_EFFECT, hasTriggeredEffect);
+  }
+
   public boolean isJumping() {
     return jumping;
   }
@@ -432,7 +442,7 @@ public class ActingPlayer implements IJsonSerializable {
   }
 
   public boolean hasActed() {
-    return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || !fUsedSkills.isEmpty());
+    return (hasMoved() || hasFouled() || hasBlocked() || hasPassed() || hasTriggeredEffect || !fUsedSkills.isEmpty());
   }
 
   public boolean hasActedIgnoringNegativeTraits() {
@@ -510,6 +520,7 @@ public class ActingPlayer implements IJsonSerializable {
     IJsonOption.HELD_IN_PLACE.addTo(jsonObject, heldInPlace);
     IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
     IJsonOption.FELL_FROM_RUSH.addTo(jsonObject, fellFromRush);
+    IJsonOption.HAS_TRIGGERED_EFFECT.addTo(jsonObject, hasTriggeredEffect);
     return jsonObject;
   }
 
@@ -552,6 +563,9 @@ public class ActingPlayer implements IJsonSerializable {
     }
     if (IJsonOption.FELL_FROM_RUSH.isDefinedIn(jsonObject)) {
       fellFromRush = IJsonOption.FELL_FROM_RUSH.getFrom(source, jsonObject);
+    }
+    if (IJsonOption.HAS_TRIGGERED_EFFECT.isDefinedIn(jsonObject)) {
+      hasTriggeredEffect = IJsonOption.HAS_TRIGGERED_EFFECT.getFrom(source, jsonObject);
     }
     return this;
   }

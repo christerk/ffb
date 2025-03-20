@@ -205,6 +205,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 					case ACTING_PLAYER_SET_HAS_FED:
 					case ACTING_PLAYER_SET_HAS_FOULED:
 					case ACTING_PLAYER_SET_HAS_MOVED:
+					case ACTING_PLAYER_SET_HAS_TRIGGERED_EFFECT:
 					case ACTING_PLAYER_SET_HAS_PASSED:
 					case ACTING_PLAYER_SET_JUMPING:
 					case ACTING_PLAYER_SET_PLAYER_ACTION:

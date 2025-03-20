@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Replay: Show correct automarking during replay")
 			.addBugfix("Replay: Show inducement icons correctly during replay")
 			.addBugfix("Automarking: Include injuries suffered during the current game")
+			.addBugfix("Blitz & Gaze vs Foul Appearance: Canceling the action after triggering Foul Appearance did not mark the player as used")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")
