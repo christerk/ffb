@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Blitz & Gaze vs Foul Appearance: Canceling the action after triggering Foul Appearance did not mark the player as used")
 			.addBugfix("Furious Outburst: Stabbing the ball carrier successfully did not cause the ball to bounce")
 			.addBugfix("Arm Bar: Modifier was not applied for jumps failing with a natural 1")
+			.addBugfix("\"Then I Started Blastin'!\": Knocking yourself down after selecting a blitz or gaze target caused the game to be stuck")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")
