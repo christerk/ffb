@@ -3,12 +3,16 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IProgressListener;
+import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
@@ -26,7 +30,7 @@ import java.util.*;
 /**
  * @author Kalimar
  */
-public class ReplayLogicModule extends LogicModule {
+public class ReplayLogicModule extends LogicModule implements IDialogCloseListener {
 
 	private List<ServerCommand> fReplayList;
 	private Set<Integer> markingAffectingCommands;
@@ -76,6 +80,7 @@ public class ReplayLogicModule extends LogicModule {
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
+		boolean loadingDone = false;
 		ClientReplayer replayer = client.getReplayer();
 		switch (pNetCommand.getId()) {
 			case SERVER_USER_SETTINGS:
@@ -96,7 +101,7 @@ public class ReplayLogicModule extends LogicModule {
 					// closed, only if we are not waiting for auto marking responses
 					if (ClientMode.REPLAY == client.getMode()) {
 						if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-							client.getCommunication().sendCloseSession();
+							loadingDone = true;
 						}
 					}
 					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
@@ -130,10 +135,7 @@ public class ReplayLogicModule extends LogicModule {
 				break;
 			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
 				ServerCommandAutomaticPlayerMarkings playerMarkings = (ServerCommandAutomaticPlayerMarkings) pNetCommand;
-				boolean complete = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
-				if (complete) {
-					client.getCommunication().sendCloseSession();
-				}
+				loadingDone = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
 				break;
 			case SERVER_REPLAY_STATUS:
 				ServerCommandReplayStatus serverCommandReplayStatus = (ServerCommandReplayStatus) pNetCommand;
@@ -141,6 +143,18 @@ public class ReplayLogicModule extends LogicModule {
 				break;
 			default:
 				break;
+		}
+		if (loadingDone) {
+			new DialogReplayModeChoice(client).showDialog(this);
+		}
+	}
+
+	private void replayMode(boolean online, String name) {
+		if (online && StringTool.isProvided(name)) {
+			String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
+			// TODO create replay state
+		} else {
+			client.getCommunication().sendCloseSession();
 		}
 	}
 
@@ -161,6 +175,14 @@ public class ReplayLogicModule extends LogicModule {
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
 		throw new UnsupportedOperationException("actionContext for acting player is not supported in replay context");
+	}
+
+	@Override
+	public void dialogClosed(IDialog dialog) {
+		if (dialog instanceof DialogReplayModeChoice) {
+			DialogReplayModeChoice replayModeChoice = (DialogReplayModeChoice) dialog;
+			replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
+		}
 	}
 
 	/**

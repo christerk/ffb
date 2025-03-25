@@ -6,7 +6,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 
 public class ClientPingTask extends TimerTask {
 
-	private FantasyFootballClient fClient;
+	private final FantasyFootballClient fClient;
 
 	public ClientPingTask(FantasyFootballClient pClient) {
 		fClient = pClient;
