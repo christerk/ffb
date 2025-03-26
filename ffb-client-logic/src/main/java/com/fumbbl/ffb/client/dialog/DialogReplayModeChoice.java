@@ -9,13 +9,16 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
-public class DialogReplayModeChoice extends Dialog implements ActionListener  {
+public class DialogReplayModeChoice extends Dialog implements ActionListener, KeyListener {
 
-	private final JRadioButton offlineButton = new JRadioButton(dimensionProvider(), "Offline");
+	private final JRadioButton offlineButton = new JRadioButton(dimensionProvider(), "Offline (Legacy Behavior)");
 	private final JRadioButton onlineButton = new JRadioButton(dimensionProvider(), "Online");
 	private final JTextField nameField = new JTextField(dimensionProvider(), Constant.REPLAY_NAME_MAX_LENGTH);
 	private final JButton okButton = new JButton(dimensionProvider(), "OK");
@@ -27,27 +30,39 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener  {
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(offlineButton);
-		group.add(offlineButton);
-		mainPanel.add(offlineButton);
+		group.add(onlineButton);
+
+		JPanel offlinePanel = new JPanel();
+		offlinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		offlinePanel.add(offlineButton);
 
 		JPanel onlinePanel = new JPanel();
-		onlinePanel.setLayout(new BoxLayout(onlinePanel, BoxLayout.X_AXIS));
+		onlinePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		onlinePanel.add(onlineButton);
 		onlinePanel.add(Box.createHorizontalStrut(5));
 		onlinePanel.add(nameField);
 
-		mainPanel.add(onlinePanel);
+		nameField.addKeyListener(this);
 
-		mainPanel.add(okButton);
+		mainPanel.add(offlinePanel);
+		mainPanel.add(onlinePanel);
+		mainPanel.add(Box.createVerticalStrut(5));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		buttonPanel.add(okButton);
+		mainPanel.add(buttonPanel);
 
 		okButton.addActionListener(this);
 		offlineButton.addActionListener(this);
 		onlineButton.addActionListener(this);
 
-		update();
+		offlineButton.setSelected(true);
+
+		this.getContentPane().add(mainPanel);
 
 		pack();
 		setLocationToCenter();
@@ -68,23 +83,39 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener  {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == okButton) {
+			replayName = nameField.getText().trim();
+			this.getCloseListener().dialogClosed(this);
+			return;
+		}
+
 		if (e.getSource() == onlineButton) {
 			online = true;
-			update();
 		}
 		if (e.getSource() == offlineButton) {
 			online = false;
-			update();
 		}
-		if (e.getSource() == okButton) {
-			replayName = nameField.getText();
-			this.getCloseListener().dialogClosed(this);
-		}
+		updateButton();
 	}
 
-	private void update() {
-		offlineButton.setSelected(!online);
-		onlineButton.setSelected(online);
-		okButton.setEnabled(StringTool.isProvided(nameField.getText()) || !online);
+	private void updateButton() {
+		okButton.setEnabled(StringTool.isProvided(replayName) || !online);
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		replayName = nameField.getText().trim();
+		updateButton();
 	}
 }
