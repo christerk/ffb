@@ -501,6 +501,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandReplayStatus(commandNr, speed, running, forward));
 	}
 
+	public void sendJoinReplay(String replayName) {
+		send(new ClientCommandJoinReplay(replayName));
+	}
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}

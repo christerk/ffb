@@ -150,9 +150,9 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 	}
 
 	private void replayMode(boolean online, String name) {
-		if (online && StringTool.isProvided(name)) {
-			String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
-			// TODO create replay state
+		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
+		if (online && StringTool.isProvided(sanitizedName)) {
+			client.getCommunication().sendJoinReplay(sanitizedName);
 		} else {
 			client.getCommunication().sendCloseSession();
 		}
