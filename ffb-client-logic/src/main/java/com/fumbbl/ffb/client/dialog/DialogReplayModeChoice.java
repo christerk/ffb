@@ -9,14 +9,19 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-public class DialogReplayModeChoice extends Dialog implements ActionListener, KeyListener {
+public class DialogReplayModeChoice extends Dialog implements ActionListener, KeyListener, FocusListener {
 
 	private final JRadioButton offlineButton = new JRadioButton(dimensionProvider(), "Offline (Legacy Behavior)");
 	private final JRadioButton onlineButton = new JRadioButton(dimensionProvider(), "Online");
@@ -47,6 +52,7 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 		onlinePanel.add(nameField);
 
 		nameField.addKeyListener(this);
+		nameField.setDocument(new FixedLengthDocument(Constant.REPLAY_NAME_MAX_LENGTH));
 
 		mainPanel.add(offlinePanel);
 		mainPanel.add(onlinePanel);
@@ -60,7 +66,11 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 		offlineButton.addActionListener(this);
 		onlineButton.addActionListener(this);
 
+		offlineButton.addFocusListener(this);
+		onlineButton.addFocusListener(this);
+
 		offlineButton.setSelected(true);
+		updateElements();
 
 		this.getContentPane().add(mainPanel);
 
@@ -95,17 +105,19 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 		if (e.getSource() == offlineButton) {
 			online = false;
 		}
-		updateButton();
+		updateElements();
 	}
 
-	private void updateButton() {
+	private void updateElements() {
+		nameField.setEnabled(online);
 		okButton.setEnabled(StringTool.isProvided(replayName) || !online);
 	}
 
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-
+		replayName = nameField.getText().trim();
+		updateElements();
 	}
 
 	@Override
@@ -115,7 +127,37 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		replayName = nameField.getText().trim();
-		updateButton();
+
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (e.getSource() == offlineButton) {
+			online = false;
+		}
+		if (e.getSource() == onlineButton) {
+			online = true;
+		}
+		updateElements();
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+
+	}
+
+	private static class FixedLengthDocument extends PlainDocument {
+		private final int maxLength;
+
+		public FixedLengthDocument(int maxLength) {
+			this.maxLength = maxLength;
+		}
+
+		public void insertString(int offset, String str, AttributeSet a)
+			throws BadLocationException {
+			if (str != null && str.length() + getLength() <= maxLength) {
+				super.insertString(offset, str, a);
+			}
+		}
 	}
 }
