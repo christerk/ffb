@@ -71,6 +71,7 @@ public class ClientReplayer implements ActionListener {
 	private boolean fSkipping;
 	private int activeMarkingCommand = -1;
 	private boolean settingDataFromCommand;
+	private ClientCommandHandlerMode lastMode;
 
 	private final Timer fTimer;
 
@@ -308,6 +309,7 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void replayTo(int pReplayPosition, ClientCommandHandlerMode pMode, IProgressListener pProgressListener) {
+		lastMode = pMode;
 		int start = 0;
 		if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
 			start = fLastReplayPosition;
@@ -605,7 +607,7 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus(int commandNr) {
-		if (!settingDataFromCommand) {
+		if (!settingDataFromCommand && lastMode == ClientCommandHandlerMode.REPLAYING ) {
 			fClient.getCommunication().sendReplayState(commandNr, fReplaySpeed, isRunning(), fReplayDirectionForward);
 		}
 	}

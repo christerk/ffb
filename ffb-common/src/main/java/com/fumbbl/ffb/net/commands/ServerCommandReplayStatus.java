@@ -16,6 +16,9 @@ public class ServerCommandReplayStatus extends ServerCommand {
 	private int commandNr, speed;
 	private boolean running, forward;
 
+	public ServerCommandReplayStatus() {
+	}
+
 	public ServerCommandReplayStatus(int commandNr, int speed, boolean running, boolean forward) {
 		this.commandNr = commandNr;
 		this.speed = speed;

@@ -4,13 +4,12 @@ import com.fumbbl.ffb.net.commands.ClientCommandReplayStatus;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 
 public class ReplayState {
-	private String name;
+	private final String name;
 	private int commandNr, speed;
 	private boolean running, forward;
 
-
-	public String getName() {
-		return name;
+	public ReplayState(String name) {
+		this.name = name;
 	}
 
 	public void handleCommand(ReceivedCommand command) {
@@ -20,11 +19,15 @@ public class ReplayState {
 				this.commandNr = statusCommand.getCommandNr();
 				this.speed = statusCommand.getSpeed();
 				this.running = statusCommand.isRunning();
-				this.running = statusCommand.isForward();
+				this.forward = statusCommand.isForward();
 				break;
 			default:
 				break;
 		}
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public int getCommandNr() {

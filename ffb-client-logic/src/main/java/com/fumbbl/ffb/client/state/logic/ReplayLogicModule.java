@@ -144,7 +144,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 			default:
 				break;
 		}
-		if (loadingDone) {
+		if (loadingDone && ClientMode.REPLAY == client.getMode()) {
 			new DialogReplayModeChoice(client).showDialog(this);
 		}
 	}
@@ -152,7 +152,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 	private void replayMode(boolean online, String name) {
 		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
 		if (online && StringTool.isProvided(sanitizedName)) {
-			client.getCommunication().sendJoinReplay(sanitizedName);
+			client.getCommunication().sendJoinReplay(sanitizedName, client.getParameters().getCoach());
 		} else {
 			client.getCommunication().sendCloseSession();
 		}
@@ -182,6 +182,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		if (dialog instanceof DialogReplayModeChoice) {
 			DialogReplayModeChoice replayModeChoice = (DialogReplayModeChoice) dialog;
 			replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
+			dialog.hideDialog();
 		}
 	}
 

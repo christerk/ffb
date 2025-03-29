@@ -278,6 +278,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandReplayStatus();
 			case CLIENT_JOIN_REPLAY:
 				return new ClientCommandJoinReplay();
+			case SERVER_REPLAY_STATUS:
+				return new ServerCommandReplayStatus();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

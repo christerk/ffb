@@ -116,8 +116,7 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		replayName = nameField.getText().trim();
-		updateElements();
+
 	}
 
 	@Override
@@ -127,7 +126,8 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		replayName = nameField.getText().trim();
+		updateElements();
 	}
 
 	@Override

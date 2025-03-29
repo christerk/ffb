@@ -9,29 +9,35 @@ import com.fumbbl.ffb.net.NetCommandId;
 
 public class ClientCommandJoinReplay extends ClientCommand {
 
-	private String replayName;
+	private String replayName, coach;
 
 	public ClientCommandJoinReplay() {
 		super();
 	}
 
-	public ClientCommandJoinReplay(String replayName) {
+	public ClientCommandJoinReplay(String replayName, String coach) {
 		this.replayName = replayName;
+		this.coach = coach;
 	}
 
 	public NetCommandId getId() {
-		return NetCommandId.CLIENT_REPLAY_STATUS;
+		return NetCommandId.CLIENT_JOIN_REPLAY;
 	}
 
 	public String getReplayName() {
 		return replayName;
 	}
 
-// JSON serialization
+	public String getCoach() {
+		return coach;
+	}
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IJsonOption.NAME.addTo(jsonObject, replayName);
+		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
 	}
 
@@ -39,6 +45,7 @@ public class ClientCommandJoinReplay extends ClientCommand {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		replayName = IJsonOption.NAME.getFrom(source, jsonObject);
+		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 }
