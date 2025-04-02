@@ -25,6 +25,7 @@ public class ChangeList {
 			.addBugfix("Arm Bar: Modifier was not applied for jumps failing with a natural 1")
 			.addBugfix("\"Then I Started Blastin'!\": Knocking yourself down after selecting a blitz or gaze target caused the game to be stuck")
 			.addBugfix("\"Then I Started Blastin'!\": Action was not available when selecting foul action")
+			.addBugfix("Furious Outburst: Could be used when prone")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")
