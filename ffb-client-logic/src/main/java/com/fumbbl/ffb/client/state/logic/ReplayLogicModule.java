@@ -21,6 +21,7 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
@@ -141,6 +142,10 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				ServerCommandReplayStatus serverCommandReplayStatus = (ServerCommandReplayStatus) pNetCommand;
 				replayer.handleCommand(serverCommandReplayStatus);
 				break;
+			case SERVER_REPLAY_CONTROL:
+				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
+				replayer.setControl(commandReplayControl.isControl());
+				callbacks.controlChanged(commandReplayControl.isControl());
 			default:
 				break;
 		}
@@ -236,5 +241,12 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 * Called if the replay was not found on server side, connection will be closed
 		 */
 		void replayUnavailable(ServerStatus status);
+
+		/**
+		 * Called when the control state of the client changes
+		 *
+		 * @param hasControl true if this client has control of the replay session, if false the front end should disable replay controls
+		 */
+		void controlChanged(boolean hasControl);
 	}
 }

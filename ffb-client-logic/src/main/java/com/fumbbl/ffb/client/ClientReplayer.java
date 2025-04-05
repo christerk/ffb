@@ -61,7 +61,7 @@ public class ClientReplayer implements ActionListener {
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
 	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr, timerCounter;
-	private boolean fReplayDirectionForward, fStopping, fSkipping, settingDataFromCommand;
+	private boolean fReplayDirectionForward, fStopping, fSkipping, control;
 	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
 
@@ -599,13 +599,12 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus(int commandNr) {
-		if (!settingDataFromCommand && lastMode == ClientCommandHandlerMode.REPLAYING ) {
+		if (control && lastMode == ClientCommandHandlerMode.REPLAYING ) {
 			fClient.getCommunication().sendReplayState(commandNr, fReplaySpeed, isRunning(), fReplayDirectionForward);
 		}
 	}
 
 	public synchronized void handleCommand(ServerCommandReplayStatus command) {
-		settingDataFromCommand = true;
 		if (command.isRunning()) {
 			fTimer.start();
 		} else {
@@ -614,6 +613,9 @@ public class ClientReplayer implements ActionListener {
 		fReplayDirectionForward = command.isForward();
 		fReplaySpeed = command.getSpeed();
 		replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
-		settingDataFromCommand = false;
+	}
+
+	public void setControl(boolean control) {
+		this.control = control;
 	}
 }

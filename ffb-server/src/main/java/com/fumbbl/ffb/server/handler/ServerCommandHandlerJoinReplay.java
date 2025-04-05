@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandJoinReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandJoin;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ReplayCache;
@@ -53,6 +54,7 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 			if (replayState == null) {
 				replayState = new ReplayState(replayName);
 				replayCache.add(replayState);
+				getServer().getCommunication().send(receivedCommand.getSession(), new ServerCommandReplayControl(true), true);
 			} else {
 				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward());
 				getServer().getCommunication().send(receivedCommand.getSession(), command, true);

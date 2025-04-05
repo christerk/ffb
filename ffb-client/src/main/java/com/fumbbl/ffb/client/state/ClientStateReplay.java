@@ -77,6 +77,10 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		return actionHandled;
 	}
 
+	public void setControl(boolean hasControl) {
+		// TODO - Handle UI effects
+	}
+
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {
 
 		private final ClientStateReplay clientStateReplay;
@@ -124,6 +128,11 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		@Override
 		public void replayUnavailable(ServerStatus status) {
 			clientStateReplay.getClient().getUserInterface().getStatusReport().reportStatus(status);
+		}
+
+		@Override
+		public void controlChanged(boolean hasControl) {
+			clientStateReplay.setControl(hasControl);
 		}
 	}
 }

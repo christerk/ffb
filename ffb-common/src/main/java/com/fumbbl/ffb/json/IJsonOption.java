@@ -131,6 +131,7 @@ public interface IJsonOption {
 	JsonBooleanOption CONFIRM = new JsonBooleanOption("confirm");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
 	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
+	JsonBooleanOption CONTROL = new JsonBooleanOption("control");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
 	JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
 	JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");
