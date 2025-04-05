@@ -74,7 +74,7 @@ public class ReplayCache {
 		if (cachedState != null) {
 			// log game 	cache size
 			server.getDebugLog().logReplay(IServerLogLevel.WARN, replayName,
-				StringTool.bind("REMOVE REPLAY cache decreases to $1 games.", statesByName.size()));
+				StringTool.bind("REMOVE REPLAY $1 cache decreases to $2 games.", replayName, statesByName.size()));
 		}
 	}
 }
