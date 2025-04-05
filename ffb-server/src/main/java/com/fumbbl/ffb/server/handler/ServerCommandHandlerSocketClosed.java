@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
@@ -108,13 +108,12 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 		ReplayState state = replayCache.replayState(replayName);
 		if (state != null) {
 
-			List<String> joinedCoaches = new ArrayList<>();
-			for (Session session : sessions) {
-				joinedCoaches.add(sessionManager.coach(session));
-			}
-
 			if (ArrayTool.isProvided(sessions)) {
-					getServer().getCommunication().sendLeave(sessions, coach, ClientMode.REPLAY, joinedCoaches);
+				List<String> joinedCoaches = new ArrayList<>();
+				for (Session session : sessions) {
+					joinedCoaches.add(sessionManager.coach(session));
+				}
+				getServer().getCommunication().sendLeave(sessions, coach, ClientMode.REPLAY, joinedCoaches);
 			} else {
 				getServer().getReplayCache().closeReplay(replayName);
 			}

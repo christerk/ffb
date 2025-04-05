@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server;
 
 import com.fumbbl.ffb.server.net.ReplaySessionManager;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -47,7 +48,7 @@ public class ReplayCache {
 				continue;
 			}
 			Session[] sessions = sessionManager.sessionsForReplay(replayName);
-			if ((sessions.length == 0)) {
+			if (!ArrayTool.isProvided(sessions)) {
 				closeReplay(replayName);
 			}
 		}
@@ -59,15 +60,9 @@ public class ReplayCache {
 		}
 		ReplayState replayState = replayState(replayName);
 		if (replayState != null) {
-			ReplaySessionManager sessionManager = server.getReplaySessionManager();
-			Session[] sessions = sessionManager.sessionsForReplay(replayName);
-			for (Session session : sessions) {
-				server.getCommunication().close(session);
-			}
 			removeReplay(replayName);
 		}
 	}
-
 
 	private void removeReplay(String replayName) {
 		ReplayState cachedState = statesByName.remove(replayName);

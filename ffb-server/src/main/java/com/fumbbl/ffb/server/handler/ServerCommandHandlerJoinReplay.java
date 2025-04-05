@@ -10,6 +10,7 @@ import com.fumbbl.ffb.server.ReplayCache;
 import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ReplaySessionManager;
+import com.fumbbl.ffb.util.ArrayTool;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -41,10 +42,12 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 
 			Session[] sessions = sessionManager.sessionsForReplay(replayName);
 
-			String[] coaches = Arrays.stream(sessions).map(sessionManager::coach).toArray(String[]::new);
+			if (ArrayTool.isProvided(sessions)) {
+				String[] coaches = Arrays.stream(sessions).map(sessionManager::coach).toArray(String[]::new);
 
-			Arrays.stream(sessions).forEach(session -> getServer().getCommunication()
-				.send(session, new ServerCommandJoin(coach, ClientMode.REPLAY, coaches, new ArrayList<>()), true));
+				Arrays.stream(sessions).forEach(session -> getServer().getCommunication()
+					.send(session, new ServerCommandJoin(coach, ClientMode.REPLAY, coaches, new ArrayList<>()), true));
+			}
 
 			ReplayState replayState = replayCache.replayState(replayName);
 			if (replayState == null) {

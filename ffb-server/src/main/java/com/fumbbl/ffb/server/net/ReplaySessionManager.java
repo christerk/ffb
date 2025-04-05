@@ -61,7 +61,7 @@ public class ReplaySessionManager {
 	}
 
 	public synchronized Session[] sessionsForReplay(String replayName) {
-		return sessionsForReplay.get(replayName).toArray(new Session[0]);
+		return sessionsForReplay.containsKey(replayName) ? sessionsForReplay.get(replayName).toArray(new Session[0]) : null;
 	}
 
 	public synchronized String coach(Session session) {
