@@ -121,7 +121,11 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 			return;
 		}
 
-		getServer().getDebugLog().logClientCommand(IServerLogLevel.DEBUG, command);
+		if(getServer().getReplaySessionManager().has(command.getSession())) {
+			getServer().getDebugLog().logReplayCommand(IServerLogLevel.DEBUG, command);
+		} else {
+			getServer().getDebugLog().logClientCommand(IServerLogLevel.DEBUG, command);
+		}
 
 		// fetch entropy payload
 		if (command.isClientCommand()) {
