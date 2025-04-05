@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.ReplaySessionManager;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -141,6 +142,18 @@ public class DebugLog {
       }
     }
     logInternal(gameId, commandFlag, pReceivedCommand.getCommand().toJsonValue().toString());
+  }
+
+  public void logReplayCommand(int pLogLevel, ReceivedCommand pReceivedCommand) {
+    if (!isLogging(pLogLevel) || (pReceivedCommand == null) || (pReceivedCommand.getId() == null)
+      || (pReceivedCommand.getId() == NetCommandId.CLIENT_PING)) {
+      return;
+    }
+
+    Session session = pReceivedCommand.getSession();
+    ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+
+    logInternal(null, sessionManager.replayNameForSession(session), null, pReceivedCommand.getCommand().toJsonValue().toString());
   }
 
   public void logServerCommand(int pLogLevel, long pGameId, NetCommand pNetCommand, String pCommandFlag) {
