@@ -53,26 +53,16 @@ import java.util.Set;
  */
 public class ClientReplayer implements ActionListener {
 
-	private final FantasyFootballClient fClient;
-
 	private static final int[] _TIMER_SETTINGS = {800, 400, 200, 100, 50, 25, 10};
 
-	private int fFirstCommandNr;
-
+	private final FantasyFootballClient fClient;
 	private final List<ServerCommand> fReplayList;
 	private final List<ServerCommand> fUnseenList;
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
-	private int fLastReplayPosition;
-	private int fReplaySpeed;
-	private boolean fReplayDirectionForward;
-	private boolean fStopping;
-	private int fUnseenPosition;
-	private boolean fSkipping;
-	private int activeMarkingCommand = -1;
-	private boolean settingDataFromCommand;
+	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr, timerCounter;
+	private boolean fReplayDirectionForward, fStopping, fSkipping, settingDataFromCommand;
 	private ClientCommandHandlerMode lastMode;
-
 	private final Timer fTimer;
 
 	public ClientReplayer(FantasyFootballClient pClient) {
@@ -218,6 +208,7 @@ public class ClientReplayer implements ActionListener {
 		if (running) {
 			resume();
 		}
+		sendReplayStatus();
 	}
 
 	private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
@@ -273,6 +264,9 @@ public class ClientReplayer implements ActionListener {
 				pause();
 				getReplayControl().showPause();
 			}
+		}
+		if (++timerCounter %5 == 0) {
+			sendReplayStatus();
 		}
 	}
 
@@ -347,9 +341,6 @@ public class ClientReplayer implements ActionListener {
 			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
 
 		}
-		if (pMode == ClientCommandHandlerMode.REPLAYING) {
-			sendReplayStatus(pReplayPosition);
-		}
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
 			if (serverCommand != null) {
@@ -407,6 +398,7 @@ public class ClientReplayer implements ActionListener {
 			fSkipping = true;
 			replayTo(position + 1, ClientCommandHandlerMode.REPLAYING, null);
 			fSkipping = false;
+			sendReplayStatus();
 		}
 	}
 
