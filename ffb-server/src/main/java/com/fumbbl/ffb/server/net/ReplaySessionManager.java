@@ -29,12 +29,13 @@ public class ReplaySessionManager {
 		autoMarkingBySession = new HashMap<>();
 	}
 
-	public synchronized void addSession(Session pSession, String name, String pCoach) {
+	public synchronized void addSession(Session session, String name, String pCoach) {
 		ReplayClient client = new ReplayClient(name, pCoach);
-		replayClientForSession.put(pSession, client);
+		replayClientForSession.put(session, client);
 		Set<Session> sessions = sessionsForReplay.computeIfAbsent(name, k -> new HashSet<>());
-		sessions.add(pSession);
-		lastPingBySession.put(pSession, System.currentTimeMillis());
+		client.setControl(sessions.isEmpty());
+		sessions.add(session);
+		lastPingBySession.put(session, System.currentTimeMillis());
 	}
 
 	public synchronized void removeSession(Session session) {
@@ -117,13 +118,27 @@ public class ReplaySessionManager {
 		}
 	}
 
+	public boolean hasControl(Session session) {
+		ReplayClient client = replayClientForSession.get(session);
+		return client != null && client.hasControl();
+	}
+
 	private static class ReplayClient {
 		private final String sharedReplayName;
 		private final String coach;
+		private boolean control;
 
 		public ReplayClient(String sharedReplayName, String coach) {
 			this.sharedReplayName = sharedReplayName;
 			this.coach = coach;
+		}
+
+		public boolean hasControl() {
+			return control;
+		}
+
+		public void setControl(boolean control) {
+			this.control = control;
 		}
 	}
 

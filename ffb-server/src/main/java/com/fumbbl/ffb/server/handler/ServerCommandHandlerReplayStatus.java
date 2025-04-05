@@ -24,9 +24,10 @@ public class ServerCommandHandlerReplayStatus extends ServerCommandHandler {
 		ClientCommandReplayStatus clientCommandReplayStatus = (ClientCommandReplayStatus) receivedCommand.getCommand();
 		ServerCommandReplayStatus serverCommandReplayStatus = new ServerCommandReplayStatus(clientCommandReplayStatus.getCommandNr(), clientCommandReplayStatus.getSpeed(), clientCommandReplayStatus.isRunning(), clientCommandReplayStatus.isForward());
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
-		sessionManager.otherSessions(receivedCommand.getSession())
-			.forEach(session -> getServer().getCommunication().send(session, serverCommandReplayStatus, true));
-
+		if (sessionManager.hasControl(receivedCommand.getSession())) {
+			sessionManager.otherSessions(receivedCommand.getSession())
+				.forEach(session -> getServer().getCommunication().send(session, serverCommandReplayStatus, true));
+		}
 		return true;
 	}
 
