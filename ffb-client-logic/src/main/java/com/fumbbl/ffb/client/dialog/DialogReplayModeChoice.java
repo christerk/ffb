@@ -110,6 +110,9 @@ public class DialogReplayModeChoice extends Dialog implements ActionListener, Ke
 
 	private void updateElements() {
 		nameField.setEnabled(online);
+		if (online) {
+			nameField.requestFocus();
+		}
 		okButton.setEnabled(StringTool.isProvided(replayName) || !online);
 	}
 

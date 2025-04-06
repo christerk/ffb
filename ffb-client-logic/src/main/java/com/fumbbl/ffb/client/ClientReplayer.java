@@ -61,7 +61,7 @@ public class ClientReplayer implements ActionListener {
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
 	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr, timerCounter;
-	private boolean fReplayDirectionForward, fStopping, fSkipping, control;
+	private boolean fReplayDirectionForward, fStopping, fSkipping, control, online;
 	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
 
@@ -289,14 +289,14 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void pause() {
-		if (isRunning()) {
+		if (control && isRunning()) {
 			fTimer.stop();
 			sendReplayStatus();
 		}
 	}
 
 	public void resume() {
-		if (!isRunning()) {
+		if (control && !isRunning()) {
 			fTimer.start();
 			sendReplayStatus();
 		}
@@ -599,7 +599,7 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus(int commandNr) {
-		if (control && lastMode == ClientCommandHandlerMode.REPLAYING ) {
+		if (control && online && lastMode == ClientCommandHandlerMode.REPLAYING ) {
 			fClient.getCommunication().sendReplayState(commandNr, fReplaySpeed, isRunning(), fReplayDirectionForward);
 		}
 	}
@@ -617,5 +617,9 @@ public class ClientReplayer implements ActionListener {
 
 	public void setControl(boolean control) {
 		this.control = control;
+	}
+
+	public void setOnline(boolean online) {
+		this.online = online;
 	}
 }
