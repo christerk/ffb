@@ -36,8 +36,7 @@ public class DialogApothecaryChoice extends Dialog implements ActionListener {
 
 		JPanel panelInfo1 = new JPanel();
 		panelInfo1.setLayout(new BoxLayout(panelInfo1, BoxLayout.X_AXIS));
-		panelInfo1.add(new JLabel(dimensionProvider(), "The apothecary gives you a choice."));
-		panelInfo1.add(new JLabel(dimensionProvider(), "Injury for " + playerName));
+		panelInfo1.add(new JLabel(dimensionProvider(), "The apothecary gives you a choice for the injury of " + playerName + "."));
 		panelInfo1.add(Box.createHorizontalGlue());
 
 		panelMain.add(panelInfo1);

@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("\"Then I Started Blastin'!\": Action was not available when selecting foul action")
 			.addBugfix("Furious Outburst: Could be used when prone")
 			.addBugfix("Deactivating a prone player again after selecting jump caused the player to stand up and use up their activation")
+			.addBugfix("Apo Dialog: Punctuation issue, reworded text to improve grammar")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")
