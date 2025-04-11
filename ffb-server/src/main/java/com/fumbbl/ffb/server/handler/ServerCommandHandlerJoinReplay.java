@@ -56,7 +56,7 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 				replayCache.add(replayState);
 				getServer().getCommunication().send(receivedCommand.getSession(), new ServerCommandReplayControl(true), true);
 			} else {
-				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward());
+				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward(), true);
 				getServer().getCommunication().send(receivedCommand.getSession(), command, true);
 			}
 		}

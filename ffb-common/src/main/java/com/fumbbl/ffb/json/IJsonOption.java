@@ -488,6 +488,7 @@ public interface IJsonOption {
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
 	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
+	JsonBooleanOption SKIP = new JsonBooleanOption("skip");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");

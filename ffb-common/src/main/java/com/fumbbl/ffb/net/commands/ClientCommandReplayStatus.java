@@ -14,17 +14,18 @@ import com.fumbbl.ffb.net.NetCommandId;
 public class ClientCommandReplayStatus extends ClientCommand {
 
 	private int commandNr, speed;
-	private boolean running, forward;
+	private boolean running, forward, skip;
 
 	public ClientCommandReplayStatus() {
 		super();
 	}
 
-	public ClientCommandReplayStatus(int commandNr, int speed, boolean running, boolean forward) {
+	public ClientCommandReplayStatus(int commandNr, int speed, boolean running, boolean forward, boolean skip) {
 		this.commandNr = commandNr;
 		this.speed = speed;
 		this.running = running;
 		this.forward = forward;
+		this.skip = skip;
 	}
 
 	public NetCommandId getId() {
@@ -47,7 +48,10 @@ public class ClientCommandReplayStatus extends ClientCommand {
 		return forward;
 	}
 
-	// JSON serialization
+	public boolean isSkip() {
+		return skip;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -55,6 +59,7 @@ public class ClientCommandReplayStatus extends ClientCommand {
 		IJsonOption.RUNNING.addTo(jsonObject, running);
 		IJsonOption.FORWARD.addTo(jsonObject, forward);
 		IJsonOption.SPEED.addTo(jsonObject, speed);
+		IJsonOption.SKIP.addTo(jsonObject, skip);
 		return jsonObject;
 	}
 
@@ -65,6 +70,7 @@ public class ClientCommandReplayStatus extends ClientCommand {
 		running =IJsonOption.RUNNING.getFrom(source, jsonObject);
 		commandNr = IJsonOption.COMMAND_NR.getFrom(source, jsonObject);
 		speed = IJsonOption.SPEED.getFrom(source, jsonObject);
+		skip = IJsonOption.SKIP.getFrom(source, jsonObject);
 		return this;
 	}
 }

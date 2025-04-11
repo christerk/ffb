@@ -497,8 +497,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game));
 	}
 
-	public void sendReplayState(int commandNr, int speed, boolean running, boolean forward) {
-		send(new ClientCommandReplayStatus(commandNr, speed, running, forward));
+	public void sendReplayState(int commandNr, int speed, boolean running, boolean forward, boolean skip) {
+		send(new ClientCommandReplayStatus(commandNr, speed, running, forward, skip));
 	}
 
 	public void sendJoinReplay(String replayName, String coach) {

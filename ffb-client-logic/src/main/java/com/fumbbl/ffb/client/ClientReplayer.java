@@ -60,7 +60,7 @@ public class ClientReplayer implements ActionListener {
 	private final List<ServerCommand> fUnseenList;
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
-	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr, timerCounter;
+	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr;
 	private boolean fReplayDirectionForward, fStopping, fSkipping, control, online;
 	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
@@ -208,7 +208,7 @@ public class ClientReplayer implements ActionListener {
 		if (running) {
 			resume();
 		}
-		sendReplayStatus();
+		sendReplayStatus(!running);
 	}
 
 	private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
@@ -265,9 +265,7 @@ public class ClientReplayer implements ActionListener {
 				getReplayControl().showPause();
 			}
 		}
-		if (++timerCounter %5 == 0) {
-			sendReplayStatus();
-		}
+		sendReplayStatus();
 	}
 
 	private int getReplaySize() {
@@ -595,24 +593,28 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus() {
-		sendReplayStatus(fLastReplayPosition);
+		sendReplayStatus(false);
 	}
 
-	private void sendReplayStatus(int commandNr) {
+	private void sendReplayStatus(boolean wasSkipping) {
 		if (control && online && lastMode == ClientCommandHandlerMode.REPLAYING ) {
-			fClient.getCommunication().sendReplayState(commandNr, fReplaySpeed, isRunning(), fReplayDirectionForward);
+			fClient.getCommunication().sendReplayState(fLastReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward, wasSkipping);
 		}
 	}
 
 	public synchronized void handleCommand(ServerCommandReplayStatus command) {
+		fTimer.stop();
+		fReplayDirectionForward = command.isForward();
+		setReplaySpeed(command.getSpeed());
+		int offset = command.isForward() ? 1 : -1 ;
+		fSkipping = command.isSkip();
+		replayTo(command.getCommandNr() + offset, ClientCommandHandlerMode.REPLAYING, null);
+		fSkipping = false;
 		if (command.isRunning()) {
 			fTimer.start();
 		} else {
 			fTimer.stop();
 		}
-		fReplayDirectionForward = command.isForward();
-		fReplaySpeed = command.getSpeed();
-		replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
 	}
 
 	public void setControl(boolean control) {
