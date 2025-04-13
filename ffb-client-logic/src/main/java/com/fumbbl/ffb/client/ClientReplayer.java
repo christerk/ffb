@@ -144,7 +144,6 @@ public class ClientReplayer implements ActionListener {
 		fReplaySpeed = pReplaySpeed;
 		fTimer.setDelay(_TIMER_SETTINGS[fReplaySpeed]);
 		fTimer.setInitialDelay(_TIMER_SETTINGS[fReplaySpeed]);
-		sendReplayStatus();
 	}
 
 	public int getReplaySpeed() {
@@ -208,7 +207,6 @@ public class ClientReplayer implements ActionListener {
 		if (running) {
 			resume();
 		}
-		sendReplayStatus(!running);
 	}
 
 	private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
@@ -265,7 +263,6 @@ public class ClientReplayer implements ActionListener {
 				getReplayControl().showPause();
 			}
 		}
-		sendReplayStatus();
 	}
 
 	private int getReplaySize() {
@@ -296,11 +293,11 @@ public class ClientReplayer implements ActionListener {
 	public void resume() {
 		if (control && !isRunning()) {
 			fTimer.start();
-			sendReplayStatus();
 		}
 	}
 
 	private void replayTo(int pReplayPosition, ClientCommandHandlerMode pMode, IProgressListener pProgressListener) {
+		sendReplayStatus(pReplayPosition);
 		lastMode = pMode;
 		int start = 0;
 		if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
@@ -396,7 +393,6 @@ public class ClientReplayer implements ActionListener {
 			fSkipping = true;
 			replayTo(position + 1, ClientCommandHandlerMode.REPLAYING, null);
 			fSkipping = false;
-			sendReplayStatus();
 		}
 	}
 
@@ -575,7 +571,6 @@ public class ClientReplayer implements ActionListener {
 					getClient().getGame().getFieldModel().addTransient(playerMarker);
 					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 				}
-				getClient().getUserInterface().refresh();
 			}
 		}
 	}
@@ -593,23 +588,35 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	private void sendReplayStatus() {
-		sendReplayStatus(false);
+		sendReplayStatus(fLastReplayPosition);
 	}
 
-	private void sendReplayStatus(boolean wasSkipping) {
-		if (control && online && lastMode == ClientCommandHandlerMode.REPLAYING ) {
-			fClient.getCommunication().sendReplayState(fLastReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward, wasSkipping);
+	private void sendReplayStatus(int pReplayPosition) {
+		if (control && online && lastMode == ClientCommandHandlerMode.REPLAYING) {
+			fClient.getCommunication().sendReplayState(pReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward, fSkipping);
 		}
 	}
 
 	public synchronized void handleCommand(ServerCommandReplayStatus command) {
 		fTimer.stop();
-		fReplayDirectionForward = command.isForward();
 		setReplaySpeed(command.getSpeed());
-		int offset = command.isForward() ? 1 : -1 ;
-		fSkipping = command.isSkip();
-		replayTo(command.getCommandNr() + offset, ClientCommandHandlerMode.REPLAYING, null);
-		fSkipping = false;
+		int offset = 0;
+		/*if (command.isRunning()) {
+			if (fReplayDirectionForward) {
+				offset = 1;
+				fLastReplayPosition = Math.min(fLastReplayPosition, command.getCommandNr() - 1);
+			} else {
+				offset = -1;
+				fLastReplayPosition = Math.max(fLastReplayPosition, command.getCommandNr() + 1);
+			}
+		}*/
+		if (fLastReplayPosition != command.getCommandNr()) {
+			fSkipping = true;
+			fReplayDirectionForward	= fLastReplayPosition < command.getCommandNr();
+			replayTo(command.getCommandNr() + offset, ClientCommandHandlerMode.REPLAYING, null);
+			fSkipping = false;
+		}
+		fReplayDirectionForward = command.isForward();
 		if (command.isRunning()) {
 			fTimer.start();
 		} else {
