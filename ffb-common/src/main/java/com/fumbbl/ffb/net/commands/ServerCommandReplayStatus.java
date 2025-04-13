@@ -50,7 +50,13 @@ public class ServerCommandReplayStatus extends ServerCommand {
 	public boolean isSkip() {
 		return skip;
 	}
-// JSON serialization
+
+	@Override
+	public boolean isReplayable() {
+		return false;
+	}
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();

@@ -30,7 +30,11 @@ public class ServerCommandReplayControl extends ServerCommand {
 		return control;
 	}
 
-	// JSON serialization
+	@Override
+	public boolean isReplayable() {
+		return false;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
