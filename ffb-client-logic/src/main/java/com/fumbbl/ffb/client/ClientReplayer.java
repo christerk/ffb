@@ -598,30 +598,23 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public synchronized void handleCommand(ServerCommandReplayStatus command) {
-		fTimer.stop();
-		setReplaySpeed(command.getSpeed());
-		int offset = 0;
-		/*if (command.isRunning()) {
-			if (fReplayDirectionForward) {
-				offset = 1;
-				fLastReplayPosition = Math.min(fLastReplayPosition, command.getCommandNr() - 1);
-			} else {
-				offset = -1;
-				fLastReplayPosition = Math.max(fLastReplayPosition, command.getCommandNr() + 1);
-			}
-		}*/
-		if (fLastReplayPosition != command.getCommandNr()) {
-			fSkipping = true;
-			fReplayDirectionForward	= fLastReplayPosition < command.getCommandNr();
-			replayTo(command.getCommandNr() + offset, ClientCommandHandlerMode.REPLAYING, null);
-			fSkipping = false;
-		}
-		fReplayDirectionForward = command.isForward();
-		if (command.isRunning()) {
-			fTimer.start();
-		} else {
-			fTimer.stop();
-		}
+			SwingUtilities.invokeLater(() -> {
+				fTimer.stop();
+				setReplaySpeed(command.getSpeed());
+				if (fLastReplayPosition != command.getCommandNr()) {
+					fSkipping = true;
+					fReplayDirectionForward = fLastReplayPosition < command.getCommandNr();
+					replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
+					fSkipping = false;
+				}
+				fReplayDirectionForward = command.isForward();
+				if (command.isRunning()) {
+					fTimer.start();
+				} else {
+					fTimer.stop();
+				}
+			});
+
 	}
 
 	public void setControl(boolean control) {
