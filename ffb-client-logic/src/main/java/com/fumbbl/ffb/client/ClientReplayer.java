@@ -151,61 +151,65 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void increaseReplaySpeed() {
-		if (fReplaySpeed < _TIMER_SETTINGS.length - 1) {
+		if (control && fReplaySpeed < _TIMER_SETTINGS.length - 1) {
 			setReplaySpeed(fReplaySpeed + 1);
 		}
 	}
 
 	public void decreaseReplaySpeed() {
-		if (fReplaySpeed > 0) {
+		if (control && fReplaySpeed > 0) {
 			setReplaySpeed(fReplaySpeed - 1);
 		}
 	}
 
 	public void play(boolean pDirectionForward) {
-		fReplayDirectionForward = pDirectionForward;
-		setReplaySpeed(1);
-		if (fLastReplayPosition < 0) {
-			if (fReplayDirectionForward) {
-				fLastReplayPosition = 0;
-			} else {
-				fLastReplayPosition = Math.max(getReplaySize(), 0);
+		if (control) {
+			fReplayDirectionForward = pDirectionForward;
+			setReplaySpeed(1);
+			if (fLastReplayPosition < 0) {
+				if (fReplayDirectionForward) {
+					fLastReplayPosition = 0;
+				} else {
+					fLastReplayPosition = Math.max(getReplaySize(), 0);
+				}
 			}
+			resume();
 		}
-		resume();
 	}
 
 	public void skip(boolean pDirectionForward) {
-		boolean oldReplayDirectionForward = fReplayDirectionForward;
-		boolean running = fTimer.isRunning();
-		if (running) {
-			pause();
-		}
-		int position;
-		if (pDirectionForward) {
-			position = getReplaySize() - 1;
-			for (int i = fLastReplayPosition + 1; i < getReplaySize(); i++) {
-				if (isRegularEndTurnCommand(getReplayCommand(i))) {
-					position = i;
-					break;
+		if (control) {
+			boolean oldReplayDirectionForward = fReplayDirectionForward;
+			boolean running = fTimer.isRunning();
+			if (running) {
+				pause();
+			}
+			int position;
+			if (pDirectionForward) {
+				position = getReplaySize() - 1;
+				for (int i = fLastReplayPosition + 1; i < getReplaySize(); i++) {
+					if (isRegularEndTurnCommand(getReplayCommand(i))) {
+						position = i;
+						break;
+					}
+				}
+			} else {
+				position = 0;
+				for (int i = fLastReplayPosition - 1; i > 0; i--) {
+					if (isRegularEndTurnCommand(getReplayCommand(i))) {
+						position = i;
+						break;
+					}
 				}
 			}
-		} else {
-			position = 0;
-			for (int i = fLastReplayPosition - 1; i > 0; i--) {
-				if (isRegularEndTurnCommand(getReplayCommand(i))) {
-					position = i;
-					break;
-				}
+			fReplayDirectionForward = pDirectionForward;
+			fSkipping = true;
+			replayTo(position, ClientCommandHandlerMode.REPLAYING, null);
+			fSkipping = false;
+			fReplayDirectionForward = oldReplayDirectionForward;
+			if (running) {
+				resume();
 			}
-		}
-		fReplayDirectionForward = pDirectionForward;
-		fSkipping = true;
-		replayTo(position, ClientCommandHandlerMode.REPLAYING, null);
-		fSkipping = false;
-		fReplayDirectionForward = oldReplayDirectionForward;
-		if (running) {
-			resume();
 		}
 	}
 
@@ -530,15 +534,17 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void stop() {
-		pause();
-		replayTo(getReplaySize(), ClientCommandHandlerMode.REPLAYING, null);
-		fUnseenPosition = 0;
-		fStopping = true;
-		setReplaySpeed(4);
-		getClient().getUserInterface().getLog().hideHighlight();
-		getClient().getUserInterface().getLog().enableReplay(false);
-		getClient().getUserInterface().getChat().showReplay(false);
-		fTimer.start();
+		if (control) {
+			pause();
+			replayTo(getReplaySize(), ClientCommandHandlerMode.REPLAYING, null);
+			fUnseenPosition = 0;
+			fStopping = true;
+			setReplaySpeed(4);
+			getClient().getUserInterface().getLog().hideHighlight();
+			getClient().getUserInterface().getLog().enableReplay(false);
+			getClient().getUserInterface().getChat().showReplay(false);
+			fTimer.start();
+		}
 	}
 
 	public int getFirstCommandNr() {
@@ -598,22 +604,22 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public synchronized void handleCommand(ServerCommandReplayStatus command) {
-			SwingUtilities.invokeLater(() -> {
+		SwingUtilities.invokeLater(() -> {
+			fTimer.stop();
+			setReplaySpeed(command.getSpeed());
+			if (fLastReplayPosition != command.getCommandNr()) {
+				fSkipping = true;
+				fReplayDirectionForward = fLastReplayPosition < command.getCommandNr();
+				replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
+				fSkipping = false;
+			}
+			fReplayDirectionForward = command.isForward();
+			if (command.isRunning()) {
+				fTimer.start();
+			} else {
 				fTimer.stop();
-				setReplaySpeed(command.getSpeed());
-				if (fLastReplayPosition != command.getCommandNr()) {
-					fSkipping = true;
-					fReplayDirectionForward = fLastReplayPosition < command.getCommandNr();
-					replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
-					fSkipping = false;
-				}
-				fReplayDirectionForward = command.isForward();
-				if (command.isRunning()) {
-					fTimer.start();
-				} else {
-					fTimer.stop();
-				}
-			});
+			}
+		});
 
 	}
 

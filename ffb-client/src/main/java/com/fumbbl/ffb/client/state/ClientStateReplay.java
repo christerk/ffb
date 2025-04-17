@@ -78,7 +78,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	public void setControl(boolean hasControl) {
-		// TODO - Handle UI effects
+		getClient().getUserInterface().getChat().getReplayControl().setActive(hasControl);
 	}
 
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {

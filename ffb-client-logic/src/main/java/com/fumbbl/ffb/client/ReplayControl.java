@@ -59,7 +59,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		iconGap = dimensionProvider.dimension(Component.REPLAY_ICON_GAP).width;
 		iconWidth = dimensionProvider.dimension(Component.REPLAY_ICON).width;
 
-		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - (iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
+		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - ((float) iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
 			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
 		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - iconWidth - iconGap, 1),
 			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,

@@ -58,6 +58,8 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
+			replayer.setControl(false);
+			callbacks.controlChanged(false);
 			if (StringTool.isProvided(parameters.getAuthentication())) {
 				client.getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
 			} else {
