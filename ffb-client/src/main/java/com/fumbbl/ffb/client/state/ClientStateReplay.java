@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IProgressListener;
+import com.fumbbl.ffb.client.ReplayControl;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -81,6 +82,15 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		getClient().getUserInterface().getChat().getReplayControl().setActive(hasControl);
 	}
 
+	public void playStatus(boolean playing, boolean forward) {
+		ReplayControl replayControl = getClient().getUserInterface().getChat().getReplayControl();
+		if (playing) {
+			replayControl.showPlay(forward);
+		} else {
+			replayControl.showPause();
+		}
+	}
+
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {
 
 		private final ClientStateReplay clientStateReplay;
@@ -133,6 +143,11 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		@Override
 		public void controlChanged(boolean hasControl) {
 			clientStateReplay.setControl(hasControl);
+		}
+
+		@Override
+		public void playStatus(boolean playing, boolean forward) {
+			clientStateReplay.playStatus(playing, forward);
 		}
 	}
 }

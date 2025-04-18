@@ -12,6 +12,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
+import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.dialog.DialogCoinChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
@@ -603,7 +604,7 @@ public class ClientReplayer implements ActionListener {
 		}
 	}
 
-	public synchronized void handleCommand(ServerCommandReplayStatus command) {
+	public synchronized void handleCommand(ServerCommandReplayStatus command, ReplayLogicModule.ReplayCallbacks callbacks) {
 		SwingUtilities.invokeLater(() -> {
 			fTimer.stop();
 			setReplaySpeed(command.getSpeed());
@@ -619,6 +620,7 @@ public class ClientReplayer implements ActionListener {
 			} else {
 				fTimer.stop();
 			}
+			callbacks.playStatus(command.isRunning(), command.isForward());
 		});
 
 	}

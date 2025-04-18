@@ -116,7 +116,6 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 					} else {
 						replayer.positionOnLastCommand();
 					}
-					replayer.getReplayControl().setActive(true);
 				}
 				break;
 			case SERVER_GAME_STATE:
@@ -142,7 +141,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				break;
 			case SERVER_REPLAY_STATUS:
 				ServerCommandReplayStatus serverCommandReplayStatus = (ServerCommandReplayStatus) pNetCommand;
-				replayer.handleCommand(serverCommandReplayStatus);
+				replayer.handleCommand(serverCommandReplayStatus, callbacks);
 				break;
 			case SERVER_REPLAY_CONTROL:
 				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
@@ -164,6 +163,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		} else {
 			client.getCommunication().sendCloseSession();
 			client.getReplayer().setControl(true);
+			callbacks.controlChanged(true);
 		}
 	}
 
@@ -252,5 +252,10 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 * @param hasControl true if this client has control of the replay session, if false the front end should disable replay controls
 		 */
 		void controlChanged(boolean hasControl);
+
+		/**
+		 * Called when a replay state command was processed
+		 */
+		void playStatus(boolean playing, boolean forward);
 	}
 }
