@@ -20,6 +20,8 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
+import com.fumbbl.ffb.net.commands.ServerCommandJoin;
+import com.fumbbl.ffb.net.commands.ServerCommandLeave;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
@@ -147,6 +149,15 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
 				replayer.setControl(commandReplayControl.isControl());
 				callbacks.controlChanged(commandReplayControl.isControl());
+				break;
+			case SERVER_JOIN:
+				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
+				callbacks.coachJoined(commandJoin.getCoach(), commandJoin.getSpectators());
+				break;
+			case SERVER_LEAVE:
+				ServerCommandLeave commandLeave = (ServerCommandLeave) pNetCommand;
+				callbacks.coachLeft(commandLeave.getCoach(), commandLeave.getSpectators());
+				break;
 			default:
 				break;
 		}
@@ -257,5 +268,16 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 * Called when a replay state command was processed
 		 */
 		void playStatus(boolean playing, boolean forward);
+
+		/**
+		 * Called when a coach joins the session
+		 */
+		void coachJoined(String coach, List<String> allCoaches);
+
+		/**
+		 * Called when a coach leaves the session
+		 */
+		void coachLeft(String coach, List<String> allCoaches);
+
 	}
 }

@@ -4,16 +4,20 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IProgressListener;
 import com.fumbbl.ffb.client.ReplayControl;
+import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
+import com.fumbbl.ffb.client.ui.ChatComponent;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -91,6 +95,32 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 	}
 
+	public void logCoach(String coach, boolean joined) {
+		String name;
+		String action;
+		if (coach.equals(getClient().getParameters().getCoach())) {
+			if (!joined) {
+				return;
+			}
+			name = "You";
+			action = "joined the session successfully";
+		} else {
+			name = coach;
+			action = joined ? "joined" : "left";
+		}
+
+		ChatComponent chat = getClient().getUserInterface().getChat();
+		chat.append(null, TextStyle.SPECTATOR, name + " " + action);
+		chat.append(null, null, null);
+	}
+
+	public void updateCoaches(List<String> allCoaches) {
+		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(getClient().getParameters().getCoach())).collect(Collectors.toList());
+		getClient().getClientData().setSpectatorCount(filteredCoaches.size());
+		getClient().getClientData().setSpectators(filteredCoaches);
+		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().refreshSideBars());
+	}
+
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {
 
 		private final ClientStateReplay clientStateReplay;
@@ -148,6 +178,18 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		@Override
 		public void playStatus(boolean playing, boolean forward) {
 			clientStateReplay.playStatus(playing, forward);
+		}
+
+		@Override
+		public void coachJoined(String coach, List<String> allCoaches) {
+			clientStateReplay.logCoach(coach, true);
+			clientStateReplay.updateCoaches(allCoaches);
+		}
+
+		@Override
+		public void coachLeft(String coach, List<String> allCoaches) {
+			clientStateReplay.logCoach(coach, false);
+			clientStateReplay.updateCoaches(allCoaches);
 		}
 	}
 }
