@@ -115,10 +115,10 @@ public final class StepInitSelecting extends AbstractStep {
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
 						} else {
-							PassState passState = getGameState().getPassState();
-							if (playerAction != null) {
-								actingPlayer.setStandingUp(playerAction.isStandingUp());
+							if (playerAction != null && playerAction.isStandingUp()) {
+								actingPlayer.setStandingUp(true);
 							}
+							PassState passState = getGameState().getPassState();
 							if (playerAction != null && playerAction.isBomb()) {
 								passState.setOriginalBombardier(actingPlayerCommand.getPlayerId());
 								if (playerAction == PlayerAction.ALL_YOU_CAN_EAT) {

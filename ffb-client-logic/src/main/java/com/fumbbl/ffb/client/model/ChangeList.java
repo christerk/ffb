@@ -20,6 +20,14 @@ public class ChangeList {
 			.addBugfix("Replay: Show correct automarking during replay")
 			.addBugfix("Replay: Show inducement icons correctly during replay")
 			.addBugfix("Automarking: Include injuries suffered during the current game")
+			.addBugfix("Blitz & Gaze vs Foul Appearance: Canceling the action after triggering Foul Appearance did not mark the player as used")
+			.addBugfix("Furious Outburst: Stabbing the ball carrier successfully did not cause the ball to bounce")
+			.addBugfix("Arm Bar: Modifier was not applied for jumps failing with a natural 1")
+			.addBugfix("\"Then I Started Blastin'!\": Knocking yourself down after selecting a blitz or gaze target caused the game to be stuck")
+			.addBugfix("\"Then I Started Blastin'!\": Action was not available when selecting foul action")
+			.addBugfix("Furious Outburst: Could be used when prone")
+			.addBugfix("Deactivating a prone player again after selecting jump caused the player to stand up and use up their activation")
+			.addBugfix("Apo Dialog: Punctuation issue, reworded text to improve grammar")
 		);
 
 		versions.add(new VersionChangeList("2.34.2")

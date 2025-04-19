@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -63,6 +64,13 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 		Game game = getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 		if (endTurn || endPlayerAction || playerState.isProneOrStunned() || playerState.isCasualty() || playerState.getBase() == PlayerState.KNOCKED_OUT) {
+			if (!game.getTurnMode().isBasicMode()) {
+				if (game.getLastTurnMode() != null || game.getLastTurnMode().isBasicMode()) {
+					game.setTurnMode(game.getLastTurnMode());
+				} else {
+					game.setTurnMode(TurnMode.REGULAR);
+				}
+			}
 			getGameState().getStepStack().clear();
 
 			EndPlayerAction endPlayerActionGenerator = (EndPlayerAction) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR).forName(SequenceGenerator.Type.EndPlayerAction.name());

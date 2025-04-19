@@ -56,7 +56,11 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 	public void setUp() {
 		super.setUp();
 		markingAffectingCommands = new HashSet<>();
-		markingAffectingCommands.add(0);
+		// we nned to add an element for the inital command so that at least one marking is loaded
+		// we cannot use 0 as for subsequent commands the command number is checked against this list
+		// and 0 is used by some special commands that are not replayable
+		// number is not used for anything else, but we need the correct number of elements
+		markingAffectingCommands.add(-1);
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {

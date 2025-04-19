@@ -218,6 +218,7 @@ public interface IJsonOption {
 	JsonBooleanOption HAS_FOULED = new JsonBooleanOption("hasFouled");
 	JsonBooleanOption HAS_MOVED = new JsonBooleanOption("hasMoved");
 	JsonBooleanOption HAS_PASSED = new JsonBooleanOption("hasPassed");
+	JsonBooleanOption HAS_TRIGGERED_EFFECT = new JsonBooleanOption("hasTriggeredEffect");
 	JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
 	JsonIntOption HEAT_ROLL = new JsonIntOption("heatRoll");
