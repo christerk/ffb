@@ -82,8 +82,10 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		return actionHandled;
 	}
 
-	public void setControl(boolean hasControl) {
-		getClient().getUserInterface().getChat().getReplayControl().setActive(hasControl);
+	public void setControllingCoach(String controllingCoach) {
+		getClient().getClientData().setCoachControllingReplay(controllingCoach);
+		getClient().getUserInterface().getChat().getReplayControl().setActive(controllingCoach.equals(getClient().getParameters().getCoach()));
+		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().getGameMenuBar().refresh());
 	}
 
 	public void playStatus(boolean playing, boolean forward) {
@@ -118,7 +120,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(getClient().getParameters().getCoach())).collect(Collectors.toList());
 		getClient().getClientData().setSpectatorCount(filteredCoaches.size());
 		getClient().getClientData().setSpectators(filteredCoaches);
-		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().refreshSideBars());
+		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().refresh());
 	}
 
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {
@@ -171,8 +173,8 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 
 		@Override
-		public void controlChanged(boolean hasControl) {
-			clientStateReplay.setControl(hasControl);
+		public void controlChanged(String controllingCoach) {
+			clientStateReplay.setControllingCoach(controllingCoach);
 		}
 
 		@Override

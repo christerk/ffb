@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -92,6 +93,11 @@ public abstract class DimensionProvider {
 			// ignore
 		}
 		return scaledImage;
+	}
+
+	public Icon scaleIcon(ImageIcon icon) {
+		icon.setImage(icon.getImage().getScaledInstance(scale(icon.getIconWidth()), scale(icon.getIconHeight()), 0));
+		return icon;
 	}
 
 	public void scaleFont(java.awt.Component component) {

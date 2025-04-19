@@ -38,27 +38,29 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 			ReplayCache replayCache = getServer().getReplayCache();
 			String replayName = clientCommandJoinReplay.getReplayName();
 
-			sessionManager.addSession(receivedCommand.getSession(), replayName, clientCommandJoinReplay.getCoach());
+			Session session = receivedCommand.getSession();
+			sessionManager.addSession(session, replayName, clientCommandJoinReplay.getCoach());
 
-			String coach = sessionManager.coach(receivedCommand.getSession());
+			String coach = sessionManager.coach(session);
 
 			Session[] sessions = sessionManager.sessionsForReplay(replayName);
 
 			if (ArrayTool.isProvided(sessions)) {
 				List<String> coaches = Arrays.stream(sessions).map(sessionManager::coach).collect(Collectors.toList());
 
-				Arrays.stream(sessions).forEach(session -> getServer().getCommunication()
-					.send(session, new ServerCommandJoin(coach, ClientMode.REPLAY, new String[0], coaches), true));
+				Arrays.stream(sessions).forEach(storedSession -> getServer().getCommunication()
+					.send(storedSession, new ServerCommandJoin(coach, ClientMode.REPLAY, new String[0], coaches), true));
 			}
 
 			ReplayState replayState = replayCache.replayState(replayName);
 			if (replayState == null) {
 				replayState = new ReplayState(replayName);
 				replayCache.add(replayState);
-				getServer().getCommunication().send(receivedCommand.getSession(), new ServerCommandReplayControl(true), true);
+				getServer().getCommunication().send(session, new ServerCommandReplayControl(coach), true);
 			} else {
 				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward(), true);
-				getServer().getCommunication().send(receivedCommand.getSession(), command, true);
+				getServer().getCommunication().send(session, command, true);
+				getServer().getCommunication().send(session, new ServerCommandReplayControl(sessionManager.controllingCoach(session)), true);
 			}
 		}
 

@@ -13,21 +13,21 @@ import com.fumbbl.ffb.net.NetCommandId;
  */
 public class ServerCommandReplayControl extends ServerCommand {
 
-	private boolean control;
+	private String coach;
 
 	public ServerCommandReplayControl() {
 	}
 
-	public ServerCommandReplayControl(boolean control) {
-		this.control = control;
+	public ServerCommandReplayControl(String coach) {
+		this.coach = coach;
 	}
 
 	public NetCommandId getId() {
 		return NetCommandId.SERVER_REPLAY_CONTROL;
 	}
 
-	public boolean isControl() {
-		return control;
+	public String getCoach() {
+		return coach;
 	}
 
 	@Override
@@ -39,14 +39,14 @@ public class ServerCommandReplayControl extends ServerCommand {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
-		IJsonOption.CONTROL.addTo(jsonObject, control);
+		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
 	}
 
 	public ServerCommandReplayControl initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
-		control = IJsonOption.CONTROL.getFrom(source, jsonObject);
+		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 }

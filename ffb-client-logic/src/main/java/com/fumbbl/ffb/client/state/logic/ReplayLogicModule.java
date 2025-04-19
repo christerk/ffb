@@ -65,7 +65,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
 			replayer.setControl(false);
-			callbacks.controlChanged(false);
+			callbacks.controlChanged("");
 			if (StringTool.isProvided(parameters.getAuthentication())) {
 				client.getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
 			} else {
@@ -151,8 +151,8 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				break;
 			case SERVER_REPLAY_CONTROL:
 				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
-				replayer.setControl(commandReplayControl.isControl());
-				callbacks.controlChanged(commandReplayControl.isControl());
+				replayer.setControl(commandReplayControl.getCoach().equals(client.getParameters().getCoach()));
+				callbacks.controlChanged(commandReplayControl.getCoach());
 				break;
 			case SERVER_JOIN:
 				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
@@ -172,13 +172,14 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 
 	private void replayMode(boolean online, String name) {
 		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
+		String coach = client.getParameters().getCoach();
 		if (online && StringTool.isProvided(sanitizedName)) {
-			client.getCommunication().sendJoinReplay(sanitizedName, client.getParameters().getCoach());
+			client.getCommunication().sendJoinReplay(sanitizedName, coach);
 			client.getReplayer().setOnline(true);
 		} else {
 			client.getCommunication().sendCloseSession();
 			client.getReplayer().setControl(true);
-			callbacks.controlChanged(true);
+			callbacks.controlChanged(coach);
 		}
 	}
 
@@ -264,9 +265,8 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		/**
 		 * Called when the control state of the client changes
 		 *
-		 * @param hasControl true if this client has control of the replay session, if false the front end should disable replay controls
 		 */
-		void controlChanged(boolean hasControl);
+		void controlChanged(String controllingCoach);
 
 		/**
 		 * Called when a replay state command was processed

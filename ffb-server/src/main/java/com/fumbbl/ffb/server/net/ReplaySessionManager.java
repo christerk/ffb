@@ -123,6 +123,15 @@ public class ReplaySessionManager {
 		return client != null && client.hasControl();
 	}
 
+	public String controllingCoach(Session session) {
+		String replayName = replayNameForSession(session);
+		return Arrays.stream(sessionsForReplay(replayName))
+			.map(replayClientForSession::get)
+			.filter(ReplayClient::hasControl)
+			.map(ReplayClient::getCoach)
+			.findFirst().orElse("");
+	}
+
 	private static class ReplayClient {
 		private final String sharedReplayName;
 		private final String coach;
@@ -131,6 +140,10 @@ public class ReplaySessionManager {
 		public ReplayClient(String sharedReplayName, String coach) {
 			this.sharedReplayName = sharedReplayName;
 			this.coach = coach;
+		}
+
+		public String getCoach() {
+			return coach;
 		}
 
 		public boolean hasControl() {

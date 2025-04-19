@@ -1,8 +1,40 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.dialog.*;
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.ConcedeGameStatus;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.ClientLayout;
+import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.dialog.DialogAbout;
+import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
+import com.fumbbl.ffb.client.dialog.DialogChangeList;
+import com.fumbbl.ffb.client.dialog.DialogChatCommands;
+import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
+import com.fumbbl.ffb.client.dialog.DialogInformation;
+import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
+import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
+import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
+import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -12,7 +44,11 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
@@ -21,16 +57,69 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_DEV;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FIELD_MARKER;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_INPUT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_SETTINGS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS_ROW;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_WEATHER;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PLAYER_MARKING_TYPE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RANGEGRID;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RIGHT_CLICK_END_ACTION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SHOW_CRATERS_AND_BLOODSPOTS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SWEET_SPOT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TEAM_LOGOS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI_LAYOUT;
 
 /**
  * @author Kalimar
@@ -39,12 +128,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private static final String _REPLAY_MODE_ON = "Replay Mode";
 	private static final String _REPLAY_MODE_OFF = "Spectator Mode";
+	private static final String JOINED_SELF = "You";
 
 	private final FantasyFootballClient fClient;
 
+	private JMenu joinedCoachesMenu;
 	private JMenuItem fGameReplayMenuItem;
 	private JMenuItem fGameConcessionMenuItem;
 	private JMenuItem fGameStatisticsMenuItem;
+	private JMenuItem joinedSelf;
+	private Set<JMenu> joinedCoaches = new HashSet<>();
 
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
@@ -151,7 +244,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem homePlayerMarkerFontColor;
 	private JMenuItem awayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
-	
+
 	private JMenu fMissingPlayersMenu;
 
 	private JMenu fInducementsMenu;
@@ -306,7 +399,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		JMenu logMenu = new JMenu(dimensionProvider, SETTING_LOG);
 		logMenu.setMnemonic(KeyEvent.VK_L);
 		fUserSettingsMenu.add(logMenu);
-		
+
 		ButtonGroup logGroup = new ButtonGroup();
 
 		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
@@ -807,7 +900,61 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameMenu.add(fGameStatisticsMenuItem);
 	}
 
-	private static ColorIcon createColorIcon(Color chatBackgroundColor) {
+	private void createReplayMenu() {
+		JMenu replayMenu = new JMenu(dimensionProvider, "Replay");
+		replayMenu.setMnemonic(KeyEvent.VK_R);
+		add(replayMenu);
+
+		createJoinedCoachesMenu(replayMenu);
+
+		fGameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
+		fGameStatisticsMenuItem.addActionListener(this);
+		fGameStatisticsMenuItem.setEnabled(false);
+		replayMenu.add(fGameStatisticsMenuItem);
+	}
+
+	private void createJoinedCoachesMenu(JMenu replayMenu) {
+		joinedCoachesMenu = new JMenu(dimensionProvider, "Joined Coaches");
+		joinedCoachesMenu.addActionListener(this);
+		joinedCoachesMenu.setMnemonic(KeyEvent.VK_J);
+		replayMenu.add(joinedCoachesMenu);
+
+		updateJoinedCoachesMenu();
+
+	}
+
+	private void updateJoinedCoachesMenu() {
+		if (joinedCoachesMenu == null) {
+			return;
+		}
+		joinedCoachesMenu.removeAll();
+		joinedCoaches.clear();
+		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
+		if (coaches.isEmpty()) {
+			return;
+		}
+
+		coaches.sort(String::compareTo);
+		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider).getScaledInstance(10, 10, 0);
+
+		ImageIcon ballIcon = new ImageIcon(ballImage);
+
+		coaches.stream().map(coach -> {
+			boolean hasControl = coach.equals(getClient().getClientData().getCoachControllingReplay());
+			JMenu coachMenu = new JMenu(dimensionProvider, coach, hasControl ? ballIcon : null);
+			coachMenu.add(new JMenuItem(dimensionProvider, "Childitem"));
+			return coachMenu;
+		}).forEach(item -> {
+			joinedCoachesMenu.add(item);
+			joinedCoaches.add(item);
+		});
+		joinedCoachesMenu.addSeparator();
+		boolean hasControl = getClient().getParameters().getCoach().equals(getClient().getClientData().getCoachControllingReplay());
+		joinedSelf = new JMenuItem(dimensionProvider, JOINED_SELF, hasControl ? ballIcon : null);
+		joinedCoachesMenu.add(joinedSelf);
+	}
+
+	private ColorIcon createColorIcon(Color chatBackgroundColor) {
 		return new ColorIcon(20, 20, chatBackgroundColor);
 	}
 
@@ -846,7 +993,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		this.removeAll();
 
-		createGameMenu();
+		if (getClient().getMode() == ClientMode.REPLAY) {
+			createReplayMenu();
+		} else {
+			createGameMenu();
+		}
 		createTeamSetupMenu();
 		createUserSettingsMenu();
 		createGameStatusMenus();
@@ -1140,11 +1291,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
 
-		boolean allowConcessions = game != null && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
-		fGameConcessionMenuItem.setEnabled(allowConcessions && gameStarted && game.isHomePlaying()
-			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
+		if (fGameConcessionMenuItem != null) {
+			boolean allowConcessions = game != null && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
+			fGameConcessionMenuItem.setEnabled(allowConcessions && gameStarted && game.isHomePlaying()
+				&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
+		}
 
-		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+		if (fGameReplayMenuItem != null) {
+			fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+		}
 
 		playerMarkingMenu.setEnabled(ClientMode.REPLAY != getClient().getMode());
 
@@ -1153,6 +1308,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
+		updateJoinedCoachesMenu();
 		refreshUi |= updateScaling();
 		refreshUi |= updateOrientation();
 
