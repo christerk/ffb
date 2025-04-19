@@ -363,6 +363,16 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		gameState.getGameLog().add((ServerCommand) command);
 	}
 
+	protected void sendAllSessions(ReplayState replayState, NetCommand command) {
+		if ((replayState == null) || (command == null)) {
+			return;
+		}
+		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, replayState.getName(), command.toJsonValue().toString());
+		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+		Session[] allSessions = sessionManager.sessionsForReplay(replayState.getName());
+		send(allSessions, command, false);
+	}
+
 	protected void sendHomeAndSpectatorSessions(GameState gameState, NetCommand command) {
 		if ((gameState == null) || (command == null)) {
 			return;
@@ -508,6 +518,11 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		} else {
 			sendSpectatorSessions(gameState, talkCommand); // not logged in Game Log
 		}
+	}
+
+	public void sendReplayTalk(ReplayState replayState, String coach, String talk, ServerCommandTalk.Mode mode) {
+		ServerCommandTalk talkCommand = new ServerCommandTalk(coach, mode.cleanIndicator(talk).trim(), mode);
+		sendAllSessions(replayState, talkCommand);
 	}
 
 	public void sendTeamSetupList(Session pSession, String[] pSetupNames) {
