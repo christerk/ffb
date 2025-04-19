@@ -130,7 +130,7 @@ public class ReplayLogicModule extends LogicModule {
 			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
 				ServerCommandAutomaticPlayerMarkings playerMarkings = (ServerCommandAutomaticPlayerMarkings) pNetCommand;
 				boolean complete = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
-				if (complete) {
+				if (complete && client.getMode() == ClientMode.REPLAY) {
 					client.getCommunication().sendCloseSession();
 				}
 				break;
