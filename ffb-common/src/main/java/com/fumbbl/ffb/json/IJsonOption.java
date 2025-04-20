@@ -216,6 +216,7 @@ public interface IJsonOption {
 	JsonBooleanOption HAS_FOULED = new JsonBooleanOption("hasFouled");
 	JsonBooleanOption HAS_MOVED = new JsonBooleanOption("hasMoved");
 	JsonBooleanOption HAS_PASSED = new JsonBooleanOption("hasPassed");
+	JsonBooleanOption HAS_TRIGGERED_EFFECT = new JsonBooleanOption("hasTriggeredEffect");
 	JsonBooleanOption HAS_USED_SECRET_WEAPON = new JsonBooleanOption("hasUsedSecretWeapon");
 	JsonArrayOption HEAT_EXHAUSTION_ARRAY = new JsonArrayOption("heatExhaustionArray");
 	JsonIntOption HEAT_ROLL = new JsonIntOption("heatRoll");
@@ -270,6 +271,8 @@ public interface IJsonOption {
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
 	JsonStringOption LOGO_URL = new JsonStringOption("logoUrl");
 	JsonStringOption MARKING = new JsonStringOption("marking");
+	JsonStringMapOption MARKINGS = new JsonStringMapOption("markings");
+	JsonIntArrayOption MARKING_AFFECTING_COMMANDS = new JsonIntArrayOption("markingIntervalIndexes");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");

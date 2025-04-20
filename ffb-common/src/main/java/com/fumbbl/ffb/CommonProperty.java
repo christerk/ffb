@@ -58,7 +58,10 @@ public enum CommonProperty {
 	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration"),
 	// usually this should now be called differently, but changing the key would reset the setting
 	SETTING_UI_LAYOUT("setting.pitch.orientation", "Client Layout", "Configuration"),
-	SETTING_UI("setting.ui", "Client UI", "Configuration")
+	SETTING_UI("setting.ui", "Client UI", "Configuration"),
+	SETTING_LOG("setting.log", "Client Logging", "Configuration"),
+	SETTING_LOG_DIR("setting.log.dir", "Logging Folder", "Configuration"),
+	SETTING_LOG_MODE("setting.log.mode", "Logging on/off", "Configuration"),
 	;
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_UI_LAYOUT,
@@ -73,7 +76,8 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
 		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS, SETTING_SHOW_CRATERS_AND_BLOODSPOTS, SETTING_SWEET_SPOT,
 		SETTING_LOCAL_ICON_CACHE, SETTING_LOCAL_ICON_CACHE_PATH, SETTING_FONT_COLOR_PLAYER_MARKER_HOME,
-		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER
+		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER, SETTING_LOG_DIR,
+		SETTING_LOG_MODE
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {

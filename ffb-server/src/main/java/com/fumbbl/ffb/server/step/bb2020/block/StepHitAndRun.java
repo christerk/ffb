@@ -141,8 +141,8 @@ public class StepHitAndRun extends AbstractStep {
 				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
 				getResult().addReport(new ReportHitAndRun(actingPlayer.getPlayerId(), direction));
 				getResult().setSound(SoundId.STEP);
-				fieldModel.updatePlayerAndBallPosition(actingPlayer.getPlayer(), coordinate);
 				actingPlayer.markSkillUsed(skill);
+				fieldModel.updatePlayerAndBallPosition(actingPlayer.getPlayer(), coordinate);
 				resetState(game);
 
 				Sequence sequence = new Sequence(getGameState());

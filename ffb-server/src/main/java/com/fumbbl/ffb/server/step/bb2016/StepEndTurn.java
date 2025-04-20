@@ -74,7 +74,6 @@ import java.util.Optional;
 
 /**
  * Step in any sequence to end a turn.
- *
  * May push another sequence on the stack (endGame, startGame or kickoff)
  *
  * @author Kalimar
@@ -607,7 +606,7 @@ public class StepEndTurn extends AbstractStep {
 	private boolean askForSecretWeaponBribes(Team team) {
 		Game game = getGameState().getGame();
 		List<String> playerIds = getPlayerIds(team, game);
-		if (playerIds.size() > 0) {
+		if (!playerIds.isEmpty()) {
 			InducementSet inducementSet = (game.getTeamHome() == team) ? game.getTurnDataHome().getInducementSet()
 				: game.getTurnDataAway().getInducementSet();
 			Optional<InducementType> bribesType = inducementSet.getInducementTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN)).findFirst();
@@ -630,7 +629,7 @@ public class StepEndTurn extends AbstractStep {
 			return false;
 		}
 		List<String> playerIds = getPlayerIds(team, game);
-		if (playerIds.size() > 0) {
+		if (!playerIds.isEmpty()) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
 				DialogArgueTheCallParameter dialogParameter = new DialogArgueTheCallParameter(team.getId(), false, false, 0);

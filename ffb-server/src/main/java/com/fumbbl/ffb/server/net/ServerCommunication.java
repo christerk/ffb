@@ -22,6 +22,7 @@ import com.fumbbl.ffb.net.commands.ClientCommand;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandAddPlayer;
 import com.fumbbl.ffb.net.commands.ServerCommandAdminMessage;
+import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
 import com.fumbbl.ffb.net.commands.ServerCommandGameList;
 import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 import com.fumbbl.ffb.net.commands.ServerCommandGameTime;
@@ -59,6 +60,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -485,6 +487,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	public void sendUpdateLocalPlayerMarkers(Session session, List<PlayerMarker> markers) {
 		send(session, new ServerCommandUpdateLocalPlayerMarkers(markers), true);
+	}
+
+	public void sendMarkings(Session session, int index, Map<String, String> markings) {
+		send(session, new ServerCommandAutomaticPlayerMarkings(index, markings), true);
 	}
 
 	public int getQueueLength() {

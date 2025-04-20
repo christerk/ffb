@@ -56,7 +56,7 @@ public class ModelChangeList implements IJsonSerializable {
 	}
 
 	public ModelChange[] getChanges() {
-		return fChanges.toArray(new ModelChange[fChanges.size()]);
+		return fChanges.toArray(new ModelChange[0]);
 	}
 
 	public void clear() {

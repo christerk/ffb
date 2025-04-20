@@ -42,6 +42,12 @@ public class Inducement implements IXmlSerializable, IJsonSerializable {
 		setValue(pValue);
 	}
 
+	public Inducement(Inducement original) {
+		this.fType = original.fType;
+		this.fValue = original.fValue;
+		this.fUses = original.fUses;
+	}
+
 	public InducementType getType() {
 		return fType;
 	}

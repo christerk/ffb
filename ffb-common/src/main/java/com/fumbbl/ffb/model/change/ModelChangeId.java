@@ -21,6 +21,7 @@ public enum ModelChangeId implements INamedObject {
 	ACTING_PLAYER_SET_HAS_JUMPED("actingPlayerSetHasJumped", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_HAS_MOVED("actingPlayerSetHasMoved", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_HAS_PASSED("actingPlayerSetHasPassed", ModelChangeDataType.BOOLEAN),
+	ACTING_PLAYER_SET_HAS_TRIGGERED_EFFECT("actingPlayerSetHasTriggeredEffect", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_JUMPING("actingPlayerSetLeaping", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_OLD_PLAYER_STATE("actingPlayerSetOldPlayerState", ModelChangeDataType.PLAYER_STATE),
 	ACTING_PLAYER_SET_PLAYER_ACTION("actingPlayerSetPlayerAction", ModelChangeDataType.PLAYER_ACTION),

@@ -11,6 +11,25 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.35.0")
+			.addFeature("Logging: Added client side logging, activated by default")
+			.addImprovement("Log sent messages in case of failure")
+			.addBugfix("Hit And Run: There were reported cases where turns were ended after using Hit And Run, this update includes chances that might fix that issue")
+			.addImprovement("Log call stacks for all end turn commands on client side")
+			.addBugfix("Take Root: Ending the player action after failing Take Root for a hand-off did end the turn instead")
+			.addBugfix("Replay: Show correct automarking during replay")
+			.addBugfix("Replay: Show inducement icons correctly during replay")
+			.addBugfix("Automarking: Include injuries suffered during the current game")
+			.addBugfix("Blitz & Gaze vs Foul Appearance: Canceling the action after triggering Foul Appearance did not mark the player as used")
+			.addBugfix("Furious Outburst: Stabbing the ball carrier successfully did not cause the ball to bounce")
+			.addBugfix("Arm Bar: Modifier was not applied for jumps failing with a natural 1")
+			.addBugfix("\"Then I Started Blastin'!\": Knocking yourself down after selecting a blitz or gaze target caused the game to be stuck")
+			.addBugfix("\"Then I Started Blastin'!\": Action was not available when selecting foul action")
+			.addBugfix("Furious Outburst: Could be used when prone")
+			.addBugfix("Deactivating a prone player again after selecting jump caused the player to stand up and use up their activation")
+			.addBugfix("Apo Dialog: Punctuation issue, reworded text to improve grammar")
+		);
+
 		versions.add(new VersionChangeList("2.34.2")
 			.addBugfix("Hail Mary Bomb: It was not possible to deselect a player with hail mary pass and bombardier once bomb action was selected")
 			.addBugfix("Ball & Chain: When B&C movement can be re-rolled in some cases loading the re-roll setting caused the game to crash")

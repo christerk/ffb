@@ -303,4 +303,12 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	public void logDebug(String message) {
 		logDebug(gameId(), message);
 	}
+
+	public String getLogFolder() {
+		String folder = getProperty(CommonProperty.SETTING_LOG_DIR);
+		if (StringTool.isProvided(folder)) {
+			return folder;
+		}
+		return System.getProperty("java.io.tmpdir");
+	}
 }

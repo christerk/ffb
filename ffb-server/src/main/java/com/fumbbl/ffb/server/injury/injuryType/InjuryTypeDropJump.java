@@ -40,8 +40,8 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 
 	@Override
 	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-	                         ApothecaryMode pApothecaryMode) {
+													 Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate vacatedFromCoordinate, InjuryContext pOldInjuryContext,
+													 ApothecaryMode pApothecaryMode) {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
@@ -58,27 +58,29 @@ public class InjuryTypeDropJump extends InjuryTypeServer<DropJump> {
 
 		Skill avOrInjModifierSkill = null;
 
-		if (fromCoordinate != null) {
-			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate, false))
-				.collect(Collectors.toSet());
+		FieldCoordinate fromCoordiante = vacatedFromCoordinate == null ? game.getFieldModel().getPlayerCoordinate(pDefender) : vacatedFromCoordinate;
 
-			Player<?> shadowingOrDtPlayer = game.getFieldModel().getPlayer(fromCoordinate);
+		Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordiante, false))
+			.collect(Collectors.toSet());
+
+		if (vacatedFromCoordinate != null) {
+			Player<?> shadowingOrDtPlayer = game.getFieldModel().getPlayer(vacatedFromCoordinate);
 
 			if (shadowingOrDtPlayer != null) {
 				players.add(shadowingOrDtPlayer);
 			}
+		}
 
-			if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
-				avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
-					.filter(Objects::nonNull).findFirst().orElseGet(() -> {
+		if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+			avOrInjModifierSkill = players.stream().map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnJump))
+				.filter(Objects::nonNull).findFirst().orElseGet(() -> {
 
-						if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
-							return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
-						}
+					if (divingTackler != null) {
+						return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
+					}
 
-						return null;
-					});
-			}
+					return null;
+				});
 		}
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {

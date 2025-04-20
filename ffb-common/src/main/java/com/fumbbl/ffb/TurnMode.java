@@ -61,4 +61,8 @@ public enum TurnMode implements INamedObject {
 	public static TurnMode forName(String name) {
 		return Arrays.stream(values()).filter(turnMode -> turnMode.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
+
+	public boolean isBasicMode() {
+		return this == REGULAR || this == BLITZ;
+	}
 }

@@ -1,6 +1,10 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SendToBoxReason;
@@ -9,16 +13,21 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.ui.LogComponent;
+import com.fumbbl.ffb.dialog.DialogCoinChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
@@ -26,14 +35,16 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -43,18 +54,21 @@ public class ClientReplayer implements ActionListener {
 
 	private final FantasyFootballClient fClient;
 
-	private static final int[] _TIMER_SETTINGS = { 800, 400, 200, 100, 50, 25, 10 };
+	private static final int[] _TIMER_SETTINGS = {800, 400, 200, 100, 50, 25, 10};
 
 	private int fFirstCommandNr;
 
-	private List<ServerCommand> fReplayList;
+	private final List<ServerCommand> fReplayList;
 	private final List<ServerCommand> fUnseenList;
+	private final List<Integer> markingAffectingCommands;
+	private final Map<Integer, Map<String, String>> markings;
 	private int fLastReplayPosition;
 	private int fReplaySpeed;
 	private boolean fReplayDirectionForward;
 	private boolean fStopping;
 	private int fUnseenPosition;
 	private boolean fSkipping;
+	private int activeMarkingCommand = -1;
 
 	private final Timer fTimer;
 
@@ -62,6 +76,8 @@ public class ClientReplayer implements ActionListener {
 		fClient = pClient;
 		fReplayList = new ArrayList<>();
 		fUnseenList = new ArrayList<>();
+		markingAffectingCommands = new ArrayList<>();
+		markings = new HashMap<>();
 		fLastReplayPosition = -1;
 		fReplaySpeed = 1;
 		fTimer = new Timer(1000, this);
@@ -110,9 +126,15 @@ public class ClientReplayer implements ActionListener {
 		}
 	}
 
-	public void init(ServerCommand[] pServerCommands, IProgressListener pProgressListener) {
-		List<ServerCommand> oldReplayList = fReplayList;
-		fReplayList = new ArrayList<>();
+	public void init(ServerCommand[] pServerCommands, Set<Integer> markingAffectingCommands, IProgressListener pProgressListener) {
+		markingAffectingCommands.addAll(this.markingAffectingCommands);
+		this.markingAffectingCommands.clear();
+		this.markingAffectingCommands.addAll(markingAffectingCommands);
+		Collections.sort(this.markingAffectingCommands);
+		markings.clear();
+
+		List<ServerCommand> oldReplayList = new ArrayList<>(fReplayList);
+		fReplayList.clear();
 		Collections.addAll(fReplayList, pServerCommands);
 		fReplayList.addAll(oldReplayList);
 		getClient().getUserInterface().getLog().detachLogDocument();
@@ -196,7 +218,7 @@ public class ClientReplayer implements ActionListener {
 
 	private boolean isRegularEndTurnCommand(ServerCommand pServerCommand) {
 		if ((NetCommandId.SERVER_MODEL_SYNC == pServerCommand.getId())
-				&& (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
+			&& (((ServerCommandModelSync) pServerCommand).getReportList().hasReport(ReportId.TURN_END))) {
 			return getClient().getUserInterface().getLog().hasCommandHighlight(pServerCommand.getCommandNr());
 		}
 		return false;
@@ -216,7 +238,7 @@ public class ClientReplayer implements ActionListener {
 				if (unseenCommand != null) {
 					if (unseenCommand.getId() == NetCommandId.SERVER_TALK) {
 						ClientCommandHandler commandHandler = getClient().getCommandHandlerFactory()
-								.getCommandHandler(NetCommandId.SERVER_TALK);
+							.getCommandHandler(NetCommandId.SERVER_TALK);
 						commandHandler.handleNetCommand(unseenCommand, ClientCommandHandlerMode.INITIALIZING);
 					} else {
 						synchronized (fReplayList) {
@@ -310,11 +332,39 @@ public class ClientReplayer implements ActionListener {
 
 		}
 		ServerCommand serverCommand = null;
+		IFactorySource applicationSource = getClient().getGame().getApplicationSource().forContext(FactoryType.FactoryContext.APPLICATION);
+		FactoryManager factoryManager = getClient().getGame().getApplicationSource().getFactoryManager();
+		List<Game> gameVersions = new ArrayList<>();
+		if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+			gameVersions.add(cloneGame(applicationSource, factoryManager));
+			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
+
+		}
 		for (int i = start; i < pReplayPosition; i++) {
 			serverCommand = getReplayCommand(i);
 			if (serverCommand != null) {
 				// System.out.println(serverCommand.toXml(0));
 				getClient().getCommandHandlerFactory().handleNetCommand(serverCommand, pMode);
+				if (serverCommand.getId() == NetCommandId.SERVER_MODEL_SYNC) {
+					ServerCommandModelSync modelSync = (ServerCommandModelSync) serverCommand;
+					if (Arrays.stream(modelSync.getModelChanges().getChanges())
+						.anyMatch(change -> change.getChangeId() == ModelChangeId.GAME_SET_DIALOG_PARAMETER
+							&& change.getValue() instanceof DialogCoinChoiceParameter)) {
+						reset(getClient().getGame().getTurnDataAway().getInducementSet());
+						reset(getClient().getGame().getTurnDataHome().getInducementSet());
+					}
+				}
+				if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+					if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+						if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
+							gameVersions.add(cloneGame(applicationSource, factoryManager));
+							int index = gameVersions.size() - 1;
+							getClient().getCommunication().sendLoadPlayerMarkings(index, gameVersions.get(index));
+						}
+					}
+				} else if (!markings.isEmpty()) {
+					applyMarkings(serverCommand.getCommandNr());
+				}
 			}
 			if (pProgressListener != null) {
 				pProgressListener.updateProgress((i - start));
@@ -325,6 +375,16 @@ public class ClientReplayer implements ActionListener {
 			highlightCommand(serverCommand.getCommandNr());
 		}
 		refreshUserInterface();
+	}
+
+	private void reset(InducementSet inducementSet) {
+		inducementSet.getInducementMapping().forEach((type, inducement) -> inducementSet.addInducement(new Inducement(type, inducement.getValue())));
+	}
+
+	private Game cloneGame(IFactorySource applicationSource, FactoryManager factoryManager) {
+		Game game = new Game(applicationSource, factoryManager);
+		game.initFrom(applicationSource, getClient().getGame().toJsonValue());
+		return game;
 	}
 
 	public void replayToCommand(int pCommandNr) {
@@ -385,6 +445,9 @@ public class ClientReplayer implements ActionListener {
 		GameResult oldGameResult = oldGame.getGameResult();
 		addTeam(game, oldGame.getTeamHome(), oldGameResult.getTeamResultHome(), true);
 		addTeam(game, oldGame.getTeamAway(), oldGameResult.getTeamResultAway(), false);
+		IFactorySource factorySource = oldGame.getRules().forContext(FactoryType.FactoryContext.GAME);
+		game.getTurnDataHome().getInducementSet().initFrom(factorySource, new InducementSet().toJsonValue());
+		game.getTurnDataAway().getInducementSet().initFrom(factorySource, new InducementSet().toJsonValue());
 		game.initializeRules();
 		return game;
 	}
@@ -414,6 +477,9 @@ public class ClientReplayer implements ActionListener {
 				} else {
 					fieldModel.setPlayerState(player, new PlayerState(PlayerState.RESERVE));
 				}
+				playerResult.setSeriousInjury(null);
+				playerResult.setSeriousInjuryDecay(null);
+				player.getEnhancementSources().forEach(player::removeEnhancements);
 				playerResult.setCurrentSpps(pOldTeamResult.getPlayerResult(player).getCurrentSpps());
 				UtilBox.putPlayerIntoBox(pGame, player);
 			}
@@ -443,11 +509,7 @@ public class ClientReplayer implements ActionListener {
 		LogComponent log = getClient().getUserInterface().getLog();
 		replayToCommand(log.findCommandNr(1));
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum();
-				}
-			});
+			SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
 		} catch (Exception pE) {
 			throw new FantasyFootballException(pE);
 		}
@@ -462,11 +524,7 @@ public class ClientReplayer implements ActionListener {
 		}
 		try {
 			if (!SwingUtilities.isEventDispatchThread()) {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
 			} else {
 				getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
 			}
@@ -489,6 +547,49 @@ public class ClientReplayer implements ActionListener {
 
 	public int getFirstCommandNr() {
 		return fFirstCommandNr;
+	}
+
+	public boolean addMarkingConfigs(int index, Map<String, String> markings) {
+		this.markings.put(markingAffectingCommands.get(index), markings);
+		if (markingAffectingCommands.size() == this.markings.size()) {
+			applyMarkings(fLastReplayPosition);
+			return true;
+		}
+		return false;
+	}
+
+	private synchronized void applyMarkings(int commandNr) {
+		int relevantCommand = findMarkingAffectingCommand(commandNr);
+
+		if (relevantCommand != activeMarkingCommand) {
+			activeMarkingCommand = relevantCommand;
+			Map<String, String> currentMarkings = markings.get(activeMarkingCommand);
+			if (currentMarkings != null) {
+				Game game = getClient().getGame();
+				for (Player<?> player : game.getPlayers()) {
+					PlayerMarker playerMarker = game.getFieldModel().getTransientPlayerMarker(player.getId());
+					if (playerMarker == null) {
+						playerMarker = new PlayerMarker(player.getId());
+					}
+					playerMarker.setHomeText(currentMarkings.get(player.getId()));
+					getClient().getGame().getFieldModel().addTransient(playerMarker);
+					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
+				}
+				getClient().getUserInterface().refresh();
+			}
+		}
+	}
+
+	private int findMarkingAffectingCommand(int commandNr) {
+		int relevantCommand = 0;
+		for (int mac : this.markingAffectingCommands) {
+			if (mac < commandNr) {
+				relevantCommand = mac;
+			} else {
+				break;
+			}
+		}
+		return relevantCommand;
 	}
 
 }

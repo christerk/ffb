@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
@@ -13,14 +15,12 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Kalimar
@@ -28,6 +28,7 @@ import java.util.Set;
 public class ReplayLogicModule extends LogicModule {
 
 	private List<ServerCommand> fReplayList;
+	private Set<Integer> markingAffectingCommands;
 	private boolean replayerInitialized;
 	private ReplayCallbacks callbacks;
 
@@ -46,6 +47,12 @@ public class ReplayLogicModule extends LogicModule {
 	@Override
 	public void setUp() {
 		super.setUp();
+		markingAffectingCommands = new HashSet<>();
+		// we nned to add an element for the inital command so that at least one marking is loaded
+		// we cannot use 0 as for subsequent commands the command number is checked against this list
+		// and 0 is used by some special commands that are not replayable
+		// number is not used for anything else, but we need the correct number of elements
+		markingAffectingCommands.add(-1);
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
@@ -80,6 +87,7 @@ public class ReplayLogicModule extends LogicModule {
 			case SERVER_REPLAY:
 				ServerCommandReplay replayCommand = (ServerCommandReplay) pNetCommand;
 				callbacks.commandCount(replayCommand.getTotalNrOfCommands());
+				markingAffectingCommands.addAll(replayCommand.getMarkingAffectingCommands());
 				for (ServerCommand command : replayCommand.getReplayCommands()) {
 					fReplayList.add(command);
 					callbacks.loadedCommands(fReplayList.size());
@@ -88,13 +96,15 @@ public class ReplayLogicModule extends LogicModule {
 					replayerInitialized = true;
 					callbacks.loadDone();
 					// signal server that we've received the full replay and the session can be
-					// closed
+					// closed, only if we are not waiting for auto marking responses
 					if (ClientMode.REPLAY == client.getMode()) {
-						client.getCommunication().sendCloseSession();
+						if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+							client.getCommunication().sendCloseSession();
+						}
 					}
 					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
 					callbacks.startReplayerInit();
-					replayer.init(replayCommands, callbacks.progressListener());
+					replayer.init(replayCommands, this.markingAffectingCommands, callbacks.progressListener());
 					callbacks.replayerInitialized();
 					if (ClientMode.REPLAY == client.getMode()) {
 						replayer.positionOnFirstCommand();
@@ -119,6 +129,13 @@ public class ReplayLogicModule extends LogicModule {
 					} else {
 						startLoadingReplay(client.getReplayer(), client.getParameters());
 					}
+				}
+				break;
+			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
+				ServerCommandAutomaticPlayerMarkings playerMarkings = (ServerCommandAutomaticPlayerMarkings) pNetCommand;
+				boolean complete = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
+				if (complete && client.getMode() == ClientMode.REPLAY) {
+					client.getCommunication().sendCloseSession();
 				}
 				break;
 			default:

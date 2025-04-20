@@ -219,7 +219,7 @@ public final class StepEndPassing extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer())
 			&& actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
 			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust())
+				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() && actingPlayer.hasPassed())
 				|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() || fPassFumble);
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {

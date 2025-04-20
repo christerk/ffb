@@ -262,13 +262,15 @@ public class DebugLog {
         try (PrintWriter gameLog = new PrintWriter(new FileWriter(gameLogFile(pGameId), true))) {
           writeLogLine(header, tokenizer, gameLog);
         } catch (IOException ioe) {
-          ioe.printStackTrace();
+					//noinspection CallToPrintStackTrace
+					ioe.printStackTrace();
         }
       } else {
         try (PrintWriter out = new PrintWriter(new FileWriter(getLogFile(), true))) {
           writeLogLine(header, tokenizer, out);
         } catch (IOException ioe) {
-          ioe.printStackTrace();
+					//noinspection CallToPrintStackTrace
+					ioe.printStackTrace();
         }
       }
     }

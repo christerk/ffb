@@ -38,6 +38,8 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerUpdatePlayerMarkings(server));
 		register(new ServerCommandHandlerApplyAutomatedPlayerMarkings(server));
 		register(new ServerCommandHandlerAddLoadedTeam(server));
+		register(new ServerCommandHandlerLoadAutomaticPlayerMarkings(server));
+		register(new ServerCommandHandlerCalculateAutomaticPlayerMarkings(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {

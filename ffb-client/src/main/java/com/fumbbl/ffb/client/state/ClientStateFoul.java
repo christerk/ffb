@@ -107,6 +107,7 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
       put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
       put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
       put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
+      put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
     }};
   }
 

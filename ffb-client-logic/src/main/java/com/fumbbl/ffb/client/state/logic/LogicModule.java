@@ -566,7 +566,7 @@ public abstract class LogicModule {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
 		return (playerState != null) && playerState.isActive()
-			&& !game.getActingPlayer().isStandingUp()
+			&& playerState.getBase() == PlayerState.STANDING
 			&& !game.getTurnData().isBlitzUsed()
 			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
 			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));

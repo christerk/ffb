@@ -1,21 +1,30 @@
 package com.fumbbl.ffb.server;
 
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.CommonPropertyValue;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
-import com.fumbbl.ffb.server.db.DbStatementId;
-import com.fumbbl.ffb.server.db.IDbStatementFactory;
-import com.fumbbl.ffb.server.db.query.DbUserSettingsQuery;
-import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestLoadPlayerMarkings;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Kalimar
  */
 public class ServerReplayer implements Runnable {
+
+	private final Set<ModelChangeId> markingAffectingChanges = new HashSet<ModelChangeId>() {{
+		add(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING);
+		add(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT);
+		add(ModelChangeId.FIELD_MODEL_REMOVE_CARD_EFFECT);
+		add(ModelChangeId.FIELD_MODEL_ADD_PRAYER);
+		add(ModelChangeId.FIELD_MODEL_REMOVE_PRAYER);
+		add(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY);
+		add(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY);
+	}};
 
 	private boolean fStopped;
 	private final List<ServerReplay> fReplayQueue;
@@ -23,7 +32,7 @@ public class ServerReplayer implements Runnable {
 
 	public ServerReplayer(FantasyFootballServer pServer) {
 		fServer = pServer;
-		fReplayQueue = new LinkedList<ServerReplay>();
+		fReplayQueue = new LinkedList<>();
 	}
 
 	public void add(ServerReplay pReplay) {
@@ -58,16 +67,6 @@ public class ServerReplayer implements Runnable {
 					}
 				}
 
-				String coach = server.getSessionManager().getCoachForSession(serverReplay.getSession());
-				IDbStatementFactory statementFactory = server.getDbQueryFactory();
-				DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
-					.getStatement(DbStatementId.USER_SETTINGS_QUERY);
-				userSettingsQuery.execute(coach);
-
-				if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-					server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(serverReplay.getGameState(), serverReplay.getSession()));
-				}
-
 				while (serverReplay != null) {
 
 					serverReplay.setComplete(true);
@@ -79,6 +78,22 @@ public class ServerReplayer implements Runnable {
 					ServerCommand[] serverCommands = serverReplay.findRelevantCommandsInLog();
 					for (ServerCommand serverCommand : serverCommands) {
 						replayCommand.add(serverCommand);
+						switch(serverCommand.getId()) {
+							case SERVER_ADD_PLAYER:
+								replayCommand.addMarkingAffectingCommand(serverCommand.getCommandNr());
+								break;
+							case SERVER_MODEL_SYNC:
+								ServerCommandModelSync syncCommand = (ServerCommandModelSync) serverCommand;
+								for (ModelChange change: syncCommand.getModelChanges().getChanges()) {
+									if (markingAffectingChanges.contains(change.getChangeId())) {
+										replayCommand.addMarkingAffectingCommand(serverCommand.getCommandNr());
+										break;
+									}
+								}
+ 								break;
+							default:
+								break;
+						}
 						if (replayCommand.getNrOfCommands() >= ServerCommandReplay.MAX_NR_OF_COMMANDS) {
 							serverReplay.setComplete(false);
 							replayCommand.setLastCommand(false);
@@ -105,7 +120,7 @@ public class ServerReplayer implements Runnable {
 				}
 
 			} catch (Exception pException) {
-				server.getDebugLog().log(serverReplay.getGameId(), pException);
+				server.getDebugLog().log(serverReplay != null ? serverReplay.getGameId() : 0, pException);
 			}
 
 		}
