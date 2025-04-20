@@ -948,10 +948,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		coaches.stream().map(coach -> {
 			boolean joinedCoachHasControl = coach.equals(getClient().getClientData().getCoachControllingReplay());
 			JMenu coachMenu = new JMenu(dimensionProvider, coach, joinedCoachHasControl ? ballIcon : null);
+			ButtonGroup group = new ButtonGroup();
 			if (clientHasControl) {
 				JMenuItem item = new JMenuItem(dimensionProvider, "Transfer Control");
 				coachMenu.add(item);
+				item.setName(coach);
+				group.add(item);
 				transferMenuItems.add(item);
+				item.addActionListener(this);
 			}
 			return coachMenu;
 		}).forEach(joinedCoachesMenu::add);
@@ -2404,11 +2408,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
 		}
 		if (source instanceof JMenuItem && transferMenuItems.contains(source)) {
-			Container parent = source.getParent();
-			if (parent instanceof JMenu) {
-				String coach = ((JMenu)parent).getText();
-				getClient().getCommunication().sendTransferReplayControl(coach);
-			}
+			String coach = source.getName();
+			getClient().getCommunication().sendTransferReplayControl(coach);
 		}
 	}
 
