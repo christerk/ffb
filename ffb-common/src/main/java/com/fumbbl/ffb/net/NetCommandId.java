@@ -61,7 +61,7 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_USE_MULTI_BLOCK_DICE_RE_ROLL("clientUseMultiBlockDiceReRoll"), INTERNAL_CALCULATE_AUTOMATIC_PLAYER_MARKINGS("internalCalculateAutomaticPlayerMarkings"),
 	CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS("clientLoadPlayerMarkings"), SERVER_AUTOMATIC_PLAYER_MARKINGS("serverAutomaticPlayerMarkings"),
 	CLIENT_REPLAY_STATUS("clientReplayStatus"), SERVER_REPLAY_STATUS("serverReplayStatus"), CLIENT_JOIN_REPLAY("clientJoinReplay"),
-	SERVER_REPLAY_CONTROL("serverReplayControl")
+	SERVER_REPLAY_CONTROL("serverReplayControl"), CLIENT_TRANSFER_REPLAY_CONTROL("clientTransferReplayControl")
 	;
 
 	private final String fName;
@@ -283,6 +283,8 @@ public enum NetCommandId implements INamedObject {
 				return new ServerCommandReplayStatus();
 			case SERVER_REPLAY_CONTROL:
 				return new ServerCommandReplayControl();
+			case CLIENT_TRANSFER_REPLAY_CONTROL:
+				return new ClientCommandTransferReplayControl();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

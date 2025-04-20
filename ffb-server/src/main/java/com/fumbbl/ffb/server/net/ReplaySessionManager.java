@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -118,18 +119,29 @@ public class ReplaySessionManager {
 		}
 	}
 
-	public boolean hasControl(Session session) {
+	public synchronized boolean hasControl(Session session) {
 		ReplayClient client = replayClientForSession.get(session);
 		return client != null && client.hasControl();
 	}
 
-	public String controllingCoach(Session session) {
+	public synchronized String controllingCoach(Session session) {
 		String replayName = replayNameForSession(session);
 		return Arrays.stream(sessionsForReplay(replayName))
 			.map(replayClientForSession::get)
 			.filter(ReplayClient::hasControl)
 			.map(ReplayClient::getCoach)
 			.findFirst().orElse("");
+	}
+
+	public synchronized boolean transferControl(Session controllingSession, String coach) {
+		Set<Session> sessions = otherSessions(controllingSession);
+		Optional<Session> futureControllingSession = sessions.stream().filter(session -> coach.equals(coach(session))).findFirst();
+		if (hasControl(controllingSession) && futureControllingSession.isPresent()) {
+			replayClientForSession.get(controllingSession).setControl(false);
+			replayClientForSession.get(futureControllingSession.get()).setControl(true);
+			return true;
+		}
+		return false;
 	}
 
 	private static class ReplayClient {

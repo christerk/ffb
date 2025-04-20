@@ -33,6 +33,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
 import com.fumbbl.ffb.net.commands.ServerCommandPong;
 import com.fumbbl.ffb.net.commands.ServerCommandRemovePlayer;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandSound;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandTalk;
@@ -523,6 +524,10 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	public void sendReplayTalk(ReplayState replayState, String coach, String talk, ServerCommandTalk.Mode mode) {
 		ServerCommandTalk talkCommand = new ServerCommandTalk(coach, mode.cleanIndicator(talk).trim(), mode);
 		sendAllSessions(replayState, talkCommand);
+	}
+
+	public void sendReplayControlChange(ReplayState replayState, String coach) {
+		sendAllSessions(replayState, new ServerCommandReplayControl(coach));
 	}
 
 	public void sendTeamSetupList(Session pSession, String[] pSetupNames) {

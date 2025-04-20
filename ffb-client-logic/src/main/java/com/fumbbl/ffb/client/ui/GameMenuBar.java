@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -137,7 +138,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem fGameConcessionMenuItem;
 	private JMenuItem fGameStatisticsMenuItem;
 	private JMenuItem joinedSelf;
-	private Set<JMenu> joinedCoaches = new HashSet<>();
+	private final Set<JMenuItem> transferMenuItems = new HashSet<>();
 
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
@@ -928,34 +929,40 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			return;
 		}
 		joinedCoachesMenu.removeAll();
-		joinedCoaches.clear();
+		transferMenuItems.clear();
 		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
 		if (coaches.isEmpty()) {
 			return;
 		}
+		boolean clientHasControl = getClient().getParameters().getCoach().equals(getClient().getClientData().getCoachControllingReplay());
 
 		coaches.sort(String::compareTo);
-		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider).getScaledInstance(10, 10, 0);
+
+		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_IMAGE_ICON);
+
+		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider)
+			.getScaledInstance(dimension.width, dimension.height, 0);
 
 		ImageIcon ballIcon = new ImageIcon(ballImage);
 
 		coaches.stream().map(coach -> {
-			boolean hasControl = coach.equals(getClient().getClientData().getCoachControllingReplay());
-			JMenu coachMenu = new JMenu(dimensionProvider, coach, hasControl ? ballIcon : null);
-			coachMenu.add(new JMenuItem(dimensionProvider, "Childitem"));
+			boolean joinedCoachHasControl = coach.equals(getClient().getClientData().getCoachControllingReplay());
+			JMenu coachMenu = new JMenu(dimensionProvider, coach, joinedCoachHasControl ? ballIcon : null);
+			if (clientHasControl) {
+				JMenuItem item = new JMenuItem(dimensionProvider, "Transfer Control");
+				coachMenu.add(item);
+				transferMenuItems.add(item);
+			}
 			return coachMenu;
-		}).forEach(item -> {
-			joinedCoachesMenu.add(item);
-			joinedCoaches.add(item);
-		});
+		}).forEach(joinedCoachesMenu::add);
 		joinedCoachesMenu.addSeparator();
-		boolean hasControl = getClient().getParameters().getCoach().equals(getClient().getClientData().getCoachControllingReplay());
-		joinedSelf = new JMenuItem(dimensionProvider, JOINED_SELF, hasControl ? ballIcon : null);
+		joinedSelf = new JMenuItem(dimensionProvider, JOINED_SELF, clientHasControl ? ballIcon : null);
 		joinedCoachesMenu.add(joinedSelf);
 	}
 
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
-		return new ColorIcon(20, 20, chatBackgroundColor);
+		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_COLOR_ICON);
+		return new ColorIcon(dimension.width, dimension.height, chatBackgroundColor);
 	}
 
 	private void addColorItem(CommonProperty title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
@@ -2395,6 +2402,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fGameConcessionMenuItem) {
 			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
+		}
+		if (source instanceof JMenuItem && transferMenuItems.contains(source)) {
+			Container parent = source.getParent();
+			if (parent instanceof JMenu) {
+				String coach = ((JMenu)parent).getText();
+				getClient().getCommunication().sendTransferReplayControl(coach);
+			}
 		}
 	}
 

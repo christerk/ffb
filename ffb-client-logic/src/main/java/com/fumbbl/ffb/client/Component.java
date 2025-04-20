@@ -39,7 +39,10 @@ public enum Component {
 	MAX_ICON(new Dimension(40, 40)),
 	ABOUT_DIALOG(new Dimension(813, 542)),
 	CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834), new Dimension(1920, 1080)),
-	BOX_SQUARE(new Dimension(39, 39));
+	BOX_SQUARE(new Dimension(39, 39)),
+	MENU_COLOR_ICON(new Dimension(20, 20)),
+	MENU_IMAGE_ICON(new Dimension(10, 10))
+	;
 	private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 
 	Component(Dimension landscape, Dimension portrait, Dimension square, Dimension wide) {

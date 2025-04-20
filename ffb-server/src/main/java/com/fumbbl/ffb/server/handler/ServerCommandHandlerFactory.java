@@ -42,6 +42,7 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerCalculateAutomaticPlayerMarkings(server));
 		register(new ServerCommandHandlerReplayStatus(server));
 		register(new ServerCommandHandlerJoinReplay(server));
+		register(new ServerCommandHandlerTransferControl(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {
