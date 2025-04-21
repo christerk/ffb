@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.35.1")
+			.addBugfix("Replays: Automatic player markings were not applied")
 		);
 
 		versions.add(new VersionChangeList("2.35.0")

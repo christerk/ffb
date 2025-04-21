@@ -68,7 +68,7 @@ public class ClientReplayer implements ActionListener {
 	private boolean fStopping;
 	private int fUnseenPosition;
 	private boolean fSkipping;
-	private int activeMarkingCommand = -1;
+	private int activeMarkingCommand = Integer.MIN_VALUE;
 
 	private final Timer fTimer;
 
