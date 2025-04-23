@@ -925,7 +925,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public synchronized void updateJoinedCoachesMenu() {
+	public void updateJoinedCoachesMenu() {
 
 		String controllingCoach = getClient().getClientData().getCoachControllingReplay();
 		List<String> previousCoaches = transferMenuItems.stream().map(JMenuItem::getName).sorted().collect(Collectors.toList());
@@ -1016,6 +1016,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fCurrentUsedCardsAway = 0;
 		fCurrentActiveCardsHome = null;
 		fCurrentActiveCardsAway = null;
+
+		currentControllingCoach = "";
+		if (joinedCoachesMenu != null) {
+			joinedCoachesMenu.removeAll();
+		}
+		transferMenuItems.clear();
 
 		this.removeAll();
 
@@ -1159,7 +1165,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return fClient;
 	}
 
-	public synchronized void refresh() {
+	public void refresh() {
 
 		Game game = getClient().getGame();
 
