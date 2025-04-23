@@ -61,7 +61,10 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		// we cannot use 0 as for subsequent commands the command number is checked against this list
 		// and 0 is used by some special commands that are not replayable
 		// number is not used for anything else, but we need the correct number of elements
-		markingAffectingCommands.add(-1);
+		boolean automarkingEnabled = IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+		if (automarkingEnabled) {
+			markingAffectingCommands.add(-1);
+		}
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
