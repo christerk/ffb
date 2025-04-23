@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IProgressListener;
 import com.fumbbl.ffb.client.ReplayControl;
 import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -17,7 +18,6 @@ import com.fumbbl.ffb.net.ServerStatus;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -83,9 +83,8 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	public void setControllingCoach(String controllingCoach) {
-		getClient().getClientData().setCoachControllingReplay(controllingCoach);
 		getClient().getUserInterface().getChat().getReplayControl().setActive(controllingCoach.equals(getClient().getParameters().getCoach()));
-		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().getGameMenuBar().refresh());
+		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().getGameMenuBar().updateJoinedCoachesMenu());
 	}
 
 	public void playStatus(boolean playing, boolean forward) {
@@ -116,11 +115,12 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		chat.append(null, null, null);
 	}
 
-	public void updateCoaches(List<String> allCoaches) {
-		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(getClient().getParameters().getCoach())).collect(Collectors.toList());
-		getClient().getClientData().setSpectatorCount(filteredCoaches.size());
-		getClient().getClientData().setSpectators(filteredCoaches);
-		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().refresh());
+	public void updateCoaches(List<String> ignored) {
+		UserInterface userInterface = getClient().getUserInterface();
+		userInterface.invokeAndWait(() -> {
+			userInterface.refreshSideBars();
+			userInterface.getGameMenuBar().updateJoinedCoachesMenu();
+		} );
 	}
 
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {

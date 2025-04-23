@@ -129,9 +129,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private static final String _REPLAY_MODE_ON = "Replay Mode";
 	private static final String _REPLAY_MODE_OFF = "Spectator Mode";
-	private static final String JOINED_SELF = "You";
 
 	private final FantasyFootballClient fClient;
+
+	private String currentControllingCoach = "";
 
 	private JMenu joinedCoachesMenu;
 	private JMenuItem fGameReplayMenuItem;
@@ -924,29 +925,32 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	private void updateJoinedCoachesMenu() {
-		if (joinedCoachesMenu == null) {
+	public synchronized void updateJoinedCoachesMenu() {
+
+		String controllingCoach = getClient().getClientData().getCoachControllingReplay();
+		List<String> previousCoaches = transferMenuItems.stream().map(JMenuItem::getName).sorted().collect(Collectors.toList());
+
+		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
+		if (coaches.equals(previousCoaches) && (!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach))) {
 			return;
 		}
+
+		currentControllingCoach = controllingCoach;
 		joinedCoachesMenu.removeAll();
 		transferMenuItems.clear();
-		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
-		if (coaches.isEmpty()) {
-			return;
-		}
-		boolean clientHasControl = getClient().getParameters().getCoach().equals(getClient().getClientData().getCoachControllingReplay());
+
+		String clientCoach = getClient().getParameters().getCoach();
+
+		boolean clientHasControl = clientCoach.equals(controllingCoach);
 
 		coaches.sort(String::compareTo);
 
 		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_IMAGE_ICON);
 
-		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider)
-			.getScaledInstance(dimension.width, dimension.height, 0);
-
-		ImageIcon ballIcon = new ImageIcon(ballImage);
+		ImageIcon ballIcon = loadBallIcon(dimension);
 
 		coaches.stream().map(coach -> {
-			boolean joinedCoachHasControl = coach.equals(getClient().getClientData().getCoachControllingReplay());
+			boolean joinedCoachHasControl = coach.equals(controllingCoach);
 			JMenu coachMenu = new JMenu(dimensionProvider, coach, joinedCoachHasControl ? ballIcon : null);
 			ButtonGroup group = new ButtonGroup();
 			if (clientHasControl) {
@@ -959,9 +963,20 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 			return coachMenu;
 		}).forEach(joinedCoachesMenu::add);
+
 		joinedCoachesMenu.addSeparator();
-		joinedSelf = new JMenuItem(dimensionProvider, JOINED_SELF, clientHasControl ? ballIcon : null);
+		joinedSelf = new JMenuItem(dimensionProvider, clientCoach, clientHasControl ? ballIcon : null);
 		joinedCoachesMenu.add(joinedSelf);
+	}
+
+	private ImageIcon loadBallIcon(Dimension dimension) {
+		if (getClient().getUserInterface() == null || getClient().getUserInterface().getIconCache() == null) {
+			return null;
+		}
+		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider)
+			.getScaledInstance(dimension.width, dimension.height, 0);
+
+		return new ImageIcon(ballImage);
 	}
 
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
@@ -1144,7 +1159,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return fClient;
 	}
 
-	public void refresh() {
+	public synchronized void refresh() {
 
 		Game game = getClient().getGame();
 
@@ -1319,7 +1334,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		updateJoinedCoachesMenu();
 		refreshUi |= updateScaling();
 		refreshUi |= updateOrientation();
 

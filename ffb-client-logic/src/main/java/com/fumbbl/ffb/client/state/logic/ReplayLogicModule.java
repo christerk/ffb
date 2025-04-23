@@ -29,6 +29,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -152,14 +153,17 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 			case SERVER_REPLAY_CONTROL:
 				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
 				replayer.setControl(commandReplayControl.getCoach().equals(client.getParameters().getCoach()));
+				client.getClientData().setCoachControllingReplay(commandReplayControl.getCoach());
 				callbacks.controlChanged(commandReplayControl.getCoach());
 				break;
 			case SERVER_JOIN:
 				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
+				updateClientData(commandJoin.getSpectators());
 				callbacks.coachJoined(commandJoin.getCoach(), commandJoin.getSpectators());
 				break;
 			case SERVER_LEAVE:
 				ServerCommandLeave commandLeave = (ServerCommandLeave) pNetCommand;
+				updateClientData(commandLeave.getSpectators());
 				callbacks.coachLeft(commandLeave.getCoach(), commandLeave.getSpectators());
 				break;
 			default:
@@ -168,6 +172,12 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		if (loadingDone && ClientMode.REPLAY == client.getMode()) {
 			new DialogReplayModeChoice(client).showDialog(this);
 		}
+	}
+
+	private void updateClientData(List<String> allCoaches) {
+		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(client.getParameters().getCoach())).collect(Collectors.toList());
+		client.getClientData().setSpectatorCount(filteredCoaches.size());
+		client.getClientData().setSpectators(filteredCoaches);
 	}
 
 	private void replayMode(boolean online, String name) {
