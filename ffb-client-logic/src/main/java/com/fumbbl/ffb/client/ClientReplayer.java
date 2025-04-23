@@ -60,7 +60,7 @@ public class ClientReplayer implements ActionListener {
 	private final List<ServerCommand> fUnseenList;
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
-	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = -1, fFirstCommandNr;
+	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = Integer.MIN_VALUE, fFirstCommandNr;
 	private boolean fReplayDirectionForward, fStopping, fSkipping, control, online;
 	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
