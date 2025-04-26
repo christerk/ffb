@@ -69,7 +69,6 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
 			replayer.setControl(false);
-			callbacks.controlChanged("");
 			if (StringTool.isProvided(parameters.getAuthentication())) {
 				client.getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
 			} else {
@@ -222,6 +221,10 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 			replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
 			dialog.hideDialog();
 		}
+	}
+
+	public boolean isOnline() {
+		return client.getReplayer().isOnline();
 	}
 
 	/**

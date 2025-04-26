@@ -630,4 +630,8 @@ public class ClientReplayer implements ActionListener {
 	public void setOnline(boolean online) {
 		this.online = online;
 	}
+
+	public boolean isOnline() {
+		return online;
+	}
 }

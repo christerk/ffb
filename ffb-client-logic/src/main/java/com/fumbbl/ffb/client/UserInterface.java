@@ -412,9 +412,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public void socketClosed() {
 		if (getClient().getMode() == ClientMode.REPLAY) {
-			ChatComponent chat = getChat();
-			chat.append(TextStyle.NONE, "The connection to the server has been closed.");
-			chat.append(TextStyle.NONE, "To re-connect you need to restart the client.");
+				if (getClient().getReplayer().isOnline()) {
+				ChatComponent chat = getChat();
+				chat.append(TextStyle.NONE, "The connection to the server has been closed.");
+				chat.append(TextStyle.NONE, "To re-connect you need to restart the client.");
+			}
 		} else {
 			getStatusReport().reportSocketClosed();
 		}

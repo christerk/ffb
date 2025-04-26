@@ -14,6 +14,7 @@ import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.ChatComponent;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Collections;
 import java.util.List;
@@ -83,8 +84,26 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	public void setControllingCoach(String controllingCoach) {
-		getClient().getUserInterface().getChat().getReplayControl().setActive(controllingCoach.equals(getClient().getParameters().getCoach()));
+		if (!StringTool.isProvided(controllingCoach)) {
+			return;
+		}
+
+		boolean gainedControl = getClient().getParameters().getCoach().equals(controllingCoach);
+		getClient().getUserInterface().getChat().getReplayControl().setActive(gainedControl);
+
 		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().getGameMenuBar().updateJoinedCoachesMenu());
+
+		if (logicModule.isOnline()) {
+
+			String prefix;
+			if (gainedControl) {
+				prefix = "You are";
+			} else {
+				prefix = controllingCoach + " is";
+			}
+
+			getClient().getUserInterface().getChat().append(TextStyle.SPECTATOR, prefix + " now in control of this session");
+		}
 	}
 
 	public void playStatus(boolean playing, boolean forward) {
@@ -119,7 +138,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		userInterface.invokeAndWait(() -> {
 			userInterface.refreshSideBars();
 			userInterface.getGameMenuBar().updateJoinedCoachesMenu();
-		} );
+		});
 	}
 
 	private static class ReplayCallbacksAwt implements ReplayLogicModule.ReplayCallbacks {

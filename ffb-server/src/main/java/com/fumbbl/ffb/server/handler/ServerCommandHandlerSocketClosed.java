@@ -17,6 +17,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -98,26 +99,33 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 	public boolean closeReplaySession(ReceivedCommand pReceivedCommand) {
 
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
-		String coach = sessionManager.coach(pReceivedCommand.getSession());
-		String replayName = sessionManager.replayNameForSession(pReceivedCommand.getSession());
-		sessionManager.removeSession(pReceivedCommand.getSession());
-
-		Session[] sessions = sessionManager.sessionsForReplay(replayName);
-
 		ReplayCache replayCache = getServer().getReplayCache();
-		ReplayState state = replayCache.replayState(replayName);
-		if (state != null) {
 
-			if (ArrayTool.isProvided(sessions)) {
+		Session closingSession = pReceivedCommand.getSession();
+		String replayName = sessionManager.replayNameForSession(closingSession);
+		Set<Session> sessions = sessionManager.otherSessions(closingSession);
+		ReplayState state = replayCache.replayState(replayName);
+
+		if (state != null) {
+			if (sessions.isEmpty()) {
+				getServer().getReplayCache().closeReplay(replayName);
+			} else {
 				List<String> joinedCoaches = new ArrayList<>();
 				for (Session session : sessions) {
 					joinedCoaches.add(sessionManager.coach(session));
 				}
-				getServer().getCommunication().sendLeave(sessions, coach, ClientMode.REPLAY, joinedCoaches);
-			} else {
-				getServer().getReplayCache().closeReplay(replayName);
+
+				String coach = sessionManager.coach(closingSession);
+				Session[] sessionsArray = sessions.toArray(new Session[0]);
+				getServer().getCommunication().sendLeave(sessionsArray, coach, ClientMode.REPLAY, joinedCoaches);
+
+				if (sessionManager.transferControl(closingSession, sessionManager.coach(sessionsArray[0]))) {
+					ReplayState replayState = getServer().getReplayCache().replayState(replayName);
+					getServer().getCommunication().sendReplayControlChange(replayState, sessionManager.coach(sessionsArray[0]));
+				}
 			}
 
+			sessionManager.removeSession(closingSession);
 		}
 
 		return true;
