@@ -368,7 +368,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		if ((replayState == null) || (command == null)) {
 			return;
 		}
-		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, replayState.getName(), command.toJsonValue().toString());
+		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, replayState.getName(), DebugLog.COMMAND_CLIENT_REPLAY_CLIENTS, command.toJsonValue().toString());
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
 		Session[] allSessions = sessionManager.sessionsForReplay(replayState.getName());
 		send(allSessions, command, false);

@@ -38,7 +38,7 @@ public class ReplayCache {
 				log.append(" ALREADY EXISTS");
 			}
 
-			server.getDebugLog().logReplay(IServerLogLevel.WARN, name, log.toString());
+			server.getDebugLog().logReplay(IServerLogLevel.WARN, name, null, log.toString());
 		}
 		// remove dead games from cache if there are no connections to the session
 		ReplaySessionManager sessionManager = server.getReplaySessionManager();
@@ -68,7 +68,7 @@ public class ReplayCache {
 		ReplayState cachedState = statesByName.remove(replayName);
 		if (cachedState != null) {
 			// log game 	cache size
-			server.getDebugLog().logReplay(IServerLogLevel.WARN, replayName,
+			server.getDebugLog().logReplay(IServerLogLevel.WARN, replayName, null,
 				StringTool.bind("REMOVE REPLAY $1 cache decreases to $2 games.", replayName, statesByName.size()));
 		}
 	}

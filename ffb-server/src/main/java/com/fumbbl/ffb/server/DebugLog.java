@@ -40,6 +40,8 @@ public class DebugLog {
 	public static final String COMMAND_CLIENT_AWAY = " A->";
 	public static final String COMMAND_SERVER_AWAY = " ->A";
 	public static final String COMMAND_CLIENT_SPECTATOR = " S->";
+	public static final String COMMAND_CLIENT_REPLAY = " R->";
+	public static final String COMMAND_CLIENT_REPLAY_CLIENTS = " ->AR";
 	public static final String COMMAND_SERVER_SPECTATOR = " ->S";
 	public static final String COMMAND_CLIENT_UNKNOWN = " ?->";
 	public static final String COMMAND_SERVER_UNKNOWN = " ->?";
@@ -157,7 +159,7 @@ public class DebugLog {
 
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
 
-		logInternal(null, sessionManager.replayNameForSession(session), null, command.toJsonValue().toString());
+		logInternal(null, sessionManager.replayNameForSession(session), COMMAND_CLIENT_REPLAY, command.toJsonValue().toString());
 	}
 
 	public void logServerCommand(int pLogLevel, long pGameId, NetCommand pNetCommand, String pCommandFlag) {
@@ -221,9 +223,9 @@ public class DebugLog {
 		}
 	}
 
-	public void logReplay(int logLevel, String replayName, String logString) {
+	public void logReplay(int logLevel, String replayName, String flag, String logString) {
 		if (isLogging(logLevel) && StringTool.isProvided(logString)) {
-			logInternal(null, replayName, null, logString);
+			logInternal(null, replayName, flag, logString);
 		}
 	}
 
@@ -232,18 +234,18 @@ public class DebugLog {
 			StringWriter stringWriter = new StringWriter();
 			PrintWriter printWriter = new PrintWriter(stringWriter);
 			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
-				logReplay(IServerLogLevel.ERROR, replayName, "Filling in stacktrace for " + pThrowable.getClass().getCanonicalName());
+				logReplay(IServerLogLevel.ERROR, replayName, null, "Filling in stacktrace for " + pThrowable.getClass().getCanonicalName());
 				pThrowable = pThrowable.fillInStackTrace();
 			}
 
 			if (!ArrayTool.isProvided(pThrowable.getStackTrace())) {
-				logReplay(IServerLogLevel.ERROR, replayName, "No stacktrace for " + pThrowable.getClass().getCanonicalName());
+				logReplay(IServerLogLevel.ERROR, replayName, null, "No stacktrace for " + pThrowable.getClass().getCanonicalName());
 			}
 
 			pThrowable.printStackTrace(printWriter);
 			printWriter.flush();
 			printWriter.close();
-			logReplay(IServerLogLevel.ERROR, replayName, stringWriter.getBuffer().toString());
+			logReplay(IServerLogLevel.ERROR, replayName, null, stringWriter.getBuffer().toString());
 		}
 	}
 
