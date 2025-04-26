@@ -2,7 +2,6 @@ package com.fumbbl.ffb.server.net;
 
 import java.util.Arrays;
 import java.util.TimerTask;
-import java.util.stream.Stream;
 
 public class SessionTimeoutTask extends TimerTask {
 
@@ -23,9 +22,13 @@ public class SessionTimeoutTask extends TimerTask {
 	@Override
 	public void run() {
 
-		Stream.concat(Arrays.stream(sessionManager.getAllSessions()), Arrays.stream(replaySessionManager.getAllSessions()))
+		Arrays.stream(sessionManager.getAllSessions())
 				.filter(session -> sessionManager.getLastPing(session) + timeout < System.currentTimeMillis())
 				.forEach(communication::close);
+
+		Arrays.stream(replaySessionManager.getAllSessions())
+			.filter(session -> replaySessionManager.getLastPing(session) + timeout < System.currentTimeMillis())
+			.forEach(communication::close);
 
 	}
 }
