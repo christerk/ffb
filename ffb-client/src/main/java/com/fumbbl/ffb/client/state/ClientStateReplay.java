@@ -111,8 +111,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 
 		ChatComponent chat = getClient().getUserInterface().getChat();
-		chat.append(null, TextStyle.SPECTATOR, name + " " + action);
-		chat.append(null, null, null);
+		chat.append(TextStyle.SPECTATOR, name + " " + action);
 	}
 
 	public void updateCoaches(List<String> ignored) {

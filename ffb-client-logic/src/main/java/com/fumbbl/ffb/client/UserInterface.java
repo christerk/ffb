@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.dialog.DialogHandler;
@@ -406,6 +407,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			if (((DialogLeaveGame) pDialog).isChoiceYes()) {
 				System.exit(0);
 			}
+		}
+	}
+
+	public void socketClosed() {
+		if (getClient().getMode() == ClientMode.REPLAY) {
+			ChatComponent chat = getChat();
+			chat.append(TextStyle.NONE, "The connection to the server has been closed.");
+			chat.append(TextStyle.NONE, "To re-connect you need to restart the client.");
+		} else {
+			getStatusReport().reportSocketClosed();
 		}
 	}
 

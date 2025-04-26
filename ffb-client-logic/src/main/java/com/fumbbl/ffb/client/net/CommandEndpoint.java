@@ -95,7 +95,7 @@ public class CommandEndpoint {
 	@SuppressWarnings("unused")
 	@OnClose
 	public void onClose(Session ignoredUnused, CloseReason ignored) {
-		fClient.getUserInterface().getStatusReport().reportSocketClosed();
+		fClient.getUserInterface().socketClosed();
 		fCloseLatch.countDown();
 	}
 
