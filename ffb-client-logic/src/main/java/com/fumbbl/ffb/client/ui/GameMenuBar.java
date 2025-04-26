@@ -135,6 +135,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private String currentControllingCoach = "";
 
 	private JMenu joinedCoachesMenu;
+	private JMenu replayMenu;
 	private JMenuItem fGameReplayMenuItem;
 	private JMenuItem fGameConcessionMenuItem;
 	private JMenuItem fGameStatisticsMenuItem;
@@ -903,7 +904,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createReplayMenu() {
-		JMenu replayMenu = new JMenu(dimensionProvider, "Replay");
+		replayMenu = new JMenu(dimensionProvider, "Replay");
 		replayMenu.setMnemonic(KeyEvent.VK_R);
 		add(replayMenu);
 
@@ -1017,16 +1018,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fCurrentActiveCardsHome = null;
 		fCurrentActiveCardsAway = null;
 
-		currentControllingCoach = "";
-		if (joinedCoachesMenu != null) {
-			joinedCoachesMenu.removeAll();
-		}
-		transferMenuItems.clear();
-
-		this.removeAll();
+		Arrays.stream(this.getComponents()).filter(comp -> comp != replayMenu).forEach(this::remove);
 
 		if (getClient().getMode() == ClientMode.REPLAY) {
-			createReplayMenu();
+			if (replayMenu == null) {
+				createReplayMenu();
+			}
 		} else {
 			createGameMenu();
 		}
