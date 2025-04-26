@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerPitch;
 import com.fumbbl.ffb.client.layer.FieldLayerPlayers;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeGrid;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
+import com.fumbbl.ffb.client.layer.FieldLayerSketches;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
 import com.fumbbl.ffb.client.state.ClientState;
@@ -58,6 +59,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final FieldLayerOverPlayers fLayerOverPlayers;
 	private final FieldLayerRangeRuler fLayerRangeRuler;
 	private final FieldLayerEnhancements layerEnhancements;
+	private final FieldLayerSketches layerSketches;
 	private BufferedImage fImage;
 
 	// we need to keep some old model values for a redraw (if those get set to null)
@@ -81,6 +83,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
@@ -105,6 +108,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers.initLayout();
 		fLayerRangeRuler.initLayout();
 		layerEnhancements.initLayout();
+		layerSketches.initLayout();
 
 		Dimension size = uiDimensionProvider.dimension(Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
@@ -155,6 +159,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		return layerEnhancements;
 	}
 
+	public FieldLayerSketches getLayerSketches() {
+		return layerSketches;
+	}
+
 	public synchronized void refresh() {
 
 		Rectangle updatedArea = combineRectangles(new Rectangle[]{getLayerField().fetchUpdatedArea(),
@@ -162,7 +170,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			getLayerBloodspots().fetchUpdatedArea(),
 			getLayerRangeGrid().fetchUpdatedArea(), getLayerMarker().fetchUpdatedArea(),
 			getLayerUnderPlayers().fetchUpdatedArea(), getLayerPlayers().fetchUpdatedArea(),
-			getLayerOverPlayers().fetchUpdatedArea(), getLayerRangeRuler().fetchUpdatedArea()});
+			getLayerOverPlayers().fetchUpdatedArea(), getLayerRangeRuler().fetchUpdatedArea(),
+			getLayerSketches().fetchUpdatedArea()
+		});
 
 		if (updatedArea != null) {
 			refresh(updatedArea);
@@ -188,6 +198,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		g2d.drawImage(getLayerPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerOverPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerRangeRuler().getImage(), 0, 0, null);
+		g2d.drawImage(getLayerSketches().getImage(), 0, 0, null);
 
 		g2d.dispose();
 
@@ -331,6 +342,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		getLayerPlayers().init();
 		getLayerOverPlayers().init();
 		getLayerRangeRuler().init();
+		getLayerSketches().init();
 		refresh();
 	}
 
