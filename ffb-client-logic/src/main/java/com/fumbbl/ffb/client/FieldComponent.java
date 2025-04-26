@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
 import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -361,7 +362,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseMoved(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseMoved(pMouseEvent);
 		}
@@ -370,7 +371,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseDragged(pMouseEvent);
 		}
@@ -378,7 +379,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseClicked(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseClicked(pMouseEvent);
 		}
@@ -386,7 +387,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseEntered(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseEntered(pMouseEvent);
 		}
@@ -394,7 +395,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseExited(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseExited(pMouseEvent);
 		}
@@ -402,7 +403,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mousePressed(pMouseEvent);
 		}
@@ -410,7 +411,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseReleased(pMouseEvent);
 		}
