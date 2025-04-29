@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.handler.ClientCommandHandlerFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.net.ClientPingTask;
 import com.fumbbl.ffb.client.net.CommandEndpoint;
+import com.fumbbl.ffb.client.overlay.Overlay;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.ClientStateFactory;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -26,6 +27,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -311,4 +313,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		}
 		return System.getProperty("java.io.tmpdir");
 	}
+
+	public abstract Optional<Overlay> getActiveOverlay();
+
+	public abstract void setActiveOverlay(Overlay activeOverlay);
 }

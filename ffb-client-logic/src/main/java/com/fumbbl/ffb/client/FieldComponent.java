@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.layer.FieldLayerSketches;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
+import com.fumbbl.ffb.client.overlay.Overlay;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.marking.FieldMarker;
@@ -41,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author j129340
@@ -423,6 +425,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseReleased(MouseEvent pMouseEvent) {
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseReleased(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseReleased(pMouseEvent);

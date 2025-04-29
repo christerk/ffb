@@ -1,8 +1,15 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.overlay.Overlay;
+import com.fumbbl.ffb.client.overlay.PatchSketchOverlay;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -15,8 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -30,6 +41,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
 	private final ClientLogger logger;
+	private Overlay activeOverlay;
+	private final PatchSketchOverlay patchSketchOverlay;
 
 	private transient int currentMouseButton;
 
@@ -57,6 +70,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface.getGameMenuBar().refresh();
 
 		setClientStateFactory();
+
+		patchSketchOverlay = new PatchSketchOverlay(fUserInterface.getCoordinateConverter());
 	}
 
 	@Override
@@ -260,5 +275,19 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		if (logger != null) {
 			logger.updateId(pGame.getId());
 		}
+	}
+
+	@Override
+	public Optional<Overlay> getActiveOverlay() {
+		return Optional.ofNullable(activeOverlay);
+	}
+
+	@Override
+	public void setActiveOverlay(Overlay activeOverlay) {
+		this.activeOverlay = activeOverlay;
+	}
+
+	public void setPathSketching(boolean active) {
+		setActiveOverlay(active ? patchSketchOverlay : null);
 	}
 }

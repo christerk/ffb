@@ -62,6 +62,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
+	private final CoordinateConverter coordinateConverter;
 
 	public UserInterface(FantasyFootballClient pClient) {
 
@@ -79,6 +80,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
 		fontCache = new FontCache();
@@ -216,7 +218,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
-		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);
@@ -283,6 +284,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	public void setGameTitle(GameTitle pGameTitle) {
 		fGameTitle = pGameTitle;
 		refreshTitle();
+	}
+
+	public CoordinateConverter getCoordinateConverter() {
+		return coordinateConverter;
 	}
 
 	public void refreshTitle() {
