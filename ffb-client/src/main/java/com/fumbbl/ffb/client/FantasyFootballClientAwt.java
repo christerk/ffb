@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
@@ -71,7 +72,9 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		setClientStateFactory();
 
-		patchSketchOverlay = new PatchSketchOverlay(fUserInterface.getCoordinateConverter());
+		patchSketchOverlay = new PatchSketchOverlay(pParameters.getCoach(), fUserInterface.getCoordinateConverter());
+
+		setPathSketching(pParameters.getMode() == ClientMode.REPLAY);
 	}
 
 	@Override
