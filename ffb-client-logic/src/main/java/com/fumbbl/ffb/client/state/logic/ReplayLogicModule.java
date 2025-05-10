@@ -48,11 +48,13 @@ public class ReplayLogicModule extends LogicModule {
 	public void setUp() {
 		super.setUp();
 		markingAffectingCommands = new HashSet<>();
-		// we nned to add an element for the inital command so that at least one marking is loaded
-		// we cannot use 0 as for subsequent commands the command number is checked against this list
-		// and 0 is used by some special commands that are not replayable
-		// number is not used for anything else, but we need the correct number of elements
-		markingAffectingCommands.add(-1);
+		if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+			// we need to add an element for the initial command so that at least one marking is loaded
+			// we cannot use 0 as for subsequent commands the command number is checked against this list
+			// and 0 is used by some special commands that are not replayable
+			// this number is not used for anything else, but we need the correct number of elements
+			markingAffectingCommands.add(-1);
+		}
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
