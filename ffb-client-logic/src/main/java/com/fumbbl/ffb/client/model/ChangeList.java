@@ -12,6 +12,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.35.2")
+			.addImprovement("Client Logging: Capture more error messages in log file")
 		);
 
 		versions.add(new VersionChangeList("2.35.1")

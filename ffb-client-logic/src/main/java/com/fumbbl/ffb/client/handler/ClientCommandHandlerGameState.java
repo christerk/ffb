@@ -100,7 +100,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			// preload all icon urls now
 			int currentIconNr = 0;
 			for (String iconUrl : iconUrlsToDownload) {
-				System.out.println("download " + iconUrl);
+				getClient().logDebug("download " + iconUrl);
 				iconCache.loadIconFromUrl(iconUrl);
 				String message = String.format("Loaded icon %d of %d.", ++currentIconNr, nrOfIcons);
 				dialogProgress.updateProgress(currentIconNr, message);
@@ -124,7 +124,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 					userInterface.getChat().requestChatInputFocus();
 				});
 			} catch (InterruptedException | InvocationTargetException e) {
-				e.printStackTrace();
+				getClient().logWithOutGameId(e);
 			}
 		}
 
