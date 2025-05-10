@@ -11,6 +11,8 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.35.2")
+		);
 
 		versions.add(new VersionChangeList("2.35.1")
 			.addBugfix("Replays: Automatic player markings were not applied")
