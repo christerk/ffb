@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.mechanics;
 
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.CatchModifier;
@@ -45,7 +44,7 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract int minimumRollSafeThrow(Player<?> pPlayer);
 
-	public abstract String formatDodgeResult(ReportSkillRoll report, ActingPlayer player);
+	public abstract String formatDodgeResult(ReportSkillRoll report, Player<?> player);
 
 	public abstract String formatJumpResult(ReportSkillRoll report, Player<?> player);
 

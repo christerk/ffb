@@ -14,6 +14,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.35.2")
 			.addImprovement("Client Logging: Capture more error messages in log file")
 			.addBugfix("Replays: In some cases replays did not load when automarking was not enabled")
+			.addBugfix("Dodge: Sporadic errors during rendering of dodge messages")
 		);
 
 		versions.add(new VersionChangeList("2.35.1")

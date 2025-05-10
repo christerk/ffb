@@ -2,7 +2,6 @@ package com.fumbbl.ffb.mechanics.bb2016;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.Wording;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.CatchModifier;
@@ -115,12 +114,12 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
+	public String formatDodgeResult(ReportSkillRoll report, Player<?> player) {
 		StringBuilder neededRoll = new StringBuilder();
 		if (usedStrength(report)) {
-			neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, player.getPlayer().getStrengthWithModifiers()));
+			neededRoll.append(" using Break Tackle (ST ").append(Math.min(6, player.getStrengthWithModifiers()));
 		} else {
-			neededRoll.append(" (AG ").append(Math.min(6, player.getPlayer().getAgilityWithModifiers()));
+			neededRoll.append(" (AG ").append(Math.min(6, player.getAgilityWithModifiers()));
 		}
 		neededRoll.append(" + 1 Dodge").append(formatRollModifiers(report.getRollModifiers())).append(" + Roll > 6).");
 		return neededRoll.toString();
