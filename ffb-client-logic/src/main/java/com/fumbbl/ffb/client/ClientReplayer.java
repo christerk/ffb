@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType;
@@ -335,7 +336,7 @@ public class ClientReplayer implements ActionListener {
 		IFactorySource applicationSource = getClient().getGame().getApplicationSource().forContext(FactoryType.FactoryContext.APPLICATION);
 		FactoryManager factoryManager = getClient().getGame().getApplicationSource().getFactoryManager();
 		List<Game> gameVersions = new ArrayList<>();
-		boolean automarkingEnabled = IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+		boolean automarkingEnabled = ClientMode.REPLAY == getClient().getMode() && IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 		if (pMode == ClientCommandHandlerMode.INITIALIZING && automarkingEnabled) {
 			gameVersions.add(cloneGame(applicationSource, factoryManager));
 			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
@@ -355,8 +356,8 @@ public class ClientReplayer implements ActionListener {
 						reset(getClient().getGame().getTurnDataHome().getInducementSet());
 					}
 				}
-				if (pMode == ClientCommandHandlerMode.INITIALIZING && automarkingEnabled) {
-					if (markingAffectingCommands.contains(serverCommand.getCommandNr())) {
+				if (pMode == ClientCommandHandlerMode.INITIALIZING) {
+					if (automarkingEnabled && markingAffectingCommands.contains(serverCommand.getCommandNr())) {
 						gameVersions.add(cloneGame(applicationSource, factoryManager));
 						int index = gameVersions.size() - 1;
 						getClient().getCommunication().sendLoadPlayerMarkings(index, gameVersions.get(index));

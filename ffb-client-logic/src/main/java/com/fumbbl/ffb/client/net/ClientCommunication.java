@@ -85,21 +85,26 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 				netCommand = fCommandQueue.remove(0);
 			}
 
-			switch (netCommand.getId()) {
-				case SERVER_PONG:
-				case SERVER_TALK:
-				case SERVER_SOUND:
-				case SERVER_REPLAY:
-				case INTERNAL_SERVER_SOCKET_CLOSED:
-					break;
-				default:
-					getClient().getReplayer().add((ServerCommand) netCommand);
-					break;
-			}
-			ClientCommandHandlerMode mode = getClient().getReplayer().isReplaying() ? ClientCommandHandlerMode.QUEUING
-				: ClientCommandHandlerMode.PLAYING;
-			getClient().getCommandHandlerFactory().handleNetCommand(netCommand, mode);
+			try {
+				switch (netCommand.getId()) {
+					case SERVER_PONG:
+					case SERVER_TALK:
+					case SERVER_SOUND:
+					case SERVER_REPLAY:
+					case INTERNAL_SERVER_SOCKET_CLOSED:
+						break;
+					default:
+						getClient().getReplayer().add((ServerCommand) netCommand);
+						break;
+				}
+				ClientCommandHandlerMode mode = getClient().getReplayer().isReplaying() ? ClientCommandHandlerMode.QUEUING
+					: ClientCommandHandlerMode.PLAYING;
+				getClient().getCommandHandlerFactory().handleNetCommand(netCommand, mode);
 
+			} catch (Exception e) {
+				getClient().logWithOutGameId(e);
+				throw e;
+			}
 		}
 
 	}
