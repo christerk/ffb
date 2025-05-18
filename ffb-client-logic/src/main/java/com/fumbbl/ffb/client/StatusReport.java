@@ -54,9 +54,10 @@ public class StatusReport {
 				ReportId reportId = renderer.getClass().getAnnotation(ReportMessageType.class).value();
 				messageRenderers.put(reportId, renderer);
 			} catch (SecurityException | IllegalArgumentException e) {
-				System.err.println(e.getMessage());
+				fClient.logWithOutGameId(e);
 			} catch (NullPointerException npe) {
-				System.err.println("Error processing " + renderer.getClass().getName());
+				fClient.logError("Error processing " + renderer.getClass().getName());
+				fClient.logWithOutGameId(npe);
 			}
 		}
 	}
