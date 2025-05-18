@@ -2,23 +2,22 @@ package com.fumbbl.ffb.client.overlay;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.CoordinateConverter;
+import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.model.sketch.Sketch;
-import com.fumbbl.ffb.model.sketch.SketchManager;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.List;
+import java.util.Optional;
 
 public class PatchSketchOverlay implements Overlay {
 
-	private boolean sketching = false;
 	private final CoordinateConverter coordinateConverter;
-	private final SketchManager sketchManager;
+	private final ClientSketchManager sketchManager;
 	private final String coach;
 
 	public PatchSketchOverlay(String coach, CoordinateConverter coordinateConverter) {
 		this.coordinateConverter = coordinateConverter;
-		this.sketchManager = new SketchManager();
+		this.sketchManager = new ClientSketchManager(coach);
 		this.coach = coach;
 	}
 
@@ -41,14 +40,15 @@ public class PatchSketchOverlay implements Overlay {
 		if (coordinate == null) {
 			return;
 		}
-		List<Sketch> sketches = sketchManager.getSketches(coach);
+		Optional<Sketch> activeSketch = sketchManager.activeSketch();
 		if (e.getClickCount() > 1) {
-			if (!sketching) {
-				sketches.add(new Sketch(new Color(0, 200, 0).getRGB()));
+			if (activeSketch.isPresent()) {
+				sketchManager.finishSketch(coordinate);
+			} else {
+				sketchManager.create(coordinate, new Color(0, 200, 0).getRGB());
 			}
-			sketching = !sketching;
-		} else if (sketching) {
-			sketches.get(sketches.size() - 1).addCoordinate(coordinate);
+		} else  {
+			sketchManager.add(coordinate);
 		}
 	}
 
