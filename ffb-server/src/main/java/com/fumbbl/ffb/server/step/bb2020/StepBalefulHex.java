@@ -33,7 +33,9 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -176,6 +178,8 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 					FieldModel fieldModel = game.getFieldModel();
 					fieldModel.setPlayerState(targetPlayer, fieldModel.getPlayerState(targetPlayer).changeHypnotized(true).changeActive(false));
 					fieldModel.addSkillEnhancements(targetPlayer, skill);
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+					ServerUtilBlock.updateDiceDecorations(game);
 				} else if (getReRolledAction() == null && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 2, false)) {
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else {

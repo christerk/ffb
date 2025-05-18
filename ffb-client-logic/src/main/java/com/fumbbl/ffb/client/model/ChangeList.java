@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Replays: In some cases replays did not load when automarking was not enabled")
 			.addBugfix("Dodge: Sporadic errors during rendering of dodge messages")
 			.addBugfix("Replays in spec mode: With automarking enabled switching back from replay to spec mode would result in subsequent moves being rendered twice")
+			.addBugfix("Baleful Hex: When applied to an adjacent player, that player was still considered marking the active player")
 		);
 
 		versions.add(new VersionChangeList("2.35.1")
