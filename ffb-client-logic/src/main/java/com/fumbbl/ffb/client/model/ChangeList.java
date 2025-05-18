@@ -15,6 +15,7 @@ public class ChangeList {
 			.addImprovement("Client Logging: Capture more error messages in log file")
 			.addBugfix("Replays: In some cases replays did not load when automarking was not enabled")
 			.addBugfix("Dodge: Sporadic errors during rendering of dodge messages")
+			.addBugfix("Replays in spec mode: With automarking enabled switching back from replay to spec mode would result in subsequent moves being rendered twice")
 		);
 
 		versions.add(new VersionChangeList("2.35.1")
