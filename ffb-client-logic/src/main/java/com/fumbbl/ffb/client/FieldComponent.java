@@ -29,6 +29,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import javax.swing.JPanel;
@@ -71,7 +72,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	private final UiDimensionProvider uiDimensionProvider;
 
-	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+												PitchDimensionProvider pitchDimensionProvider, FontCache fontCache,
+												ClientSketchManager sketchManager) {
 
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
@@ -85,7 +88,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
 
 		fCoordinateByPlayerId = new HashMap<>();
 

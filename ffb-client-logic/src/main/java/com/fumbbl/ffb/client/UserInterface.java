@@ -19,6 +19,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
+import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -64,7 +65,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final StyleProvider styleProvider;
 	private final CoordinateConverter coordinateConverter;
 
-	public UserInterface(FantasyFootballClient pClient) {
+	public UserInterface(FantasyFootballClient pClient, ClientSketchManager sketchManager) {
 
 		fDesktop = null;
 		fClient = pClient;
@@ -101,7 +102,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		setResizable(false);
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
-		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
 		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, styleProvider, fontCache);
@@ -218,6 +219,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
+		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);

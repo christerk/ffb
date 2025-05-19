@@ -17,9 +17,9 @@ public class PatchSketchOverlay implements Overlay {
 	private final String coach;
 	private final FieldComponent fieldComponent;
 
-	public PatchSketchOverlay(String coach, CoordinateConverter coordinateConverter, FieldComponent fieldComponent) {
+	public PatchSketchOverlay(String coach, CoordinateConverter coordinateConverter, FieldComponent fieldComponent, ClientSketchManager sketchManager) {
 		this.coordinateConverter = coordinateConverter;
-		this.sketchManager = new ClientSketchManager(coach);
+		this.sketchManager = sketchManager;
 		this.coach = coach;
 		this.fieldComponent = fieldComponent;
 	}
@@ -58,7 +58,7 @@ public class PatchSketchOverlay implements Overlay {
 	}
 
 	private void drawSketches() {
-		fieldComponent.getLayerSketches().draw(sketchManager.getAllSketches());
+		fieldComponent.getLayerSketches().draw();
 		fieldComponent.refresh();
 	}
 

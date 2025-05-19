@@ -41,7 +41,9 @@ public enum Component {
 	CLIENT_SIZE(new Dimension(1078, 762), new Dimension(788, 1019), new Dimension(1050, 834), new Dimension(1920, 1080)),
 	BOX_SQUARE(new Dimension(39, 39)),
 	MENU_COLOR_ICON(new Dimension(20, 20)),
-	MENU_IMAGE_ICON(new Dimension(10, 10))
+	MENU_IMAGE_ICON(new Dimension(10, 10)),
+	SKETCH_STROKE(new Dimension(3, 3)),
+	SKETCH_END(new Dimension(10, 10))
 	;
 	private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 
