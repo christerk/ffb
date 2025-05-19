@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.overlay;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.CoordinateConverter;
+import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.model.sketch.Sketch;
 
@@ -14,11 +15,13 @@ public class PatchSketchOverlay implements Overlay {
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final String coach;
+	private final FieldComponent fieldComponent;
 
-	public PatchSketchOverlay(String coach, CoordinateConverter coordinateConverter) {
+	public PatchSketchOverlay(String coach, CoordinateConverter coordinateConverter, FieldComponent fieldComponent) {
 		this.coordinateConverter = coordinateConverter;
 		this.sketchManager = new ClientSketchManager(coach);
 		this.coach = coach;
+		this.fieldComponent = fieldComponent;
 	}
 
 	@Override
@@ -47,9 +50,16 @@ public class PatchSketchOverlay implements Overlay {
 			} else {
 				sketchManager.create(coordinate, new Color(0, 200, 0).getRGB());
 			}
-		} else  {
+			drawSketches();
+		} else if (activeSketch.isPresent()) {
 			sketchManager.add(coordinate);
+			drawSketches();
 		}
+	}
+
+	private void drawSketches() {
+		fieldComponent.getLayerSketches().draw(sketchManager.getAllSketches());
+		fieldComponent.refresh();
 	}
 
 	@Override

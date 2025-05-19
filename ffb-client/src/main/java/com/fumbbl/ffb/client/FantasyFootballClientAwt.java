@@ -72,7 +72,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		setClientStateFactory();
 
-		patchSketchOverlay = new PatchSketchOverlay(pParameters.getCoach(), fUserInterface.getCoordinateConverter());
+		patchSketchOverlay = new PatchSketchOverlay(pParameters.getCoach(), fUserInterface.getCoordinateConverter(), fUserInterface.getFieldComponent());
 
 		setPathSketching(pParameters.getMode() == ClientMode.REPLAY);
 	}
