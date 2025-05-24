@@ -26,7 +26,7 @@ public class Sketch {
 	}
 
 	public void addCoordinate(FieldCoordinate coordinate) {
-		if (path.size() != 1 || path.peekLast() != coordinate ) {
+		if (!coordinate.equals(path.peekLast())) {
 			path.addLast(coordinate);
 		}
 	}
