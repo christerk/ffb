@@ -10,7 +10,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.overlay.Overlay;
-import com.fumbbl.ffb.client.overlay.PatchSketchOverlay;
+import com.fumbbl.ffb.client.overlay.PathSketchOverlay;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -44,7 +44,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ClientReplayer fReplayer;
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
-	private final PatchSketchOverlay patchSketchOverlay;
+	private final PathSketchOverlay pathSketchOverlay;
 
 	private transient int currentMouseButton;
 
@@ -74,7 +74,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		setClientStateFactory();
 
-		patchSketchOverlay = new PatchSketchOverlay(pParameters.getCoach(), fUserInterface.getCoordinateConverter(), fUserInterface.getFieldComponent(), sketchManager);
+		pathSketchOverlay = new PathSketchOverlay(fUserInterface.getCoordinateConverter(), fUserInterface.getFieldComponent(), sketchManager);
 
 		setPathSketching(pParameters.getMode() == ClientMode.REPLAY);
 	}
@@ -293,6 +293,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	}
 
 	public void setPathSketching(boolean active) {
-		setActiveOverlay(active ? patchSketchOverlay : null);
+		setActiveOverlay(active ? pathSketchOverlay : null);
 	}
 }

@@ -6,19 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 public class ClientSketchManager extends SketchManager {
-	private final String coach;
 
 	private Sketch activeSketch;
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private final List<Sketch> sketches;
 
 	public ClientSketchManager(String coach) {
-		this.coach = coach;
 		sketches = super.getSketches(coach);
 	}
 
 	public Optional<Sketch> activeSketch() {
 		return Optional.ofNullable(activeSketch);
+	}
+
+	public void clear() {
+		sketches.clear();
+		activeSketch = null;
 	}
 
 	public void create(FieldCoordinate coordinate, int rgb) {
