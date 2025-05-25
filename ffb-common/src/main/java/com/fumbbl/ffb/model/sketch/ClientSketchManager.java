@@ -4,6 +4,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ClientSketchManager extends SketchManager {
 
@@ -41,5 +43,25 @@ public class ClientSketchManager extends SketchManager {
 			activeSketch.addCoordinate(coordinate);
 		}
 		activeSketch = null;
+	}
+
+	public boolean hasSketches() {
+		return !sketches.isEmpty();
+	}
+
+	public Set<Sketch> getSketches(FieldCoordinate coordinate) {
+		return sketches.stream()
+				.filter(sketch -> sketch.getPath().contains(coordinate)).collect(Collectors.toSet());
+	}
+
+	public void setActive(Sketch sketch) {
+		activeSketch = sketch;
+	}
+
+	public void remove(Sketch sketch) {
+		sketches.remove(sketch);
+		if (activeSketch == sketch) {
+			activeSketch = null;
+		}
 	}
 }

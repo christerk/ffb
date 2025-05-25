@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 public class Sketch {
 	private int rgb;
+	private String label;
 	private final LinkedList<FieldCoordinate> path;
 
 	public Sketch(int rgb) {
@@ -13,16 +14,24 @@ public class Sketch {
 		path = new LinkedList<>();
 	}
 
-	public int getRgb() {
-		return rgb;
-	}
-
 	public LinkedList<FieldCoordinate> getPath() {
 		return path;
 	}
 
+	public int getRgb() {
+		return rgb;
+	}
+
 	public void setRgb(int rgb) {
 		this.rgb = rgb;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	public void addCoordinate(FieldCoordinate coordinate) {
