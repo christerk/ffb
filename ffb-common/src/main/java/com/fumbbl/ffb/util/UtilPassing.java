@@ -40,21 +40,18 @@ public class UtilPassing {
 		return interceptors.toArray(new Player[0]);
 	}
 
-	private static boolean canIntercept(FieldCoordinate pThrowerCoordinate, FieldCoordinate pTargetCoordinate,
-			FieldCoordinate pIinterceptorCoordinate) {
-		int receiverX = pTargetCoordinate.getX() - pThrowerCoordinate.getX();
-		int receiverY = pTargetCoordinate.getY() - pThrowerCoordinate.getY();
-		int interceptorX = pIinterceptorCoordinate.getX() - pThrowerCoordinate.getX();
-		int interceptorY = pIinterceptorCoordinate.getY() - pThrowerCoordinate.getY();
+	private static boolean canIntercept(FieldCoordinate throwerCoordinate, FieldCoordinate targetCoordinate,
+			FieldCoordinate interceptorCoordinate) {
+		int receiverX = targetCoordinate.getX() - throwerCoordinate.getX();
+		int receiverY = targetCoordinate.getY() - throwerCoordinate.getY();
+		int interceptorX = interceptorCoordinate.getX() - throwerCoordinate.getX();
+		int interceptorY = interceptorCoordinate.getY() - throwerCoordinate.getY();
 		int a = ((receiverX - interceptorX) * (receiverX - interceptorX))
 				+ ((receiverY - interceptorY) * (receiverY - interceptorY));
 		int b = (interceptorX * interceptorX) + (interceptorY * interceptorY);
 		int c = (receiverX * receiverX) + (receiverY * receiverY);
-		double d1 = Math.abs((receiverY * (interceptorX + 0.5)) - (receiverX * (interceptorY + 0.5)));
-		double d2 = Math.abs((receiverY * (interceptorX + 0.5)) - (receiverX * (interceptorY - 0.5)));
-		double d3 = Math.abs((receiverY * (interceptorX - 0.5)) - (receiverX * (interceptorY + 0.5)));
-		double d4 = Math.abs((receiverY * (interceptorX - 0.5)) - (receiverX * (interceptorY - 0.5)));
-		return (c > a) && (c > b) && (RULER_WIDTH > (2 * Math.min(Math.min(Math.min(d1, d2), d3), d4) / Math.sqrt(c)));
+		boolean withinDistance = GeometryService.INSTANCE.withinSpannedRectangle(throwerCoordinate, targetCoordinate, RULER_WIDTH, interceptorCoordinate);
+		return (c > a) && (c > b) && withinDistance;
 	}
 
 	public static Set<FieldCoordinate> findValidPassBlockEndCoordinates(Game pGame) {
