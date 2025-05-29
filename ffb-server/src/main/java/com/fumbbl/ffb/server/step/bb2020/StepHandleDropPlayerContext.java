@@ -34,6 +34,8 @@ import com.fumbbl.ffb.util.StringTool;
 public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 
 	private DropPlayerContext dropPlayerContext;
+	private String playerId;
+	private Skill skill;
 
 	public StepHandleDropPlayerContext(GameState pGameState) {
 		super(pGameState);
@@ -57,6 +59,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					boolean successful = toPrimitive((Boolean) parameter.getValue());
 
 					if (successful) {
+						getGameState().getGame().getPlayerById(playerId).markUsed(skill, getGameState().getGame());
 						successfulSkillUse(dropPlayerContext.getInjuryResult());
 					} else {
 						dropPlayerContext.getInjuryResult().injuryContext().setModifiedInjuryContext(null);
@@ -83,8 +86,6 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 				getResult().addReport(new ReportSkillUse(clientCommandUseSkill.getPlayerId(), skill, clientCommandUseSkill.isSkillUsed(), injuryResult.injuryContext().getModifiedInjuryContext().getSkillUse()));
 				if (clientCommandUseSkill.isSkillUsed()) {
 
-					getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
-
 					if (skill.getSkillBehaviour().getInjuryContextModification().requiresConditionalReRollSkill()) {
 						getGameState().pushCurrentStepOnStack();
 						Sequence sequence = new Sequence(getGameState());
@@ -93,6 +94,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						getResult().setNextAction(StepAction.NEXT_STEP);
 					} else {
+						getGameState().getGame().getPlayerById(clientCommandUseSkill.getPlayerId()).markUsed(skill, getGameState().getGame());
 						successfulSkillUse(injuryResult);
 					}
 				}
@@ -126,7 +128,9 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 			if (injuryResult.injuryContext().getModifiedInjuryContext() != null && !injuryResult.isAlreadyReported()) {
 				injuryResult.report(this);
 				ModifiedInjuryContext injuryContext = injuryResult.injuryContext().getModifiedInjuryContext();
-				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getActingPlayer().getPlayerId(), injuryContext.getUsedSkill(), 0), true);
+				playerId = game.getActingPlayer().getPlayerId();
+				skill = injuryContext.getUsedSkill();
+				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(playerId, skill, 0), true);
 				getResult().setNextAction(StepAction.CONTINUE);
 			} else {
 
@@ -165,6 +169,8 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 		if (dropPlayerContext != null) {
 			IServerJsonOption.DROP_PLAYER_CONTEXT.addTo(jsonObject, dropPlayerContext.toJsonValue());
 		}
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.SKILL.addTo(jsonObject, skill);
 		return jsonObject;
 	}
 
@@ -175,6 +181,8 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 		if (IServerJsonOption.DROP_PLAYER_CONTEXT.isDefinedIn(jsonObject)) {
 			dropPlayerContext = new DropPlayerContext().initFrom(source, IServerJsonOption.DROP_PLAYER_CONTEXT.getFrom(source, jsonObject));
 		}
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		skill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
 		return step;
 	}
 }

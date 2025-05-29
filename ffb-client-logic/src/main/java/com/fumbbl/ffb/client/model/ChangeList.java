@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Replays in spec mode: With automarking enabled switching back from replay to spec mode would result in subsequent moves being rendered twice")
 			.addBugfix("Baleful Hex: When applied to an adjacent player, that player was still considered marking the active player")
 			.addBugfix("Master Chef: When both teams have a master chef re-rolls were not calculated correctly")
+			.addBugfix("Old Pro: When the pro roll failed Old Pro was still marked as used")
 		);
 
 		versions.add(new VersionChangeList("2.35.1")
