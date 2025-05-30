@@ -88,6 +88,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		if (popupMenu != null && popupMenu.isVisible()) {
+			return;
+		}
 
 		Set<Sketch> newTargets = sketchManager.getSketches(e.getX(), e.getY());
 		Set<Sketch> oldTargets = new HashSet<>(actionTargets);

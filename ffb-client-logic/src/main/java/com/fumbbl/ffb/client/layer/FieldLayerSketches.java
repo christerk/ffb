@@ -9,10 +9,12 @@ import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.overlay.sketch.TriangleCoords;
 import com.fumbbl.ffb.model.sketch.Sketch;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.util.Collections;
@@ -47,6 +49,8 @@ public class FieldLayerSketches extends FieldLayer {
 				paint = new Color(paint.getRed(), paint.getGreen(), paint.getBlue(), 128);
 			}
 			graphics2D.setPaint(paint);
+			graphics2D.setFont(fontCache.font(Font.BOLD, 12, pitchDimensionProvider));
+
 			int nPoints = sketch.getPath().size();
 			int[] xPoints = new int[nPoints];
 			int[] yPoints = new int[nPoints];
@@ -65,9 +69,64 @@ public class FieldLayerSketches extends FieldLayer {
 				TriangleCoords triangle = TriangleCoords.calculate(xPoints[nPoints - 2], yPoints[nPoints - 2], xPoints[nPoints - 1], yPoints[nPoints - 1], legLength, legAngle);
 
 				graphics2D.fillPolygon(triangle.getxCoords(), triangle.getyCoords(), 3);
+				if (StringTool.isProvided(sketch.getLabel())) {
+					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, 1, 0, 0);
+					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, nPoints - 2, nPoints - 1, nPoints - 1);
+				}
+
+			} else {
+				if (StringTool.isProvided(sketch.getLabel())) {
+					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, 0, 0, 0 );
+				}
 			}
 		});
 		graphics2D.dispose();
 	}
 
+private void addLabel(Graphics2D graphics2D, String label, int[] xPoints, int[] yPoints, int startIndex, int endIndex, int anchorIndex) {
+		int xStart = xPoints[startIndex];
+		int yStart = yPoints[startIndex];
+		int xEnd = xPoints[endIndex];
+		int yEnd = yPoints[endIndex];
+		LabelOffset labelOffset = labelPosition(xStart, yStart, xEnd, yEnd);
+		printLabel(graphics2D, label, labelCenter(xPoints[anchorIndex], yPoints[anchorIndex], labelOffset));
+	}
+
+
+	private LabelOffset labelPosition(int xStart, int yStart, int xEnd, int yEnd) {
+		if (xStart == xEnd && yStart == yEnd) {
+			return LabelOffset.BOTTOM_RIGHT;
+		}
+		if (xStart <= xEnd && yStart <= yEnd) {
+			return LabelOffset.BOTTOM_RIGHT;
+		} else if (xStart > xEnd && yStart <= yEnd) {
+			return LabelOffset.BOTTOM_LEFT;
+		} else if (xStart >= xEnd) {
+			return LabelOffset.TOP_LEFT;
+		} else {
+			return LabelOffset.TOP_RIGHT;
+		}
+	}
+
+	private Dimension labelCenter(int x, int y, LabelOffset labelOffset) {
+		int offset = pitchDimensionProvider.dimension(Component.FIELD_SQUARE).width / 2;
+		switch (labelOffset) {
+			case TOP_LEFT:
+				return new Dimension(x - offset, y - offset / 2);
+			case BOTTOM_RIGHT:
+				return new Dimension(x, y + offset);
+			case BOTTOM_LEFT:
+				return new Dimension(x - offset, y + offset);
+			default: // TOP_RIGHT
+				return new Dimension(x, y - offset / 2);
+		}
+	}
+
+	private void printLabel(Graphics2D graphics2D, String label, Dimension center) {
+		graphics2D.drawString(label, center.width, center.height);
+	}
+
+	private enum LabelOffset {
+		TOP_LEFT, BOTTOM_RIGHT, BOTTOM_LEFT, TOP_RIGHT
+	}
 }
