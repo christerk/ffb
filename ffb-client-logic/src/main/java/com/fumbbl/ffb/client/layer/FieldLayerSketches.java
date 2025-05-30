@@ -10,7 +10,12 @@ import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.overlay.sketch.TriangleCoords;
 import com.fumbbl.ffb.model.sketch.Sketch;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.util.Collections;
 import java.util.List;
 
 public class FieldLayerSketches extends FieldLayer {
@@ -25,10 +30,10 @@ public class FieldLayerSketches extends FieldLayer {
 	@Override
 	public void init() {
 		super.init();
-		draw();
+		draw(Collections.emptyList());
 	}
 
-	public void draw() {
+	public void draw(List<Sketch> highlights) {
 		List<Sketch> sketches = sketchManager.getAllSketches();
 		clear(true);
 		Graphics2D graphics2D = getImage().createGraphics();
@@ -36,7 +41,12 @@ public class FieldLayerSketches extends FieldLayer {
 		graphics2D.setStroke(stroke);
 		Dimension sketchEnd = pitchDimensionProvider.dimension(Component.SKETCH_CIRCLE);
 		sketches.forEach(sketch -> {
-			graphics2D.setPaint(new Color(sketch.getRgb()));
+
+			Color paint = new Color(sketch.getRgb());
+			if (highlights.contains(sketch)) {
+				paint = new Color(paint.getRed(), paint.getGreen(), paint.getBlue(), 128);
+			}
+			graphics2D.setPaint(paint);
 			int nPoints = sketch.getPath().size();
 			int[] xPoints = new int[nPoints];
 			int[] yPoints = new int[nPoints];

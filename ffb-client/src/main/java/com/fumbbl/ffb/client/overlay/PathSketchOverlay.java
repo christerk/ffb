@@ -1,10 +1,10 @@
 package com.fumbbl.ffb.client.overlay;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
@@ -15,18 +15,19 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPopupMenu;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuListener {
+public class PathSketchOverlay implements Overlay, ActionListener {
 
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
@@ -71,6 +72,38 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 	}
 
 	@Override
+	public void mouseEntered(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		mouseMoved(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+
+		Set<Sketch> newTargets = sketchManager.getSketches(e.getX(), e.getY());
+		Set<Sketch> oldTargets = new HashSet<>(actionTargets);
+		if (oldTargets.containsAll(newTargets) && newTargets.containsAll(oldTargets)) {
+			return;
+		}
+		actionTargets.clear();
+		actionTargets.addAll(newTargets);
+		if (sketchManager.activeSketch().isPresent()) {
+			drawSketches();
+		} else {
+			drawSketches(actionTargets);
+		}
+	}
+
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			showContextMenu(e);
@@ -95,21 +128,24 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 	}
 
 	private void drawSketches() {
-		fieldComponent.getLayerSketches().draw();
+		drawSketches(Collections.emptyList());
+	}
+
+	private void drawSketches(List<Sketch> highlights) {
+		fieldComponent.getLayerSketches().draw(highlights);
 		fieldComponent.refresh();
 	}
 
 	private void showContextMenu(MouseEvent e) {
-		List<JMenuItem> menuItems = collectActions(e);
+		List<JMenuItem> menuItems = collectActions();
 		if (menuItems.isEmpty()) {
 			return;
 		}
 		createPopupMenu(menuItems.toArray(new JMenuItem[0]), e);
 	}
 
-	private List<JMenuItem> collectActions(MouseEvent e) {
+	private List<JMenuItem> collectActions() {
 		List<JMenuItem> menuItems = new ArrayList<>();
-		actionTargets.addAll(sketchManager.getSketches(e.getX(), e.getY()));
 		if (sketchManager.hasSketches()) {
 			menuItems.add(deleteAll);
 			if (actionTargets.size() == 1) {
@@ -128,7 +164,6 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 
 	private void createPopupMenu(JMenuItem[] pMenuItems, MouseEvent e) {
 		popupMenu = new JPopupMenu();
-		popupMenu.addPopupMenuListener(this);
 		for (JMenuItem menuItem : pMenuItems) {
 			popupMenu.add(menuItem);
 		}
@@ -136,40 +171,20 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-
-	}
-
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == deleteAll) {
 			sketchManager.clear();
-			drawSketches();
+			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteSingle) {
 			sketchManager.remove(actionTargets.get(0));
-			drawSketches();
+			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteMultiple) {
 			for (Sketch sketch : actionTargets) {
 				sketchManager.remove(sketch);
 			}
-			drawSketches();
+			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == editLabel) {
 			Point location = popupMenu.getLocation();
@@ -186,14 +201,12 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 	private void removeMenu() {
 		popupMenu.setVisible(false);
 		popupMenu = null;
-		actionTargets.clear();
 	}
 
 
 	private void createLabelPopup(String existingLabel, int pX, int pY) {
 		popupMenu.setVisible(false);
 		popupMenu = new JPopupMenu();
-		popupMenu.addPopupMenuListener(this);
 		popupMenu.add(new JLabel(pitchDimensionProvider, "Label"));
 
 		popupMenu.setLayout(new BoxLayout(popupMenu, BoxLayout.X_AXIS));
@@ -214,20 +227,5 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 			drawSketches();
 			removeMenu();
 		});
-	}
-
-	@Override
-	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-
-	}
-
-	@Override
-	public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-
-	}
-
-	@Override
-	public void popupMenuCanceled(PopupMenuEvent e) {
-		actionTargets.clear();
 	}
 }

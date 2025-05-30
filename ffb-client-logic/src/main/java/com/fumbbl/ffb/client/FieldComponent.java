@@ -379,6 +379,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseMoved(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
+
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseMoved(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseMoved(pMouseEvent);
@@ -388,6 +396,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
+
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseMoved(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseDragged(pMouseEvent);
