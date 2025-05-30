@@ -1,13 +1,13 @@
 package com.fumbbl.ffb.client.overlay;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
-import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -108,10 +108,8 @@ public class PathSketchOverlay implements Overlay, ActionListener, PopupMenuList
 	}
 
 	private List<JMenuItem> collectActions(MouseEvent e) {
-		FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(e);
-
 		List<JMenuItem> menuItems = new ArrayList<>();
-		actionTargets.addAll(sketchManager.getSketches(coordinate));
+		actionTargets.addAll(sketchManager.getSketches(e.getX(), e.getY()));
 		if (sketchManager.hasSketches()) {
 			menuItems.add(deleteAll);
 			if (actionTargets.size() == 1) {

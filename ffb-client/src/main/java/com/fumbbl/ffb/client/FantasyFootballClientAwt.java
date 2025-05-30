@@ -15,7 +15,6 @@ import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -66,15 +65,15 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		fReplayer = new ClientReplayer(this);
 
-		ClientSketchManager sketchManager = new ClientSketchManager(pParameters.getCoach());
-		fUserInterface = new UserInterface(this, sketchManager);
+		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
 		fUserInterface.getScoreBar().refresh();
 		fUserInterface.getGameMenuBar().refresh();
 
 		setClientStateFactory();
 
-		pathSketchOverlay = new PathSketchOverlay(fUserInterface.getCoordinateConverter(), fUserInterface.getFieldComponent(), sketchManager, fUserInterface.getPitchDimensionProvider());
+		pathSketchOverlay = new PathSketchOverlay(fUserInterface.getCoordinateConverter(), fUserInterface.getFieldComponent(),
+			fUserInterface.getSketchManager(), fUserInterface.getPitchDimensionProvider());
 
 		setPathSketching(pParameters.getMode() == ClientMode.REPLAY);
 	}

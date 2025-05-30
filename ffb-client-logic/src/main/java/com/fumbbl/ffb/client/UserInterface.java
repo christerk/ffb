@@ -9,6 +9,7 @@ import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.ui.ChatComponent;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
@@ -19,7 +20,6 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
-import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -64,8 +64,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 	private final CoordinateConverter coordinateConverter;
+	private final ClientSketchManager sketchManager;
 
-	public UserInterface(FantasyFootballClient pClient, ClientSketchManager sketchManager) {
+
+	public UserInterface(FantasyFootballClient pClient) {
 
 		fDesktop = null;
 		fClient = pClient;
@@ -77,11 +79,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			} catch (Exception ignored) {
 			}
 		}
-
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
 		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
+		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
 		fontCache = new FontCache();
@@ -225,6 +227,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		panelMain.add(fieldPanel);
 		panelMain.add(fSideBarAway);
 		return panelMain;
+	}
+
+	public ClientSketchManager getSketchManager() {
+		return sketchManager;
 	}
 
 	public FontCache getFontCache() {
@@ -419,7 +425,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public void socketClosed() {
 		if (getClient().getMode() == ClientMode.REPLAY) {
-				if (getClient().getReplayer().isOnline()) {
+			if (getClient().getReplayer().isOnline()) {
 				ChatComponent chat = getChat();
 				chat.append(TextStyle.NONE, "The connection to the server has been closed.");
 				chat.append(TextStyle.NONE, "To re-connect you need to restart the client.");

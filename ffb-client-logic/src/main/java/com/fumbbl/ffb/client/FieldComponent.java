@@ -20,6 +20,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerSketches;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
 import com.fumbbl.ffb.client.overlay.Overlay;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.marking.FieldMarker;
@@ -29,7 +30,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
-import com.fumbbl.ffb.model.sketch.ClientSketchManager;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import javax.swing.JPanel;
