@@ -16,7 +16,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPopupMenu;
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -39,8 +38,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private final JMenuItem deleteMultiple;
 	private final JMenuItem editLabel;
 	private final JMenuItem editLabels;
-	private final JMenuItem setActive;
 	private JPopupMenu popupMenu;
+	private int popupX;
+	private int popupY;
 
 	public PathSketchOverlay(CoordinateConverter coordinateConverter, FieldComponent fieldComponent, ClientSketchManager sketchManager, PitchDimensionProvider pitchDimensionProvider) {
 		this.coordinateConverter = coordinateConverter;
@@ -49,16 +49,14 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		this.pitchDimensionProvider = pitchDimensionProvider;
 		this.deleteAll = new JMenuItem(pitchDimensionProvider, "Clear all sketches");
 		this.deleteSingle = new JMenuItem(pitchDimensionProvider, "Clear sketch");
-		this.deleteMultiple = new JMenuItem(pitchDimensionProvider, "Clear sketch(es)");
+		this.deleteMultiple = new JMenuItem(pitchDimensionProvider, "Clear sketches");
 		this.editLabel = new JMenuItem(pitchDimensionProvider, "Edit label");
 		this.editLabels = new JMenuItem(pitchDimensionProvider, "Edit labels");
-		this.setActive = new JMenuItem(pitchDimensionProvider, "Modify sketch");
 		this.deleteAll.addActionListener(this);
 		this.deleteSingle.addActionListener(this);
 		this.deleteMultiple.addActionListener(this);
 		this.editLabel.addActionListener(this);
 		this.editLabels.addActionListener(this);
-		this.setActive.addActionListener(this);
 	}
 
 	@Override
@@ -154,9 +152,6 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			if (actionTargets.size() == 1) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
-				if (actionTargets.get(0) == sketchManager.activeSketch().orElse(null)) {
-					menuItems.add(setActive);
-				}
 			} else if (actionTargets.size() > 1) {
 				menuItems.add(deleteMultiple);
 				menuItems.add(editLabels);
@@ -171,6 +166,8 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			popupMenu.add(menuItem);
 		}
 		popupMenu.show(fieldComponent, e.getX(), e.getY());
+		popupX = e.getX();
+		popupY = e.getY();
 	}
 
 	@Override
@@ -190,14 +187,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == editLabel) {
-			Point location = popupMenu.getLocation();
-			createLabelPopup(actionTargets.get(0).getLabel(), location.x, location.y);
+			createLabelPopup(actionTargets.get(0).getLabel(), popupX, popupY);
 		} else if (e.getSource() == editLabels) {
-			Point location = popupMenu.getLocation();
-			createLabelPopup(null, location.x, location.y);
-		} else if (e.getSource() == setActive) {
-			sketchManager.setActive(actionTargets.get(0));
-			removeMenu();
+			createLabelPopup(null, popupX, popupY);
 		}
 	}
 
