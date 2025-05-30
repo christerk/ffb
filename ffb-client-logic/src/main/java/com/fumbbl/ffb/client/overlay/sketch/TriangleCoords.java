@@ -29,13 +29,12 @@ public class TriangleCoords {
 	}
 
 	public static TriangleCoords calculate(int previousX, int previousY, int finalX, int finalY, int legLength, int legAngle) {
-		double angle = incomingAngle(previousX, previousY, finalX, finalY);
+		double angleRad = angle(previousX, previousY, finalX, finalY);
 
 		TriangleCoords triangleCoords = new TriangleCoords();
 		triangleCoords.addX(finalX);
 		triangleCoords.addY(finalY);
 
-		double angleRad = Math.toRadians(angle);
 		double angle1 = angleRad - Math.toRadians(legAngle);
 		double angle2 = angleRad + Math.toRadians(legAngle);
 
@@ -48,9 +47,9 @@ public class TriangleCoords {
 		return triangleCoords;
 	}
 
-	private static double incomingAngle(int xFrom, int yFrom, int xTo, int yTo) {
+	private static double angle(int xFrom, int yFrom, int xTo, int yTo) {
 		int xDiff = xTo - xFrom;
 		int yDiff = yFrom - yTo; // y==0 is the top line of the component
-		return Math.toDegrees(Math.atan2(yDiff, xDiff));
+		return Math.atan2(yDiff, xDiff);
 	}
 }
