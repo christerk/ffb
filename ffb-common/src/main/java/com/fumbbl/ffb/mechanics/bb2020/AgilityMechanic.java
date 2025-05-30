@@ -2,7 +2,6 @@ package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.Wording;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -79,12 +78,12 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public String formatDodgeResult(ReportSkillRoll report, ActingPlayer player) {
+	public String formatDodgeResult(ReportSkillRoll report, Player<?> player) {
 		StatBasedRollModifier statBasedRollModifier = null;
 		if (report instanceof ReportDodgeRoll) {
 			statBasedRollModifier = ((ReportDodgeRoll) report).getStatBasedRollModifier();
 		}
-		return formatResult(player.getPlayer().getAgilityWithModifiers(), report.getRollModifiers(), statBasedRollModifier);
+		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers(), statBasedRollModifier);
 	}
 
 	@Override

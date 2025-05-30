@@ -11,6 +11,15 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.35.2")
+			.addImprovement("Client Logging: Capture more error messages in log file")
+			.addBugfix("Replays: In some cases replays did not load when automarking was not enabled")
+			.addBugfix("Dodge: Sporadic errors during rendering of dodge messages")
+			.addBugfix("Replays in spec mode: With automarking enabled switching back from replay to spec mode would result in subsequent moves being rendered twice")
+			.addBugfix("Baleful Hex: When applied to an adjacent player, that player was still considered marking the active player")
+			.addBugfix("Master Chef: When both teams have a master chef re-rolls were not calculated correctly")
+			.addBugfix("Old Pro: When the pro roll failed Old Pro was still marked as used")
+		);
 
 		versions.add(new VersionChangeList("2.35.1")
 			.addBugfix("Replays: Automatic player markings were not applied")
