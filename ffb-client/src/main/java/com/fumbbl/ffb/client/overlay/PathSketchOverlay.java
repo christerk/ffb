@@ -145,15 +145,15 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			return;
 		}
 		Optional<Sketch> activeSketch = sketchManager.activeSketch();
-		if (e.getClickCount() > 1) {
+		if (e.getClickCount() > 1 && activeSketch.isPresent()) {
+			sketchManager.finishSketch(coordinate);
+			drawSketches();
+		} else {
 			if (activeSketch.isPresent()) {
-				sketchManager.finishSketch(coordinate);
+				sketchManager.add(coordinate);
 			} else {
 				sketchManager.create(coordinate, sketchColor.getRGB());
 			}
-			drawSketches();
-		} else if (activeSketch.isPresent()) {
-			sketchManager.add(coordinate);
 			drawSketches();
 		}
 	}
