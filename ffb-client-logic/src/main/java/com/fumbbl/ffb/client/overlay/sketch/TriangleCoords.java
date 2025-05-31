@@ -28,8 +28,11 @@ public class TriangleCoords {
 		yCoords.add(value);
 	}
 
-	public static TriangleCoords calculate(int previousX, int previousY, int finalX, int finalY, int legLength, int legAngle) {
-		double angleRad = angle(previousX, previousY, finalX, finalY);
+	public static TriangleCoords calculate(int previousX, int previousY, int lastX, int lastY, int legLength, int legAngle) {
+		double angleRad = angle(previousX, previousY, lastX, lastY);
+
+		int finalX = (int) (lastX + Math.cos(angleRad) * legLength / 2);
+		int finalY = (int) (lastY - Math.sin(angleRad) * legLength / 2);
 
 		TriangleCoords triangleCoords = new TriangleCoords();
 		triangleCoords.addX(finalX);

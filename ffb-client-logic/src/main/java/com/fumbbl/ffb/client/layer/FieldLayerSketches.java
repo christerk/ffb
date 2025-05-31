@@ -51,7 +51,7 @@ public class FieldLayerSketches extends FieldLayer {
 			} else {
 				graphics2D.setPaint(paint);
 			}
-			graphics2D.setFont(fontCache.font(Font.BOLD, 12, pitchDimensionProvider));
+			graphics2D.setFont(fontCache.font(Font.BOLD, 14, pitchDimensionProvider));
 
 			int nPoints = sketch.getPath().size();
 			int[] xPoints = new int[nPoints];

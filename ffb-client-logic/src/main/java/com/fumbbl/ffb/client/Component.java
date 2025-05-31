@@ -42,7 +42,7 @@ public enum Component {
 	BOX_SQUARE(new Dimension(39, 39)),
 	MENU_COLOR_ICON(new Dimension(20, 20)),
 	MENU_IMAGE_ICON(new Dimension(10, 10)),
-	SKETCH_STROKE(new Dimension(3, 3)),
+	SKETCH_STROKE(new Dimension(5, 5)),
 	// hacky misuse of Dimension, width gives the length of the triangle sides, height the angle from the middle line to the side
 	SKETCH_TRIANGLE(new Dimension(15, 35)),
 	SKETCH_CIRCLE(new Dimension(10, 10))
