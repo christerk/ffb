@@ -32,10 +32,10 @@ public class FieldLayerSketches extends FieldLayer {
 	@Override
 	public void init() {
 		super.init();
-		draw(Collections.emptyList());
+		draw(Collections.emptyList(), null);
 	}
 
-	public void draw(List<Sketch> highlights) {
+	public void draw(List<Sketch> highlights, FieldCoordinate previewCoordinate) {
 		List<Sketch> sketches = sketchManager.getAllSketches();
 		clear(true);
 		Graphics2D graphics2D = getImage().createGraphics();
@@ -45,10 +45,12 @@ public class FieldLayerSketches extends FieldLayer {
 		sketches.forEach(sketch -> {
 
 			Color paint = new Color(sketch.getRgb());
+			Color highlightPaint = new Color(paint.getRed(), paint.getGreen(), paint.getBlue(), 128);
 			if (highlights.contains(sketch)) {
-				paint = new Color(paint.getRed(), paint.getGreen(), paint.getBlue(), 128);
+				graphics2D.setPaint(highlightPaint);
+			} else {
+				graphics2D.setPaint(paint);
 			}
-			graphics2D.setPaint(paint);
 			graphics2D.setFont(fontCache.font(Font.BOLD, 12, pitchDimensionProvider));
 
 			int nPoints = sketch.getPath().size();
@@ -79,6 +81,17 @@ public class FieldLayerSketches extends FieldLayer {
 					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, 0, 0, 0 );
 				}
 			}
+
+			sketchManager.activeSketch().ifPresent(activeSketch -> {
+				if (activeSketch == sketch && previewCoordinate != sketch.getPath().getLast()) {
+					Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
+					graphics2D.setPaint(highlightPaint);
+					graphics2D.drawLine(
+						xPoints[nPoints - 1], yPoints[nPoints - 1],
+						dimension.width, dimension.height
+					);
+				}
+			});
 		});
 		graphics2D.dispose();
 	}

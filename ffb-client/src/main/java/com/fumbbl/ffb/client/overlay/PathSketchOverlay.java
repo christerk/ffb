@@ -41,6 +41,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private JPopupMenu popupMenu;
 	private int popupX;
 	private int popupY;
+	private FieldCoordinate previewCoordinate;
 
 	public PathSketchOverlay(CoordinateConverter coordinateConverter, FieldComponent fieldComponent, ClientSketchManager sketchManager, PitchDimensionProvider pitchDimensionProvider) {
 		this.coordinateConverter = coordinateConverter;
@@ -92,11 +93,14 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 		Set<Sketch> newTargets = sketchManager.getSketches(e.getX(), e.getY());
 		Set<Sketch> oldTargets = new HashSet<>(actionTargets);
-		if (oldTargets.containsAll(newTargets) && newTargets.containsAll(oldTargets)) {
+		FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(e);
+
+		if (oldTargets.containsAll(newTargets) && newTargets.containsAll(oldTargets) && coordinate == previewCoordinate) {
 			return;
 		}
 		actionTargets.clear();
 		actionTargets.addAll(newTargets);
+		previewCoordinate = coordinate;
 		if (sketchManager.activeSketch().isPresent()) {
 			drawSketches();
 		} else {
@@ -133,7 +137,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	}
 
 	private void drawSketches(List<Sketch> highlights) {
-		fieldComponent.getLayerSketches().draw(highlights);
+		fieldComponent.getLayerSketches().draw(highlights, previewCoordinate);
 		fieldComponent.refresh();
 	}
 
