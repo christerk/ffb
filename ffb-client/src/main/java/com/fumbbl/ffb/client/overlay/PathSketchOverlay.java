@@ -14,6 +14,7 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JColorChooser;
 import javax.swing.JPopupMenu;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -38,10 +39,13 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private final JMenuItem deleteMultiple;
 	private final JMenuItem editLabel;
 	private final JMenuItem editLabels;
+	private final JMenuItem editColor;
+	private final JMenuItem editColors;
 	private JPopupMenu popupMenu;
 	private int popupX;
 	private int popupY;
 	private FieldCoordinate previewCoordinate;
+	private Color sketchColor = new Color(0, 200, 0);
 
 	public PathSketchOverlay(CoordinateConverter coordinateConverter, FieldComponent fieldComponent, ClientSketchManager sketchManager, PitchDimensionProvider pitchDimensionProvider) {
 		this.coordinateConverter = coordinateConverter;
@@ -53,11 +57,15 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		this.deleteMultiple = new JMenuItem(pitchDimensionProvider, "Clear sketches");
 		this.editLabel = new JMenuItem(pitchDimensionProvider, "Edit label");
 		this.editLabels = new JMenuItem(pitchDimensionProvider, "Edit labels");
+		this.editColor = new JMenuItem(pitchDimensionProvider, "Set color");
+		this.editColors = new JMenuItem(pitchDimensionProvider, "Set colors");
 		this.deleteAll.addActionListener(this);
 		this.deleteSingle.addActionListener(this);
 		this.deleteMultiple.addActionListener(this);
 		this.editLabel.addActionListener(this);
 		this.editLabels.addActionListener(this);
+		this.editColor.addActionListener(this);
+		this.editColors.addActionListener(this);
 	}
 
 	@Override
@@ -123,7 +131,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			if (activeSketch.isPresent()) {
 				sketchManager.finishSketch(coordinate);
 			} else {
-				sketchManager.create(coordinate, new Color(0, 200, 0).getRGB());
+				sketchManager.create(coordinate, sketchColor.getRGB());
 			}
 			drawSketches();
 		} else if (activeSketch.isPresent()) {
@@ -156,12 +164,15 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			if (sketchManager.activeSketch().isPresent()) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
+				menuItems.add(editColor);
 			} else if (actionTargets.size() == 1) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
+				menuItems.add(editColor);
 			} else if (actionTargets.size() > 1) {
 				menuItems.add(deleteMultiple);
 				menuItems.add(editLabels);
+				menuItems.add(editColors);
 			}
 		}
 		return menuItems;
@@ -179,16 +190,13 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Sketch singleSketch = sketchManager.activeSketch().orElseGet(() -> actionTargets.get(0));
 		if (e.getSource() == deleteAll) {
 			sketchManager.clear();
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteSingle) {
-			if (sketchManager.activeSketch().isPresent()) {
-				sketchManager.remove(sketchManager.activeSketch().get());
-			} else {
-				sketchManager.remove(actionTargets.get(0));
-			}
+			sketchManager.remove(singleSketch);
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteMultiple) {
@@ -198,10 +206,25 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == editLabel) {
-			String label = sketchManager.activeSketch().orElseGet(() -> actionTargets.get(0)).getLabel();
+			String label = singleSketch.getLabel();
 			createLabelPopup(label, popupX, popupY);
 		} else if (e.getSource() == editLabels) {
 			createLabelPopup(null, popupX, popupY);
+		} else if (e.getSource() == editColor) {
+			Color color = new Color(singleSketch.getRgb());
+			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", color);
+			if (newColor != null && newColor != color) {
+				singleSketch.setRgb(newColor.getRGB());
+				sketchColor = newColor;
+				drawSketches();
+			}
+		} else if (e.getSource() == editColors) {
+			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", sketchColor);
+			if (newColor != null) {
+				actionTargets.forEach(target -> target.setRgb(newColor.getRGB()));
+				sketchColor = newColor;
+				drawSketches();
+			}
 		}
 	}
 
