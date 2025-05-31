@@ -155,6 +155,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			menuItems.add(deleteAll);
 			if (sketchManager.activeSketch().isPresent()) {
 				menuItems.add(deleteSingle);
+				menuItems.add(editLabel);
 			} else if (actionTargets.size() == 1) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
@@ -197,7 +198,8 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == editLabel) {
-			createLabelPopup(actionTargets.get(0).getLabel(), popupX, popupY);
+			String label = sketchManager.activeSketch().orElseGet(() -> actionTargets.get(0)).getLabel();
+			createLabelPopup(label, popupX, popupY);
 		} else if (e.getSource() == editLabels) {
 			createLabelPopup(null, popupX, popupY);
 		}
@@ -226,8 +228,12 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		labelField.selectAll();
 		labelField.requestFocus();
 		labelField.addActionListener(e -> {
-			for (Sketch actionTarget : actionTargets) {
-				actionTarget.setLabel(labelField.getText());
+			if (sketchManager.activeSketch().isPresent()) {
+				sketchManager.activeSketch().get().setLabel(labelField.getText());
+			} else {
+				for (Sketch actionTarget : actionTargets) {
+					actionTarget.setLabel(labelField.getText());
+				}
 			}
 			drawSketches();
 			removeMenu();
