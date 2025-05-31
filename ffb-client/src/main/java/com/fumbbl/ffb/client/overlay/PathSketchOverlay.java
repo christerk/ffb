@@ -173,7 +173,11 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 				menuItems.add(deleteMultiple);
 				menuItems.add(editLabels);
 				menuItems.add(editColors);
+			} else {
+				menuItems.add(editColor);
 			}
+		} else {
+			menuItems.add(editColor);
 		}
 		return menuItems;
 	}
@@ -190,7 +194,13 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Sketch singleSketch = sketchManager.activeSketch().orElseGet(() -> actionTargets.get(0));
+		Sketch singleSketch = sketchManager.activeSketch().orElseGet(() -> {
+			if (actionTargets.isEmpty()) {
+				return null;
+			} else {
+				return actionTargets.get(0);
+			}
+		});
 		if (e.getSource() == deleteAll) {
 			sketchManager.clear();
 			drawSketches(actionTargets);
@@ -206,15 +216,21 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == editLabel) {
+			if (singleSketch == null) {
+				return; // nothing to edit
+			}
 			String label = singleSketch.getLabel();
 			createLabelPopup(label, popupX, popupY);
 		} else if (e.getSource() == editLabels) {
 			createLabelPopup(null, popupX, popupY);
 		} else if (e.getSource() == editColor) {
-			Color color = new Color(singleSketch.getRgb());
+			int rgb = singleSketch != null ? singleSketch.getRgb() : sketchColor.getRGB();
+			Color color = new Color(rgb);
 			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", color);
 			if (newColor != null && newColor != color) {
-				singleSketch.setRgb(newColor.getRGB());
+				if (singleSketch != null) {
+					singleSketch.setRgb(newColor.getRGB());
+				}
 				sketchColor = newColor;
 				drawSketches();
 			}
