@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.net.ssl.SSLContext;
+import javax.swing.ImageIcon;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -253,6 +254,15 @@ public class IconCache {
 			icon = getIconByUrl(iconUrl, dimensionProvider);
 		}
 		return icon;
+	}
+
+	public ImageIcon getImageIconByProperty(String pIconProperty, DimensionProvider dimensionProvider) {
+		BufferedImage icon = getIconByProperty(pIconProperty, dimensionProvider);
+		if (icon != null) {
+			return new ImageIcon(icon);
+		} else {
+			return null;
+		}
 	}
 
 	public BufferedImage getIconByUrl(String pUrl, DimensionProvider dimensionProvider) {

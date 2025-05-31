@@ -185,6 +185,11 @@ public interface IIconProperty {
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 
+	// Overlays
+	String SKETCH_DELETE = "overlays.trash";
+	String SKETCH_DELETE_ALL = "overlays.trashs";
+	String SKETCH_EDIT_LABEL = "overlays.text";
+
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
 	String PLAYER_NORMAL_HOME = "players.normal.home";

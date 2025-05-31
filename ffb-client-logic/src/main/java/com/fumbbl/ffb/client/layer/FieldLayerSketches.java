@@ -83,7 +83,7 @@ public class FieldLayerSketches extends FieldLayer {
 			}
 
 			sketchManager.activeSketch().ifPresent(activeSketch -> {
-				if (activeSketch == sketch && previewCoordinate != sketch.getPath().getLast()) {
+				if (activeSketch == sketch && previewCoordinate != sketch.getPath().getLast() && previewCoordinate != null) {
 					Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
 					graphics2D.setPaint(highlightPaint);
 					graphics2D.drawLine(

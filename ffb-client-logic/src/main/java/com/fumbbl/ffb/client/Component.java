@@ -45,7 +45,8 @@ public enum Component {
 	SKETCH_STROKE(new Dimension(5, 5)),
 	// hacky misuse of Dimension, width gives the length of the triangle sides, height the angle from the middle line to the side
 	SKETCH_TRIANGLE(new Dimension(15, 35)),
-	SKETCH_CIRCLE(new Dimension(10, 10))
+	SKETCH_CIRCLE(new Dimension(10, 10)),
+	SKETCH_COLOR_ICON(new Dimension(16, 16)),
 	;
 	private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 
