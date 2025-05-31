@@ -11,11 +11,20 @@ import java.awt.image.BufferedImage;
  */
 public final class UtilClientCursor {
 
-	public static void setCustomCursor(UserInterface pUserInterface, String pCursorIconProperty) {
+	public static void setCustomCursor(UserInterface pUserInterface, String pCursorIconProperty, boolean top) {
 		BufferedImage customCursorIcon = pUserInterface.getIconCache().getIconByProperty(pCursorIconProperty, pUserInterface.getPitchDimensionProvider());
-		Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(customCursorIcon, new Point(0, 0),
-				"CustomCursor");
+
+		Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(customCursorIcon.getWidth(), customCursorIcon.getHeight());
+
+		int y = top ? 0 : bestCursorSize.height - 1;
+		Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(customCursorIcon, new Point(0, y),
+			"CustomCursor");
 		pUserInterface.getFieldComponent().setCursor(customCursor);
+
+	}
+
+	public static void setCustomCursor(UserInterface pUserInterface, String pCursorIconProperty) {
+		setCustomCursor(pUserInterface, pCursorIconProperty, true);
 	}
 
 	public static void setDefaultCursor(UserInterface pUserInterface) {

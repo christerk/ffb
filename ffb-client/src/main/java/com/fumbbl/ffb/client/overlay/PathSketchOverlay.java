@@ -7,18 +7,19 @@ import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
+import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JPopupMenu;
@@ -27,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,11 +37,11 @@ import java.util.Set;
 
 public class PathSketchOverlay implements Overlay, ActionListener {
 
+	private final UserInterface userInterface;
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final FieldComponent fieldComponent;
 	private final PitchDimensionProvider pitchDimensionProvider;
-	private final IconCache iconCache;
 	private final List<Sketch> actionTargets = new ArrayList<>();
 	private final JMenuItem deleteAll;
 	private final JMenuItem deleteSingle;
@@ -56,12 +56,13 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private FieldCoordinate previewCoordinate;
 	private Color sketchColor = new Color(0, 200, 0);
 
-	public PathSketchOverlay(CoordinateConverter coordinateConverter, FieldComponent fieldComponent, ClientSketchManager sketchManager, PitchDimensionProvider pitchDimensionProvider, IconCache iconCache) {
-		this.coordinateConverter = coordinateConverter;
-		this.sketchManager = sketchManager;
-		this.fieldComponent = fieldComponent;
-		this.pitchDimensionProvider = pitchDimensionProvider;
-		this.iconCache = iconCache;
+	public PathSketchOverlay(UserInterface userInterface) {
+		this.userInterface = userInterface;
+		this.coordinateConverter = userInterface.getCoordinateConverter();
+		this.sketchManager = userInterface.getSketchManager();
+		this.fieldComponent = userInterface.getFieldComponent();
+		this.pitchDimensionProvider = userInterface.getPitchDimensionProvider();
+		IconCache iconCache = userInterface.getIconCache();
 
 		ImageIcon deleteAllIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE_ALL, pitchDimensionProvider);
 		ImageIcon deleteIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE, pitchDimensionProvider);
@@ -111,6 +112,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_SKETCH, false);
 		if (popupMenu != null && popupMenu.isVisible()) {
 			return;
 		}
