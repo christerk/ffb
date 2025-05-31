@@ -153,7 +153,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		List<JMenuItem> menuItems = new ArrayList<>();
 		if (sketchManager.hasSketches()) {
 			menuItems.add(deleteAll);
-			if (actionTargets.size() == 1) {
+			if (sketchManager.activeSketch().isPresent()) {
+				menuItems.add(deleteSingle);
+			} else if (actionTargets.size() == 1) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
 			} else if (actionTargets.size() > 1) {
@@ -181,7 +183,11 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteSingle) {
-			sketchManager.remove(actionTargets.get(0));
+			if (sketchManager.activeSketch().isPresent()) {
+				sketchManager.remove(sketchManager.activeSketch().get());
+			} else {
+				sketchManager.remove(actionTargets.get(0));
+			}
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteMultiple) {
