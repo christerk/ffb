@@ -412,6 +412,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseClicked(MouseEvent pMouseEvent) {
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseClicked(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseClicked(pMouseEvent);
@@ -420,6 +427,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseEntered(MouseEvent pMouseEvent) {
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseEntered(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseEntered(pMouseEvent);
@@ -428,6 +442,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseExited(MouseEvent pMouseEvent) {
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseExited(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseExited(pMouseEvent);
@@ -436,6 +457,13 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mousePressed(pMouseEvent);
+			return;
+		}
+
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mousePressed(pMouseEvent);

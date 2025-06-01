@@ -91,7 +91,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
 
 	}
 
@@ -135,7 +135,11 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
+		if (popupMenu != null && popupMenu.isVisible()) {
+			//removeMenu();
+			return;
+		}
 		if (e.getButton() != MouseEvent.BUTTON1) {
 			showContextMenu(e);
 			return;
