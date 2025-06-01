@@ -36,6 +36,11 @@ public class ServerSketchManager {
 		getSketches(session).add(sketch);
 	}
 
+	public void removeSketches(Session session, List<String> ids) {
+		List<Sketch> sketches = getSketches(session);
+		sketches.removeIf(sketch -> ids.contains(sketch.getId()));
+	}
+
 	public void remove(Session session) {
 		sketchesBySession.remove(session);
 	}

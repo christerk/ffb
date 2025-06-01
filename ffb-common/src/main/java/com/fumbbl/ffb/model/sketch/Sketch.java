@@ -66,7 +66,7 @@ public class Sketch implements IJsonSerializable {
 	}
 
 	@Override
-	public JsonValue toJsonValue() {
+	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.ID.addTo(jsonObject, id);
 		IJsonOption.RGB.addTo(jsonObject, rgb);

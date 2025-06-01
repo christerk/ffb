@@ -61,7 +61,11 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_USE_MULTI_BLOCK_DICE_RE_ROLL("clientUseMultiBlockDiceReRoll"), INTERNAL_CALCULATE_AUTOMATIC_PLAYER_MARKINGS("internalCalculateAutomaticPlayerMarkings"),
 	CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS("clientLoadPlayerMarkings"), SERVER_AUTOMATIC_PLAYER_MARKINGS("serverAutomaticPlayerMarkings"),
 	CLIENT_REPLAY_STATUS("clientReplayStatus"), SERVER_REPLAY_STATUS("serverReplayStatus"), CLIENT_JOIN_REPLAY("clientJoinReplay"),
-	SERVER_REPLAY_CONTROL("serverReplayControl"), CLIENT_TRANSFER_REPLAY_CONTROL("clientTransferReplayControl")
+	SERVER_REPLAY_CONTROL("serverReplayControl"), CLIENT_TRANSFER_REPLAY_CONTROL("clientTransferReplayControl"),
+	CLIENT_ADD_SKETCH("clientAddSketch"), CLIENT_REMOVE_SKETCHES("clientRemoveSketches"), CLIENT_SKETCH_ADD_COORDINATE("clientSketchAddCoordinate"),
+	CLIENT_SKETCH_SET_COLOR("clientSketchSetColor"), CLIENT_SKETCH_SET_LABEL("clientSketchSetLabel"), CLIENT_CLEAR_SKETCHES("clientClearSketches"),
+	SERVER_ADD_SKETCH("serverAddSketch"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
+	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches")
 	;
 
 	private final String fName;
@@ -285,6 +289,30 @@ public enum NetCommandId implements INamedObject {
 				return new ServerCommandReplayControl();
 			case CLIENT_TRANSFER_REPLAY_CONTROL:
 				return new ClientCommandTransferReplayControl();
+			case CLIENT_REMOVE_SKETCHES:
+				return new ClientCommandAddSketch();
+			case CLIENT_CLEAR_SKETCHES:
+				return new ClientCommandClearSketches();
+				case CLIENT_ADD_SKETCH:
+				return new ClientCommandAddSketch();
+			case CLIENT_SKETCH_ADD_COORDINATE:
+				return new ClientCommandSketchAddCoordinate();
+			case CLIENT_SKETCH_SET_COLOR:
+				return new ClientCommandSketchSetColor();
+			case CLIENT_SKETCH_SET_LABEL:
+				return new ClientCommandSketchSetLabel();
+			case SERVER_ADD_SKETCH:
+				return new ServerCommandAddSketch();
+			case SERVER_REMOVE_SKETCHES:
+				return new ServerCommandRemoveSketches();
+			case SERVER_SKETCH_ADD_COORDINATE:
+				return new ServerCommandSketchAddCoordinate();
+			case SERVER_SKETCH_SET_COLOR:
+				return new ServerCommandSketchSetColor();
+			case SERVER_SKETCH_SET_LABEL:
+				return new ServerCommandSketchSetLabel();
+			case SERVER_CLEAR_SKETCHES:
+				return new ServerCommandClearSketches();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
