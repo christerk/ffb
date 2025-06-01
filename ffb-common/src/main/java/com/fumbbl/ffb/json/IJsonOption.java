@@ -131,7 +131,6 @@ public interface IJsonOption {
 	JsonBooleanOption CONFIRM = new JsonBooleanOption("confirm");
 	JsonEnumWithNameOption CONFUSION_SKILL = new JsonEnumWithNameOption("confusionSkill", Factory.SKILL);
 	JsonBooleanOption CONSUMMATE_OPTION = new JsonBooleanOption("consummateOption");
-	JsonBooleanOption CONTROL = new JsonBooleanOption("control");
 	JsonFieldCoordinateOption COORDINATE = new JsonFieldCoordinateOption("coordinate");
 	JsonFieldCoordinateOption COORDINATE_FROM = new JsonFieldCoordinateOption("coordinateFrom");
 	JsonFieldCoordinateArrayOption COORDINATES_TO = new JsonFieldCoordinateArrayOption("coordinatesTo");
@@ -232,6 +231,7 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
+	JsonStringOption ID = new JsonStringOption("id");
 	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
@@ -427,6 +427,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
 	JsonIntOption RE_ROLLS_SHOW_STAR_ONE_DRIVE = new JsonIntOption("rerollShowStarOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
+	JsonIntOption RGB = new JsonIntOption("rgb");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
