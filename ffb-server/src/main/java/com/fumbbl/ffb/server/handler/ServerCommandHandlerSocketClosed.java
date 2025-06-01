@@ -34,6 +34,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 	}
 
 	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		getServer().getSketchManager().remove(pReceivedCommand.getSession());
 		if (getServer().getReplaySessionManager().has(pReceivedCommand.getSession())) {
 			return closeReplaySession(pReceivedCommand);
 		} else {
