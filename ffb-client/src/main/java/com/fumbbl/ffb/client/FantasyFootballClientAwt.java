@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
@@ -17,8 +16,8 @@ import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.UIManager;
+import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -73,8 +72,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setClientStateFactory();
 
 		pathSketchOverlay = new PathSketchOverlay(fUserInterface);
-
-		setPathSketching(pParameters.getMode() == ClientMode.REPLAY);
 	}
 
 	@Override
@@ -290,7 +287,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		this.activeOverlay = activeOverlay;
 	}
 
-	public void setPathSketching(boolean active) {
-		setActiveOverlay(active ? pathSketchOverlay : null);
+	@Override
+	public void replayInitialized() {
+		setActiveOverlay(pathSketchOverlay);
 	}
 }

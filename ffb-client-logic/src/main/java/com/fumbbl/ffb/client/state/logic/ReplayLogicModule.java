@@ -192,6 +192,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 			client.getReplayer().setControl(true);
 			callbacks.controlChanged(coach);
 		}
+		client.replayInitialized();
 	}
 
 	public boolean replayStopped(ActionKey pActionKey) {
