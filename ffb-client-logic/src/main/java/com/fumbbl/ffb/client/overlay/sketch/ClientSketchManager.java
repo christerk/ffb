@@ -4,27 +4,39 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.model.sketch.Sketch;
-import com.fumbbl.ffb.model.sketch.SketchManager;
 
 import java.awt.Dimension;
 import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClientSketchManager extends SketchManager {
+public class ClientSketchManager {
 
 	private Sketch activeSketch;
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private final List<Sketch> sketches;
 	private final PitchDimensionProvider pitchDimensionProvider;
 
+	private final Map<String, List<Sketch>> sketchesByCoach = new HashMap<>();
+
 	public ClientSketchManager(String coach, PitchDimensionProvider pitchDimensionProvider) {
-		sketches = super.getSketches(coach);
+		sketches = getSketches(coach);
 		this.pitchDimensionProvider = pitchDimensionProvider;
+	}
+
+	public List<Sketch> getSketches(String coach) {
+		return sketchesByCoach.computeIfAbsent(coach, s -> new ArrayList<>());
+	}
+
+	public List<Sketch> getAllSketches() {
+		return sketchesByCoach.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
 	public Optional<Sketch> activeSketch() {
@@ -88,10 +100,6 @@ public class ClientSketchManager extends SketchManager {
 
 		return inEndDecoration(pitchDimensionProvider.mapToLocal(currentNode, true),
 			pitchDimensionProvider.mapToLocal(sketch.getPath().getLast(), true), x, y);
-	}
-
-	public void setActive(Sketch sketch) {
-		activeSketch = sketch;
 	}
 
 	public void remove(Sketch sketch) {
