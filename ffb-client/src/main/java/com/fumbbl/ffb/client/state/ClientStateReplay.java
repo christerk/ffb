@@ -115,7 +115,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 	}
 
-	public void logCoach(String coach, boolean joined) {
+	public void logCoach(String coach, boolean joined, String replayName) {
 		String name;
 		String action;
 		if (coach.equals(getClient().getParameters().getCoach())) {
@@ -123,10 +123,10 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 				return;
 			}
 			name = "You";
-			action = "joined the session successfully";
+			action = "joined session \"" + replayName + "\" successfully";
 		} else {
-			name = coach;
-			action = joined ? "joined" : "left";
+			name = "Coach " + coach;
+			action = (joined ? "joined" : "left");
 		}
 
 		ChatComponent chat = getClient().getUserInterface().getChat();
@@ -201,14 +201,14 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 
 		@Override
-		public void coachJoined(String coach, List<String> allCoaches) {
-			clientStateReplay.logCoach(coach, true);
+		public void coachJoined(String coach, List<String> allCoaches, String replayName) {
+			clientStateReplay.logCoach(coach, true, replayName);
 			clientStateReplay.updateCoaches(allCoaches);
 		}
 
 		@Override
 		public void coachLeft(String coach, List<String> allCoaches) {
-			clientStateReplay.logCoach(coach, false);
+			clientStateReplay.logCoach(coach, false, null);
 			clientStateReplay.updateCoaches(allCoaches);
 		}
 	}

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandJoinReplay;
 import com.fumbbl.ffb.net.commands.ServerCommandJoin;
@@ -36,7 +37,10 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
 		synchronized (sessionManager) {
 			ReplayCache replayCache = getServer().getReplayCache();
-			String replayName = clientCommandJoinReplay.getReplayName();
+			String plainReplayName = clientCommandJoinReplay.getReplayName();
+			String sanitizedReplayName = plainReplayName.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, plainReplayName.length()));
+
+			String replayName = plainReplayName + "_" + clientCommandJoinReplay.getGameId();
 
 			Session session = receivedCommand.getSession();
 			sessionManager.addSession(session, replayName, clientCommandJoinReplay.getCoach());
@@ -49,7 +53,7 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 				List<String> coaches = Arrays.stream(sessions).map(sessionManager::coach).collect(Collectors.toList());
 
 				Arrays.stream(sessions).forEach(storedSession -> getServer().getCommunication()
-					.send(storedSession, new ServerCommandJoin(coach, ClientMode.REPLAY, new String[0], coaches), true));
+					.send(storedSession, new ServerCommandJoin(coach, ClientMode.REPLAY, new String[0], coaches, sanitizedReplayName), true));
 			}
 
 			ReplayState replayState = replayCache.replayState(replayName);

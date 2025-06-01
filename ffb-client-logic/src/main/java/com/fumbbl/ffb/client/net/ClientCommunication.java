@@ -506,8 +506,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandReplayStatus(commandNr, speed, running, forward, skip));
 	}
 
-	public void sendJoinReplay(String replayName, String coach) {
-		send(new ClientCommandJoinReplay(replayName, coach));
+	public void sendJoinReplay(String replayName, String coach, long gameId) {
+		send(new ClientCommandJoinReplay(replayName, coach, gameId));
 	}
 
 	public void sendTransferReplayControl(String coach) {

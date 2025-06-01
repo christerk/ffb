@@ -160,7 +160,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 			case SERVER_JOIN:
 				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
 				updateClientData(commandJoin.getSpectators());
-				callbacks.coachJoined(commandJoin.getCoach(), commandJoin.getSpectators());
+				callbacks.coachJoined(commandJoin.getCoach(), commandJoin.getSpectators(), commandJoin.getReplayName());
 				break;
 			case SERVER_LEAVE:
 				ServerCommandLeave commandLeave = (ServerCommandLeave) pNetCommand;
@@ -185,7 +185,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
 		String coach = client.getParameters().getCoach();
 		if (online && StringTool.isProvided(sanitizedName)) {
-			client.getCommunication().sendJoinReplay(sanitizedName, coach);
+			client.getCommunication().sendJoinReplay(sanitizedName, coach, client.getParameters().getGameId());
 			client.getReplayer().setOnline(true);
 		} else {
 			client.getCommunication().sendCloseSession();
@@ -292,7 +292,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		/**
 		 * Called when a coach joins the session
 		 */
-		void coachJoined(String coach, List<String> allCoaches);
+		void coachJoined(String coach, List<String> allCoaches, String replayName);
 
 		/**
 		 * Called when a coach leaves the session

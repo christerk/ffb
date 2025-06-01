@@ -467,7 +467,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendJoin(Session[] pSessions, String pCoach, ClientMode pMode, String[] pPlayers, List<String> spectators) {
-		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, spectators);
+		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, spectators, null);
 		send(pSessions, joinCommand, true);
 		// not logged in Game Log
 	}
