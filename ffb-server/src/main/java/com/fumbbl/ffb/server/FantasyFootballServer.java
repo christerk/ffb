@@ -67,6 +67,7 @@ public class FantasyFootballServer implements IFactorySource {
 	private ReplayCache replayCache;
 	private SessionManager fSessionManager;
 	private ReplaySessionManager replaySessionManager;
+	private ServerSketchManager sketchManager;
 	private final Properties fProperties;
 	private Fortuna fFortuna;
 	private DebugLog fDebugLog;
@@ -98,6 +99,10 @@ public class FantasyFootballServer implements IFactorySource {
 
 	public ReplaySessionManager getReplaySessionManager() {
 		return replaySessionManager;
+	}
+
+	public ServerSketchManager getSketchManager() {
+		return sketchManager;
 	}
 
 	public FactoryManager getFactoryManager() {
@@ -185,6 +190,8 @@ public class FantasyFootballServer implements IFactorySource {
 
 			fSessionManager = new SessionManager();
 			replaySessionManager = new ReplaySessionManager();
+
+			sketchManager = new ServerSketchManager();
 
 			fCommandHandlerFactory = new ServerCommandHandlerFactory(this);
 
@@ -320,6 +327,7 @@ public class FantasyFootballServer implements IFactorySource {
 				server.run();
 			} catch (Exception all) {
 				if (server.getDebugLog() == null) {
+					//noinspection CallToPrintStackTrace
 					all.printStackTrace();
 				} else {
 					server.getDebugLog().logWithOutGameId(all);

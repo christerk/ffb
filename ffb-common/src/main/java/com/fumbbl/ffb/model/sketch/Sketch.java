@@ -27,6 +27,10 @@ public class Sketch implements IJsonSerializable {
 		return path;
 	}
 
+	public String getId() {
+		return id;
+	}
+
 	public int getRgb() {
 		return rgb;
 	}
