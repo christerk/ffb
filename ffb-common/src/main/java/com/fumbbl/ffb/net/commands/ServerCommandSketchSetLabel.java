@@ -7,7 +7,7 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ServerCommandSketchSetLabel extends ClientCommand {
+public class ServerCommandSketchSetLabel extends ServerCommand {
 
 	private String coach;
 	private String sketchId;
@@ -41,7 +41,7 @@ public class ServerCommandSketchSetLabel extends ClientCommand {
 // JSON serialization
 
 	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
+		JsonObject jsonObject = new JsonObject();
 		IJsonOption.ID.addTo(jsonObject, sketchId);
 		IJsonOption.TEXT.addTo(jsonObject, label);
 		IJsonOption.COACH.addTo(jsonObject, coach);
@@ -49,7 +49,6 @@ public class ServerCommandSketchSetLabel extends ClientCommand {
 	}
 
 	public ServerCommandSketchSetLabel initFrom(IFactorySource source, JsonValue jsonValue) {
-		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
 		label = IJsonOption.TEXT.getFrom(source, jsonObject);

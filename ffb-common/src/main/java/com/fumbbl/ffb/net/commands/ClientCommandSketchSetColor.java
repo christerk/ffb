@@ -7,17 +7,17 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandSketchSetColor extends ClientCommand {
+public class ClientCommandSketchSetColor extends ClientSketchCommand {
 
-	private String id;
+	private String sketchId;
 	private int rbg;
 
 	public ClientCommandSketchSetColor() {
 		super();
 	}
 
-	public ClientCommandSketchSetColor(String id, int rbg) {
-		this.id = id;
+	public ClientCommandSketchSetColor(String sketchId, int rbg) {
+		this.sketchId = sketchId;
 		this.rbg = rbg;
 	}
 
@@ -25,11 +25,18 @@ public class ClientCommandSketchSetColor extends ClientCommand {
 		return NetCommandId.CLIENT_SKETCH_SET_COLOR;
 	}
 
-	// JSON serialization
+	public String getSketchId() {
+		return sketchId;
+	}
+
+	public int getRbg() {
+		return rbg;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IJsonOption.ID.addTo(jsonObject, id);
+		IJsonOption.ID.addTo(jsonObject, sketchId);
 		IJsonOption.RGB.addTo(jsonObject, rbg);
 		return jsonObject;
 	}
@@ -37,7 +44,7 @@ public class ClientCommandSketchSetColor extends ClientCommand {
 	public ClientCommandSketchSetColor initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		id = IJsonOption.ID.getFrom(source, jsonObject);
+		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
 		rbg = IJsonOption.RGB.getFrom(source, jsonObject);
 		return this;
 	}

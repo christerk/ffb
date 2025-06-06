@@ -8,7 +8,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandAddSketch extends ClientCommand {
+public class ClientCommandAddSketch extends ClientSketchCommand {
 
 	private Sketch sketch;
 
@@ -24,7 +24,10 @@ public class ClientCommandAddSketch extends ClientCommand {
 		return NetCommandId.CLIENT_ADD_SKETCH;
 	}
 
-	// JSON serialization
+	public Sketch getSketch() {
+		return sketch;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();

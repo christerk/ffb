@@ -10,7 +10,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClientCommandRemoveSketches extends ClientCommand {
+public class ClientCommandRemoveSketches extends ClientSketchCommand {
 
 	private List<String> ids;
 
@@ -26,7 +26,10 @@ public class ClientCommandRemoveSketches extends ClientCommand {
 		return NetCommandId.CLIENT_REMOVE_SKETCHES;
 	}
 
-	// JSON serialization
+	public List<String> getIds() {
+		return ids;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();

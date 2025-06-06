@@ -5,7 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandClearSketches extends ClientCommand {
+public class ClientCommandClearSketches extends ClientSketchCommand {
 
 	public ClientCommandClearSketches() {
 		super();
@@ -15,7 +15,12 @@ public class ClientCommandClearSketches extends ClientCommand {
 		return NetCommandId.CLIENT_CLEAR_SKETCHES;
 	}
 
-	// JSON serialization
+	@Override
+	public boolean requiresControl() {
+		return true;
+	}
+
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		return super.toJsonValue();

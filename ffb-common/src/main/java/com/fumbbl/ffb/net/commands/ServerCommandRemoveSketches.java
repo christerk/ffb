@@ -10,7 +10,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import java.util.Arrays;
 import java.util.List;
 
-public class ServerCommandRemoveSketches extends ClientCommand {
+public class ServerCommandRemoveSketches extends ServerCommand {
 
 	private String coach;
 	private List<String> ids;
@@ -38,7 +38,7 @@ public class ServerCommandRemoveSketches extends ClientCommand {
 // JSON serialization
 
 	public JsonObject toJsonValue() {
-		JsonObject jsonObject = super.toJsonValue();
+		JsonObject jsonObject = new JsonObject();
 		if (ids != null && !ids.isEmpty()) {
 			IJsonOption.IDS.addTo(jsonObject, ids);
 		}
@@ -47,7 +47,6 @@ public class ServerCommandRemoveSketches extends ClientCommand {
 	}
 
 	public ServerCommandRemoveSketches initFrom(IFactorySource source, JsonValue jsonValue) {
-		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		if (IJsonOption.IDS.isDefinedIn(jsonObject)) {
 			ids = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));

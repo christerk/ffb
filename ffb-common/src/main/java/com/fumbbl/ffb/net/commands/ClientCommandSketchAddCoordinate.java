@@ -8,17 +8,17 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
-public class ClientCommandSketchAddCoordinate extends ClientCommand {
+public class ClientCommandSketchAddCoordinate extends ClientSketchCommand {
 
-	private String id;
+	private String sketchId;
 	private FieldCoordinate coordinate;
 
 	public ClientCommandSketchAddCoordinate() {
 		super();
 	}
 
-	public ClientCommandSketchAddCoordinate(String id, FieldCoordinate coordinate) {
-		this.id = id;
+	public ClientCommandSketchAddCoordinate(String sketchId, FieldCoordinate coordinate) {
+		this.sketchId = sketchId;
 		this.coordinate = coordinate;
 	}
 
@@ -26,11 +26,18 @@ public class ClientCommandSketchAddCoordinate extends ClientCommand {
 		return NetCommandId.CLIENT_SKETCH_ADD_COORDINATE;
 	}
 
-	// JSON serialization
+	public String getSketchId() {
+		return sketchId;
+	}
+
+	public FieldCoordinate getCoordinate() {
+		return coordinate;
+	}
+// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IJsonOption.ID.addTo(jsonObject, id);
+		IJsonOption.ID.addTo(jsonObject, sketchId);
 		IJsonOption.COORDINATE.addTo(jsonObject, coordinate);
 		return jsonObject;
 	}
@@ -38,7 +45,7 @@ public class ClientCommandSketchAddCoordinate extends ClientCommand {
 	public ClientCommandSketchAddCoordinate initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		id = IJsonOption.ID.getFrom(source, jsonObject);
+		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
 		coordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}

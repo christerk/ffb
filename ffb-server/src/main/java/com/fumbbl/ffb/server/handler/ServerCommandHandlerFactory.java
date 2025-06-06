@@ -43,6 +43,12 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerReplayStatus(server));
 		register(new ServerCommandHandlerJoinReplay(server));
 		register(new ServerCommandHandlerTransferControl(server));
+		register(new ServerCommandHandlerAddSketch(server));
+		register(new ServerCommandHandlerRemoveSketches(server));
+		register(new ServerCommandHandlerClearSketches(server));
+		register(new ServerCommandHandlerSketchAddCoordinate(server));
+		register(new ServerCommandHandlerSketchSetColor(server));
+		register(new ServerCommandHandlerSketchSetLabel(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {
