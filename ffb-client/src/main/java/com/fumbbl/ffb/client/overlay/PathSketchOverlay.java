@@ -164,11 +164,21 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		if (e.getClickCount() > 1 && activeSketch.isPresent()) {
 			sketchManager.finishSketch(coordinate);
 			drawSketches();
+			if (isOnline) {
+				client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
+			}
 		} else {
 			if (activeSketch.isPresent()) {
 				sketchManager.add(coordinate);
+				if (isOnline) {
+					client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
+				}
 			} else {
 				sketchManager.create(coordinate, sketchColor.getRGB());
+				if (isOnline) {
+					sketchManager.activeSketch().ifPresent(sketch ->
+						client.getCommunication().sendAddSketch(sketch));
+				}
 			}
 			drawSketches();
 		}
@@ -263,20 +273,34 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			sketchManager.clearAll();
 			drawSketches();
 			removeMenu();
+			if (isOnline) {
+				client.getCommunication().sendClearSketches();
+			}
 		} else if (e.getSource() == deleteMine) {
 			sketchManager.clearOwn();
 			drawSketches(actionTargets);
 			removeMenu();
+			if (isOnline) {
+				client.getCommunication().sendRemoveSketches(null);
+			}
 		} else if (e.getSource() == deleteSingle) {
-			sketchManager.remove(singleSketch);
-			drawSketches(actionTargets);
-			removeMenu();
+			if (singleSketch != null) {
+				sketchManager.remove(singleSketch);
+				drawSketches(actionTargets);
+				removeMenu();
+				if (isOnline) {
+					client.getCommunication().sendRemoveSketches(Collections.singletonList(singleSketch.getId()));
+				}
+			}
 		} else if (e.getSource() == deleteMultiple) {
 			for (String sketchId : actionTargets) {
 				sketchManager.remove(sketchId);
 			}
 			drawSketches(actionTargets);
 			removeMenu();
+			if (isOnline) {
+				client.getCommunication().sendRemoveSketches(actionTargets);
+			}
 		} else if (e.getSource() == editLabel) {
 			if (singleSketch == null) {
 				return; // nothing to edit
@@ -290,18 +314,24 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			Color color = new Color(rgb);
 			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", color);
 			if (newColor != null && newColor != color) {
-				if (singleSketch != null) {
-					singleSketch.setRgb(newColor.getRGB());
-				} else {
+				if (singleSketch == null) {
 					sketchColor = newColor;
+				} else {
+					singleSketch.setRgb(newColor.getRGB());
+					drawSketches();
+					if (isOnline) {
+						client.getCommunication().sendSketchSetColor(Collections.singletonList(singleSketch.getId()), newColor.getRGB());
+					}
 				}
-				drawSketches();
 			}
 		} else if (e.getSource() == editColors) {
 			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", sketchColor);
 			if (newColor != null) {
 				actionTargets.stream().map(sketchManager::getSketch).filter(Optional::isPresent).map(Optional::get).forEach(target -> target.setRgb(newColor.getRGB()));
 				drawSketches();
+				if (isOnline) {
+					client.getCommunication().sendSketchSetColor(actionTargets, newColor.getRGB());
+				}
 			}
 		}
 	}
@@ -329,12 +359,19 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		labelField.selectAll();
 		labelField.requestFocus();
 		labelField.addActionListener(e -> {
-			if (sketchManager.activeSketch().isPresent()) {
-				sketchManager.activeSketch().get().setLabel(labelField.getText());
+			Optional<Sketch> activeSketch = sketchManager.activeSketch();
+			if (activeSketch.isPresent()) {
+				activeSketch.get().setLabel(labelField.getText());
+				if (isOnline) {
+					client.getCommunication().sendSketchSetLabel(Collections.singletonList(activeSketch.get().getId()), labelField.getText());
+				}
 			} else {
 				actionTargets.stream().map(sketchManager::getSketch)
 					.filter(Optional::isPresent).map(Optional::get)
 					.forEach(target -> target.setLabel(labelField.getText()));
+				if (isOnline) {
+					client.getCommunication().sendSketchSetLabel(actionTargets, labelField.getText());
+				}
 			}
 			drawSketches();
 			removeMenu();
