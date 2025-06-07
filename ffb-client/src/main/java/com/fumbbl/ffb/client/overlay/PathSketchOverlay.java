@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.overlay;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
@@ -50,6 +51,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private final List<String> actionTargets = new ArrayList<>();
 	private final JMenuItem deleteAll;
+	private final JMenuItem deleteMine;
 	private final JMenuItem deleteSingle;
 	private final JMenuItem deleteMultiple;
 	private final JMenuItem editLabel;
@@ -61,6 +63,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private int popupY;
 	private FieldCoordinate previewCoordinate;
 	private Color sketchColor = new Color(0, 200, 0);
+	private final boolean isOnline;
 
 	public PathSketchOverlay(FantasyFootballClient client) {
 		this.client = client;
@@ -70,20 +73,23 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		this.fieldComponent = userInterface.getFieldComponent();
 		this.pitchDimensionProvider = userInterface.getPitchDimensionProvider();
 		IconCache iconCache = userInterface.getIconCache();
+		isOnline = this.client.getMode() != ClientMode.REPLAY || this.client.getReplayer().isOnline();
 
 		ImageIcon deleteAllIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE_ALL, pitchDimensionProvider);
 		ImageIcon deleteIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE, pitchDimensionProvider);
 		ImageIcon editIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_EDIT_LABEL, pitchDimensionProvider);
 
-		this.deleteAll = new JMenuItem(pitchDimensionProvider, "Clear all sketches", deleteAllIcon);
-		this.deleteSingle = new JMenuItem(pitchDimensionProvider, "Clear sketch", deleteIcon);
-		this.deleteMultiple = new JMenuItem(pitchDimensionProvider, "Clear sketches", deleteIcon);
+		this.deleteAll = new JMenuItem(pitchDimensionProvider, "Clear sketches", deleteAllIcon);
+		this.deleteMine = new JMenuItem(pitchDimensionProvider, "Delete my sketches", deleteAllIcon);
+		this.deleteSingle = new JMenuItem(pitchDimensionProvider, "Delete sketch", deleteIcon);
+		this.deleteMultiple = new JMenuItem(pitchDimensionProvider, "Delete sketches", deleteIcon);
 		this.editLabel = new JMenuItem(pitchDimensionProvider, "Edit label", editIcon);
 		this.editLabels = new JMenuItem(pitchDimensionProvider, "Edit labels", editIcon);
 		this.editColor = new JMenuItem(pitchDimensionProvider, "Set color");
 		this.editColors = new JMenuItem(pitchDimensionProvider, "Set colors");
 
 		this.deleteAll.addActionListener(this);
+		this.deleteMine.addActionListener(this);
 		this.deleteSingle.addActionListener(this);
 		this.deleteMultiple.addActionListener(this);
 		this.editLabel.addActionListener(this);
@@ -190,8 +196,11 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	private List<JMenuItem> collectActions() {
 		List<JMenuItem> menuItems = new ArrayList<>();
-		if (sketchManager.hasSketches()) {
+		if (isOnline && sketchManager.hasAnySketches()) {
 			menuItems.add(deleteAll);
+		}
+		if (sketchManager.hasOwnSketches()) {
+			menuItems.add(deleteMine);
 			if (sketchManager.activeSketch().isPresent()) {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
@@ -248,8 +257,14 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 				return sketchManager.getSketch(actionTargets.get(0)).orElse(null);
 			}
 		});
+
+
 		if (e.getSource() == deleteAll) {
-			sketchManager.clear();
+			sketchManager.clearAll();
+			drawSketches();
+			removeMenu();
+		} else if (e.getSource() == deleteMine) {
+			sketchManager.clearOwn();
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteSingle) {

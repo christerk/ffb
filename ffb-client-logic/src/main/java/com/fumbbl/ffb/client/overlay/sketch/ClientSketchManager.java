@@ -21,12 +21,14 @@ public class ClientSketchManager {
 
 	private Sketch activeSketch;
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-	private final List<Sketch> sketches;
+	private List<Sketch> sketches;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	private final String coach;
 
 	private final Map<String, List<Sketch>> sketchesByCoach = new HashMap<>();
 
 	public ClientSketchManager(String coach, PitchDimensionProvider pitchDimensionProvider) {
+		this.coach = coach;
 		sketches = getSketches(coach);
 		this.pitchDimensionProvider = pitchDimensionProvider;
 	}
@@ -49,8 +51,14 @@ public class ClientSketchManager {
 		return Optional.ofNullable(activeSketch);
 	}
 
-	public void clear() {
+	public void clearOwn() {
 		sketches.clear();
+		activeSketch = null;
+	}
+
+	public void clearAll() {
+		sketchesByCoach.clear();
+		sketches = getSketches(coach);
 		activeSketch = null;
 	}
 
@@ -73,7 +81,11 @@ public class ClientSketchManager {
 		activeSketch = null;
 	}
 
-	public boolean hasSketches() {
+	public boolean hasAnySketches() {
+		return !sketchesByCoach.isEmpty() && sketchesByCoach.values().stream().anyMatch(list -> !list.isEmpty());
+	}
+
+	public boolean hasOwnSketches() {
 		return !sketches.isEmpty();
 	}
 
