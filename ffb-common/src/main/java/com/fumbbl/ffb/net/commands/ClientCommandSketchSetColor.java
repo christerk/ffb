@@ -7,17 +7,20 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ClientCommandSketchSetColor extends ClientSketchCommand {
 
-	private String sketchId;
+	private List<String> sketchIds;
 	private int rbg;
 
 	public ClientCommandSketchSetColor() {
 		super();
 	}
 
-	public ClientCommandSketchSetColor(String sketchId, int rbg) {
-		this.sketchId = sketchId;
+	public ClientCommandSketchSetColor(List<String> sketchIds, int rbg) {
+		this.sketchIds = sketchIds;
 		this.rbg = rbg;
 	}
 
@@ -25,8 +28,8 @@ public class ClientCommandSketchSetColor extends ClientSketchCommand {
 		return NetCommandId.CLIENT_SKETCH_SET_COLOR;
 	}
 
-	public String getSketchId() {
-		return sketchId;
+	public List<String> getSketchIds() {
+		return sketchIds;
 	}
 
 	public int getRbg() {
@@ -36,7 +39,7 @@ public class ClientCommandSketchSetColor extends ClientSketchCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IJsonOption.ID.addTo(jsonObject, sketchId);
+		IJsonOption.IDS.addTo(jsonObject, sketchIds);
 		IJsonOption.RGB.addTo(jsonObject, rbg);
 		return jsonObject;
 	}
@@ -44,7 +47,7 @@ public class ClientCommandSketchSetColor extends ClientSketchCommand {
 	public ClientCommandSketchSetColor initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
+		sketchIds = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));
 		rbg = IJsonOption.RGB.getFrom(source, jsonObject);
 		return this;
 	}

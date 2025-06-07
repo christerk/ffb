@@ -18,11 +18,11 @@ public class ServerCommandHandlerSketchSetColor extends AbstractServerCommandHan
 
 	@Override
 	protected void updateSketchManager(Session session, ClientCommandSketchSetColor command) {
-			sketchManager.setRgb(session, command.getSketchId(), command.getRbg());
+		command.getSketchIds().forEach(id -> sketchManager.setRgb(session, id, command.getRbg()));
 	}
 
 	@Override
 	protected ServerCommandSketchSetColor createServerCommand(Session session, ClientCommandSketchSetColor command) {
-		return new ServerCommandSketchSetColor(replaySessionManager.coach(session), command.getSketchId(), command.getRbg());
+		return new ServerCommandSketchSetColor(replaySessionManager.coach(session), command.getSketchIds(), command.getRbg());
 	}
 }

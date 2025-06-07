@@ -7,17 +7,20 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ClientCommandSketchSetLabel extends ClientSketchCommand {
 
-	private String sketchId;
+	private List<String> sketchIds;
 	private String label;
 
 	public ClientCommandSketchSetLabel() {
 		super();
 	}
 
-	public ClientCommandSketchSetLabel(String sketchId, String label) {
-		this.sketchId = sketchId;
+	public ClientCommandSketchSetLabel(List<String> sketchIds, String label) {
+		this.sketchIds = sketchIds;
 		this.label = label;
 	}
 
@@ -25,8 +28,8 @@ public class ClientCommandSketchSetLabel extends ClientSketchCommand {
 		return NetCommandId.CLIENT_SKETCH_SET_LABEL;
 	}
 
-	public String getSketchId() {
-		return sketchId;
+	public List<String> getSketchIds() {
+		return sketchIds;
 	}
 
 	public String getLabel() {
@@ -36,7 +39,7 @@ public class ClientCommandSketchSetLabel extends ClientSketchCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IJsonOption.ID.addTo(jsonObject, sketchId);
+		IJsonOption.IDS.addTo(jsonObject, sketchIds);
 		IJsonOption.TEXT.addTo(jsonObject, label);
 		return jsonObject;
 	}
@@ -44,7 +47,7 @@ public class ClientCommandSketchSetLabel extends ClientSketchCommand {
 	public ClientCommandSketchSetLabel initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
+		sketchIds = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));
 		label = IJsonOption.TEXT.getFrom(source, jsonObject);
 		return this;
 	}

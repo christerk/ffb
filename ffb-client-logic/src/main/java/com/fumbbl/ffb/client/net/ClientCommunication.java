@@ -25,6 +25,7 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
 import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
@@ -508,6 +509,30 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendJoinReplay(String replayName, String coach, long gameId) {
 		send(new ClientCommandJoinReplay(replayName, coach, gameId));
+	}
+
+	public void sendClearSketches() {
+		send(new ClientCommandClearSketches());
+	}
+
+	public void sendRemoveSketches(List<String> ids) {
+		send(new ClientCommandRemoveSketches(ids));
+	}
+
+	public void sendAddSketch(Sketch sketch) {
+		send(new ClientCommandAddSketch(sketch));
+	}
+
+	public void sendSketchAddCoordinate(String sketchId, FieldCoordinate coordinate) {
+		send(new ClientCommandSketchAddCoordinate(sketchId, coordinate));
+	}
+
+	public void sendSketchSetColor(List<String> sketchIds, int rgb) {
+		send(new ClientCommandSketchSetColor(sketchIds, rgb));
+	}
+
+	public void sendSketchSetLabel(List<String> sketchId, String label) {
+		send(new ClientCommandSketchSetLabel(sketchId, label));
 	}
 
 	public void sendTransferReplayControl(String coach) {

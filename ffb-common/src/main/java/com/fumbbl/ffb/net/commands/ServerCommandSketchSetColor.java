@@ -7,19 +7,22 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ServerCommandSketchSetColor extends ServerCommand {
 
 	private String coach;
-	private String sketchId;
+	private List<String> sketchIds;
 	private int rbg;
 
 	public ServerCommandSketchSetColor() {
 		super();
 	}
 
-	public ServerCommandSketchSetColor(String coach, String sketchId, int rbg) {
+	public ServerCommandSketchSetColor(String coach, List<String> sketchIds, int rbg) {
 		this.coach = coach;
-		this.sketchId = sketchId;
+		this.sketchIds = sketchIds;
 		this.rbg = rbg;
 	}
 
@@ -27,8 +30,8 @@ public class ServerCommandSketchSetColor extends ServerCommand {
 		return NetCommandId.SERVER_SKETCH_SET_COLOR;
 	}
 
-	public String getSketchId() {
-		return sketchId;
+	public List<String> getSketchIds() {
+		return sketchIds;
 	}
 
 	public String getCoach() {
@@ -42,7 +45,7 @@ public class ServerCommandSketchSetColor extends ServerCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
-		IJsonOption.ID.addTo(jsonObject, sketchId);
+		IJsonOption.IDS.addTo(jsonObject, sketchIds);
 		IJsonOption.RGB.addTo(jsonObject, rbg);
 		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
@@ -50,7 +53,7 @@ public class ServerCommandSketchSetColor extends ServerCommand {
 
 	public ServerCommandSketchSetColor initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
+		sketchIds = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));
 		rbg = IJsonOption.RGB.getFrom(source, jsonObject);
 		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;

@@ -18,11 +18,11 @@ public class ServerCommandHandlerSketchSetLabel extends AbstractServerCommandHan
 
 	@Override
 	protected void updateSketchManager(Session session, ClientCommandSketchSetLabel command) {
-			sketchManager.setLabel(session, command.getSketchId(), command.getLabel());
+		command.getSketchIds().forEach(id -> sketchManager.setLabel(session, id, command.getLabel()));
 	}
 
 	@Override
 	protected ServerCommandSketchSetLabel createServerCommand(Session session, ClientCommandSketchSetLabel command) {
-		return new ServerCommandSketchSetLabel(replaySessionManager.coach(session), command.getSketchId(), command.getLabel());
+		return new ServerCommandSketchSetLabel(replaySessionManager.coach(session), command.getSketchIds(), command.getLabel());
 	}
 }
