@@ -374,6 +374,14 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		send(allSessions, command, false);
 	}
 
+	public void sendToReplaySession(Session session, NetCommand command) {
+		if ((session == null) || (command == null)) {
+			return;
+		}
+		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, getServer().getReplaySessionManager().replayNameForSession(session), DebugLog.COMMAND_CLIENT_REPLAY_CLIENTS, command.toJsonValue().toString());
+		send(session, command, false);
+	}
+
 	protected void sendHomeAndSpectatorSessions(GameState gameState, NetCommand command) {
 		if ((gameState == null) || (command == null)) {
 			return;

@@ -37,6 +37,7 @@ public class ServerCommandAddSketch extends ServerCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.SKETCH.addTo(jsonObject, sketch.toJsonValue());
 		IJsonOption.COACH.addTo(jsonObject, coach);
 		return jsonObject;
@@ -44,6 +45,7 @@ public class ServerCommandAddSketch extends ServerCommand {
 
 	public ServerCommandAddSketch initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		sketch = new Sketch(0).initFrom(source, IJsonOption.SKETCH.getFrom(source, jsonObject));
 		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;

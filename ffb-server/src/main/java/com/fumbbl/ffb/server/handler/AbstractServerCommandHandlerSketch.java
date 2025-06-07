@@ -31,7 +31,7 @@ public abstract class AbstractServerCommandHandlerSketch<C extends ClientSketchC
 			updateSketchManager(session, command);
 			replaySessionManager.otherSessions(session)
 				.forEach(otherSession ->
-					getServer().getCommunication().send(otherSession, createServerCommand(otherSession, command), true));
+					getServer().getCommunication().sendToReplaySession(otherSession, createServerCommand(otherSession, command)));
 		}
 		return true;
 	}

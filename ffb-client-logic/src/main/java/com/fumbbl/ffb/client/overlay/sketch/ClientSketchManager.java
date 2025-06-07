@@ -63,15 +63,38 @@ public class ClientSketchManager {
 	}
 
 	public void create(FieldCoordinate coordinate, int rgb) {
-		activeSketch = new Sketch(rgb);
-		activeSketch.addCoordinate(coordinate);
+		Sketch sketch = new Sketch(rgb);
+		sketch.addCoordinate(coordinate);
+		add(sketch);
+	}
+
+	public void add(Sketch sketch) {
+		activeSketch = sketch;
 		sketches.add(activeSketch);
+	}
+
+	public void add(String coach, String sketchId, FieldCoordinate coordinate) {
+		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
+			.findFirst()
+			.ifPresent(sketch -> sketch.addCoordinate(coordinate));
 	}
 
 	public void add(FieldCoordinate coordinate) {
 		if (activeSketch != null) {
 			activeSketch.addCoordinate(coordinate);
 		}
+	}
+
+	public void setColor(String coach, String sketchId, int rgb) {
+		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
+			.findFirst()
+			.ifPresent(sketch -> sketch.setRgb(rgb));
+	}
+
+	public void setLabel(String coach, String sketchId, String label) {
+		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
+			.findFirst()
+			.ifPresent(sketch -> sketch.setLabel(label));
 	}
 
 	public void finishSketch(FieldCoordinate coordinate) {
@@ -118,6 +141,20 @@ public class ClientSketchManager {
 
 		return inEndDecoration(pitchDimensionProvider.mapToLocal(currentNode, true),
 			pitchDimensionProvider.mapToLocal(sketch.getPath().getLast(), true), x, y);
+	}
+
+	public void removeAll(String coach) {
+		 sketchesByCoach.get(coach).clear();
+	}
+
+	public void remove(String coach, String id) {
+		List<Sketch> sketches = sketchesByCoach.get(coach);
+		if (sketches != null) {
+			sketches.stream()
+				.filter(sketch -> sketch.getId().equals(id))
+				.findFirst()
+				.ifPresent(this::remove);
+		}
 	}
 
 	public void remove(String id) {

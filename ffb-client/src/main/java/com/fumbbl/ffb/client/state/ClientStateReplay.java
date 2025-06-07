@@ -211,5 +211,10 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 			clientStateReplay.logCoach(coach, false, null);
 			clientStateReplay.updateCoaches(allCoaches);
 		}
+
+		@Override
+		public void onlineChanged(boolean online) {
+			clientStateReplay.getClient().getOverlays().forEach(overlay -> overlay.setOnline(online));
+		}
 	}
 }

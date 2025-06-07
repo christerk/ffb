@@ -45,6 +45,7 @@ public class ServerCommandSketchSetColor extends ServerCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.IDS.addTo(jsonObject, sketchIds);
 		IJsonOption.RGB.addTo(jsonObject, rbg);
 		IJsonOption.COACH.addTo(jsonObject, coach);
@@ -53,6 +54,7 @@ public class ServerCommandSketchSetColor extends ServerCommand {
 
 	public ServerCommandSketchSetColor initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		sketchIds = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));
 		rbg = IJsonOption.RGB.getFrom(source, jsonObject);
 		coach = IJsonOption.COACH.getFrom(source, jsonObject);

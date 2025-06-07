@@ -39,6 +39,7 @@ public class ServerCommandRemoveSketches extends ServerCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		if (ids != null && !ids.isEmpty()) {
 			IJsonOption.IDS.addTo(jsonObject, ids);
 		}
@@ -48,6 +49,7 @@ public class ServerCommandRemoveSketches extends ServerCommand {
 
 	public ServerCommandRemoveSketches initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		if (IJsonOption.IDS.isDefinedIn(jsonObject)) {
 			ids = Arrays.asList(IJsonOption.IDS.getFrom(source, jsonObject));
 		}

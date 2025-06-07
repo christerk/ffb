@@ -93,6 +93,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 					case SERVER_SOUND:
 					case SERVER_REPLAY:
 					case INTERNAL_SERVER_SOCKET_CLOSED:
+					case SERVER_SKETCH_ADD_COORDINATE:
+					case SERVER_SKETCH_SET_COLOR:
+					case SERVER_SKETCH_SET_LABEL:
+					case SERVER_ADD_SKETCH:
+					case SERVER_REMOVE_SKETCHES:
+					case SERVER_CLEAR_SKETCHES:
 						break;
 					default:
 						getClient().getReplayer().add((ServerCommand) netCommand);
@@ -132,7 +138,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendJoin(String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId,
-	                     String pTeamName) {
+											 String pTeamName) {
 		ClientCommandJoin joinCommand = new ClientCommandJoin(getClient().getMode());
 		joinCommand.setCoach(pCoach);
 		joinCommand.setPassword(pPassword);
@@ -168,12 +174,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                           FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
+														 FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
 		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo, ballAndChainRrSetting));
 	}
 
 	public void sendPlayerBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                                FieldCoordinate[] pCoordinatesTo) {
+																	FieldCoordinate[] pCoordinatesTo) {
 		send(new ClientCommandBlitzMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
 	}
 

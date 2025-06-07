@@ -187,6 +187,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		if (online && StringTool.isProvided(sanitizedName)) {
 			client.getCommunication().sendJoinReplay(sanitizedName, coach, client.getParameters().getGameId());
 			client.getReplayer().setOnline(true);
+			callbacks.onlineChanged(true);
 		} else {
 			client.getCommunication().sendCloseSession();
 			client.getReplayer().setControl(true);
@@ -298,6 +299,13 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 * Called when a coach leaves the session
 		 */
 		void coachLeft(String coach, List<String> allCoaches);
+
+		/**
+		 * Called when the online status of the session changes.
+		 *
+		 * @param online indicates whether the session is online (true) or offline (false)
+		 */
+		void onlineChanged(boolean online);
 
 	}
 }

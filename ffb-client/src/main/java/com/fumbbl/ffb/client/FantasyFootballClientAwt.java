@@ -291,4 +291,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	public void replayInitialized() {
 		setActiveOverlay(pathSketchOverlay);
 	}
+
+	public List<Overlay> getOverlays() {
+		return Collections.singletonList(pathSketchOverlay);
+	}
 }

@@ -37,6 +37,12 @@ public class ClientCommandHandlerFactory {
 		register(new ClientCommandHandlerZapPlayer(getClient()));
 		register(new ClientCommandHandlerUnzapPlayer(getClient()));
 		register(new ClientCommandHandlerUpdateLocalPlayerMarkers(getClient()));
+		register(new ClientCommandHandlerAddSketch(getClient()));
+		register(new ClientCommandHandlerRemoveSketches(getClient()));
+		register(new ClientCommandHandlerClearSketches(getClient()));
+		register(new ClientCommandHandlerSketchAddCoordinate(getClient()));
+		register(new ClientCommandHandlerSketchSetColor(getClient()));
+		register(new ClientCommandHandlerSketchSetLabel(getClient()));
 	}
 
 	public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {

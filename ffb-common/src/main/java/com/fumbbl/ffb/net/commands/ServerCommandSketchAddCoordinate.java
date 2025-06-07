@@ -43,6 +43,7 @@ public class ServerCommandSketchAddCoordinate extends ServerCommand {
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
+		IJsonOption.NET_COMMAND_ID.addTo(jsonObject, getId());
 		IJsonOption.ID.addTo(jsonObject, sketchId);
 		IJsonOption.COORDINATE.addTo(jsonObject, coordinate);
 		IJsonOption.COACH.addTo(jsonObject, coach);
@@ -51,6 +52,7 @@ public class ServerCommandSketchAddCoordinate extends ServerCommand {
 
 	public ServerCommandSketchAddCoordinate initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));
 		sketchId = IJsonOption.ID.getFrom(source, jsonObject);
 		coordinate = IJsonOption.COORDINATE.getFrom(source, jsonObject);
 		coach = IJsonOption.COACH.getFrom(source, jsonObject);

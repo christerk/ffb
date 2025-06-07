@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.client.overlay;
 
-import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
@@ -63,7 +62,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private int popupY;
 	private FieldCoordinate previewCoordinate;
 	private Color sketchColor = new Color(0, 200, 0);
-	private final boolean isOnline;
+	private boolean isOnline;
 
 	public PathSketchOverlay(FantasyFootballClient client) {
 		this.client = client;
@@ -73,7 +72,6 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		this.fieldComponent = userInterface.getFieldComponent();
 		this.pitchDimensionProvider = userInterface.getPitchDimensionProvider();
 		IconCache iconCache = userInterface.getIconCache();
-		isOnline = this.client.getMode() != ClientMode.REPLAY || this.client.getReplayer().isOnline();
 
 		ImageIcon deleteAllIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE_ALL, pitchDimensionProvider);
 		ImageIcon deleteIcon = iconCache.getImageIconByProperty(IIconProperty.SKETCH_DELETE, pitchDimensionProvider);
@@ -376,5 +374,10 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches();
 			removeMenu();
 		});
+	}
+
+	@Override
+	public void setOnline(boolean online) {
+		isOnline = online;
 	}
 }
