@@ -15,7 +15,10 @@ import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.sketch.Sketch;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -35,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PathSketchOverlay implements Overlay, ActionListener {
 
@@ -44,7 +48,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private final ClientSketchManager sketchManager;
 	private final FieldComponent fieldComponent;
 	private final PitchDimensionProvider pitchDimensionProvider;
-	private final List<Sketch> actionTargets = new ArrayList<>();
+	private final List<String> actionTargets = new ArrayList<>();
 	private final JMenuItem deleteAll;
 	private final JMenuItem deleteSingle;
 	private final JMenuItem deleteMultiple;
@@ -120,8 +124,8 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			return;
 		}
 
-		Set<Sketch> newTargets = sketchManager.getSketches(e.getX(), e.getY());
-		Set<Sketch> oldTargets = new HashSet<>(actionTargets);
+		Set<String> newTargets = sketchManager.getSketches(e.getX(), e.getY()).stream().map(Sketch::getId).collect(Collectors.toSet());
+		Set<String> oldTargets = new HashSet<>(actionTargets);
 		FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(e);
 
 		if (oldTargets.containsAll(newTargets) && newTargets.containsAll(oldTargets) && coordinate == previewCoordinate) {
@@ -140,7 +144,6 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (popupMenu != null && popupMenu.isVisible()) {
-			//removeMenu();
 			return;
 		}
 		if (e.getButton() != MouseEvent.BUTTON1) {
@@ -169,9 +172,12 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		drawSketches(Collections.emptyList());
 	}
 
-	private void drawSketches(List<Sketch> highlights) {
-		fieldComponent.getLayerSketches().draw(highlights, previewCoordinate);
-		fieldComponent.refresh();
+	private void drawSketches(List<String> highlights) {
+		Optional<Sketch> activeSketch = sketchManager.activeSketch();
+		String activeSketchId = activeSketch.map(Sketch::getId).orElse(null);
+		SketchState sketchState = new SketchState(sketchManager.getAllSketches(), highlights, previewCoordinate, activeSketchId);
+		ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+		client.getGame().notifyObservers(modelChange);
 	}
 
 	private void showContextMenu(MouseEvent e) {
@@ -195,7 +201,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 				menuItems.add(deleteSingle);
 				menuItems.add(editLabel);
 				menuItems.add(editColor);
-				editColor.setIcon(createColorIcon(actionTargets.get(0).getRgb()));
+				sketchManager.getSketch(actionTargets.get(0))
+					.ifPresent(sketch -> editColor.setIcon(createColorIcon(sketch.getRgb())));
+
 			} else if (actionTargets.size() > 1) {
 				menuItems.add(deleteMultiple);
 				menuItems.add(editLabels);
@@ -237,7 +245,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			if (actionTargets.isEmpty()) {
 				return null;
 			} else {
-				return actionTargets.get(0);
+				return sketchManager.getSketch(actionTargets.get(0)).orElse(null);
 			}
 		});
 		if (e.getSource() == deleteAll) {
@@ -249,8 +257,8 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			drawSketches(actionTargets);
 			removeMenu();
 		} else if (e.getSource() == deleteMultiple) {
-			for (Sketch sketch : actionTargets) {
-				sketchManager.remove(sketch);
+			for (String sketchId : actionTargets) {
+				sketchManager.remove(sketchId);
 			}
 			drawSketches(actionTargets);
 			removeMenu();
@@ -277,7 +285,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 		} else if (e.getSource() == editColors) {
 			Color newColor = JColorChooser.showDialog(fieldComponent, "Select color", sketchColor);
 			if (newColor != null) {
-				actionTargets.forEach(target -> target.setRgb(newColor.getRGB()));
+				actionTargets.stream().map(sketchManager::getSketch).filter(Optional::isPresent).map(Optional::get).forEach(target -> target.setRgb(newColor.getRGB()));
 				drawSketches();
 			}
 		}
@@ -309,9 +317,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 			if (sketchManager.activeSketch().isPresent()) {
 				sketchManager.activeSketch().get().setLabel(labelField.getText());
 			} else {
-				for (Sketch actionTarget : actionTargets) {
-					actionTarget.setLabel(labelField.getText());
-				}
+				actionTargets.stream().map(sketchManager::getSketch)
+					.filter(Optional::isPresent).map(Optional::get)
+					.forEach(target -> target.setLabel(labelField.getText()));
 			}
 			drawSketches();
 			removeMenu();

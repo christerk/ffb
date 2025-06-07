@@ -9,6 +9,7 @@ import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.overlay.sketch.TriangleCoords;
 import com.fumbbl.ffb.model.sketch.Sketch;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.awt.BasicStroke;
@@ -17,7 +18,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
-import java.util.Collections;
 import java.util.List;
 
 public class FieldLayerSketches extends FieldLayer {
@@ -32,11 +32,11 @@ public class FieldLayerSketches extends FieldLayer {
 	@Override
 	public void init() {
 		super.init();
-		draw(Collections.emptyList(), null);
+		draw(new SketchState(sketchManager.getAllSketches()));
 	}
 
-	public void draw(List<Sketch> highlights, FieldCoordinate previewCoordinate) {
-		List<Sketch> sketches = sketchManager.getAllSketches();
+	public void draw(SketchState sketchState) {
+		List<Sketch> sketches = sketchState.getSketches();
 		clear(true);
 		Graphics2D graphics2D = getImage().createGraphics();
 		Stroke stroke = new BasicStroke(pitchDimensionProvider.dimension(Component.SKETCH_STROKE).width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
@@ -46,7 +46,7 @@ public class FieldLayerSketches extends FieldLayer {
 
 			Color paint = new Color(sketch.getRgb());
 			Color highlightPaint = new Color(paint.getRed(), paint.getGreen(), paint.getBlue(), 128);
-			if (highlights.contains(sketch)) {
+			if (sketchState.getHighlightIds().contains(sketch.getId())) {
 				graphics2D.setPaint(highlightPaint);
 			} else {
 				graphics2D.setPaint(paint);
@@ -78,25 +78,24 @@ public class FieldLayerSketches extends FieldLayer {
 
 			} else {
 				if (StringTool.isProvided(sketch.getLabel())) {
-					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, 0, 0, 0 );
+					addLabel(graphics2D, sketch.getLabel(), xPoints, yPoints, 0, 0, 0);
 				}
 			}
 
-			sketchManager.activeSketch().ifPresent(activeSketch -> {
-				if (activeSketch == sketch && previewCoordinate != sketch.getPath().getLast() && previewCoordinate != null) {
-					Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
-					graphics2D.setPaint(highlightPaint);
-					graphics2D.drawLine(
-						xPoints[nPoints - 1], yPoints[nPoints - 1],
-						dimension.width, dimension.height
-					);
-				}
-			});
+			FieldCoordinate previewCoordinate = sketchState.getPreviewCoordinate();
+			if (sketch.getId().equals(sketchState.getActiveSketchId())  && previewCoordinate != sketch.getPath().getLast() && previewCoordinate != null) {
+				Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
+				graphics2D.setPaint(highlightPaint);
+				graphics2D.drawLine(
+					xPoints[nPoints - 1], yPoints[nPoints - 1],
+					dimension.width, dimension.height
+				);
+			}
 		});
 		graphics2D.dispose();
 	}
 
-private void addLabel(Graphics2D graphics2D, String label, int[] xPoints, int[] yPoints, int startIndex, int endIndex, int anchorIndex) {
+	private void addLabel(Graphics2D graphics2D, String label, int[] xPoints, int[] yPoints, int startIndex, int endIndex, int anchorIndex) {
 		int xStart = xPoints[startIndex];
 		int yStart = yPoints[startIndex];
 		int xEnd = xPoints[endIndex];

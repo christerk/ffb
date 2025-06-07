@@ -39,6 +39,12 @@ public class ClientSketchManager {
 		return sketchesByCoach.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
+	public Optional<Sketch> getSketch(String id) {
+		return sketches.stream()
+			.filter(sketch -> sketch.getId().equals(id))
+			.findFirst();
+	}
+
 	public Optional<Sketch> activeSketch() {
 		return Optional.ofNullable(activeSketch);
 	}
@@ -100,6 +106,10 @@ public class ClientSketchManager {
 
 		return inEndDecoration(pitchDimensionProvider.mapToLocal(currentNode, true),
 			pitchDimensionProvider.mapToLocal(sketch.getPath().getLast(), true), x, y);
+	}
+
+	public void remove(String id) {
+		getSketch(id).ifPresent(this::remove);
 	}
 
 	public void remove(Sketch sketch) {

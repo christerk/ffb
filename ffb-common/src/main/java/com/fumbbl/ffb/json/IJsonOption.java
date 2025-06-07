@@ -478,6 +478,7 @@ public interface IJsonOption {
 	JsonBooleanOption SHOW_NAME_IN_REPORT = new JsonBooleanOption("showNameInReport");
 	JsonBooleanOption SHOW_NEVER_USE = new JsonBooleanOption("showNeverUse");
 	JsonObjectOption SKETCH = new JsonObjectOption("sketch");
+	JsonArrayOption SKETCHES = new JsonArrayOption("sketches");
 	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", Factory.SKILL);
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");

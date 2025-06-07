@@ -30,6 +30,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import javax.swing.JPanel;
@@ -327,6 +328,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			case GAME_SET_HOME_PLAYING:
 			case GAME_SET_TURN_MODE:
 				getLayerUnderPlayers().init();
+				break;
+			case SKETCH_UPDATE:
+				getLayerSketches().draw((SketchState) pModelChange.getValue());
+				refresh();
 				break;
 			default:
 				break;
