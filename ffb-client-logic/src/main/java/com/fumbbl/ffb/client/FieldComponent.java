@@ -400,7 +400,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
 		if (overlay.isPresent()) {
-			overlay.get().mouseMoved(pMouseEvent);
+			overlay.get().mouseDragged(pMouseEvent);
 			return;
 		}
 
