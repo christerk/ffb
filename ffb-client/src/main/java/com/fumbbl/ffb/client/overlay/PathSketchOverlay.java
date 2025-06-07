@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.CoordinateConverter;
+import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
@@ -37,6 +38,7 @@ import java.util.Set;
 
 public class PathSketchOverlay implements Overlay, ActionListener {
 
+	private final FantasyFootballClient client;
 	private final UserInterface userInterface;
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
@@ -56,8 +58,9 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private FieldCoordinate previewCoordinate;
 	private Color sketchColor = new Color(0, 200, 0);
 
-	public PathSketchOverlay(UserInterface userInterface) {
-		this.userInterface = userInterface;
+	public PathSketchOverlay(FantasyFootballClient client) {
+		this.client = client;
+		this.userInterface = client.getUserInterface();
 		this.coordinateConverter = userInterface.getCoordinateConverter();
 		this.sketchManager = userInterface.getSketchManager();
 		this.fieldComponent = userInterface.getFieldComponent();

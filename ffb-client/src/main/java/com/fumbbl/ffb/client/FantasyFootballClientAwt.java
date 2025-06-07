@@ -71,7 +71,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		setClientStateFactory();
 
-		pathSketchOverlay = new PathSketchOverlay(fUserInterface);
+		pathSketchOverlay = new PathSketchOverlay(this);
 	}
 
 	@Override
