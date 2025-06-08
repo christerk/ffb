@@ -290,7 +290,7 @@ public enum NetCommandId implements INamedObject {
 			case CLIENT_TRANSFER_REPLAY_CONTROL:
 				return new ClientCommandTransferReplayControl();
 			case CLIENT_REMOVE_SKETCHES:
-				return new ClientCommandAddSketch();
+				return new ClientCommandRemoveSketches();
 			case CLIENT_CLEAR_SKETCHES:
 				return new ClientCommandClearSketches();
 				case CLIENT_ADD_SKETCH:
