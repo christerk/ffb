@@ -2,11 +2,13 @@ package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandAddSketch;
-import com.fumbbl.ffb.net.commands.ServerCommandAddSketch;
+import com.fumbbl.ffb.net.commands.ServerCommandAddSketches;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import org.eclipse.jetty.websocket.api.Session;
 
-public class ServerCommandHandlerAddSketch extends AbstractServerCommandHandlerSketch<ClientCommandAddSketch, ServerCommandAddSketch> {
+import java.util.Collections;
+
+public class ServerCommandHandlerAddSketch extends AbstractServerCommandHandlerSketch<ClientCommandAddSketch, ServerCommandAddSketches> {
 	protected ServerCommandHandlerAddSketch(FantasyFootballServer pServer) {
 		super(pServer);
 	}
@@ -22,7 +24,7 @@ public class ServerCommandHandlerAddSketch extends AbstractServerCommandHandlerS
 	}
 
 	@Override
-	protected ServerCommandAddSketch createServerCommand(String coach, ClientCommandAddSketch command) {
-		return new ServerCommandAddSketch(coach, command.getSketch());
+	protected ServerCommandAddSketches createServerCommand(String coach, ClientCommandAddSketch command) {
+		return new ServerCommandAddSketches(coach, Collections.singletonList(command.getSketch()));
 	}
 }

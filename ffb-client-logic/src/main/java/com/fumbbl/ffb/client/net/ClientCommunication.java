@@ -96,7 +96,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 					case SERVER_SKETCH_ADD_COORDINATE:
 					case SERVER_SKETCH_SET_COLOR:
 					case SERVER_SKETCH_SET_LABEL:
-					case SERVER_ADD_SKETCH:
+					case SERVER_ADD_SKETCHES:
 					case SERVER_REMOVE_SKETCHES:
 					case SERVER_CLEAR_SKETCHES:
 						break;

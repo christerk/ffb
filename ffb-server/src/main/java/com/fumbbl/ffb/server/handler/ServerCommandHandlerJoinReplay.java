@@ -2,16 +2,20 @@ package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandJoinReplay;
+import com.fumbbl.ffb.net.commands.ServerCommandAddSketches;
 import com.fumbbl.ffb.net.commands.ServerCommandJoin;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ReplayCache;
 import com.fumbbl.ffb.server.ReplayState;
+import com.fumbbl.ffb.server.ServerSketchManager;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ReplaySessionManager;
+import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.util.ArrayTool;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -35,6 +39,9 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 	public boolean handleCommand(ReceivedCommand receivedCommand) {
 		ClientCommandJoinReplay clientCommandJoinReplay = (ClientCommandJoinReplay) receivedCommand.getCommand();
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+		ServerCommunication communication = getServer().getCommunication();
+		ServerSketchManager sketchManager = getServer().getSketchManager();
+
 		synchronized (sessionManager) {
 			ReplayCache replayCache = getServer().getReplayCache();
 			String plainReplayName = clientCommandJoinReplay.getReplayName();
@@ -52,7 +59,7 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 			if (ArrayTool.isProvided(sessions)) {
 				List<String> coaches = Arrays.stream(sessions).map(sessionManager::coach).collect(Collectors.toList());
 
-				Arrays.stream(sessions).forEach(storedSession -> getServer().getCommunication()
+				Arrays.stream(sessions).forEach(storedSession -> communication
 					.send(storedSession, new ServerCommandJoin(coach, ClientMode.REPLAY, new String[0], coaches, sanitizedReplayName), true));
 			}
 
@@ -60,11 +67,16 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 			if (replayState == null) {
 				replayState = new ReplayState(replayName);
 				replayCache.add(replayState);
-				getServer().getCommunication().send(session, new ServerCommandReplayControl(coach), true);
+				communication.sendToReplaySession(session, new ServerCommandReplayControl(coach));
 			} else {
 				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward(), true);
-				getServer().getCommunication().send(session, command, true);
-				getServer().getCommunication().send(session, new ServerCommandReplayControl(sessionManager.controllingCoach(session)), true);
+				communication.sendToReplaySession(session, command);
+				communication.sendToReplaySession(session, new ServerCommandReplayControl(sessionManager.controllingCoach(session)));
+				sessionManager.otherSessions(session).forEach(otherSession -> {
+					List<Sketch> sketches = sketchManager.getSketches(otherSession);
+					String otherCoach = sessionManager.coach(otherSession);
+					communication.sendToReplaySession(session, new ServerCommandAddSketches(otherCoach, sketches));
+				});
 			}
 		}
 

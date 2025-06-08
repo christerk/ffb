@@ -64,7 +64,7 @@ public enum NetCommandId implements INamedObject {
 	SERVER_REPLAY_CONTROL("serverReplayControl"), CLIENT_TRANSFER_REPLAY_CONTROL("clientTransferReplayControl"),
 	CLIENT_ADD_SKETCH("clientAddSketch"), CLIENT_REMOVE_SKETCHES("clientRemoveSketches"), CLIENT_SKETCH_ADD_COORDINATE("clientSketchAddCoordinate"),
 	CLIENT_SKETCH_SET_COLOR("clientSketchSetColor"), CLIENT_SKETCH_SET_LABEL("clientSketchSetLabel"), CLIENT_CLEAR_SKETCHES("clientClearSketches"),
-	SERVER_ADD_SKETCH("serverAddSketch"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
+	SERVER_ADD_SKETCHES("serverAddSketches"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
 	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches")
 	;
 
@@ -301,8 +301,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandSketchSetColor();
 			case CLIENT_SKETCH_SET_LABEL:
 				return new ClientCommandSketchSetLabel();
-			case SERVER_ADD_SKETCH:
-				return new ServerCommandAddSketch();
+			case SERVER_ADD_SKETCHES:
+				return new ServerCommandAddSketches();
 			case SERVER_REMOVE_SKETCHES:
 				return new ServerCommandRemoveSketches();
 			case SERVER_SKETCH_ADD_COORDINATE:

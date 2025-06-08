@@ -486,6 +486,19 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// not logged in Game Log
 	}
 
+	public void sendReplayLeave(Session[] pSessions, String pCoach, ClientMode pMode, List<String> pSpectators) {
+		ServerCommandLeave leaveCommand = new ServerCommandLeave(pCoach, pMode, pSpectators);
+		sendToReplay(pSessions, leaveCommand);
+		// not logged in Game Log
+	}
+
+	protected void sendToReplay(Session[] pSessions, NetCommand command) {
+		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSessions);
+		for (Session pSession : pSessions) {
+			sendToReplaySession(pSession, command);
+		}
+	}
+
 	public void sendGameTime(GameState gameState) {
 		if (gameState != null) {
 			Game game = gameState.getGame();

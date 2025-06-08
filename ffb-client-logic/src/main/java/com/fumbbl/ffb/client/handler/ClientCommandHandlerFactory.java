@@ -37,7 +37,7 @@ public class ClientCommandHandlerFactory {
 		register(new ClientCommandHandlerZapPlayer(getClient()));
 		register(new ClientCommandHandlerUnzapPlayer(getClient()));
 		register(new ClientCommandHandlerUpdateLocalPlayerMarkers(getClient()));
-		register(new ClientCommandHandlerAddSketch(getClient()));
+		register(new ClientCommandHandlerAddSketches(getClient()));
 		register(new ClientCommandHandlerRemoveSketches(getClient()));
 		register(new ClientCommandHandlerClearSketches(getClient()));
 		register(new ClientCommandHandlerSketchAddCoordinate(getClient()));
