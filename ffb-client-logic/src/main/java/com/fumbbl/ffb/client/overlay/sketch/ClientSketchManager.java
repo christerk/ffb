@@ -33,30 +33,30 @@ public class ClientSketchManager {
 		this.pitchDimensionProvider = pitchDimensionProvider;
 	}
 
-	public List<Sketch> getSketches(String coach) {
+	public synchronized List<Sketch> getSketches(String coach) {
 		return sketchesByCoach.computeIfAbsent(coach, s -> new ArrayList<>());
 	}
 
-	public List<Sketch> getAllSketches() {
+	public synchronized List<Sketch> getAllSketches() {
 		return sketchesByCoach.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
-	public Optional<Sketch> getSketch(String id) {
+	public synchronized Optional<Sketch> getSketch(String id) {
 		return sketches.stream()
 			.filter(sketch -> sketch.getId().equals(id))
 			.findFirst();
 	}
 
-	public Optional<Sketch> activeSketch() {
+	public synchronized Optional<Sketch> activeSketch() {
 		return Optional.ofNullable(activeSketch);
 	}
 
-	public void clearOwn() {
+	public synchronized void clearOwn() {
 		sketches.clear();
 		activeSketch = null;
 	}
 
-	public void clearAll() {
+	public synchronized void clearAll() {
 		sketchesByCoach.clear();
 		sketches = getSketches(coach);
 		activeSketch = null;
@@ -68,51 +68,56 @@ public class ClientSketchManager {
 		add(sketch);
 	}
 
-	public void add(Sketch sketch) {
+	public synchronized void add(Sketch sketch) {
 		activeSketch = sketch;
 		sketches.add(activeSketch);
 	}
 
-	public void add(String coach, String sketchId, FieldCoordinate coordinate) {
+	public synchronized void add(String coach, Sketch sketch) {
+		List<Sketch> coachSketches = getSketches(coach);
+		coachSketches.add(sketch);
+	}
+
+	public synchronized void add(String coach, String sketchId, FieldCoordinate coordinate) {
 		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
 			.findFirst()
 			.ifPresent(sketch -> sketch.addCoordinate(coordinate));
 	}
 
-	public void add(FieldCoordinate coordinate) {
+	public synchronized void add(FieldCoordinate coordinate) {
 		if (activeSketch != null) {
 			activeSketch.addCoordinate(coordinate);
 		}
 	}
 
-	public void setColor(String coach, String sketchId, int rgb) {
+	public synchronized void setColor(String coach, String sketchId, int rgb) {
 		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
 			.findFirst()
 			.ifPresent(sketch -> sketch.setRgb(rgb));
 	}
 
-	public void setLabel(String coach, String sketchId, String label) {
+	public synchronized void setLabel(String coach, String sketchId, String label) {
 		getSketches(coach).stream().filter(sketch -> sketch.getId().equals(sketchId))
 			.findFirst()
 			.ifPresent(sketch -> sketch.setLabel(label));
 	}
 
-	public void finishSketch(FieldCoordinate coordinate) {
+	public synchronized void finishSketch(FieldCoordinate coordinate) {
 		if (activeSketch != null) {
 			activeSketch.addCoordinate(coordinate);
 		}
 		activeSketch = null;
 	}
 
-	public boolean hasAnySketches() {
+	public synchronized boolean hasAnySketches() {
 		return !sketchesByCoach.isEmpty() && sketchesByCoach.values().stream().anyMatch(list -> !list.isEmpty());
 	}
 
-	public boolean hasOwnSketches() {
+	public synchronized boolean hasOwnSketches() {
 		return !sketches.isEmpty();
 	}
 
-	public Set<Sketch> getSketches(int x, int y) {
+	public synchronized Set<Sketch> getSketches(int x, int y) {
 		return sketches.stream()
 			.filter(sketch -> intersect(sketch, x, y)).collect(Collectors.toSet());
 	}
@@ -143,7 +148,7 @@ public class ClientSketchManager {
 			pitchDimensionProvider.mapToLocal(sketch.getPath().getLast(), true), x, y);
 	}
 
-	public void removeAll(String coach) {
+	public synchronized void removeAll(String coach) {
 		 sketchesByCoach.get(coach).clear();
 	}
 

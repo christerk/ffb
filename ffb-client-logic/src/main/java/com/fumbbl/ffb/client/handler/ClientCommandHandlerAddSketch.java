@@ -17,6 +17,6 @@ public class ClientCommandHandlerAddSketch extends AbstractClientCommandHandlerS
 
 		@Override
 		protected void updateSketchManager(ServerCommandAddSketch command) {
-				getClient().getUserInterface().getSketchManager().add(command.getSketch());
+				getClient().getUserInterface().getSketchManager().add(command.getCoach(), command.getSketch());
 		}
 }
