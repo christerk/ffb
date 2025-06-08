@@ -23,7 +23,7 @@ public class ServerCommandHandlerClearSketches extends AbstractServerCommandHand
 	}
 
 	@Override
-	protected ServerCommandClearSketches createServerCommand(Session session, ClientCommandClearSketches command) {
+	protected ServerCommandClearSketches createServerCommand(String coach, ClientCommandClearSketches command) {
 		return new ServerCommandClearSketches();
 	}
 }

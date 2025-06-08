@@ -22,7 +22,7 @@ public class ServerCommandHandlerSketchAddCoordinate extends AbstractServerComma
 	}
 
 	@Override
-	protected ServerCommandSketchAddCoordinate createServerCommand(Session session, ClientCommandSketchAddCoordinate command) {
-		return new ServerCommandSketchAddCoordinate(replaySessionManager.coach(session), command.getSketchId(), command.getCoordinate());
+	protected ServerCommandSketchAddCoordinate createServerCommand(String coach, ClientCommandSketchAddCoordinate command) {
+		return new ServerCommandSketchAddCoordinate(coach, command.getSketchId(), command.getCoordinate());
 	}
 }

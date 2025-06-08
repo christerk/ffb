@@ -31,12 +31,12 @@ public abstract class AbstractServerCommandHandlerSketch<C extends ClientSketchC
 			updateSketchManager(session, command);
 			replaySessionManager.otherSessions(session)
 				.forEach(otherSession ->
-					getServer().getCommunication().sendToReplaySession(otherSession, createServerCommand(otherSession, command)));
+					getServer().getCommunication().sendToReplaySession(otherSession, createServerCommand(replaySessionManager.coach(session), command)));
 		}
 		return true;
 	}
 
 	protected abstract void updateSketchManager(Session session, C command);
 
-	protected abstract S createServerCommand(Session session, C command);
+	protected abstract S createServerCommand(String coach, C command);
 }

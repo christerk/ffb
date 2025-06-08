@@ -22,7 +22,7 @@ public class ServerCommandHandlerSketchSetLabel extends AbstractServerCommandHan
 	}
 
 	@Override
-	protected ServerCommandSketchSetLabel createServerCommand(Session session, ClientCommandSketchSetLabel command) {
-		return new ServerCommandSketchSetLabel(replaySessionManager.coach(session), command.getSketchIds(), command.getLabel());
+	protected ServerCommandSketchSetLabel createServerCommand(String coach, ClientCommandSketchSetLabel command) {
+		return new ServerCommandSketchSetLabel(coach, command.getSketchIds(), command.getLabel());
 	}
 }

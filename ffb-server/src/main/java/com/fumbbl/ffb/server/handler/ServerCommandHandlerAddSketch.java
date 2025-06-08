@@ -22,7 +22,7 @@ public class ServerCommandHandlerAddSketch extends AbstractServerCommandHandlerS
 	}
 
 	@Override
-	protected ServerCommandAddSketch createServerCommand(Session session, ClientCommandAddSketch command) {
-		return new ServerCommandAddSketch(replaySessionManager.coach(session), command.getSketch());
+	protected ServerCommandAddSketch createServerCommand(String coach, ClientCommandAddSketch command) {
+		return new ServerCommandAddSketch(coach, command.getSketch());
 	}
 }

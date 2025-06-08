@@ -26,7 +26,7 @@ public class ServerCommandHandlerRemoveSketches extends AbstractServerCommandHan
 	}
 
 	@Override
-	protected ServerCommandRemoveSketches createServerCommand(Session session, ClientCommandRemoveSketches command) {
-		return new ServerCommandRemoveSketches(replaySessionManager.coach(session), command.getIds());
+	protected ServerCommandRemoveSketches createServerCommand(String coach, ClientCommandRemoveSketches command) {
+		return new ServerCommandRemoveSketches(coach, command.getIds());
 	}
 }

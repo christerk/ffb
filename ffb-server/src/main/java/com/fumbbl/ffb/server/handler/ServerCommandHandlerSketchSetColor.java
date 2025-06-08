@@ -22,7 +22,7 @@ public class ServerCommandHandlerSketchSetColor extends AbstractServerCommandHan
 	}
 
 	@Override
-	protected ServerCommandSketchSetColor createServerCommand(Session session, ClientCommandSketchSetColor command) {
-		return new ServerCommandSketchSetColor(replaySessionManager.coach(session), command.getSketchIds(), command.getRbg());
+	protected ServerCommandSketchSetColor createServerCommand(String coach, ClientCommandSketchSetColor command) {
+		return new ServerCommandSketchSetColor(coach, command.getSketchIds(), command.getRbg());
 	}
 }
