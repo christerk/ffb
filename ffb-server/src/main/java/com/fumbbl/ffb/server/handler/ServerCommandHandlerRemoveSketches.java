@@ -18,7 +18,7 @@ public class ServerCommandHandlerRemoveSketches extends AbstractServerCommandHan
 
 	@Override
 	protected void updateSketchManager(Session session, ClientCommandRemoveSketches command) {
-		if (command.getIds().isEmpty()) {
+		if (command.getIds() == null || command.getIds().isEmpty()) {
 			sketchManager.remove(session);
 		} else {
 			sketchManager.removeSketches(session, command.getIds());
