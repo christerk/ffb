@@ -13,6 +13,8 @@ import com.fumbbl.ffb.client.IProgressListener;
 import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.model.ControlAware;
+import com.fumbbl.ffb.client.model.OnlineAware;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
@@ -153,9 +155,9 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				break;
 			case SERVER_REPLAY_CONTROL:
 				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
-				replayer.setControl(commandReplayControl.getCoach().equals(client.getParameters().getCoach()));
 				client.getClientData().setCoachControllingReplay(commandReplayControl.getCoach());
-				callbacks.controlChanged(commandReplayControl.getCoach());
+				boolean hasControl = commandReplayControl.getCoach().equals(client.getParameters().getCoach());
+				evaluateControl(hasControl, commandReplayControl.getCoach());
 				break;
 			case SERVER_JOIN:
 				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
@@ -175,6 +177,14 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		}
 	}
 
+	private void evaluateControl(boolean hasControl, String commandReplayControl) {
+		client.getReplayer().setControl(hasControl);
+		callbacks.controlChanged(commandReplayControl);
+		client.getOverlays().stream().filter(overlay -> overlay instanceof ControlAware)
+			.map(overlay -> (ControlAware) overlay)
+			.forEach(overlay -> overlay.setControl(hasControl));
+	}
+
 	private void updateClientData(List<String> allCoaches) {
 		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(client.getParameters().getCoach())).collect(Collectors.toList());
 		client.getClientData().setSpectatorCount(filteredCoaches.size());
@@ -187,11 +197,13 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		if (online && StringTool.isProvided(sanitizedName)) {
 			client.getCommunication().sendJoinReplay(sanitizedName, coach, client.getParameters().getGameId());
 			client.getReplayer().setOnline(true);
-			callbacks.onlineChanged(true);
+			client.getOverlays().stream().filter(overlay -> overlay instanceof OnlineAware)
+				.map(overlay -> (OnlineAware) overlay)
+				.forEach(overlay -> overlay.setOnline(online));
+
 		} else {
 			client.getCommunication().sendCloseSession();
-			client.getReplayer().setControl(true);
-			callbacks.controlChanged(coach);
+			evaluateControl(true, coach);
 		}
 		client.replayInitialized();
 	}
@@ -299,13 +311,6 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 * Called when a coach leaves the session
 		 */
 		void coachLeft(String coach, List<String> allCoaches);
-
-		/**
-		 * Called when the online status of the session changes.
-		 *
-		 * @param online indicates whether the session is online (true) or offline (false)
-		 */
-		void onlineChanged(boolean online);
 
 	}
 }

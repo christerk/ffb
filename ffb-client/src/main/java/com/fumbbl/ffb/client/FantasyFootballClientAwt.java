@@ -292,6 +292,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setActiveOverlay(pathSketchOverlay);
 	}
 
+	@Override
 	public List<Overlay> getOverlays() {
 		return Collections.singletonList(pathSketchOverlay);
 	}

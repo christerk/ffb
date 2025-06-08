@@ -9,6 +9,8 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.model.ControlAware;
+import com.fumbbl.ffb.client.model.OnlineAware;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -40,7 +42,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PathSketchOverlay implements Overlay, ActionListener {
+public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, ControlAware {
 
 	private final FantasyFootballClient client;
 	private final UserInterface userInterface;
@@ -63,6 +65,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	private FieldCoordinate previewCoordinate;
 	private Color sketchColor = new Color(0, 200, 0);
 	private boolean isOnline;
+	private boolean hasControl;
 
 	public PathSketchOverlay(FantasyFootballClient client) {
 		this.client = client;
@@ -204,7 +207,7 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 
 	private List<JMenuItem> collectActions() {
 		List<JMenuItem> menuItems = new ArrayList<>();
-		if (isOnline && sketchManager.hasAnySketches()) {
+		if (isOnline && hasControl && sketchManager.hasAnySketches()) {
 			menuItems.add(deleteAll);
 		}
 		if (sketchManager.hasOwnSketches()) {
@@ -379,5 +382,10 @@ public class PathSketchOverlay implements Overlay, ActionListener {
 	@Override
 	public void setOnline(boolean online) {
 		isOnline = online;
+	}
+
+	@Override
+	public void setControl(boolean control) {
+		hasControl = control;
 	}
 }
