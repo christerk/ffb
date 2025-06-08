@@ -158,7 +158,7 @@ public class ClientSketchManager {
 			sketches.stream()
 				.filter(sketch -> sketch.getId().equals(id))
 				.findFirst()
-				.ifPresent(this::remove);
+				.ifPresent(sketches::remove);
 		}
 	}
 
