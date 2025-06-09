@@ -190,6 +190,11 @@ public interface IIconProperty {
 	String SKETCH_DELETE_ALL = "overlays.trashs";
 	String SKETCH_EDIT_LABEL = "overlays.text";
 
+	// Menu
+	String MENU_SKETCH_ALLOWED = "menu.sketch.allowed";
+	String MENU_SKETCH_HIDDEN = "menu.sketch.hidden";
+	String MENU_SKETCH_PREVENTED = "menu.sketch.prevented";
+
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
 	String PLAYER_NORMAL_HOME = "players.normal.home";

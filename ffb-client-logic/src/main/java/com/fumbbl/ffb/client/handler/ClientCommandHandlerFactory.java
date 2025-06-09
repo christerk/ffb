@@ -43,6 +43,7 @@ public class ClientCommandHandlerFactory {
 		register(new ClientCommandHandlerSketchAddCoordinate(getClient()));
 		register(new ClientCommandHandlerSketchSetColor(getClient()));
 		register(new ClientCommandHandlerSketchSetLabel(getClient()));
+		register(new ClientCommandHandlerSetPreventSketching(getClient()));
 	}
 
 	public void handleNetCommand(NetCommand pNetCommand, ClientCommandHandlerMode pMode) {

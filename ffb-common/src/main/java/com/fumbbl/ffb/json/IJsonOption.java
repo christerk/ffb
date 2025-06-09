@@ -391,6 +391,7 @@ public interface IJsonOption {
 	JsonStringOption PRAYER = new JsonStringOption("prayer");
 	JsonBooleanOption PRAYER_AVAILABLE = new JsonBooleanOption("prayerAvailable");
 	JsonStringArrayOption PRAYERS = new JsonStringArrayOption("prayers");
+	JsonBooleanOption PREVENT = new JsonBooleanOption("prevent");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
 	JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");

@@ -36,6 +36,7 @@ import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -133,14 +134,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final FantasyFootballClient fClient;
 
 	private String currentControllingCoach = "";
+	private final Set<String> hiddenCoaches = new HashSet<>();
+	private final Set<String> preventedCoaches = new HashSet<>();
 
 	private JMenu joinedCoachesMenu;
 	private JMenu replayMenu;
 	private JMenuItem fGameReplayMenuItem;
 	private JMenuItem fGameConcessionMenuItem;
 	private JMenuItem fGameStatisticsMenuItem;
-	private JMenuItem joinedSelf;
 	private final Set<JMenuItem> transferMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchAllowedMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchHiddenMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchPreventedMenuItems = new HashSet<>();
 
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
@@ -286,6 +291,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
 	private final LayoutSettings layoutSettings;
+	private final ClientSketchManager sketchManager;
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -306,11 +312,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
 		fClient = pClient;
+		this.sketchManager = sketchManager;
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
@@ -932,13 +939,24 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		List<String> previousCoaches = transferMenuItems.stream().map(JMenuItem::getName).sorted().collect(Collectors.toList());
 
 		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
-		if (coaches.equals(previousCoaches) && (!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach))) {
+		if (coaches.equals(previousCoaches)
+			&& (!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach))
+			&& sketchManager.preventedCoaches().equals(preventedCoaches)
+			&& sketchManager.hiddenCoaches().equals(hiddenCoaches)
+		) {
 			return;
 		}
 
 		currentControllingCoach = controllingCoach;
 		joinedCoachesMenu.removeAll();
 		transferMenuItems.clear();
+		sketchAllowedMenuItems.clear();
+		sketchHiddenMenuItems.clear();
+		sketchPreventedMenuItems.clear();
+		preventedCoaches.clear();
+		preventedCoaches.addAll(sketchManager.preventedCoaches());
+		hiddenCoaches.clear();
+		hiddenCoaches.addAll(sketchManager.hiddenCoaches());
 
 		String clientCoach = getClient().getParameters().getCoach();
 
@@ -948,36 +966,89 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_IMAGE_ICON);
 
-		ImageIcon ballIcon = loadBallIcon(dimension);
+		ImageIcon ballIcon = loadBallIcon(dimension, IIconProperty.GAME_BALL);
+		ImageIcon allowedIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_ALLOWED);
+		ImageIcon hiddenIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_HIDDEN);
+		ImageIcon preventedIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_PREVENTED);
 
 		coaches.stream().map(coach -> {
 			boolean joinedCoachHasControl = coach.equals(controllingCoach);
-			JMenu coachMenu = new JMenu(dimensionProvider, coach, joinedCoachHasControl ? ballIcon : null);
+			ImageIcon icon = determineCoachIcon(coach, joinedCoachHasControl, ballIcon, sketchManager, hiddenIcon, preventedIcon, allowedIcon);
+			JMenu coachMenu = new JMenu(dimensionProvider, coach, icon);
 			ButtonGroup group = new ButtonGroup();
 			if (clientHasControl) {
-				JMenuItem item = new JMenuItem(dimensionProvider, "Transfer Control");
-				coachMenu.add(item);
-				item.setName(coach);
-				group.add(item);
-				transferMenuItems.add(item);
-				item.addActionListener(this);
+				JMenuItem transferItem = new JMenuItem(dimensionProvider, "Transfer Control");
+				coachMenu.add(transferItem);
+				transferItem.setName(coach);
+				group.add(transferItem);
+				transferMenuItems.add(transferItem);
+				transferItem.addActionListener(this);
 			}
+
+			JMenu sketchMenu = new JMenu(dimensionProvider, "Sketching");
+			coachMenu.add(sketchMenu);
+			group.add(sketchMenu);
+
+			ButtonGroup sketchGroup = new ButtonGroup();
+
+			JRadioButtonMenuItem allowed = new JRadioButtonMenuItem(dimensionProvider, sketchManager.displaySketches(coach) ? "Allowed" : "Allow");
+			sketchMenu.add(allowed);
+			sketchGroup.add(allowed);
+			allowed.setEnabled(!sketchManager.displaySketches(coach) && (!sketchManager.isCoachPreventedFromSketching(coach) || clientHasControl));
+			allowed.setSelected(sketchManager.displaySketches(coach));
+			allowed.setName(coach);
+			allowed.addActionListener(this);
+			sketchAllowedMenuItems.add(allowed);
+
+			JRadioButtonMenuItem hidden = new JRadioButtonMenuItem(dimensionProvider, sketchManager.areSketchesHidden(coach) ? "Hidden" : "Hide");
+			sketchMenu.add(hidden);
+			sketchGroup.add(hidden);
+			hidden.setEnabled(!sketchManager.areSketchesHidden(coach) && !sketchManager.isCoachPreventedFromSketching(coach));
+			hidden.setSelected(sketchManager.areSketchesHidden(coach));
+			hidden.setName(coach);
+			hidden.addActionListener(this);
+			sketchHiddenMenuItems.add(hidden);
+
+			JRadioButtonMenuItem prevented = new JRadioButtonMenuItem(dimensionProvider, sketchManager.isCoachPreventedFromSketching(coach) ? "Blocked" : "Block");
+			sketchMenu.add(prevented);
+			sketchGroup.add(prevented);
+			prevented.setEnabled(clientHasControl && !sketchManager.isCoachPreventedFromSketching(coach));
+			prevented.setSelected(sketchManager.isCoachPreventedFromSketching(coach));
+			prevented.setName(coach);
+			prevented.addActionListener(this);
+			sketchPreventedMenuItems.add(prevented);
+
 			return coachMenu;
 		}).forEach(joinedCoachesMenu::add);
 
 		joinedCoachesMenu.addSeparator();
-		joinedSelf = new JMenuItem(dimensionProvider, clientCoach, clientHasControl ? ballIcon : null);
+		ImageIcon icon = determineCoachIcon(clientCoach, clientHasControl, ballIcon, sketchManager, hiddenIcon, preventedIcon, allowedIcon);
+		JMenuItem joinedSelf = new JMenuItem(dimensionProvider, clientCoach, icon);
 		joinedCoachesMenu.add(joinedSelf);
 	}
 
-	private ImageIcon loadBallIcon(Dimension dimension) {
+	private ImageIcon determineCoachIcon(String coach, boolean joinedCoachHasControl, ImageIcon ballIcon, ClientSketchManager sketchManager, ImageIcon hiddenIcon, ImageIcon preventedIcon, ImageIcon allowedIcon) {
+		ImageIcon icon;
+		if (joinedCoachHasControl) {
+			icon = ballIcon;
+		} else if (sketchManager.isCoachPreventedFromSketching(coach)) {
+			icon = preventedIcon;
+		} else if (sketchManager.areSketchesHidden(coach)) {
+			icon = hiddenIcon;
+		} else {
+			icon = allowedIcon;
+		}
+		return icon;
+	}
+
+	private ImageIcon loadBallIcon(Dimension dimension, String iconProperty) {
 		if (getClient().getUserInterface() == null || getClient().getUserInterface().getIconCache() == null) {
 			return null;
 		}
-		Image ballImage = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_BALL, dimensionProvider)
+		Image image = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty, dimensionProvider)
 			.getScaledInstance(dimension.width, dimension.height, 0);
 
-		return new ImageIcon(ballImage);
+		return new ImageIcon(image);
 	}
 
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
@@ -2428,6 +2499,28 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			String coach = source.getName();
 			getClient().getCommunication().sendTransferReplayControl(coach);
 		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchHiddenMenuItems.contains(source)) {
+			String coach = source.getName();
+			sketchManager.hideSketches(coach);
+			this.updateJoinedCoachesMenu();
+		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchAllowedMenuItems.contains(source)) {
+			String coach = source.getName();
+			sketchManager.showSketches(coach);
+			if (sketchManager.isCoachPreventedFromSketching(coach)) {
+				getClient().getCommunication().sendPreventFromSketching(coach, false);
+			}
+		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchPreventedMenuItems.contains(source)) {
+			String coach = source.getName();
+			if (!sketchManager.isCoachPreventedFromSketching(coach)) {
+				getClient().getCommunication().sendPreventFromSketching(coach, true);
+			}
+		}
+
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")

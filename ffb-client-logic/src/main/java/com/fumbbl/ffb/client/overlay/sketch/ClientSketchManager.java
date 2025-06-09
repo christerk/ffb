@@ -10,6 +10,7 @@ import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class ClientSketchManager {
 	private List<Sketch> sketches;
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private final String coach;
+	private final Set<String> coachesPreventedFromSketching = new HashSet<>();
+	private final Set<String> hiddenCoaches = new HashSet<>();
 
 	private final Map<String, List<Sketch>> sketchesByCoach = new HashMap<>();
 
@@ -34,11 +37,16 @@ public class ClientSketchManager {
 	}
 
 	public synchronized List<Sketch> getSketches(String coach) {
+		if (coachesPreventedFromSketching.contains(coach)) {
+			return new ArrayList<>();
+		}
 		return sketchesByCoach.computeIfAbsent(coach, s -> new ArrayList<>());
 	}
 
 	public synchronized List<Sketch> getAllSketches() {
-		return sketchesByCoach.values().stream().flatMap(List::stream).collect(Collectors.toList());
+		return sketchesByCoach.entrySet().stream()
+			.filter(entry -> !coachesPreventedFromSketching.contains(entry.getKey()))
+			.flatMap(entry -> entry.getValue().stream()).collect(Collectors.toList());
 	}
 
 	public synchronized Optional<Sketch> getSketch(String id) {
@@ -149,7 +157,7 @@ public class ClientSketchManager {
 	}
 
 	public synchronized void removeAll(String coach) {
-		 sketchesByCoach.get(coach).clear();
+		getSketches(coach).clear();
 	}
 
 	public void remove(String coach, String id) {
@@ -208,4 +216,39 @@ public class ClientSketchManager {
 		return startToEnd >= startToCheck && startToEnd >= checkToEnd && rectWidth > (2 * perpendicular);
 	}
 
+	public void preventedFromSketching(String coach) {
+		coachesPreventedFromSketching.add(coach);
+	}
+
+	public void allowSketching(String coach) {
+		coachesPreventedFromSketching.remove(coach);
+	}
+
+	public Set<String> preventedCoaches() {
+		return new HashSet<>(coachesPreventedFromSketching);
+	}
+
+	public boolean isCoachPreventedFromSketching(String coach) {
+		return coachesPreventedFromSketching.contains(coach);
+	}
+
+	public void hideSketches(String coach) {
+		hiddenCoaches.add(coach);
+	}
+
+	public void showSketches(String coach) {
+		hiddenCoaches.remove(coach);
+	}
+
+	public Set<String> hiddenCoaches() {
+		return new HashSet<>(hiddenCoaches);
+	}
+
+	public boolean areSketchesHidden(String coach) {
+		return hiddenCoaches.contains(coach);
+	}
+
+	public boolean displaySketches(String coach) {
+		return !isCoachPreventedFromSketching(coach) && !areSketchesHidden(coach);
+	}
 }

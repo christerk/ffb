@@ -545,6 +545,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandTransferReplayControl(coach));
 	}
 
+	public void sendPreventFromSketching(String coach, boolean prevent) {
+		send(new ClientCommandSetPreventSketching(coach, prevent));
+	}
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}

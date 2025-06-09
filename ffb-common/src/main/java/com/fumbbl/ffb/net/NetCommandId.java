@@ -65,8 +65,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_ADD_SKETCH("clientAddSketch"), CLIENT_REMOVE_SKETCHES("clientRemoveSketches"), CLIENT_SKETCH_ADD_COORDINATE("clientSketchAddCoordinate"),
 	CLIENT_SKETCH_SET_COLOR("clientSketchSetColor"), CLIENT_SKETCH_SET_LABEL("clientSketchSetLabel"), CLIENT_CLEAR_SKETCHES("clientClearSketches"),
 	SERVER_ADD_SKETCHES("serverAddSketches"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
-	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches")
-	;
+	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches"),
+	CLIENT_SET_PREVENT_SKETCHING("clientSetPreventSketching"), SERVER_SET_PREVENT_SKETCHING("serverSetPreventSketching");
 
 	private final String fName;
 
@@ -293,7 +293,7 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandRemoveSketches();
 			case CLIENT_CLEAR_SKETCHES:
 				return new ClientCommandClearSketches();
-				case CLIENT_ADD_SKETCH:
+			case CLIENT_ADD_SKETCH:
 				return new ClientCommandAddSketch();
 			case CLIENT_SKETCH_ADD_COORDINATE:
 				return new ClientCommandSketchAddCoordinate();
@@ -313,6 +313,10 @@ public enum NetCommandId implements INamedObject {
 				return new ServerCommandSketchSetLabel();
 			case SERVER_CLEAR_SKETCHES:
 				return new ServerCommandClearSketches();
+			case CLIENT_SET_PREVENT_SKETCHING:
+				return new ClientCommandSetPreventSketching();
+			case SERVER_SET_PREVENT_SKETCHING:
+				return new ServerCommandSetPreventSketching();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

@@ -49,6 +49,7 @@ public class ServerCommandHandlerFactory {
 		register(new ServerCommandHandlerSketchAddCoordinate(server));
 		register(new ServerCommandHandlerSketchSetColor(server));
 		register(new ServerCommandHandlerSketchSetLabel(server));
+		register(new ServerCommandHandlerSetPreventSketching(server));
 	}
 
 	public void handleCommand(ReceivedCommand receivedCommand) {

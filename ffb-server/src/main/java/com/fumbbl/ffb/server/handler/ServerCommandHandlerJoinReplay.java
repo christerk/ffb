@@ -9,6 +9,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandAddSketches;
 import com.fumbbl.ffb.net.commands.ServerCommandJoin;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
+import com.fumbbl.ffb.net.commands.ServerCommandSetPreventSketching;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ReplayCache;
 import com.fumbbl.ffb.server.ReplayState;
@@ -73,9 +74,12 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 				communication.sendToReplaySession(session, command);
 				communication.sendToReplaySession(session, new ServerCommandReplayControl(sessionManager.controllingCoach(session)));
 				sessionManager.otherSessions(session).forEach(otherSession -> {
-					List<Sketch> sketches = sketchManager.getSketches(otherSession);
 					String otherCoach = sessionManager.coach(otherSession);
+					List<Sketch> sketches = sketchManager.getSketches(otherSession);
 					communication.sendToReplaySession(session, new ServerCommandAddSketches(otherCoach, sketches));
+					if (sessionManager.isPreventedFromSketching(otherSession)) {
+						communication.sendToReplaySession(session, new ServerCommandSetPreventSketching(otherCoach, true));
+					}
 				});
 			}
 		}

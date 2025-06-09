@@ -135,7 +135,7 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 		Set<String> oldTargets = new HashSet<>(actionTargets);
 		FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(e);
 
-		if (oldTargets.containsAll(newTargets) && newTargets.containsAll(oldTargets) && coordinate == previewCoordinate) {
+		if (oldTargets.equals(newTargets) && coordinate == previewCoordinate) {
 			return;
 		}
 		actionTargets.clear();
