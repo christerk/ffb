@@ -65,6 +65,14 @@ public class ReplaySessionManager {
 		return sessionsForReplay.containsKey(replayName) ? sessionsForReplay.get(replayName).toArray(new Session[0]) : null;
 	}
 
+	public synchronized String replayForSession(Session session) {
+		ReplayClient replayClient = replayClientForSession.get(session);
+		if (replayClient == null) {
+			return "";
+		}
+		return replayClient.sharedReplayName;
+	}
+
 	public synchronized String coach(Session session) {
 		ReplayClient replayClient = replayClientForSession.get(session);
 		if (replayClient == null) {
@@ -138,29 +146,16 @@ public class ReplaySessionManager {
 		Optional<Session> futureControllingSession = sessions.stream().filter(session -> coach.equals(coach(session))).findFirst();
 		if (hasControl(controllingSession) && futureControllingSession.isPresent()) {
 			replayClientForSession.get(controllingSession).setControl(false);
-			replayClientForSession.get(controllingSession).setPreventedFromSketching(false);
 			replayClientForSession.get(futureControllingSession.get()).setControl(true);
 			return true;
 		}
 		return false;
 	}
 
-	public synchronized void setPreventSketching(String coach, boolean prevent) {
-		replayClientForSession.values().stream()
-			.filter(client -> client.getCoach().equals(coach))
-			.findFirst().ifPresent(client -> client.setPreventedFromSketching(prevent));
-	}
-
-	public synchronized boolean isPreventedFromSketching(Session session) {
-		ReplayClient client = replayClientForSession.get(session);
-		return client != null && client.isPreventedFromSketching();
-	}
-
 	private static class ReplayClient {
 		private final String sharedReplayName;
 		private final String coach;
 		private boolean control;
-		private boolean preventedFromSketching;
 
 		public ReplayClient(String sharedReplayName, String coach) {
 			this.sharedReplayName = sharedReplayName;
@@ -177,14 +172,6 @@ public class ReplaySessionManager {
 
 		public void setControl(boolean control) {
 			this.control = control;
-		}
-
-		public boolean isPreventedFromSketching() {
-			return preventedFromSketching;
-		}
-
-		public void setPreventedFromSketching(boolean preventedFromSketching) {
-			this.preventedFromSketching = preventedFromSketching;
 		}
 	}
 

@@ -185,7 +185,7 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 		}
 	}
 
-	private void drawSketches() {
+	public void drawSketches() {
 		drawSketches(Collections.emptyList());
 	}
 

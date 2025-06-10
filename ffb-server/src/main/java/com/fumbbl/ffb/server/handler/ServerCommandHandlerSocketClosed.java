@@ -134,7 +134,7 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 				if (sessionManager.transferControl(closingSession, futureControllingCoach)) {
 					ReplayState replayState = getServer().getReplayCache().replayState(replayName);
 					communication.sendReplayControlChange(replayState, futureControllingCoach);
-					communication.sendReplayAllowSketching(replayState, futureControllingCoach);
+					communication.sendReplayPreventSketching(replayState, futureControllingCoach, false);
 				}
 			}
 			sketchManager.remove(closingSession);

@@ -51,6 +51,9 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
@@ -2503,6 +2506,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source instanceof JRadioButtonMenuItem && sketchHiddenMenuItems.contains(source)) {
 			String coach = source.getName();
 			sketchManager.hideSketches(coach);
+			SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+			ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+			getClient().getGame().notifyObservers(modelChange);
 			this.updateJoinedCoachesMenu();
 		}
 
@@ -2511,6 +2517,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			sketchManager.showSketches(coach);
 			if (sketchManager.isCoachPreventedFromSketching(coach)) {
 				getClient().getCommunication().sendPreventFromSketching(coach, false);
+			} else {
+				SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+				ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+				getClient().getGame().notifyObservers(modelChange);
+				this.updateJoinedCoachesMenu();
 			}
 		}
 

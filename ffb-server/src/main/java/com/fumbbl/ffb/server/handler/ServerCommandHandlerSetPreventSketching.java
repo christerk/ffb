@@ -4,6 +4,8 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSetPreventSketching;
 import com.fumbbl.ffb.net.commands.ServerCommandSetPreventSketching;
 import com.fumbbl.ffb.server.FantasyFootballServer;
+import com.fumbbl.ffb.server.ReplayCache;
+import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.ReplaySessionManager;
 import com.fumbbl.ffb.server.net.ServerCommunication;
@@ -28,8 +30,19 @@ public class ServerCommandHandlerSetPreventSketching extends ServerCommandHandle
 		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
 		Session session = receivedCommand.getSession();
 		if (sessionManager.has(session) && sessionManager.hasControl(session)) {
+			ReplayCache replayCache = getServer().getReplayCache();
 			ClientCommandSetPreventSketching command = (ClientCommandSetPreventSketching) receivedCommand.getCommand();
-			sessionManager.setPreventSketching(command.getCoach(), command.isPreventSketching());
+
+			ReplayState replayState = replayCache.replayState(sessionManager.replayForSession(session));
+
+			synchronized (replayState) {
+				if (command.isPreventSketching()) {
+					replayState.preventCoachFromSketching(command.getCoach());
+				} else {
+					replayState.allowCoachToSketch(command.getCoach());
+				}
+			}
+
 			ServerCommunication communication = getServer().getCommunication();
 			Set<Session> sessions = new HashSet<>();
 			sessions.add(session);

@@ -73,11 +73,15 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 				ServerCommandReplayStatus command = new ServerCommandReplayStatus(replayState.getCommandNr(), replayState.getSpeed(), replayState.isRunning(), replayState.isForward(), true);
 				communication.sendToReplaySession(session, command);
 				communication.sendToReplaySession(session, new ServerCommandReplayControl(sessionManager.controllingCoach(session)));
+				if (replayState.isCoachPreventedFromSketching(coach)) {
+					communication.sendToReplaySession(session, new ServerCommandSetPreventSketching(coach, true));
+				}
+				ReplayState finalReplayState = replayState;
 				sessionManager.otherSessions(session).forEach(otherSession -> {
 					String otherCoach = sessionManager.coach(otherSession);
 					List<Sketch> sketches = sketchManager.getSketches(otherSession);
 					communication.sendToReplaySession(session, new ServerCommandAddSketches(otherCoach, sketches));
-					if (sessionManager.isPreventedFromSketching(otherSession)) {
+					if (finalReplayState.isCoachPreventedFromSketching(otherCoach)) {
 						communication.sendToReplaySession(session, new ServerCommandSetPreventSketching(otherCoach, true));
 					}
 				});

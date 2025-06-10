@@ -552,8 +552,8 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		sendAllSessions(replayState, new ServerCommandReplayControl(coach));
 	}
 
-	public void sendReplayAllowSketching(ReplayState replayState, String coach) {
-		ServerCommandSetPreventSketching command = new ServerCommandSetPreventSketching(coach, false);
+	public void sendReplayPreventSketching(ReplayState replayState, String coach, boolean preventSketching) {
+		ServerCommandSetPreventSketching command = new ServerCommandSetPreventSketching(coach, preventSketching);
 		sendAllSessions(replayState, command);
 	}
 

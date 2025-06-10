@@ -36,16 +36,13 @@ public class ClientSketchManager {
 		this.pitchDimensionProvider = pitchDimensionProvider;
 	}
 
-	public synchronized List<Sketch> getSketches(String coach) {
-		if (coachesPreventedFromSketching.contains(coach)) {
-			return new ArrayList<>();
-		}
+	private synchronized List<Sketch> getSketches(String coach) {
 		return sketchesByCoach.computeIfAbsent(coach, s -> new ArrayList<>());
 	}
 
 	public synchronized List<Sketch> getAllSketches() {
 		return sketchesByCoach.entrySet().stream()
-			.filter(entry -> !coachesPreventedFromSketching.contains(entry.getKey()))
+			.filter(entry -> includeSketches(entry.getKey()))
 			.flatMap(entry -> entry.getValue().stream()).collect(Collectors.toList());
 	}
 
@@ -250,5 +247,9 @@ public class ClientSketchManager {
 
 	public boolean displaySketches(String coach) {
 		return !isCoachPreventedFromSketching(coach) && !areSketchesHidden(coach);
+	}
+
+	private boolean includeSketches(String coach) {
+		return this.coach.equals(coach) || (!coachesPreventedFromSketching.contains(coach) && !hiddenCoaches.contains(coach)) ;
 	}
 }
