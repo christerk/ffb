@@ -102,7 +102,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 				prefix = controllingCoach + " is";
 			}
 
-			getClient().getUserInterface().getChat().append(TextStyle.SPECTATOR, prefix + " now in control of this session");
+			getClient().getUserInterface().getChat().append(TextStyle.SPECTATOR, prefix + " in control of this session");
 		}
 	}
 
