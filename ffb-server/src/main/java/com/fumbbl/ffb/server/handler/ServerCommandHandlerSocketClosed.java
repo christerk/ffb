@@ -136,9 +136,10 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 					.orElse(sessionManager.coach(sessionsArray[0]));
 
 				if (sessionManager.transferControl(closingSession, futureControllingCoach)) {
-					ReplayState replayState = getServer().getReplayCache().replayState(replayName);
 					communication.sendReplayControlChange(replayState, futureControllingCoach);
-					communication.sendReplayPreventSketching(replayState, futureControllingCoach, false);
+					if (replayState.isCoachPreventedFromSketching(futureControllingCoach)) {
+						communication.sendReplayPreventSketching(replayState, futureControllingCoach, false);
+					}
 				}
 			}
 			sketchManager.remove(closingSession);
