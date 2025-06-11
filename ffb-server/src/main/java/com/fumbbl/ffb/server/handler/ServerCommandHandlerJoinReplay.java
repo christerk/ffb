@@ -79,11 +79,11 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 				ReplayState finalReplayState = replayState;
 				sessionManager.otherSessions(session).forEach(otherSession -> {
 					String otherCoach = sessionManager.coach(otherSession);
-					List<Sketch> sketches = sketchManager.getSketches(otherSession);
-					communication.sendToReplaySession(session, new ServerCommandAddSketches(otherCoach, sketches));
 					if (finalReplayState.isCoachPreventedFromSketching(otherCoach)) {
 						communication.sendToReplaySession(session, new ServerCommandSetPreventSketching(otherCoach, true));
 					}
+					List<Sketch> sketches = sketchManager.getSketches(otherSession);
+					communication.sendToReplaySession(session, new ServerCommandAddSketches(otherCoach, sketches));
 				});
 			}
 		}
