@@ -994,7 +994,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 			ButtonGroup sketchGroup = new ButtonGroup();
 
-			JRadioButtonMenuItem allowed = new JRadioButtonMenuItem(dimensionProvider, sketchManager.displaySketches(coach) ? "Allowed" : "Allow");
+			String allowLabel;
+			if (sketchManager.isCoachPreventedFromSketching(coach)) {
+				allowLabel = "Unblock";
+			} else if (sketchManager.areSketchesHidden(coach)) {
+				allowLabel = "Show";
+			} else {
+				allowLabel = "Showing";
+			}
+			JRadioButtonMenuItem allowed = new JRadioButtonMenuItem(dimensionProvider, allowLabel);
 			sketchMenu.add(allowed);
 			sketchGroup.add(allowed);
 			allowed.setEnabled(!sketchManager.displaySketches(coach) && (!sketchManager.isCoachPreventedFromSketching(coach) || clientHasControl));
@@ -2514,10 +2522,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (source instanceof JRadioButtonMenuItem && sketchAllowedMenuItems.contains(source)) {
 			String coach = source.getName();
-			sketchManager.showSketches(coach);
 			if (sketchManager.isCoachPreventedFromSketching(coach)) {
 				getClient().getCommunication().sendPreventFromSketching(coach, false);
 			} else {
+				sketchManager.showSketches(coach);
 				SketchState sketchState = new SketchState(sketchManager.getAllSketches());
 				ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
 				getClient().getGame().notifyObservers(modelChange);
