@@ -59,6 +59,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	@SuppressWarnings("FieldCanBeLocal")
+	private final DugoutDimensionProvider dugoutDimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
 
@@ -78,6 +80,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
 		fontCache = new FontCache();
@@ -101,8 +104,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, styleProvider, fontCache);
-		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, styleProvider, fontCache);
+		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
+		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
 
 		initComponents(false);
 
@@ -215,7 +218,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
-		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);

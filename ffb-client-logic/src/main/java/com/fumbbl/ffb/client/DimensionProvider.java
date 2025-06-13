@@ -49,6 +49,8 @@ public abstract class DimensionProvider {
 		switch (renderContext) {
 			case ON_PITCH:
 				return layoutSettings.getScale() * layoutSettings.getLayout().getPitchScale();
+			case DUGOUT:
+				return layoutSettings.getScale() * layoutSettings.getLayout().getDugoutScale();
 			default:
 				return layoutSettings.getScale();
 		}
@@ -84,7 +86,7 @@ public abstract class DimensionProvider {
 		AffineTransform at = new AffineTransform();
 		at.scale(effectiveScale, effectiveScale);
 		AffineTransformOp scaleOp =
-				new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 
 		try {
 			scaledImage = scaleOp.filter(pImage, scaledImage);
