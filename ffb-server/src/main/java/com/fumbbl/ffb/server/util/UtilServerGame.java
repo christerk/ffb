@@ -144,22 +144,16 @@ public class UtilServerGame {
 		// handle Master Chefs
 		int reRollsStolenHome = rollMasterChef(pStep, true);
 		int reRollsStolenAway = rollMasterChef(pStep, false);
-		int delta = reRollsStolenHome - reRollsStolenAway;
-		if (delta > 0) {
-			game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() + delta);
-			game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() - delta);
-			if (game.getTurnDataAway().getReRolls() < 0) {
-				game.getTurnDataAway().setReRolls(0);
-			}
-		}
-		if (delta < 0) {
-			delta = -delta;
-			game.getTurnDataAway().setReRolls(game.getTurnDataAway().getReRolls() + delta);
-			game.getTurnDataHome().setReRolls(game.getTurnDataHome().getReRolls() - delta);
-			if (game.getTurnDataHome().getReRolls() < 0) {
-				game.getTurnDataHome().setReRolls(0);
-			}
-		}
+
+		int homeReRolls = game.getTurnDataHome().getReRolls();
+		homeReRolls = Math.max(0, homeReRolls - reRollsStolenAway);
+		homeReRolls += reRollsStolenHome;
+		game.getTurnDataHome().setReRolls(homeReRolls);
+
+		int awayReRolls = game.getTurnDataAway().getReRolls();
+		awayReRolls = Math.max(0, awayReRolls - reRollsStolenHome);
+		awayReRolls += reRollsStolenAway;
+		game.getTurnDataAway().setReRolls(awayReRolls);
 	}
 
 	public static void prepareForSetup(Game game) {
