@@ -1,15 +1,21 @@
 package com.fumbbl.ffb.client;
 
 public enum ClientLayout {
-	LANDSCAPE(false, 1.0), PORTRAIT(true, 1.0), SQUARE(true, 1.0), WIDE(false, (double) 57 / 30);
+	LANDSCAPE(false), PORTRAIT(true), SQUARE(true),
+	WIDE(false, (double) 57 / 30, 1.25);
 
 	private final boolean portrait;
-
 	private final double pitchScale;
+	private final double dugoutScale;
 
-	ClientLayout(boolean portrait, double pitchScale) {
+	ClientLayout(boolean portrait) {
+		this(portrait, 1.0, 1.0);
+	}
+
+	ClientLayout(boolean portrait, double pitchScale, double dugoutScale) {
 		this.portrait = portrait;
 		this.pitchScale = pitchScale;
+		this.dugoutScale = dugoutScale;
 	}
 
 	public boolean isPortrait() {
@@ -18,5 +24,9 @@ public enum ClientLayout {
 
 	public double getPitchScale() {
 		return pitchScale;
+	}
+
+	public double getDugoutScale() {
+		return dugoutScale;
 	}
 }
