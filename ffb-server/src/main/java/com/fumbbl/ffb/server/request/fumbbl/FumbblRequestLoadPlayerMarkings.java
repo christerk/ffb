@@ -4,6 +4,7 @@ import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
 import com.fumbbl.ffb.server.request.ServerRequestProcessor;
 import org.eclipse.jetty.websocket.api.Session;
@@ -19,14 +20,15 @@ public class FumbblRequestLoadPlayerMarkings extends AbstractFumbblRequestLoadPl
 
 	@Override
 	public void process(ServerRequestProcessor processor) {
-
+		SessionManager sessionManager = processor.getServer().getSessionManager();
+		String coach = sessionManager.getCoachForSession(session);
 		Game game = gameState.getGame();
-		AutoMarkingConfig config = loadAutomarkingConfig(processor.getServer(), game.getId(), game.getRules());
+
+		AutoMarkingConfig config = loadAutomarkingConfig(processor.getServer(), coach, game.getId(), game.getRules());
+		sessionManager.addAutoMarking(session, config);
 
 		processor.getServer().getCommunication().handleCommand(
 			new ReceivedCommand(
 				new InternalServerCommandApplyAutomatedPlayerMarkings(config, gameState.getId()), session));
 	}
-
-
 }

@@ -41,14 +41,6 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
 			return false;
 		}
 
-		// client signals that it has received the complete replay - socket can be
-		// closed
-		/*
-		 * if (replayToCommandNr < 0) { try { pReceivedCommand.getSession().close(); }
-		 * catch (IOException pIoException) { getServer().getDebugLog().log(gameId,
-		 * pIoException); } return; }
-		 */
-
 		GameState gameState = getServer().getGameCache().getGameStateById(gameId);
 		if (gameState == null) {
 			gameState = getServer().getGameCache().queryFromDb(gameId);
@@ -56,7 +48,7 @@ public class ServerCommandHandlerReplay extends ServerCommandHandler {
 		}
 
 		if (gameState != null) {
-			UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession(), replayCommand.getCoach());
+			UtilServerReplay.startServerReplay(gameState, replayToCommandNr, pReceivedCommand.getSession());
 
 		} else {
 			// game has been moved out of the db - request it from the backup service

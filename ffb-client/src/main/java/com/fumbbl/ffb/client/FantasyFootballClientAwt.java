@@ -1,22 +1,33 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.overlay.Overlay;
+import com.fumbbl.ffb.client.overlay.PathSketchOverlay;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.UIManager;
+import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
@@ -30,6 +41,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ActionKeyBindings fActionKeyBindings;
 	private final ClientReplayer fReplayer;
 	private final ClientLogger logger;
+	private Overlay activeOverlay;
+	private final PathSketchOverlay pathSketchOverlay;
 
 	private transient int currentMouseButton;
 
@@ -57,6 +70,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fUserInterface.getGameMenuBar().refresh();
 
 		setClientStateFactory();
+
+		pathSketchOverlay = new PathSketchOverlay(this);
 	}
 
 	@Override
@@ -260,5 +275,25 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		if (logger != null) {
 			logger.updateId(pGame.getId());
 		}
+	}
+
+	@Override
+	public Optional<Overlay> getActiveOverlay() {
+		return Optional.ofNullable(activeOverlay);
+	}
+
+	@Override
+	public void setActiveOverlay(Overlay activeOverlay) {
+		this.activeOverlay = activeOverlay;
+	}
+
+	@Override
+	public void replayInitialized() {
+		setActiveOverlay(pathSketchOverlay);
+	}
+
+	@Override
+	public List<Overlay> getOverlays() {
+		return Collections.singletonList(pathSketchOverlay);
 	}
 }

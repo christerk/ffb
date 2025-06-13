@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.net;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
@@ -32,6 +33,8 @@ import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.net.commands.ServerCommandPasswordChallenge;
 import com.fumbbl.ffb.net.commands.ServerCommandPong;
 import com.fumbbl.ffb.net.commands.ServerCommandRemovePlayer;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
+import com.fumbbl.ffb.net.commands.ServerCommandSetPreventSketching;
 import com.fumbbl.ffb.net.commands.ServerCommandSound;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandTalk;
@@ -48,6 +51,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.IServerProperty;
+import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.handler.IReceivedCommandHandler;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommand;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandSocketClosed;
@@ -65,7 +69,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * 
  * @author Kalimar
  */
 public class ServerCommunication implements Runnable, IReceivedCommandHandler {
@@ -79,7 +82,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		fServer = pServer;
 		fCommandQueue = new LinkedBlockingQueue<>();
 		String commandCompression = (fServer != null) ? fServer.getProperty(IServerProperty.SERVER_COMMAND_COMPRESSION)
-				: null;
+			: null;
 		if (StringTool.isProvided(commandCompression)) {
 			fCommandCompression = Boolean.parseBoolean(commandCompression);
 		}
@@ -119,7 +122,11 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 			return;
 		}
 
-		getServer().getDebugLog().logClientCommand(IServerLogLevel.DEBUG, command);
+		if (getServer().getReplaySessionManager().has(command.getSession())) {
+			getServer().getDebugLog().logReplayCommand(IServerLogLevel.DEBUG, command);
+		} else {
+			getServer().getDebugLog().logClientCommand(IServerLogLevel.DEBUG, command);
+		}
 
 		// fetch entropy payload
 		if (command.isClientCommand()) {
@@ -132,6 +139,77 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		try {
 			getServer().getCommandHandlerFactory().handleCommand(command);
 		} catch (Exception any) {
+			shutdown(command, any);
+		}
+
+		handleByState(command);
+
+	}
+
+	private void handleByState(ReceivedCommand command) {
+		if (getServer().getReplaySessionManager().has(command.getSession())) {
+			handleByReplayState(command);
+		} else {
+			handleByGameState(command);
+		}
+	}
+
+	private void handleByReplayState(ReceivedCommand command) {
+		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
+			String replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
+			ReplayState replayState = getServer().getReplayCache().replayState(replayName);
+			if (replayState != null) {
+				try {
+					getServer().getReplaySessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
+					replayState.handleCommand(command);
+
+				} catch (Exception any) {
+					getServer().getDebugLog().logReplay(replayState.getName(), new FantasyFootballException("Shutting down replay " + replayName, any));
+					shutdownReplay(replayState);
+				}
+			}
+		}
+	}
+
+
+	private void handleByGameState(ReceivedCommand command) {
+		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
+			long gameId;
+			if (command.isInternalCommand()) {
+				gameId = ((InternalServerCommand) command.getCommand()).getGameId();
+			} else {
+				gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
+			}
+			GameState gameState = getServer().getGameCache().getGameStateById(gameId);
+			if (gameState != null) {
+				try {
+					if (command.isInternalCommand()
+						|| (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == command.getSession())
+						|| (getServer().getSessionManager().getSessionOfAwayCoach(gameId) == command.getSession())) {
+						getServer().getSessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
+						gameState.handleCommand(command);
+					}
+				} catch (Exception any) {
+					getServer().getDebugLog().log(gameState.getId(), any);
+					shutdownGame(gameState);
+				}
+			}
+		}
+	}
+
+	private void shutdown(ReceivedCommand command, Exception any) {
+
+		if (getServer().getReplaySessionManager().has(command.getSession())) {
+
+			String replayName = getServer().getReplaySessionManager().replayNameForSession(command.getSession());
+			ReplayState replayState = getServer().getReplayCache().replayState(replayName);
+
+			getServer().getDebugLog().logReplay(replayName, new FantasyFootballException("Shutting down replay " + replayName, any));
+
+			shutdownReplay(replayState);
+
+
+		} else {
 			GameState gameState = null;
 
 			// fetch the game state if available
@@ -146,30 +224,6 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 			// Attempt to shut down the game.
 			shutdownGame(gameState);
 		}
-
-		if ((command.getId() != NetCommandId.CLIENT_PING) && (command.getId() != NetCommandId.CLIENT_DEBUG_CLIENT_STATE)) {
-			long gameId;
-			if (command.isInternalCommand()) {
-				gameId = ((InternalServerCommand) command.getCommand()).getGameId();
-			} else {
-				gameId = getServer().getSessionManager().getGameIdForSession(command.getSession());
-			}
-			GameState gameState = getServer().getGameCache().getGameStateById(gameId);
-			if (gameState != null) {
-				try {
-					if (command.isInternalCommand()
-							|| (getServer().getSessionManager().getSessionOfHomeCoach(gameId) == command.getSession())
-							|| (getServer().getSessionManager().getSessionOfAwayCoach(gameId) == command.getSession())) {
-						getServer().getSessionManager().setLastPing(command.getSession(), System.currentTimeMillis());
-						gameState.handleCommand(command);
-					}
-				} catch (Exception any) {
-					getServer().getDebugLog().log(gameState.getId(), any);
-					shutdownGame(gameState);
-				}
-			}
-		}
-
 	}
 
 	private void shutdownGame(GameState gameState) {
@@ -182,7 +236,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// Send out an error message
 		try {
 			ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(
-					new String[] { "This match has entered an invalid state and is shutting down." });
+				new String[]{"This match has entered an invalid state and is shutting down."});
 			send(getServer().getSessionManager().getSessionsForGameId(gameState.getId()), messageCommand, false);
 		} catch (Exception ignored) {
 		}
@@ -190,6 +244,31 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		// Disconnect clients
 		try {
 			for (Session session : getServer().getSessionManager().getSessionsForGameId(gameState.getId())) {
+				getServer().getCommunication().close(session);
+			}
+		} catch (Exception ignored) {
+		}
+
+	}
+
+	private void shutdownReplay(ReplayState replayState) {
+
+		// Sanity checking
+		if (replayState == null) {
+			return;
+		}
+
+		// Send out an error message
+		try {
+			ServerCommandAdminMessage messageCommand = new ServerCommandAdminMessage(
+				new String[]{"This replay session has entered an invalid state and is shutting down."});
+			send(getServer().getReplaySessionManager().sessionsForReplay(replayState.getName()), messageCommand, false);
+		} catch (Exception ignored) {
+		}
+
+		// Disconnect clients
+		try {
+			for (Session session : getServer().getReplaySessionManager().sessionsForReplay(replayState.getName())) {
 				getServer().getCommunication().close(session);
 			}
 		} catch (Exception ignored) {
@@ -277,7 +356,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		}
 		if (addToLog) {
 			getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-					DebugLog.COMMAND_SERVER_ALL_CLIENTS);
+				DebugLog.COMMAND_SERVER_ALL_CLIENTS);
 		}
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] allSessions = sessionManager.getSessionsForGameId(gameState.getId());
@@ -285,12 +364,30 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		gameState.getGameLog().add((ServerCommand) command);
 	}
 
+	protected void sendAllSessions(ReplayState replayState, NetCommand command) {
+		if ((replayState == null) || (command == null)) {
+			return;
+		}
+		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, replayState.getName(), DebugLog.COMMAND_CLIENT_REPLAY_CLIENTS, command.toJsonValue().toString());
+		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+		Session[] allSessions = sessionManager.sessionsForReplay(replayState.getName());
+		send(allSessions, command, false);
+	}
+
+	public void sendToReplaySession(Session session, NetCommand command) {
+		if ((session == null) || (command == null)) {
+			return;
+		}
+		getServer().getDebugLog().logReplay(IServerLogLevel.DEBUG, getServer().getReplaySessionManager().replayNameForSession(session), DebugLog.COMMAND_CLIENT_REPLAY_CLIENTS, command.toJsonValue().toString());
+		send(session, command, false);
+	}
+
 	protected void sendHomeAndSpectatorSessions(GameState gameState, NetCommand command) {
 		if ((gameState == null) || (command == null)) {
 			return;
 		}
 		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-				DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
+			DebugLog.COMMAND_SERVER_HOME_SPECTATORS);
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] sessions = sessionManager.getSessionsWithoutAwayCoach(gameState.getId());
 		send(sessions, command, false);
@@ -302,7 +399,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 			return;
 		}
 		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-				DebugLog.COMMAND_SERVER_AWAY);
+			DebugLog.COMMAND_SERVER_AWAY);
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session awaySession = sessionManager.getSessionOfAwayCoach(gameState.getId());
 		send(awaySession, command, false);
@@ -313,7 +410,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 			return;
 		}
 		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, gameState.getId(), command,
-				DebugLog.COMMAND_SERVER_SPECTATOR);
+			DebugLog.COMMAND_SERVER_SPECTATOR);
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] spectatorSessions = sessionManager.getSessionsOfSpectators(gameState.getId());
 		send(spectatorSessions, command, false);
@@ -329,7 +426,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendStatus(Session pSession, ServerStatus pStatus, String pMessage) {
-		sendStatus(new Session[] { pSession }, pStatus, pMessage);
+		sendStatus(new Session[]{pSession}, pStatus, pMessage);
 		// not logged in Game Log
 	}
 
@@ -378,7 +475,7 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendJoin(Session[] pSessions, String pCoach, ClientMode pMode, String[] pPlayers, List<String> spectators) {
-		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, spectators);
+		ServerCommandJoin joinCommand = new ServerCommandJoin(pCoach, pMode, pPlayers, spectators, null);
 		send(pSessions, joinCommand, true);
 		// not logged in Game Log
 	}
@@ -387,6 +484,19 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 		ServerCommandLeave leaveCommand = new ServerCommandLeave(pCoach, pMode, pSpectators);
 		send(pSessions, leaveCommand, true);
 		// not logged in Game Log
+	}
+
+	public void sendReplayLeave(Session[] pSessions, String pCoach, ClientMode pMode, List<String> pSpectators) {
+		ServerCommandLeave leaveCommand = new ServerCommandLeave(pCoach, pMode, pSpectators);
+		sendToReplay(pSessions, leaveCommand);
+		// not logged in Game Log
+	}
+
+	protected void sendToReplay(Session[] pSessions, NetCommand command) {
+		getServer().getDebugLog().logServerCommand(IServerLogLevel.DEBUG, command, pSessions);
+		for (Session pSession : pSessions) {
+			sendToReplaySession(pSession, command);
+		}
 	}
 
 	public void sendGameTime(GameState gameState) {
@@ -424,12 +534,26 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 
 	public void sendSpectatorTalk(GameState gameState, String pCoach, String pTalk, ServerCommandTalk.Mode mode) {
 		ServerCommandTalk talkCommand = new ServerCommandTalk(pCoach, mode.cleanIndicator(pTalk).trim(), mode);
-		
+
 		if (mode.isSendToAll()) {
 			sendAllSessions(gameState, talkCommand, true);
 		} else {
 			sendSpectatorSessions(gameState, talkCommand); // not logged in Game Log
 		}
+	}
+
+	public void sendReplayTalk(ReplayState replayState, String coach, String talk, ServerCommandTalk.Mode mode) {
+		ServerCommandTalk talkCommand = new ServerCommandTalk(coach, mode.cleanIndicator(talk).trim(), mode);
+		sendAllSessions(replayState, talkCommand);
+	}
+
+	public void sendReplayControlChange(ReplayState replayState, String coach) {
+		sendAllSessions(replayState, new ServerCommandReplayControl(coach));
+	}
+
+	public void sendReplayPreventSketching(ReplayState replayState, String coach, boolean preventSketching) {
+		ServerCommandSetPreventSketching command = new ServerCommandSetPreventSketching(coach, preventSketching);
+		sendAllSessions(replayState, command);
 	}
 
 	public void sendTeamSetupList(Session pSession, String[] pSetupNames) {
@@ -445,9 +569,9 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendAddPlayer(GameState gameState, String pTeamId, RosterPlayer pPlayer, PlayerState pPlayerState,
-			PlayerResult pPlayerResult) {
+														PlayerResult pPlayerResult) {
 		ServerCommandAddPlayer addPlayersCommand = new ServerCommandAddPlayer(pTeamId, pPlayer, pPlayerState,
-				pPlayerResult);
+			pPlayerResult);
 		addPlayersCommand.setCommandNr(gameState.generateCommandNr());
 		sendAllSessions(gameState, addPlayersCommand, true);
 		gameState.updatePlayerMarkings();
@@ -466,9 +590,9 @@ public class ServerCommunication implements Runnable, IReceivedCommandHandler {
 	}
 
 	public void sendModelSync(GameState gameState, ModelChangeList pModelChanges, ReportList pReports,
-			Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
+														Animation pAnimation, SoundId pSound, long pGameTime, long pTurnTime) {
 		ServerCommandModelSync syncCommand = new ServerCommandModelSync(pModelChanges, pReports, pAnimation, pSound,
-				pGameTime, pTurnTime);
+			pGameTime, pTurnTime);
 		syncCommand.setCommandNr(gameState.generateCommandNr());
 		sendHomeAndSpectatorSessions(gameState, syncCommand);
 		sendAwaySession(gameState, syncCommand.transform(gameState.getGame().getRules()));

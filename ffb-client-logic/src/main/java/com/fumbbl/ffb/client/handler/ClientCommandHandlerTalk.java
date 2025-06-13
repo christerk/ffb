@@ -53,8 +53,7 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
 				}
 				status.append(talk);
 				ChatComponent chat = getClient().getUserInterface().getChat();
-				chat.append(null, style, status.toString());
-				chat.append(null, null, null);
+				chat.append(style, status.toString());
 			}
 		}
 

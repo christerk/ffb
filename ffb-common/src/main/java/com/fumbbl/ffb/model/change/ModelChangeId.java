@@ -139,6 +139,8 @@ public enum ModelChangeId implements INamedObject {
 	PLAYER_RESULT_SET_TOUCHDOWNS("playerResultSetTouchdowns", ModelChangeDataType.INTEGER),
 	PLAYER_RESULT_SET_TURNS_PLAYED("playerResultSetTurnsPlayed", ModelChangeDataType.INTEGER),
 
+	SKETCH_UPDATE("sketchUpdate", ModelChangeDataType.SKETCH_STATE),
+
 	TARGET_SELECTION_COMMITTED("targetSelectionCommitted", ModelChangeDataType.BOOLEAN),
 
 	TEAM_RESULT_SET_CONCEDED("teamResultSetConceded", ModelChangeDataType.BOOLEAN),

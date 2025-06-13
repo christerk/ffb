@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ServerCommandJoin extends ServerCommand {
 
-	private String fCoach;
+	private String fCoach, replayName;
 	private ClientMode fClientMode;
 	private final List<String> fPlayerNames, spectators;
 	private int spectatorCount;
@@ -30,10 +30,11 @@ public class ServerCommandJoin extends ServerCommand {
 		spectators = new ArrayList<>();
 	}
 
-	public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, List<String> spectators) {
+	public ServerCommandJoin(String pCoach, ClientMode pClientMode, String[] pPlayerNames, List<String> spectators, String replayName) {
 		this();
 		fCoach = pCoach;
 		fClientMode = pClientMode;
+		this.replayName = replayName;
 		addPlayerNames(pPlayerNames);
 		spectatorCount = spectators.size();
 		this.spectators.addAll(spectators);
@@ -57,6 +58,10 @@ public class ServerCommandJoin extends ServerCommand {
 	}
 	public List<String> getSpectators() {
 		return spectators;
+	}
+
+	public String getReplayName() {
+		return replayName;
 	}
 
 	private void addPlayerName(String pPlayerName) {
@@ -97,6 +102,7 @@ public class ServerCommandJoin extends ServerCommand {
 		IJsonOption.SPECTATORS.addTo(jsonObject, spectatorCount);
 		IJsonOption.PLAYER_NAMES.addTo(jsonObject, fPlayerNames);
 		IJsonOption.SPECTATOR_NAMES.addTo(jsonObject, spectators);
+		IJsonOption.NAME.addTo(jsonObject, replayName);
 		return jsonObject;
 	}
 
@@ -113,6 +119,7 @@ public class ServerCommandJoin extends ServerCommand {
 		} else {
 			spectatorCount = IJsonOption.SPECTATORS.getFrom(source, jsonObject);
 		}
+		replayName = IJsonOption.NAME.getFrom(source, jsonObject);
 		return this;
 	}
 

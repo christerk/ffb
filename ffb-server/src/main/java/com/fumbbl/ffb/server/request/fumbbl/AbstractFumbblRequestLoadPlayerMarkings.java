@@ -5,7 +5,6 @@ import com.fumbbl.ffb.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.GameRules;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ServerUrlProperty;
-import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.request.ServerRequest;
 import com.fumbbl.ffb.server.util.UtilServerHttpClient;
 import com.fumbbl.ffb.util.StringTool;
@@ -19,12 +18,9 @@ public abstract class AbstractFumbblRequestLoadPlayerMarkings extends ServerRequ
 		this.session = session;
 	}
 
-	protected AutoMarkingConfig loadAutomarkingConfig(FantasyFootballServer server, long id, GameRules rules) {
-		SessionManager sessionManager = server.getSessionManager();
+	protected AutoMarkingConfig loadAutomarkingConfig(FantasyFootballServer server, String coach, long id, GameRules rules) {
 
 		AutoMarkingConfig config = new AutoMarkingConfig();
-
-		String coach = sessionManager.getCoachForSession(session);
 		setRequestUrl(StringTool.bind(ServerUrlProperty.FUMBBL_PLAYER_MARKINGS.url(server.getProperties()),
 			coach));
 

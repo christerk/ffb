@@ -16,9 +16,13 @@ import com.fumbbl.ffb.client.layer.FieldLayerPitch;
 import com.fumbbl.ffb.client.layer.FieldLayerPlayers;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeGrid;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
+import com.fumbbl.ffb.client.layer.FieldLayerSketches;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
+import com.fumbbl.ffb.client.overlay.Overlay;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -26,6 +30,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import javax.swing.JPanel;
@@ -39,6 +44,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author j129340
@@ -57,6 +63,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final FieldLayerOverPlayers fLayerOverPlayers;
 	private final FieldLayerRangeRuler fLayerRangeRuler;
 	private final FieldLayerEnhancements layerEnhancements;
+	private final FieldLayerSketches layerSketches;
 	private BufferedImage fImage;
 
 	// we need to keep some old model values for a redraw (if those get set to null)
@@ -66,7 +73,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	private final UiDimensionProvider uiDimensionProvider;
 
-	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+												PitchDimensionProvider pitchDimensionProvider, FontCache fontCache,
+												ClientSketchManager sketchManager) {
 
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
@@ -80,6 +89,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
@@ -104,6 +114,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerOverPlayers.initLayout();
 		fLayerRangeRuler.initLayout();
 		layerEnhancements.initLayout();
+		layerSketches.initLayout();
 
 		Dimension size = uiDimensionProvider.dimension(Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
@@ -154,6 +165,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		return layerEnhancements;
 	}
 
+	public FieldLayerSketches getLayerSketches() {
+		return layerSketches;
+	}
+
 	public synchronized void refresh() {
 
 		Rectangle updatedArea = combineRectangles(new Rectangle[]{getLayerField().fetchUpdatedArea(),
@@ -161,7 +176,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			getLayerBloodspots().fetchUpdatedArea(),
 			getLayerRangeGrid().fetchUpdatedArea(), getLayerMarker().fetchUpdatedArea(),
 			getLayerUnderPlayers().fetchUpdatedArea(), getLayerPlayers().fetchUpdatedArea(),
-			getLayerOverPlayers().fetchUpdatedArea(), getLayerRangeRuler().fetchUpdatedArea()});
+			getLayerOverPlayers().fetchUpdatedArea(), getLayerRangeRuler().fetchUpdatedArea(),
+			getLayerSketches().fetchUpdatedArea()
+		});
 
 		if (updatedArea != null) {
 			refresh(updatedArea);
@@ -187,6 +204,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		g2d.drawImage(getLayerPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerOverPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerRangeRuler().getImage(), 0, 0, null);
+		g2d.drawImage(getLayerSketches().getImage(), 0, 0, null);
 
 		g2d.dispose();
 
@@ -311,6 +329,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			case GAME_SET_TURN_MODE:
 				getLayerUnderPlayers().init();
 				break;
+			case SKETCH_UPDATE:
+				getLayerSketches().draw((SketchState) pModelChange.getValue());
+				refresh();
+				break;
 			default:
 				break;
 		}
@@ -330,6 +352,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		getLayerPlayers().init();
 		getLayerOverPlayers().init();
 		getLayerRangeRuler().init();
+		getLayerSketches().init();
 		refresh();
 	}
 
@@ -361,7 +384,15 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseMoved(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-		ClientState uiState = getClient().getClientState();
+
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseMoved(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseMoved(pMouseEvent);
 		}
@@ -370,7 +401,15 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {
 		getClient().getUserInterface().getMouseEntropySource().reportMousePosition(pMouseEvent);
-		ClientState uiState = getClient().getClientState();
+
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseDragged(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseDragged(pMouseEvent);
 		}
@@ -378,7 +417,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseClicked(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseClicked(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseClicked(pMouseEvent);
 		}
@@ -386,7 +432,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseEntered(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseEntered(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseEntered(pMouseEvent);
 		}
@@ -394,7 +447,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseExited(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseExited(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseExited(pMouseEvent);
 		}
@@ -402,7 +462,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mousePressed(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mousePressed(pMouseEvent);
 		}
@@ -410,7 +477,14 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mouseReleased(MouseEvent pMouseEvent) {
-		ClientState uiState = getClient().getClientState();
+		Optional<Overlay> overlay = getClient().getActiveOverlay();
+
+		if (overlay.isPresent()) {
+			overlay.get().mouseReleased(pMouseEvent);
+			return;
+		}
+
+		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
 			uiState.mouseReleased(pMouseEvent);
 		}

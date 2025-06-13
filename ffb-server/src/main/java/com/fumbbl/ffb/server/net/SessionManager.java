@@ -159,7 +159,7 @@ public class SessionManager {
 	public synchronized Session[] getSessionsWithoutAwayCoach(long gameId) {
 		Set<Session> filteredSessions = new HashSet<>();
 		Set<Session> sessions = fSessionsByGameId.get(gameId);
-		if ((sessions != null) && (sessions.size() > 0)) {
+		if ((sessions != null) && (!sessions.isEmpty())) {
 			Session sessionAwayCoach = getSessionOfAwayCoach(gameId);
 			for (Session session : sessions) {
 				if (session != sessionAwayCoach) {
@@ -170,24 +170,10 @@ public class SessionManager {
 		return filteredSessions.toArray(new Session[0]);
 	}
 
-	public synchronized Session[] getSessionsWithoutHomeCoach(long gameId) {
-		Set<Session> filteredSessions = new HashSet<>();
-		Set<Session> sessions = fSessionsByGameId.get(gameId);
-		if ((sessions != null) && (sessions.size() > 0)) {
-			Session sessionHomeCoach = getSessionOfHomeCoach(gameId);
-			for (Session session : sessions) {
-				if (session != sessionHomeCoach) {
-					filteredSessions.add(session);
-				}
-			}
-		}
-		return filteredSessions.toArray(new Session[0]);
-	}
-
 	public synchronized Session[] getSessionsOfSpectators(long gameId) {
 		Set<Session> filteredSessions = new HashSet<>();
 		Set<Session> sessions = fSessionsByGameId.get(gameId);
-		if ((sessions != null) && (sessions.size() > 0)) {
+		if ((sessions != null) && (!sessions.isEmpty())) {
 			Session sessionAwayCoach = getSessionOfAwayCoach(gameId);
 			Session sessionHomeCoach = getSessionOfHomeCoach(gameId);
 			for (Session session : sessions) {
@@ -215,7 +201,7 @@ public class SessionManager {
 		Set<Session> sessions = fSessionsByGameId.get(gameId);
 		if (sessions != null) {
 			sessions.remove(pSession);
-			if (sessions.size() == 0) {
+			if (sessions.isEmpty()) {
 				fSessionsByGameId.remove(gameId);
 			}
 		}

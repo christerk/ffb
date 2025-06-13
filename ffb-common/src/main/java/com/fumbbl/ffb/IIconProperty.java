@@ -185,6 +185,16 @@ public interface IIconProperty {
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 
+	// Overlays
+	String SKETCH_DELETE = "overlays.trash";
+	String SKETCH_DELETE_ALL = "overlays.trashs";
+	String SKETCH_EDIT_LABEL = "overlays.text";
+
+	// Menu
+	String MENU_SKETCH_ALLOWED = "menu.sketch.allowed";
+	String MENU_SKETCH_HIDDEN = "menu.sketch.hidden";
+	String MENU_SKETCH_PREVENTED = "menu.sketch.prevented";
+
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
 	String PLAYER_NORMAL_HOME = "players.normal.home";
@@ -219,6 +229,8 @@ public interface IIconProperty {
 	String CURSOR_BLADE = "cursor.blade";
 	String CURSOR_FURIOUS = "cursor.furious";
 	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
+	String CURSOR_SKETCH = "cursor.sketch";
+
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
 	String BLOODSPOT_BH = "bloodspot.bh";

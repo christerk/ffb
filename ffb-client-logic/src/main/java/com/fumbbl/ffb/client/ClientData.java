@@ -28,6 +28,7 @@ public class ClientData {
 	private int spectatorCount;
 	private SpecialEffect fWizardSpell;
 	private List<String> spectators = new ArrayList<>();
+	private String coachControllingReplay;
 
 	public Player<?> getSelectedPlayer() {
 		return fSelectedPlayer;
@@ -134,6 +135,14 @@ public class ClientData {
 
 	public List<String> getSpectators() {
 		return spectators;
+	}
+
+	public String getCoachControllingReplay() {
+		return coachControllingReplay;
+	}
+
+	public void setCoachControllingReplay(String coachControllingReplay) {
+		this.coachControllingReplay = coachControllingReplay;
 	}
 
 	public void clear() {

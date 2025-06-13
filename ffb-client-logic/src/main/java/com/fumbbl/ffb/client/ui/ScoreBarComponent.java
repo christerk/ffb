@@ -154,10 +154,10 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, _TURN, x, yText, styleProvider);
-		x += turnPrefixBounds.getWidth() + dimensionProvider.scale(10);
+		x += (int) (turnPrefixBounds.getWidth() + dimensionProvider.scale(10));
 		g2d.setFont(turnNumberFont);
 		UtilClientGraphics.drawShadowedText(g2d, turn, x, yInts, styleProvider);
-		x += turnBounds.getWidth() + dimensionProvider.scale(10);
+		x += (int) (turnBounds.getWidth() + dimensionProvider.scale(10));
 		g2d.setFont(turnTextFont);
 		UtilClientGraphics.drawShadowedText(g2d, half, x, yText, styleProvider);
 		g2d.dispose();
@@ -267,53 +267,48 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		spectatorFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
 
 		Game game = getClient().getGame();
-		if (game.getHalf() > 0) {
-			ClientData clientData = getClient().getClientData();
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = ((fTurnHome != game.getTurnDataHome().getTurnNr())
-					|| (fTurnAway != game.getTurnDataAway().getTurnNr()) || (fHalf != game.getHalf()));
-			}
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = ((fScoreHome != game.getGameResult().getTeamResultHome().getScore())
-					|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
-			}
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = (spectatorCount != clientData.getSpectatorCount());
-			}
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = !spectators.equals(clientData.getSpectators());
-			}
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = (fWeather != game.getFieldModel().getWeather());
-			}
-			if (!fRefreshNecessary) {
-				fRefreshNecessary = (fCoachBannedHome != game.getTurnDataHome().isCoachBanned())
-					|| (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
-			}
-			if (fRefreshNecessary) {
-				fTurnHome = game.getTurnDataHome().getTurnNr();
-				fTurnAway = game.getTurnDataAway().getTurnNr();
-				fHalf = game.getHalf();
-				fScoreHome = game.getGameResult().getTeamResultHome().getScore();
-				fScoreAway = game.getGameResult().getTeamResultAway().getScore();
-				spectatorCount = clientData.getSpectatorCount();
-				fWeather = game.getFieldModel().getWeather();
-				fCoachBannedHome = game.getTurnDataHome().isCoachBanned();
-				fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
-				spectators.clear();
-				spectators.addAll(clientData.getSpectators());
-				drawBackground();
-				drawTurn();
-				drawScore();
-				drawSpectators();
-				drawWeather();
-				drawBannedCoaches();
-				repaint();
-				fRefreshNecessary = false;
-			}
-		} else {
+		ClientData clientData = getClient().getClientData();
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = ((fTurnHome != game.getTurnDataHome().getTurnNr())
+				|| (fTurnAway != game.getTurnDataAway().getTurnNr()) || (fHalf != game.getHalf()));
+		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = ((fScoreHome != game.getGameResult().getTeamResultHome().getScore())
+				|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
+		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = (spectatorCount != clientData.getSpectatorCount());
+		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = !spectators.equals(clientData.getSpectators());
+		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = (fWeather != game.getFieldModel().getWeather());
+		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = (fCoachBannedHome != game.getTurnDataHome().isCoachBanned())
+				|| (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
+		}
+		if (fRefreshNecessary) {
+			fTurnHome = game.getTurnDataHome().getTurnNr();
+			fTurnAway = game.getTurnDataAway().getTurnNr();
+			fHalf = game.getHalf();
+			fScoreHome = game.getGameResult().getTeamResultHome().getScore();
+			fScoreAway = game.getGameResult().getTeamResultAway().getScore();
+			spectatorCount = clientData.getSpectatorCount();
+			fWeather = game.getFieldModel().getWeather();
+			fCoachBannedHome = game.getTurnDataHome().isCoachBanned();
+			fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
+			spectators.clear();
+			spectators.addAll(clientData.getSpectators());
 			drawBackground();
+			drawTurn();
+			drawScore();
+			drawSpectators();
+			drawWeather();
+			drawBannedCoaches();
 			repaint();
+			fRefreshNecessary = false;
 		}
 	}
 

@@ -59,8 +59,14 @@ public enum NetCommandId implements INamedObject {
 	INTERNAL_SERVER_ADD_LOADED_TEAM("internalServerAddLoadedTeam"),
 	INTERNAL_APPLY_AUTOMATIC_PLAYER_MARKINGS("internalApplyAutomaticPlayerMarkings"), CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL("clientUseSingleBlockDieReRoll"),
 	CLIENT_USE_MULTI_BLOCK_DICE_RE_ROLL("clientUseMultiBlockDiceReRoll"), INTERNAL_CALCULATE_AUTOMATIC_PLAYER_MARKINGS("internalCalculateAutomaticPlayerMarkings"),
-	CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS("clientLoadPlayerMarkings"), SERVER_AUTOMATIC_PLAYER_MARKINGS("serverAutomaticPlayerMarkings")
-	;
+	CLIENT_LOAD_AUTOMATIC_PLAYER_MARKINGS("clientLoadPlayerMarkings"), SERVER_AUTOMATIC_PLAYER_MARKINGS("serverAutomaticPlayerMarkings"),
+	CLIENT_REPLAY_STATUS("clientReplayStatus"), SERVER_REPLAY_STATUS("serverReplayStatus"), CLIENT_JOIN_REPLAY("clientJoinReplay"),
+	SERVER_REPLAY_CONTROL("serverReplayControl"), CLIENT_TRANSFER_REPLAY_CONTROL("clientTransferReplayControl"),
+	CLIENT_ADD_SKETCH("clientAddSketch"), CLIENT_REMOVE_SKETCHES("clientRemoveSketches"), CLIENT_SKETCH_ADD_COORDINATE("clientSketchAddCoordinate"),
+	CLIENT_SKETCH_SET_COLOR("clientSketchSetColor"), CLIENT_SKETCH_SET_LABEL("clientSketchSetLabel"), CLIENT_CLEAR_SKETCHES("clientClearSketches"),
+	SERVER_ADD_SKETCHES("serverAddSketches"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
+	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches"),
+	CLIENT_SET_PREVENT_SKETCHING("clientSetPreventSketching"), SERVER_SET_PREVENT_SKETCHING("serverSetPreventSketching");
 
 	private final String fName;
 
@@ -273,6 +279,44 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandLoadAutomaticPlayerMarkings();
 			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
 				return new ServerCommandAutomaticPlayerMarkings();
+			case CLIENT_REPLAY_STATUS:
+				return new ClientCommandReplayStatus();
+			case CLIENT_JOIN_REPLAY:
+				return new ClientCommandJoinReplay();
+			case SERVER_REPLAY_STATUS:
+				return new ServerCommandReplayStatus();
+			case SERVER_REPLAY_CONTROL:
+				return new ServerCommandReplayControl();
+			case CLIENT_TRANSFER_REPLAY_CONTROL:
+				return new ClientCommandTransferReplayControl();
+			case CLIENT_REMOVE_SKETCHES:
+				return new ClientCommandRemoveSketches();
+			case CLIENT_CLEAR_SKETCHES:
+				return new ClientCommandClearSketches();
+			case CLIENT_ADD_SKETCH:
+				return new ClientCommandAddSketch();
+			case CLIENT_SKETCH_ADD_COORDINATE:
+				return new ClientCommandSketchAddCoordinate();
+			case CLIENT_SKETCH_SET_COLOR:
+				return new ClientCommandSketchSetColor();
+			case CLIENT_SKETCH_SET_LABEL:
+				return new ClientCommandSketchSetLabel();
+			case SERVER_ADD_SKETCHES:
+				return new ServerCommandAddSketches();
+			case SERVER_REMOVE_SKETCHES:
+				return new ServerCommandRemoveSketches();
+			case SERVER_SKETCH_ADD_COORDINATE:
+				return new ServerCommandSketchAddCoordinate();
+			case SERVER_SKETCH_SET_COLOR:
+				return new ServerCommandSketchSetColor();
+			case SERVER_SKETCH_SET_LABEL:
+				return new ServerCommandSketchSetLabel();
+			case SERVER_CLEAR_SKETCHES:
+				return new ServerCommandClearSketches();
+			case CLIENT_SET_PREVENT_SKETCHING:
+				return new ClientCommandSetPreventSketching();
+			case SERVER_SET_PREVENT_SKETCHING:
+				return new ServerCommandSetPreventSketching();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

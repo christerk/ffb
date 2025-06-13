@@ -21,6 +21,9 @@ class SessionTimeoutTaskTest {
   private SessionManager sessionManager;
 
   @Mock
+  private ReplaySessionManager replaySessionManager;
+
+  @Mock
   private ServerCommunication communication;
 
   @Mock
@@ -29,9 +32,16 @@ class SessionTimeoutTaskTest {
   @Mock
   private Session timeoutSession;
 
+  @Mock
+  private Session activeReplaySession;
+
+  @Mock
+  private Session timeoutReplaySession;
+
+
   @BeforeEach
   void setUp() {
-    timeoutTask = new SessionTimeoutTask(sessionManager, communication, TIMEOUT);
+    timeoutTask = new SessionTimeoutTask(sessionManager, replaySessionManager, communication, TIMEOUT);
   }
 
   @Test
@@ -44,9 +54,19 @@ class SessionTimeoutTaskTest {
       (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT -1
     );
 
+    when(replaySessionManager.getAllSessions()).thenReturn(new Session[]{activeReplaySession, timeoutReplaySession});
+    when(replaySessionManager.getLastPing(activeReplaySession)).then(
+      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT
+    );
+    when(replaySessionManager.getLastPing(timeoutReplaySession)).then(
+      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT -1
+    );
+
+
     timeoutTask.run();
 
     verify(communication).close(timeoutSession);
+    verify(communication).close(timeoutReplaySession);
     verifyNoMoreInteractions(communication);
   }
 }

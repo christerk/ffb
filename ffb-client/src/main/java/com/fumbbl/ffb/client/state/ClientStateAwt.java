@@ -4,8 +4,8 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -38,17 +38,17 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}};
 
 	private boolean fClickable;
-	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private JPopupMenu fPopupMenu;
+	private final CoordinateConverter coordinateConverter;
 
 	private Player<?> fPopupMenuPlayer;
 
 	public ClientStateAwt(FantasyFootballClientAwt pClient, T logicModule) {
 		super(pClient, logicModule);
 		setClickable(true);
-		uiDimensionProvider = pClient.getUserInterface().getUiDimensionProvider();
 		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
+		coordinateConverter = pClient.getUserInterface().getCoordinateConverter();
 	}
 
 	public void setUp() {
@@ -87,18 +87,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	// Helper Methods
 
-	protected FieldCoordinate getFieldCoordinate(MouseEvent pMouseEvent) {
-		FieldCoordinate coordinate = null;
-		int x = pMouseEvent.getX();
-		int y = pMouseEvent.getY();
-		Dimension field = uiDimensionProvider.dimension(Component.FIELD);
-		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			coordinate = new FieldCoordinate((int) ((x / (pitchDimensionProvider.getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()),
-				(int) ((y / (pitchDimensionProvider.getLayoutSettings().getScale() * pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale())) / pitchDimensionProvider.unscaledFieldSquare()));
-			coordinate = pitchDimensionProvider.mapToGlobal(coordinate);
-		}
-		return coordinate;
-	}
+
 
 	protected void drawSelectSquare() {
 		drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
@@ -133,7 +122,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public void mouseMoved(MouseEvent pMouseEvent) {
 		if (isSelectable()) {
-			FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
+			FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(pMouseEvent);
 			if ((coordinate == null) || !FieldCoordinateBounds.FIELD.isInBounds(coordinate)) {
 				hideSelectSquare();
 			} else {
@@ -159,7 +148,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			return;
 		}
 		getClient().setCurrentMouseButton(MouseEvent.NOBUTTON);
-		FieldCoordinate coordinate = getFieldCoordinate(pMouseEvent);
+		FieldCoordinate coordinate = coordinateConverter.getFieldCoordinate(pMouseEvent);
 		if ((getClient().getGame() != null) && (coordinate != null)) {
 			Optional<Player<?>> player = logicModule.getPlayer(coordinate);
 			if (pMouseEvent.isShiftDown()) {

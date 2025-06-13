@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 public class Constant {
 
+	public static int REPLAY_NAME_MAX_LENGTH = 20;
+
 	public static int MINIMUM_MOVE_TO_STAND_UP = 3;
 
 	public static final Set<ISkillProperty> CHECK_AFTER_PLAYER_REMOVAL = new HashSet<ISkillProperty>() {{
