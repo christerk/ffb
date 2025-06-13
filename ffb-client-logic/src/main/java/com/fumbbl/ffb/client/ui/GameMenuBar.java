@@ -356,7 +356,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide (Beta)");
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
