@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> implements IDialogCloseListener, IProgressListener {
@@ -89,9 +88,13 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		}
 
 		boolean gainedControl = getClient().getParameters().getCoach().equals(controllingCoach);
-		getClient().getUserInterface().getChat().getReplayControl().setActive(gainedControl);
+		UserInterface userInterface = getClient().getUserInterface();
+		userInterface.getChat().getReplayControl().setActive(gainedControl);
 
-		getClient().getUserInterface().invokeAndWait(() -> getClient().getUserInterface().getGameMenuBar().updateJoinedCoachesMenu());
+		userInterface.invokeAndWait(() -> {
+			userInterface.getGameMenuBar().updateJoinedCoachesMenu();
+			userInterface.getChat().getReplayControl().refresh();
+		});
 
 		if (logicModule.isOnline()) {
 
@@ -102,7 +105,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 				prefix = "Coach " + controllingCoach + " is";
 			}
 
-			getClient().getUserInterface().getChat().append(TextStyle.SPECTATOR, prefix + " in control of this session");
+			userInterface.getChat().append(TextStyle.SPECTATOR, prefix + " in control of this session");
 		}
 	}
 

@@ -54,25 +54,25 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		iconWidth = dimensionProvider.dimension(Component.REPLAY_ICON).width;
 
 		fButtonPause = new ReplayButton(new Point((int) ((size.width / 2.0f) - ((float) iconWidth / 2)), 1), IIconProperty.REPLAY_PAUSE,
-			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED, isActive(fButtonPause));
+			IIconProperty.REPLAY_PAUSE_ACTIVE, IIconProperty.REPLAY_PAUSE_SELECTED,  IIconProperty.REPLAY_PAUSE_DISABLED, isActive(fButtonPause) );
 		fButtonPlayBackward = new ReplayButton(new Point(fButtonPause.getPosition().x - iconWidth - iconGap, 1),
 			IIconProperty.REPLAY_PLAY_BACKWARD, IIconProperty.REPLAY_PLAY_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED, isActive(fButtonPlayBackward));
+			IIconProperty.REPLAY_PLAY_BACKWARD_SELECTED, IIconProperty.REPLAY_PLAY_BACKWARD_DISABLED, isActive(fButtonPlayBackward));
 		fButtonFastBackward = new ReplayButton(new Point(fButtonPlayBackward.getPosition().x - iconWidth - iconGap, 1),
 			IIconProperty.REPLAY_FAST_BACKWARD, IIconProperty.REPLAY_FAST_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_FAST_BACKWARD_SELECTED, isActive(fButtonFastBackward));
+			IIconProperty.REPLAY_FAST_BACKWARD_SELECTED, IIconProperty.REPLAY_FAST_BACKWARD_DISABLED, isActive(fButtonFastBackward));
 		fButtonSkipBackward = new ReplayButton(new Point(fButtonFastBackward.getPosition().x - iconWidth - iconGap, 1),
 			IIconProperty.REPLAY_SKIP_BACKWARD, IIconProperty.REPLAY_SKIP_BACKWARD_ACTIVE,
-			IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED, isActive(fButtonSkipBackward));
+			IIconProperty.REPLAY_SKIP_BACKWARD_SELECTED, IIconProperty.REPLAY_SKIP_BACKWARD_DISABLED, isActive(fButtonSkipBackward));
 		fButtonPlayForward = new ReplayButton(new Point(fButtonPause.getPosition().x + iconWidth + iconGap, 1),
 			IIconProperty.REPLAY_PLAY_FORWARD, IIconProperty.REPLAY_PLAY_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_PLAY_FORWARD_SELECTED, isActive(fButtonPlayForward));
+			IIconProperty.REPLAY_PLAY_FORWARD_SELECTED, IIconProperty.REPLAY_PLAY_FORWARD_DISABLED, isActive(fButtonPlayForward));
 		fButtonFastForward = new ReplayButton(new Point(fButtonPlayForward.getPosition().x + iconWidth + iconGap, 1),
 			IIconProperty.REPLAY_FAST_FORWARD, IIconProperty.REPLAY_FAST_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_FAST_FORWARD_SELECTED, isActive(fButtonFastForward));
+			IIconProperty.REPLAY_FAST_FORWARD_SELECTED, IIconProperty.REPLAY_FAST_FORWARD_DISABLED, isActive(fButtonFastForward));
 		fButtonSkipForward = new ReplayButton(new Point(fButtonFastForward.getPosition().x + iconWidth + iconGap, 1),
 			IIconProperty.REPLAY_SKIP_FORWARD, IIconProperty.REPLAY_SKIP_FORWARD_ACTIVE,
-			IIconProperty.REPLAY_SKIP_FORWARD_SELECTED, isActive(fButtonSkipForward));
+			IIconProperty.REPLAY_SKIP_FORWARD_SELECTED, IIconProperty.REPLAY_SKIP_FORWARD_DISABLED, isActive(fButtonSkipForward));
 
 	}
 
@@ -120,16 +120,18 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		private final String fIconProperty;
 		private final String fIconPropertyActive;
 		private final String fIconPropertySelected;
+		private final String iconPropertyDisabled;
 
 		private final Point fPosition;
 
 		public ReplayButton(Point pPosition, String pIconProperty, String pIconPropertyActive,
-												String pIconPropertySelected, boolean active) {
+												String pIconPropertySelected, String iconPropertyDisabled, boolean active) {
 			fPosition = pPosition;
 			fIconProperty = pIconProperty;
 			fIconPropertyActive = pIconPropertyActive;
 			fIconPropertySelected = pIconPropertySelected;
 			this.active = active;
+			this.iconPropertyDisabled = iconPropertyDisabled;
 		}
 
 		public boolean isActive() {
@@ -164,7 +166,9 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 		public void draw(Graphics2D pGraphics2D) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage icon;
-			if (isActive()) {
+			if (!isEnabled()) {
+				icon = iconCache.getIconByProperty(iconPropertyDisabled, dimensionProvider);
+			} else if (isActive()) {
 				icon = iconCache.getIconByProperty(fIconPropertyActive, dimensionProvider);
 			} else if (isSelected()) {
 				icon = iconCache.getIconByProperty(fIconPropertySelected, dimensionProvider);
