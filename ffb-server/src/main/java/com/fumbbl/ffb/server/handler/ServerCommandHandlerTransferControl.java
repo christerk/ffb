@@ -27,7 +27,9 @@ public class ServerCommandHandlerTransferControl extends ServerCommandHandler {
 			if (sessionManager.transferControl(receivedCommand.getSession(), command.getCoach())) {
 				ReplayState replayState = getServer().getReplayCache().replayState(sessionManager.replayNameForSession(receivedCommand.getSession()));
 				getServer().getCommunication().sendReplayControlChange(replayState, command.getCoach());
-				getServer().getCommunication().sendReplayPreventSketching(replayState, command.getCoach(), false);
+				if (replayState.isCoachPreventedFromSketching(command.getCoach())) {
+					getServer().getCommunication().sendReplayPreventSketching(replayState, command.getCoach(), false);
+				}
 			}
 		}
 		return true;
