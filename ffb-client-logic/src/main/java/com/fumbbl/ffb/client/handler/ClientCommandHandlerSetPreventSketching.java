@@ -32,7 +32,7 @@ public class ClientCommandHandlerSetPreventSketching extends ClientCommandHandle
 		if (getClient().getParameters().getCoach().equals(command.getCoach())) {
 			prefix = "You are";
 		} else {
-			prefix = command.getCoach() + " is";
+			prefix = "Coach " + command.getCoach() + " is";
 		}
 
 		String action;
