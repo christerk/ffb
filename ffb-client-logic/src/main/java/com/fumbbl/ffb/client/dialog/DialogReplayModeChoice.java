@@ -23,8 +23,8 @@ import java.awt.event.KeyListener;
 
 public class DialogReplayModeChoice extends Dialog implements ActionListener, KeyListener, FocusListener {
 
-	private final JRadioButton offlineButton = new JRadioButton(dimensionProvider(), "Offline (Legacy Behavior)");
-	private final JRadioButton onlineButton = new JRadioButton(dimensionProvider(), "Online");
+	private final JRadioButton offlineButton = new JRadioButton(dimensionProvider(), "Solo");
+	private final JRadioButton onlineButton = new JRadioButton(dimensionProvider(), "Collaborative");
 	private final JTextField nameField = new JTextField(dimensionProvider(), Constant.REPLAY_NAME_MAX_LENGTH);
 	private final JButton okButton = new JButton(dimensionProvider(), "OK");
 	private boolean online;
