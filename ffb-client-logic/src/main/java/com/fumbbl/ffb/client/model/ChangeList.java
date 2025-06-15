@@ -13,6 +13,8 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("2.36.1")
 			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
+			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
+			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
 		);
 
 		versions.add(new VersionChangeList("2.36.0")

@@ -177,9 +177,9 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		}
 	}
 
-	private void evaluateControl(boolean hasControl, String commandReplayControl) {
+	public void evaluateControl(boolean hasControl, String coach) {
 		client.getReplayer().setControl(hasControl);
-		callbacks.controlChanged(commandReplayControl);
+		callbacks.controlChanged(coach);
 		client.getOverlays().stream().filter(overlay -> overlay instanceof ControlAware)
 			.map(overlay -> (ControlAware) overlay)
 			.forEach(overlay -> overlay.setControl(hasControl));
