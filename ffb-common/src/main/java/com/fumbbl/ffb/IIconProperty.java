@@ -131,24 +131,31 @@ public interface IIconProperty {
 	String REPLAY_PLAY_FORWARD = "replay.play.forward";
 	String REPLAY_PLAY_FORWARD_SELECTED = "replay.play.forward.selected";
 	String REPLAY_PLAY_FORWARD_ACTIVE = "replay.play.forward.active";
+	String REPLAY_PLAY_FORWARD_DISABLED = "replay.play.forward.disabled";
 	String REPLAY_FAST_FORWARD = "replay.fast.forward";
 	String REPLAY_FAST_FORWARD_SELECTED = "replay.fast.forward.selected";
 	String REPLAY_FAST_FORWARD_ACTIVE = "replay.fast.forward.active";
+	String REPLAY_FAST_FORWARD_DISABLED = "replay.fast.forward.disabled";
 	String REPLAY_SKIP_FORWARD = "replay.skip.forward";
 	String REPLAY_SKIP_FORWARD_SELECTED = "replay.skip.forward.selected";
 	String REPLAY_SKIP_FORWARD_ACTIVE = "replay.skip.forward.active";
+	String REPLAY_SKIP_FORWARD_DISABLED = "replay.skip.forward.disabled";
 	String REPLAY_PLAY_BACKWARD = "replay.play.backward";
 	String REPLAY_PLAY_BACKWARD_SELECTED = "replay.play.backward.selected";
 	String REPLAY_PLAY_BACKWARD_ACTIVE = "replay.play.backward.active";
+	String REPLAY_PLAY_BACKWARD_DISABLED = "replay.play.backward.disabled";
 	String REPLAY_FAST_BACKWARD = "replay.fast.backward";
 	String REPLAY_FAST_BACKWARD_SELECTED = "replay.fast.backward.selected";
 	String REPLAY_FAST_BACKWARD_ACTIVE = "replay.fast.backward.active";
+	String REPLAY_FAST_BACKWARD_DISABLED = "replay.fast.backward.disabled";
 	String REPLAY_SKIP_BACKWARD = "replay.skip.backward";
 	String REPLAY_SKIP_BACKWARD_SELECTED = "replay.skip.backward.selected";
 	String REPLAY_SKIP_BACKWARD_ACTIVE = "replay.skip.backward.active";
+	String REPLAY_SKIP_BACKWARD_DISABLED = "replay.skip.backward.disabled";
 	String REPLAY_PAUSE = "replay.pause";
 	String REPLAY_PAUSE_SELECTED = "replay.pause.selected";
 	String REPLAY_PAUSE_ACTIVE = "replay.pause.active";
+	String REPLAY_PAUSE_DISABLED = "replay.pause.disabled";
 
 	// Player actions
 	String ACTION_MOVE = "action.move";
@@ -185,6 +192,16 @@ public interface IIconProperty {
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 
+	// Overlays
+	String SKETCH_DELETE = "overlays.trash";
+	String SKETCH_DELETE_ALL = "overlays.trashs";
+	String SKETCH_EDIT_LABEL = "overlays.text";
+
+	// Menu
+	String MENU_SKETCH_ALLOWED = "menu.sketch.allowed";
+	String MENU_SKETCH_HIDDEN = "menu.sketch.hidden";
+	String MENU_SKETCH_PREVENTED = "menu.sketch.prevented";
+
 	// Player icons
 	String PLAYER_SMALL_HOME = "players.small.home";
 	String PLAYER_NORMAL_HOME = "players.normal.home";
@@ -219,6 +236,8 @@ public interface IIconProperty {
 	String CURSOR_BLADE = "cursor.blade";
 	String CURSOR_FURIOUS = "cursor.furious";
 	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
+	String CURSOR_SKETCH = "cursor.sketch";
+
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
 	String BLOODSPOT_BH = "bloodspot.bh";

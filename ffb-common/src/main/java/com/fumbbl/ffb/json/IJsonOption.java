@@ -187,6 +187,7 @@ public interface IJsonOption {
 	JsonDateOption FINISHED = new JsonDateOption("finished");
 	JsonBooleanOption FIRST_RUN = new JsonBooleanOption("firstRun");
 	JsonBooleanOption FIRST_TURN_AFTER_KICKOFF = new JsonBooleanOption("firstTurnAfterKickoff");
+	JsonBooleanOption FORWARD = new JsonBooleanOption("forward");
 	JsonBooleanOption FOUL_USED = new JsonBooleanOption("foulUsed");
 	JsonBooleanOption FOULING_PLAYER_BANNED = new JsonBooleanOption("foulingPlayerBanned");
 	JsonIntOption FOULS = new JsonIntOption("fouls");
@@ -230,6 +231,8 @@ public interface IJsonOption {
 	JsonBooleanOption HOME_PLAYING = new JsonBooleanOption("homePlaying");
 	JsonBooleanOption HOME_TEAM = new JsonBooleanOption("homeTeam");
 	JsonStringOption HOME_TEXT = new JsonStringOption("homeText");
+	JsonStringOption ID = new JsonStringOption("id");
+	JsonStringArrayOption IDS = new JsonStringArrayOption("ids");
 	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
@@ -246,7 +249,6 @@ public interface IJsonOption {
 	JsonIntArrayOption INJURY_ROLL = new JsonIntArrayOption("injuryRoll");
 	JsonEnumWithNameOption INJURY_TYPE = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE);
 	JsonEnumWithNameOption INJURY_TYPE_SERVER = new JsonEnumWithNameOption("injuryType", Factory.INJURY_TYPE_SERVER);
-
 	JsonIntOption INTERCEPTIONS = new JsonIntOption("interceptions");
 	JsonFieldCoordinateOption INTERCEPTOR_COORDINATE = new JsonFieldCoordinateOption("interceptorCoordinate");
 	JsonStringOption INTERCEPTOR_ID = new JsonStringOption("interceptorId");
@@ -389,6 +391,7 @@ public interface IJsonOption {
 	JsonStringOption PRAYER = new JsonStringOption("prayer");
 	JsonBooleanOption PRAYER_AVAILABLE = new JsonBooleanOption("prayerAvailable");
 	JsonStringArrayOption PRAYERS = new JsonStringArrayOption("prayers");
+	JsonBooleanOption PREVENT = new JsonBooleanOption("prevent");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
 	JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");
@@ -426,10 +429,12 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE = new JsonIntOption("rerollPumpUpTheCrowdOneDrive");
 	JsonIntOption RE_ROLLS_SHOW_STAR_ONE_DRIVE = new JsonIntOption("rerollShowStarOneDrive");
 	JsonIntOption RE_ROLLS_STOLEN = new JsonIntOption("reRollsStolen");
+	JsonIntOption RGB = new JsonIntOption("rgb");
 	JsonStringOption RIOTOUS_POSITION_ID = new JsonStringOption("riotousPositionId");
 	JsonIntOption RIOTOUS_AMOUNT = new JsonIntOption("riotousAmount");
 	JsonIntArrayOption RIOTOUS_ROLL = new JsonIntArrayOption("riotousRoll");
 	JsonIntOption RIP_SUFFERED = new JsonIntOption("ripSuffered");
+	JsonBooleanOption RUNNING = new JsonBooleanOption("running");
 	JsonIntOption ROLL = new JsonIntOption("roll");
 	JsonStringOption ROLL_COUNT = new JsonStringOption("rollCount");
 	JsonIntOption ROLL_SCATTER_DIRECTION = new JsonIntOption("rollScatterDirection");
@@ -473,6 +478,8 @@ public interface IJsonOption {
 	JsonStringOption SHORTHAND = new JsonStringOption("shorthand");
 	JsonBooleanOption SHOW_NAME_IN_REPORT = new JsonBooleanOption("showNameInReport");
 	JsonBooleanOption SHOW_NEVER_USE = new JsonBooleanOption("showNeverUse");
+	JsonObjectOption SKETCH = new JsonObjectOption("sketch");
+	JsonArrayOption SKETCHES = new JsonArrayOption("sketches");
 	JsonEnumWithNameOption SKILL = new JsonEnumWithNameOption("skill", Factory.SKILL);
 	JsonArrayOption SKILL_ARRAY = new JsonArrayOption("skillArray");
 	JsonArrayOption SKILL_CATEGORIES_DOUBLE = new JsonArrayOption("skillCategoriesDouble");
@@ -487,12 +494,12 @@ public interface IJsonOption {
 	JsonSkillValuesMapOption SKILL_VALUES_MAP = new JsonSkillValuesMapOption("skillValuesMap");
 	JsonBooleanOption SKILL_USED = new JsonBooleanOption("skillUsed");
 	JsonStringListMapOption SKILLS_GRANTED_BY = new JsonStringListMapOption("skillsGrantedBy");
+	JsonBooleanOption SKIP = new JsonBooleanOption("skip");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);
 	JsonEnumWithNameOption SOUND_ALTERNATIVE = new JsonEnumWithNameOption("soundAlternative", Factory.SOUND_ID);
-
 	JsonEnumWithNameOption SPECIAL_EFFECT = new JsonEnumWithNameOption("specialEffect", Factory.SPECIAL_EFFECT);
 	JsonStringArrayOption SPECIAL_RULES = new JsonStringArrayOption("specialRules");
 	JsonStringArrayOption SPECTATOR_NAMES = new JsonStringArrayOption("spectatorNames");
@@ -501,6 +508,7 @@ public interface IJsonOption {
 	JsonIntOption SPECTATORS = new JsonIntOption("spectators");
 	JsonIntOption SPECTATORS_AWAY = new JsonIntOption("spectatorsAway");
 	JsonIntOption SPECTATORS_HOME = new JsonIntOption("spectatorsHome");
+	JsonIntOption SPEED = new JsonIntOption("speed");
 	JsonIntOption SPIRALLING_EXPENSES = new JsonIntOption("spirallingExpenses");
 	JsonStringArrayOption STAFF_POSITION_IDS = new JsonStringArrayOption("staffPositionIds");
 	JsonBooleanOption STANDING_UP = new JsonBooleanOption("standingUp");

@@ -21,7 +21,11 @@ public class ServerCommandHandlerPing extends ServerCommandHandler {
 
 	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
 		ClientCommandPing pingCommand = (ClientCommandPing) pReceivedCommand.getCommand();
-		getServer().getSessionManager().setLastPing(pReceivedCommand.getSession(), System.currentTimeMillis());
+		if (getServer().getReplaySessionManager().has(pReceivedCommand.getSession())) {
+			getServer().getReplaySessionManager().setLastPing(pReceivedCommand.getSession(), System.currentTimeMillis());
+		} else {
+			getServer().getSessionManager().setLastPing(pReceivedCommand.getSession(), System.currentTimeMillis());
+		}
 		getServer().getCommunication().sendPong(pReceivedCommand.getSession(), pingCommand.getTimestamp());
 		return true;
 	}

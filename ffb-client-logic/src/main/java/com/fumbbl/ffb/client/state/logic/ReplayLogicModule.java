@@ -3,12 +3,18 @@ package com.fumbbl.ffb.client.state.logic;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IProgressListener;
+import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.model.ControlAware;
+import com.fumbbl.ffb.client.model.OnlineAware;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
@@ -16,16 +22,21 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandAutomaticPlayerMarkings;
+import com.fumbbl.ffb.net.commands.ServerCommandJoin;
+import com.fumbbl.ffb.net.commands.ServerCommandLeave;
 import com.fumbbl.ffb.net.commands.ServerCommandReplay;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
  */
-public class ReplayLogicModule extends LogicModule {
+public class ReplayLogicModule extends LogicModule implements IDialogCloseListener {
 
 	private List<ServerCommand> fReplayList;
 	private Set<Integer> markingAffectingCommands;
@@ -58,6 +69,7 @@ public class ReplayLogicModule extends LogicModule {
 		ClientParameters parameters = client.getParameters();
 		ClientReplayer replayer = client.getReplayer();
 		if (ClientMode.REPLAY == client.getMode()) {
+			replayer.setControl(false);
 			if (StringTool.isProvided(parameters.getAuthentication())) {
 				client.getCommunication().sendJoin(parameters.getCoach(), parameters.getAuthentication(), 0, null, null, null);
 			} else {
@@ -81,6 +93,7 @@ public class ReplayLogicModule extends LogicModule {
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
+		boolean loadingDone = false;
 		ClientReplayer replayer = client.getReplayer();
 		switch (pNetCommand.getId()) {
 			case SERVER_USER_SETTINGS:
@@ -101,7 +114,7 @@ public class ReplayLogicModule extends LogicModule {
 					// closed, only if we are not waiting for auto marking responses
 					if (ClientMode.REPLAY == client.getMode()) {
 						if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-							client.getCommunication().sendCloseSession();
+							loadingDone = true;
 						}
 					}
 					ServerCommand[] replayCommands = fReplayList.toArray(new ServerCommand[0]);
@@ -113,7 +126,6 @@ public class ReplayLogicModule extends LogicModule {
 					} else {
 						replayer.positionOnLastCommand();
 					}
-					replayer.getReplayControl().setActive(true);
 				}
 				break;
 			case SERVER_GAME_STATE:
@@ -135,14 +147,65 @@ public class ReplayLogicModule extends LogicModule {
 				break;
 			case SERVER_AUTOMATIC_PLAYER_MARKINGS:
 				ServerCommandAutomaticPlayerMarkings playerMarkings = (ServerCommandAutomaticPlayerMarkings) pNetCommand;
-				boolean complete = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
-				if (complete && client.getMode() == ClientMode.REPLAY) {
-					client.getCommunication().sendCloseSession();
-				}
+				loadingDone = client.getReplayer().addMarkingConfigs(playerMarkings.getIndex(), playerMarkings.getMarkings());
+				break;
+			case SERVER_REPLAY_STATUS:
+				ServerCommandReplayStatus serverCommandReplayStatus = (ServerCommandReplayStatus) pNetCommand;
+				replayer.handleCommand(serverCommandReplayStatus, callbacks);
+				break;
+			case SERVER_REPLAY_CONTROL:
+				ServerCommandReplayControl commandReplayControl = (ServerCommandReplayControl) pNetCommand;
+				client.getClientData().setCoachControllingReplay(commandReplayControl.getCoach());
+				boolean hasControl = commandReplayControl.getCoach().equals(client.getParameters().getCoach());
+				evaluateControl(hasControl, commandReplayControl.getCoach());
+				break;
+			case SERVER_JOIN:
+				ServerCommandJoin commandJoin = (ServerCommandJoin) pNetCommand;
+				updateClientData(commandJoin.getSpectators());
+				callbacks.coachJoined(commandJoin.getCoach(), commandJoin.getSpectators(), commandJoin.getReplayName());
+				break;
+			case SERVER_LEAVE:
+				ServerCommandLeave commandLeave = (ServerCommandLeave) pNetCommand;
+				updateClientData(commandLeave.getSpectators());
+				callbacks.coachLeft(commandLeave.getCoach(), commandLeave.getSpectators());
 				break;
 			default:
 				break;
 		}
+		if (loadingDone && ClientMode.REPLAY == client.getMode()) {
+			new DialogReplayModeChoice(client).showDialog(this);
+		}
+	}
+
+	private void evaluateControl(boolean hasControl, String commandReplayControl) {
+		client.getReplayer().setControl(hasControl);
+		callbacks.controlChanged(commandReplayControl);
+		client.getOverlays().stream().filter(overlay -> overlay instanceof ControlAware)
+			.map(overlay -> (ControlAware) overlay)
+			.forEach(overlay -> overlay.setControl(hasControl));
+	}
+
+	private void updateClientData(List<String> allCoaches) {
+		List<String> filteredCoaches = allCoaches.stream().filter(coach -> !coach.equals(client.getParameters().getCoach())).collect(Collectors.toList());
+		client.getClientData().setSpectatorCount(filteredCoaches.size());
+		client.getClientData().setSpectators(filteredCoaches);
+	}
+
+	private void replayMode(boolean online, String name) {
+		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
+		String coach = client.getParameters().getCoach();
+		if (online && StringTool.isProvided(sanitizedName)) {
+			client.getCommunication().sendJoinReplay(sanitizedName, coach, client.getParameters().getGameId());
+			client.getReplayer().setOnline(true);
+			client.getOverlays().stream().filter(overlay -> overlay instanceof OnlineAware)
+				.map(overlay -> (OnlineAware) overlay)
+				.forEach(overlay -> overlay.setOnline(online));
+
+		} else {
+			client.getCommunication().sendCloseSession();
+			evaluateControl(true, coach);
+		}
+		client.replayInitialized();
 	}
 
 	public boolean replayStopped(ActionKey pActionKey) {
@@ -162,6 +225,19 @@ public class ReplayLogicModule extends LogicModule {
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
 		throw new UnsupportedOperationException("actionContext for acting player is not supported in replay context");
+	}
+
+	@Override
+	public void dialogClosed(IDialog dialog) {
+		if (dialog instanceof DialogReplayModeChoice) {
+			DialogReplayModeChoice replayModeChoice = (DialogReplayModeChoice) dialog;
+			replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
+			dialog.hideDialog();
+		}
+	}
+
+	public boolean isOnline() {
+		return client.getReplayer().isOnline();
 	}
 
 	/**
@@ -214,5 +290,27 @@ public class ReplayLogicModule extends LogicModule {
 		 * Called if the replay was not found on server side, connection will be closed
 		 */
 		void replayUnavailable(ServerStatus status);
+
+		/**
+		 * Called when the control state of the client changes
+		 *
+		 */
+		void controlChanged(String controllingCoach);
+
+		/**
+		 * Called when a replay state command was processed
+		 */
+		void playStatus(boolean playing, boolean forward);
+
+		/**
+		 * Called when a coach joins the session
+		 */
+		void coachJoined(String coach, List<String> allCoaches, String replayName);
+
+		/**
+		 * Called when a coach leaves the session
+		 */
+		void coachLeft(String coach, List<String> allCoaches);
+
 	}
 }

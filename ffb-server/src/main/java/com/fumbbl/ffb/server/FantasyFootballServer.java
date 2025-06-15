@@ -19,6 +19,7 @@ import com.fumbbl.ffb.server.db.DbUpdateFactory;
 import com.fumbbl.ffb.server.handler.ServerCommandHandlerFactory;
 import com.fumbbl.ffb.server.net.CommandServlet;
 import com.fumbbl.ffb.server.net.FileServlet;
+import com.fumbbl.ffb.server.net.ReplaySessionManager;
 import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.ServerDbKeepAliveTask;
 import com.fumbbl.ffb.server.net.ServerGameTimeTask;
@@ -63,7 +64,10 @@ public class FantasyFootballServer implements IFactorySource {
 	private Thread fCommunicationThread;
 	private ServerCommandHandlerFactory fCommandHandlerFactory;
 	private GameCache fGameCache;
+	private ReplayCache replayCache;
 	private SessionManager fSessionManager;
+	private ReplaySessionManager replaySessionManager;
+	private ServerSketchManager sketchManager;
 	private final Properties fProperties;
 	private Fortuna fFortuna;
 	private DebugLog fDebugLog;
@@ -91,6 +95,14 @@ public class FantasyFootballServer implements IFactorySource {
 			factory.initialize(null);
 		}
 		
+	}
+
+	public ReplaySessionManager getReplaySessionManager() {
+		return replaySessionManager;
+	}
+
+	public ServerSketchManager getSketchManager() {
+		return sketchManager;
 	}
 
 	public FactoryManager getFactoryManager() {
@@ -170,12 +182,16 @@ public class FantasyFootballServer implements IFactorySource {
 
 			fGameCache = new GameCache(this);
 			fGameCache.init();
+			replayCache = new ReplayCache(this);
 
 			fDbUpdater = new DbUpdater(this);
 			fPersistenceUpdaterThread = new Thread(fDbUpdater);
 			fPersistenceUpdaterThread.start();
 
 			fSessionManager = new SessionManager();
+			replaySessionManager = new ReplaySessionManager();
+
+			sketchManager = new ServerSketchManager();
 
 			fCommandHandlerFactory = new ServerCommandHandlerFactory(this);
 
@@ -237,7 +253,7 @@ public class FantasyFootballServer implements IFactorySource {
 				sessionTimeoutTimer = new Timer(true);
 				int timerSchedule = Integer.parseInt(getProperty(IServerProperty.TIMER_SESSION_TIMEOUT_SCHEDULE));
 				int sessionTimeout = Integer.parseInt(getProperty(IServerProperty.SESSION_TIMEOUT_VALUE));
-				sessionTimeoutTimer.scheduleAtFixedRate(new SessionTimeoutTask(fSessionManager, fCommunication, sessionTimeout),
+				sessionTimeoutTimer.scheduleAtFixedRate(new SessionTimeoutTask(fSessionManager, replaySessionManager,  fCommunication, sessionTimeout),
 						0, timerSchedule);
 			}
 
@@ -247,6 +263,10 @@ public class FantasyFootballServer implements IFactorySource {
 
 		}
 
+	}
+
+	public ReplayCache getReplayCache() {
+		return replayCache;
 	}
 
 	public DbQueryFactory getDbQueryFactory() {
@@ -307,6 +327,7 @@ public class FantasyFootballServer implements IFactorySource {
 				server.run();
 			} catch (Exception all) {
 				if (server.getDebugLog() == null) {
+					//noinspection CallToPrintStackTrace
 					all.printStackTrace();
 				} else {
 					server.getDebugLog().logWithOutGameId(all);

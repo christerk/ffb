@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -49,6 +50,8 @@ public abstract class DimensionProvider {
 		switch (renderContext) {
 			case ON_PITCH:
 				return layoutSettings.getScale() * layoutSettings.getLayout().getPitchScale();
+			case DUGOUT:
+				return layoutSettings.getScale() * layoutSettings.getLayout().getDugoutScale();
 			default:
 				return layoutSettings.getScale();
 		}
@@ -84,7 +87,7 @@ public abstract class DimensionProvider {
 		AffineTransform at = new AffineTransform();
 		at.scale(effectiveScale, effectiveScale);
 		AffineTransformOp scaleOp =
-				new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+			new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 
 		try {
 			scaledImage = scaleOp.filter(pImage, scaledImage);
@@ -92,6 +95,11 @@ public abstract class DimensionProvider {
 			// ignore
 		}
 		return scaledImage;
+	}
+
+	public Icon scaleIcon(ImageIcon icon) {
+		icon.setImage(icon.getImage().getScaledInstance(scale(icon.getIconWidth()), scale(icon.getIconHeight()), 0));
+		return icon;
 	}
 
 	public void scaleFont(java.awt.Component component) {

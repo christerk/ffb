@@ -117,8 +117,9 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		fChatTextPane.update();
 	}
 
-	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
-		fChatTextPane.append(pTextIndent, pStyle, pText);
+	public void append(TextStyle pStyle, String pText) {
+		fChatTextPane.append(null, pStyle, pText);
+		fChatTextPane.append(null, null, null);
 	}
 
 	public FantasyFootballClient getClient() {

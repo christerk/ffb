@@ -11,6 +11,15 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+
+		versions.add(new VersionChangeList("2.36.0")
+			.addBugfix("Savage Blow: When performing an uphill block wthout any other re-roll sources left the dialog did not show any buttons to continue")
+			.addBehaviorChange("Players in dugouts are spaced more evenly")
+			.addImprovement("Player in dugout are scaled up in wide mode")
+			.addFeature("Collaborative replays: Replays can now be watched with multiple participants in an online session")
+			.addFeature("Replay sketches: In replays (collaborative or single) coaches can sketch player paths/mark squares which is visible to other participants")
+		);
+
 		versions.add(new VersionChangeList("2.35.2")
 			.addImprovement("Client Logging: Capture more error messages in log file")
 			.addBugfix("Replays: In some cases replays did not load when automarking was not enabled")

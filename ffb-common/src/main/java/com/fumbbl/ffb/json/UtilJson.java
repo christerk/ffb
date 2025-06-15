@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,24 +28,18 @@ import com.fumbbl.ffb.util.ArrayTool;
  * 
  * @author Kalimar
  */
+@SuppressWarnings("deprecation")
 public class UtilJson {
 
 	private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
 
-	private static final Charset _CHARSET = Charset.forName("UTF-8");
+	private static final Charset _CHARSET = StandardCharsets.UTF_8;
 
 	public static JsonObject toJsonObject(JsonValue pJsonValue) {
 		if ((pJsonValue == null) || !pJsonValue.isObject()) {
 			throw new IllegalArgumentException("JsonValue is not an object.");
 		}
 		return pJsonValue.asObject();
-	}
-
-	public static JsonArray toJsonArray(JsonValue pJsonValue) {
-		if ((pJsonValue == null) || !pJsonValue.isArray()) {
-			throw new IllegalArgumentException("JsonValue is not an array.");
-		}
-		return pJsonValue.asArray();
 	}
 
 	public static FieldCoordinate toFieldCoordinate(JsonValue pJsonValue) {
@@ -100,7 +95,7 @@ public class UtilJson {
 		return JsonValue.valueOf(pPlayerState.getId());
 	}
 
-	public static INamedObject toEnumWithName(INamedObjectFactory pFactory, JsonValue pJsonValue) {
+	public static INamedObject toEnumWithName(INamedObjectFactory<?> pFactory, JsonValue pJsonValue) {
 		if (pFactory == null) {
 			throw new IllegalArgumentException("Parameter factory must not be null.");
 		}
@@ -136,8 +131,7 @@ public class UtilJson {
 			gzipOut.flush();
 			byteOut.flush();
 			out.close();
-			byte[] data = byteOut.toByteArray();
-			return data;
+			return byteOut.toByteArray();
 		} finally {
 			if (out != null) {
 				out.close();

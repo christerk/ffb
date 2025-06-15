@@ -13,6 +13,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
+import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.dialog.DialogCoinChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
@@ -32,6 +33,7 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
@@ -48,29 +50,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientReplayer implements ActionListener {
 
-	private final FantasyFootballClient fClient;
-
 	private static final int[] _TIMER_SETTINGS = {800, 400, 200, 100, 50, 25, 10};
 
-	private int fFirstCommandNr;
-
+	private final FantasyFootballClient fClient;
 	private final List<ServerCommand> fReplayList;
 	private final List<ServerCommand> fUnseenList;
 	private final List<Integer> markingAffectingCommands;
 	private final Map<Integer, Map<String, String>> markings;
-	private int fLastReplayPosition;
-	private int fReplaySpeed;
-	private boolean fReplayDirectionForward;
-	private boolean fStopping;
-	private int fUnseenPosition;
-	private boolean fSkipping;
-	private int activeMarkingCommand = Integer.MIN_VALUE;
-
+	private int fLastReplayPosition, fReplaySpeed, fUnseenPosition, activeMarkingCommand = Integer.MIN_VALUE, fFirstCommandNr;
+	private boolean fReplayDirectionForward, fStopping, fSkipping, control, online;
+	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
 
 	public ClientReplayer(FantasyFootballClient pClient) {
@@ -159,61 +152,65 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void increaseReplaySpeed() {
-		if (fReplaySpeed < _TIMER_SETTINGS.length - 1) {
+		if (control && fReplaySpeed < _TIMER_SETTINGS.length - 1) {
 			setReplaySpeed(fReplaySpeed + 1);
 		}
 	}
 
 	public void decreaseReplaySpeed() {
-		if (fReplaySpeed > 0) {
+		if (control && fReplaySpeed > 0) {
 			setReplaySpeed(fReplaySpeed - 1);
 		}
 	}
 
 	public void play(boolean pDirectionForward) {
-		fReplayDirectionForward = pDirectionForward;
-		setReplaySpeed(1);
-		if (fLastReplayPosition < 0) {
-			if (fReplayDirectionForward) {
-				fLastReplayPosition = 0;
-			} else {
-				fLastReplayPosition = Math.max(getReplaySize(), 0);
+		if (control) {
+			fReplayDirectionForward = pDirectionForward;
+			setReplaySpeed(1);
+			if (fLastReplayPosition < 0) {
+				if (fReplayDirectionForward) {
+					fLastReplayPosition = 0;
+				} else {
+					fLastReplayPosition = Math.max(getReplaySize(), 0);
+				}
 			}
+			resume();
 		}
-		resume();
 	}
 
 	public void skip(boolean pDirectionForward) {
-		boolean oldReplayDirectionForward = fReplayDirectionForward;
-		boolean running = fTimer.isRunning();
-		if (running) {
-			pause();
-		}
-		int position;
-		if (pDirectionForward) {
-			position = getReplaySize() - 1;
-			for (int i = fLastReplayPosition + 1; i < getReplaySize(); i++) {
-				if (isRegularEndTurnCommand(getReplayCommand(i))) {
-					position = i;
-					break;
+		if (control) {
+			boolean oldReplayDirectionForward = fReplayDirectionForward;
+			boolean running = fTimer.isRunning();
+			if (running) {
+				pause();
+			}
+			int position;
+			if (pDirectionForward) {
+				position = getReplaySize() - 1;
+				for (int i = fLastReplayPosition + 1; i < getReplaySize(); i++) {
+					if (isRegularEndTurnCommand(getReplayCommand(i))) {
+						position = i;
+						break;
+					}
+				}
+			} else {
+				position = 0;
+				for (int i = fLastReplayPosition - 1; i > 0; i--) {
+					if (isRegularEndTurnCommand(getReplayCommand(i))) {
+						position = i;
+						break;
+					}
 				}
 			}
-		} else {
-			position = 0;
-			for (int i = fLastReplayPosition - 1; i > 0; i--) {
-				if (isRegularEndTurnCommand(getReplayCommand(i))) {
-					position = i;
-					break;
-				}
+			fReplayDirectionForward = pDirectionForward;
+			fSkipping = true;
+			replayTo(position, ClientCommandHandlerMode.REPLAYING, null);
+			fSkipping = false;
+			fReplayDirectionForward = oldReplayDirectionForward;
+			if (running) {
+				resume();
 			}
-		}
-		fReplayDirectionForward = pDirectionForward;
-		fSkipping = true;
-		replayTo(position, ClientCommandHandlerMode.REPLAYING, null);
-		fSkipping = false;
-		fReplayDirectionForward = oldReplayDirectionForward;
-		if (running) {
-			resume();
 		}
 	}
 
@@ -292,18 +289,21 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void pause() {
-		if (isRunning()) {
+		if (control && isRunning()) {
 			fTimer.stop();
+			sendReplayStatus();
 		}
 	}
 
 	public void resume() {
-		if (!isRunning()) {
+		if (control && !isRunning()) {
 			fTimer.start();
 		}
 	}
 
 	private void replayTo(int pReplayPosition, ClientCommandHandlerMode pMode, IProgressListener pProgressListener) {
+		sendReplayStatus(pReplayPosition);
+		lastMode = pMode;
 		int start = 0;
 		if ((fLastReplayPosition >= 0) && (fLastReplayPosition < pReplayPosition)) {
 			start = fLastReplayPosition;
@@ -534,15 +534,17 @@ public class ClientReplayer implements ActionListener {
 	}
 
 	public void stop() {
-		pause();
-		replayTo(getReplaySize(), ClientCommandHandlerMode.REPLAYING, null);
-		fUnseenPosition = 0;
-		fStopping = true;
-		setReplaySpeed(4);
-		getClient().getUserInterface().getLog().hideHighlight();
-		getClient().getUserInterface().getLog().enableReplay(false);
-		getClient().getUserInterface().getChat().showReplay(false);
-		fTimer.start();
+		if (control) {
+			pause();
+			replayTo(getReplaySize(), ClientCommandHandlerMode.REPLAYING, null);
+			fUnseenPosition = 0;
+			fStopping = true;
+			setReplaySpeed(4);
+			getClient().getUserInterface().getLog().hideHighlight();
+			getClient().getUserInterface().getLog().enableReplay(false);
+			getClient().getUserInterface().getChat().showReplay(false);
+			fTimer.start();
+		}
 	}
 
 	public int getFirstCommandNr() {
@@ -575,7 +577,6 @@ public class ClientReplayer implements ActionListener {
 					getClient().getGame().getFieldModel().addTransient(playerMarker);
 					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 				}
-				getClient().getUserInterface().refresh();
 			}
 		}
 	}
@@ -592,4 +593,46 @@ public class ClientReplayer implements ActionListener {
 		return relevantCommand;
 	}
 
+	private void sendReplayStatus() {
+		sendReplayStatus(fLastReplayPosition);
+	}
+
+	private void sendReplayStatus(int pReplayPosition) {
+		if (control && online && lastMode == ClientCommandHandlerMode.REPLAYING) {
+			fClient.getCommunication().sendReplayState(pReplayPosition, fReplaySpeed, isRunning(), fReplayDirectionForward, fSkipping);
+		}
+	}
+
+	public synchronized void handleCommand(ServerCommandReplayStatus command, ReplayLogicModule.ReplayCallbacks callbacks) {
+		SwingUtilities.invokeLater(() -> {
+			fTimer.stop();
+			setReplaySpeed(command.getSpeed());
+			if (fLastReplayPosition != command.getCommandNr()) {
+				fSkipping = true;
+				fReplayDirectionForward = fLastReplayPosition < command.getCommandNr();
+				replayTo(command.getCommandNr(), ClientCommandHandlerMode.REPLAYING, null);
+				fSkipping = false;
+			}
+			fReplayDirectionForward = command.isForward();
+			if (command.isRunning()) {
+				fTimer.start();
+			} else {
+				fTimer.stop();
+			}
+			callbacks.playStatus(command.isRunning(), command.isForward());
+		});
+
+	}
+
+	public void setControl(boolean control) {
+		this.control = control;
+	}
+
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
+
+	public boolean isOnline() {
+		return online;
+	}
 }

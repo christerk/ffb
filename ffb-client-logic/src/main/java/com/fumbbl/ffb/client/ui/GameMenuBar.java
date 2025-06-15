@@ -1,8 +1,42 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.*;
-import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.dialog.*;
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.ConcedeGameStatus;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.ClientLayout;
+import com.fumbbl.ffb.client.ClientReplayer;
+import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.dialog.DialogAbout;
+import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
+import com.fumbbl.ffb.client.dialog.DialogChangeList;
+import com.fumbbl.ffb.client.dialog.DialogChatCommands;
+import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
+import com.fumbbl.ffb.client.dialog.DialogInformation;
+import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
+import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
+import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
+import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -12,7 +46,14 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
@@ -21,16 +62,69 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_DEV;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FIELD_MARKER;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_INPUT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_SETTINGS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS_ROW;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_WEATHER;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PLAYER_MARKING_TYPE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RANGEGRID;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN;
+import static com.fumbbl.ffb.CommonProperty.SETTING_RIGHT_CLICK_END_ACTION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SHOW_CRATERS_AND_BLOODSPOTS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_SWEET_SPOT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TEAM_LOGOS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI_LAYOUT;
 
 /**
  * @author Kalimar
@@ -42,9 +136,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final FantasyFootballClient fClient;
 
+	private String currentControllingCoach = "";
+	private final Set<String> hiddenCoaches = new HashSet<>();
+	private final Set<String> preventedCoaches = new HashSet<>();
+
+	private JMenu joinedCoachesMenu;
+	private JMenu replayMenu;
 	private JMenuItem fGameReplayMenuItem;
 	private JMenuItem fGameConcessionMenuItem;
 	private JMenuItem fGameStatisticsMenuItem;
+	private final Set<JMenuItem> transferMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchAllowedMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchHiddenMenuItems = new HashSet<>();
+	private final Set<JRadioButtonMenuItem> sketchPreventedMenuItems = new HashSet<>();
 
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
@@ -151,7 +255,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem homePlayerMarkerFontColor;
 	private JMenuItem awayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
-	
+
 	private JMenu fMissingPlayersMenu;
 
 	private JMenu fInducementsMenu;
@@ -190,6 +294,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
 	private final LayoutSettings layoutSettings;
+	private final ClientSketchManager sketchManager;
 
 	private class MenuPlayerMouseListener extends MouseAdapter {
 
@@ -210,11 +315,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
 		fClient = pClient;
+		this.sketchManager = sketchManager;
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
@@ -306,7 +412,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		JMenu logMenu = new JMenu(dimensionProvider, SETTING_LOG);
 		logMenu.setMnemonic(KeyEvent.VK_L);
 		fUserSettingsMenu.add(logMenu);
-		
+
 		ButtonGroup logGroup = new ButtonGroup();
 
 		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
@@ -356,7 +462,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide (Beta)");
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
@@ -807,8 +913,158 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fGameMenu.add(fGameStatisticsMenuItem);
 	}
 
-	private static ColorIcon createColorIcon(Color chatBackgroundColor) {
-		return new ColorIcon(20, 20, chatBackgroundColor);
+	private void createReplayMenu() {
+		replayMenu = new JMenu(dimensionProvider, "Replay");
+		replayMenu.setMnemonic(KeyEvent.VK_R);
+		add(replayMenu);
+
+		createJoinedCoachesMenu(replayMenu);
+
+		fGameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
+		fGameStatisticsMenuItem.addActionListener(this);
+		fGameStatisticsMenuItem.setEnabled(false);
+		replayMenu.add(fGameStatisticsMenuItem);
+	}
+
+	private void createJoinedCoachesMenu(JMenu replayMenu) {
+		joinedCoachesMenu = new JMenu(dimensionProvider, "Joined Coaches");
+		joinedCoachesMenu.addActionListener(this);
+		joinedCoachesMenu.setMnemonic(KeyEvent.VK_J);
+		replayMenu.add(joinedCoachesMenu);
+
+		updateJoinedCoachesMenu();
+
+	}
+
+	public void updateJoinedCoachesMenu() {
+
+		String controllingCoach = getClient().getClientData().getCoachControllingReplay();
+		List<String> previousCoaches = transferMenuItems.stream().map(JMenuItem::getName).sorted().collect(Collectors.toList());
+
+		List<String> coaches = new ArrayList<>(getClient().getClientData().getSpectators());
+		if (coaches.equals(previousCoaches)
+			&& (!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach))
+			&& sketchManager.preventedCoaches().equals(preventedCoaches)
+			&& sketchManager.hiddenCoaches().equals(hiddenCoaches)
+		) {
+			return;
+		}
+
+		currentControllingCoach = controllingCoach;
+		joinedCoachesMenu.removeAll();
+		transferMenuItems.clear();
+		sketchAllowedMenuItems.clear();
+		sketchHiddenMenuItems.clear();
+		sketchPreventedMenuItems.clear();
+		preventedCoaches.clear();
+		preventedCoaches.addAll(sketchManager.preventedCoaches());
+		hiddenCoaches.clear();
+		hiddenCoaches.addAll(sketchManager.hiddenCoaches());
+
+		String clientCoach = getClient().getParameters().getCoach();
+
+		boolean clientHasControl = clientCoach.equals(controllingCoach);
+
+		coaches.sort(String::compareTo);
+
+		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_IMAGE_ICON);
+
+		ImageIcon ballIcon = loadBallIcon(dimension, IIconProperty.GAME_BALL);
+		ImageIcon allowedIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_ALLOWED);
+		ImageIcon hiddenIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_HIDDEN);
+		ImageIcon preventedIcon = loadBallIcon(dimension, IIconProperty.MENU_SKETCH_PREVENTED);
+
+		coaches.stream().map(coach -> {
+			boolean joinedCoachHasControl = coach.equals(controllingCoach);
+			ImageIcon icon = determineCoachIcon(coach, joinedCoachHasControl, ballIcon, sketchManager, hiddenIcon, preventedIcon, allowedIcon);
+			JMenu coachMenu = new JMenu(dimensionProvider, coach, icon);
+			ButtonGroup group = new ButtonGroup();
+			if (clientHasControl) {
+				JMenuItem transferItem = new JMenuItem(dimensionProvider, "Transfer Control");
+				coachMenu.add(transferItem);
+				transferItem.setName(coach);
+				group.add(transferItem);
+				transferMenuItems.add(transferItem);
+				transferItem.addActionListener(this);
+			}
+
+			JMenu sketchMenu = new JMenu(dimensionProvider, "Sketching");
+			coachMenu.add(sketchMenu);
+			group.add(sketchMenu);
+
+			ButtonGroup sketchGroup = new ButtonGroup();
+
+			String allowLabel;
+			if (sketchManager.isCoachPreventedFromSketching(coach)) {
+				allowLabel = "Unblock";
+			} else if (sketchManager.areSketchesHidden(coach)) {
+				allowLabel = "Show";
+			} else {
+				allowLabel = "Showing";
+			}
+			JRadioButtonMenuItem allowed = new JRadioButtonMenuItem(dimensionProvider, allowLabel);
+			sketchMenu.add(allowed);
+			sketchGroup.add(allowed);
+			allowed.setEnabled(!sketchManager.displaySketches(coach) && (!sketchManager.isCoachPreventedFromSketching(coach) || clientHasControl));
+			allowed.setSelected(sketchManager.displaySketches(coach));
+			allowed.setName(coach);
+			allowed.addActionListener(this);
+			sketchAllowedMenuItems.add(allowed);
+
+			JRadioButtonMenuItem hidden = new JRadioButtonMenuItem(dimensionProvider, sketchManager.areSketchesHidden(coach) ? "Hidden" : "Hide");
+			sketchMenu.add(hidden);
+			sketchGroup.add(hidden);
+			hidden.setEnabled(!sketchManager.areSketchesHidden(coach) && !sketchManager.isCoachPreventedFromSketching(coach));
+			hidden.setSelected(sketchManager.areSketchesHidden(coach));
+			hidden.setName(coach);
+			hidden.addActionListener(this);
+			sketchHiddenMenuItems.add(hidden);
+
+			JRadioButtonMenuItem prevented = new JRadioButtonMenuItem(dimensionProvider, sketchManager.isCoachPreventedFromSketching(coach) ? "Blocked" : "Block");
+			sketchMenu.add(prevented);
+			sketchGroup.add(prevented);
+			prevented.setEnabled(clientHasControl && !sketchManager.isCoachPreventedFromSketching(coach));
+			prevented.setSelected(sketchManager.isCoachPreventedFromSketching(coach));
+			prevented.setName(coach);
+			prevented.addActionListener(this);
+			sketchPreventedMenuItems.add(prevented);
+
+			return coachMenu;
+		}).forEach(joinedCoachesMenu::add);
+
+		joinedCoachesMenu.addSeparator();
+		ImageIcon icon = determineCoachIcon(clientCoach, clientHasControl, ballIcon, sketchManager, hiddenIcon, preventedIcon, allowedIcon);
+		JMenuItem joinedSelf = new JMenuItem(dimensionProvider, clientCoach, icon);
+		joinedCoachesMenu.add(joinedSelf);
+	}
+
+	private ImageIcon determineCoachIcon(String coach, boolean joinedCoachHasControl, ImageIcon ballIcon, ClientSketchManager sketchManager, ImageIcon hiddenIcon, ImageIcon preventedIcon, ImageIcon allowedIcon) {
+		ImageIcon icon;
+		if (joinedCoachHasControl) {
+			icon = ballIcon;
+		} else if (sketchManager.isCoachPreventedFromSketching(coach)) {
+			icon = preventedIcon;
+		} else if (sketchManager.areSketchesHidden(coach)) {
+			icon = hiddenIcon;
+		} else {
+			icon = allowedIcon;
+		}
+		return icon;
+	}
+
+	private ImageIcon loadBallIcon(Dimension dimension, String iconProperty) {
+		if (getClient().getUserInterface() == null || getClient().getUserInterface().getIconCache() == null) {
+			return null;
+		}
+		Image image = getClient().getUserInterface().getIconCache().getIconByProperty(iconProperty, dimensionProvider)
+			.getScaledInstance(dimension.width, dimension.height, 0);
+
+		return new ImageIcon(image);
+	}
+
+	private ColorIcon createColorIcon(Color chatBackgroundColor) {
+		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_COLOR_ICON);
+		return new ColorIcon(dimension.width, dimension.height, chatBackgroundColor);
 	}
 
 	private void addColorItem(CommonProperty title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
@@ -844,9 +1100,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fCurrentActiveCardsHome = null;
 		fCurrentActiveCardsAway = null;
 
-		this.removeAll();
+		Arrays.stream(this.getComponents()).filter(comp -> comp != replayMenu).forEach(this::remove);
 
-		createGameMenu();
+		if (getClient().getMode() == ClientMode.REPLAY) {
+			if (replayMenu == null) {
+				createReplayMenu();
+			}
+		} else {
+			createGameMenu();
+		}
 		createTeamSetupMenu();
 		createUserSettingsMenu();
 		createGameStatusMenus();
@@ -1140,11 +1402,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
 
-		boolean allowConcessions = game != null && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
-		fGameConcessionMenuItem.setEnabled(allowConcessions && gameStarted && game.isHomePlaying()
-			&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
+		if (fGameConcessionMenuItem != null) {
+			boolean allowConcessions = game != null && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.ALLOW_CONCESSIONS)).isEnabled();
+			fGameConcessionMenuItem.setEnabled(allowConcessions && gameStarted && game.isHomePlaying()
+				&& (ClientMode.PLAYER == getClient().getMode()) && game.isConcessionPossible());
+		}
 
-		fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+		if (fGameReplayMenuItem != null) {
+			fGameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == getClient().getMode());
+		}
 
 		playerMarkingMenu.setEnabled(ClientMode.REPLAY != getClient().getMode());
 
@@ -2240,6 +2506,40 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == fGameConcessionMenuItem) {
 			getClient().getCommunication().sendConcedeGame(ConcedeGameStatus.REQUESTED);
 		}
+		if (source instanceof JMenuItem && transferMenuItems.contains(source)) {
+			String coach = source.getName();
+			getClient().getCommunication().sendTransferReplayControl(coach);
+		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchHiddenMenuItems.contains(source)) {
+			String coach = source.getName();
+			sketchManager.hideSketches(coach);
+			SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+			ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+			getClient().getGame().notifyObservers(modelChange);
+			this.updateJoinedCoachesMenu();
+		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchAllowedMenuItems.contains(source)) {
+			String coach = source.getName();
+			if (sketchManager.isCoachPreventedFromSketching(coach)) {
+				getClient().getCommunication().sendPreventFromSketching(coach, false);
+			} else {
+				sketchManager.showSketches(coach);
+				SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+				ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+				getClient().getGame().notifyObservers(modelChange);
+				this.updateJoinedCoachesMenu();
+			}
+		}
+
+		if (source instanceof JRadioButtonMenuItem && sketchPreventedMenuItems.contains(source)) {
+			String coach = source.getName();
+			if (!sketchManager.isCoachPreventedFromSketching(coach)) {
+				getClient().getCommunication().sendPreventFromSketching(coach, true);
+			}
+		}
+
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")

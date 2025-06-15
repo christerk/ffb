@@ -2,11 +2,18 @@ package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ServerCommandRemoveSketches;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.ReplayCache;
+import com.fumbbl.ffb.server.ReplayState;
+import com.fumbbl.ffb.server.ServerSketchManager;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.net.ReplaySessionManager;
+import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -14,9 +21,11 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
@@ -30,6 +39,15 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 	}
 
 	public boolean handleCommand(ReceivedCommand pReceivedCommand) {
+		getServer().getSketchManager().remove(pReceivedCommand.getSession());
+		if (getServer().getReplaySessionManager().has(pReceivedCommand.getSession())) {
+			return closeReplaySession(pReceivedCommand);
+		} else {
+			return closeGameSession(pReceivedCommand);
+		}
+	}
+
+	public boolean closeGameSession(ReceivedCommand pReceivedCommand) {
 
 		SessionManager sessionManager = getServer().getSessionManager();
 		String coach = sessionManager.getCoachForSession(pReceivedCommand.getSession());
@@ -78,6 +96,54 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 				getServer().getGameCache().closeGame(gameState.getId());
 			}
 
+		}
+
+		return true;
+
+	}
+
+	public boolean closeReplaySession(ReceivedCommand pReceivedCommand) {
+
+		ReplaySessionManager sessionManager = getServer().getReplaySessionManager();
+		ReplayCache replayCache = getServer().getReplayCache();
+		ServerSketchManager sketchManager = getServer().getSketchManager();
+
+		Session closingSession = pReceivedCommand.getSession();
+		String replayName = sessionManager.replayNameForSession(closingSession);
+		Set<Session> sessions = sessionManager.otherSessions(closingSession);
+		ReplayState state = replayCache.replayState(replayName);
+
+		if (state != null) {
+			if (sessions.isEmpty()) {
+				getServer().getReplayCache().closeReplay(replayName);
+			} else {
+				ServerCommunication communication = getServer().getCommunication();
+				List<String> sketchIds = sketchManager.getSketches(closingSession).stream()
+						.map(Sketch::getId).collect(Collectors.toList());
+				List<String> joinedCoaches = new ArrayList<>();
+				for (Session session : sessions) {
+					joinedCoaches.add(sessionManager.coach(session));
+					communication.sendToReplaySession(session, new ServerCommandRemoveSketches(sessionManager.coach(closingSession), sketchIds));
+				}
+
+				String coach = sessionManager.coach(closingSession);
+				Session[] sessionsArray = sessions.toArray(new Session[0]);
+				communication.sendReplayLeave(sessionsArray, coach, ClientMode.REPLAY, joinedCoaches);
+
+				ReplayState replayState = getServer().getReplayCache().replayState(replayName);
+				String futureControllingCoach = sessions.stream().map(sessionManager::coach).filter(sessionCoach ->
+					!replayState.isCoachPreventedFromSketching(sessionCoach)).findFirst()
+					.orElse(sessionManager.coach(sessionsArray[0]));
+
+				if (sessionManager.transferControl(closingSession, futureControllingCoach)) {
+					communication.sendReplayControlChange(replayState, futureControllingCoach);
+					if (replayState.isCoachPreventedFromSketching(futureControllingCoach)) {
+						communication.sendReplayPreventSketching(replayState, futureControllingCoach, false);
+					}
+				}
+			}
+			sketchManager.remove(closingSession);
+			sessionManager.removeSession(closingSession);
 		}
 
 		return true;

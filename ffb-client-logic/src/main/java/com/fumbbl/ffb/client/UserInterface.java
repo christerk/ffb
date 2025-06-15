@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.dialog.DialogHandler;
@@ -8,6 +9,7 @@ import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.ui.ChatComponent;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
@@ -59,8 +61,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	@SuppressWarnings("FieldCanBeLocal")
+	private final DugoutDimensionProvider dugoutDimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private final StyleProvider styleProvider;
+	private final CoordinateConverter coordinateConverter;
+	private final ClientSketchManager sketchManager;
+
 
 	public UserInterface(FantasyFootballClient pClient) {
 
@@ -74,10 +81,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			} catch (Exception ignored) {
 			}
 		}
-
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
+		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
+		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
 		fontCache = new FontCache();
@@ -86,7 +95,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache));
+		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -98,11 +107,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		setResizable(false);
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
-		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache);
+		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, styleProvider, fontCache);
-		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, styleProvider, fontCache);
+		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
+		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
 
 		initComponents(false);
 
@@ -215,12 +224,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
-		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);
 		panelMain.add(fSideBarAway);
 		return panelMain;
+	}
+
+	public ClientSketchManager getSketchManager() {
+		return sketchManager;
 	}
 
 	public FontCache getFontCache() {
@@ -282,6 +294,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	public void setGameTitle(GameTitle pGameTitle) {
 		fGameTitle = pGameTitle;
 		refreshTitle();
+	}
+
+	public CoordinateConverter getCoordinateConverter() {
+		return coordinateConverter;
 	}
 
 	public void refreshTitle() {
@@ -406,6 +422,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			if (((DialogLeaveGame) pDialog).isChoiceYes()) {
 				System.exit(0);
 			}
+		}
+	}
+
+	public void socketClosed() {
+		if (getClient().getMode() == ClientMode.REPLAY) {
+			if (getClient().getReplayer().isOnline()) {
+				ChatComponent chat = getChat();
+				chat.append(TextStyle.NONE, "The connection to the server has been closed.");
+				chat.append(TextStyle.NONE, "To re-connect you need to restart the client.");
+			}
+		} else {
+			getStatusReport().reportSocketClosed();
 		}
 	}
 

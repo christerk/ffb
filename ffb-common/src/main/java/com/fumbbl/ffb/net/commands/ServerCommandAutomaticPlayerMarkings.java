@@ -37,6 +37,11 @@ public class ServerCommandAutomaticPlayerMarkings extends ServerCommand {
 	}
 
 	@Override
+	public boolean isReplayable() {
+		return false;
+	}
+
+	@Override
 	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilNetCommand.validateCommandId(this, (NetCommandId) IJsonOption.NET_COMMAND_ID.getFrom(source, jsonObject));

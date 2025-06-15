@@ -149,7 +149,7 @@ public class DialogBlockRollPartialReRoll extends AbstractDialogBlock implements
 		}
 
 		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || getDialogParameter().hasConsummateOption()
-			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null || singleBlockDieReRollSource != null) {
+			|| pDialogParameter.hasBrawlerOption() || singleUseReRollSource != null || singleBlockDieReRollSource != null || anyBlockDiceReRollSource != null) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);

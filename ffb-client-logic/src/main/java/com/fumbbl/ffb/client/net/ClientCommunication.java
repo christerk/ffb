@@ -25,6 +25,7 @@ import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
 import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.INetCommandHandler;
 import com.fumbbl.ffb.net.NetCommand;
@@ -92,6 +93,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 					case SERVER_SOUND:
 					case SERVER_REPLAY:
 					case INTERNAL_SERVER_SOCKET_CLOSED:
+					case SERVER_SKETCH_ADD_COORDINATE:
+					case SERVER_SKETCH_SET_COLOR:
+					case SERVER_SKETCH_SET_LABEL:
+					case SERVER_ADD_SKETCHES:
+					case SERVER_REMOVE_SKETCHES:
+					case SERVER_CLEAR_SKETCHES:
 						break;
 					default:
 						getClient().getReplayer().add((ServerCommand) netCommand);
@@ -131,7 +138,7 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendJoin(String pCoach, String pPassword, long pGameId, String pGameName, String pTeamId,
-	                     String pTeamName) {
+											 String pTeamName) {
 		ClientCommandJoin joinCommand = new ClientCommandJoin(getClient().getMode());
 		joinCommand.setCoach(pCoach);
 		joinCommand.setPassword(pPassword);
@@ -167,12 +174,12 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendPlayerMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                           FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
+														 FieldCoordinate[] pCoordinatesTo, String ballAndChainRrSetting) {
 		send(new ClientCommandMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo, ballAndChainRrSetting));
 	}
 
 	public void sendPlayerBlitzMove(String pActingPlayerId, FieldCoordinate pCoordinateFrom,
-	                                FieldCoordinate[] pCoordinatesTo) {
+																	FieldCoordinate[] pCoordinatesTo) {
 		send(new ClientCommandBlitzMove(pActingPlayerId, pCoordinateFrom, pCoordinatesTo));
 	}
 
@@ -500,6 +507,46 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendLoadPlayerMarkings(int index, Game game) {
 		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game));
+	}
+
+	public void sendReplayState(int commandNr, int speed, boolean running, boolean forward, boolean skip) {
+		send(new ClientCommandReplayStatus(commandNr, speed, running, forward, skip));
+	}
+
+	public void sendJoinReplay(String replayName, String coach, long gameId) {
+		send(new ClientCommandJoinReplay(replayName, coach, gameId));
+	}
+
+	public void sendClearSketches() {
+		send(new ClientCommandClearSketches());
+	}
+
+	public void sendRemoveSketches(List<String> ids) {
+		send(new ClientCommandRemoveSketches(ids));
+	}
+
+	public void sendAddSketch(Sketch sketch) {
+		send(new ClientCommandAddSketch(sketch));
+	}
+
+	public void sendSketchAddCoordinate(String sketchId, FieldCoordinate coordinate) {
+		send(new ClientCommandSketchAddCoordinate(sketchId, coordinate));
+	}
+
+	public void sendSketchSetColor(List<String> sketchIds, int rgb) {
+		send(new ClientCommandSketchSetColor(sketchIds, rgb));
+	}
+
+	public void sendSketchSetLabel(List<String> sketchId, String label) {
+		send(new ClientCommandSketchSetLabel(sketchId, label));
+	}
+
+	public void sendTransferReplayControl(String coach) {
+		send(new ClientCommandTransferReplayControl(coach));
+	}
+
+	public void sendPreventFromSketching(String coach, boolean prevent) {
+		send(new ClientCommandSetPreventSketching(coach, prevent));
 	}
 
 	public FantasyFootballClient getClient() {

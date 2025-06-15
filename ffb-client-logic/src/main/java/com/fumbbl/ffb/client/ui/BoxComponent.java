@@ -48,24 +48,26 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private BoxType fOpenBox;
 	private final List<BoxSlot> fBoxSlots;
 	private int fMaxTitleOffset;
-	private final UiDimensionProvider dimensionProvider;
+	private final UiDimensionProvider uiDimensionProvider;
+	private final DugoutDimensionProvider dugoutDimensionProvider;
 	private final StyleProvider styleProvider;
 	private Font boxFont;
 
-	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider uiDimensionProvider, DugoutDimensionProvider dugoutDimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		this.dimensionProvider = dimensionProvider;
+		this.uiDimensionProvider = uiDimensionProvider;
+		this.dugoutDimensionProvider = dugoutDimensionProvider;
 		this.styleProvider = styleProvider;
 		ToolTipManager.sharedInstance().registerComponent(this);
 	}
 
 	public void initLayout() {
-		size = dimensionProvider.dimension(Component.BOX);
+		size = uiDimensionProvider.dimension(Component.BOX);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		setLayout(null);
 		setMinimumSize(size);
@@ -90,7 +92,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		Graphics2D g2d = fImage.createGraphics();
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX, dimensionProvider);
+			BufferedImage background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_BOX, uiDimensionProvider);
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
 			g2d.setColor(styleProvider.getFrameBackground());
@@ -100,7 +102,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
-		boxFont = fontCache.font(Font.BOLD, 12, dimensionProvider);
+		boxFont = fontCache.font(Font.BOLD, 12, uiDimensionProvider);
 
 		drawBackground();
 		drawPlayers();
@@ -113,7 +115,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 			FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(pBoxSlot.getPlayer());
 			if (playerCoordinate != null) {
-				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer(), dimensionProvider);
+				BufferedImage icon = playerIconFactory.getIcon(getSideBar().getClient(), pBoxSlot.getPlayer(), dugoutDimensionProvider);
 				if (icon != null) {
 					Graphics2D g2d = fImage.createGraphics();
 					int x = pBoxSlot.getLocation().x + ((pBoxSlot.getLocation().width - icon.getWidth()) / 2);
@@ -151,7 +153,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private int drawPlayersInBox(int pXCoordinate, int pYPosition) {
 		FieldModel fieldModel = getSideBar().getClient().getGame().getFieldModel();
 		PlayerState boxState = findPlayerStateForXCoordinate(pXCoordinate);
-		Dimension dimension = dimensionProvider.dimension(Component.BOX_SQUARE);
+		Dimension dimension = uiDimensionProvider.dimension(Component.BOX_SQUARE);
 		int yPos = drawTitle(boxState, pYPosition);
 		int row = -1;
 		for (int y = 0; y < MAX_BOX_ELEMENTS; y++) {
@@ -220,7 +222,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? dimensionProvider.scale(5) : dimensionProvider.dimension(Component.FIELD).width - dimensionProvider.scale(135);
+					int x = getSideBar().isHomeSide() ? uiDimensionProvider.scale(5) : uiDimensionProvider.dimension(Component.FIELD).width - uiDimensionProvider.scale(135);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
 					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}

@@ -22,18 +22,18 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	private final BoxButtonComponent fBoxButtons;
 	private final ResourceComponent fResourceComponent;
 	private final TurnDiceStatusComponent fTurnDiceStatusComponent;
-	private final DimensionProvider dimensionProvider;
+	private final UiDimensionProvider uiDimensionProvider;
 
-	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, UiDimensionProvider dimensionProvider,
-													StyleProvider styleProvider, FontCache fontCache) {
+	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, UiDimensionProvider uiDimensionProvider,
+													DugoutDimensionProvider dugoutDimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
 		fClient = pClient;
-		this.dimensionProvider = dimensionProvider;
+		this.uiDimensionProvider = uiDimensionProvider;
 		fHomeSide = pHomeSide;
-		fPlayerDetail = new PlayerDetailComponent(this, dimensionProvider, styleProvider, fontCache);
-		fBoxComponent = new BoxComponent(this, dimensionProvider, styleProvider, fontCache);
-		fBoxButtons = new BoxButtonComponent(this, dimensionProvider, styleProvider, fontCache);
-		fResourceComponent = new ResourceComponent(this, dimensionProvider, styleProvider);
-		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, dimensionProvider, styleProvider);
+		fPlayerDetail = new PlayerDetailComponent(this, uiDimensionProvider, styleProvider, fontCache);
+		fBoxComponent = new BoxComponent(this, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
+		fBoxButtons = new BoxButtonComponent(this, uiDimensionProvider, styleProvider, fontCache);
+		fResourceComponent = new ResourceComponent(this, uiDimensionProvider, styleProvider);
+		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, uiDimensionProvider, styleProvider);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addComponents();
 		fPlayerDetail.addMouseMotionListener(this);
@@ -50,7 +50,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fResourceComponent.initLayout();
 		fTurnDiceStatusComponent.initLayout();
 
-		Dimension size = dimensionProvider.dimension(Component.SIDEBAR);
+		Dimension size = uiDimensionProvider.dimension(Component.SIDEBAR);
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
