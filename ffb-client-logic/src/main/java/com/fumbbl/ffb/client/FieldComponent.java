@@ -387,10 +387,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
-		if (overlay.isPresent()) {
-			overlay.get().mouseMoved(pMouseEvent);
-			return;
-		}
+		overlay.ifPresent(value -> value.mouseMoved(pMouseEvent));
 
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {

@@ -11,6 +11,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.36.1")
+			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
+		);
 
 		versions.add(new VersionChangeList("2.36.0")
 			.addBugfix("Savage Blow: When performing an uphill block wthout any other re-roll sources left the dialog did not show any buttons to continue")
