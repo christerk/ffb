@@ -1355,9 +1355,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		sweetSpotBlack.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_BLACK.equals(sweetSpotSetting));
 		sweetSpotWhite.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_WHITE.equals(sweetSpotSetting));
 
-		String sketchCursorSetting = getClient().getProperty(CommonProperty.SETTING_SKETCH_CURSOR);
-		customSketchCursor.setSelected(true);
-		defaultSketchCursor.setSelected(IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF.equals(sketchCursorSetting));
+		if (customSketchCursor != null) {
+			String sketchCursorSetting = getClient().getProperty(CommonProperty.SETTING_SKETCH_CURSOR);
+			customSketchCursor.setSelected(true);
+			defaultSketchCursor.setSelected(IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF.equals(sketchCursorSetting));
+		}
 
 		boolean refreshUi = refreshColorMenu(CommonProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
