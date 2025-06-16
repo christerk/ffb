@@ -13,14 +13,16 @@ public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 
 	private Game game;
 	private int index;
+	private String coach;
 
 	public ClientCommandLoadAutomaticPlayerMarkings() {
 		super();
 	}
 
-	public ClientCommandLoadAutomaticPlayerMarkings(int index, Game game) {
+	public ClientCommandLoadAutomaticPlayerMarkings(int index, Game game, String coach) {
 		this.game = game;
 		this.index = index;
+		this.coach = coach;
 	}
 
 	@Override
@@ -36,11 +38,16 @@ public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 		return index;
 	}
 
+	public String getCoach() {
+		return coach;
+	}
+
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonValue = super.toJsonValue();
 		IJsonOption.SELECTED_INDEX.addTo(jsonValue, index);
 		IJsonOption.GAME.addTo(jsonValue, game.toJsonValue());
+		IJsonOption.COACH.addTo(jsonValue, coach);
 		return jsonValue;
 	}
 
@@ -52,6 +59,7 @@ public class ClientCommandLoadAutomaticPlayerMarkings extends ClientCommand {
 		game = new Game(source.forContext(FactoryType.FactoryContext.APPLICATION), source.getFactoryManager());
 		game.initFrom(source, json);
 		index = IJsonOption.SELECTED_INDEX.getFrom(source, jsonObject);
+		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		return this;
 	}
 }

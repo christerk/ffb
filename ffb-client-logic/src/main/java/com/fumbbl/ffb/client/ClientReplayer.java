@@ -339,7 +339,7 @@ public class ClientReplayer implements ActionListener {
 		boolean automarkingEnabled = ClientMode.REPLAY == getClient().getMode() && IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 		if (pMode == ClientCommandHandlerMode.INITIALIZING && automarkingEnabled) {
 			gameVersions.add(cloneGame(applicationSource, factoryManager));
-			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0));
+			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0), getClient().getParameters().getCoach());
 
 		}
 		for (int i = start; i < pReplayPosition; i++) {
@@ -360,7 +360,7 @@ public class ClientReplayer implements ActionListener {
 					if (automarkingEnabled && markingAffectingCommands.contains(serverCommand.getCommandNr())) {
 						gameVersions.add(cloneGame(applicationSource, factoryManager));
 						int index = gameVersions.size() - 1;
-						getClient().getCommunication().sendLoadPlayerMarkings(index, gameVersions.get(index));
+						getClient().getCommunication().sendLoadPlayerMarkings(index, gameVersions.get(index), getClient().getParameters().getCoach());
 					}
 				} else if (!markings.isEmpty()) {
 					applyMarkings(serverCommand.getCommandNr());

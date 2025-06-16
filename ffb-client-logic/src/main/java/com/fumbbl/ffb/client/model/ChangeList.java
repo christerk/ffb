@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
 			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
 			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
+			.addBugfix("Replay Mode: Automarking did not use coach's settings anymore")
 		);
 
 		versions.add(new VersionChangeList("2.36.0")

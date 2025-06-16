@@ -13,11 +13,13 @@ public class FumbblRequestLoadPlayerMarkingsForGameVersion extends AbstractFumbb
 
 	private final Game game;
 	private final int index;
+	private final String coach;
 
-	public FumbblRequestLoadPlayerMarkingsForGameVersion(Game game, int index, Session session) {
+	public FumbblRequestLoadPlayerMarkingsForGameVersion(Game game, int index, String coach, Session session) {
 		super(session);
 		this.game = game;
 		this.index = index;
+		this.coach = coach;
 	}
 
 	@Override
@@ -29,7 +31,6 @@ public class FumbblRequestLoadPlayerMarkingsForGameVersion extends AbstractFumbb
 		AutoMarkingConfig config = sessionManager.getAutoMarking(session);
 
 		if (config == null) {
-			String coach = sessionManager.coach(session);
 			config = loadAutomarkingConfig(server, coach, game.getId(), game.getRules());
 			sessionManager.addAutoMarking(session, config);
 		}
