@@ -143,8 +143,9 @@ public class ServerCommandHandlerSocketClosed extends ServerCommandHandler {
 				}
 			}
 			sketchManager.remove(closingSession);
-			sessionManager.removeSession(closingSession);
 		}
+
+		sessionManager.removeSession(closingSession);
 
 		return true;
 
