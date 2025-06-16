@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
 			.addBugfix("Replay Mode: Automarking did not use coach's settings anymore")
 			.addBugfix("Replay Mode: Manual markings could not be set")
+			.addImprovement("Sketches: Custom cursor can now be turned off in the replay menu")
 		);
 
 		versions.add(new VersionChangeList("2.36.0")
