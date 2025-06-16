@@ -1,0 +1,765 @@
+{
+  "autoMarkingRecords": [
+    {
+      "skillArray": [
+        "Block"
+      ],
+      "injuryAttributes": [],
+      "marking": "B",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Break Tackle"
+      ],
+      "injuryAttributes": [],
+      "marking": "Bt",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Mighty Blow"
+      ],
+      "injuryAttributes": [],
+      "marking": "M",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Arm Bar"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ab",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Accurate"
+      ],
+      "injuryAttributes": [],
+      "marking": "A",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Big Hand"
+      ],
+      "injuryAttributes": [],
+      "marking": "Bh",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Brawler"
+      ],
+      "injuryAttributes": [],
+      "marking": "Br",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Cannoneer"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ca",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Catch"
+      ],
+      "injuryAttributes": [],
+      "marking": "C",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Claws"
+      ],
+      "injuryAttributes": [],
+      "marking": "Cl",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Cloud Burster"
+      ],
+      "injuryAttributes": [],
+      "marking": "Cb",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dauntless"
+      ],
+      "injuryAttributes": [],
+      "marking": "Dl",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Defensive"
+      ],
+      "injuryAttributes": [],
+      "marking": "De",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Diving Catch"
+      ],
+      "injuryAttributes": [],
+      "marking": "Dc",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Diving Tackle"
+      ],
+      "injuryAttributes": [],
+      "marking": "Dt",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dump-off"
+      ],
+      "injuryAttributes": [],
+      "marking": "Do",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Extra Arms"
+      ],
+      "injuryAttributes": [],
+      "marking": "E",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Fend"
+      ],
+      "injuryAttributes": [],
+      "marking": "Fe",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Foul Appearance"
+      ],
+      "injuryAttributes": [],
+      "marking": "Fa",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dirty Player"
+      ],
+      "injuryAttributes": [],
+      "marking": "Dp",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Frenzy"
+      ],
+      "injuryAttributes": [],
+      "marking": "Fr",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Fumblerooskie"
+      ],
+      "injuryAttributes": [],
+      "marking": "Fu",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dodge"
+      ],
+      "injuryAttributes": [],
+      "marking": "D",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Grab"
+      ],
+      "injuryAttributes": [],
+      "marking": "Gr",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Guard"
+      ],
+      "injuryAttributes": [],
+      "marking": "G",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Hail Mary Pass"
+      ],
+      "injuryAttributes": [],
+      "marking": "Hmp",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Disturbing Presence"
+      ],
+      "injuryAttributes": [],
+      "marking": "Dip",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Horns"
+      ],
+      "injuryAttributes": [],
+      "marking": "H",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Iron Hard Skin"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ihs",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Juggernaut"
+      ],
+      "injuryAttributes": [],
+      "marking": "J",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Jump Up"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ju",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Kick"
+      ],
+      "injuryAttributes": [],
+      "marking": "K",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Leader"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ld",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Leap"
+      ],
+      "injuryAttributes": [],
+      "marking": "L",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Mighty Blow"
+      ],
+      "injuryAttributes": [],
+      "marking": "M",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Multiple Block"
+      ],
+      "injuryAttributes": [],
+      "marking": "Mb",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "On the Ball"
+      ],
+      "injuryAttributes": [],
+      "marking": "Otb",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Pile Driver"
+      ],
+      "injuryAttributes": [],
+      "marking": "Pd",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Pass"
+      ],
+      "injuryAttributes": [],
+      "marking": "P",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Prehensile Tail"
+      ],
+      "injuryAttributes": [],
+      "marking": "Pt",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Pro"
+      ],
+      "injuryAttributes": [],
+      "marking": "Pr",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Shadowing"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sha",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Monstrous Mouth"
+      ],
+      "injuryAttributes": [],
+      "marking": "Mm",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Loner"
+      ],
+      "injuryAttributes": [],
+      "marking": "Lo",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Running Pass"
+      ],
+      "injuryAttributes": [],
+      "marking": "R",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Strong Arm"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sa",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Nerves of Steel"
+      ],
+      "injuryAttributes": [],
+      "marking": "Nos",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Safe Pair of Hands"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sph",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Safe Pass"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sap",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Side Step"
+      ],
+      "injuryAttributes": [],
+      "marking": "S",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Sneaky Git"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sg",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Sprint"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sp",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Stab"
+      ],
+      "injuryAttributes": [],
+      "marking": "St",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Stand Firm"
+      ],
+      "injuryAttributes": [],
+      "marking": "Stf",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Strip Ball"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sb",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Sure Feet"
+      ],
+      "injuryAttributes": [],
+      "marking": "Suf",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Sure Hands"
+      ],
+      "injuryAttributes": [],
+      "marking": "Sh",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Tackle"
+      ],
+      "injuryAttributes": [],
+      "marking": "T",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Tentacles"
+      ],
+      "injuryAttributes": [],
+      "marking": "Te",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Thick Skull"
+      ],
+      "injuryAttributes": [],
+      "marking": "Ts",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Two Heads"
+      ],
+      "injuryAttributes": [],
+      "marking": "Th",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Very Long Legs"
+      ],
+      "injuryAttributes": [],
+      "marking": "V",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Wrestle"
+      ],
+      "injuryAttributes": [],
+      "marking": "W",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "+ST"
+      ],
+      "injuryAttributes": [],
+      "marking": "+S",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "+AG"
+      ],
+      "injuryAttributes": [],
+      "marking": "+Ag",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "+AV"
+      ],
+      "injuryAttributes": [],
+      "marking": "+Av",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "+MA"
+      ],
+      "injuryAttributes": [],
+      "marking": "+M",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "+PA"
+      ],
+      "injuryAttributes": [],
+      "marking": "+P",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "NI"
+      ],
+      "marking": "n",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "AG"
+      ],
+      "marking": "-Ag",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "AV"
+      ],
+      "marking": "-Av",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "MA"
+      ],
+      "marking": "-M",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "PA"
+      ],
+      "marking": "-P",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [],
+      "injuryAttributes": [
+        "ST"
+      ],
+      "marking": "-S",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    }
+  ],
+  "autoMarkingSeparator": "",
+  "pitches": {
+    "Blackbox": true,
+    "FumbblCup": true,
+    "NAF": true,
+    "Amazon": true,
+    "Chaos": true,
+    "Darkelf": true,
+    "Goblin": true,
+    "Highelf": true,
+    "Khorne": true,
+    "Lizardmen": true,
+    "Necromantic": true,
+    "Norse": true,
+    "Nurgle": true,
+    "Skaven": true,
+    "Slaanesh": true,
+    "TombKings": true,
+    "Tzeentch": true,
+    "Vampire": true
+  }
+}

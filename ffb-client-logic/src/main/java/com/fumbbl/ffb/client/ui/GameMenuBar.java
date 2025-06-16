@@ -277,6 +277,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem resetBackgroundColors;
 	private JMenuItem resetFontColors;
 
+	private JRadioButtonMenuItem customSketchCursor;
+	private JRadioButtonMenuItem defaultSketchCursor;
+
 	private IDialog fDialogShown;
 
 	private int fCurrentInducementTotalHome;
@@ -920,6 +923,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		createJoinedCoachesMenu(replayMenu);
 
+		JMenu cursorMenu = new JMenu(dimensionProvider, "Cursor");
+		ButtonGroup cursorGroup = new ButtonGroup();
+		customSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "Pen");
+		customSketchCursor.addActionListener(this);
+		cursorMenu.add(customSketchCursor);
+		cursorGroup.add(customSketchCursor);
+		defaultSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "System Default");
+		defaultSketchCursor.addActionListener(this);
+		cursorMenu.add(defaultSketchCursor);
+		cursorGroup.add(defaultSketchCursor);
+		replayMenu.add(cursorMenu);
+
 		fGameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
 		fGameStatisticsMenuItem.addActionListener(this);
 		fGameStatisticsMenuItem.setEnabled(false);
@@ -1339,6 +1354,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		sweetSpotOff.setSelected(true);
 		sweetSpotBlack.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_BLACK.equals(sweetSpotSetting));
 		sweetSpotWhite.setSelected(IClientPropertyValue.SETTING_SWEET_SPOT_WHITE.equals(sweetSpotSetting));
+
+		if (customSketchCursor != null) {
+			String sketchCursorSetting = getClient().getProperty(CommonProperty.SETTING_SKETCH_CURSOR);
+			customSketchCursor.setSelected(true);
+			defaultSketchCursor.setSelected(IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF.equals(sketchCursorSetting));
+		}
 
 		boolean refreshUi = refreshColorMenu(CommonProperty.SETTING_BACKGROUND_CHAT, chatBackground,
 			styleProvider::getChatBackground, styleProvider::setChatBackground);
@@ -2538,6 +2559,17 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			if (!sketchManager.isCoachPreventedFromSketching(coach)) {
 				getClient().getCommunication().sendPreventFromSketching(coach, true);
 			}
+		}
+
+		if (source == customSketchCursor) {
+			getClient().setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_ON);
+			getClient().saveUserSettings(true);
+
+		}
+
+		if (source == defaultSketchCursor) {
+			getClient().setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF);
+			getClient().saveUserSettings(true);
 		}
 
 	}

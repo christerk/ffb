@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client.overlay;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.CoordinateConverter;
@@ -111,7 +113,11 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-
+		if (IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF.equals(client.getProperty(CommonProperty.SETTING_SKETCH_CURSOR))) {
+			UtilClientCursor.setDefaultCursor(userInterface);
+		} else {
+			UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_SKETCH, false);
+		}
 	}
 
 	@Override
@@ -126,7 +132,7 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_SKETCH, false);
+
 		if (popupMenu != null && popupMenu.isVisible()) {
 			return;
 		}

@@ -387,10 +387,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
-		if (overlay.isPresent()) {
-			overlay.get().mouseMoved(pMouseEvent);
-			return;
-		}
+		overlay.ifPresent(value -> value.mouseMoved(pMouseEvent));
 
 		ClientState<? extends LogicModule, ? extends FantasyFootballClient> uiState = getClient().getClientState();
 		if (uiState != null) {
@@ -419,7 +416,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	public void mouseClicked(MouseEvent pMouseEvent) {
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
-		if (overlay.isPresent()) {
+		if (!pMouseEvent.isShiftDown() && overlay.isPresent()) {
 			overlay.get().mouseClicked(pMouseEvent);
 			return;
 		}
@@ -462,9 +459,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	// MouseListener
 	public void mousePressed(MouseEvent pMouseEvent) {
+
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
-		if (overlay.isPresent()) {
+		if (!pMouseEvent.isShiftDown() && overlay.isPresent()) {
 			overlay.get().mousePressed(pMouseEvent);
 			return;
 		}
@@ -479,7 +477,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	public void mouseReleased(MouseEvent pMouseEvent) {
 		Optional<Overlay> overlay = getClient().getActiveOverlay();
 
-		if (overlay.isPresent()) {
+		if (!pMouseEvent.isShiftDown() && overlay.isPresent()) {
 			overlay.get().mouseReleased(pMouseEvent);
 			return;
 		}

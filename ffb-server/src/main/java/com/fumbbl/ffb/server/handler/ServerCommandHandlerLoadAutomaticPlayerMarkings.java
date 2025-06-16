@@ -20,7 +20,8 @@ public class ServerCommandHandlerLoadAutomaticPlayerMarkings extends ServerComma
 	@Override
 	public boolean handleCommand(ReceivedCommand receivedCommand) {
 		ClientCommandLoadAutomaticPlayerMarkings clientCommandLoadAutomaticPlayerMarkings = (ClientCommandLoadAutomaticPlayerMarkings) receivedCommand.getCommand();
-		getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkingsForGameVersion(clientCommandLoadAutomaticPlayerMarkings.getGame(), clientCommandLoadAutomaticPlayerMarkings.getIndex(), receivedCommand.getSession()));
+		getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkingsForGameVersion(clientCommandLoadAutomaticPlayerMarkings.getGame(),
+			clientCommandLoadAutomaticPlayerMarkings.getIndex(), clientCommandLoadAutomaticPlayerMarkings.getCoach(), receivedCommand.getSession()));
 		return true;
 	}
 }

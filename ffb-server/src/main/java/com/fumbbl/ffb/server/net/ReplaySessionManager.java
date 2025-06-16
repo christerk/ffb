@@ -101,7 +101,7 @@ public class ReplaySessionManager {
 	}
 
 	public synchronized boolean has(Session session) {
-		return replayClientForSession.containsKey(session);
+		return replayClientForSession.containsKey(session) || autoMarkingBySession.containsKey(session);
 	}
 
 	public synchronized void addAutoMarking(Session session, AutoMarkingConfig autoMarkingConfig) {

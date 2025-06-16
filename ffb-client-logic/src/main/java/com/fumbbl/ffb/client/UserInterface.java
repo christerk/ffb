@@ -156,6 +156,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		if (callInit) {
 			init(null);
+			boolean activeReplay = getClient().getMode() != ClientMode.REPLAY
+				|| getClient().getReplayer() != null && getClient().getReplayer().hasControl();
+			getChat().getReplayControl().setActive(activeReplay);
 			getChat().getReplayControl().refresh();
 		}
 		fDialogManager.setShownDialogParameter(null);
@@ -224,6 +227,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
+		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);

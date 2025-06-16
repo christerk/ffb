@@ -11,6 +11,14 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("2.36.1")
+			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
+			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
+			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
+			.addBugfix("Replay Mode: Automarking did not use coach's settings anymore")
+			.addBugfix("Replay Mode: Manual markings could not be set")
+			.addImprovement("Sketches: Custom cursor can now be turned off in the replay menu")
+		);
 
 		versions.add(new VersionChangeList("2.36.0")
 			.addBugfix("Savage Blow: When performing an uphill block wthout any other re-roll sources left the dialog did not show any buttons to continue")

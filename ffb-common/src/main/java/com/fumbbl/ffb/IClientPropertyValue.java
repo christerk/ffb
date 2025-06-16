@@ -75,4 +75,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_LOG_ON = "logOn";
 	String SETTING_LOG_OFF = "logOff";
+
+	String SETTING_SKETCH_CURSOR_ON = "sketchCursorOn";
+	String SETTING_SKETCH_CURSOR_OFF = "sketchCursorOff";
 }

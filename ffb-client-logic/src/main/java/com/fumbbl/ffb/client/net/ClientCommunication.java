@@ -505,8 +505,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandBloodlustAction(change));
 	}
 
-	public void sendLoadPlayerMarkings(int index, Game game) {
-		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game));
+	public void sendLoadPlayerMarkings(int index, Game game, String coach) {
+		send(new ClientCommandLoadAutomaticPlayerMarkings(index, game, coach));
 	}
 
 	public void sendReplayState(int commandNr, int speed, boolean running, boolean forward, boolean skip) {
