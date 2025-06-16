@@ -50,6 +50,7 @@ public class SpectateLogicModule extends LogicModule {
 		client.getReplayer().start();
 		client.getReplayer().setControl(true);
 		client.getReplayer().getReplayControl().setActive(true);
+		client.getReplayer().getReplayControl().refresh();
 		client.updateClientState();
 	}
 
