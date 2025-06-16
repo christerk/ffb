@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
 			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
 			.addBugfix("Replay Mode: Automarking did not use coach's settings anymore")
+			.addBugfix("Replay Mode: Manual markings could not be set")
 		);
 
 		versions.add(new VersionChangeList("2.36.0")
