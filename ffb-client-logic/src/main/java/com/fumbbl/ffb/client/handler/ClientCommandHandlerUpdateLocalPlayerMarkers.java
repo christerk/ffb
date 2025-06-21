@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.handler;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandUpdateLocalPlayerMarkers;
@@ -22,14 +23,14 @@ public class ClientCommandHandlerUpdateLocalPlayerMarkers extends ClientCommandH
 		ServerCommandUpdateLocalPlayerMarkers commandUpdateLocalPlayerMarkers = (ServerCommandUpdateLocalPlayerMarkers) pNetCommand;
 
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
-		for (PlayerMarker marker : fieldModel.getTransientPlayerMarkers()) {
-			fieldModel.removeTransient(marker);
-			getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(marker);
+		for (PlayerMarker marker : fieldModel.getPlayerMarkers()) {
+			fieldModel.remove(marker);
+			getClient().getGame().notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER_MARKER, null, marker);
 		}
 
 		commandUpdateLocalPlayerMarkers.getMarkers().forEach(marker -> {
-			fieldModel.addTransient(marker);
-			getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(marker);
+			fieldModel.add(marker);
+			getClient().getGame().notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, marker);
 		});
 
 		getClient().getUserInterface().refresh();

@@ -26,6 +26,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
+import com.fumbbl.ffb.marking.TransientPlayerMarker;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
@@ -71,7 +72,7 @@ public class FieldModel implements IJsonSerializable {
 	private final Set<DiceDecoration> fDiceDecorations;
 	private final Set<FieldMarker> fFieldMarkers;
 	private final Set<PlayerMarker> fPlayerMarkers;
-	private final Set<PlayerMarker> transientPlayerMarkers;
+	private final Set<TransientPlayerMarker> transientPlayerMarkers;
 	private final Set<FieldMarker> transientFieldMarkers;
 	private final Map<String, Set<Card>> fCardsByPlayerId;
 	private final Map<String, Set<CardEffect>> fCardEffectsByPlayerId;
@@ -775,12 +776,12 @@ public class FieldModel implements IJsonSerializable {
 		return null;
 	}
 
-	public void addTransient(PlayerMarker playerMarker) {
+	public void addTransient(TransientPlayerMarker playerMarker) {
 		removeTransient(playerMarker);
 		transientPlayerMarkers.add(playerMarker);
 	}
 
-	public void removeTransient(PlayerMarker playerMarker) {
+	public void removeTransient(TransientPlayerMarker playerMarker) {
 		transientPlayerMarkers.remove(playerMarker);
 	}
 
@@ -813,12 +814,12 @@ public class FieldModel implements IJsonSerializable {
 		return null;
 	}
 
-	public PlayerMarker[] getTransientPlayerMarkers() {
-		return transientPlayerMarkers.toArray(new PlayerMarker[0]);
+	public TransientPlayerMarker[] getTransientPlayerMarkers() {
+		return transientPlayerMarkers.toArray(new TransientPlayerMarker[0]);
 	}
 
-	public PlayerMarker getTransientPlayerMarker(String pPlayerId) {
-		for (PlayerMarker playerMarker : transientPlayerMarkers) {
+	public TransientPlayerMarker getTransientPlayerMarker(String pPlayerId) {
+		for (TransientPlayerMarker playerMarker : transientPlayerMarkers) {
 			if (playerMarker.getPlayerId().equals(pPlayerId)) {
 				return playerMarker;
 			}

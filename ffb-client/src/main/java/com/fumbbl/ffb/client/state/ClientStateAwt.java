@@ -14,7 +14,6 @@ import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.client.util.UtilClientMarker;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -161,10 +160,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 					}
 
 					Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
-					UtilClientMarker.showMarkerPopup(getClient(), player.get(), dimension.width, dimension.height);
+					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), player.get(), dimension.width, dimension.height);
 
 				} else {
-					UtilClientMarker.showMarkerPopup(getClient(), coordinate);
+					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), coordinate);
 				}
 			} else {
 				if (isClickable()) {

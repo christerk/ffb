@@ -62,10 +62,6 @@ public class PlayerMarker implements IJsonSerializable {
 		return transformedMarker;
 	}
 
-	public static PlayerMarker transform(PlayerMarker pFieldMarker) {
-		return (pFieldMarker != null) ? pFieldMarker.transform() : null;
-	}
-
 	// JSON serialization
 
 	public JsonObject toJsonValue() {

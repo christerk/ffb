@@ -16,6 +16,7 @@ import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.client.ui.ScoreBarComponent;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
+import com.fumbbl.ffb.client.util.MarkerService;
 import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -67,9 +68,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final StyleProvider styleProvider;
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
+	private final MarkerService markerService;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
+
+		markerService = new MarkerService();
 
 		fDesktop = null;
 		fClient = pClient;
@@ -110,8 +114,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
-		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
-		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
+		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
+		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 
 		initComponents(false);
 
@@ -227,7 +231,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
-		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);
@@ -289,6 +292,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public DialogManager getDialogManager() {
 		return fDialogManager;
+	}
+
+	public MarkerService getMarkerService() {
+		return markerService;
 	}
 
 	public GameTitle getGameTitle() {

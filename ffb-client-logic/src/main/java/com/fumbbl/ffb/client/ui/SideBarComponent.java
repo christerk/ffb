@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.util.MarkerService;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.BoxLayout;
@@ -25,12 +26,13 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 	private final UiDimensionProvider uiDimensionProvider;
 
 	public SideBarComponent(FantasyFootballClient pClient, boolean pHomeSide, UiDimensionProvider uiDimensionProvider,
-													DugoutDimensionProvider dugoutDimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+													DugoutDimensionProvider dugoutDimensionProvider, StyleProvider styleProvider, FontCache fontCache,
+													MarkerService markerService) {
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
 		fHomeSide = pHomeSide;
 		fPlayerDetail = new PlayerDetailComponent(this, uiDimensionProvider, styleProvider, fontCache);
-		fBoxComponent = new BoxComponent(this, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache);
+		fBoxComponent = new BoxComponent(this, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 		fBoxButtons = new BoxButtonComponent(this, uiDimensionProvider, styleProvider, fontCache);
 		fResourceComponent = new ResourceComponent(this, uiDimensionProvider, styleProvider);
 		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, uiDimensionProvider, styleProvider);

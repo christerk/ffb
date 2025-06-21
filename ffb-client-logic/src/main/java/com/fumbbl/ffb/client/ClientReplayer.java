@@ -21,6 +21,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
+import com.fumbbl.ffb.marking.TransientPlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -311,7 +312,7 @@ public class ClientReplayer implements ActionListener {
 		if (start == 0) {
 			Game oldGame = getClient().getGame();
 			FieldMarker[] oldFieldMarker = null;
-			PlayerMarker[] oldPlayerMarker = null;
+			TransientPlayerMarker[] oldPlayerMarker = null;
 			if (oldGame != null) {
 				oldFieldMarker = oldGame.getFieldModel().getTransientFieldMarkers();
 				oldPlayerMarker = oldGame.getFieldModel().getTransientPlayerMarkers();
@@ -569,13 +570,13 @@ public class ClientReplayer implements ActionListener {
 			if (currentMarkings != null) {
 				Game game = getClient().getGame();
 				for (Player<?> player : game.getPlayers()) {
-					PlayerMarker playerMarker = game.getFieldModel().getTransientPlayerMarker(player.getId());
+					PlayerMarker playerMarker = game.getFieldModel().getPlayerMarker(player.getId());
 					if (playerMarker == null) {
 						playerMarker = new PlayerMarker(player.getId());
 					}
 					playerMarker.setHomeText(currentMarkings.get(player.getId()));
-					getClient().getGame().getFieldModel().addTransient(playerMarker);
-					getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
+					getClient().getGame().getFieldModel().add(playerMarker);
+					//getClient().getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 				}
 			}
 		}

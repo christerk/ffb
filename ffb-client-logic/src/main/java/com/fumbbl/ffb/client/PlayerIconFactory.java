@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.marking.PlayerMarker;
+import com.fumbbl.ffb.marking.TransientPlayerMarker;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.StringTool;
@@ -41,7 +42,7 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, DimensionProvider dimensionProvider) {
+	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
 			g2d.setColor(homePlayer ? styleProvider.getPlayerMarkerHome() : styleProvider.getPlayerMarkerAway());
@@ -49,7 +50,7 @@ public class PlayerIconFactory {
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
 			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
-			int y = pIcon.getHeight() - metrics.getDescent();
+			int y = bottom ? pIcon.getHeight() - metrics.getDescent() : -metrics.getAscent();
 			g2d.drawString(pText, x, y);
 			g2d.dispose();
 		}
@@ -318,14 +319,40 @@ public class PlayerIconFactory {
 			}
 		}
 
-		PlayerMarker playerMarker = ClientMode.PLAYER == pClient.getMode() ? game.getFieldModel().getPlayerMarker(pPlayer.getId()) : game.getFieldModel().getTransientPlayerMarker(pPlayer.getId());
-		if ((playerMarker != null)) {
-			String homeText = playerMarker.getHomeText();
-			markIcon(icon, homeText, pClient.getUserInterface().getFontCache(), pClient.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider);
-		}
+		applyMarker(pClient, pPlayer, dimensionProvider, icon, homePlayer);
 
 		return icon;
 
+	}
+
+	private static void applyMarker(FantasyFootballClient client, Player<?> pPlayer, DimensionProvider dimensionProvider, BufferedImage icon, boolean homePlayer) {
+		PlayerMarker playerMarker =  client.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());
+		TransientPlayerMarker transientPlayerMarker = client.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
+		if (playerMarker != null || transientPlayerMarker != null) {
+			if (transientPlayerMarker == null) {
+				markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+			} else if (playerMarker == null) {
+				markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+			} else {
+				switch (transientPlayerMarker.getMode()) {
+					case REPLACE:
+						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						break;
+					case APPEND:
+						markIcon(icon, playerMarker.getHomeText() + transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						break;
+					case PREPEND:
+						markIcon(icon, transientPlayerMarker.getHomeText() + playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						break;
+					case ADDITIONALLY:
+						markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, false);
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	}
 
 	public static String getPortraitUrl(Player<?> pPlayer) {

@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -12,7 +14,12 @@ import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.marking.TransientPlayerMarker;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ServerCommandGameState;
@@ -43,7 +50,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		ServerCommandGameState gameStateCommand = (ServerCommandGameState) pNetCommand;
 
-		PlayerMarker[] transientPlayerMarkers = getClient().getGame().getFieldModel().getTransientPlayerMarkers();
+		TransientPlayerMarker[] transientPlayerMarkers = getClient().getGame().getFieldModel().getTransientPlayerMarkers();
 		PlayerMarker[] playerMarkers = getClient().getGame().getFieldModel().getPlayerMarkers();
 		FieldMarker[] transientFieldMarkers = getClient().getGame().getFieldModel().getTransientFieldMarkers();
 		FieldMarker[] fieldMarkers = getClient().getGame().getFieldModel().getFieldMarkers();
@@ -54,8 +61,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		Arrays.stream(transientPlayerMarkers).forEach(fieldModel::addTransient);
 		Arrays.stream(transientFieldMarkers).forEach(fieldModel::addTransient);
-		Arrays.stream(playerMarkers).forEach(fieldModel::add);
-		Arrays.stream(fieldMarkers).forEach(fieldModel::add);
+		if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+			Arrays.stream(playerMarkers).forEach(fieldModel::add);
+			Arrays.stream(fieldMarkers).forEach(fieldModel::add);
+		}
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 

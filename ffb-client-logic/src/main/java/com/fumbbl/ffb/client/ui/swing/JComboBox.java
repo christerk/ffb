@@ -12,4 +12,10 @@ public class JComboBox<T> extends javax.swing.JComboBox<T> {
 		super();
 		dimensionProvider.scaleFont(this);
 	}
+
+	@Override
+	public T getSelectedItem() {
+		//noinspection unchecked
+		return (T) super.getSelectedItem();
+	}
 }

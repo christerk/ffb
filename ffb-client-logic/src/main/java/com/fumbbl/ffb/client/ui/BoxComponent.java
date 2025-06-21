@@ -6,7 +6,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
-import com.fumbbl.ffb.client.util.UtilClientMarker;
+import com.fumbbl.ffb.client.util.MarkerService;
 import com.fumbbl.ffb.client.util.UtilClientPlayerDrag;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -52,10 +52,13 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private final DugoutDimensionProvider dugoutDimensionProvider;
 	private final StyleProvider styleProvider;
 	private Font boxFont;
+	private final MarkerService markerService;
 
-	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider uiDimensionProvider, DugoutDimensionProvider dugoutDimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider uiDimensionProvider, DugoutDimensionProvider dugoutDimensionProvider,
+											StyleProvider styleProvider, FontCache fontCache, MarkerService markerService) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
+		this.markerService = markerService;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
 		addMouseListener(this);
@@ -224,7 +227,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 				if (boxSlot != null) {
 					int x = getSideBar().isHomeSide() ? uiDimensionProvider.scale(5) : uiDimensionProvider.dimension(Component.FIELD).width - uiDimensionProvider.scale(135);
 					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
-					UtilClientMarker.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
+					markerService.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
 				}
 			} else {
 				if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {
