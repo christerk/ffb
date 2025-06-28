@@ -225,9 +225,8 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			if (pMouseEvent.isShiftDown()) {
 				BoxSlot boxSlot = findSlot(pMouseEvent.getPoint());
 				if (boxSlot != null) {
-					int x = getSideBar().isHomeSide() ? uiDimensionProvider.scale(5) : uiDimensionProvider.dimension(Component.FIELD).width - uiDimensionProvider.scale(135);
-					int y = boxSlot.getLocation().y + boxSlot.getLocation().height;
-					markerService.showMarkerPopup(getSideBar().getClient(), boxSlot.getPlayer(), x, y);
+					Dimension dimension =  uiDimensionProvider.dimension(Component.BOX_SQUARE);
+					markerService.showMarkerPopup(getSideBar().getClient(), getSideBar(), boxSlot.getPlayer(), pMouseEvent.getX() + dimension.width / 2, pMouseEvent.getY() + dimension.height / 2);
 				}
 			} else {
 				if (getSideBar().isHomeSide() && (BoxType.RESERVES == fOpenBox)) {

@@ -152,18 +152,19 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			Optional<Player<?>> player = logicModule.getPlayer(coordinate);
 			if (pMouseEvent.isShiftDown()) {
 				hideSelectSquare();
+				int offsetX = 1, offsetY = 1;
+
+				if (pitchDimensionProvider.isPitchPortrait()) {
+					offsetX = -1;
+				}
+
+				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+
 				if (player.isPresent()) {
-					int offsetX = 1, offsetY = 1;
-
-					if (pitchDimensionProvider.isPitchPortrait()) {
-						offsetX = -1;
-					}
-
-					Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
-					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), player.get(), dimension.width, dimension.height);
+					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), player.get(), dimension.width, dimension.height);
 
 				} else {
-					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), coordinate);
+					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), coordinate, dimension.width, dimension.height);
 				}
 			} else {
 				if (isClickable()) {

@@ -53,6 +53,16 @@ public class TransientPlayerMarker extends PlayerMarker {
 	}
 
 	public enum Mode {
-		ADDITIONALLY, APPEND, PREPEND, REPLACE
+		APPEND("Append"), PREPEND("Prepend"), REPLACE("Replace"), SEPARATE("Separate");
+
+		private String displayText;
+
+		Mode(String displayText) {
+			this.displayText = displayText;
+		}
+
+		public String getDisplayText() {
+			return displayText;
+		}
 	}
 }

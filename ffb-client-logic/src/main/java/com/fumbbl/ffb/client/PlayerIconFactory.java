@@ -344,7 +344,7 @@ public class PlayerIconFactory {
 					case PREPEND:
 						markIcon(icon, transientPlayerMarker.getHomeText() + playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
 						break;
-					case ADDITIONALLY:
+					case SEPARATE:
 						markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
 						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, false);
 						break;

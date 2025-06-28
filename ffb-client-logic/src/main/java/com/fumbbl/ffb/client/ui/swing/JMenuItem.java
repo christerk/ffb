@@ -5,6 +5,10 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import javax.swing.Icon;
 
 public class JMenuItem extends javax.swing.JMenuItem {
+	public JMenuItem() {
+		super();
+	}
+
 	public JMenuItem(DimensionProvider dimensionProvider, String name) {
 		super(name);
 		dimensionProvider.scaleFont(this);

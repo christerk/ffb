@@ -8,6 +8,7 @@ public class LayoutSettings {
 	public static final int SIDEBAR_WIDTH_L = 145;
 	public static final int SIDEBAR_WIDTH_P = 165;
 	public static final int BASE_SQUARE_SIZE = 30;
+	public static final int TITLE_BAR_HEIGHT = 29;
 
 	private final double scaleStep = 0.05;
 	private double scale;
