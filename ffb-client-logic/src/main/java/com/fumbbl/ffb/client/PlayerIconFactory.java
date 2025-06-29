@@ -50,7 +50,7 @@ public class PlayerIconFactory {
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
 			int x = (int) ((pIcon.getWidth() - textBounds.getWidth()) / 2);
-			int y = bottom ? pIcon.getHeight() - metrics.getDescent() : -metrics.getAscent();
+			int y = bottom ? pIcon.getHeight() - metrics.getDescent() : metrics.getHeight();
 			g2d.drawString(pText, x, y);
 			g2d.dispose();
 		}
