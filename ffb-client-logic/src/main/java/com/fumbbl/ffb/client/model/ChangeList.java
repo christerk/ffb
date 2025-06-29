@@ -11,6 +11,11 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+
+		versions.add(new VersionChangeList("2.37.0")
+			.addFeature("Player Markings: it is no possible to add manual player markings in addition to automatic player markings using different modes")
+		);
+
 		versions.add(new VersionChangeList("2.36.1")
 			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
 			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
