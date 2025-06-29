@@ -74,8 +74,8 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 
 		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel(gameOptions, buildCardPanel()));
 
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(verticalMainPanel, BorderLayout.CENTER);
+		setLayout(new BorderLayout());
+		add(verticalMainPanel, BorderLayout.CENTER);
 		showDialog();
 
 
@@ -179,7 +179,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		// disable cards for now
 		//dynamicPanel.removeAll();
 		//dynamicPanel.add(addCardPanel);
-		getContentPane().validate();
+		validate();
 		pack();
 	}
 
@@ -188,7 +188,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		dynamicPanel.removeAll();
 		selectChoiceButton.setText("Use " + cardChoices.getInitial().getType().getDeckName());
 		dynamicPanel.add(deckChoicePanel);
-		getContentPane().validate();
+		validate();
 		pack();
 	}
 
@@ -203,7 +203,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 			choiceTwoButton.setText(choice.getChoiceTwo().getName());
 		}
 		dynamicPanel.add(cardChoicePanel);
-		getContentPane().validate();
+		validate();
 		pack();
 	}
 
@@ -279,7 +279,7 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		if (superInitialized) {
 			labelAvailableGold.setText((parameter.isUsesTreasury() ? "Treasury: " : "Petty Cash: ") + StringTool.formatThousands(availableGold) + " gp");
 			labelAvailableGold.setForeground(parameter.isUsesTreasury() ? Color.RED : Color.BLACK);
-			getContentPane().validate();
+			validate();
 		}
 	}
 
