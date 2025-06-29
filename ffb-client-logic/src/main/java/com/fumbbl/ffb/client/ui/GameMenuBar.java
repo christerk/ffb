@@ -88,6 +88,8 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_AWAY;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_DEV;
@@ -254,6 +256,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem inputFontColor;
 	private JMenuItem homePlayerMarkerFontColor;
 	private JMenuItem awayPlayerMarkerFontColor;
+	private JMenuItem additionalHomePlayerMarkerFontColor;
+	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
 	private JMenu fMissingPlayersMenu;
@@ -520,6 +524,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
 		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), fontStyles, (item) -> homePlayerMarkerFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, styleProvider.getPlayerMarkerAway(), fontStyles, (item) -> awayPlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, styleProvider.getAdditionalPlayerMarkerHome(), fontStyles, (item) -> additionalHomePlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, styleProvider.getAdditionalPlayerMarkerAway(), fontStyles, (item) -> additionalAwayPlayerMarkerFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FIELD_MARKER, styleProvider.getFieldMarker(), fontStyles, (item) -> fieldMarkerFontColor = item);
 	}
 
@@ -1399,6 +1405,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, awayPlayerMarkerFontColor,
 			styleProvider::getPlayerMarkerAway, styleProvider::setPlayerMarkerAway);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, additionalHomePlayerMarkerFontColor,
+			styleProvider::getAdditionalPlayerMarkerHome, styleProvider::setAdditionalPlayerMarkerHome);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, additionalAwayPlayerMarkerFontColor,
+			styleProvider::getAdditionalPlayerMarkerAway, styleProvider::setAdditionalPlayerMarkerAway);
 
 		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_FIELD_MARKER, fieldMarkerFontColor,
 			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
@@ -2481,6 +2493,24 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			Color color = JColorChooser.showDialog(this, "Choose away player marker color", defaultColor);
 			if (color != null) {
 				getClient().setProperty(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == additionalHomePlayerMarkerFontColor) {
+			Color defaultColor = styleProvider.getAdditionalPlayerMarkerHome();
+			Color color = JColorChooser.showDialog(this, "Choose additional home player marker color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, String.valueOf(color.getRGB()));
+				getClient().saveUserSettings(true);
+			}
+		}
+
+		if (source == additionalAwayPlayerMarkerFontColor) {
+			Color defaultColor = styleProvider.getAdditionalPlayerMarkerAway();
+			Color color = JColorChooser.showDialog(this, "Choose additional away player marker color", defaultColor);
+			if (color != null) {
+				getClient().setProperty(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
 		}

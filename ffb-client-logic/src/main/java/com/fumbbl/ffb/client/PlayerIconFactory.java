@@ -45,7 +45,21 @@ public class PlayerIconFactory {
 	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
-			g2d.setColor(homePlayer ? styleProvider.getPlayerMarkerHome() : styleProvider.getPlayerMarkerAway());
+			Color color;
+			if (homePlayer) {
+				if (bottom) {
+					color = styleProvider.getPlayerMarkerHome();
+				} else {
+					color = styleProvider.getAdditionalPlayerMarkerHome();
+				}
+			} else {
+				if (bottom) {
+					color = styleProvider.getPlayerMarkerAway();
+				} else {
+					color = styleProvider.getAdditionalPlayerMarkerAway();
+				}
+			}
+			g2d.setColor(color);
 			g2d.setFont(fontCache.font(Font.BOLD, 12, dimensionProvider));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pText, g2d);
@@ -326,7 +340,7 @@ public class PlayerIconFactory {
 	}
 
 	private static void applyMarker(FantasyFootballClient client, Player<?> pPlayer, DimensionProvider dimensionProvider, BufferedImage icon, boolean homePlayer) {
-		PlayerMarker playerMarker =  client.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());
+		PlayerMarker playerMarker = client.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());
 		TransientPlayerMarker transientPlayerMarker = client.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if (playerMarker != null || transientPlayerMarker != null) {
 			if (transientPlayerMarker == null) {

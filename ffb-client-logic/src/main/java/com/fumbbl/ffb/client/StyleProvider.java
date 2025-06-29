@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
 
 public class StyleProvider {
 
@@ -25,6 +26,8 @@ public class StyleProvider {
 		put(SETTING_FONT_COLOR_INPUT, Color.BLACK);
 		put(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, new Color(1.0f, 1.0f, 0.0f, 1.0f));
 		put(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, new Color(1.0f, 1.0f, 0.0f, 1.0f));
+		put(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, new Color(1.0f, 1.0f, 0.0f, 1.0f));
+		put(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, new Color(1.0f, 1.0f, 0.0f, 1.0f));
 		put(SETTING_FONT_COLOR_FIELD_MARKER, new Color(1.0f, 1.0f, 1.0f, 1.0f));
 	}};
 
@@ -42,6 +45,8 @@ public class StyleProvider {
 	private Color input = defaults.get(SETTING_FONT_COLOR_INPUT);
 	private Color playerMarkerHome = defaults.get(SETTING_FONT_COLOR_PLAYER_MARKER_HOME);
 	private Color playerMarkerAway = defaults.get(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY);
+	private Color additionalPlayerMarkerHome = defaults.get(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME);
+	private Color additionalPlayerMarkerAway = defaults.get(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY);
 	private Color fieldMarker = defaults.get(SETTING_FONT_COLOR_FIELD_MARKER);
 
 	private boolean swapTeamColors;
@@ -180,5 +185,21 @@ public class StyleProvider {
 
 	public void setFieldMarker(Color fieldMarker) {
 		this.fieldMarker = fieldMarker;
+	}
+
+	public Color getAdditionalPlayerMarkerHome() {
+		return additionalPlayerMarkerHome;
+	}
+
+	public void setAdditionalPlayerMarkerHome(Color additionalPlayerMarkerHome) {
+		this.additionalPlayerMarkerHome = additionalPlayerMarkerHome;
+	}
+
+	public Color getAdditionalPlayerMarkerAway() {
+		return additionalPlayerMarkerAway;
+	}
+
+	public void setAdditionalPlayerMarkerAway(Color additionalPlayerMarkerAway) {
+		this.additionalPlayerMarkerAway = additionalPlayerMarkerAway;
 	}
 }
