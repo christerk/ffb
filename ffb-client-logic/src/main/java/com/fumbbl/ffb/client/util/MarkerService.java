@@ -57,7 +57,7 @@ public class MarkerService {
 		}
 	}
 
-	public void showMarkerPopup(final FantasyFootballClient pClient, Component source,  final FieldCoordinate pCoordinate, int pX, int pY) {
+	public void showMarkerPopup(final FantasyFootballClient pClient, Component source, final FieldCoordinate pCoordinate, int pX, int pY) {
 		if (pCoordinate != null) {
 			Game game = pClient.getGame();
 			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
@@ -85,7 +85,7 @@ public class MarkerService {
 		}
 	}
 
-	private JTextField createMarkerPopup(UserInterface ui, Component source,  String pTitle, String pMarkerText, int pX, int pY, boolean includeMode) {
+	private JTextField createMarkerPopup(UserInterface ui, Component source, String pTitle, String pMarkerText, int pX, int pY, boolean includeMode) {
 
 		DimensionProvider dimensionProvider = ui.getPitchDimensionProvider();
 
@@ -118,7 +118,10 @@ public class MarkerService {
 
 			JComboBox<TransientPlayerMarker.Mode> modeComboBox = new JComboBox<>(dimensionProvider, TransientPlayerMarker.Mode.values());
 			modeComboBox.setSelectedItem(defaultMode);
-			modeComboBox.addActionListener(pActionEvent -> defaultMode = modeComboBox.getSelectedItem());
+			modeComboBox.addActionListener(pActionEvent -> {
+				defaultMode = modeComboBox.getSelectedItem();
+				markerField.requestFocus();
+			});
 
 			spacerPanel.add(modeComboBox);
 		}
@@ -153,7 +156,7 @@ public class MarkerService {
 
 		if (source == ui.getFieldComponent()) {
 			dimension.width = (int) dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth();
-		}  else if (source == ui.getSideBarAway()) {
+		} else if (source == ui.getSideBarAway()) {
 			dimension.width = (int) (dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth() + dimensionProvider.dimension(com.fumbbl.ffb.client.Component.FIELD).getWidth());
 		}
 		return dimension;
