@@ -20,7 +20,9 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
@@ -117,6 +119,7 @@ public class MarkerService {
 		if (includeMode) {
 
 			JComboBox<TransientPlayerMarker.Mode> modeComboBox = new JComboBox<>(dimensionProvider, TransientPlayerMarker.Mode.values());
+			modeComboBox.setRenderer(new MarkerCellRenderer(dimensionProvider));
 			modeComboBox.setSelectedItem(defaultMode);
 			modeComboBox.addActionListener(pActionEvent -> {
 				defaultMode = modeComboBox.getSelectedItem();
@@ -162,4 +165,19 @@ public class MarkerService {
 		return dimension;
 	}
 
+	private static class MarkerCellRenderer extends JPanel implements ListCellRenderer<TransientPlayerMarker.Mode> {
+
+		private final JLabel label;
+
+		public MarkerCellRenderer(DimensionProvider dimensionProvider) {
+			label = new JLabel(dimensionProvider);
+			add(label);
+		}
+
+		@Override
+		public Component getListCellRendererComponent(JList<? extends TransientPlayerMarker.Mode> list, TransientPlayerMarker.Mode value, int index, boolean isSelected, boolean cellHasFocus) {
+			label.setText(value.getDisplayText());
+			return this;
+		}
+	}
 }
