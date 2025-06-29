@@ -7,13 +7,10 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.Dialog;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
-import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.marking.TransientPlayerMarker;
@@ -24,11 +21,8 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicInternalFrameUI;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -42,7 +36,7 @@ public class MarkerService {
 			boolean persistMarker = ClientMode.PLAYER == pClient.getMode() && !IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(pClient.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 			PlayerMarker playerMarker = persistMarker ? pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId()) : pClient.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 			String markerText = (playerMarker != null) ? playerMarker.getHomeText() : null;
-			final JTextField markerField = createMarkerPopup(pClient.getUserInterface(), source, "Mark Player", StringTool.print(markerText), pX, pY, pClient.getUserInterface().getUiDimensionProvider(), !persistMarker);
+			final JTextField markerField = createMarkerPopup(pClient.getUserInterface(), source, "Mark Player", StringTool.print(markerText), pX, pY, !persistMarker);
 			markerField.addActionListener(pActionEvent -> {
 				String text = StringTool.print(markerField.getText());
 				if (persistMarker) {
@@ -57,7 +51,7 @@ public class MarkerService {
 						pClient.getGame().getFieldModel().removeTransient((TransientPlayerMarker) playerMarker);
 						pClient.getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 					}
-					pClient.getUserInterface().getFieldComponent().refresh();
+					pClient.getUserInterface().refresh();
 				}
 			});
 		}
@@ -69,9 +63,8 @@ public class MarkerService {
 			boolean persistMarker = ClientMode.PLAYER == pClient.getMode();
 			FieldMarker fieldMarker = persistMarker ? game.getFieldModel().getFieldMarker(pCoordinate) : game.getFieldModel().getTransientFieldMarker(pCoordinate);
 			String markerText = (fieldMarker != null) ? fieldMarker.getHomeText() : null;
-			PitchDimensionProvider dimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 
-			final JTextField markerField = createMarkerPopup(pClient.getUserInterface(), source, "Mark Field", StringTool.print(markerText), pX, pY, dimensionProvider, false);
+			final JTextField markerField = createMarkerPopup(pClient.getUserInterface(), source, "Mark Field", StringTool.print(markerText), pX, pY, false);
 			markerField.addActionListener(pActionEvent -> {
 				String text = StringTool.print(markerField.getText());
 				if (persistMarker) {
@@ -92,8 +85,9 @@ public class MarkerService {
 		}
 	}
 
-	private JTextField createMarkerPopup(UserInterface ui, Component source,  String pTitle, String pMarkerText, int pX, int pY, DimensionProvider dimensionProvider, boolean includeMode) {
-	//	createDialog(ui, pTitle, pMarkerText, pX, pY, dimensionProvider, includeMode);
+	private JTextField createMarkerPopup(UserInterface ui, Component source,  String pTitle, String pMarkerText, int pX, int pY, boolean includeMode) {
+
+		DimensionProvider dimensionProvider = ui.getPitchDimensionProvider();
 
 		JDialog pPopupMenu = new JDialog(ui);
 
@@ -142,8 +136,7 @@ public class MarkerService {
 		});
 		pPopupMenu.setUndecorated(true);
 		pPopupMenu.pack();
-		//pPopupMenu.setLocationRelativeTo(ui);
-		Dimension offset = offset(ui, source);
+		Dimension offset = offset(ui, source, dimensionProvider);
 		int componentOffsetX = offset.width + ui.getX();
 		int componentOffsetY = offset.height + ui.getY();
 
@@ -155,81 +148,15 @@ public class MarkerService {
 		return markerField;
 	}
 
-	private Dimension offset(UserInterface ui, Component source) {
+	private Dimension offset(UserInterface ui, Component source, DimensionProvider dimensionProvider) {
 		Dimension dimension = new Dimension(0, ui.getGameMenuBar().getHeight() + LayoutSettings.TITLE_BAR_HEIGHT);
 
 		if (source == ui.getFieldComponent()) {
-			dimension.width = ui.getSideBarHome().getWidth();
+			dimension.width = (int) dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth();
 		}  else if (source == ui.getSideBarAway()) {
-			dimension.width = ui.getSideBarHome().getWidth() + ui.getFieldComponent().getWidth();
+			dimension.width = (int) (dimensionProvider.dimension(com.fumbbl.ffb.client.Component.SIDEBAR).getWidth() + dimensionProvider.dimension(com.fumbbl.ffb.client.Component.FIELD).getWidth());
 		}
 		return dimension;
-	}
-
-	private JTextField createDialog(UserInterface ui, String pTitle, String pMarkerText, int pX, int pY, DimensionProvider dimensionProvider, boolean includeMode) {
-
-		Dialog pPopupMenu = new Dialog(ui.getClient(), "Marker", false) {
-
-			@Override
-			public DialogId getId() {
-				return null;
-			}
-		};
-
-		JPanel spacerPanel = new JPanel();
-		spacerPanel.setLayout(new BoxLayout(spacerPanel, BoxLayout.Y_AXIS));
-		spacerPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-
-		if (StringTool.isProvided(pTitle)) {
-			JLabel comp = new JLabel(dimensionProvider, pTitle);
-			comp.setAlignmentX(JPanel.LEFT_ALIGNMENT);
-			JPanel panel = new JPanel();
-			panel.add(comp);
-			spacerPanel.add(panel);
-		}
-		JTextField markerField = new JTextField(dimensionProvider, 7);
-		if (StringTool.isProvided(pMarkerText)) {
-			markerField.setText(pMarkerText);
-		}
-		markerField.addActionListener(pActionEvent -> {
-			if (pPopupMenu.isVisible()) {
-				pPopupMenu.setVisible(false);
-			}
-		});
-
-		spacerPanel.add(markerField);
-
-		if (includeMode) {
-
-			JComboBox<TransientPlayerMarker.Mode> modeComboBox = new JComboBox<>(dimensionProvider, TransientPlayerMarker.Mode.values());
-			modeComboBox.setSelectedItem(defaultMode);
-			modeComboBox.addActionListener(pActionEvent -> defaultMode = modeComboBox.getSelectedItem());
-
-			spacerPanel.add(modeComboBox);
-		}
-		pPopupMenu.add(spacerPanel);
-
-		pPopupMenu.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				pPopupMenu.hideDialog();
-			}
-
-		});
-		((BasicInternalFrameUI)pPopupMenu.getUI()).setNorthPane(null);
-		pPopupMenu.setBorder(null);
-		pPopupMenu.pack();
-		pPopupMenu.setLocation(pX, pY);
-		pPopupMenu.showDialog(null);
-		markerField.selectAll();
-		markerField.requestFocus();
-
-		return markerField;
 	}
 
 }
