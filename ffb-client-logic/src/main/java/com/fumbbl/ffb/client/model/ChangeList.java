@@ -14,12 +14,13 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("2.37.0")
 			.addFeature("Player Markings: it is now possible to add manual player markings in addition to automatic player markings using different modes")
+			.addBugfix("Manual Markings: Changes to manual markings should now be preserved should the other coach leave the game")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
 			.addBugfix("Replay Mode: Mouse hover did not show player details anymore")
 			.addBugfix("Spectator Mode: When switching to replay mode during spectating the replay controls were disabled")
-			.addBugfix("Replay Mode: When changing client layout replay c	ontrols got disabled")
+			.addBugfix("Replay Mode: When changing client layout replay controls got disabled")
 			.addBugfix("Replay Mode: Automarking did not use coach's settings anymore")
 			.addBugfix("Replay Mode: Manual markings could not be set")
 			.addImprovement("Sketches: Custom cursor can now be turned off in the replay menu")
