@@ -3,6 +3,10 @@ package com.fumbbl.ffb;
 /**
  * @author Kalimar
  */
+
+/*
+	Value must not exceed 40 chars
+ */
 public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_SOUND_ON = "soundOn";
