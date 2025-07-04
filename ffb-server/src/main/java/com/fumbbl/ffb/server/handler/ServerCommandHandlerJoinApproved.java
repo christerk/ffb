@@ -160,9 +160,12 @@ public class ServerCommandHandlerJoinApproved extends ServerCommandHandler {
 					if (game.getStarted() != null) {
 						getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(),
 							"Kick starting");
-						// Game is already initialized, so we just need to kickstart it
-						UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
-						UtilServerStartGame.startGame(pGameState);
+						//noinspection SynchronizationOnLocalVariableOrMethodParameter
+						synchronized (pGameState) {
+							// Game is already initialized, so we just need to kickstart it
+							UtilSkillBehaviours.registerBehaviours(pGameState.getGame(), getServer().getDebugLog());
+							UtilServerStartGame.startGame(pGameState);
+						}
 					} else {
 						getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getId(),
 							"Check gamestate");
