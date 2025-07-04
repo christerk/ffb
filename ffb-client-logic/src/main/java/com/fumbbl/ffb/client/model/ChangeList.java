@@ -13,7 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.37.0")
-			.addFeature("Player Markings: it is no possible to add manual player markings in addition to automatic player markings using different modes")
+			.addFeature("Player Markings: it is now possible to add manual player markings in addition to automatic player markings using different modes")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
