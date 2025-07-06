@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class TalkHandlerTurnData extends TalkHandler {
+public abstract class TalkHandlerUsedActions extends TalkHandler {
 
 	private static final Set<PlayerAction> ACTIONS = new HashSet<PlayerAction>() {{
 		add(PlayerAction.FOUL);
@@ -25,7 +25,7 @@ public abstract class TalkHandlerTurnData extends TalkHandler {
 		add(PlayerAction.KICK_TEAM_MATE);
 	}};
 
-	public TalkHandlerTurnData(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
+	public TalkHandlerUsedActions(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
 		super("/action_used", 2, commandAdapter, requiredClient, requiredEnv, requiresOnePrivilegeOf);
 	}
 

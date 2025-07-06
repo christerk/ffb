@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.handler.talk;
 
-public class TalkHandlerTurnDataLive extends TalkHandlerTurnData {
+public class TalkHandlerUsedActionsLive extends TalkHandlerUsedActions {
 
-	public TalkHandlerTurnDataLive() {
+	public TalkHandlerUsedActionsLive() {
 		super(new DecoratingCommandAdapter(), TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE, TalkRequirements.Privilege.EDIT_STATE);
 	}
 }
