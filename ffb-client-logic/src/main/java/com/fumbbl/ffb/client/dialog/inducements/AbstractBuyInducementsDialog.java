@@ -127,7 +127,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		leftPanel.add(Box.createVerticalStrut(verticalStrut));
 
 		((InducementTypeFactory) gameOptions.getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages())).limit(1)
+			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages())).limit(5)
 			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());
