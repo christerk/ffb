@@ -248,7 +248,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		}
 		int cost = findInducementCost(fTeam, pInducementType, gameOptions);
 		DropDownPanel panel = new DropDownPanel(dimensionProvider(), pInducementType, maxCount, pInducementType.getDescription(), cost, this,
-			getAvailableGold());
+			getAvailableGold(), getClient().getUserInterface().getFontCache().font(Font.PLAIN, 12, dimensionProvider()));
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));

@@ -9,6 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class DropDownPanel extends JPanel implements ActionListener {
 	private final InducementType fInducementType;
 
 	public DropDownPanel(DimensionProvider dimensionProvider, InducementType pInducementType, int pMax, String pText, int pCost, ActionListener pListener,
-											 int pAvailableGold) {
+											 int pAvailableGold, Font font) {
 		super();
 		fInducementType = pInducementType;
 		fMax = pMax;
@@ -44,12 +45,14 @@ public class DropDownPanel extends JPanel implements ActionListener {
 		fBox.addActionListener(pListener);
 		fBox.setEnabled(fAvailable);
 		fBox.addActionListener(this);
+		fBox.setFont(font);
 
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(fBox);
 		add(Box.createHorizontalStrut(10));
 		JLabel label = new JLabel(dimensionProvider,
 			pText + " (Max: " + fMax + "  " + formatGold(fCost) + " Gold" + (pMax > 1 ? " each)" : ")"));
+		label.setFont(font);
 		add(label);
 		add(Box.createHorizontalGlue());
 
