@@ -8,7 +8,9 @@ import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.mechanics.bb2020.StatsMechanic;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Position;
 import com.fumbbl.ffb.model.skill.Skill;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +70,10 @@ class MarkerGeneratorTest {
 	@Mock
 	private Game game;
 	@Mock
+	private GameResult gameResult;
+	@Mock
+	private PlayerResult playerResult;
+	@Mock
 	private MechanicsFactory mechanicsFactory;
 
 	@BeforeEach
@@ -81,10 +87,6 @@ class MarkerGeneratorTest {
 		given(game.getFactory(FactoryType.Factory.SKILL)).willReturn(skillFactory);
 		given(mechanicsFactory.forName(anyString())).willReturn(new StatsMechanic());
 
-		/*
-		        StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
-                .forName(Mechanic.Type.STAT.name());
-		 */
 		Set<Skill> gainedSkills = new HashSet<Skill>() {{
 			add(skillFactory.forName(BLOCK));
 			add(skillFactory.forName(DODGE));
@@ -108,6 +110,8 @@ class MarkerGeneratorTest {
 		given(position.getArmour()).willReturn(ARMOUR);
 
 		given(player.getLastingInjuries()).willReturn(new SeriousInjury[]{SeriousInjury.HEAD_INJURY, SeriousInjury.SERIOUS_INJURY});
+		given(game.getGameResult()).willReturn(gameResult);
+		given(gameResult.getPlayerResult(player)).willReturn(playerResult);
 	}
 
 	@Test
@@ -473,6 +477,21 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(game, player, config, true);
 
 		assertEquals(NI_MARKING, marking);
+	}
+
+	@Test
+	public void generateCombinedInjuryMarkerWhenPlayerWasHurtDuringTheGame() {
+		markings.add(builder.withInjury(InjuryAttribute.NI).withMarking(NI_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.AG).withMarking(AG_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+
+
+		given(playerResult.getSeriousInjury()).willReturn(SeriousInjury.NECK_INJURY);
+		given(playerResult.getSeriousInjuryDecay()).willReturn(SeriousInjury.SMASHED_KNEE);
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals(AG_MARKING + MA_MARKING + NI_MARKING, marking);
 	}
 
 	@Test

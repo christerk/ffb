@@ -132,12 +132,14 @@ public class UtilServerStartGame {
 					ServerStatus.ERROR_NOT_YOUR_TEAM, null);
 			}
 		}
+		boolean resumed = false;
 		if (ownershipOk) {
 			if ((game.getFinished() == null) && (gameState.getStepStack().size() == 0)) {
 				SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 				((StartGame) factory.forName(SequenceGenerator.Type.StartGame.name()))
 					.pushSequence(new SequenceGenerator.SequenceParams(gameState));
 			} else {
+				resumed = true;
 				if (server.getMode() == ServerMode.FUMBBL) {
 					server.getRequestProcessor().add(new FumbblRequestResumeGamestate(gameState));
 				}
@@ -152,6 +154,13 @@ public class UtilServerStartGame {
 
 			server.getCommunication().sendGameState(gameState);
 			gameState.fetchChanges(); // clear changes after sending the whole model
+
+			if (resumed) {
+				// Otherwise we will send all markers again which would overwrite new markings
+				// coaches with manual marking made in this game so far
+				// The markings are contained in the gamestate already anyway
+				return;
+			}
 
 			MarkerLoadingService loadingService = new MarkerLoadingService();
 

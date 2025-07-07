@@ -2,6 +2,9 @@ package com.fumbbl.ffb;
 
 import java.util.Arrays;
 
+/*
+	Name value must not exceed 40 chars
+ */
 public enum CommonProperty {
 
 	CLIENT_COMMAND_COMPRESSION("client.command.compression"),
@@ -46,8 +49,8 @@ public enum CommonProperty {
 	SETTING_FONT_COLOR_INPUT("setting.font.color.input", "Chat input", "Font Color"),
 	SETTING_FONT_COLOR_PLAYER_MARKER_HOME("setting.font.color.playerMarkerHome", "Home Player Marker", "Font Color"),
 	SETTING_FONT_COLOR_PLAYER_MARKER_AWAY("setting.font.color.playerMarkerAway", "Away Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME("setting.font.color.additionalPlayerMarkerHome", "Additional Home Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY("setting.font.color.additionalPlayerMarkerAway", "Additional Away Player Marker", "Font Color"),
+	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME("setting.font.color.addPlayerMarkerHome", "Additional Home Player Marker", "Font Color"),
+	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY("setting.font.color.addPlayerMarkerAway", "Additional Away Player Marker", "Font Color"),
 	SETTING_FONT_COLOR_FIELD_MARKER("setting.font.color.fieldMarker", "Field Marker", "Font Color"),
 
 	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint", "What's new?", "Configuration"),

@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.handler.talk;
 
-public class TalkHandlerTurnDataTest extends TalkHandlerTurnData {
+public class TalkHandlerUsedActionsTest extends TalkHandlerUsedActions {
 
-	public TalkHandlerTurnDataTest() {
+	public TalkHandlerUsedActionsTest() {
 		super(new IdentityCommandAdapter(), TalkRequirements.Client.PLAYER, TalkRequirements.Environment.TEST_GAME);
 	}
 }

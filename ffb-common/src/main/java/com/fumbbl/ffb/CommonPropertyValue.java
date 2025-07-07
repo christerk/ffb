@@ -1,5 +1,8 @@
 package com.fumbbl.ffb;
 
+/*
+	Value must not exceed 40 chars
+ */
 public interface CommonPropertyValue {
 	String SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER = "reRollBallAndChainNever";
 	String SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE = "reRollBallAndChainTeamMate";

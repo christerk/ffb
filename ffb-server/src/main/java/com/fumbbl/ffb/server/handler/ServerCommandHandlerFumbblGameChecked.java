@@ -41,32 +41,34 @@ public class ServerCommandHandlerFumbblGameChecked extends ServerCommandHandler 
 		InternalServerCommandFumbblGameChecked gameCheckedCommand = (InternalServerCommandFumbblGameChecked) pReceivedCommand
 				.getCommand();
 		GameState gameState = getServer().getGameCache().getGameStateById(gameCheckedCommand.getGameId());
-		gameState.initRulesDependentMembers();
-		gameState.getGame().initializeRules();
-		UtilSkillBehaviours.registerBehaviours(gameState.getGame(), getServer().getDebugLog());
+		synchronized (gameState) {
+			gameState.initRulesDependentMembers();
+			gameState.getGame().initializeRules();
+			UtilSkillBehaviours.registerBehaviours(gameState.getGame(), getServer().getDebugLog());
 
-		Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
-		Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
+			Team home = inflateIfNeeded(gameState.getGame().getTeamHome(), gameState);
+			Team away = inflateIfNeeded(gameState.getGame().getTeamAway(), gameState);
 
-		if (home == null || away == null) {
-			return false;
+			if (home == null || away == null) {
+				return false;
+			}
+
+			Roster rosterHome = getRoster(gameState, home.getId());
+			Roster rosterAway = getRoster(gameState, away.getId());
+			if (rosterHome == null || rosterAway == null) {
+				return false;
+			}
+
+			home.updateRoster(rosterHome, gameState.getGame().getRules());
+			away.updateRoster(rosterAway, gameState.getGame().getRules());
+
+			getServer().getGameCache().addTeamToGame(gameState, home, true);
+			getServer().getGameCache().addTeamToGame(gameState, away, false);
+			gameState.getGame().teamsAreInflated();
+			getServer().getGameCache().queueDbUpdate(gameState, true);
+
+			UtilServerStartGame.startGame(gameState);
 		}
-
-		Roster rosterHome = getRoster(gameState, home.getId());
-		Roster rosterAway = getRoster(gameState, away.getId());
-		if (rosterHome == null || rosterAway == null) {
-			return false;
-		}
-
-		home.updateRoster(rosterHome, gameState.getGame().getRules());
-		away.updateRoster(rosterAway, gameState.getGame().getRules());
-
-		getServer().getGameCache().addTeamToGame(gameState, home, true);
-		getServer().getGameCache().addTeamToGame(gameState, away, false);
-		gameState.getGame().teamsAreInflated();
-		getServer().getGameCache().queueDbUpdate(gameState, true);
-
-		UtilServerStartGame.startGame(gameState);
 		return true;
 	}
 
