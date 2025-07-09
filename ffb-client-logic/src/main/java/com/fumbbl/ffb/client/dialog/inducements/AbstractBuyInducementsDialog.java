@@ -50,6 +50,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	private final Team fTeam;
 	private int maximumGold;
 
+	protected List<DropDownPanel> dropdowns = new ArrayList<>();
 
 	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
 		super(client, title, closeable);
