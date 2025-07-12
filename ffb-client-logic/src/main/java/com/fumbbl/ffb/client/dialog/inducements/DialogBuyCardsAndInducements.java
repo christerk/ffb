@@ -72,32 +72,16 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		deckChoicePanel = buildDeckChoicePanel();
 		cardChoicePanel = buildCardChoicePanel();
 
-		JPanel panelCards = buildCardPanel();
-		JPanel horizontalMainPanel = horizontalMainPanel(gameOptions, panelCards);
-		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel);
-
-		logHeights("cards", panelCards);
-		logHeights("hoirizontal",  horizontalMainPanel);
-		logHeights("vertical", verticalMainPanel);
-		logHeights("dialog", this);
+		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel(gameOptions, buildCardPanel()));
 
 		setLayout(new BorderLayout());
 		add(verticalMainPanel, BorderLayout.CENTER);
 		showDialog();
 
-		logHeights("cards", panelCards);
-		logHeights("hoirizontal",  horizontalMainPanel);
-		logHeights("vertical", verticalMainPanel);
-		logHeights("dialog", this);
 
 		setLocationToCenter();
 		Point p = getLocation();
 		setLocation(p.x, 10);
-	}
-
-	private void logHeights(String name, Component component) {
-		System.out.println(name + " " + component.getSize().height + " " + component.getPreferredSize().height +
-				" " + component.getMinimumSize().height + " " + component.getMaximumSize().height);
 	}
 
 	public void setCardChoices(CardChoices cardChoices) {
