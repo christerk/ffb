@@ -74,15 +74,15 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	protected JPanel buildInducementPanel(GameOptions gameOptions) {
 
-		//JPanel leftPanel = buildLeftPanel(gameOptions);
-		JPanel rightPanel = buildRightPanel(gameOptions);
+		JPanel leftPanel = buildLeftPanel(gameOptions);
+		//JPanel rightPanel = buildRightPanel(gameOptions);
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
-		//centerPanel.add(leftPanel);
+		centerPanel.add(leftPanel);
 		int ten = dimensionProvider().scale(10);
 		//centerPanel.add(Box.createHorizontalStrut(ten));
-		centerPanel.add(rightPanel);
+		//centerPanel.add(rightPanel);
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(ten, ten, ten, ten));
 
