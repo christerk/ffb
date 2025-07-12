@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.client.dialog.DebugDialog;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.overlay.Overlay;
@@ -89,7 +90,9 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		getUserInterface().setVisible(true);
 
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
-		aboutDialogHandler.showDialog();
+		//aboutDialogHandler.showDialog();
+		DebugDialog debugDialog = new DebugDialog();
+		debugDialog.showDialog(getUserInterface().getDesktop());
 	}
 
 	public void dialogClosed(IDialog pDialog) {
