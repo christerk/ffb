@@ -163,7 +163,6 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		verticalMainPanel.setLayout(new BoxLayout(verticalMainPanel, BoxLayout.Y_AXIS));
 		//verticalMainPanel.add(goldPanel());
 		verticalMainPanel.add(horizontalMainPanel);
-		buttonPanel();
 	//	verticalMainPanel.add(buttonPanel());
 		return verticalMainPanel;
 	}
