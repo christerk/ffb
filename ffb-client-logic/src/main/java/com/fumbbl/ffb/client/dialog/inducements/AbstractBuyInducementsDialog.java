@@ -257,7 +257,6 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));
 		}
 		fPanels.add(panel);
-		dropdowns.add(panel);
 	}
 
 	public int findInducementCost(Team team, InducementType pInducement, GameOptions gameOptions) {
