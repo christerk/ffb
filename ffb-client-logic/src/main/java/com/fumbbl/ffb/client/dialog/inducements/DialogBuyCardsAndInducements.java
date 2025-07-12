@@ -76,17 +76,19 @@ public class DialogBuyCardsAndInducements extends AbstractBuyInducementsDialog {
 		JPanel horizontalMainPanel = horizontalMainPanel(gameOptions, panelCards);
 		JPanel verticalMainPanel = verticalMainPanel(horizontalMainPanel);
 
-		for (int i = 0; i < dropdowns.size(); i++) {
-			logHeights(String.valueOf(i), dropdowns.get(i));
-		}
+		logHeights("cards", panelCards);
+		logHeights("hoirizontal",  horizontalMainPanel);
+		logHeights("vertical", verticalMainPanel);
+		logHeights("dialog", this);
 
 		setLayout(new BorderLayout());
 		add(verticalMainPanel, BorderLayout.CENTER);
 		showDialog();
 
-		for (int i = 0; i < dropdowns.size(); i++) {
-			logHeights(String.valueOf(i), dropdowns.get(i));
-		}
+		logHeights("cards", panelCards);
+		logHeights("hoirizontal",  horizontalMainPanel);
+		logHeights("vertical", verticalMainPanel);
+		logHeights("dialog", this);
 
 		setLocationToCenter();
 		Point p = getLocation();
