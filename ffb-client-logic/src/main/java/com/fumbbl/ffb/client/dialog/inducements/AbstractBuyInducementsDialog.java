@@ -86,7 +86,6 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(ten, ten, ten, ten));
 
-		centerPanel.setBackground(Color.BLUE);
 		return centerPanel;
 	}
 
@@ -132,7 +131,6 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());
-		leftPanel.setBackground(Color.WHITE);
 
 		return leftPanel;
 
