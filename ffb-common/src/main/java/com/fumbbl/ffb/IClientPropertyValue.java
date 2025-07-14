@@ -80,12 +80,11 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_SKETCH_CURSOR_OFF = "sketchCursorOff";
 
 	// Tacklezones (toggle style)
-	String SETTING_TACKLEZONES_HOME_ON = "homeTzOn";
-	String SETTING_TACKLEZONES_HOME_OFF = "homeTzOff";
-	String SETTING_TACKLEZONES_AWAY_ON = "awayTzOn";
-	String SETTING_TACKLEZONES_AWAY_OFF = "awayTzOff";
-	String SETTING_TACKLEZONES_OPPOSING_ON = "opposingTzOn";
-	String SETTING_TACKLEZONES_OPPOSING_OFF = "opposingTzOff";
+	String SETTING_TACKLEZONES_NONE = "none";
+	String SETTING_TACKLEZONES_HOME = "home";
+	String SETTING_TACKLEZONES_AWAY = "away";
+	String SETTING_TACKLEZONES_BOTH = "both";
+	String SETTING_TACKLEZONES_PASSIVE = "passive";
 	String SETTING_TACKLEZONES_NO_OVERLAP_ON = "noOverlapTzOn";
 	String SETTING_TACKLEZONES_NO_OVERLAP_OFF = "noOverlapTzOff";
 	String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";

@@ -14,6 +14,7 @@
 
 package com.fumbbl.ffb.client.layer;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
@@ -58,7 +59,7 @@ public class FieldLayerTackleZones extends FieldLayer {
   public void updateTackleZones() {
     clear(true);
 
-    if (!isHomeTzEnabled() && !isAwayTzEnabled()) {
+    if (isTzDisabled()) {
       addUpdatedArea(new Rectangle(0, 0, getImage().getWidth(), getImage().getHeight()));
       return;
     }
@@ -83,11 +84,19 @@ public class FieldLayerTackleZones extends FieldLayer {
     Game game = getClient().getGame();
     List<Player<?>> playerList = Arrays.asList(game.getPlayers());
 
-    boolean showBothTz = showBothTz(game.getTurnMode());
-    boolean homeTz = isHomeTzEnabled();
-    boolean awayTz = isAwayTzEnabled();
+    String setting = getCurrentTacklezoneSetting();
+
+    boolean isPassive = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(setting);
+    boolean showHome = IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(setting)
+                    || IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
+    boolean showAway = IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(setting)
+                    || IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
+
+    boolean showBothTz = showBothTzThisTurnMode(game.getTurnMode());
+
     boolean isHomeActive = game.isHomePlaying();
-    boolean opposingTz = isOpposingTzEnabled();
+    
+
 
     for (Player<?> player : playerList) {
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -98,14 +107,14 @@ public class FieldLayerTackleZones extends FieldLayer {
 
       boolean isHomePlayer = player.getTeam() == game.getTeamHome();
       
-      // Opponent only logic
-      if (opposingTz && !showBothTz && (isHomePlayer == isHomeActive)) {
+      // Passive mode: only show passive player's tz (shows both on setup)
+      if (isPassive && !showBothTz && (isHomePlayer == isHomeActive)) {
         continue;
       }
 
       // Per-team toggles
-      if (!opposingTz && ((isHomePlayer && !homeTz) || (!isHomePlayer && !awayTz))) {
-        continue;
+      if (!isPassive && ((isHomePlayer && !showHome) || (!isHomePlayer && !showAway))) {
+          continue;
       }
       int px = coord.getX();
       int py = coord.getY();
@@ -250,22 +259,17 @@ public class FieldLayerTackleZones extends FieldLayer {
     g2d.setStroke(old);
   }
 
-  private boolean isHomeTzEnabled() {
-    return IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON.equals(
-      getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_HOME)
-    );
+  private String getCurrentTacklezoneSetting() {
+    ClientMode mode = getClient().getMode();
+    if (mode == ClientMode.SPECTATOR) {
+      return getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
+    } else { // treat all others as PLAYER for now
+      return getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
+    }
   }
 
-  private boolean isAwayTzEnabled() {
-    return IClientPropertyValue.SETTING_TACKLEZONES_AWAY_ON.equals(
-      getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_AWAY)
-    );
-  }
-
-  private boolean isOpposingTzEnabled() {
-    return IClientPropertyValue.SETTING_TACKLEZONES_OPPOSING_ON.equals(
-      getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_OPPOSING)
-    );
+  private boolean isTzDisabled() {
+    return IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTacklezoneSetting());
   }
 
   private boolean isNoOverlapEnabled() {
@@ -280,7 +284,7 @@ public class FieldLayerTackleZones extends FieldLayer {
     );
   }
 
-  public static boolean showBothTz(TurnMode turnMode) {
+  public static boolean showBothTzThisTurnMode(TurnMode turnMode) {
     return turnMode == TurnMode.SETUP ||
            turnMode == TurnMode.KICKOFF ||
            turnMode == TurnMode.PERFECT_DEFENCE ||

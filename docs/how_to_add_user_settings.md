@@ -1,136 +1,165 @@
-## FFB Client: Adding New User Settings (Tacklezones Example)
+## FFB Client: Adding Multi-Mode User Settings
 
-This guide documents the exact steps and conventions used to add new user settings to the FFB Java client, using the Tacklezones feature as an example.
+This guide documents the conventions for adding user settings to the FFB Java client using the revised Tacklezones feature as an example.
 
 ---
 
-### 1. **Define Setting Keys** (`CommonProperty.java`)
+#### 1: Register Properties in `CommonProperty.java`
 
-- **Purpose:** Add unique string keys for each setting.
-- **Location:** `CommonProperty.java`
-- **Example:**
+- **A. Add a new enum entry** for each setting at the top of the enum, e.g.:
 
   ```java
-  public static final String SETTING_TACKLEZONES_HOME = "setting.tacklezones.home";
-  public static final String SETTING_TACKLEZONES_AWAY = "setting.tacklezones.away";
-  public static final String SETTING_TACKLEZONES_OPPOSING = "setting.tacklezones.opposing";
-  public static final String SETTING_TACKLEZONES_NO_OVERLAP = "setting.tacklezones.noOverlap";
-  public static final String SETTING_TACKLEZONES_CONTOUR = "setting.tacklezones.contour";
+  // Tacklezones
+  SETTING_TACKLEZONES_PLAYER_MODE("setting.tacklezones.playerMode", "Player Mode", "Gameplay", "Tacklezones: Player Mode"),
+  SETTING_TACKLEZONES_SPECTATOR_MODE("setting.tacklezones.spectatorMode", "Spectator Mode", "Gameplay", "Tacklezones: Spectator Mode"),
+  SETTING_TACKLEZONES_NO_OVERLAP("setting.tacklezones.noOverlap", "NO Overlap", "Gameplay"),
+  SETTING_TACKLEZONES_CONTOUR("setting.tacklezones.contour", "Contour", "Gameplay"),
+  ```
+
+- **B. Add the new properties to the `_SAVED_USER_SETTINGS` array** so they persist between sessions and show up in config dialogs:
+
+  ```java
+  public static final CommonProperty[] _SAVED_USER_SETTINGS = {
+      ...,
+      SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_SPECTATOR_MODE,
+      SETTING_TACKLEZONES_NO_OVERLAP, SETTING_TACKLEZONES_CONTOUR,
+  };
   ```
 
 ---
 
 ### 2. **Define Setting Values** (`IClientPropertyValue.java`)
 
-- **Purpose:** Enumerate all possible states for each setting (e.g., ON/OFF).
+- **Purpose:** Enumerate all possible states.
 - **Location:** `IClientPropertyValue.java`
 - **Example:**
 
   ```java
-  String SETTING_TACKLEZONES_HOME_ON = "homeTzOn";
-  String SETTING_TACKLEZONES_HOME_OFF = "homeTzOff";
-  String SETTING_TACKLEZONES_AWAY_ON = "awayTzOn";
-  String SETTING_TACKLEZONES_AWAY_OFF = "awayTzOff";
-  String SETTING_TACKLEZONES_OPPOSING_ON = "opposingTzOn";
-  String SETTING_TACKLEZONES_OPPOSING_OFF = "opposingTzOff";
-  String SETTING_TACKLEZONES_NO_OVERLAP_ON = "noOverlapTzOn";
+  // Single-selection values
+  String SETTING_TACKLEZONES_NONE    = "none";
+  String SETTING_TACKLEZONES_HOME    = "home";
+  String SETTING_TACKLEZONES_AWAY    = "away";
+  String SETTING_TACKLEZONES_BOTH    = "both";
+  String SETTING_TACKLEZONES_PASSIVE = "passive";
+  // Global toggles
+  String SETTING_TACKLEZONES_NO_OVERLAP_ON  = "noOverlapTzOn";
   String SETTING_TACKLEZONES_NO_OVERLAP_OFF = "noOverlapTzOff";
-  String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";
-  String SETTING_TACKLEZONES_CONTOUR_OFF = "tzContourOff";
+  String SETTING_TACKLEZONES_CONTOUR_ON     = "tzContourOn";
+  String SETTING_TACKLEZONES_CONTOUR_OFF    = "tzContourOff";
   ```
 
 ---
 
 ### 3. **Create Menu UI** (`GameMenuBar.java`)
 
-- **Purpose:** Add new menu items for each setting (ON/OFF toggle), group by feature.
-- **Implementation:**
+- **Purpose:** Present one set of choices per mode, and global toggles.
+- **Pattern:**
 
-  - Use a parent `JMenu` for Tacklezones.
-  - Create submenus for each option (e.g., Home, Away, Opposing, No Overlap, Contour).
-  - Each submenu has two `JRadioButtonMenuItem`s: ON and OFF.
-  - Example variable declaration (class fields):
+  - Main menu: **Tacklezones**
+  - Submenus: **Player Mode**, **Spectator Mode** (each with a radio group: None, Home, Away, Both, Passive)
+  - Below: **No Overlap** and **Contour** (ON/OFF radio groups, global for both modes)
 
-    ```java
-    private JRadioButtonMenuItem fTzHomeOnMenuItem;
-    private JRadioButtonMenuItem fTzHomeOffMenuItem;
-    // ...etc for each option
-    ```
-
-  - Example instantiation (in `createTacklezonesMenu`):
-
-    ```java
-    fTzHomeOnMenuItem = new JRadioButtonMenuItem(...);
-    fTzHomeOffMenuItem = new JRadioButtonMenuItem(...);
-    // ...add to ButtonGroup, add listeners, add to menu
-    ```
-
----
-
-### 4. **Initialize Menu State** (`refresh` Method, usually in `GameMenuBar.java`)
-
-- **Purpose:** Ensure the UI reflects the current setting value at startup and after changes.
-- **Typical pattern:**
+- **Variable declarations (fields):**
 
   ```java
-  String tzHomeSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_HOME);
-  fTzHomeOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON.equals(tzHomeSetting));
-  fTzHomeOffMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME_OFF.equals(tzHomeSetting));
+  // Player mode
+  private JRadioButtonMenuItem fTzPlayerNoneMenuItem;
+  private JRadioButtonMenuItem fTzPlayerHomeMenuItem;
+  private JRadioButtonMenuItem fTzPlayerAwayMenuItem;
+  private JRadioButtonMenuItem fTzPlayerBothMenuItem;
+  private JRadioButtonMenuItem fTzPlayerPassiveMenuItem;
+  // Spectator mode
+  private JRadioButtonMenuItem fTzSpecNoneMenuItem;
+  private JRadioButtonMenuItem fTzSpecHomeMenuItem;
+  private JRadioButtonMenuItem fTzSpecAwayMenuItem;
+  private JRadioButtonMenuItem fTzSpecBothMenuItem;
+  private JRadioButtonMenuItem fTzSpecPassiveMenuItem;
+  // Global
+  private JRadioButtonMenuItem fTzNoOverlapOnMenuItem;
+  private JRadioButtonMenuItem fTzNoOverlapOffMenuItem;
+  private JRadioButtonMenuItem fTzContourOnMenuItem;
+  private JRadioButtonMenuItem fTzContourOffMenuItem;
   ```
 
-  - Repeat for each subsetting.
+---
+
+### 4. **Initialize Menu State** (`refresh` Method)
+
+- **Purpose:** Reflect the current value in the UI for each group.
+- **Pattern:**
+
+  ```java
+  String playerMode = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
+  fTzPlayerNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(playerMode));
+  fTzPlayerHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(playerMode));
+  // ...etc for Away/Both/Passive
+
+  String specMode = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
+  // ...repeat for each
+
+  String noOverlap = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP);
+  fTzNoOverlapOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON.equals(noOverlap));
+  fTzNoOverlapOffMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_OFF.equals(noOverlap));
+
+  String contour = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
+  fTzContourOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(contour));
+  fTzContourOffMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_OFF.equals(contour));
+  ```
 
 ---
 
-### 5. **Handle Menu Actions** (`actionPerformed` Method, usually in `GameMenuBar.java`)
+### 5. **Handle Menu Actions** (`actionPerformed` Method)
 
-- **Purpose:** When a menu item is clicked, save the new setting.
-- **Example:**
+- **Purpose:** Save the selected value to the relevant property.
+- **Pattern:**
 
   ```java
-  if (source == fTzHomeOnMenuItem) {
-      getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_HOME, IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON);
-  } else if (source == fTzHomeOffMenuItem) {
-      getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_HOME, IClientPropertyValue.SETTING_TACKLEZONES_HOME_OFF);
+  if (source == fTzPlayerNoneMenuItem) {
+    getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
   }
-  // ...repeat for each option
+  if (source == fTzPlayerHomeMenuItem) {
+    getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_HOME);
+  }
+  // ...etc for other player and spec items
+
+  if (source == fTzNoOverlapOnMenuItem) {
+    getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON);
+  }
+  // ...etc for all items, with saveUserSettings(true) as appropriate
   ```
 
 ---
 
 ### 6. **Consume the Setting in Feature Code**
 
-- **Purpose:** Use the setting to control feature logic (e.g., tacklezone rendering).
+- **Purpose:** Use the selected value (per mode) to drive behavior.
 - **Pattern:**
 
-  - Implement convenience methods where needed:
-
-    ```java
-    private boolean isHomeTzEnabled() {
-      return IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON.equals(
-        getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_HOME));
-    }
-    // ...repeat for other toggles
-    ```
-
-  - Reference these in the relevant update/draw methods to enable or disable behavior.
+  ```java
+  // To get the correct setting for the current client mode:
+  String tzSetting;
+  if (getClient().getMode() == ClientMode.SPECTATOR) {
+      tzSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
+  } else {
+      tzSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
+  }
+  // Then compare tzSetting to IClientPropertyValue constants as needed.
+  ```
 
 ---
 
 ## **Summary Table**
 
-| Step | File                        | What to Add                             |
-| ---- | --------------------------- | --------------------------------------- |
-| 1    | `CommonProperty.java`       | Keys for each new setting               |
-| 2    | `IClientPropertyValue.java` | ON/OFF values for each setting          |
-| 3    | `GameMenuBar.java`          | Menu code to allow user to toggle       |
-| 4    | `GameMenuBar.java`          | Sync menu selection with property state |
-| 5    | `GameMenuBar.java`          | Save setting change on menu action      |
-| 6    | Feature/Layer Class         | Use property to control logic/behavior  |
+| Step | File                        | What to Add                                 |
+| ---- | --------------------------- | ------------------------------------------- |
+| 1    | `CommonProperty.java`       | Keys for each new setting                   |
+| 2    | `IClientPropertyValue.java` | String values for single-select/radio style |
+| 3    | `GameMenuBar.java`          | Menu for Player, Spectator, and global      |
+| 4    | `GameMenuBar.java`          | Sync menu items with property state         |
+| 5    | `GameMenuBar.java`          | Save setting change on action               |
+| 6    | Feature/Layer Class         | Use property in logic/behavior              |
 
 ---
 
 **Tip:**
-This pattern is consistent for adding almost any new user-configurable option in the FFB Java client. Copy/adapt as needed for future settings.
-
----
+This pattern is now the reference for any _radio group_ user setting with multiple modes and shared/global toggles.

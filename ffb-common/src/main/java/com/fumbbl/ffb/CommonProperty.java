@@ -65,9 +65,8 @@ public enum CommonProperty {
 	SETTING_SKETCH_CURSOR("setting.sketchCursor", "Sketch Cursor", "Configuration"),
 
 	// Tacklezones
-	SETTING_TACKLEZONES_HOME("setting.tacklezones.home", "Home", "Gameplay"),
-	SETTING_TACKLEZONES_AWAY("setting.tacklezones.away", "Away", "Gameplay"),
-	SETTING_TACKLEZONES_OPPOSING("setting.tacklezones.opposing", "Opposing", "Gameplay"),
+	SETTING_TACKLEZONES_PLAYER_MODE("setting.tacklezones.playerMode", "Player Mode", "Gameplay", "Tacklezones: Player Mode"),
+	SETTING_TACKLEZONES_SPECTATOR_MODE("setting.tacklezones.spectatorMode", "Spectator Mode", "Gameplay", "Tacklezones: Spectator Mode"),
 	SETTING_TACKLEZONES_NO_OVERLAP("setting.tacklezones.noOverlap", "NO Overlap", "Gameplay"),
 	SETTING_TACKLEZONES_CONTOUR("setting.tacklezones.contour", "Contour", "Gameplay"),
 	;
@@ -85,8 +84,8 @@ public enum CommonProperty {
 		SETTING_SCALE_FACTOR, SETTING_LOCAL_SETTINGS, SETTING_SHOW_CRATERS_AND_BLOODSPOTS, SETTING_SWEET_SPOT,
 		SETTING_LOCAL_ICON_CACHE, SETTING_LOCAL_ICON_CACHE_PATH, SETTING_FONT_COLOR_PLAYER_MARKER_HOME,
 		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER, SETTING_LOG_DIR,
-		SETTING_LOG_MODE, SETTING_SKETCH_CURSOR, 	SETTING_TACKLEZONES_HOME,	SETTING_TACKLEZONES_AWAY,
-	  SETTING_TACKLEZONES_OPPOSING, SETTING_TACKLEZONES_NO_OVERLAP, SETTING_TACKLEZONES_CONTOUR,
+		SETTING_LOG_MODE, SETTING_SKETCH_CURSOR, SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_NO_OVERLAP, 
+		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR,
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {
