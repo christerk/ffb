@@ -17,6 +17,7 @@ import com.fumbbl.ffb.client.layer.FieldLayerPlayers;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeGrid;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
 import com.fumbbl.ffb.client.layer.FieldLayerSketches;
+import com.fumbbl.ffb.client.layer.FieldLayerTackleZones;
 import com.fumbbl.ffb.client.layer.FieldLayerTeamLogo;
 import com.fumbbl.ffb.client.layer.FieldLayerUnderPlayers;
 import com.fumbbl.ffb.client.overlay.Overlay;
@@ -64,6 +65,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final FieldLayerRangeRuler fLayerRangeRuler;
 	private final FieldLayerEnhancements layerEnhancements;
 	private final FieldLayerSketches layerSketches;
+	private final FieldLayerTackleZones fLayerTackleZones;
 	private BufferedImage fImage;
 
 	// we need to keep some old model values for a redraw (if those get set to null)
@@ -90,6 +92,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
+		fLayerTackleZones = new FieldLayerTackleZones(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
@@ -115,6 +118,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerRangeRuler.initLayout();
 		layerEnhancements.initLayout();
 		layerSketches.initLayout();
+		fLayerTackleZones.initLayout();
 
 		Dimension size = uiDimensionProvider.dimension(Component.FIELD);
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
@@ -169,15 +173,19 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		return layerSketches;
 	}
 
+	public FieldLayerTackleZones getLayerTackleZones() {
+    return fLayerTackleZones;
+  }
+
 	public synchronized void refresh() {
 
 		Rectangle updatedArea = combineRectangles(new Rectangle[]{getLayerField().fetchUpdatedArea(),
 			getLayerTeamLogo().fetchUpdatedArea(), getLayerEnhancements().fetchUpdatedArea(),
 			getLayerBloodspots().fetchUpdatedArea(),
 			getLayerRangeGrid().fetchUpdatedArea(), getLayerMarker().fetchUpdatedArea(),
-			getLayerUnderPlayers().fetchUpdatedArea(), getLayerPlayers().fetchUpdatedArea(),
-			getLayerOverPlayers().fetchUpdatedArea(), getLayerRangeRuler().fetchUpdatedArea(),
-			getLayerSketches().fetchUpdatedArea()
+			getLayerUnderPlayers().fetchUpdatedArea(), getLayerTackleZones().fetchUpdatedArea(),
+			getLayerPlayers().fetchUpdatedArea(), getLayerOverPlayers().fetchUpdatedArea(), 
+			getLayerRangeRuler().fetchUpdatedArea(), getLayerSketches().fetchUpdatedArea(),
 		});
 
 		if (updatedArea != null) {
@@ -201,6 +209,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		g2d.drawImage(getLayerRangeGrid().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerMarker().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerUnderPlayers().getImage(), 0, 0, null);
+		g2d.drawImage(getLayerTackleZones().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerOverPlayers().getImage(), 0, 0, null);
 		g2d.drawImage(getLayerRangeRuler().getImage(), 0, 0, null);
@@ -303,6 +312,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				break;
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
 				FieldCoordinate oldPlayerCoordinate = fCoordinateByPlayerId.get(pModelChange.getKey());
+				getLayerTackleZones().updateTackleZones();
 				if (oldPlayerCoordinate != null) {
 					getLayerPlayers().updateBallAndPlayers(oldPlayerCoordinate, true);
 				}
@@ -316,6 +326,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				Player<?> player = game.getPlayerById(pModelChange.getKey());
 				FieldCoordinate playerCoordinateForStateChange = fieldModel.getPlayerCoordinate(player);
 				boolean playerOverBall = fieldModel.isBallInPlay();
+				getLayerTackleZones().updateTackleZones();
 				getLayerPlayers().updateBallAndPlayers(playerCoordinateForStateChange, playerOverBall);
 				break;
 			case FIELD_MODEL_SET_RANGE_RULER:
@@ -353,7 +364,9 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		getLayerOverPlayers().init();
 		getLayerRangeRuler().init();
 		getLayerSketches().init();
+		getLayerTackleZones().init();
 		refresh();
+
 	}
 
 	private void initPlayerCoordinates() {

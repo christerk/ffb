@@ -256,6 +256,17 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem awayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
+	private JRadioButtonMenuItem fTzHomeOnMenuItem;
+	private JRadioButtonMenuItem fTzHomeOffMenuItem;
+	private JRadioButtonMenuItem fTzAwayOnMenuItem;
+	private JRadioButtonMenuItem fTzAwayOffMenuItem;
+	private JRadioButtonMenuItem fTzOpposingOnMenuItem;
+	private JRadioButtonMenuItem fTzOpposingOffMenuItem;
+	private JRadioButtonMenuItem fTzNoOverlapOnMenuItem;
+	private JRadioButtonMenuItem fTzNoOverlapOffMenuItem;
+	private JRadioButtonMenuItem fTzContourOnMenuItem;
+	private JRadioButtonMenuItem fTzContourOffMenuItem;
+
 	private JMenu fMissingPlayersMenu;
 
 	private JMenu fInducementsMenu;
@@ -406,6 +417,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createClientUiMenu(fUserSettingsMenu);
 		createLogMenu(fUserSettingsMenu);
 		createLocalPropertiesItem(fUserSettingsMenu);
+		createTacklezonesMenu(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
@@ -1208,6 +1220,108 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
+	private void createTacklezonesMenu(JMenu fUserSettingsMenu) {
+		JMenu fTacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
+		fTacklezonesMenu.setMnemonic(KeyEvent.VK_T);
+		fUserSettingsMenu.add(fTacklezonesMenu);
+
+		// Home
+		JMenu fTzHomeMenu = new JMenu(dimensionProvider, "Home");
+		fTzHomeMenu.setMnemonic(KeyEvent.VK_H);
+		fTacklezonesMenu.add(fTzHomeMenu);
+
+		ButtonGroup homeGroup = new ButtonGroup();
+
+		fTzHomeOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzHomeOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzHomeOffMenuItem.addActionListener(this);
+		homeGroup.add(fTzHomeOffMenuItem);
+		fTzHomeMenu.add(fTzHomeOffMenuItem);
+
+		fTzHomeOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzHomeOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzHomeOnMenuItem.addActionListener(this);
+		homeGroup.add(fTzHomeOnMenuItem);
+		fTzHomeMenu.add(fTzHomeOnMenuItem);
+
+		// Away
+		JMenu fTzAwayMenu = new JMenu(dimensionProvider, "Away");
+		fTzAwayMenu.setMnemonic(KeyEvent.VK_A);
+		fTacklezonesMenu.add(fTzAwayMenu);
+
+		ButtonGroup awayGroup = new ButtonGroup();
+
+		fTzAwayOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzAwayOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzAwayOffMenuItem.addActionListener(this);
+		awayGroup.add(fTzAwayOffMenuItem);
+		fTzAwayMenu.add(fTzAwayOffMenuItem);
+
+		fTzAwayOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzAwayOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzAwayOnMenuItem.addActionListener(this);
+		awayGroup.add(fTzAwayOnMenuItem);
+		fTzAwayMenu.add(fTzAwayOnMenuItem);
+
+		// Opposing
+		JMenu fTzOpposingMenu = new JMenu(dimensionProvider, "Opposing");
+		fTzOpposingMenu.setMnemonic(KeyEvent.VK_O);
+		fTacklezonesMenu.add(fTzOpposingMenu);
+
+		ButtonGroup opposingGroup = new ButtonGroup();
+
+		fTzOpposingOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzOpposingOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzOpposingOffMenuItem.addActionListener(this);
+		opposingGroup.add(fTzOpposingOffMenuItem);
+		fTzOpposingMenu.add(fTzOpposingOffMenuItem);
+
+		fTzOpposingOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzOpposingOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzOpposingOnMenuItem.addActionListener(this);
+		opposingGroup.add(fTzOpposingOnMenuItem);
+		fTzOpposingMenu.add(fTzOpposingOnMenuItem);
+
+		// No Overlap
+		JMenu fTzNoOverlapMenu = new JMenu(dimensionProvider, "No Overlap");
+		fTzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
+		fTacklezonesMenu.add(fTzNoOverlapMenu);
+
+		ButtonGroup noOverlapGroup = new ButtonGroup();
+
+		fTzNoOverlapOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzNoOverlapOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzNoOverlapOffMenuItem.addActionListener(this);
+		noOverlapGroup.add(fTzNoOverlapOffMenuItem);
+		fTzNoOverlapMenu.add(fTzNoOverlapOffMenuItem);
+
+		fTzNoOverlapOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzNoOverlapOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzNoOverlapOnMenuItem.addActionListener(this);
+		noOverlapGroup.add(fTzNoOverlapOnMenuItem);
+		fTzNoOverlapMenu.add(fTzNoOverlapOnMenuItem);
+
+		// Contour
+		JMenu fTzContourMenu = new JMenu(dimensionProvider, "Contour");
+		fTzContourMenu.setMnemonic(KeyEvent.VK_C);
+		fTacklezonesMenu.add(fTzContourMenu);
+
+		ButtonGroup contourGroup = new ButtonGroup();
+
+		fTzContourOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzContourOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzContourOffMenuItem.addActionListener(this);
+		contourGroup.add(fTzContourOffMenuItem);
+		fTzContourMenu.add(fTzContourOffMenuItem);
+
+		fTzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzContourOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzContourOnMenuItem.addActionListener(this);
+		contourGroup.add(fTzContourOnMenuItem);
+		fTzContourMenu.add(fTzContourOnMenuItem);
+	}
+
+
 	private boolean refreshFrameBackgroundMenu(boolean useColor) {
 		Color oldColor = styleProvider.getFrameBackground();
 		Color newColor = null;
@@ -1419,6 +1533,31 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			styleProvider.setSwapTeamColors(swapTeamColors);
 			refreshUi = true;
 		}
+
+		// Home Tacklezone
+		String tzHomeSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_HOME);
+		fTzHomeOffMenuItem.setSelected(true);
+		fTzHomeOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON.equals(tzHomeSetting));
+
+		// Away Tacklezone
+		String tzAwaySetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_AWAY);
+		fTzAwayOffMenuItem.setSelected(true);
+		fTzAwayOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY_ON.equals(tzAwaySetting));
+
+		// Opposing Tacklezone
+		String tzOpposingSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_OPPOSING);
+		fTzOpposingOffMenuItem.setSelected(true);
+		fTzOpposingOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_OPPOSING_ON.equals(tzOpposingSetting));
+
+		// No Overlap Tacklezone
+		String tzNoOverlapSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP);
+		fTzNoOverlapOffMenuItem.setSelected(true);
+		fTzNoOverlapOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON.equals(tzNoOverlapSetting));
+
+		// Contour Tacklezone
+		String tzContourSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
+		fTzContourOffMenuItem.setSelected(true);
+		fTzContourOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(tzContourSetting));
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -2569,6 +2708,56 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (source == defaultSketchCursor) {
 			getClient().setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzHomeOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_HOME, IClientPropertyValue.SETTING_TACKLEZONES_HOME_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzHomeOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_HOME, IClientPropertyValue.SETTING_TACKLEZONES_HOME_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzAwayOnMenuItem) {	
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_AWAY, IClientPropertyValue.SETTING_TACKLEZONES_AWAY_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzAwayOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_AWAY, IClientPropertyValue.SETTING_TACKLEZONES_AWAY_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzOpposingOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_OPPOSING, IClientPropertyValue.SETTING_TACKLEZONES_OPPOSING_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzOpposingOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_OPPOSING, IClientPropertyValue.SETTING_TACKLEZONES_OPPOSING_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzNoOverlapOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzNoOverlapOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzContourOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzContourOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_OFF);
 			getClient().saveUserSettings(true);
 		}
 
