@@ -272,7 +272,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 
   private String getCurrentTacklezoneSetting() {
     ClientMode mode = getClient().getMode();
-    if (mode == ClientMode.SPECTATOR) {
+    if (mode == ClientMode.SPECTATOR || mode == ClientMode.REPLAY) {
       return getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
     } else { // treat all others as PLAYER for now
       return getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
