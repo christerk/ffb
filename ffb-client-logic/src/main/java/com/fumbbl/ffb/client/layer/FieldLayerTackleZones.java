@@ -176,13 +176,24 @@ public class FieldLayerTackleZones extends FieldLayer {
         int w  = originX[col+1] - px;
         int h  = originY[row+1] - py;
 
-        if (hO > 0 && aO > 0) {
-          paintZoneRect(g2d, px, py, w, h, homeColor, (baseA * Math.min(hO, cap)) / 2f);
-          paintZoneRect(g2d, px, py, w, h, awayColor, (baseA * Math.min(aO, cap)) / 2f);
-        } else if (hO > 0) {
-          paintZoneRect(g2d, px, py, w, h, homeColor, baseA * Math.min(hO, cap));
-        } else {
-          paintZoneRect(g2d, px, py, w, h, awayColor, baseA * Math.min(aO, cap));
+        float homeVal = Math.min(hO, cap);// Cap home tackle zones
+        float awayVal = Math.min(aO, cap);// Cap away tackle zones
+
+        if (homeVal > 0 && awayVal > 0) {
+          float totalVal = homeVal + awayVal;
+          float maxVal = Math.max(homeVal, awayVal);// Use the larger count for max intensity
+          float totalIntensity = baseA * maxVal;    // Set total intensity by the largest stack
+          // Split intensity proportionally between teams
+          float homeAlpha = totalIntensity * (homeVal / totalVal);
+          float awayAlpha = totalIntensity * (awayVal / totalVal);
+          paintZoneRect(g2d, px, py, w, h, homeColor, homeAlpha);
+          paintZoneRect(g2d, px, py, w, h, awayColor, awayAlpha);
+        } else if (homeVal > 0) {
+          // Only home team present
+          paintZoneRect(g2d, px, py, w, h, homeColor, baseA * homeVal);
+        } else if (awayVal > 0) {
+          // Only away team present
+          paintZoneRect(g2d, px, py, w, h, awayColor, baseA * awayVal);
         }
       }
     }
