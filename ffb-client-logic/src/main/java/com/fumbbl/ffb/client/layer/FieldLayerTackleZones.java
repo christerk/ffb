@@ -24,6 +24,7 @@ import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -31,7 +32,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.awt.Rectangle;
 import java.awt.BasicStroke;
@@ -82,7 +82,7 @@ public class FieldLayerTackleZones extends FieldLayer {
   // Tallies up all tackle zone influences into two team maps.
   private void countTackleZones(int[][] homeMap, int[][] awayMap, int pitchWidth, int pitchHeight) {
     Game game = getClient().getGame();
-    List<Player<?>> playerList = Arrays.asList(game.getPlayers());
+    FieldModel fieldModel = game.getFieldModel();
 
     String setting = getCurrentTacklezoneSetting();
 
@@ -97,13 +97,14 @@ public class FieldLayerTackleZones extends FieldLayer {
     boolean isHomeActive = game.isHomePlaying();
     
 
+    List<Player<?>> playerList = getPlayersOnField(fieldModel);
 
     for (Player<?> player : playerList) {
+
+      FieldCoordinate coord = fieldModel.getPlayerCoordinate(player);
+
       PlayerState playerState = game.getFieldModel().getPlayerState(player);
       if (!playerState.hasTacklezones()) continue;
-
-      FieldCoordinate coord = game.getFieldModel().getPlayerCoordinate(player);
-      if (coord == null || coord.isBoxCoordinate()) continue;
 
       boolean isHomePlayer = player.getTeam() == game.getTeamHome();
       
@@ -302,6 +303,14 @@ public class FieldLayerTackleZones extends FieldLayer {
            turnMode == TurnMode.SOLID_DEFENCE ||
            turnMode == TurnMode.KICKOFF_RETURN; 
   }
+  
 
+  private List<Player<?>> getPlayersOnField(FieldModel fieldModel) {
+    List<Player<?>> result = new ArrayList<>();
+    for (FieldCoordinate coord : fieldModel.getPlayerCoordinates()) {
+      result.addAll(fieldModel.getPlayers(coord));
+    }
+    return result;
+  }
  
 }
