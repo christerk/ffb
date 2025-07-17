@@ -56,7 +56,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		fActionKeyBindings = new ActionKeyBindings(this);
 
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
 			UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
 		} catch (Exception e) {
@@ -90,9 +91,11 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		getUserInterface().setVisible(true);
 
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
-		//aboutDialogHandler.showDialog();
-		DebugDialog debugDialog = new DebugDialog();
-		debugDialog.showDialog(getUserInterface().getDesktop());
+		aboutDialogHandler.showDialog();
+		if (getParameters().getCoach().equalsIgnoreCase("Candlejack")) {
+			DebugDialog debugDialog = new DebugDialog();
+			debugDialog.showDialog(getUserInterface().getDesktop());
+		}
 	}
 
 	public void dialogClosed(IDialog pDialog) {
