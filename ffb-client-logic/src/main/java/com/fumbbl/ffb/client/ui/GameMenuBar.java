@@ -256,6 +256,28 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem awayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
+	// Player Mode
+	private JRadioButtonMenuItem fTzPlayerNoneMenuItem;
+	private JRadioButtonMenuItem fTzPlayerHomeMenuItem;
+	private JRadioButtonMenuItem fTzPlayerAwayMenuItem;
+	private JRadioButtonMenuItem fTzPlayerBothMenuItem;
+	private JRadioButtonMenuItem fTzPlayerPassiveMenuItem;
+
+	// Spectator Mode
+	private JRadioButtonMenuItem fTzSpectatorNoneMenuItem;
+	private JRadioButtonMenuItem fTzSpectatorHomeMenuItem;
+	private JRadioButtonMenuItem fTzSpectatorAwayMenuItem;
+	private JRadioButtonMenuItem fTzSpectatorBothMenuItem;
+	private JRadioButtonMenuItem fTzSpectatorPassiveMenuItem;
+
+	// No Overlap (global)
+	private JRadioButtonMenuItem fTzNoOverlapOffMenuItem;
+	private JRadioButtonMenuItem fTzNoOverlapOnMenuItem;
+
+	// Contour (global)
+	private JRadioButtonMenuItem fTzContourOffMenuItem;
+	private JRadioButtonMenuItem fTzContourOnMenuItem;
+
 	private JMenu fMissingPlayersMenu;
 
 	private JMenu fInducementsMenu;
@@ -406,6 +428,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createClientUiMenu(fUserSettingsMenu);
 		createLogMenu(fUserSettingsMenu);
 		createLocalPropertiesItem(fUserSettingsMenu);
+		createTacklezonesMenu(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
@@ -1208,6 +1231,127 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
+	private void createTacklezonesMenu(JMenu fUserSettingsMenu) {
+		JMenu fTacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
+		fTacklezonesMenu.setMnemonic(KeyEvent.VK_T);
+		fUserSettingsMenu.add(fTacklezonesMenu);
+
+		// --- Player Mode ---
+		JMenu playerModeMenu = new JMenu(dimensionProvider, "Player Mode");
+		playerModeMenu.setMnemonic(KeyEvent.VK_P);
+		fTacklezonesMenu.add(playerModeMenu);
+
+		ButtonGroup playerModeGroup = new ButtonGroup();
+
+		fTzPlayerNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		fTzPlayerNoneMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzPlayerNoneMenuItem.addActionListener(this);
+		playerModeGroup.add(fTzPlayerNoneMenuItem);
+		playerModeMenu.add(fTzPlayerNoneMenuItem);
+
+		fTzPlayerHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		fTzPlayerHomeMenuItem.setMnemonic(KeyEvent.VK_H);
+		fTzPlayerHomeMenuItem.addActionListener(this);
+		playerModeGroup.add(fTzPlayerHomeMenuItem);
+		playerModeMenu.add(fTzPlayerHomeMenuItem);
+
+		fTzPlayerAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		fTzPlayerAwayMenuItem.setMnemonic(KeyEvent.VK_A);
+		fTzPlayerAwayMenuItem.addActionListener(this);
+		playerModeGroup.add(fTzPlayerAwayMenuItem);
+		playerModeMenu.add(fTzPlayerAwayMenuItem);
+
+		fTzPlayerBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		fTzPlayerBothMenuItem.setMnemonic(KeyEvent.VK_B);
+		fTzPlayerBothMenuItem.addActionListener(this);
+		playerModeGroup.add(fTzPlayerBothMenuItem);
+		playerModeMenu.add(fTzPlayerBothMenuItem);
+
+		fTzPlayerPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		fTzPlayerPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
+		fTzPlayerPassiveMenuItem.addActionListener(this);
+		playerModeGroup.add(fTzPlayerPassiveMenuItem);
+		playerModeMenu.add(fTzPlayerPassiveMenuItem);
+
+		// --- Spectator Mode ---
+		JMenu spectatorModeMenu = new JMenu(dimensionProvider, "Spectator Mode");
+		spectatorModeMenu.setMnemonic(KeyEvent.VK_S);
+		fTacklezonesMenu.add(spectatorModeMenu);
+
+		ButtonGroup spectatorModeGroup = new ButtonGroup();
+
+		fTzSpectatorNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		fTzSpectatorNoneMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzSpectatorNoneMenuItem.addActionListener(this);
+		spectatorModeGroup.add(fTzSpectatorNoneMenuItem);
+		spectatorModeMenu.add(fTzSpectatorNoneMenuItem);
+
+		fTzSpectatorHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		fTzSpectatorHomeMenuItem.setMnemonic(KeyEvent.VK_H);
+		fTzSpectatorHomeMenuItem.addActionListener(this);
+		spectatorModeGroup.add(fTzSpectatorHomeMenuItem);
+		spectatorModeMenu.add(fTzSpectatorHomeMenuItem);
+
+		fTzSpectatorAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		fTzSpectatorAwayMenuItem.setMnemonic(KeyEvent.VK_A);
+		fTzSpectatorAwayMenuItem.addActionListener(this);
+		spectatorModeGroup.add(fTzSpectatorAwayMenuItem);
+		spectatorModeMenu.add(fTzSpectatorAwayMenuItem);
+
+		fTzSpectatorBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		fTzSpectatorBothMenuItem.setMnemonic(KeyEvent.VK_B);
+		fTzSpectatorBothMenuItem.addActionListener(this);
+		spectatorModeGroup.add(fTzSpectatorBothMenuItem);
+		spectatorModeMenu.add(fTzSpectatorBothMenuItem);
+
+		fTzSpectatorPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		fTzSpectatorPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
+		fTzSpectatorPassiveMenuItem.addActionListener(this);
+		spectatorModeGroup.add(fTzSpectatorPassiveMenuItem);
+		spectatorModeMenu.add(fTzSpectatorPassiveMenuItem);
+
+		fTacklezonesMenu.addSeparator();
+
+		// --- No Overlap (global) ---
+		JMenu fTzNoOverlapMenu = new JMenu(dimensionProvider, "No Overlap");
+		fTzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
+		fTacklezonesMenu.add(fTzNoOverlapMenu);
+
+		ButtonGroup noOverlapGroup = new ButtonGroup();
+
+		fTzNoOverlapOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzNoOverlapOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzNoOverlapOffMenuItem.addActionListener(this);
+		noOverlapGroup.add(fTzNoOverlapOffMenuItem);
+		fTzNoOverlapMenu.add(fTzNoOverlapOffMenuItem);
+
+		fTzNoOverlapOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzNoOverlapOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzNoOverlapOnMenuItem.addActionListener(this);
+		noOverlapGroup.add(fTzNoOverlapOnMenuItem);
+		fTzNoOverlapMenu.add(fTzNoOverlapOnMenuItem);
+
+		// --- Contour (global) ---
+		JMenu fTzContourMenu = new JMenu(dimensionProvider, "Contour");
+		fTzContourMenu.setMnemonic(KeyEvent.VK_C);
+		fTacklezonesMenu.add(fTzContourMenu);
+
+		ButtonGroup contourGroup = new ButtonGroup();
+
+		fTzContourOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		fTzContourOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		fTzContourOffMenuItem.addActionListener(this);
+		contourGroup.add(fTzContourOffMenuItem);
+		fTzContourMenu.add(fTzContourOffMenuItem);
+
+		fTzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		fTzContourOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		fTzContourOnMenuItem.addActionListener(this);
+		contourGroup.add(fTzContourOnMenuItem);
+		fTzContourMenu.add(fTzContourOnMenuItem);
+	}
+
+
 	private boolean refreshFrameBackgroundMenu(boolean useColor) {
 		Color oldColor = styleProvider.getFrameBackground();
 		Color newColor = null;
@@ -1419,6 +1563,32 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			styleProvider.setSwapTeamColors(swapTeamColors);
 			refreshUi = true;
 		}
+
+		// Tacklezone player mode
+		String tzPlayerSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
+		fTzPlayerNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzPlayerSetting));
+		fTzPlayerHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzPlayerSetting));
+		fTzPlayerAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzPlayerSetting));
+		fTzPlayerBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzPlayerSetting));
+		fTzPlayerPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzPlayerSetting));
+
+		// Tacklezone spec mode
+		String tzSpectatorSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
+		fTzSpectatorNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzSpectatorSetting));
+		fTzSpectatorHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzSpectatorSetting));
+		fTzSpectatorAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzSpectatorSetting));
+		fTzSpectatorBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzSpectatorSetting));
+		fTzSpectatorPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzSpectatorSetting));
+
+		// Tacklezone No Overlap
+		String tzNoOverlapSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP);
+		fTzNoOverlapOffMenuItem.setSelected(true);
+		fTzNoOverlapOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON.equals(tzNoOverlapSetting));
+
+		// Tacklezone Contour
+		String tzContourSetting = getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
+		fTzContourOffMenuItem.setSelected(true);
+		fTzContourOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(tzContourSetting));
 
 		boolean gameStarted = ((game != null) && (game.getStarted() != null));
 		fGameStatisticsMenuItem.setEnabled(gameStarted);
@@ -2569,6 +2739,70 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (source == defaultSketchCursor) {
 			getClient().setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		// Tacklezones Player Mode Menu Item Handlers
+		if (source == fTzPlayerNoneMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzPlayerHomeMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_HOME);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzPlayerAwayMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_AWAY);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzPlayerBothMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_BOTH);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzPlayerPassiveMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
+			getClient().saveUserSettings(true);
+		}
+
+		// Tacklezones Spectator Mode Menu Item Handlers
+		if (source == fTzSpectatorNoneMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzSpectatorHomeMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_HOME);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzSpectatorAwayMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_AWAY);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzSpectatorBothMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_BOTH);
+			getClient().saveUserSettings(true);
+		}
+		if (source == fTzSpectatorPassiveMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzNoOverlapOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzNoOverlapOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_NO_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzContourOnMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == fTzContourOffMenuItem) {
+			getClient().setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_OFF);
 			getClient().saveUserSettings(true);
 		}
 
