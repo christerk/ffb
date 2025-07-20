@@ -58,6 +58,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		try {
 			//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			this.logError("System LAF: " + UIManager.getSystemLookAndFeelClassName());
+			for (UIManager.LookAndFeelInfo installedLookAndFeel : UIManager.getInstalledLookAndFeels()) {
+				this.logError("Installed LAF: " + installedLookAndFeel);
+			}
+
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
 			UIManager.put("InternalFrame.useTaskBar", Boolean.FALSE);
