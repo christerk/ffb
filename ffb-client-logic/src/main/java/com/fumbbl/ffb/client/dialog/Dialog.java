@@ -166,4 +166,12 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	protected FontCache fontCache() {
 		return getClient().getUserInterface().getFontCache();
 	}
+
+	@Override
+	public void addNotify() {
+		super.addNotify();
+		// workaround for issue with gtk laf where dropdowns do not communicate their correct size before this point
+		// https://stackoverflow.com/a/79707250/1506428
+		pack();
+	}
 }
