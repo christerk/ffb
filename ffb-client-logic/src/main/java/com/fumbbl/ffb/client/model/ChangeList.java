@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.37.0")
+			.addImprovement("Dialogs: On systems using gtk laf dialogs with dropdowns did not render properly")
 			.addFeature("Player Markings: it is now possible to add manual player markings in addition to automatic player markings using different modes")
 			.addBugfix("Manual Markings: Changes to manual markings should now be preserved should the other coach leave the game")
 			.addFeature("Added command to change amount of rerolls in test games")
