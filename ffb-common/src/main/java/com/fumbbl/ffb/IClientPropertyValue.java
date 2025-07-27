@@ -82,4 +82,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_SKETCH_CURSOR_ON = "sketchCursorOn";
 	String SETTING_SKETCH_CURSOR_OFF = "sketchCursorOff";
+
+	String SETTING_LAF_SYSTEM = "lafSystem";
+	String SETTING_LAF_CROSS_PLATFORM = "lafCrossPlatform";
 }

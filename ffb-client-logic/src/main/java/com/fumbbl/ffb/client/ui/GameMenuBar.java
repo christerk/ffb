@@ -104,6 +104,7 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LAF;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_SETTINGS;
@@ -199,6 +200,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
 	private JRadioButtonMenuItem layoutWideMenuItem;
+
+	private JRadioButtonMenuItem lafSystemItem;
+	private JRadioButtonMenuItem lafCrossPlatformItem;
 
 	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -475,6 +479,22 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		orientationMenu.add(layoutWideMenuItem);
 
 		createScaleItem(uiMenu);
+
+		JMenu lafMenu = new JMenu(dimensionProvider, SETTING_LAF);
+		lafMenu.setMnemonic(KeyEvent.VK_L);
+		uiMenu.add(lafMenu);
+
+		ButtonGroup lafGroup = new ButtonGroup();
+
+		lafSystemItem = new JRadioButtonMenuItem(dimensionProvider, "System");
+		lafSystemItem.addActionListener(this);
+		lafMenu.add(lafSystemItem);
+		lafGroup.add(lafSystemItem);
+
+		lafCrossPlatformItem = new JRadioButtonMenuItem(dimensionProvider, "Cross Platform");
+		lafCrossPlatformItem.addActionListener(this);
+		lafMenu.add(lafCrossPlatformItem);
+		lafGroup.add(lafCrossPlatformItem);
 
 	}
 
@@ -1452,6 +1472,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
+		updateLaf();
 		refreshUi |= updateScaling();
 		refreshUi |= updateOrientation();
 
@@ -1514,6 +1535,44 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				break;
 		}
 		fDialogShown = null;
+	}
+
+	private void updateLaf() {
+		if (getClient().getUserInterface() == null) {
+			return;
+		}
+
+			if (IClientPropertyValue.SETTING_LAF_CROSS_PLATFORM.equals(getClient().getProperty(CommonProperty.SETTING_LAF))) {
+			if (!UIManager.getCrossPlatformLookAndFeelClassName().equals(UIManager.getLookAndFeel().getClass().getName())) {
+				try {
+					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+					for (Window window : Window.getWindows()) {
+						SwingUtilities.updateComponentTreeUI(window);
+					}
+					if (getClient().getUserInterface() != null) {
+						getClient().getUserInterface().initComponents(true);
+					}
+				} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+					getClient().getFactorySource().logWithOutGameId(e);
+				}
+			}
+			lafCrossPlatformItem.setSelected(true);
+		} else {
+			if (!UIManager.getSystemLookAndFeelClassName().equals(UIManager.getLookAndFeel().getClass().getName())) {
+				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					for (Window window : Window.getWindows()) {
+						SwingUtilities.updateComponentTreeUI(window);
+					}
+					if (getClient().getUserInterface() != null) {
+						getClient().getUserInterface().initComponents(true);
+					}
+				} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+					getClient().getFactorySource().logWithOutGameId(e);
+				}
+			}
+			lafSystemItem.setSelected(true);
+		}
 	}
 
 	private void updateScaleProperty(double scalingFactor) {
@@ -2599,6 +2658,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		if (source == defaultSketchCursor) {
 			getClient().setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == lafSystemItem) {
+			getClient().setProperty(CommonProperty.SETTING_LAF, IClientPropertyValue.SETTING_LAF_SYSTEM);
+			getClient().saveUserSettings(true);
+		}
+
+		if (source == lafCrossPlatformItem) {
+			getClient().setProperty(CommonProperty.SETTING_LAF, IClientPropertyValue.SETTING_LAF_CROSS_PLATFORM);
 			getClient().saveUserSettings(true);
 		}
 

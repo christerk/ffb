@@ -67,7 +67,8 @@ public enum CommonProperty {
 	SETTING_LOG("setting.log", "Client Logging", "Configuration"),
 	SETTING_LOG_DIR("setting.log.dir", "Logging Folder", "Configuration"),
 	SETTING_LOG_MODE("setting.log.mode", "Logging on/off", "Configuration"),
-	SETTING_SKETCH_CURSOR("setting.sketchCursor", "Sketch Cursor", "Configuration")
+	SETTING_SKETCH_CURSOR("setting.sketchCursor", "Sketch Cursor", "Configuration"),
+	SETTING_LAF("setting.laf", "Look and Feel", "Configuration")
 	;
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_UI_LAYOUT,
@@ -84,7 +85,7 @@ public enum CommonProperty {
 		SETTING_LOCAL_ICON_CACHE, SETTING_LOCAL_ICON_CACHE_PATH, SETTING_FONT_COLOR_PLAYER_MARKER_HOME,
 		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER, SETTING_LOG_DIR,
 		SETTING_LOG_MODE, SETTING_SKETCH_CURSOR, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME,
-		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY
+		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, SETTING_LAF
 
 	};
 
