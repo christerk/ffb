@@ -36,6 +36,11 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	public void tearDown() {}
 
+	public void reinitializeLocalState() {
+		// Default empty implementation
+		// Subclasses should override to recreate their local state
+	}
+
 	public final ClientStateId getId() {
 		return logicModule.getId();
 	}

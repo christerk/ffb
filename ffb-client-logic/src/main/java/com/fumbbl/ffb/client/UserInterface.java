@@ -11,6 +11,8 @@ import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.sound.SoundEngine;
+import com.fumbbl.ffb.client.state.ClientState;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.ui.ChatComponent;
 import com.fumbbl.ffb.client.ui.GameMenuBar;
 import com.fumbbl.ffb.client.ui.LogComponent;
@@ -24,16 +26,8 @@ import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -160,9 +154,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		if (callInit) {
 			init(null);
-			boolean activeReplay = getClient().getMode() != ClientMode.REPLAY
-				|| getClient().getReplayer() != null && getClient().getReplayer().hasControl();
-			getChat().getReplayControl().setActive(activeReplay);
+			ClientState<? extends LogicModule, ? extends FantasyFootballClient> state = fClient.getClientState();
+			if (state != null) {
+				state.reinitializeLocalState();
+			}
+			boolean activeReplay = getClient().getMode() != ClientMode.REPLAY || getClient().getReplayer() != null && getClient().getReplayer().hasControl();			getChat().getReplayControl().setActive(activeReplay);
 			getChat().getReplayControl().refresh();
 		}
 		fDialogManager.setShownDialogParameter(null);
