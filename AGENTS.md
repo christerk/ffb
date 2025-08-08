@@ -15,6 +15,14 @@
 - Error handling: Use appropriate exception types, document exceptions in method signatures
 - Test style: Test class names end with "Test", use descriptive test method names
 
+### Import Organization
+1. Project imports first (com.fumbbl.*)
+2. Core Java imports after project imports (javax.*, java.*, etc.)
+3. Within project imports, organize by package hierarchy
+4. No wildcard imports (*) - list each class explicitly
+5. Each import on its own line, no concatenation
+6. Use blank lines to separate import groups
+
 ## Dependencies
 Dependencies are managed centrally in root pom.xml. Add new dependencies there first.
 
