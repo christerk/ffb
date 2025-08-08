@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.ReplayControl;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
+import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -25,7 +26,15 @@ import java.util.Map;
  */
 public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> implements IDialogCloseListener, IProgressListener {
 
+	private enum DialogState {
+		NONE,
+		REPLAY_PROGRESS,
+		INIT_PROGRESS,
+		REPLACE_CHOICE
+	}
+
 	private DialogProgressBar fDialogProgress;
+	private DialogState currentDialog = DialogState.NONE;
 
 	protected ClientStateReplay(FantasyFootballClientAwt pClient) {
 		super(pClient, new ReplayLogicModule(pClient));
@@ -47,7 +56,33 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		return Collections.emptyMap();
 	}
 
-	public void dialogClosed(IDialog pDialog) {
+	@Override
+	public void reinitializeLocalState() {
+		super.reinitializeLocalState();
+
+		switch (currentDialog) {
+			case REPLAY_PROGRESS:
+				fDialogProgress.showDialog(this);
+				break;
+
+			case INIT_PROGRESS:
+				fDialogProgress.showDialog(this);
+				break;
+			case REPLACE_CHOICE:
+				new DialogReplayModeChoice(getClient()).showDialog(this);
+			case NONE:
+				break;
+		}
+	}
+
+	@Override
+	public void dialogClosed(IDialog dialog) {
+		if (dialog instanceof DialogReplayModeChoice) {
+			DialogReplayModeChoice replayModeChoice = (DialogReplayModeChoice) dialog;
+			logicModule.replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
+			currentDialog = DialogState.NONE;
+			dialog.hideDialog();
+		}
 	}
 
 	public void updateProgress(int pProgress) {
@@ -66,6 +101,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 
 	private void showProgressDialog() {
 		fDialogProgress = new DialogProgressBar(getClient(), "Receiving Replay");
+		currentDialog = DialogState.REPLAY_PROGRESS;
 		fDialogProgress.showDialog(this);
 	}
 
@@ -169,18 +205,31 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 
 		@Override
 		public void loadDone() {
-			clientStateReplay.fDialogProgress.hideDialog();
+			if (clientStateReplay.fDialogProgress != null) {
+				clientStateReplay.fDialogProgress.hideDialog();
+			}
+			clientStateReplay.currentDialog = DialogState.NONE;
 		}
 
 		@Override
 		public void startReplayerInit() {
 			clientStateReplay.fDialogProgress = new DialogProgressBar(clientStateReplay.getClient(), "Initializing Replay");
+			clientStateReplay.currentDialog = DialogState.INIT_PROGRESS;
 			clientStateReplay.fDialogProgress.showDialog(clientStateReplay);
 		}
 
 		@Override
 		public void replayerInitialized() {
-			clientStateReplay.fDialogProgress.hideDialog();
+			if (clientStateReplay.fDialogProgress != null) {
+				clientStateReplay.fDialogProgress.hideDialog();
+			}
+			clientStateReplay.currentDialog = DialogState.NONE;
+		}
+
+		@Override
+		public void promptForReplayChoice() {
+			clientStateReplay.currentDialog = DialogState.REPLACE_CHOICE;
+			new DialogReplayModeChoice(clientStateReplay.getClient()).showDialog(clientStateReplay);
 		}
 
 		@Override

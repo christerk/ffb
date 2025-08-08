@@ -25,8 +25,6 @@ import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandTeamList;
 import com.fumbbl.ffb.net.commands.ServerCommandVersion;
 import com.fumbbl.ffb.util.StringTool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -36,8 +34,8 @@ import java.util.Map;
  */
 public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implements IDialogCloseListener {
 
-	private static final Logger log = LoggerFactory.getLogger(ClientStateLogin.class);
 	private ServerStatus fLastServerError;
+	private boolean loginDialogVisible;
 	protected ClientStateLogin(FantasyFootballClientAwt pClient) {
 		super(pClient, new LoginLogicModule(pClient));
 	}
@@ -56,6 +54,7 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
+		loginDialogVisible = false;
 		switch (pDialog.getId()) {
 			case GAME_COACH_PASSWORD:
 				DialogLogin loginDialog = (DialogLogin) pDialog;
@@ -178,6 +177,14 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 		return Collections.emptyMap();
 	}
 
+	@Override
+	public void reinitializeLocalState() {
+		super.reinitializeLocalState();
+		// If the login dialog was visible, show it again
+		if (loginDialogVisible) {
+			showLoginDialog();
+		}
+	}
 	private void showLoginDialog() {
 		boolean hasGameId = (getClient().getParameters().getGameId() > 0);
 		if (StringTool.isProvided(getClient().getParameters().getAuthentication())) {
@@ -186,15 +193,20 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 		DialogLogin loginDialog = new DialogLogin(getClient(), logicModule.getEncodedPassword(), logicModule.getPasswordLength(),
 			logicModule.getTeamHomeName(), logicModule.getTeamAwayName(), !hasGameId);
 		if (hasGameId && (logicModule.getPasswordLength() < 0)) {
-			dialogClosed(loginDialog); // close dialog right away if no game name or password is necessary
+			// close dialog right away if no game name or password is necessary
+			dialogClosed(loginDialog);
 		} else if (fLastServerError == ServerStatus.ERROR_GAME_IN_USE) {
+			loginDialogVisible = true;
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_GAME);
 		} else if (fLastServerError == ServerStatus.ERROR_UNKNOWN_COACH) {
+			loginDialogVisible = true;
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_COACH);
 		} else if (fLastServerError == ServerStatus.ERROR_WRONG_PASSWORD) {
+			loginDialogVisible = true;
 			loginDialog.setEncodedPassword(null, logicModule.getPasswordLength());
 			loginDialog.showDialogWithError(this, DialogLogin.FIELD_PASSWORD);
 		} else {
+			loginDialogVisible = true;
 			loginDialog.showDialog(this);
 		}
 	}

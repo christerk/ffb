@@ -4,6 +4,8 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.dialog.DialogProgressBar;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.net.NetCommand;
 
@@ -15,6 +17,7 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	protected final T logicModule;
 
 	protected FieldCoordinate fSelectSquareCoordinate;
+	private DialogProgressBar dialogProgress;
 
 	public ClientState(C pClient, T logicModule) {
 		fClient = pClient;
@@ -37,8 +40,9 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	public void tearDown() {}
 
 	public void reinitializeLocalState() {
-		// Default empty implementation
-		// Subclasses should override to recreate their local state
+		if (dialogProgress != null) {
+			dialogProgress.showDialog(dialogProgress.getCloseListener());
+		}
 	}
 
 	public final ClientStateId getId() {
@@ -123,6 +127,20 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 
 	public boolean isDropAllowed(FieldCoordinate dragEndPosition) {
 		return true;
+	}
+
+	public void showIconProgress(IDialogCloseListener listener, int total) {
+		dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, total);
+		dialogProgress.showDialog(listener);
+	}
+
+	public void updateIconProgress(int count, String message) {
+		dialogProgress.updateProgress(count, message);
+	}
+
+	public void hideIconProgress() {
+		dialogProgress.hideDialog();
+		dialogProgress = null;
 	}
 }
 

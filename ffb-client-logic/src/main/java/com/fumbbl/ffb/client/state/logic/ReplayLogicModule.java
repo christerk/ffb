@@ -10,9 +10,6 @@ import com.fumbbl.ffb.client.ClientParameters;
 import com.fumbbl.ffb.client.ClientReplayer;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IProgressListener;
-import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
-import com.fumbbl.ffb.client.dialog.IDialog;
-import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.model.ControlAware;
 import com.fumbbl.ffb.client.model.OnlineAware;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
@@ -30,13 +27,17 @@ import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandStatus;
 import com.fumbbl.ffb.util.StringTool;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
  */
-public class ReplayLogicModule extends LogicModule implements IDialogCloseListener {
+public class ReplayLogicModule extends LogicModule {
 
 	private List<ServerCommand> fReplayList;
 	private Set<Integer> markingAffectingCommands;
@@ -173,8 +174,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 				break;
 		}
 		if (loadingDone && ClientMode.REPLAY == client.getMode()) {
-			new DialogReplayModeChoice(client).showDialog(this);
-		}
+			callbacks.promptForReplayChoice();		}
 	}
 
 	public void evaluateControl(boolean hasControl, String coach) {
@@ -191,7 +191,7 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		client.getClientData().setSpectators(filteredCoaches);
 	}
 
-	private void replayMode(boolean online, String name) {
+	public void replayMode(boolean online, String name) {
 		String sanitizedName = name.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, name.length()));
 		String coach = client.getParameters().getCoach();
 		if (online && StringTool.isProvided(sanitizedName)) {
@@ -225,15 +225,6 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {
 		throw new UnsupportedOperationException("actionContext for acting player is not supported in replay context");
-	}
-
-	@Override
-	public void dialogClosed(IDialog dialog) {
-		if (dialog instanceof DialogReplayModeChoice) {
-			DialogReplayModeChoice replayModeChoice = (DialogReplayModeChoice) dialog;
-			replayMode(replayModeChoice.isOnline(), replayModeChoice.getReplayName());
-			dialog.hideDialog();
-		}
 	}
 
 	public boolean isOnline() {
@@ -312,5 +303,8 @@ public class ReplayLogicModule extends LogicModule implements IDialogCloseListen
 		 */
 		void coachLeft(String coach, List<String> allCoaches);
 
-	}
-}
+		/**
+		 * Called when the replay mode choice dialog should be shown
+		 */
+		void promptForReplayChoice();
+	}}

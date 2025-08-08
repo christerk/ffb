@@ -8,7 +8,6 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
@@ -103,8 +102,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		int nrOfIcons = iconUrlsToDownload.size();
 		if (nrOfIcons > 0) {
 
-			DialogProgressBar dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, nrOfIcons);
-			dialogProgress.showDialog(this);
+			getClient().getClientState().showIconProgress(this, nrOfIcons);
 
 			// preload all icon urls now
 			int currentIconNr = 0;
@@ -112,10 +110,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 				getClient().logDebug("download " + iconUrl);
 				iconCache.loadIconFromUrl(iconUrl);
 				String message = String.format("Loaded icon %d of %d.", ++currentIconNr, nrOfIcons);
-				dialogProgress.updateProgress(currentIconNr, message);
+				getClient().getClientState().updateIconProgress(currentIconNr, message);
 			}
 
-			dialogProgress.hideDialog();
+			getClient().getClientState().hideIconProgress();
 
 		}
 
