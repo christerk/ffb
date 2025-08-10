@@ -24,13 +24,9 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
-import com.fumbbl.ffb.client.dialog.DialogChangeList;
-import com.fumbbl.ffb.client.dialog.DialogChatCommands;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
 import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
@@ -272,11 +268,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenu fGameOptionsMenu;
 
-	private JMenuItem fAboutMenuItem;
-	private JMenuItem fChatCommandsMenuItem;
-	private JMenuItem fKeyBindingsMenuItem;
-	private JMenuItem changeListItem;
-	private JMenuItem autoMarkingItem;
+	private HelpMenu helpMenu;
+
 	private JMenu reRollBallAndChainPanelMenu;
 
 	private JMenuItem resetColors;
@@ -286,10 +279,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem customSketchCursor;
 	private JRadioButtonMenuItem defaultSketchCursor;
 
-	private IDialog fDialogShown;
-
-	private int fCurrentInducementTotalHome;
-	private int fCurrentUsedCardsHome;
+	private int fCurrentInducementTotalHome;	private int fCurrentUsedCardsHome;
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 
@@ -339,31 +329,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void createHelpMenu() {
-		JMenu fHelpMenu = new JMenu(dimensionProvider, "Help");
-		fHelpMenu.setMnemonic(KeyEvent.VK_H);
-		add(fHelpMenu);
-
-		fAboutMenuItem = new JMenuItem(dimensionProvider, "About", KeyEvent.VK_A);
-		fAboutMenuItem.addActionListener(this);
-		fHelpMenu.add(fAboutMenuItem);
-
-		fChatCommandsMenuItem = new JMenuItem(dimensionProvider, "Chat Commands", KeyEvent.VK_C);
-		fChatCommandsMenuItem.addActionListener(this);
-		fHelpMenu.add(fChatCommandsMenuItem);
-
-		changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_W);
-		changeListItem.addActionListener(this);
-		fHelpMenu.add(changeListItem);
-
-		autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_M);
-		autoMarkingItem.addActionListener(this);
-		fHelpMenu.add(autoMarkingItem);
-
-		fKeyBindingsMenuItem = new JMenuItem(dimensionProvider, "Key Bindings", KeyEvent.VK_K);
-		fKeyBindingsMenuItem.addActionListener(this);
-		fHelpMenu.add(fKeyBindingsMenuItem);
+		helpMenu = new HelpMenu(getClient(), dimensionProvider);
+		add(helpMenu);
 	}
-
 	private void createGameStatusMenus() {
 		fMissingPlayersMenu = new JMenu(dimensionProvider, "Missing Players");
 		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
@@ -1492,7 +1460,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void dialogClosed(IDialog pDialog) {
-		pDialog.hideDialog();
+		fClient.getUserInterface().dialogClosed(pDialog);
 		switch (pDialog.getId()) {
 			case SOUND_VOLUME:
 				DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
@@ -1515,7 +1483,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			default:
 				break;
 		}
-		fDialogShown = null;
 	}
 
 	private void updateScaleProperty(double scalingFactor) {
@@ -1537,11 +1504,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 
 	public void showDialog(IDialog pDialog) {
-		if (fDialogShown != null) {
-			fDialogShown.hideDialog();
-		}
-		fDialogShown = pDialog;
-		fDialogShown.showDialog(this);
+		fClient.getUserInterface().showDialog(pDialog, this);
 	}
 
 	private boolean updateScaling() {
@@ -2082,6 +2045,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == null) {
 			return;
 		}
+
+		helpMenu.actionPerformed(e);
+
 		if (source == fLoadSetupMenuItem) {
 			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_LOAD);
 		}
@@ -2162,21 +2128,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 		}
 
-		if (source == fAboutMenuItem) {
-			showDialog(new DialogAbout(getClient()));
-		}
-		if (source == fChatCommandsMenuItem) {
-			showDialog(new DialogChatCommands(getClient()));
-		}
-		if (source == changeListItem) {
-			showDialog(new DialogChangeList(getClient()));
-		}
-		if (source == autoMarkingItem) {
-			showDialog(DialogAutoMarking.create(getClient(), false));
-		}
-		if (source == fKeyBindingsMenuItem) {
-			showDialog(new DialogKeyBindings(getClient()));
-		}
 		if (source == fGameStatisticsMenuItem) {
 			showDialog(new DialogGameStatistics(getClient()));
 		}

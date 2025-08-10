@@ -38,6 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 public class UserInterface extends JFrame implements WindowListener, IDialogCloseListener {
 
 	private final FantasyFootballClient fClient;
+	private IDialog currentDialog;
 	private final FieldComponent fFieldComponent;
 	private final StatusReport fStatusReport;
 	private final SideBarComponent fSideBarHome;
@@ -423,15 +424,23 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	public void windowOpened(WindowEvent pE) {
 	}
 
+	public void showDialog(IDialog dialog, IDialogCloseListener listener) {
+		if (currentDialog != null) {
+			currentDialog.hideDialog();
+		}
+		currentDialog = dialog;
+		currentDialog.showDialog(listener);
+	}
+
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
+		currentDialog = null;
 		if (DialogId.LEAVE_GAME == pDialog.getId()) {
 			if (((DialogLeaveGame) pDialog).isChoiceYes()) {
 				System.exit(0);
 			}
 		}
 	}
-
 	public void socketClosed() {
 		if (getClient().getMode() == ClientMode.REPLAY) {
 			if (getClient().getReplayer().isOnline()) {
