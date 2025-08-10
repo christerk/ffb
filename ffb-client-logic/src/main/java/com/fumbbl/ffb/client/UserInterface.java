@@ -14,7 +14,7 @@ import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.ui.ChatComponent;
-import com.fumbbl.ffb.client.ui.GameMenuBar;
+import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.client.ui.ScoreBarComponent;
 import com.fumbbl.ffb.client.ui.SideBarComponent;

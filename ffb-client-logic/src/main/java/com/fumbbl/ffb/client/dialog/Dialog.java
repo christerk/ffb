@@ -2,7 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.ui.GameMenuBar;
+import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.util.StringTool;

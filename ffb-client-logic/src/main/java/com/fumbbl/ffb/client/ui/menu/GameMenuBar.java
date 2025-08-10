@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.ui;
+package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
@@ -37,6 +37,8 @@ import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
+import com.fumbbl.ffb.client.ui.BoxComponent;
+import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
