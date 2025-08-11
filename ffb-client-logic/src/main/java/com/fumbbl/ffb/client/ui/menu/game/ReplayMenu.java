@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.ui.menu;
+package com.fumbbl.ffb.client.ui.menu.game;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;

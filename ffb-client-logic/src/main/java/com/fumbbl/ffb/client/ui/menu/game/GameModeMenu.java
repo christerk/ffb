@@ -1,9 +1,10 @@
-package com.fumbbl.ffb.client.ui.menu;
+package com.fumbbl.ffb.client.ui.menu.game;
 
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 
 import java.awt.event.KeyEvent;

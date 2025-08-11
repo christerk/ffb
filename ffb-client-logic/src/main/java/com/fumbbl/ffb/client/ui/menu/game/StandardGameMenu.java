@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.ui.menu;
+package com.fumbbl.ffb.client.ui.menu.game;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ConcedeGameStatus;
