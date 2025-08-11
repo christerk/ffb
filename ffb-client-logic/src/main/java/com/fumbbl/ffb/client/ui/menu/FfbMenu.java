@@ -28,8 +28,4 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
     public void dialogClosed(IDialog dialog) {
         client.getUserInterface().dialogClosed(dialog);
     }
-
-    protected FantasyFootballClient getClient() {
-        return client;
-    }
 }

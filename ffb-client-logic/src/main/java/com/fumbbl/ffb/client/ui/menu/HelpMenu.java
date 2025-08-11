@@ -52,15 +52,15 @@ public class HelpMenu extends FfbMenu {
         Object source = event.getSource();
 
         if (source == aboutMenuItem) {
-            showDialog(new DialogAbout(getClient()));
+            showDialog(new DialogAbout(client));
         } else if (source == chatCommandsMenuItem) {
-            showDialog(new DialogChatCommands(getClient()));
+            showDialog(new DialogChatCommands(client));
         } else if (source == changeListItem) {
-            showDialog(new DialogChangeList(getClient()));
+            showDialog(new DialogChangeList(client));
         } else if (source == autoMarkingItem) {
-            showDialog(DialogAutoMarking.create(getClient(), false));
+            showDialog(DialogAutoMarking.create(client, false));
         } else if (source == keyBindingsMenuItem) {
-            showDialog(new DialogKeyBindings(getClient()));
+            showDialog(new DialogKeyBindings(client));
         }
     }
 }
