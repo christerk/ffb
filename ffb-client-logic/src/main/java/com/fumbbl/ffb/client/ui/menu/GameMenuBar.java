@@ -51,7 +51,6 @@ import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.option.IGameOption;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -243,10 +242,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenu prayersMenu;
 
-	private JMenu fGameOptionsMenu;
-
-	private HelpMenu helpMenu;
 	private CardsMenu cardsMenu;
+	private OptionsMenu optionsMenu;
+	private HelpMenu helpMenu;
 
 	private JMenu reRollBallAndChainPanelMenu;
 
@@ -320,10 +318,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		prayersMenu.setEnabled(false);
 		add(prayersMenu);
 
-		fGameOptionsMenu = new JMenu(dimensionProvider, "Game Options");
-		fGameOptionsMenu.setMnemonic(KeyEvent.VK_O);
-		fGameOptionsMenu.setEnabled(false);
-		add(fGameOptionsMenu);
 	}
 
 	public void updateJoinedCoachesMenu() {
@@ -896,6 +890,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		cardsMenu = new CardsMenu(getClient(), dimensionProvider);
 		add(cardsMenu);
 
+		optionsMenu = new OptionsMenu(getClient(), dimensionProvider);
+		add(optionsMenu);
+
 		helpMenu = new HelpMenu(getClient(), dimensionProvider);
 		add(helpMenu);
 
@@ -1343,37 +1340,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void updateGameOptions() {
-		fGameOptionsMenu.removeAll();
-		IGameOption[] gameOptions = getClient().getGame().getOptions().getOptions();
-		Arrays.sort(gameOptions, Comparator.comparing(pO -> pO.getId().getName()));
-		int optionsAdded = 0;
-		if (getClient().getGame().isTesting()) {
-			JMenuItem optionItem = new JMenuItem(dimensionProvider,
-				"* Game is in TEST mode. No results will be uploaded. See help for available test commands.");
-			fGameOptionsMenu.add(optionItem);
-			optionsAdded++;
-		}
-		for (IGameOption option : gameOptions) {
-			if (option.isChanged() && (option.getId() != GameOptionId.TEST_MODE)
-				&& StringTool.isProvided(option.getDisplayMessage())) {
-				JMenuItem optionItem = new JMenuItem(dimensionProvider, "* " + option.getDisplayMessage());
-				fGameOptionsMenu.add(optionItem);
-				optionsAdded++;
-			}
-		}
-		if (optionsAdded > 0) {
-			StringBuilder menuText = new StringBuilder().append(optionsAdded);
-			if (optionsAdded > 1) {
-				menuText.append(" Game Options");
-			} else {
-				menuText.append(" Game Option");
-			}
-			fGameOptionsMenu.setText(menuText.toString());
-			fGameOptionsMenu.setEnabled(true);
-		} else {
-			fGameOptionsMenu.setText("No Game Options");
-			fGameOptionsMenu.setEnabled(false);
-		}
+		optionsMenu.refresh();
 	}
 
 	public void updateInducements() {
