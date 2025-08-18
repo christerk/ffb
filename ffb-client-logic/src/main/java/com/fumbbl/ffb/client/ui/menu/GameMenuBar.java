@@ -52,7 +52,6 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -242,13 +241,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenu fInducementsMenu;
 
-	private JMenu fActiveCardsMenu;
-
 	private JMenu prayersMenu;
 
 	private JMenu fGameOptionsMenu;
 
 	private HelpMenu helpMenu;
+	private CardsMenu cardsMenu;
 
 	private JMenu reRollBallAndChainPanelMenu;
 
@@ -263,8 +261,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 
-	private Card[] fCurrentActiveCardsHome;
-	private Card[] fCurrentActiveCardsAway;
 
 	private final List<Prayer> currentPrayersHome = new ArrayList<>();
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
@@ -308,11 +304,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	}
 
-	private void createHelpMenu() {
-		helpMenu = new HelpMenu(getClient(), dimensionProvider);
-		add(helpMenu);
-	}
-
 	private void createGameStatusMenus() {
 		fMissingPlayersMenu = new JMenu(dimensionProvider, "Missing Players");
 		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
@@ -323,11 +314,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fInducementsMenu.setMnemonic(KeyEvent.VK_I);
 		fInducementsMenu.setEnabled(false);
 		add(fInducementsMenu);
-
-		fActiveCardsMenu = new JMenu(dimensionProvider, "Active Cards");
-		fActiveCardsMenu.setMnemonic(KeyEvent.VK_C);
-		fActiveCardsMenu.setEnabled(false);
-		add(fActiveCardsMenu);
 
 		prayersMenu = new JMenu(dimensionProvider, "Prayers");
 		prayersMenu.setMnemonic(KeyEvent.VK_P);
@@ -886,8 +872,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fCurrentUsedCardsHome = 0;
 		fCurrentInducementTotalAway = -1;
 		fCurrentUsedCardsAway = 0;
-		fCurrentActiveCardsHome = null;
-		fCurrentActiveCardsAway = null;
 
 		Arrays.stream(this.getComponents()).filter(comp -> comp != gameModeMenu).forEach(this::remove);
 
@@ -908,7 +892,12 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createTeamSetupMenu();
 		createUserSettingsMenu();
 		createGameStatusMenus();
-		createHelpMenu();
+
+		cardsMenu = new CardsMenu(getClient(), dimensionProvider);
+		add(cardsMenu);
+
+		helpMenu = new HelpMenu(getClient(), dimensionProvider);
+		add(helpMenu);
 
 		refresh();
 	}
@@ -1457,92 +1446,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	private void updateActiveCards() {
-
-		boolean refreshNecessary = false;
-		Game game = getClient().getGame();
-
-		Card[] cardsHome = game.getTurnDataHome().getInducementSet().getActiveCards();
-		if ((fCurrentActiveCardsHome == null) || (cardsHome.length != fCurrentActiveCardsHome.length)) {
-			fCurrentActiveCardsHome = cardsHome;
-			refreshNecessary = true;
-		}
-
-		Card[] cardsAway = game.getTurnDataAway().getInducementSet().getActiveCards();
-		if ((fCurrentActiveCardsAway == null) || (cardsAway.length != fCurrentActiveCardsAway.length)) {
-			fCurrentActiveCardsAway = cardsAway;
-			refreshNecessary = true;
-		}
-
-		if (refreshNecessary) {
-
-			fActiveCardsMenu.removeAll();
-
-			if (ArrayTool.isProvided(fCurrentActiveCardsHome)) {
-				JMenu fActiveCardsHomeMenu = new JMenu(dimensionProvider, fCurrentActiveCardsHome.length + " Home Team");
-				fActiveCardsHomeMenu.setForeground(Color.RED);
-				fActiveCardsHomeMenu.setMnemonic(KeyEvent.VK_H);
-				fActiveCardsMenu.add(fActiveCardsHomeMenu);
-				addActiveCards(fActiveCardsHomeMenu, fCurrentActiveCardsHome);
-			}
-
-			if (ArrayTool.isProvided(fCurrentActiveCardsAway)) {
-				JMenu fActiveCardsAwayMenu = new JMenu(dimensionProvider, fCurrentActiveCardsAway.length + " Away Team");
-				fActiveCardsAwayMenu.setForeground(Color.BLUE);
-				fActiveCardsAwayMenu.setMnemonic(KeyEvent.VK_A);
-				fActiveCardsMenu.add(fActiveCardsAwayMenu);
-				addActiveCards(fActiveCardsAwayMenu, fCurrentActiveCardsAway);
-			}
-
-			int currentActiveCardsHomeLength = ArrayTool.isProvided(fCurrentActiveCardsHome) ? fCurrentActiveCardsHome.length
-				: 0;
-			int currentActiveCardsAwayLength = ArrayTool.isProvided(fCurrentActiveCardsAway) ? fCurrentActiveCardsAway.length
-				: 0;
-
-			if ((currentActiveCardsHomeLength + currentActiveCardsAwayLength) > 0) {
-				StringBuilder menuText = new StringBuilder()
-					.append(currentActiveCardsHomeLength + currentActiveCardsAwayLength);
-				if ((currentActiveCardsHomeLength + currentActiveCardsAwayLength) > 1) {
-					menuText.append(" Active Cards");
-				} else {
-					menuText.append(" Active Card");
-				}
-				fActiveCardsMenu.setText(menuText.toString());
-				fActiveCardsMenu.setEnabled(true);
-			} else {
-				fActiveCardsMenu.setText("No Active Cards");
-				fActiveCardsMenu.setEnabled(false);
-			}
-
-		}
-
+		cardsMenu.refresh();
 	}
 
-	private void addActiveCards(JMenu pCardsMenu, Card[] pCards) {
-		Game game = getClient().getGame();
-		Arrays.sort(pCards, Card.createComparator());
-		Icon cardIcon = new ImageIcon(
-			getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider));
-		for (Card card : pCards) {
-			Player<?> player = null;
-			if (card.getTarget().isPlayedOnPlayer()) {
-				player = game.getFieldModel().findPlayer(card);
-			}
-			StringBuilder cardText = new StringBuilder();
-			cardText.append("<html>");
-			cardText.append("<b>").append(card.getName()).append("</b>");
-			if (player != null) {
-				cardText.append("<br>").append("Played on ").append(player.getName());
-			}
-			cardText.append("<br>").append(card.getHtmlDescription());
-			cardText.append("</html>");
-			if (player != null) {
-				addPlayerMenuItem(pCardsMenu, player, cardText.toString());
-			} else {
-				JMenuItem cardMenuItem = new JMenuItem(dimensionProvider, cardText.toString(), cardIcon);
-				pCardsMenu.add(cardMenuItem);
-			}
-		}
-	}
 
 	private void updatePrayers() {
 

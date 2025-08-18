@@ -48,6 +48,10 @@ public class HelpMenu extends FfbMenu {
     }
 
     @Override
+    protected void refresh() {
+    }
+
+    @Override
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
 

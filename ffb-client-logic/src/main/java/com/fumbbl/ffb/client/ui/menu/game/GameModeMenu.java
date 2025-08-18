@@ -27,6 +27,7 @@ public abstract class GameModeMenu extends FfbMenu {
 
     protected abstract void createSpecificMenuItems();
 
+    @Override
     public final void refresh() {
         boolean gameStarted = client.getGame() != null && client.getGame().getStarted() != null;
         gameStatisticsMenuItem.setEnabled(gameStarted);
