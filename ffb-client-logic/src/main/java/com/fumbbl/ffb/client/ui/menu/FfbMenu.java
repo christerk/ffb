@@ -54,7 +54,7 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
     }
 
 
-    private class MenuPlayerMouseListener extends MouseAdapter {
+    protected class MenuPlayerMouseListener extends MouseAdapter {
 
         private final Player<?> fPlayer;
 

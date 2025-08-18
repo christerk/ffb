@@ -4,21 +4,17 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
@@ -27,7 +23,6 @@ import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
-import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.menu.game.GameModeMenu;
 import com.fumbbl.ffb.client.ui.menu.game.ReplayMenu;
@@ -36,15 +31,11 @@ import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
@@ -57,8 +48,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -230,10 +219,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
-	private JMenu fMissingPlayersMenu;
-
-	private CardsMenu cardsMenu;
+	private MissingPlayersMenu missingPlayersMenu;
 	private InducementsMenu inducementsMenu;
+	private CardsMenu cardsMenu;
 	private PrayersMenu prayersMenu;
 	private OptionsMenu optionsMenu;
 	private HelpMenu helpMenu;
@@ -253,25 +241,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final LayoutSettings layoutSettings;
 	private final ClientSketchManager sketchManager;
 
-	private class MenuPlayerMouseListener extends MouseAdapter {
-
-		private final Player<?> fPlayer;
-
-		public MenuPlayerMouseListener(Player<?> pPlayer) {
-			fPlayer = pPlayer;
-		}
-
-		public void mouseEntered(MouseEvent pMouseEvent) {
-			ClientData clientData = getClient().getClientData();
-			// do not interfere with dragging (MNG player reappears on pitch bug)
-			if ((clientData.getSelectedPlayer() != fPlayer) && (clientData.getDragStartPosition() == null)) {
-				clientData.setSelectedPlayer(fPlayer);
-				getClient().getUserInterface().refreshSideBars();
-			}
-		}
-
-	}
-
 	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
@@ -283,14 +252,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
 
 		init();
-
-	}
-
-	private void createGameStatusMenus() {
-		fMissingPlayersMenu = new JMenu(dimensionProvider, "Missing Players");
-		fMissingPlayersMenu.setMnemonic(KeyEvent.VK_M);
-		fMissingPlayersMenu.setEnabled(false);
-		add(fMissingPlayersMenu);
 
 	}
 
@@ -855,7 +816,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		createTeamSetupMenu();
 		createUserSettingsMenu();
-		createGameStatusMenus();
+
+		missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider);
+		add(missingPlayersMenu);
 
 		inducementsMenu = new InducementsMenu(getClient(), dimensionProvider);
 		add(inducementsMenu);
@@ -1333,72 +1296,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void updateMissingPlayers() {
-		Game game = getClient().getGame();
-		fMissingPlayersMenu.removeAll();
-		int nrOfEntries = 0;
-		for (int i = 0; i < BoxComponent.MAX_BOX_ELEMENTS; i++) {
-			Player<?> player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_HOME_X, i));
-			if (player != null) {
-				addMissingPlayerMenuItem(player);
-				nrOfEntries++;
-			} else {
-				break;
-			}
-		}
-		for (int i = 0; i < BoxComponent.MAX_BOX_ELEMENTS; i++) {
-			Player<?> player = game.getFieldModel().getPlayer(new FieldCoordinate(FieldCoordinate.MNG_AWAY_X, i));
-			if (player != null) {
-				addMissingPlayerMenuItem(player);
-				nrOfEntries++;
-			} else {
-				break;
-			}
-		}
-		StringBuilder menuText = new StringBuilder();
-		if (nrOfEntries > 0) {
-			menuText.append(nrOfEntries);
-			if (nrOfEntries > 1) {
-				menuText.append(" Missing Players");
-			} else {
-				menuText.append(" Missing Player");
-			}
-			fMissingPlayersMenu.setEnabled(true);
-		} else {
-			menuText.append("No Missing Players");
-			fMissingPlayersMenu.setEnabled(false);
-		}
-		fMissingPlayersMenu.setText(menuText.toString());
-	}
-
-	private void addMissingPlayerMenuItem(Player<?> pPlayer) {
-		if (pPlayer == null) {
-			return;
-		}
-		StringBuilder playerText = new StringBuilder();
-		playerText.append("<html>").append(pPlayer.getName());
-		if (pPlayer.getRecoveringInjury() != null) {
-			playerText.append("<br>").append(pPlayer.getRecoveringInjury().getRecovery());
-		} else {
-			Game game = getClient().getGame();
-			PlayerResult playerResult = game.getGameResult().getPlayerResult(pPlayer);
-			if (playerResult.getSendToBoxReason() != null) {
-				playerText.append("<br>").append(playerResult.getSendToBoxReason().getReason());
-			}
-		}
-		playerText.append("</html>");
-		addPlayerMenuItem(fMissingPlayersMenu, pPlayer, playerText.toString());
-	}
-
-	private void addPlayerMenuItem(JMenu pPlayersMenu, Player<?> pPlayer, String pText) {
-		if ((pPlayer == null) || !StringTool.isProvided(pText)) {
-			return;
-		}
-		UserInterface userInterface = getClient().getUserInterface();
-		PlayerIconFactory playerIconFactory = userInterface.getPlayerIconFactory();
-		Icon playerIcon = new ImageIcon(playerIconFactory.getIcon(getClient(), pPlayer, dimensionProvider));
-		JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon);
-		playersMenuItem.addMouseListener(new MenuPlayerMouseListener(pPlayer));
-		pPlayersMenu.add(playersMenuItem);
+		missingPlayersMenu.refresh();
 	}
 
 	public String menuName(CommonProperty menuProperty) {
