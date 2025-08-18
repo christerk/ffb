@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientProperty;
@@ -38,12 +37,10 @@ import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
-import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
@@ -53,8 +50,18 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuBar;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -70,7 +77,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -240,9 +246,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JMenu fInducementsMenu;
 
-	private JMenu prayersMenu;
-
 	private CardsMenu cardsMenu;
+	private PrayersMenu prayersMenu;
 	private OptionsMenu optionsMenu;
 	private HelpMenu helpMenu;
 
@@ -259,9 +264,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 
-
-	private final List<Prayer> currentPrayersHome = new ArrayList<>();
-	private final List<Prayer> currentPrayersAway = new ArrayList<>();
 	private final Map<CommonProperty, JMenu> exposedMenus = new HashMap<>();
 
 	private final StyleProvider styleProvider;
@@ -313,10 +315,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fInducementsMenu.setEnabled(false);
 		add(fInducementsMenu);
 
-		prayersMenu = new JMenu(dimensionProvider, "Prayers");
-		prayersMenu.setMnemonic(KeyEvent.VK_P);
-		prayersMenu.setEnabled(false);
-		add(prayersMenu);
 
 	}
 
@@ -890,6 +888,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		cardsMenu = new CardsMenu(getClient(), dimensionProvider);
 		add(cardsMenu);
 
+		prayersMenu = new PrayersMenu(getClient(), dimensionProvider);
+		add(prayersMenu);
+
 		optionsMenu = new OptionsMenu(getClient(), dimensionProvider);
 		add(optionsMenu);
 
@@ -1418,73 +1419,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 
 	private void updatePrayers() {
-
-		boolean refreshNecessary = false;
-		Game game = getClient().getGame();
-
-		Set<Prayer> prayersHome = game.getTurnDataHome().getInducementSet().getPrayers();
-		if (prayersHome.size() != currentPrayersHome.size()) {
-			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
-			currentPrayersHome.clear();
-			currentPrayersHome.addAll(prayerFactory.sort(prayersHome));
-			refreshNecessary = true;
-		}
-
-		Set<Prayer> prayersAway = game.getTurnDataAway().getInducementSet().getPrayers();
-		if (prayersAway.size() != currentPrayersAway.size()) {
-			PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
-			currentPrayersAway.clear();
-			currentPrayersAway.addAll(prayerFactory.sort(prayersAway));
-			refreshNecessary = true;
-		}
-
-		if (refreshNecessary) {
-
-			prayersMenu.removeAll();
-
-			if (!currentPrayersHome.isEmpty()) {
-				JMenu prayersHomeMenu = new JMenu(dimensionProvider, currentPrayersHome.size() + " Home Team");
-				prayersHomeMenu.setForeground(Color.RED);
-				prayersHomeMenu.setMnemonic(KeyEvent.VK_H);
-				prayersMenu.add(prayersHomeMenu);
-				addPrayers(prayersHomeMenu, currentPrayersHome);
-			}
-
-			if (!currentPrayersAway.isEmpty()) {
-				JMenu prayersAwayMenu = new JMenu(dimensionProvider, currentPrayersAway.size() + " Away Team");
-				prayersAwayMenu.setForeground(Color.BLUE);
-				prayersAwayMenu.setMnemonic(KeyEvent.VK_A);
-				prayersMenu.add(prayersAwayMenu);
-				addPrayers(prayersAwayMenu, currentPrayersAway);
-			}
-
-			int totalPrayers = currentPrayersHome.size() + currentPrayersAway.size();
-			if (totalPrayers > 0) {
-				StringBuilder menuText = new StringBuilder()
-					.append(totalPrayers);
-				if (totalPrayers > 1) {
-					menuText.append(" Prayers");
-				} else {
-					menuText.append(" Prayer");
-				}
-				prayersMenu.setText(menuText.toString());
-				prayersMenu.setEnabled(true);
-			} else {
-				prayersMenu.setText("No Prayers");
-				prayersMenu.setEnabled(false);
-			}
-		}
-	}
-
-	private void addPrayers(JMenu prayerMenu, List<Prayer> prayers) {
-		for (Prayer prayer : prayers) {
-			String text = "<html>" +
-				"<b>" + prayer.getName() + "</b>" +
-				"<br>" + prayer.getDuration().getDescription() + ": " + prayer.getDescription() +
-				"</html>";
-			JMenuItem menuItem = new JMenuItem(dimensionProvider, text);
-			prayerMenu.add(menuItem);
-		}
+		prayersMenu.refresh();
 	}
 
 	private void addInducements(JMenu pInducementMenu, InducementSet pInducementSet) {
