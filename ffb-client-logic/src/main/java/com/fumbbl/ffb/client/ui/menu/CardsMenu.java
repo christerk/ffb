@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.inducement.Card;
@@ -22,8 +24,8 @@ public class CardsMenu extends FfbMenu {
 	private Card[] fCurrentActiveCardsHome;
 	private Card[] fCurrentActiveCardsAway;
 
-	protected CardsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider) {
-		super("Active Cards", client, dimensionProvider);
+	protected CardsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
+		super("Active Cards", client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_C);
 		setEnabled(false);
 	}

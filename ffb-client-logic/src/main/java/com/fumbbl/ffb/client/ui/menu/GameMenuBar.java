@@ -24,6 +24,7 @@ import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.menu.game.GameModeMenu;
 import com.fumbbl.ffb.client.ui.menu.game.ReplayMenu;
 import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
+import com.fumbbl.ffb.client.ui.menu.settings.UserSettingsMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -211,6 +212,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
+	private UserSettingsMenu userSettingsMenu;
 	private SetupMenu setupMenu;
 	private MissingPlayersMenu missingPlayersMenu;
 	private InducementsMenu inducementsMenu;
@@ -250,7 +252,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void updateJoinedCoachesMenu() {
 		if (gameModeMenu instanceof ReplayMenu) {
-			((ReplayMenu) gameModeMenu).updateJoinedCoachesMenu();
+			gameModeMenu.refresh();
 		}
 	}
 
@@ -773,37 +775,41 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
 			if (gameModeMenu == null) {
-				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, sketchManager, getClient().getCommunication());
+				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager);
 				add(gameModeMenu);
 			}
 		} else {
 			if (this.gameModeMenu != null) {
 				this.remove(gameModeMenu);
 			}
-			gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication());
+			gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings);
 			add(gameModeMenu);
 		}
 
-		setupMenu = new SetupMenu(getClient(), dimensionProvider);
+		setupMenu = new SetupMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(setupMenu);
+
+		userSettingsMenu = new UserSettingsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+		add(userSettingsMenu);
+
 		createUserSettingsMenu();
 
-		missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider);
+		missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(missingPlayersMenu);
 
-		inducementsMenu = new InducementsMenu(getClient(), dimensionProvider);
+		inducementsMenu = new InducementsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(inducementsMenu);
 
-		cardsMenu = new CardsMenu(getClient(), dimensionProvider);
+		cardsMenu = new CardsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(cardsMenu);
 
-		prayersMenu = new PrayersMenu(getClient(), dimensionProvider);
+		prayersMenu = new PrayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(prayersMenu);
 
-		optionsMenu = new OptionsMenu(getClient(), dimensionProvider);
+		optionsMenu = new OptionsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(optionsMenu);
 
-		helpMenu = new HelpMenu(getClient(), dimensionProvider);
+		helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(helpMenu);
 
 		refresh();

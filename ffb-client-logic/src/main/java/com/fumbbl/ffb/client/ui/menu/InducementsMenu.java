@@ -5,6 +5,8 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
@@ -35,8 +37,8 @@ public class InducementsMenu extends FfbMenu {
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 
-	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider) {
-		super("Inducements", client, dimensionProvider);
+	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
+		super("Inducements", client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_I);
 		setEnabled(false);
 	}

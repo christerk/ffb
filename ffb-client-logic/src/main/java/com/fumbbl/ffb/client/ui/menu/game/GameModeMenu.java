@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.ui.menu.game;
 
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
@@ -14,8 +16,9 @@ public abstract class GameModeMenu extends FfbMenu {
     protected JMenuItem gameStatisticsMenuItem;
     protected ClientCommunication communication;
 
-    protected GameModeMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication) {
-        super(text, client, dimensionProvider);
+    protected GameModeMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
+                           StyleProvider styleProvider, LayoutSettings layoutSettings) {
+        super(text, client, dimensionProvider, styleProvider, layoutSettings);
         this.communication = communication;
     }
 

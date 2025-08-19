@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
@@ -19,8 +21,8 @@ public class HelpMenu extends FfbMenu {
     private JMenuItem changeListItem;
     private JMenuItem autoMarkingItem;
 
-    public HelpMenu(FantasyFootballClient client, DimensionProvider dimensionProvider) {
-        super("Help", client, dimensionProvider);
+    public HelpMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
+        super("Help", client, dimensionProvider, styleProvider, layoutSettings);
         setMnemonic(KeyEvent.VK_H);
     }
 

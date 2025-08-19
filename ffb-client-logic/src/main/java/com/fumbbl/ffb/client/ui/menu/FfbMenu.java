@@ -3,7 +3,9 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -21,10 +23,15 @@ import java.awt.event.MouseEvent;
 public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCloseListener {
     protected final FantasyFootballClient client;
     protected final DimensionProvider dimensionProvider;
-    protected FfbMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider) {
+    protected final StyleProvider styleProvider;
+    protected final LayoutSettings layoutSettings;
+
+    protected FfbMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
         super(dimensionProvider, text);
         this.client = client;
         this.dimensionProvider = dimensionProvider;
+        this.styleProvider = styleProvider;
+        this.layoutSettings = layoutSettings;
         init();
     }
 

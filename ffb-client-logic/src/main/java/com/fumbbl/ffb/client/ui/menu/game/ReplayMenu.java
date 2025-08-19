@@ -5,6 +5,8 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
@@ -34,8 +36,9 @@ public class ReplayMenu extends GameModeMenu {
 	private final Set<String> preventedCoaches;
 	private final ClientSketchManager sketchManager;
 
-	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientSketchManager sketchManager, ClientCommunication communication) {
-		super("Replay", client, dimensionProvider, communication);
+	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
+										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager) {
+		super("Replay", client, dimensionProvider, communication, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_R);
 		this.sketchManager = sketchManager;
 		transferMenuItems = new HashSet<>();
@@ -84,7 +87,7 @@ public class ReplayMenu extends GameModeMenu {
 		}
 	}
 
-	public void updateJoinedCoachesMenu() {
+	private void updateJoinedCoachesMenu() {
 		String controllingCoach = client.getClientData().getCoachControllingReplay();
 		List<String> previousCoaches = transferMenuItems.stream()
 			.map(JMenuItem::getName)

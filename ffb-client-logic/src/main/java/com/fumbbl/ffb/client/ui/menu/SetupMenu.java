@@ -6,6 +6,8 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
@@ -19,8 +21,8 @@ public class SetupMenu extends FfbMenu {
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
 
-	protected SetupMenu(FantasyFootballClient client, DimensionProvider dimensionProvider) {
-		super("Team Setup", client, dimensionProvider);
+	protected SetupMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
+		super("Team Setup", client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_T);
 	}
 
