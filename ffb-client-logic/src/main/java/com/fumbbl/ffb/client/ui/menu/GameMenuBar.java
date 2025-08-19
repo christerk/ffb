@@ -4,10 +4,7 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -30,7 +27,6 @@ import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
@@ -39,7 +35,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
-import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -110,9 +105,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final FantasyFootballClient fClient;
 	private GameModeMenu gameModeMenu; // Menu for current game mode (StandardGame or Replay)
-
-	private JMenuItem fLoadSetupMenuItem;
-	private JMenuItem fSaveSetupMenuItem;
 
 	private JMenuItem fRestoreDefaultsMenuItem;
 	private JMenu playerMarkingMenu;
@@ -219,6 +211,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
 
+	private SetupMenu setupMenu;
 	private MissingPlayersMenu missingPlayersMenu;
 	private InducementsMenu inducementsMenu;
 	private CardsMenu cardsMenu;
@@ -743,29 +736,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fUserSettingsMenu.add(localPropertiesItem);
 	}
 
-	private void createTeamSetupMenu() {
-		JMenu fTeamSetupMenu = new JMenu(dimensionProvider, "Team Setup");
-		fTeamSetupMenu.setMnemonic(KeyEvent.VK_T);
-		add(fTeamSetupMenu);
-
-		fLoadSetupMenuItem = new JMenuItem(dimensionProvider, "Load Setup", KeyEvent.VK_L);
-		String menuSetupLoad = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
-		if (StringTool.isProvided(menuSetupLoad)) {
-			fLoadSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupLoad));
-		}
-		fLoadSetupMenuItem.addActionListener(this);
-		fTeamSetupMenu.add(fLoadSetupMenuItem);
-
-		fSaveSetupMenuItem = new JMenuItem(dimensionProvider, "Save Setup", KeyEvent.VK_S);
-		String menuSetupSave = getClient().getProperty(IClientProperty.KEY_MENU_SETUP_SAVE);
-		if (StringTool.isProvided(menuSetupSave)) {
-			fSaveSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupSave));
-		}
-		fSaveSetupMenuItem.addActionListener(this);
-		fTeamSetupMenu.add(fSaveSetupMenuItem);
-	}
-
-
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
 		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_COLOR_ICON);
 		return new ColorIcon(dimension.width, dimension.height, chatBackgroundColor);
@@ -800,7 +770,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Arrays.stream(this.getComponents()).filter(comp -> comp != gameModeMenu).forEach(this::remove);
 
-		// Create and store appropriate game mode menu
+		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
 			if (gameModeMenu == null) {
 				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, sketchManager, getClient().getCommunication());
@@ -814,7 +784,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			add(gameModeMenu);
 		}
 
-		createTeamSetupMenu();
+		setupMenu = new SetupMenu(getClient(), dimensionProvider);
+		add(setupMenu);
 		createUserSettingsMenu();
 
 		missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider);
@@ -1158,15 +1129,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void changeState(ClientStateId pStateId) {
-		Game game = getClient().getGame();
+		setupMenu.changeState(pStateId);
+
 		if (pStateId == ClientStateId.SETUP) {
-			boolean setupEnabled = (game.getTurnMode() != TurnMode.QUICK_SNAP);
-			fLoadSetupMenuItem.setEnabled(setupEnabled);
-			fSaveSetupMenuItem.setEnabled(setupEnabled);
 			fRestoreDefaultsMenuItem.setEnabled(true);
 		} else {
-			fLoadSetupMenuItem.setEnabled(false);
-			fSaveSetupMenuItem.setEnabled(false);
 			fSoundOnMenuItem.setEnabled(true);
 			fSoundMuteSpectatorsMenuItem.setEnabled(true);
 			fSoundOffMenuItem.setEnabled(true);
@@ -1326,13 +1293,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		helpMenu.actionPerformed(e);
 		gameModeMenu.actionPerformed(e);
+		missingPlayersMenu.actionPerformed(e);
+		cardsMenu.actionPerformed(e);
+		inducementsMenu.actionPerformed(e);
+		prayersMenu.actionPerformed(e);
+		setupMenu.actionPerformed(e);
+		optionsMenu.actionPerformed(e);
 
-		if (source == fLoadSetupMenuItem) {
-			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_LOAD);
-		}
-		if (source == fSaveSetupMenuItem) {
-			getClient().getClientState().actionKeyPressed(ActionKey.MENU_SETUP_SAVE);
-		}
 		if (source == fSoundVolumeItem) {
 			showDialog(new DialogSoundVolume(getClient()));
 		}
