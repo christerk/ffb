@@ -3,9 +3,7 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -14,9 +12,6 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
-import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
-import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
-import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
@@ -36,7 +31,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
-import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -77,7 +71,6 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_SETTINGS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
@@ -90,14 +83,9 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_PLAYER_MARKING_TYPE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_RANGEGRID;
 import static com.fumbbl.ffb.CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN;
 import static com.fumbbl.ffb.CommonProperty.SETTING_RIGHT_CLICK_END_ACTION;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SHOW_CRATERS_AND_BLOODSPOTS;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SWEET_SPOT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_TEAM_LOGOS;
-import static com.fumbbl.ffb.CommonProperty.SETTING_UI;
-import static com.fumbbl.ffb.CommonProperty.SETTING_UI_LAYOUT;
 
 /**
  * @author Kalimar
@@ -107,17 +95,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final FantasyFootballClient fClient;
 	private GameModeMenu gameModeMenu; // Menu for current game mode (StandardGame or Replay)
 
-	private JMenuItem fRestoreDefaultsMenuItem;
 	private JMenu playerMarkingMenu;
 
-	private JMenuItem fSoundVolumeItem;
-	private JRadioButtonMenuItem fSoundOnMenuItem;
-	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
-	private JRadioButtonMenuItem fSoundOffMenuItem;
-
-	private JMenuItem scalingItem;
-
-	private JMenuItem localPropertiesItem;
 	private JRadioButtonMenuItem fIconsAbstract;
 	private JRadioButtonMenuItem fIconsRosterOpponent;
 	private JRadioButtonMenuItem fIconsRosterBoth;
@@ -146,11 +125,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JRadioButtonMenuItem fPitchMarkingsRowOnMenuItem;
 	private JRadioButtonMenuItem fPitchMarkingsRowOffMenuItem;
-
-	private JRadioButtonMenuItem pitchLandscapeMenuItem;
-	private JRadioButtonMenuItem pitchPortraitMenuItem;
-	private JRadioButtonMenuItem layoutSquareMenuItem;
-	private JRadioButtonMenuItem layoutWideMenuItem;
 
 	private JRadioButtonMenuItem fTeamLogoBothMenuItem;
 	private JRadioButtonMenuItem fTeamLogoOwnMenuItem;
@@ -261,7 +235,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fUserSettingsMenu.setMnemonic(KeyEvent.VK_U);
 		add(fUserSettingsMenu);
 
-		createSoundMenu(fUserSettingsMenu);
 		createIconsMenu(fUserSettingsMenu);
 		createAutomoveMenu(fUserSettingsMenu);
 		createBlitzPanelMenu(fUserSettingsMenu);
@@ -274,9 +247,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createMarkingMenu(fUserSettingsMenu);
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
-		createClientUiMenu(fUserSettingsMenu);
 		createLogMenu(fUserSettingsMenu);
-		createLocalPropertiesItem(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
@@ -310,46 +281,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		logMenu.add(openLogFolderMenuItem);
 	}
 
-	private void createClientUiMenu(JMenu fUserSettingsMenu) {
-		JMenu uiMenu = new JMenu(dimensionProvider, SETTING_UI);
-		uiMenu.setMnemonic(KeyEvent.VK_U);
-		fUserSettingsMenu.add(uiMenu);
-
-		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_UI_LAYOUT);
-		orientationMenu.setMnemonic(KeyEvent.VK_O);
-		uiMenu.add(orientationMenu);
-
-		ButtonGroup orientationGroup = new ButtonGroup();
-
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
-		pitchLandscapeMenuItem.addActionListener(this);
-		orientationGroup.add(pitchLandscapeMenuItem);
-		orientationMenu.add(pitchLandscapeMenuItem);
-
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
-		pitchPortraitMenuItem.addActionListener(this);
-		orientationGroup.add(pitchPortraitMenuItem);
-		orientationMenu.add(pitchPortraitMenuItem);
-
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
-		layoutSquareMenuItem.addActionListener(this);
-		orientationGroup.add(layoutSquareMenuItem);
-		orientationMenu.add(layoutSquareMenuItem);
-
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
-		layoutWideMenuItem.addActionListener(this);
-		orientationGroup.add(layoutWideMenuItem);
-		orientationMenu.add(layoutWideMenuItem);
-
-		createScaleItem(uiMenu);
-
-	}
-
 	private void createRestoreMenu(JMenu fUserSettingsMenu) {
-		fRestoreDefaultsMenuItem = new JMenuItem(dimensionProvider, "Restore Defaults");
-		fRestoreDefaultsMenuItem.addActionListener(this);
-		fRestoreDefaultsMenuItem.setEnabled(false);
-		fUserSettingsMenu.add(fRestoreDefaultsMenuItem);
 
 		resetColors = new JMenuItem(dimensionProvider, "Reset all colors");
 		resetColors.addActionListener(this);
@@ -694,50 +626,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
 	}
 
-	private void createSoundMenu(JMenu fUserSettingsMenu) {
-		JMenu fSoundMenu = new JMenu(dimensionProvider, SETTING_SOUND_MODE);
-		fSoundMenu.setMnemonic(KeyEvent.VK_S);
-		fUserSettingsMenu.add(fSoundMenu);
-
-		fSoundVolumeItem = new JMenuItem(dimensionProvider, SETTING_SOUND_VOLUME.getValue());
-		fSoundVolumeItem.setMnemonic(KeyEvent.VK_V);
-		fSoundVolumeItem.addActionListener(this);
-		fSoundMenu.add(fSoundVolumeItem);
-
-		fSoundMenu.addSeparator();
-
-		ButtonGroup soundGroup = new ButtonGroup();
-
-		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on");
-		fSoundOnMenuItem.addActionListener(this);
-		soundGroup.add(fSoundOnMenuItem);
-		fSoundMenu.add(fSoundOnMenuItem);
-
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators");
-		fSoundMuteSpectatorsMenuItem.addActionListener(this);
-		soundGroup.add(fSoundMuteSpectatorsMenuItem);
-		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
-
-		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off");
-		fSoundOffMenuItem.addActionListener(this);
-		soundGroup.add(fSoundOffMenuItem);
-		fSoundMenu.add(fSoundOffMenuItem);
-	}
-
-	private void createScaleItem(JMenu fUserSettingsMenu) {
-		scalingItem = new JMenuItem(dimensionProvider, SETTING_SCALE_FACTOR.getValue());
-		scalingItem.setMnemonic(KeyEvent.VK_E);
-		scalingItem.addActionListener(this);
-		fUserSettingsMenu.add(scalingItem);
-	}
-
-	private void createLocalPropertiesItem(JMenu fUserSettingsMenu) {
-		localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue());
-		localPropertiesItem.setMnemonic(KeyEvent.VK_L);
-		localPropertiesItem.addActionListener(this);
-		fUserSettingsMenu.add(localPropertiesItem);
-	}
-
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
 		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_COLOR_ICON);
 		return new ColorIcon(dimension.width, dimension.height, chatBackgroundColor);
@@ -948,10 +836,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			gameModeMenu.refresh();
 		}
 
-		String soundSetting = getClient().getProperty(CommonProperty.SETTING_SOUND_MODE);
-		fSoundOnMenuItem.setSelected(true);
-		fSoundMuteSpectatorsMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting));
-		fSoundOffMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_OFF.equals(soundSetting));
+		userSettingsMenu.refresh();
 
 		String iconsSetting = getClient().getProperty(SETTING_ICONS);
 		fIconsTeam.setSelected(true);
@@ -1003,12 +888,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		String pitchMarkingsRowSetting = getClient().getProperty(SETTING_PITCH_MARKINGS_ROW);
 		fPitchMarkingsRowOffMenuItem.setSelected(true);
 		fPitchMarkingsRowOnMenuItem.setSelected(IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON.equals(pitchMarkingsRowSetting));
-
-		String orientationSetting = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
-		pitchLandscapeMenuItem.setSelected(true);
-		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
-		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
-		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
 
 		String teamLogosSetting = getClient().getProperty(CommonProperty.SETTING_TEAM_LOGOS);
 		fTeamLogoBothMenuItem.setSelected(true);
@@ -1114,8 +993,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		updateActiveCards();
 		updatePrayers();
 		updateGameOptions();
-		refreshUi |= updateScaling();
-		refreshUi |= updateOrientation();
 
 		boolean askForReRoll = ((GameOptionBoolean) getClient().getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 
@@ -1136,41 +1013,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void changeState(ClientStateId pStateId) {
 		setupMenu.changeState(pStateId);
-
-		if (pStateId == ClientStateId.SETUP) {
-			fRestoreDefaultsMenuItem.setEnabled(true);
-		} else {
-			fSoundOnMenuItem.setEnabled(true);
-			fSoundMuteSpectatorsMenuItem.setEnabled(true);
-			fSoundOffMenuItem.setEnabled(true);
-			fRestoreDefaultsMenuItem.setEnabled(true);
-		}
 	}
 
 	public void dialogClosed(IDialog pDialog) {
 		fClient.getUserInterface().dialogClosed(pDialog);
-		switch (pDialog.getId()) {
-			case SOUND_VOLUME:
-				DialogSoundVolume volumeDialog = (DialogSoundVolume) pDialog;
-				getClient().setProperty(CommonProperty.SETTING_SOUND_VOLUME, Integer.toString(volumeDialog.getVolume()));
-				getClient().saveUserSettings(true);
-				break;
-			case SCALING_FACTOR:
-				DialogScalingFactor scalingDialog = (DialogScalingFactor) pDialog;
-				if (scalingDialog.getFactor() != null) {
-					updateScaleProperty(scalingDialog.getFactor());
-				}
-				break;
-			case STORE_PROPERTIES_LOCAL:
-				DialogSelectLocalStoredProperties dialogSelectLocalStoredProperties = (DialogSelectLocalStoredProperties) pDialog;
-				if (dialogSelectLocalStoredProperties.getSelectedProperties() != null) {
-					getClient().setLocallyStoredPropertyKeys(dialogSelectLocalStoredProperties.getSelectedProperties());
-					getClient().saveUserSettings(false);
-				}
-				break;
-			default:
-				break;
-		}
 	}
 
 	private void updateScaleProperty(double scalingFactor) {
@@ -1193,62 +1039,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void showDialog(IDialog pDialog) {
 		fClient.getUserInterface().showDialog(pDialog, this);
-	}
-
-	private boolean updateScaling() {
-		String factorValue = getClient().getProperty(CommonProperty.SETTING_SCALE_FACTOR);
-		if (StringTool.isProvided(factorValue)) {
-			try {
-				double factor = Double.parseDouble(factorValue);
-				if (layoutSettings.getScale() != factor) {
-					layoutSettings.setScale(factor);
-					getClient().getUserInterface().getIconCache().clear();
-					FontCache fontCache = getClient().getUserInterface().getFontCache();
-					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
-					return true;
-				}
-			} catch (Exception ignored) {
-
-			}
-		}
-		return false;
-	}
-
-	private boolean updateOrientation() {
-
-		ClientLayout layout = ClientLayout.LANDSCAPE;
-
-		String orientation = getClient().getProperty(CommonProperty.SETTING_UI_LAYOUT);
-
-		if (orientation != null) {
-			switch (orientation) {
-				case IClientPropertyValue.SETTING_LAYOUT_PORTRAIT:
-					layout = ClientLayout.PORTRAIT;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-					layout = ClientLayout.SQUARE;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
-					layout = ClientLayout.WIDE;
-					break;
-				default:
-					break;
-			}
-		}
-
-		if (layout != layoutSettings.getLayout()) {
-			layoutSettings.setLayout(layout);
-			if (getClient().getUserInterface() != null) {
-				getClient().getUserInterface().getIconCache().clear();
-				FontCache fontCache = getClient().getUserInterface().getFontCache();
-				fontCache.clear();
-				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
-			}
-			return true;
-		}
-
-		return false;
 	}
 
 	public void updateGameOptions() {
@@ -1306,24 +1096,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		setupMenu.actionPerformed(e);
 		optionsMenu.actionPerformed(e);
 
-		if (source == fSoundVolumeItem) {
-			showDialog(new DialogSoundVolume(getClient()));
-		}
-		if (source == scalingItem) {
-			showDialog(new DialogScalingFactor(getClient()));
-		}
-		if (source == fSoundOffMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fSoundMuteSpectatorsMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS);
-			getClient().saveUserSettings(false);
-		}
-		if (source == fSoundOnMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
-			getClient().saveUserSettings(false);
-		}
+
 		if (source == fIconsTeam) {
 			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_TEAM);
 			getClient().saveUserSettings(true);
@@ -1464,22 +1237,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			getClient().setProperty(SETTING_PITCH_MARKINGS_ROW, IClientPropertyValue.SETTING_PITCH_MARKINGS_ROW_ON);
 			getClient().saveUserSettings(true);
 		}
-		if (source == pitchLandscapeMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE);
-			getClient().saveUserSettings(true);
-		}
-		if (source == pitchPortraitMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_PORTRAIT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == layoutSquareMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
-			getClient().saveUserSettings(true);
-		}
-		if (source == layoutWideMenuItem) {
-			getClient().setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
-			getClient().saveUserSettings(true);
-		}
+
 		if (source == showCratersAndBloodsptsMenuItem) {
 			getClient().setProperty(SETTING_SHOW_CRATERS_AND_BLOODSPOTS, IClientPropertyValue.SETTING_CRATERS_AND_BLOODSPOTS_SHOW);
 			getClient().saveUserSettings(true);
@@ -1724,20 +1482,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 				getClient().setProperty(SETTING_FONT_COLOR_FIELD_MARKER, String.valueOf(color.getRGB()));
 				getClient().saveUserSettings(true);
 			}
-		}
-
-		if (source == localPropertiesItem) {
-			showDialog(new DialogSelectLocalStoredProperties(fClient));
-		}
-
-		if (source == fRestoreDefaultsMenuItem) {
-			try {
-				getClient().loadProperties();
-			} catch (IOException pIoE) {
-				throw new FantasyFootballException(pIoE);
-			}
-			refresh();
-			getClient().saveUserSettings(true);
 		}
 
 		if (source == resetColors) {
