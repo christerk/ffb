@@ -929,6 +929,10 @@ public class FieldModel implements IJsonSerializable {
 			transformedModel.add(playerMarker.transform());
 		}
 
+		for (DiceDecoration diceDecoration: getDiceDecorations()) {
+			transformedModel.add(diceDecoration.transform());
+		}
+
 		trapDoors.stream().map(TrapDoor::transform).forEach(transformedModel::add);
 
 		return transformedModel;

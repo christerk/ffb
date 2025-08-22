@@ -168,7 +168,7 @@ public class LoginLogicModule extends LogicModule {
 	private VersionCheck checkVersion(String pServerVersion, String pClientVersion) {
 
 		if (checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
-				return VersionCheck.CLIENT_FAIL;
+			return VersionCheck.CLIENT_FAIL;
 		}
 
 		if (checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
@@ -187,7 +187,7 @@ public class LoginLogicModule extends LogicModule {
 		SUCCESS, CLIENT_FAIL, SERVER_FAIL
 	}
 
-		public static class LoginData {
+	public static class LoginData {
 		private final String gameName;
 		private final byte[] encodedPassword;
 		private final int passwordLength;

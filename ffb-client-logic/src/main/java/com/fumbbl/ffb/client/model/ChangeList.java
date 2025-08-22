@@ -17,7 +17,8 @@ public class ChangeList {
 			.addFeature("Player Markings: it is now possible to add manual player markings in addition to automatic player markings using different modes")
 			.addBugfix("Manual Markings: Changes to manual markings should now be preserved should the other coach leave the game")
 			.addFeature("Added command to change amount of rerolls in test games")
-			.addBugfix("Bugfix: Preserve shown dialogs during init phase (login dialog, replay choice and various progress bars)")
+			.addBugfix("Preserve shown dialogs during init phase (login dialog, replay choice and various progress bars)")
+			.addBugfix("Disconnection: When the away client got disconnected while performing a blitz action it was not possible to block after reconnecting")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
