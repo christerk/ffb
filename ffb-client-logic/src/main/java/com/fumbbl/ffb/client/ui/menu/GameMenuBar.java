@@ -11,7 +11,6 @@ import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
-import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
@@ -29,7 +28,6 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,7 +35,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -67,8 +64,6 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
@@ -136,10 +131,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private JRadioButtonMenuItem swapTeamColorsOffMenuItem;
 	private JRadioButtonMenuItem swapTeamColorsOnMenuItem;
-
-	private JRadioButtonMenuItem localIconCacheOffMenuItem;
-	private JRadioButtonMenuItem localIconCacheOnMenuItem;
-	private JMenuItem localIconCacheSelectMenuItem;
 
 	private JRadioButtonMenuItem playersMarkingManualMenuItem;
 	private JRadioButtonMenuItem playersMarkingAutoMenuItem;
@@ -714,30 +705,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		swapTeamColorsOnMenuItem.addActionListener(this);
 		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
 		swapTeamColorsMenu.add(swapTeamColorsOnMenuItem);
-
-		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE);
-		localIconCacheMenu.setMnemonic(KeyEvent.VK_L);
-		fIconsMenu.add(localIconCacheMenu);
-
-		ButtonGroup localIconCacheGroup = new ButtonGroup();
-
-		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
-		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
-		localIconCacheOffMenuItem.addActionListener(this);
-		localIconCacheGroup.add(localIconCacheOffMenuItem);
-		localIconCacheMenu.add(localIconCacheOffMenuItem);
-
-		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
-		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
-		localIconCacheOnMenuItem.addActionListener(this);
-		localIconCacheGroup.add(localIconCacheOnMenuItem);
-		localIconCacheMenu.add(localIconCacheOnMenuItem);
-
-		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
-		localIconCacheSelectMenuItem.setMnemonic(KeyEvent.VK_S);
-		localIconCacheSelectMenuItem.addActionListener(this);
-		localIconCacheMenu.add(localIconCacheSelectMenuItem);
-
 	}
 
 	private boolean refreshFrameBackgroundMenu(boolean useColor) {
@@ -804,10 +771,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		fIconsRosterOpponent.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_OPPONENT.equals(iconsSetting));
 		fIconsRosterBoth.setSelected(IClientPropertyValue.SETTING_ICONS_ROSTER_BOTH.equals(iconsSetting));
 		fIconsAbstract.setSelected(IClientPropertyValue.SETTING_ICONS_ABSTRACT.equals(iconsSetting));
-
-		String localIconCacheSetting = getClient().getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE);
-		localIconCacheOffMenuItem.setSelected(true);
-		localIconCacheOnMenuItem.setSelected(IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(localIconCacheSetting));
 
 		String automoveSetting = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
@@ -1068,21 +1031,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 		if (source == fIconsAbstract) {
 			getClient().setProperty(SETTING_ICONS, IClientPropertyValue.SETTING_ICONS_ABSTRACT);
-			getClient().saveUserSettings(true);
-		}
-		if (source == localIconCacheOffMenuItem) {
-			getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == localIconCacheOnMenuItem) {
-			getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
-			if (!iconCacheValid()) {
-				selectIconCacheFolder();
-			}
-			getClient().saveUserSettings(true);
-		}
-		if (source == localIconCacheSelectMenuItem) {
-			selectIconCacheFolder();
 			getClient().saveUserSettings(true);
 		}
 
@@ -1430,75 +1378,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
 
 
-	}
-
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private boolean iconCacheValid() {
-		return validFolder(getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH));
-	}
-
-	private boolean validFolder(String path) {
-		if (!StringTool.isProvided(path)) {
-			return false;
-		}
-		File file = new File(path);
-		return validFolder(file);
-	}
-
-	private boolean validFolder(File file) {
-		return file.exists() && file.isDirectory() && file.canWrite();
-	}
-
-	private void selectIconCacheFolder() {
-		File folder = newIconCacheFolder();
-
-		if (folder == null) {
-			if (!iconCacheValid()) {
-				getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
-				getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
-				showError("Local Icon Cache", new String[]{"No folder selected and old path was invalid", "Cache has been disabled"});
-			}
-		} else {
-			if (validFolder(folder)) {
-				getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, folder.getAbsolutePath());
-				if (!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(getClient().getProperty(SETTING_LOCAL_ICON_CACHE))) {
-					getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
-					showError("Local Icon Cache", new String[]{"Cache activated"});
-				}
-			} else {
-				if (!iconCacheValid()) {
-					getClient().setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
-					getClient().setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
-					showError("Local Icon Cache", new String[]{"Invalid folder selected and old path was invalid",
-						"Cache has been disabled",
-						"Folder has to be writeable."});
-				} else {
-					showError("Local Icon Cache", new String[]{"Invalid folder selected", "Folder has to be writeable"});
-				}
-			}
-		}
-
-	}
-
-	private File newIconCacheFolder() {
-		String oldValue = getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH);
-		return getFolder(oldValue);
-	}
-
-	private File getFolder(String oldValue) {
-		JFileChooser chooser = new JFileChooser(oldValue);
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		int result = chooser.showOpenDialog(this);
-		if (result == JFileChooser.APPROVE_OPTION) {
-			return chooser.getSelectedFile();
-		}
-		return null;
-	}
-
-	private void showError(String title, String[] error) {
-		DialogInformation messageDialog = new DialogInformation(getClient(), title,
-			error, DialogInformation.OK_DIALOG, false);
-		messageDialog.showDialog(this);
 	}
 
 }

@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
 import com.fumbbl.ffb.client.dialog.IDialog;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import java.awt.Desktop;
 import java.awt.Font;
@@ -26,6 +28,8 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
@@ -53,7 +57,10 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JMenuItem logSelectMenuItem;
 	private JMenuItem openLogFolderMenuItem;
 
-
+	private JRadioButtonMenuItem localIconCacheOffMenuItem;
+	private JRadioButtonMenuItem localIconCacheOnMenuItem;
+	private JMenuItem localIconCacheSelectMenuItem;
+	
 	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_S);
@@ -65,6 +72,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		createClientUiMenu();
 		createScaleItem();
 		createLogMenu();
+		createLocalIconCacheMenu();
 	}
 
 	@Override
@@ -84,6 +92,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		logOnMenuItem.setSelected(true);
 		logOffMenuItem.setSelected(IClientPropertyValue.SETTING_LOG_OFF.equals(logModeSetting));
 
+		String localIconCacheSetting = client.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE);
+		localIconCacheOffMenuItem.setSelected(true);
+		localIconCacheOnMenuItem.setSelected(IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(localIconCacheSetting));
+		
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
 
@@ -178,8 +190,65 @@ public class ClientSettingsMenu extends FfbMenu {
 			}
 		}
 
+		if (source == localIconCacheOffMenuItem) {
+			client.setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+			client.saveUserSettings(false);
+		}
+		if (source == localIconCacheOnMenuItem) {
+			client.setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
+			if (!iconCacheValid()) {
+				selectIconCacheFolder();
+			}
+			client.saveUserSettings(true);
+		}
+		if (source == localIconCacheSelectMenuItem) {
+			selectIconCacheFolder();
+			client.saveUserSettings(true);
+		}
+
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	private boolean iconCacheValid() {
+		return validFolder(client.getProperty(SETTING_LOCAL_ICON_CACHE_PATH));
+	}
+
+	private void selectIconCacheFolder() {
+		File folder = newIconCacheFolder();
+
+		if (folder == null) {
+			if (!iconCacheValid()) {
+				client.setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
+				client.setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+				showError("Local Icon Cache", new String[]{"No folder selected and old path was invalid", "Cache has been disabled"});
+			}
+		} else {
+			if (validFolder(folder)) {
+				client.setProperty(SETTING_LOCAL_ICON_CACHE_PATH, folder.getAbsolutePath());
+				if (!IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(client.getProperty(SETTING_LOCAL_ICON_CACHE))) {
+					client.setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
+					showError("Local Icon Cache", new String[]{"Cache activated"});
+				}
+			} else {
+				if (!iconCacheValid()) {
+					client.setProperty(SETTING_LOCAL_ICON_CACHE_PATH, null);
+					client.setProperty(SETTING_LOCAL_ICON_CACHE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_OFF);
+					showError("Local Icon Cache", new String[]{"Invalid folder selected and old path was invalid",
+						"Cache has been disabled",
+						"Folder has to be writeable."});
+				} else {
+					showError("Local Icon Cache", new String[]{"Invalid folder selected", "Folder has to be writeable"});
+				}
+			}
+		}
+
+	}
+
+	private File newIconCacheFolder() {
+		String oldValue = client.getProperty(SETTING_LOCAL_ICON_CACHE_PATH);
+		return getFolder(oldValue);
+	}
+	
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean logFolderValid() {
 		return validFolder(client.getLogFolder());
@@ -375,4 +444,56 @@ public class ClientSettingsMenu extends FfbMenu {
 		logMenu.add(openLogFolderMenuItem);
 	}
 
+	private void createLocalIconCacheMenu() {
+		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE);
+		localIconCacheMenu.setMnemonic(KeyEvent.VK_L);
+		add(localIconCacheMenu);
+
+		ButtonGroup localIconCacheGroup = new ButtonGroup();
+
+		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		localIconCacheOffMenuItem.addActionListener(this);
+		localIconCacheGroup.add(localIconCacheOffMenuItem);
+		localIconCacheMenu.add(localIconCacheOffMenuItem);
+
+		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		localIconCacheOnMenuItem.addActionListener(this);
+		localIconCacheGroup.add(localIconCacheOnMenuItem);
+		localIconCacheMenu.add(localIconCacheOnMenuItem);
+
+		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
+		localIconCacheSelectMenuItem.setMnemonic(KeyEvent.VK_S);
+		localIconCacheSelectMenuItem.addActionListener(this);
+		localIconCacheMenu.add(localIconCacheSelectMenuItem);
+	}
+
+	private void showError(String title, String[] error) {
+		DialogInformation messageDialog = new DialogInformation(client, title,
+			error, DialogInformation.OK_DIALOG, false);
+		messageDialog.showDialog(this);
+	}
+
+	private boolean validFolder(String path) {
+		if (!StringTool.isProvided(path)) {
+			return false;
+		}
+		File file = new File(path);
+		return validFolder(file);
+	}
+
+	private boolean validFolder(File file) {
+		return file.exists() && file.isDirectory() && file.canWrite();
+	}
+
+	private File getFolder(String oldValue) {
+		JFileChooser chooser = new JFileChooser(oldValue);
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int result = chooser.showOpenDialog(this);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile();
+		}
+		return null;
+	}
 }

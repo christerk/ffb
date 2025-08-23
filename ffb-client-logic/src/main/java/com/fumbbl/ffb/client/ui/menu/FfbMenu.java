@@ -7,7 +7,6 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
@@ -17,11 +16,9 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCloseListener {
     protected final FantasyFootballClient client;
@@ -61,34 +58,6 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
         JMenuItem playersMenuItem = new JMenuItem(dimensionProvider, pText, playerIcon);
         playersMenuItem.addMouseListener(new MenuPlayerMouseListener(pPlayer));
         pPlayersMenu.add(playersMenuItem);
-    }
-
-    protected void showError(String title, String[] error) {
-        DialogInformation messageDialog = new DialogInformation(client, title,
-          error, DialogInformation.OK_DIALOG, false);
-        messageDialog.showDialog(this);
-    }
-
-    protected boolean validFolder(String path) {
-        if (!StringTool.isProvided(path)) {
-            return false;
-        }
-        File file = new File(path);
-        return validFolder(file);
-    }
-
-    protected boolean validFolder(File file) {
-        return file.exists() && file.isDirectory() && file.canWrite();
-    }
-
-    protected File getFolder(String oldValue) {
-        JFileChooser chooser = new JFileChooser(oldValue);
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int result = chooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            return chooser.getSelectedFile();
-        }
-        return null;
     }
 
     protected class MenuPlayerMouseListener extends MouseAdapter {
