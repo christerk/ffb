@@ -19,10 +19,16 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.ButtonGroup;
 import javax.swing.UIManager;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
@@ -42,6 +48,12 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem layoutSquareMenuItem;
 	private JRadioButtonMenuItem layoutWideMenuItem;
 
+	private JRadioButtonMenuItem logOnMenuItem;
+	private JRadioButtonMenuItem logOffMenuItem;
+	private JMenuItem logSelectMenuItem;
+	private JMenuItem openLogFolderMenuItem;
+
+
 	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_S);
@@ -52,6 +64,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		createSoundMenu();
 		createClientUiMenu();
 		createScaleItem();
+		createLogMenu();
 	}
 
 	@Override
@@ -66,6 +79,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
+
+		String logModeSetting = client.getProperty(SETTING_LOG_MODE);
+		logOnMenuItem.setSelected(true);
+		logOffMenuItem.setSelected(IClientPropertyValue.SETTING_LOG_OFF.equals(logModeSetting));
 
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
@@ -136,6 +153,71 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
 			client.saveUserSettings(true);
 		}
+
+		if (source == logOffMenuItem) {
+			client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
+			client.saveUserSettings(false);
+		}
+		if (source == logOnMenuItem) {
+			client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_ON);
+			if (!logFolderValid()) {
+				selectLogFolder();
+			}
+			client.saveUserSettings(true);
+		}
+		if (source == logSelectMenuItem) {
+			selectLogFolder();
+			client.saveUserSettings(true);
+		}
+
+		if (source == openLogFolderMenuItem) {
+			try {
+				Desktop.getDesktop().open(new File(client.getLogFolder()));
+			} catch (IOException ex) {
+				client.logWithOutGameId(ex);
+			}
+		}
+
+	}
+
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	private boolean logFolderValid() {
+		return validFolder(client.getLogFolder());
+	}
+
+	private void selectLogFolder() {
+		File folder = newLogFolder();
+
+		if (folder == null) {
+			if (!logFolderValid()) {
+				client.setProperty(SETTING_LOG_DIR, null);
+				client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
+				showError("Logging", new String[]{"No folder selected and old path was invalid", "Logging has been disabled"});
+			}
+		} else {
+			if (validFolder(folder)) {
+				client.setProperty(SETTING_LOG_DIR, folder.getAbsolutePath());
+				if (IClientPropertyValue.SETTING_LOG_OFF.equals(client.getProperty(SETTING_LOG_MODE))) {
+					client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
+					showError("Logging", new String[]{"Logging activated"});
+				}
+			} else {
+				if (!logFolderValid()) {
+					client.setProperty(SETTING_LOG_DIR, null);
+					client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
+					showError("Logging", new String[]{"Invalid folder selected and old path was invalid",
+						"Logging has been disabled",
+						"Folder has to be writeable."});
+				} else {
+					showError("Logging", new String[]{"Invalid folder selected", "Folder has to be writeable"});
+				}
+			}
+		}
+	}
+
+	private File newLogFolder() {
+		String oldValue = client.getLogFolder();
+		return getFolder(oldValue);
 	}
 
 	private void createSoundMenu() {
@@ -264,4 +346,33 @@ public class ClientSettingsMenu extends FfbMenu {
 		client.setProperty(CommonProperty.SETTING_SCALE_FACTOR, Double.toString(scalingFactor));
 		client.saveUserSettings(true);
 	}
+
+	private void createLogMenu() {
+		JMenu logMenu = new JMenu(dimensionProvider, SETTING_LOG);
+		logMenu.setMnemonic(KeyEvent.VK_L);
+		add(logMenu);
+
+		ButtonGroup logGroup = new ButtonGroup();
+
+		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		logOnMenuItem.addActionListener(this);
+		logGroup.add(logOnMenuItem);
+		logMenu.add(logOnMenuItem);
+
+		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		logOffMenuItem.addActionListener(this);
+		logGroup.add(logOffMenuItem);
+		logMenu.add(logOffMenuItem);
+
+		logSelectMenuItem = new JMenuItem(dimensionProvider, "Select log folder");
+		logSelectMenuItem.setMnemonic(KeyEvent.VK_S);
+		logSelectMenuItem.addActionListener(this);
+		logMenu.add(logSelectMenuItem);
+
+		openLogFolderMenuItem = new JMenuItem(dimensionProvider, "Open log folder");
+		openLogFolderMenuItem.setMnemonic(KeyEvent.VK_O);
+		openLogFolderMenuItem.addActionListener(this);
+		logMenu.add(openLogFolderMenuItem);
+	}
+
 }

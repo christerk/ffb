@@ -32,14 +32,12 @@ import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuBar;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -71,9 +69,6 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
@@ -164,11 +159,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private JRadioButtonMenuItem frameBackgroundIcons;
 	private JRadioButtonMenuItem frameBackgroundColor;
 
-	private JRadioButtonMenuItem logOnMenuItem;
-	private JRadioButtonMenuItem logOffMenuItem;
-	private JMenuItem logSelectMenuItem;
-	private JMenuItem openLogFolderMenuItem;
-
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
 	private JMenuItem textFontColor;
@@ -247,38 +237,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		createMarkingMenu(fUserSettingsMenu);
 		createBackgroundMenu(fUserSettingsMenu);
 		createFontMenu(fUserSettingsMenu);
-		createLogMenu(fUserSettingsMenu);
 
 		fUserSettingsMenu.addSeparator();
 		createRestoreMenu(fUserSettingsMenu);
-	}
-
-	private void createLogMenu(JMenu fUserSettingsMenu) {
-		JMenu logMenu = new JMenu(dimensionProvider, SETTING_LOG);
-		logMenu.setMnemonic(KeyEvent.VK_L);
-		fUserSettingsMenu.add(logMenu);
-
-		ButtonGroup logGroup = new ButtonGroup();
-
-		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
-		logOnMenuItem.addActionListener(this);
-		logGroup.add(logOnMenuItem);
-		logMenu.add(logOnMenuItem);
-
-		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
-		logOffMenuItem.addActionListener(this);
-		logGroup.add(logOffMenuItem);
-		logMenu.add(logOffMenuItem);
-
-		logSelectMenuItem = new JMenuItem(dimensionProvider, "Select log folder");
-		logSelectMenuItem.setMnemonic(KeyEvent.VK_S);
-		logSelectMenuItem.addActionListener(this);
-		logMenu.add(logSelectMenuItem);
-
-		openLogFolderMenuItem = new JMenuItem(dimensionProvider, "Open log folder");
-		openLogFolderMenuItem.setMnemonic(KeyEvent.VK_O);
-		openLogFolderMenuItem.addActionListener(this);
-		logMenu.add(openLogFolderMenuItem);
 	}
 
 	private void createRestoreMenu(JMenu fUserSettingsMenu) {
@@ -848,10 +809,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		localIconCacheOffMenuItem.setSelected(true);
 		localIconCacheOnMenuItem.setSelected(IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(localIconCacheSetting));
 
-		String logModeSetting = getClient().getProperty(SETTING_LOG_MODE);
-		logOnMenuItem.setSelected(true);
-		logOffMenuItem.setSelected(IClientPropertyValue.SETTING_LOG_OFF.equals(logModeSetting));
-
 		String automoveSetting = getClient().getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
@@ -1127,30 +1084,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		if (source == localIconCacheSelectMenuItem) {
 			selectIconCacheFolder();
 			getClient().saveUserSettings(true);
-		}
-
-		if (source == logOffMenuItem) {
-			getClient().setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
-			getClient().saveUserSettings(false);
-		}
-		if (source == logOnMenuItem) {
-			getClient().setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_ON);
-			if (!logFolderValid()) {
-				selectLogFolder();
-			}
-			getClient().saveUserSettings(true);
-		}
-		if (source == logSelectMenuItem) {
-			selectLogFolder();
-			getClient().saveUserSettings(true);
-		}
-
-		if (source == openLogFolderMenuItem) {
-			try {
-				Desktop.getDesktop().open(new File(getClient().getLogFolder()));
-			} catch (IOException ex) {
-				getClient().logWithOutGameId(ex);
-			}
 		}
 
 		if (source == fAutomoveOffMenuItem) {
@@ -1504,11 +1437,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return validFolder(getClient().getProperty(SETTING_LOCAL_ICON_CACHE_PATH));
 	}
 
-	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private boolean logFolderValid() {
-		return validFolder(getClient().getLogFolder());
-	}
-
 	private boolean validFolder(String path) {
 		if (!StringTool.isProvided(path)) {
 			return false;
@@ -1557,11 +1485,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		return getFolder(oldValue);
 	}
 
-	private File newLogFolder() {
-		String oldValue = getClient().getLogFolder();
-		return getFolder(oldValue);
-	}
-
 	private File getFolder(String oldValue) {
 		JFileChooser chooser = new JFileChooser(oldValue);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -1578,33 +1501,4 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		messageDialog.showDialog(this);
 	}
 
-	private void selectLogFolder() {
-		File folder = newLogFolder();
-
-		if (folder == null) {
-			if (!logFolderValid()) {
-				getClient().setProperty(SETTING_LOG_DIR, null);
-				getClient().setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
-				showError("Logging", new String[]{"No folder selected and old path was invalid", "Logging has been disabled"});
-			}
-		} else {
-			if (validFolder(folder)) {
-				getClient().setProperty(SETTING_LOG_DIR, folder.getAbsolutePath());
-				if (IClientPropertyValue.SETTING_LOG_OFF.equals(getClient().getProperty(SETTING_LOG_MODE))) {
-					getClient().setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON);
-					showError("Logging", new String[]{"Logging activated"});
-				}
-			} else {
-				if (!iconCacheValid()) {
-					getClient().setProperty(SETTING_LOG_DIR, null);
-					getClient().setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
-					showError("Logging", new String[]{"Invalid folder selected and old path was invalid",
-						"Logging has been disabled",
-						"Folder has to be writeable."});
-				} else {
-					showError("Logging", new String[]{"Invalid folder selected", "Folder has to be writeable"});
-				}
-			}
-		}
-	}
 }
