@@ -37,7 +37,7 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
 
     protected abstract void init();
 
-    protected abstract void refresh();
+    public abstract void refresh();
 
     public void showDialog(IDialog dialog) {
         client.getUserInterface().showDialog(dialog, this);

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu.settings;
 
+import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
@@ -11,14 +12,16 @@ import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_SETTINGS;
 
 public class UserSettingsMenu extends FfbMenu {
-	private ClientSettingsMenu clientSettingsMenu;
-	private ClientGraphicsMenu clientGraphicsMenu;
 	private GamePlayMenu gamePlayMenu;
 	private JMenuItem localPropertiesItem;
+	private Set<FfbMenu> subMenus;
 
 	public UserSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("User Settings", client, dimensionProvider, styleProvider, layoutSettings);
@@ -26,11 +29,21 @@ public class UserSettingsMenu extends FfbMenu {
 	}
 
 	@Override
+	public javax.swing.JMenuItem add(javax.swing.JMenuItem menuItem) {
+		if (menuItem instanceof FfbMenu) {
+			subMenus.add((FfbMenu) menuItem);
+		}
+		return super.add(menuItem);
+	}
+
+	@Override
 	protected void init() {
-		clientGraphicsMenu = new ClientGraphicsMenu(client, dimensionProvider, styleProvider, layoutSettings);
+		subMenus = new HashSet<>();
+
+		ClientGraphicsMenu clientGraphicsMenu = new ClientGraphicsMenu(client, dimensionProvider, styleProvider, layoutSettings);
 		add(clientGraphicsMenu);
 
-		clientSettingsMenu = new ClientSettingsMenu(client, dimensionProvider, styleProvider, layoutSettings);
+		ClientSettingsMenu clientSettingsMenu = new ClientSettingsMenu(client, dimensionProvider, styleProvider, layoutSettings);
 		add(clientSettingsMenu);
 
 		gamePlayMenu = new GamePlayMenu(client, dimensionProvider, styleProvider, layoutSettings);
@@ -41,16 +54,12 @@ public class UserSettingsMenu extends FfbMenu {
 
 	@Override
 	public void refresh() {
-		clientSettingsMenu.refresh();
-		clientGraphicsMenu.refresh();
-		gamePlayMenu.refresh();
+		subMenus.forEach(FfbMenu::refresh);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		clientSettingsMenu.actionPerformed(e);
-		clientGraphicsMenu.actionPerformed(e);
-		gamePlayMenu.actionPerformed(e);
+		subMenus.forEach(menu -> menu.actionPerformed(e));
 
 		javax.swing.JMenuItem source = (javax.swing.JMenuItem) (e.getSource());
 
@@ -79,5 +88,13 @@ public class UserSettingsMenu extends FfbMenu {
 			default:
 				break;
 		}
+	}
+
+	public String menuName(CommonProperty menuProperty) {
+		return gamePlayMenu.menuName(menuProperty);
+	}
+
+	public Map<String, String> menuEntries(CommonProperty menuProperty) {
+		return gamePlayMenu.menuEntries(menuProperty);
 	}
 }

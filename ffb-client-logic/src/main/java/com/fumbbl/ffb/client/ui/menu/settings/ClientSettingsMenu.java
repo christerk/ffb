@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu.settings;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.ClientLayout;
@@ -33,6 +34,7 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
+import static com.fumbbl.ffb.CommonProperty.SETTING_PLAYER_MARKING_TYPE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
@@ -44,6 +46,10 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem fSoundOnMenuItem;
 	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
 	private JRadioButtonMenuItem fSoundOffMenuItem;
+
+	private JMenu playerMarkingMenu;
+	private JRadioButtonMenuItem playersMarkingManualMenuItem;
+	private JRadioButtonMenuItem playersMarkingAutoMenuItem;
 
 	private JMenuItem scalingItem;
 
@@ -69,6 +75,7 @@ public class ClientSettingsMenu extends FfbMenu {
 	@Override
 	protected void init() {
 		createSoundMenu();
+		createMarkingMenu();
 		createClientUiMenu();
 		createScaleItem();
 		createLogMenu();
@@ -76,7 +83,13 @@ public class ClientSettingsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void refresh() {
+	public void refresh() {
+		playerMarkingMenu.setEnabled(ClientMode.REPLAY != client.getMode());
+		
+		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
+		playersMarkingManualMenuItem.setSelected(true);
+		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
+		
 		String soundSetting = client.getProperty(CommonProperty.SETTING_SOUND_MODE);
 		fSoundOnMenuItem.setSelected(true);
 		fSoundMuteSpectatorsMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting));
@@ -205,6 +218,10 @@ public class ClientSettingsMenu extends FfbMenu {
 			selectIconCacheFolder();
 			client.saveUserSettings(true);
 		}
+
+		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
+		playersMarkingManualMenuItem.setSelected(true);
+		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
 
 	}
 
@@ -469,6 +486,24 @@ public class ClientSettingsMenu extends FfbMenu {
 		localIconCacheMenu.add(localIconCacheSelectMenuItem);
 	}
 
+	private void createMarkingMenu() {
+		playerMarkingMenu = new JMenu(dimensionProvider, SETTING_PLAYER_MARKING_TYPE);
+		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
+		add(playerMarkingMenu);
+
+		ButtonGroup playerMarkingGroup = new ButtonGroup();
+
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic");
+		playersMarkingAutoMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingAutoMenuItem);
+		playerMarkingMenu.add(playersMarkingAutoMenuItem);
+
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual");
+		playersMarkingManualMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingManualMenuItem);
+		playerMarkingMenu.add(playersMarkingManualMenuItem);
+	}
+	
 	private void showError(String title, String[] error) {
 		DialogInformation messageDialog = new DialogInformation(client, title,
 			error, DialogInformation.OK_DIALOG, false);

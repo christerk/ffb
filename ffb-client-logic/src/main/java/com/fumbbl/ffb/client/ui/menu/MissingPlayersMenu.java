@@ -32,7 +32,7 @@ public class MissingPlayersMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void refresh() {
+	public void refresh() {
 		Game game = client.getGame();
 		removeAll();
 		int nrOfEntries = 0;

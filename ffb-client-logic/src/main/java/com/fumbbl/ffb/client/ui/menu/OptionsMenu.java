@@ -27,7 +27,7 @@ public class OptionsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void refresh() {
+	public void refresh() {
 		removeAll();
 		IGameOption[] gameOptions = client.getGame().getOptions().getOptions();
 		Arrays.sort(gameOptions, Comparator.comparing(pO -> pO.getId().getName()));
