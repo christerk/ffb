@@ -395,12 +395,12 @@ public class PlayerDetailComponent extends JPanel {
 			rosterSkills.removeAll(modifications);
 
 			int height = 0;
-			if (modifications.size() > 0) {
+			if (!modifications.isEmpty()) {
 				g2d.setColor(new Color(220, 0, 0));
 				height += drawPlayerSkills(g2d, x, y + height, new ArrayList<>(modifications), usedSkills) + 2;
 			}
 
-			if (acquiredSkills.size() > 0) {
+			if (!acquiredSkills.isEmpty()) {
 				g2d.setColor(new Color(0, 96, 0));
 				height += drawPlayerSkills(g2d, x, y + height, acquiredSkills, usedSkills) + 2;
 			}
@@ -412,7 +412,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private int drawPlayerSkills(Graphics2D pG2d, int pX, int pY, List<String> pSkills, Set<String> pUsedSkills) {
 		int height = 0;
-		if ((pSkills != null) && (pSkills.size() > 0)) {
+		if ((pSkills != null) && (!pSkills.isEmpty())) {
 			int yPos = pY;
 			for (String skill : pSkills) {
 				if (pUsedSkills.contains(skill)) {
@@ -448,7 +448,7 @@ public class PlayerDetailComponent extends JPanel {
 		StringBuilder line = new StringBuilder(LINE_LENGTH);
 
 		for (String word : words) {
-			if (line.length() + word.length() > LINE_LENGTH && line.toString().trim().length() > 0) {
+			if (line.length() + word.length() > LINE_LENGTH && !line.toString().trim().isEmpty()) {
 				addPart(parts, line);
 				line = new StringBuilder(LINE_LENGTH);
 			}
@@ -456,7 +456,7 @@ public class PlayerDetailComponent extends JPanel {
 
 		}
 
-		if (line.toString().trim().length() > 0) {
+		if (!line.toString().trim().isEmpty()) {
 			addPart(parts, line);
 		}
 
