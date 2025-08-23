@@ -19,6 +19,8 @@ public class ChangeList {
 			.addFeature("Added command to change amount of rerolls in test games")
 			.addBugfix("Preserve shown dialogs during init phase (login dialog, replay choice and various progress bars)")
 			.addBugfix("Disconnection: When the away client got disconnected while performing a blitz action it was not possible to block after reconnecting")
+			.addBugfix("Fix wording of target select dialogs")
+			.addImprovement("User Settings menu has been restructured")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
