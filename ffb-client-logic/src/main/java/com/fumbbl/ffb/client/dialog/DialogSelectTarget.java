@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
+public class DialogSelectTarget extends Dialog implements ActionListener {
 
 	private final JCheckBox doNotShowAgainCheckbox;
 
@@ -21,8 +21,8 @@ public class DialogSelectBlitzTarget extends Dialog implements ActionListener {
 	private final String panelOffValue; // IClientPropertyValue.SETTING_BLITZ_TARGET_PANEL_OFF;
 	private final DialogId dialogId; // DialogId.SELECT_BLITZ_TARGET;
 
-	public DialogSelectBlitzTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
-																 DialogId dialogId, CommonProperty panelProperty, String panelOffValue) {
+	public DialogSelectTarget(FantasyFootballClient pClient, String pTitle, String[] pMessages, String pIconProperty,
+														DialogId dialogId, CommonProperty panelProperty, String panelOffValue) {
 
 		super(pClient, pTitle, false);
 

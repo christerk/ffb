@@ -19,8 +19,8 @@ public class DialogSelectGazeTargetHandler extends DialogHandler {
 		Game game = getClient().getGame();
 
 		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
-			setDialog(new DialogSelectBlitzTarget(getClient(), "Select Gaze target",
-				new String[]{"Select the player you intend to gaze or active player again to cancel.", "Once you select an opposing player the activation is used."},
+			setDialog(new DialogSelectTarget(getClient(), "Select Gaze target",
+				new String[]{"Select the player you intend to gaze or active player again to cancel.", "The action can only be cancelled as long as no dice have been rolled."},
 				IIconProperty.ACTION_GAZE, DialogId.SELECT_GAZE_TARGET, CommonProperty.SETTING_GAZE_TARGET_PANEL, IClientPropertyValue.SETTING_GAZE_TARGET_PANEL_OFF));
 			getDialog().showDialog(this);
 
