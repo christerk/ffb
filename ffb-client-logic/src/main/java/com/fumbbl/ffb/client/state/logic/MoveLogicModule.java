@@ -240,11 +240,22 @@ public class MoveLogicModule extends LogicModule {
 
 		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 
-		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, pCoordinates[pCoordinates.length - 1])) {
+		FieldCoordinate lastCoordinate = pCoordinates[pCoordinates.length - 1];
+		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, lastCoordinate)) {
 			return false;
 		}
 
-		sendCommand(actingPlayer, coordinateFrom, pCoordinates);
+		// Clean up the coordinates if we are jumping (only the last coordinate matters).
+		// This mitigates a bug where a move-path was sent while jumping, resulting in additional dodge rolls
+		// and spending more movement than necessary.
+		// The source of this bug is so far unknown, but we want to prevent the occurrence of the bug.
+		FieldCoordinate[] cleanedCoordinates = pCoordinates;
+
+		if (actingPlayer.isJumping()) {
+			cleanedCoordinates = new FieldCoordinate[]{lastCoordinate};
+		}
+
+		sendCommand(actingPlayer, coordinateFrom, cleanedCoordinates);
 		return true;
 	}
 

@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Disconnection: When the away client got disconnected while performing a blitz action it was not possible to block after reconnecting")
 			.addBugfix("Fix wording of target select dialogs")
 			.addImprovement("User Settings menu has been restructured")
+			.addBugfix("Jump: In some cases a jump resulted in additional dodge rolls")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
