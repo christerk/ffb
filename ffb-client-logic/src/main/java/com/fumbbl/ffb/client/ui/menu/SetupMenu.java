@@ -46,8 +46,8 @@ public class SetupMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
-
+	public boolean refresh() {
+		return false;
 	}
 
 	@Override

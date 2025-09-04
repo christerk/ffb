@@ -27,7 +27,7 @@ public class OptionsMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		removeAll();
 		IGameOption[] gameOptions = client.getGame().getOptions().getOptions();
 		Arrays.sort(gameOptions, Comparator.comparing(pO -> pO.getId().getName()));
@@ -59,6 +59,8 @@ public class OptionsMenu extends FfbMenu {
 			setText("No Game Options");
 			setEnabled(false);
 		}
+
+		return false;
 	}
 
 	@Override

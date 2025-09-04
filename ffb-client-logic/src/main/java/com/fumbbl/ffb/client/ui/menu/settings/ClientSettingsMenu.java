@@ -83,7 +83,7 @@ public class ClientSettingsMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		playerMarkingMenu.setEnabled(ClientMode.REPLAY != client.getMode());
 		
 		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
@@ -112,9 +112,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
 
-		if (client.getUserInterface() != null && refreshUi) {
-			client.getUserInterface().initComponents(true);
-		}
+		return refreshUi;
 	}
 
 	@Override

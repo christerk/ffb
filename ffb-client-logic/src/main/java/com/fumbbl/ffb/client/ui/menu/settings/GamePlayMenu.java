@@ -77,7 +77,7 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		String automoveSetting = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
@@ -113,6 +113,7 @@ public class GamePlayMenu extends FfbMenu {
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
+		return false;
 	}
 
 	@Override

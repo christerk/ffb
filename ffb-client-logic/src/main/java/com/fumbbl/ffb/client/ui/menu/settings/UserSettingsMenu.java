@@ -53,8 +53,8 @@ public class UserSettingsMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
-		subMenus.forEach(FfbMenu::refresh);
+	public boolean refresh() {
+		return subMenus.stream().map(FfbMenu::refresh).reduce((a, b) -> a || b).orElse(false);
 	}
 
 	@Override

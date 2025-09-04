@@ -126,7 +126,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 
 		String pitchCustomizationSetting = client.getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);
@@ -230,9 +230,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 			refreshUi = true;
 		}
 
-		if (client.getUserInterface() != null && refreshUi) {
-			client.getUserInterface().initComponents(true);
-		}
+		return refreshUi;
 
 	}
 

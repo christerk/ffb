@@ -31,11 +31,12 @@ public abstract class GameModeMenu extends FfbMenu {
     protected abstract void createSpecificMenuItems();
 
     @Override
-    public final void refresh() {
+    public final boolean refresh() {
         boolean gameStarted = client.getGame() != null && client.getGame().getStarted() != null;
         gameStatisticsMenuItem.setEnabled(gameStarted);
 
         subClassRefresh();
+        return false;
     }
 
     protected abstract void subClassRefresh();

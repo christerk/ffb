@@ -38,7 +38,7 @@ public class CardsMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		boolean refreshNecessary = false;
 
 		Game game = client.getGame();
@@ -97,6 +97,7 @@ public class CardsMenu extends FfbMenu {
 
 		}
 
+		return false;
 	}
 
 	private void addActiveCards(JMenu pCardsMenu, Card[] pCards) {

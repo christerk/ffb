@@ -34,7 +34,7 @@ public class PrayersMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
 
@@ -90,6 +90,7 @@ public class PrayersMenu extends FfbMenu {
 				setEnabled(false);
 			}
 		}
+		return false;
 	}
 
 	private void addPrayers(JMenu prayerMenu, List<Prayer> prayers) {

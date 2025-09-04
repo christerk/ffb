@@ -50,7 +50,8 @@ public class HelpMenu extends FfbMenu {
     }
 
     @Override
-    public void refresh() {
+    public boolean refresh() {
+        return false;
     }
 
     @Override

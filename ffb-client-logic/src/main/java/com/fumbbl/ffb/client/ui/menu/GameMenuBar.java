@@ -18,6 +18,7 @@ import com.fumbbl.ffb.client.ui.menu.settings.UserSettingsMenu;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,6 +59,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		init();
 
+	}
+
+	@Override
+	public void remove(Component c) {
+		if (c instanceof FfbMenu) {
+			subMenus.remove((FfbMenu) c);
+		}
+		super.remove(c);
 	}
 
 	@Override
@@ -124,7 +133,11 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	}
 
 	public void refresh() {
-		subMenus.forEach(FfbMenu::refresh);
+		boolean reInit = subMenus.stream().map(FfbMenu::refresh).reduce((a, b) -> a || b).orElse(false);
+
+		if (fClient.getUserInterface() != null && reInit) {
+			fClient.getUserInterface().initComponents(true);
+		}
 	}
 
 	public void changeState(ClientStateId pStateId) {

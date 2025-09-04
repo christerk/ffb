@@ -32,7 +32,7 @@ public class MissingPlayersMenu extends FfbMenu {
 	}
 
 	@Override
-	public void refresh() {
+	public boolean refresh() {
 		Game game = client.getGame();
 		removeAll();
 		int nrOfEntries = 0;
@@ -68,6 +68,8 @@ public class MissingPlayersMenu extends FfbMenu {
 			setEnabled(false);
 		}
 		setText(menuText.toString());
+
+		return false;
 	}
 
 	private void addMissingPlayerMenuItem(Player<?> pPlayer) {
