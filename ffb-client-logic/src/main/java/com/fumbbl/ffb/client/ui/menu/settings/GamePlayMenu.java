@@ -182,6 +182,11 @@ public class GamePlayMenu extends FfbMenu {
 			client.saveUserSettings(false);
 		}
 
+		if (source == fRangeGridToggleMenuItem) {
+			client.setProperty(CommonProperty.SETTING_RANGEGRID, IClientPropertyValue.SETTING_RANGEGRID_TOGGLE);
+			client.saveUserSettings(false);
+		}
+
 		if (source == markUsedPlayersCheckIconGreenMenuItem) {
 			client.setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN);
 			client.saveUserSettings(true);

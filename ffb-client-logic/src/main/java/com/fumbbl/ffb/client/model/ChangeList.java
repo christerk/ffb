@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Fix wording of target select dialogs")
 			.addImprovement("User Settings menu has been restructured")
 			.addBugfix("Jump: In some cases a jump resulted in additional dodge rolls")
+			.addBugfix("Rangegrid: It was not possible to change the mode back to toggle from always on")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
