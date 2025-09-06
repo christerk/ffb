@@ -23,6 +23,7 @@ public class ChangeList {
 			.addImprovement("User Settings menu has been restructured")
 			.addBugfix("Jump: In some cases a jump resulted in additional dodge rolls")
 			.addBugfix("Rangegrid: It was not possible to change the mode back to toggle from always on")
+			.addImprovement("Resize shortcuts: Now you also use ctrl and +/-/0 on num pad (with or without num lock) to change client size")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
