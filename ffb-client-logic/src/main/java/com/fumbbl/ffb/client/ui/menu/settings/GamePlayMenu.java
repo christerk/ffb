@@ -56,6 +56,28 @@ public class GamePlayMenu extends FfbMenu {
 
 	private JMenu reRollBallAndChainPanelMenu;
 
+	// Player Mode
+	private JRadioButtonMenuItem tzPlayerNoneMenuItem;
+	private JRadioButtonMenuItem tzPlayerHomeMenuItem;
+	private JRadioButtonMenuItem tzPlayerAwayMenuItem;
+	private JRadioButtonMenuItem tzPlayerBothMenuItem;
+	private JRadioButtonMenuItem tzPlayerPassiveMenuItem;
+
+	// Spectator Mode
+	private JRadioButtonMenuItem tzSpectatorNoneMenuItem;
+	private JRadioButtonMenuItem tzSpectatorHomeMenuItem;
+	private JRadioButtonMenuItem tzSpectatorAwayMenuItem;
+	private JRadioButtonMenuItem tzSpectatorBothMenuItem;
+	private JRadioButtonMenuItem tzSpectatorPassiveMenuItem;
+
+	// No Overlap (global)
+	private JRadioButtonMenuItem tzNoOverlapMenuItem;
+	private JRadioButtonMenuItem tzOverlapMenuItem;
+
+	// Contour (global)
+	private JRadioButtonMenuItem tzContourOffMenuItem;
+	private JRadioButtonMenuItem tzContourOnMenuItem;
+
 	private Map<CommonProperty, JMenu> exposedMenus;
 
 	protected GamePlayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
@@ -74,6 +96,7 @@ public class GamePlayMenu extends FfbMenu {
 		createBallAndChainMenu();
 		createRangegridMenu();
 		createMarkUsedPlayerMenu();
+		createTacklezonesMenu();
 	}
 
 	@Override
@@ -113,6 +136,33 @@ public class GamePlayMenu extends FfbMenu {
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
+
+		// Tacklezone player mode
+		String tzPlayerSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
+		tzPlayerNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzPlayerSetting));
+		tzPlayerHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzPlayerSetting));
+		tzPlayerAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzPlayerSetting));
+		tzPlayerBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzPlayerSetting));
+		tzPlayerPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzPlayerSetting));
+
+		// Tacklezone spec mode
+		String tzSpectatorSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
+		tzSpectatorNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzSpectatorSetting));
+		tzSpectatorHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzSpectatorSetting));
+		tzSpectatorAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzSpectatorSetting));
+		tzSpectatorBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzSpectatorSetting));
+		tzSpectatorPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzSpectatorSetting));
+
+		// Tacklezone No Overlap
+		String tzNoOverlapSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP);
+		tzNoOverlapMenuItem.setSelected(true);
+		tzOverlapMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP.equals(tzNoOverlapSetting));
+
+		// Tacklezone Contour
+		String tzContourSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
+		tzContourOffMenuItem.setSelected(true);
+		tzContourOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(tzContourSetting));
+		
 		return false;
 	}
 
@@ -194,6 +244,70 @@ public class GamePlayMenu extends FfbMenu {
 
 		if (source == markUsedPlayersDefaultMenuItem) {
 			client.setProperty(CommonProperty.SETTING_MARK_USED_PLAYERS, IClientPropertyValue.SETTING_MARK_USED_PLAYERS_DEFAULT);
+			client.saveUserSettings(true);
+		}
+
+		// Tacklezones Player Mode Menu Item Handlers
+		if (source == tzPlayerNoneMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
+			client.saveUserSettings(true);
+		}
+		if (source == tzPlayerHomeMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_HOME);
+			client.saveUserSettings(true);
+		}
+		if (source == tzPlayerAwayMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_AWAY);
+			client.saveUserSettings(true);
+		}
+		if (source == tzPlayerBothMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_BOTH);
+			client.saveUserSettings(true);
+		}
+		if (source == tzPlayerPassiveMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
+			client.saveUserSettings(true);
+		}
+
+		// Tacklezones Spectator Mode Menu Item Handlers
+		if (source == tzSpectatorNoneMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
+			client.saveUserSettings(true);
+		}
+		if (source == tzSpectatorHomeMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_HOME);
+			client.saveUserSettings(true);
+		}
+		if (source == tzSpectatorAwayMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_AWAY);
+			client.saveUserSettings(true);
+		}
+		if (source == tzSpectatorBothMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_BOTH);
+			client.saveUserSettings(true);
+		}
+		if (source == tzSpectatorPassiveMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
+			client.saveUserSettings(true);
+		}
+
+		if (source == tzOverlapMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP);
+			client.saveUserSettings(true);
+		}
+
+		if (source == tzNoOverlapMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP);
+			client.saveUserSettings(true);
+		}
+
+		if (source == tzContourOnMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON);
+			client.saveUserSettings(true);
+		}
+
+		if (source == tzContourOffMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_OFF);
 			client.saveUserSettings(true);
 		}
 	}
@@ -343,6 +457,126 @@ public class GamePlayMenu extends FfbMenu {
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
+	}
+
+	private void createTacklezonesMenu() {
+		JMenu fTacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
+		fTacklezonesMenu.setMnemonic(KeyEvent.VK_T);
+		add(fTacklezonesMenu);
+
+		// --- Player Mode ---
+		JMenu playerModeMenu = new JMenu(dimensionProvider, "Player Mode");
+		playerModeMenu.setMnemonic(KeyEvent.VK_P);
+		fTacklezonesMenu.add(playerModeMenu);
+
+		ButtonGroup playerModeGroup = new ButtonGroup();
+
+		tzPlayerNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		tzPlayerNoneMenuItem.setMnemonic(KeyEvent.VK_N);
+		tzPlayerNoneMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerNoneMenuItem);
+		playerModeMenu.add(tzPlayerNoneMenuItem);
+
+		tzPlayerHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		tzPlayerHomeMenuItem.setMnemonic(KeyEvent.VK_H);
+		tzPlayerHomeMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerHomeMenuItem);
+		playerModeMenu.add(tzPlayerHomeMenuItem);
+
+		tzPlayerAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		tzPlayerAwayMenuItem.setMnemonic(KeyEvent.VK_A);
+		tzPlayerAwayMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerAwayMenuItem);
+		playerModeMenu.add(tzPlayerAwayMenuItem);
+
+		tzPlayerBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		tzPlayerBothMenuItem.setMnemonic(KeyEvent.VK_B);
+		tzPlayerBothMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerBothMenuItem);
+		playerModeMenu.add(tzPlayerBothMenuItem);
+
+		tzPlayerPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		tzPlayerPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
+		tzPlayerPassiveMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerPassiveMenuItem);
+		playerModeMenu.add(tzPlayerPassiveMenuItem);
+
+		// --- Spectator Mode ---
+		JMenu spectatorModeMenu = new JMenu(dimensionProvider, "Spectator Mode");
+		spectatorModeMenu.setMnemonic(KeyEvent.VK_S);
+		fTacklezonesMenu.add(spectatorModeMenu);
+
+		ButtonGroup spectatorModeGroup = new ButtonGroup();
+
+		tzSpectatorNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		tzSpectatorNoneMenuItem.setMnemonic(KeyEvent.VK_N);
+		tzSpectatorNoneMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorNoneMenuItem);
+		spectatorModeMenu.add(tzSpectatorNoneMenuItem);
+
+		tzSpectatorHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		tzSpectatorHomeMenuItem.setMnemonic(KeyEvent.VK_H);
+		tzSpectatorHomeMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorHomeMenuItem);
+		spectatorModeMenu.add(tzSpectatorHomeMenuItem);
+
+		tzSpectatorAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		tzSpectatorAwayMenuItem.setMnemonic(KeyEvent.VK_A);
+		tzSpectatorAwayMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorAwayMenuItem);
+		spectatorModeMenu.add(tzSpectatorAwayMenuItem);
+
+		tzSpectatorBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		tzSpectatorBothMenuItem.setMnemonic(KeyEvent.VK_B);
+		tzSpectatorBothMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorBothMenuItem);
+		spectatorModeMenu.add(tzSpectatorBothMenuItem);
+
+		tzSpectatorPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		tzSpectatorPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
+		tzSpectatorPassiveMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorPassiveMenuItem);
+		spectatorModeMenu.add(tzSpectatorPassiveMenuItem);
+
+		fTacklezonesMenu.addSeparator();
+
+		// --- No Overlap (global) ---
+		JMenu fTzNoOverlapMenu = new JMenu(dimensionProvider, "No Overlap");
+		fTzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
+		fTacklezonesMenu.add(fTzNoOverlapMenu);
+
+		ButtonGroup noOverlapGroup = new ButtonGroup();
+
+		tzNoOverlapMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		tzNoOverlapMenuItem.setMnemonic(KeyEvent.VK_F);
+		tzNoOverlapMenuItem.addActionListener(this);
+		noOverlapGroup.add(tzNoOverlapMenuItem);
+		fTzNoOverlapMenu.add(tzNoOverlapMenuItem);
+
+		tzOverlapMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		tzOverlapMenuItem.setMnemonic(KeyEvent.VK_N);
+		tzOverlapMenuItem.addActionListener(this);
+		noOverlapGroup.add(tzOverlapMenuItem);
+		fTzNoOverlapMenu.add(tzOverlapMenuItem);
+
+		// --- Contour (global) ---
+		JMenu fTzContourMenu = new JMenu(dimensionProvider, "Contour");
+		fTzContourMenu.setMnemonic(KeyEvent.VK_C);
+		fTacklezonesMenu.add(fTzContourMenu);
+
+		ButtonGroup contourGroup = new ButtonGroup();
+
+		tzContourOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		tzContourOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		tzContourOffMenuItem.addActionListener(this);
+		contourGroup.add(tzContourOffMenuItem);
+		fTzContourMenu.add(tzContourOffMenuItem);
+
+		tzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		tzContourOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		tzContourOnMenuItem.addActionListener(this);
+		contourGroup.add(tzContourOnMenuItem);
+		fTzContourMenu.add(tzContourOnMenuItem);
 	}
 
 	public String menuName(CommonProperty menuProperty) {
