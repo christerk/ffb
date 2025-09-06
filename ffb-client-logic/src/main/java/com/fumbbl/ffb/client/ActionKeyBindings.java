@@ -138,6 +138,11 @@ public class ActionKeyBindings {
 	}
 
 	public void addKeyBindings(JComponent pComponent, ActionKeyGroup pActionKeyGroup) {
+		// Remove default Ctrl+Insert binding to avoid conflicts with our own binding
+		KeyStroke ctrlInsert = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.CTRL_DOWN_MASK);
+		pComponent.getInputMap(JComponent.WHEN_FOCUSED).put(ctrlInsert, "none");
+		pComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(ctrlInsert, "none");
+
 		if (pActionKeyGroup == ActionKeyGroup.ALL) {
 			addKeyBindings(pComponent, ActionKeyGroup.PLAYER_MOVES);
 			addKeyBindings(pComponent, ActionKeyGroup.PLAYER_SELECTION);
