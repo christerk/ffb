@@ -115,7 +115,12 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER, resizeActions, ActionKey.RESIZE_SMALLER, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		addActionBinding(IClientProperty.KEY_RESIZE_RESET, resizeActions, ActionKey.RESIZE_RESET, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER2, resizeActions, ActionKey.RESIZE_SMALLER2, JComponent.WHEN_IN_FOCUSED_WINDOW);
-		fActionsByGroup.put(ActionKeyGroup.RESIZE, resizeActions);
+		addActionBinding(IClientProperty.KEY_RESIZE_LARGER2, resizeActions, ActionKey.RESIZE_LARGER2, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_RESET2, resizeActions, ActionKey.RESIZE_RESET2, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER3, resizeActions, ActionKey.RESIZE_SMALLER3, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_LARGER3, resizeActions, ActionKey.RESIZE_LARGER3, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_RESET3, resizeActions, ActionKey.RESIZE_RESET3, JComponent.WHEN_IN_FOCUSED_WINDOW);
+		addActionBinding(IClientProperty.KEY_RESIZE_SMALLER4, resizeActions, ActionKey.RESIZE_SMALLER4, JComponent.WHEN_IN_FOCUSED_WINDOW);		fActionsByGroup.put(ActionKeyGroup.RESIZE, resizeActions);
 
 	}
 

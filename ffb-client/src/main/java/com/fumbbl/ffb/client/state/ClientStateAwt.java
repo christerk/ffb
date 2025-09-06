@@ -294,19 +294,24 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		GameMenuBar gameMenuBar = getClient().getUserInterface().getGameMenuBar();
 		switch (pActionKey) {
 			case RESIZE_LARGER:
+			case RESIZE_LARGER2:
+			case RESIZE_LARGER3:
 				gameMenuBar.increaseScaling();
 				return true;
 			case RESIZE_RESET:
+			case RESIZE_RESET2:
+			case RESIZE_RESET3:
 				gameMenuBar.resetScaling();
 				return true;
 			case RESIZE_SMALLER:
 			case RESIZE_SMALLER2:
+			case RESIZE_SMALLER3:
+			case RESIZE_SMALLER4:
 				gameMenuBar.decreaseScaling();
 				return true;
 			default:
 				break;
-		}
-		return false;
+		}		return false;
 	}
 
 	public boolean isInitDragAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
