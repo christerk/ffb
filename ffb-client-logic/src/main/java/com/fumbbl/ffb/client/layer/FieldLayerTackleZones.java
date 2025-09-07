@@ -16,6 +16,7 @@ package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
@@ -36,10 +37,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -47,6 +45,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 	private static final float ALPHA = 0.1f;
 	private static final float[] TZ_DASH = {6f, 4f};
+	private static final BasicStroke STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, TZ_DASH, 0f);
 
 	private final StyleProvider styleProvider;
 
@@ -70,7 +69,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 			return;
 		}
 
-		String setting = getCurrentTacklezoneSetting();
+		String setting = getCurrentTackleZoneSetting();
 		Game game = getClient().getGame();
 		boolean isHomeActive = game.isHomePlaying();
 
@@ -78,11 +77,12 @@ public class FieldLayerTackleZones extends FieldLayer {
 		boolean showPassiveBothOnSetup = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP.equals(setting);
 
 		Graphics2D g2d = getImage().createGraphics();
+		g2d.setStroke(STROKE);
 
 		if (showPassiveOnly || showPassiveBothOnSetup) {
 			// Handle both passive modes
 			if (showPassiveBothOnSetup && isSetupPhase(game.getTurnMode())) {
-				// Special case: Show both teams during setup phase
+				// Special case: Show both teams during the setup phases
 				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
 				processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
 			} else {
@@ -115,15 +115,17 @@ public class FieldLayerTackleZones extends FieldLayer {
 		Game game = getClient().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 
+		g2d.setColor(color);
+
 		boolean overlapEnabled = isOverlapEnabled();
 
 		Set<FieldCoordinate> processedCoords = new HashSet<>();
 
 		for (Player<?> player : team.getPlayers()) {
 
-			FieldCoordinate coord = fieldModel.getPlayerCoordinate(player);
+			FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(player);
 
-			if (coord == null) {
+			if (coordinate == null) {
 				continue;
 			}
 
@@ -132,161 +134,94 @@ public class FieldLayerTackleZones extends FieldLayer {
 				continue;
 			}
 
-			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coord, FieldCoordinateBounds.FIELD, 1, false);
+			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD, 1, false);
 
 			for (FieldCoordinate tackleZone : tackleZones) {
 				if (overlapEnabled || processedCoords.add(tackleZone)) {
-					drawTackleZone(g2d, tackleZone, color);
+					drawTackleZone(g2d, tackleZone, pitchDimensionProvider.getDirection(coordinate, tackleZone));
 				}
 			}
 		}
 	}
 
-	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate, Color color) {
+	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate, Direction fromPlayer) {
 		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
-		paintZoneRect(g2d, origin.width, origin.height, color);
-	}
-
-
-	// Paints tackle zone overlays for the entire pitch with.
-/*	private void drawTackleZoneTiles(int[][] homeMap, int[][] awayMap, int pitchWidth, int pitchHeight) {
-		Graphics2D g2d = getImage().createGraphics();
-		float baseA = 0.15f;
-		int cap = isOverlapEnabled() ? 3 : 1; // caps number of tz drawn on a single tile
-		int unscaled = pitchDimensionProvider.unscaledFieldSquare();
-		boolean portrait = pitchDimensionProvider.isPitchPortrait();
-
-		String swapSetting = getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
-		boolean swapColors = IClientPropertyValue.SETTING_SWAP_TEAM_COLORS_ON.equals(swapSetting);
-
-		Color homeColor = swapColors ? new Color(0, 0, 255, 255) : new Color(255, 0, 0, 255);
-		Color awayColor = swapColors ? new Color(255, 0, 0, 255) : new Color(0, 0, 255, 255);
-
-		// Precompute exact pixel origins for every column and
-		// row to handle different column/row sizes.
-		// 1) Build origin arrays, swapping dimensions in portrait mode
-		int cols = portrait ? pitchHeight : pitchWidth;
-		int[] originX = new int[cols + 1];
-		for (int i = 0; i <= cols; i++) {
-			originX[i] = pitchDimensionProvider.scale(i * unscaled);
-		}
-
-		int rows = portrait ? pitchWidth : pitchHeight;
-		int[] originY = new int[rows + 1];
-		for (int j = 0; j <= rows; j++) {
-			originY[j] = pitchDimensionProvider.scale(j * unscaled);
-		}
-
-		// 2) Draw each tile
-		for (int x = 0; x < pitchWidth; x++) {
-			for (int y = 0; y < pitchHeight; y++) {
-				int hO = homeMap[x][y], aO = awayMap[x][y];
-				if (hO == 0 && aO == 0) continue;
-
-				int col = portrait ? y : x;
-				int row = portrait ? (pitchWidth - 1 - x) : y;
-
-				int px = originX[col];
-				int py = originY[row];
-				int w = originX[col + 1] - px;
-				int h = originY[row + 1] - py;
-
-				float homeVal = Math.min(hO, cap);// Cap home tackle zones
-				float awayVal = Math.min(aO, cap);// Cap away tackle zones
-
-				if (homeVal > 0 && awayVal > 0) {
-					float totalVal = homeVal + awayVal;
-					float maxVal = Math.max(homeVal, awayVal);// Use the larger count for max intensity
-					float totalIntensity = baseA * maxVal;    // Set total intensity by the largest stack
-					// Split intensity proportionally between teams
-					float homeAlpha = totalIntensity * (homeVal / totalVal);
-					float awayAlpha = totalIntensity * (awayVal / totalVal);
-					paintZoneRect(g2d, px, py, w, h, homeColor, homeAlpha);
-					paintZoneRect(g2d, px, py, w, h, awayColor, awayAlpha);
-				} else if (homeVal > 0) {
-					// Only home team present
-					paintZoneRect(g2d, px, py, w, h, homeColor, baseA * homeVal);
-				} else if (awayVal > 0) {
-					// Only away team present
-					paintZoneRect(g2d, px, py, w, h, awayColor, baseA * awayVal);
-				}
+		paintZoneRect(g2d, origin.width, origin.height);
+		if (isContourEnabled()) {
+			switch (fromPlayer) {
+				case NORTH:
+				case SOUTH:
+				case EAST:
+				case WEST:
+					drawContour(g2d, contourOrigin(origin, fromPlayer), contourTarget(origin, fromPlayer));
+					break;
+				case NORTHEAST:
+					drawContour(g2d, contourOrigin(origin, Direction.NORTH), contourTarget(origin, Direction.NORTH));
+					drawContour(g2d, contourOrigin(origin, Direction.EAST), contourTarget(origin, Direction.EAST));
+					break;
+				case NORTHWEST:
+					drawContour(g2d, contourOrigin(origin, Direction.NORTH), contourTarget(origin, Direction.NORTH));
+					drawContour(g2d, contourOrigin(origin, Direction.WEST), contourTarget(origin, Direction.WEST));
+					break;
+				case SOUTHEAST:
+					drawContour(g2d, contourOrigin(origin, Direction.SOUTH), contourTarget(origin, Direction.SOUTH));
+					drawContour(g2d, contourOrigin(origin, Direction.EAST), contourTarget(origin, Direction.EAST));
+					break;
+				case SOUTHWEST:
+					drawContour(g2d, contourOrigin(origin, Direction.SOUTH), contourTarget(origin, Direction.SOUTH));
+					drawContour(g2d, contourOrigin(origin, Direction.WEST), contourTarget(origin, Direction.WEST));
+					break;
+				default:
+					break;
 			}
 		}
+	}
 
-		if (isContourEnabled()) {
-			// draw contours
-			List<int[]> homeEdges = getPerimeterEdges(homeMap, pitchWidth, pitchHeight);
-			List<int[]> awayEdges = getPerimeterEdges(awayMap, pitchWidth, pitchHeight);
-			drawContour(g2d, homeEdges, pitchWidth, portrait, originX, originY, TZ_DASH, homeColor);
-			drawContour(g2d, awayEdges, pitchWidth, portrait, originX, originY, TZ_DASH, awayColor);
+	private Dimension contourOrigin(Dimension upperLeft, Direction fromPlayer) {
+		switch (fromPlayer) {
+			case SOUTH:
+				return new Dimension(upperLeft.width, upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+
+			case EAST:
+				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height);
+
+			default:
+				return upperLeft;
 		}
+	}
 
-		g2d.dispose();
-	}*/
+	private Dimension contourTarget(Dimension upperLeft, Direction fromPlayer) {
+		switch (fromPlayer) {
+			case NORTH:
+				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height);
+
+			case WEST:
+				return new Dimension(upperLeft.width, upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+
+			case EAST:
+			case SOUTH:
+				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+			default:
+				return upperLeft;
+		}
+	}
 
 	// Paints a single colored translucent zone square.
-	private void paintZoneRect(Graphics2D g2d, int x, int y, Color color) {
+	private void paintZoneRect(Graphics2D g2d, int x, int y) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
-		g2d.setColor(color);
 		g2d.fillRect(x, y, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
-	}
-
-	// Scans the map array and returns a list of edges on the perimeter.
-	// Each entry is int[]{ x1, y1, x2, y2 } in tile coordinates.
-	// For each occupied tile, checks its four sides. If a neighboring tile is empty or out of bounds,
-	// adds that side as a perimeter edge (as a line from one corner to the next).
-	// Returns all perimeter edges as a list of [x1, y1, x2, y2] tile coordinates.
-	private List<int[]> getPerimeterEdges(int[][] map, int width, int height) {
-		List<int[]> edges = new ArrayList<>();
-		int[][] sides = {
-			{0, -1, 0, 0, 1, 0},
-			{1, 0, 1, 0, 1, 1},
-			{0, 1, 1, 1, 0, 1},
-			{-1, 0, 0, 1, 0, 0},
-		};
-		for (int x = 0; x < width; x++)
-			for (int y = 0; y < height; y++) {
-				if (map[x][y] == 0) continue;
-				for (int[] s : sides) {
-					int nx = x + s[0], ny = y + s[1];
-					if (nx < 0 || nx >= width || ny < 0 || ny >= height || map[nx][ny] == 0) {
-						edges.add(new int[]{x + s[2], y + s[3], x + s[4], y + s[5]});
-					}
-				}
-			}
-		return edges;
 	}
 
 	//Draws a dashed contour for the given edges list.
 	//Reuses the same originX/originY arrays from drawTackleZoneTiles.
-	private void drawContour(Graphics2D g2d, List<int[]> edges, int pitchWidth, boolean portrait,
-													 int[] originX, int[] originY, float[] dash, Color color) {
-		Stroke old = g2d.getStroke();
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-		g2d.setColor(color);
-		g2d.setStroke(new BasicStroke(
-			1f,
-			BasicStroke.CAP_BUTT,
-			BasicStroke.JOIN_MITER,
-			10f,
-			dash,
-			0f
-		));
-		for (int[] e : edges) {
-			int x1 = e[0], y1 = e[1], x2 = e[2], y2 = e[3];
-			int col1 = portrait ? y1 : x1;
-			int row1 = portrait ? (pitchWidth - x1) : y1;
-			int col2 = portrait ? y2 : x2;
-			int row2 = portrait ? (pitchWidth - x2) : y2;
-			int px1 = originX[col1], py1 = originY[row1];
-			int px2 = originX[col2], py2 = originY[row2];
-			g2d.drawLine(px1, py1, px2, py2);
+	private void drawContour(Graphics2D g2d, Dimension from, Dimension to) {
 
-		}
-		g2d.setStroke(old);
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		g2d.drawLine(from.width, from.height, to.width, to.height);
+
 	}
 
-	private String getCurrentTacklezoneSetting() {
+	private String getCurrentTackleZoneSetting() {
 		ClientMode mode = getClient().getMode();
 		if (mode == ClientMode.PLAYER) {
 			return getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
@@ -296,7 +231,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 	}
 
 	private boolean isTzDisabled() {
-		return IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTacklezoneSetting());
+		return IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting());
 	}
 
 	private boolean isOverlapEnabled() {
