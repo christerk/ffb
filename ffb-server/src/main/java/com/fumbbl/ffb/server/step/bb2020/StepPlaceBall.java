@@ -155,7 +155,7 @@ public class StepPlaceBall extends AbstractStep {
 					game.setWaitingForOpponent(true);
 					UtilServerTimer.stopTurnTimer(getGameState(), System.currentTimeMillis());
 				}
-				Direction direction = FieldCoordinate.getDirection(game.getFieldModel().getBallCoordinate(), selectedCoordinate);
+				Direction direction = game.getFieldModel().getBallCoordinate().getDirection(selectedCoordinate);
 				getResult().addReport(new ReportPlaceBallDirection(playerId, direction));
 				game.getFieldModel().setBallCoordinate(selectedCoordinate);
 				game.getFieldModel().setBallMoving(true);

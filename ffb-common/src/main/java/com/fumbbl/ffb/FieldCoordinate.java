@@ -175,8 +175,18 @@ public class FieldCoordinate implements IJsonSerializable {
 	}
 
 	public static Direction getDirection(FieldCoordinate from, FieldCoordinate to) {
-		int dx = to.getX() - from.getX();
-		int dy = to.getY() - from.getY();
+		return from.getDirection(to);
+	}
+
+	/**
+	 * Returns the direction from this coordinate to the specified coordinate.
+	 * 
+	 * @param to the destination coordinate
+	 * @return the direction from this coordinate to the destination, or null if both coordinates are the same
+	 */
+	public Direction getDirection(FieldCoordinate to) {
+		int dx = to.getX() - this.getX();
+		int dy = to.getY() - this.getY();
 
 		if (dx < 0) {
 			if (dy < 0) {
