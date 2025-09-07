@@ -1,12 +1,12 @@
 /**
  * FieldLayerTackleZones
- *
+ * <p>
  * Renders the colored tackle zone overlays for both teams on the field.
  * Responds to user toggles for per-team visibility, overlapping, contours, and "opposing only" logic.
- *
+ * <p>
  * The rendering respects user settings set in the menu (see CommonProperty and IClientPropertyValue),
  * and draws translucent rectangles and (optionally) dashed contours to show tackle zone coverage.
- *
+ * <p>
  * This layer is integrated in FieldComponent as a part of the field rendering stack.
  *
  * @author Garcangel
@@ -17,32 +17,40 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.Rectangle;
 import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class FieldLayerTackleZones extends FieldLayer {
 
+	private final StyleProvider styleProvider;
+
 	public FieldLayerTackleZones(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
-															 PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+															 PitchDimensionProvider pitchDimensionProvider, FontCache fontCache, StyleProvider styleProvider) {
 		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		this.styleProvider = styleProvider;
 	}
 
 	@Override
@@ -61,85 +69,89 @@ public class FieldLayerTackleZones extends FieldLayer {
 		clear(true);
 
 		if (isTzDisabled()) {
-			addUpdatedArea(new Rectangle(0, 0, getImage().getWidth(), getImage().getHeight()));
 			return;
 		}
 
-		// 1. Tally tackle zones per tile (by team)
-		int[][] homeMap, awayMap;
-		int pitchWidth = FieldCoordinate.FIELD_WIDTH;
-		int pitchHeight = FieldCoordinate.FIELD_HEIGHT;
-		homeMap = new int[pitchWidth][pitchHeight];
-		awayMap = new int[pitchWidth][pitchHeight];
-
-		countTackleZones(homeMap, awayMap, pitchWidth, pitchHeight);
-
-		// 2. Draw the tiles with blending/overlap
-		drawTackleZoneTiles(homeMap, awayMap, pitchWidth, pitchHeight);
-
-		addUpdatedArea(new Rectangle(0, 0, getImage().getWidth(), getImage().getHeight()));
-	}
-
-	// Tallies up all tackle zone influences into two team maps.
-	private void countTackleZones(int[][] homeMap, int[][] awayMap, int pitchWidth, int pitchHeight) {
-		Game game = getClient().getGame();
-		FieldModel fieldModel = game.getFieldModel();
 
 		String setting = getCurrentTacklezoneSetting();
 
-		boolean isPassive = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(setting);
-		boolean showHome = IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(setting)
-			|| IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
-		boolean showAway = IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(setting)
-			|| IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
-
-		boolean showBothTz = showBothTzThisTurnMode(game.getTurnMode());
-
+		Game game = getClient().getGame();
 		boolean isHomeActive = game.isHomePlaying();
 
+		boolean showPassiveOnly = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(setting);
 
-		List<Player<?>> playerList = getPlayersOnField(fieldModel);
+		Graphics2D g2d = getImage().createGraphics();
 
-		for (Player<?> player : playerList) {
+		if (showPassiveOnly) {
+			if (isHomeActive) {
+				processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
+			} else {
+				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
+			}
+		} else {
+			boolean showBothTz = showBothTzThisTurnMode(game.getTurnMode());
+			boolean showHome = IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(setting)
+				|| IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
+			boolean showAway = IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(setting)
+				|| IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
+
+			if (showAway || showBothTz) {
+				processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
+			}
+
+			if (showHome || showBothTz) {
+				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
+			}
+		}
+
+		g2d.dispose();
+	}
+
+	private void processPlayers(Graphics2D g2d, Team team, Color color) {
+		Game game = getClient().getGame();
+		FieldModel fieldModel = game.getFieldModel();
+
+		boolean overlapEnabled = isOverlapEnabled();
+
+		Set<FieldCoordinate> processedCoords = new HashSet<>();
+
+		for (Player<?> player : team.getPlayers()) {
 
 			FieldCoordinate coord = fieldModel.getPlayerCoordinate(player);
 
+			if (coord == null) {
+				continue;
+			}
+
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			if (!playerState.hasTacklezones()) continue;
-
-			boolean isHomePlayer = player.getTeam() == game.getTeamHome();
-
-			// Passive mode: only show passive player's tz (shows both on setup)
-			if (isPassive && !showBothTz && (isHomePlayer == isHomeActive)) {
+			if (!playerState.hasTacklezones()) {
 				continue;
 			}
 
-			// Per-team toggles
-			if (!isPassive && ((isHomePlayer && !showHome) || (!isHomePlayer && !showAway))) {
-				continue;
-			}
-			int px = coord.getX();
-			int py = coord.getY();
+			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coord, FieldCoordinateBounds.FIELD, 1, false);
 
-			for (int dx = -1; dx <= 1; dx++) {
-				for (int dy = -1; dy <= 1; dy++) {
-					int tx = px + dx, ty = py + dy;
-					if (tx < 0 || ty < 0 || tx >= pitchWidth || ty >= pitchHeight) continue;
-					if (isHomePlayer) {
-						homeMap[tx][ty]++;
-					} else {
-						awayMap[tx][ty]++;
-					}
+			for (FieldCoordinate tackleZone : tackleZones) {
+				if (overlapEnabled || processedCoords.add(tackleZone)) {
+					drawTackleZone(g2d, tackleZone, color);
 				}
 			}
 		}
 	}
 
+	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate, Color color) {
+		float alpha = 0.1f;
+
+		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
+
+		paintZoneRect(g2d, origin.width, origin.height, color, alpha);
+	}
+
+
 	// Paints tackle zone overlays for the entire pitch with.
-	private void drawTackleZoneTiles(int[][] homeMap, int[][] awayMap, int pitchWidth, int pitchHeight) {
+/*	private void drawTackleZoneTiles(int[][] homeMap, int[][] awayMap, int pitchWidth, int pitchHeight) {
 		Graphics2D g2d = getImage().createGraphics();
 		float baseA = 0.15f;
-		int cap = isNoOverlapEnabled() ? 1 : 3; // caps number of tz drawn on a single tile
+		int cap = isOverlapEnabled() ? 3 : 1; // caps number of tz drawn on a single tile
 		int unscaled = pitchDimensionProvider.unscaledFieldSquare();
 		boolean portrait = pitchDimensionProvider.isPitchPortrait();
 
@@ -151,7 +163,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 		// Precompute exact pixel origins for every column and
 		// row to handle different column/row sizes.
-		// 1) Build origin arrays, swapping dimensions in portrait
+		// 1) Build origin arrays, swapping dimensions in portrait mode
 		int cols = portrait ? pitchHeight : pitchWidth;
 		int[] originX = new int[cols + 1];
 		for (int i = 0; i <= cols; i++) {
@@ -209,13 +221,13 @@ public class FieldLayerTackleZones extends FieldLayer {
 		}
 
 		g2d.dispose();
-	}
+	}*/
 
 	// Paints a single colored translucent zone square.
-	private void paintZoneRect(Graphics2D g2d, int x, int y, int w, int h, Color color, float alpha) {
+	private void paintZoneRect(Graphics2D g2d, int x, int y, Color color, float alpha) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		g2d.setColor(color);
-		g2d.fillRect(x, y, w, h);
+		g2d.fillRect(x, y, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
 	}
 
 	// Scans the map array and returns a list of edges on the perimeter.
@@ -286,8 +298,8 @@ public class FieldLayerTackleZones extends FieldLayer {
 		return IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTacklezoneSetting());
 	}
 
-	private boolean isNoOverlapEnabled() {
-		return IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP.equals(
+	private boolean isOverlapEnabled() {
+		return IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP_ON.equals(
 			getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP)
 		);
 	}

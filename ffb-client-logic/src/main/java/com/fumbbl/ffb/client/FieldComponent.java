@@ -77,7 +77,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
 												PitchDimensionProvider pitchDimensionProvider, FontCache fontCache,
-												ClientSketchManager sketchManager) {
+												ClientSketchManager sketchManager, StyleProvider styleProvider) {
 
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
@@ -92,7 +92,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
-		layerTackleZones = new FieldLayerTackleZones(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+		layerTackleZones = new FieldLayerTackleZones(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, styleProvider);
 
 		fCoordinateByPlayerId = new HashMap<>();
 
