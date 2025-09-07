@@ -62,6 +62,7 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem tzPlayerAwayMenuItem;
 	private JRadioButtonMenuItem tzPlayerBothMenuItem;
 	private JRadioButtonMenuItem tzPlayerPassiveMenuItem;
+	private JRadioButtonMenuItem tzPlayerPassiveBothOnSetupMenuItem;
 
 	// Spectator Mode
 	private JRadioButtonMenuItem tzSpectatorNoneMenuItem;
@@ -69,6 +70,7 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem tzSpectatorAwayMenuItem;
 	private JRadioButtonMenuItem tzSpectatorBothMenuItem;
 	private JRadioButtonMenuItem tzSpectatorPassiveMenuItem;
+	private JRadioButtonMenuItem tzSpectatorPassiveBothOnSetupMenuItem;
 
 	// No Overlap (global)
 	private JRadioButtonMenuItem tzOverlapOffMenuItem;
@@ -132,7 +134,7 @@ public class GamePlayMenu extends FfbMenu {
 		String markUsedPlayersSetting = client.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS);
 		markUsedPlayersDefaultMenuItem.setSelected(true);
 		markUsedPlayersCheckIconGreenMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(markUsedPlayersSetting));
-		
+
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
 
@@ -144,6 +146,7 @@ public class GamePlayMenu extends FfbMenu {
 		tzPlayerAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzPlayerSetting));
 		tzPlayerBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzPlayerSetting));
 		tzPlayerPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzPlayerSetting));
+		tzPlayerPassiveBothOnSetupMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP.equals(tzPlayerSetting));
 
 		// Tacklezone spec mode
 		String tzSpectatorSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
@@ -152,6 +155,7 @@ public class GamePlayMenu extends FfbMenu {
 		tzSpectatorAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzSpectatorSetting));
 		tzSpectatorBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzSpectatorSetting));
 		tzSpectatorPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzSpectatorSetting));
+		tzSpectatorPassiveBothOnSetupMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP.equals(tzSpectatorSetting));
 
 		// Tacklezone Overlap
 		String tzOverlapSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP);
@@ -162,7 +166,7 @@ public class GamePlayMenu extends FfbMenu {
 		String tzContourSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
 		tzContourOffMenuItem.setSelected(true);
 		tzContourOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(tzContourSetting));
-		
+
 		return false;
 	}
 
@@ -268,6 +272,10 @@ public class GamePlayMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
 			client.saveUserSettings(true);
 		}
+		if (source == tzPlayerPassiveBothOnSetupMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP);
+			client.saveUserSettings(true);
+		}
 
 		// Tacklezones Spectator Mode Menu Item Handlers
 		if (source == tzSpectatorNoneMenuItem) {
@@ -288,6 +296,10 @@ public class GamePlayMenu extends FfbMenu {
 		}
 		if (source == tzSpectatorPassiveMenuItem) {
 			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE);
+			client.saveUserSettings(true);
+		}
+		if (source == tzSpectatorPassiveBothOnSetupMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE, IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP);
 			client.saveUserSettings(true);
 		}
 
@@ -347,7 +359,7 @@ public class GamePlayMenu extends FfbMenu {
 		rangeGridGroup.add(fRangeGridToggleMenuItem);
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
 	}
-	
+
 	private void createBallAndChainMenu() {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN);
@@ -501,6 +513,12 @@ public class GamePlayMenu extends FfbMenu {
 		playerModeGroup.add(tzPlayerPassiveMenuItem);
 		playerModeMenu.add(tzPlayerPassiveMenuItem);
 
+		tzPlayerPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)");
+		tzPlayerPassiveBothOnSetupMenuItem.setMnemonic(KeyEvent.VK_S);
+		tzPlayerPassiveBothOnSetupMenuItem.addActionListener(this);
+		playerModeGroup.add(tzPlayerPassiveBothOnSetupMenuItem);
+		playerModeMenu.add(tzPlayerPassiveBothOnSetupMenuItem);
+
 		// --- Spectator Mode ---
 		JMenu spectatorModeMenu = new JMenu(dimensionProvider, "Spectator Mode");
 		spectatorModeMenu.setMnemonic(KeyEvent.VK_S);
@@ -537,6 +555,12 @@ public class GamePlayMenu extends FfbMenu {
 		tzSpectatorPassiveMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorPassiveMenuItem);
 		spectatorModeMenu.add(tzSpectatorPassiveMenuItem);
+
+		tzSpectatorPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)");
+		tzSpectatorPassiveBothOnSetupMenuItem.setMnemonic(KeyEvent.VK_S);
+		tzSpectatorPassiveBothOnSetupMenuItem.addActionListener(this);
+		spectatorModeGroup.add(tzSpectatorPassiveBothOnSetupMenuItem);
+		spectatorModeMenu.add(tzSpectatorPassiveBothOnSetupMenuItem);
 
 		fTacklezonesMenu.addSeparator();
 

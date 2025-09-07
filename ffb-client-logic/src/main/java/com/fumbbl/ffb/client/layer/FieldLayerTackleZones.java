@@ -63,31 +63,35 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 	@Override
 	public void init() {
-		updateTackleZones();
-	}
 
-	public void updateTackleZones() {
 		clear(true);
 
 		if (isTzDisabled()) {
 			return;
 		}
 
-
 		String setting = getCurrentTacklezoneSetting();
-
 		Game game = getClient().getGame();
 		boolean isHomeActive = game.isHomePlaying();
 
 		boolean showPassiveOnly = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(setting);
+		boolean showPassiveBothOnSetup = IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP.equals(setting);
 
 		Graphics2D g2d = getImage().createGraphics();
 
-		if (showPassiveOnly) {
-			if (isHomeActive) {
+		if (showPassiveOnly || showPassiveBothOnSetup) {
+			// Handle both passive modes
+			if (showPassiveBothOnSetup && isSetupPhase(game.getTurnMode())) {
+				// Special case: Show both teams during setup phase
+				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
 				processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
 			} else {
-				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
+				// Common case for both passive modes: Show only non-active team
+				if (isHomeActive) {
+					processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
+				} else {
+					processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
+				}
 			}
 		} else {
 			boolean showHome = IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(setting)
@@ -140,7 +144,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate, Color color) {
 		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
-		paintZoneRect(g2d, origin.width, origin.height, color, ALPHA);
+		paintZoneRect(g2d, origin.width, origin.height, color);
 	}
 
 
@@ -221,8 +225,8 @@ public class FieldLayerTackleZones extends FieldLayer {
 	}*/
 
 	// Paints a single colored translucent zone square.
-	private void paintZoneRect(Graphics2D g2d, int x, int y, Color color, float alpha) {
-		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	private void paintZoneRect(Graphics2D g2d, int x, int y, Color color) {
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
 		g2d.setColor(color);
 		g2d.fillRect(x, y, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
 	}
@@ -305,6 +309,14 @@ public class FieldLayerTackleZones extends FieldLayer {
 		return IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_ON.equals(
 			getClient().getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR)
 		);
+	}
+
+	private boolean isSetupPhase(TurnMode turnMode) {
+		return turnMode == TurnMode.SETUP ||
+			turnMode == TurnMode.KICKOFF ||
+			turnMode == TurnMode.PERFECT_DEFENCE ||
+			turnMode == TurnMode.SOLID_DEFENCE ||
+			turnMode == TurnMode.KICKOFF_RETURN;
 	}
 
 }

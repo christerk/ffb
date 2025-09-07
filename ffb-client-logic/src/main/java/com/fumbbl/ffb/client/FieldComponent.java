@@ -312,7 +312,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				break;
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
 				FieldCoordinate oldPlayerCoordinate = fCoordinateByPlayerId.get(pModelChange.getKey());
-				getLayerTackleZones().updateTackleZones();
+				getLayerTackleZones().init();
 				if (oldPlayerCoordinate != null) {
 					getLayerPlayers().updateBallAndPlayers(oldPlayerCoordinate, true);
 				}
@@ -326,7 +326,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				Player<?> player = game.getPlayerById(pModelChange.getKey());
 				FieldCoordinate playerCoordinateForStateChange = fieldModel.getPlayerCoordinate(player);
 				boolean playerOverBall = fieldModel.isBallInPlay();
-				getLayerTackleZones().updateTackleZones();
+				getLayerTackleZones().init();
 				getLayerPlayers().updateBallAndPlayers(playerCoordinateForStateChange, playerOverBall);
 				break;
 			case FIELD_MODEL_SET_RANGE_RULER:
@@ -339,6 +339,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 			case GAME_SET_HOME_PLAYING:
 			case GAME_SET_TURN_MODE:
 				getLayerUnderPlayers().init();
+				getLayerTackleZones().init();
 				break;
 			case SKETCH_UPDATE:
 				getLayerSketches().draw((SketchState) pModelChange.getValue());
