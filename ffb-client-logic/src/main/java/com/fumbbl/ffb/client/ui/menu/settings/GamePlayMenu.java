@@ -71,8 +71,8 @@ public class GamePlayMenu extends FfbMenu {
 	private JRadioButtonMenuItem tzSpectatorPassiveMenuItem;
 
 	// No Overlap (global)
-	private JRadioButtonMenuItem tzNoOverlapMenuItem;
-	private JRadioButtonMenuItem tzOverlapMenuItem;
+	private JRadioButtonMenuItem tzOverlapOffMenuItem;
+	private JRadioButtonMenuItem tzOverlapOnMenuItem;
 
 	// Contour (global)
 	private JRadioButtonMenuItem tzContourOffMenuItem;
@@ -139,7 +139,7 @@ public class GamePlayMenu extends FfbMenu {
 
 		// Tacklezone player mode
 		String tzPlayerSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE);
-		tzPlayerNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzPlayerSetting));
+		tzPlayerNoneMenuItem.setSelected(true);
 		tzPlayerHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzPlayerSetting));
 		tzPlayerAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzPlayerSetting));
 		tzPlayerBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzPlayerSetting));
@@ -147,16 +147,16 @@ public class GamePlayMenu extends FfbMenu {
 
 		// Tacklezone spec mode
 		String tzSpectatorSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_SPECTATOR_MODE);
-		tzSpectatorNoneMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(tzSpectatorSetting));
+		tzSpectatorNoneMenuItem.setSelected(true);
 		tzSpectatorHomeMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_HOME.equals(tzSpectatorSetting));
 		tzSpectatorAwayMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_AWAY.equals(tzSpectatorSetting));
 		tzSpectatorBothMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(tzSpectatorSetting));
 		tzSpectatorPassiveMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_PASSIVE.equals(tzSpectatorSetting));
 
-		// Tacklezone No Overlap
-		String tzNoOverlapSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP);
-		tzNoOverlapMenuItem.setSelected(true);
-		tzOverlapMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP.equals(tzNoOverlapSetting));
+		// Tacklezone Overlap
+		String tzOverlapSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP);
+		tzOverlapOffMenuItem.setSelected(true);
+		tzOverlapOnMenuItem.setSelected(IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP_ON.equals(tzOverlapSetting));
 
 		// Tacklezone Contour
 		String tzContourSetting = client.getProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR);
@@ -291,13 +291,13 @@ public class GamePlayMenu extends FfbMenu {
 			client.saveUserSettings(true);
 		}
 
-		if (source == tzOverlapMenuItem) {
-			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_NO_OVERLAP);
+		if (source == tzOverlapOnMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP_ON);
 			client.saveUserSettings(true);
 		}
 
-		if (source == tzNoOverlapMenuItem) {
-			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP);
+		if (source == tzOverlapOffMenuItem) {
+			client.setProperty(CommonProperty.SETTING_TACKLEZONES_OVERLAP, IClientPropertyValue.SETTING_TACKLEZONES_OVERLAP_OFF);
 			client.saveUserSettings(true);
 		}
 
@@ -541,28 +541,28 @@ public class GamePlayMenu extends FfbMenu {
 		fTacklezonesMenu.addSeparator();
 
 		// --- No Overlap (global) ---
-		JMenu fTzNoOverlapMenu = new JMenu(dimensionProvider, "No Overlap");
-		fTzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
-		fTacklezonesMenu.add(fTzNoOverlapMenu);
+		JMenu tzNoOverlapMenu = new JMenu(dimensionProvider, "Overlap");
+		tzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
+		fTacklezonesMenu.add(tzNoOverlapMenu);
 
 		ButtonGroup noOverlapGroup = new ButtonGroup();
 
-		tzNoOverlapMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
-		tzNoOverlapMenuItem.setMnemonic(KeyEvent.VK_F);
-		tzNoOverlapMenuItem.addActionListener(this);
-		noOverlapGroup.add(tzNoOverlapMenuItem);
-		fTzNoOverlapMenu.add(tzNoOverlapMenuItem);
+		tzOverlapOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		tzOverlapOffMenuItem.setMnemonic(KeyEvent.VK_F);
+		tzOverlapOffMenuItem.addActionListener(this);
+		noOverlapGroup.add(tzOverlapOffMenuItem);
+		tzNoOverlapMenu.add(tzOverlapOffMenuItem);
 
-		tzOverlapMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
-		tzOverlapMenuItem.setMnemonic(KeyEvent.VK_N);
-		tzOverlapMenuItem.addActionListener(this);
-		noOverlapGroup.add(tzOverlapMenuItem);
-		fTzNoOverlapMenu.add(tzOverlapMenuItem);
+		tzOverlapOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		tzOverlapOnMenuItem.setMnemonic(KeyEvent.VK_N);
+		tzOverlapOnMenuItem.addActionListener(this);
+		noOverlapGroup.add(tzOverlapOnMenuItem);
+		tzNoOverlapMenu.add(tzOverlapOnMenuItem);
 
 		// --- Contour (global) ---
-		JMenu fTzContourMenu = new JMenu(dimensionProvider, "Contour");
-		fTzContourMenu.setMnemonic(KeyEvent.VK_C);
-		fTacklezonesMenu.add(fTzContourMenu);
+		JMenu tzContourMenu = new JMenu(dimensionProvider, "Contour");
+		tzContourMenu.setMnemonic(KeyEvent.VK_C);
+		fTacklezonesMenu.add(tzContourMenu);
 
 		ButtonGroup contourGroup = new ButtonGroup();
 
@@ -570,13 +570,13 @@ public class GamePlayMenu extends FfbMenu {
 		tzContourOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		tzContourOffMenuItem.addActionListener(this);
 		contourGroup.add(tzContourOffMenuItem);
-		fTzContourMenu.add(tzContourOffMenuItem);
+		tzContourMenu.add(tzContourOffMenuItem);
 
 		tzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
 		tzContourOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		tzContourOnMenuItem.addActionListener(this);
 		contourGroup.add(tzContourOnMenuItem);
-		fTzContourMenu.add(tzContourOnMenuItem);
+		tzContourMenu.add(tzContourOnMenuItem);
 	}
 
 	public String menuName(CommonProperty menuProperty) {
