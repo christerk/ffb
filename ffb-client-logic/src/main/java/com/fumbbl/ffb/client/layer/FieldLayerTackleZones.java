@@ -38,7 +38,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class FieldLayerTackleZones extends FieldLayer {
@@ -134,47 +136,49 @@ public class FieldLayerTackleZones extends FieldLayer {
 				continue;
 			}
 
-			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD, 1, false);
+			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD, 1, true);
 
 			for (FieldCoordinate tackleZone : tackleZones) {
-				if (overlapEnabled || processedCoords.add(tackleZone)) {
-					drawTackleZone(g2d, tackleZone, pitchDimensionProvider.getDirection(coordinate, tackleZone));
+				if (processedCoords.add(tackleZone) || overlapEnabled ) {
+					drawTackleZone(g2d, tackleZone);
 				}
+			}
+		}
+		if (isContourEnabled()) {
+			for (FieldCoordinate processedCoord : processedCoords) {
+				drawContours(g2d, processedCoord, processedCoords);
 			}
 		}
 	}
 
-	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate, Direction fromPlayer) {
+	private void drawContours(Graphics2D g2d, FieldCoordinate coordinate, Set<FieldCoordinate> processedCoords) {
+		List<Direction> directions = borderDirections(coordinate, processedCoords);
+		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
+		for (Direction direction : directions) {
+			drawContour(g2d, contourOrigin(origin, direction), contourTarget(origin, direction));
+		}
+	}
+
+	private List<Direction> borderDirections(FieldCoordinate coordinate, Set<FieldCoordinate> processedCoords) {
+		List<Direction> directions = new java.util.ArrayList<>();
+		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX(), coordinate.getY() - 1))) {
+			directions.add(Direction.NORTH);
+		}
+		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX(), coordinate.getY() + 1))) {
+			directions.add(Direction.SOUTH);
+		}
+		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX() - 1, coordinate.getY()))) {
+			directions.add(Direction.WEST);
+		}
+		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX() + 1, coordinate.getY()))) {
+			directions.add(Direction.EAST);
+		}
+		return directions.stream().map(pitchDimensionProvider::mapToLocal).collect(Collectors.toList());
+	}
+
+	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate) {
 		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
 		paintZoneRect(g2d, origin.width, origin.height);
-		if (isContourEnabled()) {
-			switch (fromPlayer) {
-				case NORTH:
-				case SOUTH:
-				case EAST:
-				case WEST:
-					drawContour(g2d, contourOrigin(origin, fromPlayer), contourTarget(origin, fromPlayer));
-					break;
-				case NORTHEAST:
-					drawContour(g2d, contourOrigin(origin, Direction.NORTH), contourTarget(origin, Direction.NORTH));
-					drawContour(g2d, contourOrigin(origin, Direction.EAST), contourTarget(origin, Direction.EAST));
-					break;
-				case NORTHWEST:
-					drawContour(g2d, contourOrigin(origin, Direction.NORTH), contourTarget(origin, Direction.NORTH));
-					drawContour(g2d, contourOrigin(origin, Direction.WEST), contourTarget(origin, Direction.WEST));
-					break;
-				case SOUTHEAST:
-					drawContour(g2d, contourOrigin(origin, Direction.SOUTH), contourTarget(origin, Direction.SOUTH));
-					drawContour(g2d, contourOrigin(origin, Direction.EAST), contourTarget(origin, Direction.EAST));
-					break;
-				case SOUTHWEST:
-					drawContour(g2d, contourOrigin(origin, Direction.SOUTH), contourTarget(origin, Direction.SOUTH));
-					drawContour(g2d, contourOrigin(origin, Direction.WEST), contourTarget(origin, Direction.WEST));
-					break;
-				default:
-					break;
-			}
-		}
 	}
 
 	private Dimension contourOrigin(Dimension upperLeft, Direction fromPlayer) {
