@@ -161,7 +161,7 @@ public class GameOptions implements IXmlSerializable, IJsonSerializable {
 
 	public IXmlSerializable startXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
 		if (IGameOption.XML_TAG.equals(pXmlTag)) {
-			addOption(new GameOptionFactory().fromXmlElement(game, pXmlTag, pXmlAttributes));
+			addOption(new GameOptionFactory().fromXmlElement(pXmlTag, pXmlAttributes));
 		}
 		return this;
 	}

@@ -209,7 +209,7 @@ public class StepRaidingParty extends AbstractStep {
 			if (StringTool.isProvided(playerId) && coordinate != null) {
 
 				FieldCoordinate fromCoordinate = fieldModel.getPlayerCoordinate(player);
-				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
+				Direction direction = fromCoordinate.getDirection(coordinate);
 				getResult().addReport(new ReportRaidingParty(actingPlayer.getPlayerId(), playerId, direction));
 				getResult().setSound(SoundId.STEP);
 				fieldModel.updatePlayerAndBallPosition(player, coordinate);

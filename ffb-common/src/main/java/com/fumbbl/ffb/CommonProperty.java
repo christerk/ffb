@@ -67,7 +67,13 @@ public enum CommonProperty {
 	SETTING_LOG("setting.log", "Client Logging", "Configuration"),
 	SETTING_LOG_DIR("setting.log.dir", "Logging Folder", "Configuration"),
 	SETTING_LOG_MODE("setting.log.mode", "Logging on/off", "Configuration"),
-	SETTING_SKETCH_CURSOR("setting.sketchCursor", "Sketch Cursor", "Configuration")
+	SETTING_SKETCH_CURSOR("setting.sketchCursor", "Sketch Cursor", "Configuration"),
+
+	// Tacklezones
+	SETTING_TACKLEZONES_PLAYER_MODE("setting.tacklezones.playerMode", "Player Mode", "Gameplay", "Tacklezones: Player Mode"),
+	SETTING_TACKLEZONES_SPECTATOR_MODE("setting.tacklezones.spectatorMode", "Spectator Mode", "Gameplay", "Tacklezones: Spectator Mode"),
+	SETTING_TACKLEZONES_OVERLAP("setting.tacklezones.overlap", "Overlap", "Gameplay"),
+	SETTING_TACKLEZONES_CONTOUR("setting.tacklezones.contour", "Contour", "Gameplay"),
 	;
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_UI_LAYOUT,
@@ -84,8 +90,8 @@ public enum CommonProperty {
 		SETTING_LOCAL_ICON_CACHE, SETTING_LOCAL_ICON_CACHE_PATH, SETTING_FONT_COLOR_PLAYER_MARKER_HOME,
 		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER, SETTING_LOG_DIR,
 		SETTING_LOG_MODE, SETTING_SKETCH_CURSOR, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME,
-		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY
-
+		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_OVERLAP,
+		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR,
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {

@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Jump: In some cases a jump resulted in additional dodge rolls")
 			.addBugfix("Rangegrid: It was not possible to change the mode back to toggle from always on")
 			.addImprovement("Resize shortcuts: Now you also use ctrl and +/-/0 on num pad (with or without num lock) to change client size")
+			.addFeature("Tacklezone Overlays: Can be activated in the game play menu if enabled in the ruleset (contributed by Garcangle)")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")

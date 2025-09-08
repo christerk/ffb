@@ -138,7 +138,7 @@ public class StepHitAndRun extends AbstractStep {
 			} else {
 
 				FieldCoordinate fromCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
-				Direction direction = FieldCoordinate.getDirection(fromCoordinate, coordinate);
+				Direction direction = fromCoordinate.getDirection(coordinate);
 				getResult().addReport(new ReportHitAndRun(actingPlayer.getPlayerId(), direction));
 				getResult().setSound(SoundId.STEP);
 				actingPlayer.markSkillUsed(skill);

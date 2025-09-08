@@ -4,7 +4,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
@@ -346,6 +345,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
 					.setMessageTrue("Overdog can spend treasury");
+			case ENABLE_TACKLEZONE_OVERLAYS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Tacklezone overlays are enabled.")
+					.setMessageFalse("Tacklezone overlays are disabled.");
 			default:
 				return null;
 		}
@@ -365,7 +368,7 @@ public class GameOptionFactory {
 
 	// XML serialization
 
-	public IGameOption fromXmlElement(Game game, String pXmlTag, Attributes pXmlAttributes) {
+	public IGameOption fromXmlElement(String pXmlTag, Attributes pXmlAttributes) {
 		IGameOption option = null;
 		if (IGameOption.XML_TAG.equals(pXmlTag)) {
 			String name = UtilXml.getStringAttribute(pXmlAttributes, IGameOption.XML_ATTRIBUTE_NAME);

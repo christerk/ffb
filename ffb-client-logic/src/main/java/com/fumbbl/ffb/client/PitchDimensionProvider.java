@@ -76,4 +76,12 @@ public class PitchDimensionProvider extends DimensionProvider {
 
 		return direction;
 	}
+
+	public Direction getDirection(FieldCoordinate from, FieldCoordinate to) {
+		Direction direction = from.getDirection(to);
+		if (isPitchPortrait()) {
+			return mapToLocal(direction);
+		}
+		return direction;
+	}
 }
