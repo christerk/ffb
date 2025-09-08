@@ -31,6 +31,8 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -235,7 +237,8 @@ public class FieldLayerTackleZones extends FieldLayer {
 	}
 
 	private boolean isTzDisabled() {
-		return IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting());
+		return !UtilGameOption.isOptionEnabled(getClient().getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
+			|| IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting()) ;
 	}
 
 	private boolean isOverlapEnabled() {

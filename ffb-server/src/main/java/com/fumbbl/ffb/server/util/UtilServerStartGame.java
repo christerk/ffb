@@ -250,6 +250,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean ballAndChainRr = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL);
 			ballAndChainRr.setValue(true);
 			game.getOptions().addOption(ballAndChainRr);
+			GameOptionBoolean tacklezones = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_TACKLEZONE_OVERLAYS);
+			tacklezones.setValue(true);
+		//	game.getOptions().addOption(tacklezones);
 		}
 	}
 

@@ -11,6 +11,7 @@ import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionEvent;
@@ -472,14 +473,16 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	private void createTacklezonesMenu() {
-		JMenu fTacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
-		fTacklezonesMenu.setMnemonic(KeyEvent.VK_T);
-		add(fTacklezonesMenu);
+		JMenu tacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
+		tacklezonesMenu.setMnemonic(KeyEvent.VK_T);
+		if (UtilGameOption.isOptionEnabled(client.getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)) {
+			add(tacklezonesMenu);
+		}
 
 		// --- Player Mode ---
 		JMenu playerModeMenu = new JMenu(dimensionProvider, "Player Mode");
 		playerModeMenu.setMnemonic(KeyEvent.VK_P);
-		fTacklezonesMenu.add(playerModeMenu);
+		tacklezonesMenu.add(playerModeMenu);
 
 		ButtonGroup playerModeGroup = new ButtonGroup();
 
@@ -522,7 +525,7 @@ public class GamePlayMenu extends FfbMenu {
 		// --- Spectator Mode ---
 		JMenu spectatorModeMenu = new JMenu(dimensionProvider, "Spectator Mode");
 		spectatorModeMenu.setMnemonic(KeyEvent.VK_S);
-		fTacklezonesMenu.add(spectatorModeMenu);
+		tacklezonesMenu.add(spectatorModeMenu);
 
 		ButtonGroup spectatorModeGroup = new ButtonGroup();
 
@@ -562,12 +565,12 @@ public class GamePlayMenu extends FfbMenu {
 		spectatorModeGroup.add(tzSpectatorPassiveBothOnSetupMenuItem);
 		spectatorModeMenu.add(tzSpectatorPassiveBothOnSetupMenuItem);
 
-		fTacklezonesMenu.addSeparator();
+		tacklezonesMenu.addSeparator();
 
 		// --- No Overlap (global) ---
 		JMenu tzNoOverlapMenu = new JMenu(dimensionProvider, "Overlap");
 		tzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
-		fTacklezonesMenu.add(tzNoOverlapMenu);
+		tacklezonesMenu.add(tzNoOverlapMenu);
 
 		ButtonGroup noOverlapGroup = new ButtonGroup();
 
@@ -586,7 +589,7 @@ public class GamePlayMenu extends FfbMenu {
 		// --- Contour (global) ---
 		JMenu tzContourMenu = new JMenu(dimensionProvider, "Contour");
 		tzContourMenu.setMnemonic(KeyEvent.VK_C);
-		fTacklezonesMenu.add(tzContourMenu);
+		tacklezonesMenu.add(tzContourMenu);
 
 		ButtonGroup contourGroup = new ButtonGroup();
 
