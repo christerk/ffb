@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 
 public class FieldLayerTackleZones extends FieldLayer {
 
-	private static final float ALPHA = 0.1f;
+	private static final float ALPHA = 0.15f;
 	private static final float[] TZ_DASH = {6f, 4f};
 	private static final BasicStroke STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, TZ_DASH, 0f);
 
@@ -237,8 +237,10 @@ public class FieldLayerTackleZones extends FieldLayer {
 	}
 
 	private boolean isTzDisabled() {
-		return !UtilGameOption.isOptionEnabled(getClient().getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
-			|| IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting()) ;
+		return (
+			!UtilGameOption.isOptionEnabled(getClient().getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
+				&& getClient().getMode() == ClientMode.PLAYER
+		) || IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting()) ;
 	}
 
 	private boolean isOverlapEnabled() {

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu.settings;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -475,7 +476,8 @@ public class GamePlayMenu extends FfbMenu {
 	private void createTacklezonesMenu() {
 		JMenu tacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
 		tacklezonesMenu.setMnemonic(KeyEvent.VK_T);
-		if (UtilGameOption.isOptionEnabled(client.getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)) {
+		if (UtilGameOption.isOptionEnabled(client.getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
+			|| client.getMode() != ClientMode.PLAYER) {
 			add(tacklezonesMenu);
 		}
 
