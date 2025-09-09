@@ -60,11 +60,6 @@ public class FieldLayerTackleZones extends FieldLayer {
 	}
 
 	@Override
-	public void initLayout() {
-		super.initLayout();
-	}
-
-	@Override
 	public void init() {
 
 		clear(true);
@@ -104,11 +99,11 @@ public class FieldLayerTackleZones extends FieldLayer {
 				|| IClientPropertyValue.SETTING_TACKLEZONES_BOTH.equals(setting);
 
 			if (showAway) {
-				processPlayers(g2d, game.getTeamAway(), styleProvider.getAway());
+				processPlayers(g2d, game.getTeamAway(), styleProvider.getTackleZoneAway());
 			}
 
 			if (showHome) {
-				processPlayers(g2d, game.getTeamHome(), styleProvider.getHome());
+				processPlayers(g2d, game.getTeamHome(), styleProvider.getTackleZoneHome());
 			}
 		}
 
@@ -141,7 +136,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 			FieldCoordinate[] tackleZones = fieldModel.findAdjacentCoordinates(coordinate, FieldCoordinateBounds.FIELD, 1, true);
 
 			for (FieldCoordinate tackleZone : tackleZones) {
-				if (processedCoords.add(tackleZone) || overlapEnabled ) {
+				if (processedCoords.add(tackleZone) || overlapEnabled) {
 					drawTackleZone(g2d, tackleZone);
 				}
 			}
@@ -240,7 +235,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 		return (
 			!UtilGameOption.isOptionEnabled(getClient().getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
 				&& getClient().getMode() == ClientMode.PLAYER
-		) || IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting()) ;
+		) || IClientPropertyValue.SETTING_TACKLEZONES_NONE.equals(getCurrentTackleZoneSetting());
 	}
 
 	private boolean isOverlapEnabled() {

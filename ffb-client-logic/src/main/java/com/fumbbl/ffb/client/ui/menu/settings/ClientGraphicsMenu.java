@@ -49,6 +49,8 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_WEATHER;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SHOW_CRATERS_AND_BLOODSPOTS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_SWEET_SPOT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_TEAM_LOGOS;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_HOME;
 
 public class ClientGraphicsMenu extends FfbMenu {
 
@@ -104,6 +106,8 @@ public class ClientGraphicsMenu extends FfbMenu {
 	private JMenuItem additionalHomePlayerMarkerFontColor;
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
+	private JMenuItem tzColorHome;
+	private JMenuItem tzColorAway;
 
 	private JMenuItem resetColors;
 	private JMenuItem resetBackgroundColors;
@@ -119,7 +123,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		createIconsMenu();
 		createPitchMenu();
 		createBackgroundMenu();
-		createFontMenu();
+		createColorsMenu();
 
 		addSeparator();
 		createRestoreMenu();
@@ -217,6 +221,12 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_FIELD_MARKER, fieldMarkerFontColor,
 			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
+
+		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_HOME, tzColorHome,
+			styleProvider::getTackleZoneHome, styleProvider::setTackleZoneHome);
+
+		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_AWAY, tzColorAway,
+			styleProvider::getTackleZoneAway, styleProvider::setTackleZoneAway);
 
 		String frameBackgroundSetting = client.getProperty(CommonProperty.SETTING_BACKGROUND_FRAME);
 		frameBackgroundIcons.setSelected(true);
@@ -500,6 +510,24 @@ public class ClientGraphicsMenu extends FfbMenu {
 			}
 		}
 
+		if (source == tzColorAway) {
+			Color defaultColor = styleProvider.getTackleZoneAway();
+			Color color = JColorChooser.showDialog(this, "Choose away tacklezone color", defaultColor);
+			if (color != null) {
+				client.setProperty(SETTING_TZ_COLOR_AWAY, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
+		if (source == tzColorHome) {
+			Color defaultColor = styleProvider.getTackleZoneHome();
+			Color color = JColorChooser.showDialog(this, "Choose home tacklezone color", defaultColor);
+			if (color != null) {
+				client.setProperty(SETTING_TZ_COLOR_HOME, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
 		if (source == resetColors) {
 			resetColors(CommonProperty.COLOR_SETTINGS);
 		}
@@ -707,24 +735,26 @@ public class ClientGraphicsMenu extends FfbMenu {
 		backgroundStyles.add(createFrameBackgroundMenu());
 	}
 
-	private void createFontMenu() {
-		JMenu fontStyles = new JMenu(dimensionProvider, "Font colors");
-		fontStyles.setMnemonic(KeyEvent.VK_F);
-		add(fontStyles);
-		addColorItem(SETTING_FONT_COLOR_TEXT, styleProvider.getText(), fontStyles, (item) -> textFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_AWAY, styleProvider.getAwayUnswapped(), fontStyles, (item) -> awayFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_HOME, styleProvider.getHomeUnswapped(), fontStyles, (item) -> homeFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_SPEC, styleProvider.getSpec(), fontStyles, (item) -> specFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_ADMIN, styleProvider.getAdmin(), fontStyles, (item) -> adminFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_DEV, styleProvider.getDev(), fontStyles, (item) -> devFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_INPUT, styleProvider.getInput(), fontStyles, (item) -> inputFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_FRAME, styleProvider.getFrame(), fontStyles, (item) -> frameFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), fontStyles, (item) -> frameFontShadowColor = item);
-		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), fontStyles, (item) -> homePlayerMarkerFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, styleProvider.getPlayerMarkerAway(), fontStyles, (item) -> awayPlayerMarkerFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, styleProvider.getAdditionalPlayerMarkerHome(), fontStyles, (item) -> additionalHomePlayerMarkerFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, styleProvider.getAdditionalPlayerMarkerAway(), fontStyles, (item) -> additionalAwayPlayerMarkerFontColor = item);
-		addColorItem(SETTING_FONT_COLOR_FIELD_MARKER, styleProvider.getFieldMarker(), fontStyles, (item) -> fieldMarkerFontColor = item);
+	private void createColorsMenu() {
+		JMenu colors = new JMenu(dimensionProvider, "Colors");
+		colors.setMnemonic(KeyEvent.VK_F);
+		add(colors);
+		addColorItem(SETTING_FONT_COLOR_TEXT, styleProvider.getText(), colors, (item) -> textFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_AWAY, styleProvider.getAwayUnswapped(), colors, (item) -> awayFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_HOME, styleProvider.getHomeUnswapped(), colors, (item) -> homeFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_SPEC, styleProvider.getSpec(), colors, (item) -> specFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_ADMIN, styleProvider.getAdmin(), colors, (item) -> adminFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_DEV, styleProvider.getDev(), colors, (item) -> devFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_INPUT, styleProvider.getInput(), colors, (item) -> inputFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_FRAME, styleProvider.getFrame(), colors, (item) -> frameFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), colors, (item) -> frameFontShadowColor = item);
+		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), colors, (item) -> homePlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, styleProvider.getPlayerMarkerAway(), colors, (item) -> awayPlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, styleProvider.getAdditionalPlayerMarkerHome(), colors, (item) -> additionalHomePlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, styleProvider.getAdditionalPlayerMarkerAway(), colors, (item) -> additionalAwayPlayerMarkerFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_FIELD_MARKER, styleProvider.getFieldMarker(), colors, (item) -> fieldMarkerFontColor = item);
+		addColorItem(SETTING_TZ_COLOR_HOME, styleProvider.getTackleZoneHome(), colors, (item) -> tzColorHome = item);
+		addColorItem(SETTING_TZ_COLOR_AWAY, styleProvider.getTackleZoneAway(), colors, (item) -> tzColorAway = item);
 	}
 
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
@@ -811,12 +841,12 @@ public class ClientGraphicsMenu extends FfbMenu {
 		resetColors.setEnabled(true);
 		add(resetColors);
 
-		resetBackgroundColors = new JMenuItem(dimensionProvider, "Reset background colors");
+		resetBackgroundColors = new JMenuItem(dimensionProvider, "Reset background styles");
 		resetBackgroundColors.addActionListener(this);
 		resetBackgroundColors.setEnabled(true);
 		add(resetBackgroundColors);
 
-		resetFontColors = new JMenuItem(dimensionProvider, "Reset font colors");
+		resetFontColors = new JMenuItem(dimensionProvider, "Reset colors");
 		resetFontColors.addActionListener(this);
 		resetFontColors.setEnabled(true);
 		add(resetFontColors);

@@ -29,6 +29,8 @@ public class StyleProvider {
 		put(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, new Color(1.0f, 1.0f, 0.0f, 1.0f));
 		put(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, new Color(1.0f, 1.0f, 0.0f, 1.0f));
 		put(SETTING_FONT_COLOR_FIELD_MARKER, new Color(1.0f, 1.0f, 1.0f, 1.0f));
+		put(SETTING_TZ_COLOR_AWAY, Color.BLUE);
+		put(SETTING_TZ_COLOR_HOME, Color.RED);
 	}};
 
 	private Color chatBackground = defaults.get(SETTING_BACKGROUND_CHAT);
@@ -48,6 +50,8 @@ public class StyleProvider {
 	private Color additionalPlayerMarkerHome = defaults.get(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME);
 	private Color additionalPlayerMarkerAway = defaults.get(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY);
 	private Color fieldMarker = defaults.get(SETTING_FONT_COLOR_FIELD_MARKER);
+	private Color tackleZoneHome = defaults.get(SETTING_TZ_COLOR_HOME);
+	private Color tackleZoneAway = defaults.get(SETTING_TZ_COLOR_AWAY);
 
 	private boolean swapTeamColors;
 
@@ -201,5 +205,21 @@ public class StyleProvider {
 
 	public void setAdditionalPlayerMarkerAway(Color additionalPlayerMarkerAway) {
 		this.additionalPlayerMarkerAway = additionalPlayerMarkerAway;
+	}
+
+	public Color getTackleZoneHome() {
+		return tackleZoneHome;
+	}
+
+	public void setTackleZoneHome(Color tackleZoneHome) {
+		this.tackleZoneHome = tackleZoneHome;
+	}
+
+	public Color getTackleZoneAway() {
+		return tackleZoneAway;
+	}
+
+	public void setTackleZoneAway(Color tackleZoneAway) {
+		this.tackleZoneAway = tackleZoneAway;
 	}
 }

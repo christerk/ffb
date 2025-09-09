@@ -38,20 +38,22 @@ public enum CommonProperty {
 	SETTING_BACKGROUND_LOG("setting.background.log", "Log", "Background", "Log Color"),
 	SETTING_BACKGROUND_FRAME("setting.background.frame", "Frame", "Background", "Frame Graphics/Color"),
 	SETTING_BACKGROUND_FRAME_COLOR("setting.background.frame.color", "Color", "Background", "Frame Color"),
-	SETTING_FONT_COLOR_TEXT("setting.font.color.text", "Regular text", "Font Color"),
-	SETTING_FONT_COLOR_AWAY("setting.font.color.away", "Away", "Font Color"),
-	SETTING_FONT_COLOR_HOME("setting.font.color.home", "Home", "Font Color"),
-	SETTING_FONT_COLOR_SPEC("setting.font.color.spec", "Spectators", "Font Color"),
-	SETTING_FONT_COLOR_DEV("setting.font.color.dev", "Devs", "Font Color"),
-	SETTING_FONT_COLOR_ADMIN("setting.font.color.admin", "Admin", "Font Color"),
-	SETTING_FONT_COLOR_FRAME("setting.font.color.frame", "Sidebar/Scoreboard", "Font Color"),
-	SETTING_FONT_COLOR_FRAME_SHADOW("setting.font.color.frameShadow", "Sidebar/Scoreboard shadow", "Font Color"),
-	SETTING_FONT_COLOR_INPUT("setting.font.color.input", "Chat input", "Font Color"),
-	SETTING_FONT_COLOR_PLAYER_MARKER_HOME("setting.font.color.playerMarkerHome", "Home Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_PLAYER_MARKER_AWAY("setting.font.color.playerMarkerAway", "Away Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME("setting.font.color.addPlayerMarkerHome", "Additional Home Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY("setting.font.color.addPlayerMarkerAway", "Additional Away Player Marker", "Font Color"),
-	SETTING_FONT_COLOR_FIELD_MARKER("setting.font.color.fieldMarker", "Field Marker", "Font Color"),
+	SETTING_FONT_COLOR_TEXT("setting.font.color.text", "Regular text", "Color"),
+	SETTING_FONT_COLOR_AWAY("setting.font.color.away", "Away text", "Color"),
+	SETTING_FONT_COLOR_HOME("setting.font.color.home", "Home text", "Color"),
+	SETTING_FONT_COLOR_SPEC("setting.font.color.spec", "Spectators text", "Color"),
+	SETTING_FONT_COLOR_DEV("setting.font.color.dev", "Devs text", "Color"),
+	SETTING_FONT_COLOR_ADMIN("setting.font.color.admin", "Admin text", "Color"),
+	SETTING_FONT_COLOR_FRAME("setting.font.color.frame", "Sidebar/Scoreboard", "Color"),
+	SETTING_FONT_COLOR_FRAME_SHADOW("setting.font.color.frameShadow", "Sidebar/Scoreboard shadow", "Color"),
+	SETTING_FONT_COLOR_INPUT("setting.font.color.input", "Chat input", "Color"),
+	SETTING_FONT_COLOR_PLAYER_MARKER_HOME("setting.font.color.playerMarkerHome", "Home Player Marker", "Color"),
+	SETTING_FONT_COLOR_PLAYER_MARKER_AWAY("setting.font.color.playerMarkerAway", "Away Player Marker", "Color"),
+	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME("setting.font.color.addPlayerMarkerHome", "Additional Home Player Marker", "Color"),
+	SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY("setting.font.color.addPlayerMarkerAway", "Additional Away Player Marker", "Color"),
+	SETTING_FONT_COLOR_FIELD_MARKER("setting.font.color.fieldMarker", "Field Marker", "Color"),
+	SETTING_TZ_COLOR_HOME("setting.tz.color.home", "Tacklezones Home", "Color"),
+	SETTING_TZ_COLOR_AWAY("setting.tz.color.away", "Tacklezones Away", "Color"),
 
 	SETTING_LAST_CHANGE_LOG_FINGERPRINT("setting.lastChangeLogFingerPrint", "What's new?", "Configuration"),
 
@@ -91,7 +93,7 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER, SETTING_LOG_DIR,
 		SETTING_LOG_MODE, SETTING_SKETCH_CURSOR, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME,
 		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_OVERLAP,
-		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR,
+		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR, SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {
@@ -100,7 +102,8 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW, SETTING_FONT_COLOR_INPUT,
 		SETTING_FONT_COLOR_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_PLAYER_MARKER_AWAY,  SETTING_FONT_COLOR_FIELD_MARKER,
-		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY
+		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY,
+		SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY
 	};
 	public static final CommonProperty[] BACKGROUND_COLOR_SETTINGS = {
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME_COLOR
@@ -110,7 +113,8 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_HOME, SETTING_FONT_COLOR_SPEC, SETTING_FONT_COLOR_DEV,
 		SETTING_FONT_COLOR_ADMIN, SETTING_FONT_COLOR_FRAME, SETTING_FONT_COLOR_FRAME_SHADOW,
 		SETTING_FONT_COLOR_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_PLAYER_MARKER_AWAY, SETTING_FONT_COLOR_FIELD_MARKER,
-		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY
+		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY,
+		SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY
 	};
 	private final String key;
 
