@@ -9,6 +9,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
 import com.fumbbl.ffb.client.dialog.DialogSoundVolume;
@@ -217,10 +218,21 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.saveUserSettings(true);
 		}
 
-		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
-		playersMarkingManualMenuItem.setSelected(true);
-		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
+		if (source == playersMarkingAutoMenuItem) {
+			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+			client.saveUserSettings(true);
+			client.getCommunication().sendUpdatePlayerMarkings(true);
 
+			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(client.getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
+				showDialog(DialogAutoMarking.create(client, true));
+			}
+		}
+
+		if (source == playersMarkingManualMenuItem) {
+			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+			client.saveUserSettings(true);
+			client.getCommunication().sendUpdatePlayerMarkings(false);
+		}
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
