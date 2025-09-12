@@ -28,8 +28,21 @@ public class DbUserSettingsQuery extends DbStatement {
 	private String fCoach;
 
 	public void execute(String pCoach) {
-		fCoach = pCoach;
-		fSettings.clear();
+		execute(pCoach, null);
+	}
+
+	public void execute(String pCoach, Map<CommonProperty, String> settings) {
+		Map<CommonProperty, String> actualSettings;
+
+		if (settings == null) {
+			fCoach = pCoach;
+			actualSettings = fSettings;
+		} else {
+			actualSettings = settings;
+		}
+
+		actualSettings.clear();
+
 		try {
 			fStatement.setString(1, pCoach);
 			try (ResultSet resultSet = fStatement.executeQuery()) {
@@ -38,7 +51,7 @@ public class DbUserSettingsQuery extends DbStatement {
 
 					CommonProperty key = CommonProperty.forKey(queryResult.getSettingName());
 					if (key != null) {
-						fSettings.put(key, queryResult.getSettingValue());
+						actualSettings.put(key, queryResult.getSettingValue());
 					}
 				}
 			}

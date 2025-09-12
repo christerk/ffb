@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.marking.ApplyTo;
 import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.server.marking.AutoMarkingRecord;
 import com.fumbbl.ffb.server.marking.MarkerGenerator;
+import com.fumbbl.ffb.server.marking.SortMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -127,6 +128,20 @@ class MarkerGeneratorTest {
 
 		assertEquals(BLOCK_MARKING, marking);
 	}
+
+	@Test
+	public void generateWithoutSorting() {
+		markings.add(builder.withSkill(DODGE).withMarking(DODGE_MARKING).build());
+		markings.add(builder.withInjury(InjuryAttribute.MA).withMarking(MA_MARKING).build());
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+
+		config.setSortMode(SortMode.NONE);
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals(DODGE_MARKING + MA_MARKING + BLOCK_MARKING, marking);
+	}
+
 
 	@Test
 	public void generateWithSeparator() {

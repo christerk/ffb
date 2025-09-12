@@ -25,6 +25,7 @@ public class FumbblRequestLoadPlayerMarkings extends AbstractFumbblRequestLoadPl
 		Game game = gameState.getGame();
 
 		AutoMarkingConfig config = loadAutomarkingConfig(processor.getServer(), coach, game.getId(), game.getRules());
+		updateSearchMode(processor.getServer(), coach, game.getId(), config);
 		sessionManager.addAutoMarking(session, config);
 
 		processor.getServer().getCommunication().handleCommand(

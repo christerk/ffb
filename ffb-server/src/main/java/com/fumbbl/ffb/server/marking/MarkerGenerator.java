@@ -62,10 +62,16 @@ public class MarkerGenerator {
         String finalSeparator = separator == null ? "" : separator;
         List<AutoMarkingRecord> records = config.getMarkings().stream()
           .filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach)).collect(Collectors.toList());
-        List<String> markings = getSortedMarkings(records, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator);
+
+        List<String>  markings;
+        if (config.getSortMode() == SortMode.NONE) {
+            markings = records.stream().map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator))
+              .filter(StringTool::isProvided).collect(Collectors.toList());
+        } else {
+            markings = getSortedMarkings(records, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator);
+        }
+
         return markings.stream().filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
-
-
     }
 
     private List<String> getSortedMarkings(List<AutoMarkingRecord> records, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuriesAttributes, Set<AutoMarkingRecord> markingsToApply, String finalSeparator) {

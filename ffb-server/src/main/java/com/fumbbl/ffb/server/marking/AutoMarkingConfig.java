@@ -18,6 +18,9 @@ public class AutoMarkingConfig implements IJsonSerializable {
 	private String separator = "";
 	private List<AutoMarkingRecord> markings = new ArrayList<>();
 
+	// This field is not serialized. It is set when loading config from the site.
+	private transient SortMode sortMode = SortMode.DEFAULT;
+
 	public List<AutoMarkingRecord> getMarkings() {
 		return markings;
 	}
@@ -28,6 +31,14 @@ public class AutoMarkingConfig implements IJsonSerializable {
 
 	public void setSeparator(String separator) {
 		this.separator = separator;
+	}
+
+	public SortMode getSortMode() {
+		return sortMode;
+	}
+
+	public void setSortMode(SortMode sortMode) {
+		this.sortMode = sortMode;
 	}
 
 	public static List<AutoMarkingRecord> defaults(SkillFactory skillFactory) {

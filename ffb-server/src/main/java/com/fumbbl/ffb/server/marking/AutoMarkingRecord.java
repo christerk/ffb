@@ -19,7 +19,7 @@ import java.util.List;
 
 public class AutoMarkingRecord implements IJsonSerializable {
 	private List<Skill> skills = new ArrayList<>();
-	private List<InjuryAttribute> injuries = new ArrayList<>();
+	private final List<InjuryAttribute> injuries = new ArrayList<>();
 
 	private boolean gainedOnly, applyRepeatedly;
 
@@ -31,32 +31,16 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		return skills;
 	}
 
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-
 	public List<InjuryAttribute> getInjuries() {
 		return injuries;
-	}
-
-	public void setInjuries(List<InjuryAttribute> injuries) {
-		this.injuries = injuries;
 	}
 
 	public boolean isGainedOnly() {
 		return gainedOnly;
 	}
 
-	public void setGainedOnly(boolean gainedOnly) {
-		this.gainedOnly = gainedOnly;
-	}
-
 	public ApplyTo getApplyTo() {
 		return applyTo;
-	}
-
-	public void setApplyTo(ApplyTo applyTo) {
-		this.applyTo = applyTo;
 	}
 
 	public boolean isSubSetOf(AutoMarkingRecord other) {
@@ -66,10 +50,6 @@ public class AutoMarkingRecord implements IJsonSerializable {
 
 	public boolean isApplyRepeatedly() {
 		return applyRepeatedly;
-	}
-
-	public void setApplyRepeatedly(boolean applyRepeatedly) {
-		this.applyRepeatedly = applyRepeatedly;
 	}
 
 	public String getMarking() {

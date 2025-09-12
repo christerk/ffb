@@ -10,7 +10,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
  */
 public abstract class DbStatement {
 
-	private FantasyFootballServer fServer;
+	private final FantasyFootballServer fServer;
 
 	public DbStatement(FantasyFootballServer pServer) {
 		fServer = pServer;

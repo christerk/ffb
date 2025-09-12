@@ -34,6 +34,7 @@ public class FumbblRequestLoadPlayerMarkingsForGameVersion extends AbstractFumbb
 			config = loadAutomarkingConfig(server, coach, game.getId(), game.getRules());
 			sessionManager.addAutoMarking(session, config);
 		}
+		updateSearchMode(processor.getServer(), coach, game.getId(), config);
 
 		server.getCommunication().handleCommand(
 			new ReceivedCommand(
