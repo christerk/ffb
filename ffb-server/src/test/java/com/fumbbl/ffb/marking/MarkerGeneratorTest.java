@@ -21,6 +21,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,7 +63,7 @@ class MarkerGeneratorTest {
 	private AutoMarkingConfig config;
 	private AutoMarkingRecord.Builder builder;
 	private MockSkillFactory skillFactory;
-	private Set<AutoMarkingRecord> markings;
+	private List<AutoMarkingRecord> markings;
 	@Mock
 	private Player<Position> player;
 	@Mock

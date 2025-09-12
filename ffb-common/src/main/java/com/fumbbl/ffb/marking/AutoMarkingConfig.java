@@ -9,16 +9,16 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class AutoMarkingConfig implements IJsonSerializable {
 
 	private String separator = "";
-	private Set<AutoMarkingRecord> markings = new HashSet<>();
+	private List<AutoMarkingRecord> markings = new ArrayList<>();
 
-	public Set<AutoMarkingRecord> getMarkings() {
+	public List<AutoMarkingRecord> getMarkings() {
 		return markings;
 	}
 
@@ -30,9 +30,9 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		this.separator = separator;
 	}
 
-	public static Set<AutoMarkingRecord> defaults(SkillFactory skillFactory) {
+	public static List<AutoMarkingRecord> defaults(SkillFactory skillFactory) {
 
-		Set<AutoMarkingRecord> defaults = new HashSet<>();
+		List<AutoMarkingRecord> defaults = new ArrayList<>();
 		AutoMarkingRecord.Builder builder = new AutoMarkingRecord.Builder(skillFactory);
 
 		defaults.add(builder.withSkill("Block").withMarking("B").withGainedOnly(true).build());
@@ -54,7 +54,7 @@ public class AutoMarkingConfig implements IJsonSerializable {
 		try {
 			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 			markings = IJsonOption.AUTO_MARKING_RECORDS.getFrom(source, jsonObject).values().stream()
-				.map(value -> new AutoMarkingRecord().initFrom(source, value)).collect(Collectors.toSet());
+				.map(value -> new AutoMarkingRecord().initFrom(source, value)).collect(Collectors.toList());
 			separator = IJsonOption.SEPARATOR.getFrom(source, jsonObject);
 		} catch (Exception e) {
 			source.logError(0, "Could not init auto marking config: " + e.getMessage());
