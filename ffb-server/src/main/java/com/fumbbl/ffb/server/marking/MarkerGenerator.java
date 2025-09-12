@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.marking;
+package com.fumbbl.ffb.server.marking;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;

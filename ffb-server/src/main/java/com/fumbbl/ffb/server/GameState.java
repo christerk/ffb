@@ -7,7 +7,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;

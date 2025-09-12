@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.marking;
+package com.fumbbl.ffb.server.marking;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;

@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.GameRules;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.ServerUrlProperty;

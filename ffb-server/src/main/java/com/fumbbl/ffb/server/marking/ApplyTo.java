@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.marking;
+package com.fumbbl.ffb.server.marking;
 
 public enum ApplyTo {
 	OWN(true, false), OPPONENT(false, true), BOTH(true, true);

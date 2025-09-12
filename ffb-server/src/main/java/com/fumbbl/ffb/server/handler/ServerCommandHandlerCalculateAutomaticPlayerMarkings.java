@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.handler;
 
 import com.fumbbl.ffb.Pair;
-import com.fumbbl.ffb.marking.AutoMarkingConfig;
-import com.fumbbl.ffb.marking.MarkerGenerator;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.marking.MarkerGenerator;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.server.FantasyFootballServer;

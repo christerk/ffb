@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.server.request.fumbbl;
 
-import com.fumbbl.ffb.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;

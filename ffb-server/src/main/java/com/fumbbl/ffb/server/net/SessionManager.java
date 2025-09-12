@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.server.net;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.HashMap;
