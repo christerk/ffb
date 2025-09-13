@@ -17,7 +17,6 @@ import com.fumbbl.ffb.server.marking.ApplyTo;
 import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.server.marking.AutoMarkingRecord;
 import com.fumbbl.ffb.server.marking.MarkerGenerator;
-import com.fumbbl.ffb.server.marking.SortMode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

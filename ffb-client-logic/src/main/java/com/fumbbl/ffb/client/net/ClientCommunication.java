@@ -24,6 +24,7 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -493,8 +494,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandSelectWeather(modifier, weatherName));
 	}
 
-	public void sendUpdatePlayerMarkings(boolean auto) {
-		send(new ClientCommandUpdatePlayerMarkings(auto));
+	public void sendUpdatePlayerMarkings(boolean auto, SortMode sortMode) {
+		send(new ClientCommandUpdatePlayerMarkings(auto, sortMode));
 	}
 
 	public void sendKickOffResultChoice(KickoffResult kickoffResult) {

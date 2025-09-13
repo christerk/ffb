@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.GameOptionFactory;
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.option.*;
@@ -76,9 +77,13 @@ public class UtilServerStartGame {
 			server.getCommunication().sendJoin(sessions, pCoach, pMode, players, visibleSpectators);
 		}
 
-		if (pMode == ClientMode.SPECTATOR
-			&& CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingsMap.get(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-			server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(pGameState, pSession));
+		if (pMode == ClientMode.SPECTATOR) {
+			String settingValue = settingsMap.get(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
+			if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingValue)) {
+				server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(pGameState, pSession, SortMode.DEFAULT));
+			} else if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO_NO_SORT.equalsIgnoreCase(settingValue)) {
+				server.getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(pGameState, pSession, SortMode.NONE));
+			}
 		}
 
 		return players.length;
@@ -168,13 +173,31 @@ public class UtilServerStartGame {
 			DbUserSettingsQuery userSettingsQuery = (DbUserSettingsQuery) statementFactory
 				.getStatement(DbStatementId.USER_SETTINGS_QUERY);
 
+			boolean loadAuto = false;
+			SortMode sortMode = null;
+			String settingValue;
+
 			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfHomeCoach));
-			boolean loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
-			loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto);
+			settingValue = userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
+			if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingValue)) {
+				loadAuto = true;
+				sortMode = SortMode.DEFAULT;
+			} else if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO_NO_SORT.equalsIgnoreCase(settingValue)) {
+				loadAuto = true;
+				sortMode = SortMode.NONE;
+			}
+			loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto, sortMode);
 
 			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
-			loadAuto = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
-			loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto);
+			settingValue = userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
+			if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingValue)) {
+				loadAuto = true;
+				sortMode = SortMode.DEFAULT;
+			} else if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO_NO_SORT.equalsIgnoreCase(settingValue)) {
+				loadAuto = true;
+				sortMode = SortMode.NONE;
+			}
+			loadingService.loadMarker(gameState, sessionOfAwayCoach, false, loadAuto, sortMode);
 		}
 	}
 

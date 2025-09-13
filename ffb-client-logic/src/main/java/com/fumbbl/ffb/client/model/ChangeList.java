@@ -26,6 +26,7 @@ public class ChangeList {
 			.addImprovement("Resize shortcuts: Now you also use ctrl and +/-/0 on num pad (with or without num lock) to change client size")
 			.addFeature("Tacklezone Overlays: Can be activated in the game play menu if enabled in the ruleset (contributed by Garcangel)")
 			.addImprovement("Auto Marking: Add Wrestle to default markings")
+			.addFeature("Auto Marking: Add second auto marking option to keep order from website")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")

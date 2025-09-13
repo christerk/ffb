@@ -60,7 +60,7 @@ public class ReplayLogicModule extends LogicModule {
 	public void setUp() {
 		super.setUp();
 		markingAffectingCommands = new HashSet<>();
-		if (IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+		if (IClientPropertyValue.AUTO_MARKING.contains(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
 			// we need to add an element for the initial command so that at least one marking is loaded
 			// we cannot use 0 as for subsequent commands the command number is checked against this list
 			// and 0 is used by some special commands that are not replayable
@@ -114,7 +114,7 @@ public class ReplayLogicModule extends LogicModule {
 					// signal server that we've received the full replay and the session can be
 					// closed, only if we are not waiting for auto marking responses
 					if (ClientMode.REPLAY == client.getMode()) {
-						if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+						if (!IClientPropertyValue.AUTO_MARKING.contains(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
 							loadingDone = true;
 						}
 					}

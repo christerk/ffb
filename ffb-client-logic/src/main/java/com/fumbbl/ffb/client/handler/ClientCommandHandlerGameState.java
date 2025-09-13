@@ -60,7 +60,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		Arrays.stream(transientPlayerMarkers).forEach(fieldModel::addTransient);
 		Arrays.stream(transientFieldMarkers).forEach(fieldModel::addTransient);
-		if (!IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
+		if (!IClientPropertyValue.AUTO_MARKING.contains(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
 			Arrays.stream(playerMarkers).forEach(fieldModel::add);
 			Arrays.stream(fieldMarkers).forEach(fieldModel::add);
 		}

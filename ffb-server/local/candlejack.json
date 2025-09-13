@@ -2,6 +2,26 @@
   "autoMarkingRecords": [
     {
       "skillArray": [
+        "Mighty Blow"
+      ],
+      "injuryAttributes": [],
+      "marking": "M",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
+        "Dodge"
+      ],
+      "injuryAttributes": [],
+      "marking": "D",
+      "gainedOnly": true,
+      "applyTo": "BOTH",
+      "applyRepeatedly": false
+    },
+    {
+      "skillArray": [
         "Block"
       ],
       "injuryAttributes": [],
@@ -16,16 +36,6 @@
       ],
       "injuryAttributes": [],
       "marking": "Bt",
-      "gainedOnly": true,
-      "applyTo": "BOTH",
-      "applyRepeatedly": false
-    },
-    {
-      "skillArray": [
-        "Mighty Blow"
-      ],
-      "injuryAttributes": [],
-      "marking": "M",
       "gainedOnly": true,
       "applyTo": "BOTH",
       "applyRepeatedly": false
@@ -216,16 +226,6 @@
       ],
       "injuryAttributes": [],
       "marking": "Fu",
-      "gainedOnly": true,
-      "applyTo": "BOTH",
-      "applyRepeatedly": false
-    },
-    {
-      "skillArray": [
-        "Dodge"
-      ],
-      "injuryAttributes": [],
-      "marking": "D",
       "gainedOnly": true,
       "applyTo": "BOTH",
       "applyRepeatedly": false

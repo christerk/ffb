@@ -5,6 +5,7 @@ import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.Game;

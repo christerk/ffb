@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.marking;
+package com.fumbbl.ffb.marking;
 
 public enum SortMode {
 	DEFAULT, NONE

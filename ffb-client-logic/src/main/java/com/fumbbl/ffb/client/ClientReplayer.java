@@ -337,7 +337,7 @@ public class ClientReplayer implements ActionListener {
 		IFactorySource applicationSource = getClient().getGame().getApplicationSource().forContext(FactoryType.FactoryContext.APPLICATION);
 		FactoryManager factoryManager = getClient().getGame().getApplicationSource().getFactoryManager();
 		List<Game> gameVersions = new ArrayList<>();
-		boolean automarkingEnabled = ClientMode.REPLAY == getClient().getMode() && IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+		boolean automarkingEnabled = ClientMode.REPLAY == getClient().getMode() && IClientPropertyValue.AUTO_MARKING.contains(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 		if (pMode == ClientCommandHandlerMode.INITIALIZING && automarkingEnabled) {
 			gameVersions.add(cloneGame(applicationSource, factoryManager));
 			getClient().getCommunication().sendLoadPlayerMarkings(0, gameVersions.get(0), getClient().getParameters().getCoach());

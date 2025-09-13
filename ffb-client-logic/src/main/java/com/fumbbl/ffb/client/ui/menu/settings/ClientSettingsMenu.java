@@ -18,6 +18,7 @@ import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.ButtonGroup;
@@ -51,6 +52,7 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JMenu playerMarkingMenu;
 	private JRadioButtonMenuItem playersMarkingManualMenuItem;
 	private JRadioButtonMenuItem playersMarkingAutoMenuItem;
+	private JRadioButtonMenuItem playersMarkingAutoNoSortMenuItem;
 
 	private JMenuItem scalingItem;
 
@@ -90,7 +92,8 @@ public class ClientSettingsMenu extends FfbMenu {
 		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
 		playersMarkingManualMenuItem.setSelected(true);
 		playersMarkingAutoMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(playerMarkingSetting));
-		
+		playersMarkingAutoNoSortMenuItem.setSelected(IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO_NO_SORT.equals(playerMarkingSetting));
+
 		String soundSetting = client.getProperty(CommonProperty.SETTING_SOUND_MODE);
 		fSoundOnMenuItem.setSelected(true);
 		fSoundMuteSpectatorsMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting));
@@ -221,7 +224,17 @@ public class ClientSettingsMenu extends FfbMenu {
 		if (source == playersMarkingAutoMenuItem) {
 			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
 			client.saveUserSettings(true);
-			client.getCommunication().sendUpdatePlayerMarkings(true);
+			client.getCommunication().sendUpdatePlayerMarkings(true, SortMode.DEFAULT);
+
+			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(client.getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
+				showDialog(DialogAutoMarking.create(client, true));
+			}
+		}
+
+		if (source == playersMarkingAutoNoSortMenuItem) {
+			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO_NO_SORT);
+			client.saveUserSettings(true);
+			client.getCommunication().sendUpdatePlayerMarkings(true, SortMode.NONE);
 
 			if (!IClientPropertyValue.SETTING_HIDE_AUTO_MARKING_DIALOG.equals(client.getProperty(CommonProperty.SETTING_SHOW_AUTO_MARKING_DIALOG))) {
 				showDialog(DialogAutoMarking.create(client, true));
@@ -231,7 +244,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		if (source == playersMarkingManualMenuItem) {
 			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
 			client.saveUserSettings(true);
-			client.getCommunication().sendUpdatePlayerMarkings(false);
+			client.getCommunication().sendUpdatePlayerMarkings(false, null);
 		}
 	}
 
@@ -503,10 +516,15 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic");
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Sorted)");
 		playersMarkingAutoMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoMenuItem);
+
+		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Unsorted)");
+		playersMarkingAutoNoSortMenuItem.addActionListener(this);
+		playerMarkingGroup.add(playersMarkingAutoNoSortMenuItem);
+		playerMarkingMenu.add(playersMarkingAutoNoSortMenuItem);
 
 		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual");
 		playersMarkingManualMenuItem.addActionListener(this);

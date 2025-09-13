@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.request.fumbbl;
 import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
@@ -12,10 +13,12 @@ import org.eclipse.jetty.websocket.api.Session;
 public class FumbblRequestLoadPlayerMarkings extends AbstractFumbblRequestLoadPlayerMarkings {
 
 	private final GameState gameState;
+	private final SortMode sortMode;
 
-	public FumbblRequestLoadPlayerMarkings(GameState gameState, Session session) {
+	public FumbblRequestLoadPlayerMarkings(GameState gameState, Session session, SortMode sortMode) {
 		super(session);
 		this.gameState = gameState;
+		this.sortMode = sortMode;
 	}
 
 	@Override
@@ -25,8 +28,8 @@ public class FumbblRequestLoadPlayerMarkings extends AbstractFumbblRequestLoadPl
 		Game game = gameState.getGame();
 
 		AutoMarkingConfig config = loadAutomarkingConfig(processor.getServer(), coach, game.getId(), game.getRules());
-		updateSearchMode(processor.getServer(), coach, game.getId(), config);
 		sessionManager.addAutoMarking(session, config);
+		config.setSortMode(sortMode);
 
 		processor.getServer().getCommunication().handleCommand(
 			new ReceivedCommand(

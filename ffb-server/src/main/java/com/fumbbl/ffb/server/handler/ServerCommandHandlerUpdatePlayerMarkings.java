@@ -40,10 +40,10 @@ public class ServerCommandHandlerUpdatePlayerMarkings extends ServerCommandHandl
 		}
 
 		if (mode == ClientMode.PLAYER) {
-			new MarkerLoadingService().loadMarker(gameState, session, isHome, commandUpdatePlayerMarkings.isAuto());
+			new MarkerLoadingService().loadMarker(gameState, session, isHome, commandUpdatePlayerMarkings.isAuto(), commandUpdatePlayerMarkings.getSortMode());
 		} else if (mode == ClientMode.SPECTATOR) {
 			if (commandUpdatePlayerMarkings.isAuto()) {
-				getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, session));
+				getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, session, commandUpdatePlayerMarkings.getSortMode()));
 			} else {
 				getServer().getCommunication().sendUpdateLocalPlayerMarkers(session, Collections.emptyList());
 			}

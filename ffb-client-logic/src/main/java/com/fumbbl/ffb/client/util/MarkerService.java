@@ -35,7 +35,7 @@ public class MarkerService {
 
 	public void showMarkerPopup(final FantasyFootballClient pClient, Component source, final Player<?> pPlayer, int pX, int pY) {
 		if (pPlayer != null) {
-			boolean persistMarker = ClientMode.PLAYER == pClient.getMode() && !IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equals(pClient.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+			boolean persistMarker = ClientMode.PLAYER == pClient.getMode() && !IClientPropertyValue.AUTO_MARKING.contains(pClient.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
 			PlayerMarker playerMarker = persistMarker ? pClient.getGame().getFieldModel().getPlayerMarker(pPlayer.getId()) : pClient.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 			String markerText = (playerMarker != null) ? playerMarker.getHomeText() : null;
 			final JTextField markerField = createMarkerPopup(pClient.getUserInterface(), source, "Mark Player", StringTool.print(markerText), pX, pY, !persistMarker);

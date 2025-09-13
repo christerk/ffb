@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.marking.SortMode;
 
 import java.util.ArrayList;
 import java.util.List;

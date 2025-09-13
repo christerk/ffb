@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.util;
 
+import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.db.DbStatementId;
 import com.fumbbl.ffb.server.db.IDbStatementFactory;
@@ -9,9 +10,9 @@ import org.eclipse.jetty.websocket.api.Session;
 
 public class MarkerLoadingService {
 
-	public void loadMarker(GameState gameState, Session session, boolean homeTeam, boolean auto) {
+	public void loadMarker(GameState gameState, Session session, boolean homeTeam, boolean auto, SortMode sortMode) {
 		if (auto) {
-			gameState.getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, session));
+			gameState.getServer().getRequestProcessor().add(new FumbblRequestLoadPlayerMarkings(gameState, session, sortMode));
 		} else {
 			IDbStatementFactory statementFactory = gameState.getServer().getDbQueryFactory();
 
