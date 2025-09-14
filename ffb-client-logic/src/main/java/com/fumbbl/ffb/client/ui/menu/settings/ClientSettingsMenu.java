@@ -516,12 +516,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Sorted)");
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Alphabetical Order)");
 		playersMarkingAutoMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoMenuItem);
 
-		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Unsorted)");
+		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Site Order)");
 		playersMarkingAutoNoSortMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoNoSortMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoNoSortMenuItem);
