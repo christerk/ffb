@@ -60,6 +60,10 @@ public class AutoMarkingRecord implements IJsonSerializable {
 		this.marking = marking;
 	}
 
+	public boolean isInjuryOnly() {
+		return skills.isEmpty();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

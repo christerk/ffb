@@ -143,6 +143,19 @@ class MarkerGeneratorTest {
 
 
 	@Test
+	public void generateForSuperSetsWithoutSorting() {
+		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withMarking(DODGE_MARKING).build());
+		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());
+		markings.add(builder.withSkill(BLOCK).withSkill(DODGE).withSkill(TACKLE).withMarking(BLACKLE_MARKING).build());
+
+		config.setSortMode(SortMode.NONE);
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals(BLACKLE_MARKING, marking);
+	}
+
+	@Test
 	public void generateWithSeparator() {
 		config.setSeparator(SEPARATOR);
 		markings.add(builder.withSkill(BLOCK).withMarking(BLOCK_MARKING).build());

@@ -17,180 +17,180 @@ import com.fumbbl.ffb.util.StringTool;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MarkerGenerator {
 
-    public String generate(Game game, Player<?> player, AutoMarkingConfig config, boolean playsForMarkingCoach) {
+	public String generate(Game game, Player<?> player, AutoMarkingConfig config, boolean playsForMarkingCoach) {
 
-        List<Skill> baseSkills = new ArrayList<>(Arrays.asList(player.getPosition().getSkills()));
-        List<Skill> gainedSkills = player.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getCategory() != SkillCategory.STAT_INCREASE).collect(Collectors.toList());
-        gainedSkills.removeAll(baseSkills);
-        List<InjuryAttribute> injuriesAttributes = new ArrayList<>();
+		List<Skill> baseSkills = new ArrayList<>(Arrays.asList(player.getPosition().getSkills()));
+		List<Skill> gainedSkills = player.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getCategory() != SkillCategory.STAT_INCREASE).collect(Collectors.toList());
+		gainedSkills.removeAll(baseSkills);
+		List<InjuryAttribute> injuriesAttributes = new ArrayList<>();
 
-        for (PlayerStatKey key : PlayerStatKey.values()) {
-            int statDiff = statDiff(game, key, player);
+		for (PlayerStatKey key : PlayerStatKey.values()) {
+			int statDiff = statDiff(game, key, player);
 
-            if (statDiff > 0) {
-                SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
-                Skill statIncrease = factory.forStatKey(key);
-                for (int i = 0; i < statDiff; i++) {
-                    gainedSkills.add(statIncrease);
-                }
-            } else if (statDiff < 0) {
-                InjuryAttribute injury = InjuryAttribute.forStatKey(key);
-                for (int i = 0; i < Math.abs(statDiff); i++) {
-                    injuriesAttributes.add(injury);
-                }
-            }
-        }
+			if (statDiff > 0) {
+				SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+				Skill statIncrease = factory.forStatKey(key);
+				for (int i = 0; i < statDiff; i++) {
+					gainedSkills.add(statIncrease);
+				}
+			} else if (statDiff < 0) {
+				InjuryAttribute injury = InjuryAttribute.forStatKey(key);
+				for (int i = 0; i < Math.abs(statDiff); i++) {
+					injuriesAttributes.add(injury);
+				}
+			}
+		}
 
-        List<SeriousInjury> injuries = new ArrayList<>();
-        injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjury());
-        injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjuryDecay());
-        injuries.addAll(Arrays.asList(player.getLastingInjuries()));
-        injuriesAttributes.addAll(injuries.stream().filter(Objects::nonNull).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
+		List<SeriousInjury> injuries = new ArrayList<>();
+		injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjury());
+		injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjuryDecay());
+		injuries.addAll(Arrays.asList(player.getLastingInjuries()));
+		injuriesAttributes.addAll(injuries.stream().filter(Objects::nonNull).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
 
-        Set<AutoMarkingRecord> markingsToApply = new HashSet<>();
+		List<AutoMarkingRecord> recordsToApply = new ArrayList<>();
 
-        String separator = config.getSeparator();
+		String separator = config.getSeparator();
 
-        String finalSeparator = separator == null ? "" : separator;
-        List<AutoMarkingRecord> records = config.getMarkings().stream()
-          .filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach)).collect(Collectors.toList());
+		String finalSeparator = separator == null ? "" : separator;
+		List<AutoMarkingRecord> records = config.getMarkings().stream()
+			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach)).collect(Collectors.toList());
 
-        List<String>  markings;
-        if (config.getSortMode() == SortMode.NONE) {
-            markings = records.stream().map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator))
-              .filter(StringTool::isProvided).collect(Collectors.toList());
-        } else {
-            markings = getSortedMarkings(records, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator);
-        }
+		if (config.getSortMode() == SortMode.NONE) {
+			records.forEach(markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes, recordsToApply));
+			return recordsToApply.stream().map(AutoMarkingRecord::getMarking).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
+		} else {
+			populateAndSortRecords(records, baseSkills, gainedSkills, injuriesAttributes, recordsToApply);
 
-        return markings.stream().filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
-    }
+			return recordsToApply.stream()
+				.sorted(Comparator.comparingInt((AutoMarkingRecord record) -> record.isInjuryOnly() ? 1 : 0).thenComparing(AutoMarkingRecord::getMarking))
+				.map(AutoMarkingRecord::getMarking).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
+		}
 
-    private List<String> getSortedMarkings(List<AutoMarkingRecord> records, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuriesAttributes, Set<AutoMarkingRecord> markingsToApply, String finalSeparator) {
-        return records.stream()
-          .collect(Collectors.groupingBy(markingRecord -> markingRecord.getSkills().isEmpty()))
-          .entrySet().stream()
-          .sorted((entry1, entry2) -> entry1.getKey() == entry2.getKey() ? 0 : entry1.getKey() ? 1 : -1)
-          .flatMap(
-            entry -> entry.getValue().stream()
-              .sorted(Comparator.comparingInt(
-                  (AutoMarkingRecord record) ->
-                    record.getSkills().size())
-                .thenComparingInt(
-                  record -> record.getInjuries().size()).reversed()
-                .thenComparing((record1, record2) -> {
-                    if (record1.getApplyTo() == record2.getApplyTo()) {
-                        return 0;
-                    }
-                    if (record1.getApplyTo() == ApplyTo.BOTH) {
-                        return -1;
-                    }
+	}
 
-                    if (record2.getApplyTo() == ApplyTo.BOTH) {
-                        return 1;
-                    }
+	private void populateAndSortRecords(List<AutoMarkingRecord> records, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuriesAttributes, List<AutoMarkingRecord> recordsToApply) {
+		records.stream()
+			.collect(Collectors.groupingBy(AutoMarkingRecord::isInjuryOnly))
+			.entrySet().stream()
+			.sorted((entry1, entry2) -> entry1.getKey() == entry2.getKey() ? 0 : entry1.getKey() ? 1 : -1)
+			.forEach(
+				entry -> entry.getValue().stream()
+					.sorted(Comparator.comparingInt(
+							(AutoMarkingRecord record) ->
+								record.getSkills().size())
+						.thenComparingInt(
+							record -> record.getInjuries().size()).reversed()
+						.thenComparing((record1, record2) -> {
+							if (record1.getApplyTo() == record2.getApplyTo()) {
+								return 0;
+							}
+							if (record1.getApplyTo() == ApplyTo.BOTH) {
+								return -1;
+							}
 
-                    if (record1.getApplyTo() == ApplyTo.OWN) {
-                        return -1;
-                    }
+							if (record2.getApplyTo() == ApplyTo.BOTH) {
+								return 1;
+							}
 
-                    return 1;
-                })
-                .thenComparing(AutoMarkingRecord::isGainedOnly)
-                .thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
-                .thenComparing(
-                  AutoMarkingRecord::getMarking))
-              .map(markingRecord -> getMarking(markingRecord, baseSkills, gainedSkills, injuriesAttributes, markingsToApply, finalSeparator))
-              .sorted()).collect(Collectors.toList());
-    }
+							if (record1.getApplyTo() == ApplyTo.OWN) {
+								return -1;
+							}
 
-    private int statDiff(Game game, PlayerStatKey key, Player<?> player) {
-        StatsMechanic mechanic = (StatsMechanic) game.getFactory(FactoryType.Factory.MECHANIC)
-                .forName(Mechanic.Type.STAT.name());
+							return 1;
+						})
+						.thenComparing(AutoMarkingRecord::isGainedOnly)
+						.thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
+						.thenComparing(
+							AutoMarkingRecord::getMarking))
+					.forEach(markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes, recordsToApply)));
 
-        switch (key) {
-            case MA:
-                return player.getMovementWithModifiers(game) - player.getPosition().getMovement();
-            case ST:
-                return player.getStrengthWithModifiers(game) - player.getPosition().getStrength();
-            case AG:
-                boolean higherIsBetter = mechanic.improvementIncreasesValue();
-                if (higherIsBetter) {
-                    return player.getAgilityWithModifiers(game) - player.getPosition().getAgility();
-                }
-                return player.getPosition().getAgility() - player.getAgilityWithModifiers(game);
-            case PA:
-                if (mechanic.drawPassing()) {
-                    return player.getPosition().getPassing() - player.getPassingWithModifiers(game);
-                }
-                return 0;
-            case AV:
-                return player.getArmourWithModifiers(game) - player.getPosition().getArmour();
-            default:
-                return 0;
-        }
-    }
+	}
 
-    private boolean appliesTo(ApplyTo applyTo, boolean playsForMarkingCoach) {
-        return playsForMarkingCoach && applyTo.isAppliesToOwn() || !playsForMarkingCoach && applyTo.isAppliesToOpponent();
-    }
+	private int statDiff(Game game, PlayerStatKey key, Player<?> player) {
+		StatsMechanic mechanic = (StatsMechanic) game.getFactory(FactoryType.Factory.MECHANIC)
+			.forName(Mechanic.Type.STAT.name());
 
-    private String getMarking(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills,
-                              List<InjuryAttribute> injuries, Set<AutoMarkingRecord> markingsToApply, String separator) {
+		switch (key) {
+			case MA:
+				return player.getMovementWithModifiers(game) - player.getPosition().getMovement();
+			case ST:
+				return player.getStrengthWithModifiers(game) - player.getPosition().getStrength();
+			case AG:
+				boolean higherIsBetter = mechanic.improvementIncreasesValue();
+				if (higherIsBetter) {
+					return player.getAgilityWithModifiers(game) - player.getPosition().getAgility();
+				}
+				return player.getPosition().getAgility() - player.getAgilityWithModifiers(game);
+			case PA:
+				if (mechanic.drawPassing()) {
+					return player.getPosition().getPassing() - player.getPassingWithModifiers(game);
+				}
+				return 0;
+			case AV:
+				return player.getArmourWithModifiers(game) - player.getPosition().getArmour();
+			default:
+				return 0;
+		}
+	}
 
-        List<String> marking = new ArrayList<>();
+	private boolean appliesTo(ApplyTo applyTo, boolean playsForMarkingCoach) {
+		return playsForMarkingCoach && applyTo.isAppliesToOwn() || !playsForMarkingCoach && applyTo.isAppliesToOpponent();
+	}
 
-        if (markingsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
+	private void populateMarkingRecords(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills,
+																			List<InjuryAttribute> injuries, List<AutoMarkingRecord> recordsToApply) {
 
-            List<Skill> skillsToCheck = new ArrayList<>(gainedSkills);
-            if (!markingRecord.isGainedOnly()) {
-                skillsToCheck.addAll(baseSkills);
-            }
+		if (recordsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
 
-            int matches = findMin(isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck), isSubSetWithDuplicates(markingRecord.getInjuries(), injuries));
+			List<Skill> skillsToCheck = new ArrayList<>(gainedSkills);
+			if (!markingRecord.isGainedOnly()) {
+				skillsToCheck.addAll(baseSkills);
+			}
 
-            if (!markingRecord.isApplyRepeatedly()) {
-                matches = Math.min(1, matches);
-            }
+			int matches = findMin(isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck), isSubSetWithDuplicates(markingRecord.getInjuries(), injuries));
 
-            for (int counter = 0; counter < matches; counter++) {
-                markingsToApply.add(markingRecord);
-                marking.add(markingRecord.getMarking());
-            }
-        }
-        return String.join(separator, marking);
-    }
+			if (!markingRecord.isApplyRepeatedly()) {
+				matches = Math.min(1, matches);
+			}
 
-    private int findMin(int first, int second) {
-        int result = Math.min(first, second);
+			if (matches > 0) {
+				recordsToApply.removeIf(record -> record.isSubSetOf(markingRecord));
+			}
 
-        return result == Integer.MAX_VALUE ? 0 : result;
-    }
+			for (int counter = 0; counter < matches; counter++) {
+				recordsToApply.add(markingRecord);
+			}
+		}
+	}
 
-    private <T> int isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
+	private int findMin(int first, int second) {
+		int result = Math.min(first, second);
 
-        if (subSet.isEmpty()) {
-            return Integer.MAX_VALUE;
-        }
+		return result == Integer.MAX_VALUE ? 0 : result;
+	}
 
-        Map<Integer, List<T>> subGroups = subSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
-        Map<Integer, List<T>> superGroups = superSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
+	private <T> int isSubSetWithDuplicates(List<T> subSet, List<T> superSet) {
 
-        return subGroups.entrySet().stream().map(entry -> {
-            List<T> superElements = superGroups.get(entry.getKey());
-            if (superElements == null || superElements.isEmpty()) {
-                return 0;
-            }
-            return superElements.size() / entry.getValue().size();
-        }).min(Comparator.naturalOrder()).orElse(0);
-    }
+		if (subSet.isEmpty()) {
+			return Integer.MAX_VALUE;
+		}
+
+		Map<Integer, List<T>> subGroups = subSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
+		Map<Integer, List<T>> superGroups = superSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
+
+		return subGroups.entrySet().stream().map(entry -> {
+			List<T> superElements = superGroups.get(entry.getKey());
+			if (superElements == null || superElements.isEmpty()) {
+				return 0;
+			}
+			return superElements.size() / entry.getValue().size();
+		}).min(Comparator.naturalOrder()).orElse(0);
+	}
 }
