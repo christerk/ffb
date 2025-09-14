@@ -13,6 +13,9 @@ import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -70,14 +73,31 @@ public class ReplayMenu extends GameModeMenu {
 			JMenuItem item = (JMenuItem) source;
 			client.getCommunication().sendTransferReplayControl(item.getName());
 		} else if (sketchAllowedMenuItems.contains(source)) {
-			JMenuItem item = (JMenuItem) source;
-			sketchManager.showSketches(item.getName());
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) source;
+			String coach = item.getName();
+			if (sketchManager.isCoachPreventedFromSketching(coach)) {
+				client.getCommunication().sendPreventFromSketching(coach, false);
+			} else {
+				sketchManager.showSketches(coach);
+				SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+				ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+				client.getGame().notifyObservers(modelChange);
+				this.updateJoinedCoachesMenu();
+			}
 		} else if (sketchHiddenMenuItems.contains(source)) {
-			JMenuItem item = (JMenuItem) source;
-			sketchManager.hideSketches(item.getName());
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) source;
+			String coach = item.getName();
+			sketchManager.hideSketches(coach);
+			SketchState sketchState = new SketchState(sketchManager.getAllSketches());
+			ModelChange modelChange = new ModelChange(ModelChangeId.SKETCH_UPDATE, null, sketchState);
+			client.getGame().notifyObservers(modelChange);
+			this.updateJoinedCoachesMenu();
 		} else if (sketchPreventedMenuItems.contains(source)) {
-			JMenuItem item = (JMenuItem) source;
-			sketchManager.preventedFromSketching(item.getName());
+			JRadioButtonMenuItem item = (JRadioButtonMenuItem) source;
+			String coach = item.getName();
+			if (!sketchManager.isCoachPreventedFromSketching(coach)) {
+				client.getCommunication().sendPreventFromSketching(coach, true);
+			}
 		} else if (source == customSketchCursor) {
 			client.setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_ON);
 			client.saveUserSettings(true);
