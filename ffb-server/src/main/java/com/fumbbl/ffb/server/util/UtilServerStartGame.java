@@ -275,7 +275,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(ballAndChainRr);
 			GameOptionBoolean tacklezones = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_TACKLEZONE_OVERLAYS);
 			tacklezones.setValue(true);
-		//	game.getOptions().addOption(tacklezones);
+			game.getOptions().addOption(tacklezones);
 		}
 	}
 

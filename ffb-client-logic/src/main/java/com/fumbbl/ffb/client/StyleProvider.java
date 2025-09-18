@@ -6,8 +6,25 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME_COLOR;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_DEV;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FIELD_MARKER;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_FRAME_SHADOW;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_INPUT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_AWAY;
+import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_HOME;
 
 public class StyleProvider {
 
@@ -208,6 +225,10 @@ public class StyleProvider {
 	}
 
 	public Color getTackleZoneHome() {
+		return swapTeamColors ? tackleZoneAway : tackleZoneHome;
+	}
+
+	public Color getTackleZoneHomeUnswapped() {
 		return tackleZoneHome;
 	}
 
@@ -216,6 +237,10 @@ public class StyleProvider {
 	}
 
 	public Color getTackleZoneAway() {
+		return swapTeamColors ? tackleZoneHome : tackleZoneAway;
+	}
+
+	public Color getTackleZoneAwayUnswapped() {
 		return tackleZoneAway;
 	}
 

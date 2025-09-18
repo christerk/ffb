@@ -223,10 +223,10 @@ public class ClientGraphicsMenu extends FfbMenu {
 			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
 
 		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_HOME, tzColorHome,
-			styleProvider::getTackleZoneHome, styleProvider::setTackleZoneHome);
+			styleProvider::getTackleZoneHomeUnswapped, styleProvider::setTackleZoneHome);
 
 		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_AWAY, tzColorAway,
-			styleProvider::getTackleZoneAway, styleProvider::setTackleZoneAway);
+			styleProvider::getTackleZoneAwayUnswapped, styleProvider::setTackleZoneAway);
 
 		String frameBackgroundSetting = client.getProperty(CommonProperty.SETTING_BACKGROUND_FRAME);
 		frameBackgroundIcons.setSelected(true);
@@ -511,7 +511,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		}
 
 		if (source == tzColorAway) {
-			Color defaultColor = styleProvider.getTackleZoneAway();
+			Color defaultColor = styleProvider.getTackleZoneAwayUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose away tacklezone color", defaultColor);
 			if (color != null) {
 				client.setProperty(SETTING_TZ_COLOR_AWAY, String.valueOf(color.getRGB()));
@@ -520,7 +520,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		}
 
 		if (source == tzColorHome) {
-			Color defaultColor = styleProvider.getTackleZoneHome();
+			Color defaultColor = styleProvider.getTackleZoneHomeUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose home tacklezone color", defaultColor);
 			if (color != null) {
 				client.setProperty(SETTING_TZ_COLOR_HOME, String.valueOf(color.getRGB()));
@@ -753,8 +753,8 @@ public class ClientGraphicsMenu extends FfbMenu {
 		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME, styleProvider.getAdditionalPlayerMarkerHome(), colors, (item) -> additionalHomePlayerMarkerFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, styleProvider.getAdditionalPlayerMarkerAway(), colors, (item) -> additionalAwayPlayerMarkerFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FIELD_MARKER, styleProvider.getFieldMarker(), colors, (item) -> fieldMarkerFontColor = item);
-		addColorItem(SETTING_TZ_COLOR_HOME, styleProvider.getTackleZoneHome(), colors, (item) -> tzColorHome = item);
-		addColorItem(SETTING_TZ_COLOR_AWAY, styleProvider.getTackleZoneAway(), colors, (item) -> tzColorAway = item);
+		addColorItem(SETTING_TZ_COLOR_HOME, styleProvider.getTackleZoneHomeUnswapped(), colors, (item) -> tzColorHome = item);
+		addColorItem(SETTING_TZ_COLOR_AWAY, styleProvider.getTackleZoneAwayUnswapped(), colors, (item) -> tzColorAway = item);
 	}
 
 	private ColorIcon createColorIcon(Color chatBackgroundColor) {
