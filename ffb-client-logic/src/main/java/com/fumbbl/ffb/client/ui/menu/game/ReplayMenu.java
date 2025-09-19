@@ -9,6 +9,7 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
+import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategy;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -273,5 +274,19 @@ public class ReplayMenu extends GameModeMenu {
 			return hiddenIcon;
 		}
 		return allowedIcon;
+	}
+
+	// Inner class for menu item using ClickStrategy
+	private class ClickStrategyMenuItem extends com.fumbbl.ffb.client.ui.swing.JMenuItem {
+		private final ClickStrategy strategy;
+
+		public ClickStrategyMenuItem(DimensionProvider dimensionProvider, ClickStrategy strategy) {
+			super(dimensionProvider, strategy.getMenuLabel());
+			this.strategy = strategy;
+		}
+
+		public ClickStrategy getClickStrategy() {
+			return strategy;
+		}
 	}
 }
