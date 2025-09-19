@@ -13,4 +13,9 @@ public class LeftClickNoModifierStrategy implements ClickStrategy {
 	public String getMenuLabel() {
 		return "Left Click";
 	}
+
+	@Override
+	public int getOrder() {
+		return 0; // Left click is first
+	}
 }

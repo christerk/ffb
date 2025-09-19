@@ -12,4 +12,9 @@ public class RightClickStrategy implements ClickStrategy {
 	public String getMenuLabel() {
 		return "Right Click";
 	}
+
+	@Override
+	public int getOrder() {
+		return 4; // Right click is last
+	}
 }

@@ -12,4 +12,9 @@ public class LeftClickShiftStrategy implements ClickStrategy {
     public String getMenuLabel() {
         return "Left Click + Shift";
     }
+
+    @Override
+    public int getOrder() {
+        return 3; // Shift is third among modifiers
+    }
 }

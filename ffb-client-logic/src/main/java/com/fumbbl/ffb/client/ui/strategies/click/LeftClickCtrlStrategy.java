@@ -12,4 +12,9 @@ public class LeftClickCtrlStrategy implements ClickStrategy {
     public String getMenuLabel() {
         return "Left Click + Ctrl";
     }
+
+    @Override
+    public int getOrder() {
+        return 2; // Ctrl is second among modifiers
+    }
 }

@@ -12,4 +12,9 @@ public class LeftClickAltStrategy implements ClickStrategy {
 	public String getMenuLabel() {
 		return "Left Click + Alt";
 	}
+
+	@Override
+	public int getOrder() {
+		return 1; // Alt is first among modifiers
+	}
 }
