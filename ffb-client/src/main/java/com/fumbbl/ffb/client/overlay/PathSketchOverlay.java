@@ -15,6 +15,8 @@ import com.fumbbl.ffb.client.model.ControlAware;
 import com.fumbbl.ffb.client.model.OnlineAware;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.ColorIcon;
+import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategy;
+import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
@@ -156,6 +158,7 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+
 		if (popupMenu != null && popupMenu.isVisible()) {
 			return;
 		}
@@ -167,27 +170,34 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 		if (coordinate == null) {
 			return;
 		}
+
+		ClickStrategyRegistry registry = userInterface.getClickStrategyRegistry();
+		ClickStrategy startStrategy = registry.getStrategyByKey(client.getProperty(CommonProperty.SETTING_CLICK_START_SKETCH));
+		ClickStrategy addPointStrategy = registry.getStrategyByKey(client.getProperty(CommonProperty.SETTING_CLICK_ADD_POINT));
+		ClickStrategy endStrategy = registry.getStrategyByKey(client.getProperty(CommonProperty.SETTING_CLICK_END_SKETCH));
+
 		Optional<Sketch> activeSketch = sketchManager.activeSketch();
-		if (e.getClickCount() > 1 && activeSketch.isPresent()) {
-			sketchManager.finishSketch(coordinate);
-			drawSketches();
-			if (isOnline) {
-				client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
-			}
-		} else {
-			if (activeSketch.isPresent()) {
-				sketchManager.add(coordinate);
+		if (activeSketch.isPresent()) {
+			if (endStrategy.applies(e)) {
+				sketchManager.finishSketch(coordinate);
+				drawSketches();
 				if (isOnline) {
 					client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
 				}
-			} else {
+			} else if (addPointStrategy.applies(e)) {
+				sketchManager.add(coordinate);
+				drawSketches();
+				if (isOnline) {
+					client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
+				}
+			} else if (startStrategy.applies(e)) {
 				sketchManager.create(coordinate, sketchColor.getRGB());
+				drawSketches();
 				if (isOnline) {
 					sketchManager.activeSketch().ifPresent(sketch ->
 						client.getCommunication().sendAddSketch(sketch));
 				}
 			}
-			drawSketches();
 		}
 	}
 
