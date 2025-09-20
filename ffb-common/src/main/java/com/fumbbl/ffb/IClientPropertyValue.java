@@ -95,4 +95,14 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_TACKLEZONES_OVERLAP_OFF = "overlapTzOff";
 	String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";
 	String SETTING_TACKLEZONES_CONTOUR_OFF = "tzContourOff";
+
+	// Click strategy settings
+	String SETTING_CLICK_LEFT = "clickLeft";
+	String SETTING_CLICK_LEFT_ALT = "clickLeftAlt";
+	String SETTING_CLICK_LEFT_CTRL = "clickLeftCtrl";
+	String SETTING_CLICK_LEFT_SHIFT = "clickLeftShift";
+	String SETTING_CLICK_DOUBLE = "clickDouble";
+	String SETTING_CLICK_RIGHT = "clickRight";
+
+
 }
