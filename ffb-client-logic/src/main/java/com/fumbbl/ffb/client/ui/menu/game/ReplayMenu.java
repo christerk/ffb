@@ -138,14 +138,26 @@ public class ReplayMenu extends GameModeMenu {
 			endSketchKey = IClientPropertyValue.SETTING_CLICK_DOUBLE;
 		}
 
-		selectClickStrategyMenuItem(startSketchItems, startSketchKey);
-		selectClickStrategyMenuItem(addPointItems, addPointKey);
-		selectClickStrategyMenuItem(endSketchItems, endSketchKey);
-	}
+		// For startSketchItems, all are enabled
+		for (ClickStrategyMenuItem item : startSketchItems) {
+			item.setEnabled(true);
+			item.setSelected(item.getClickStrategy().getKey().equals(startSketchKey));
+		}
 
-	private void selectClickStrategyMenuItem(Set<ClickStrategyMenuItem> items, String key) {
-		for (ClickStrategyMenuItem item : items) {
-			item.setSelected(item.getClickStrategy().getKey().equals(key));
+		// For addPointItems, disable the one selected for end
+		for (ClickStrategyMenuItem item : addPointItems) {
+			boolean isSelected = item.getClickStrategy().getKey().equals(addPointKey);
+			boolean isDisabled = item.getClickStrategy().getKey().equals(endSketchKey);
+			item.setEnabled(!isDisabled);
+			item.setSelected(isSelected);
+		}
+
+		// For endSketchItems, disable the one selected for addPoint
+		for (ClickStrategyMenuItem item : endSketchItems) {
+			boolean isSelected = item.getClickStrategy().getKey().equals(endSketchKey);
+			boolean isDisabled = item.getClickStrategy().getKey().equals(addPointKey);
+			item.setEnabled(!isDisabled);
+			item.setSelected(isSelected);
 		}
 	}
 
