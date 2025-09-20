@@ -10,7 +10,7 @@ public class DoubleClickStrategy implements ClickStrategy {
 
 	@Override
 	public String getMenuLabel() {
-		return "Double Click";
+		return "Double Left Click";
 	}
 
 	@Override

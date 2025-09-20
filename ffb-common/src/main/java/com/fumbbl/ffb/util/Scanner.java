@@ -37,6 +37,13 @@ public class Scanner<T extends IKeyedItem> {
 		return filterClasses(options, classes);
 	}
 
+
+	public Collection<T> getInstancesImplementing() {
+		Set<Class<T>> classes = rawScanner.getClassesImplementing();
+
+		return filterClasses(classes);
+	}
+
 	public Collection<Class<T>> getClassesImplementing(GameOptions options) {
 		return rawScanner.getClassesImplementing().stream().filter(cls ->
 				Arrays.stream(cls.getAnnotations()).anyMatch(annotation ->
@@ -56,23 +63,7 @@ public class Scanner<T extends IKeyedItem> {
 					Rules rule = ((RulesCollection) a).value();
 					if (rule.matches(options.getRulesVersion())) {
 
-						try {
-							Constructor<?> ctr = cls.getConstructor();
-							@SuppressWarnings("unchecked")
-							T instance = (T) ctr.newInstance();
-							Object key = instance.getKey();
-
-							if (result.containsKey(key)) {
-								System.out.println(instance.getClass().getCanonicalName());
-								System.out.println(result.get(key).getClass().getCanonicalName());
-								throw new FantasyFootballException("Duplicate implementation found when scanning: " + key);
-							}
-
-							result.put(instance.getKey(), instance);
-						} catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-										 InvocationTargetException e) {
-							throw new FantasyFootballException("Error initializing scanned class.", e);
-						}
+						addInstance(cls, result);
 					}
 				}
 			}
@@ -81,6 +72,34 @@ public class Scanner<T extends IKeyedItem> {
 			}
 		}
 		return result.values();
+	}
+
+	private Collection<T> filterClasses(Set<Class<T>> classes) {
+		Map<Object, T> result = new HashMap<>();
+		for (Class<T> cls : classes) {
+				addInstance(cls, result);
+		}
+		return result.values();
+	}
+
+	private void addInstance(Class<T> cls, Map<Object, T> result) {
+		try {
+			Constructor<?> ctr = cls.getConstructor();
+			@SuppressWarnings("unchecked")
+			T instance = (T) ctr.newInstance();
+			Object key = instance.getKey();
+
+			if (result.containsKey(key)) {
+				System.out.println(instance.getClass().getCanonicalName());
+				System.out.println(result.get(key).getClass().getCanonicalName());
+				throw new FantasyFootballException("Duplicate implementation found when scanning: " + key);
+			}
+
+			result.put(instance.getKey(), instance);
+		} catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+						 InvocationTargetException e) {
+			throw new FantasyFootballException("Error initializing scanned class.", e);
+		}
 	}
 
 	public Set<Class<T>> getSubclasses() {

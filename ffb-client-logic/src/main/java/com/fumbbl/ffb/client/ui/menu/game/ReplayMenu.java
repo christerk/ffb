@@ -40,6 +40,9 @@ public class ReplayMenu extends GameModeMenu {
 	private final Set<String> hiddenCoaches;
 	private final Set<String> preventedCoaches;
 	private final ClientSketchManager sketchManager;
+	private Set<ClickStrategyMenuItem> startSketchItems;
+	private Set<ClickStrategyMenuItem> addPointItems;
+	private Set<ClickStrategyMenuItem> endSketchItems;
 
 	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
 										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager) {
@@ -65,14 +68,44 @@ public class ReplayMenu extends GameModeMenu {
 	private void createClickBehaviorMenu() {
 		// Dynamically load all ClickStrategy implementations using Scanner
 		Scanner<ClickStrategy> scanner = new Scanner<>(ClickStrategy.class);
-		List<ClickStrategy> clickStrategies = new ArrayList<>(scanner.getSubclassInstances());
+		List<ClickStrategy> clickStrategies = new ArrayList<>(scanner.getInstancesImplementing());
 		clickStrategies.sort(Comparator.comparingInt(ClickStrategy::getOrder));
+
 
 		// Create Click Behavior menu and submenus
 		JMenu clickBehaviorMenu = new JMenu(dimensionProvider, "Click Behavior");
 		JMenu startSketchMenu = new JMenu(dimensionProvider, "Start Sketch");
 		JMenu addPointMenu = new JMenu(dimensionProvider, "Add Point");
 		JMenu endSketchMenu = new JMenu(dimensionProvider, "End Sketch");
+
+		startSketchItems = new HashSet<>();
+		addPointItems = new HashSet<>();
+		endSketchItems = new HashSet<>();
+
+		// Use local ButtonGroups
+		ButtonGroup startSketchGroup = new ButtonGroup();
+		ButtonGroup addPointGroup = new ButtonGroup();
+		ButtonGroup endSketchGroup = new ButtonGroup();
+
+		for (ClickStrategy strategy : clickStrategies) {
+			ClickStrategyMenuItem startItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			startItem.addActionListener(this);
+			startSketchMenu.add(startItem);
+			startSketchItems.add(startItem);
+			startSketchGroup.add(startItem);
+
+			ClickStrategyMenuItem addItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			addItem.addActionListener(this);
+			addPointMenu.add(addItem);
+			addPointItems.add(addItem);
+			addPointGroup.add(addItem);
+
+			ClickStrategyMenuItem endItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			endItem.addActionListener(this);
+			endSketchMenu.add(endItem);
+			endSketchItems.add(endItem);
+			endSketchGroup.add(endItem);
+		}
 
 		clickBehaviorMenu.add(startSketchMenu);
 		clickBehaviorMenu.add(addPointMenu);
