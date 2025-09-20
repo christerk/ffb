@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.ui.menu.game.GameModeMenu;
 import com.fumbbl.ffb.client.ui.menu.game.ReplayMenu;
 import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
 import com.fumbbl.ffb.client.ui.menu.settings.UserSettingsMenu;
+import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -44,18 +45,20 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final DimensionProvider dimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private final ClientSketchManager sketchManager;
+	private final ClickStrategyRegistry clickStrategyRegistry;
 
 	private final Set<FfbMenu> subMenus = new HashSet<>();
 
-	public GameMenuBar(FantasyFootballClient pClient, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
+	public GameMenuBar(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
-		fClient = pClient;
+		fClient = client;
 		this.sketchManager = sketchManager;
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
+		this.clickStrategyRegistry = new ClickStrategyRegistry();
 
 		init();
 
@@ -90,7 +93,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
 			if (gameModeMenu == null) {
-				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager);
+				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry);
 				add(gameModeMenu);
 			}
 		} else {
