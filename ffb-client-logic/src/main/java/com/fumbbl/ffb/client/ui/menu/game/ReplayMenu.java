@@ -161,6 +161,18 @@ public class ReplayMenu extends GameModeMenu {
 		} else if (source == defaultSketchCursor) {
 			client.setProperty(CommonProperty.SETTING_SKETCH_CURSOR, IClientPropertyValue.SETTING_SKETCH_CURSOR_OFF);
 			client.saveUserSettings(true);
+		} else if (startSketchItems.contains(source)) {
+			ClickStrategyMenuItem item = (ClickStrategyMenuItem) source;
+			client.setProperty(CommonProperty.SETTING_CLICK_START_SKETCH, item.getClickStrategy().getKey());
+			client.saveUserSettings(false);
+		} else if (addPointItems.contains(source)) {
+			ClickStrategyMenuItem item = (ClickStrategyMenuItem) source;
+			client.setProperty(CommonProperty.SETTING_CLICK_ADD_POINT, item.getClickStrategy().getKey());
+			client.saveUserSettings(false);
+		} else if (endSketchItems.contains(source)) {
+			ClickStrategyMenuItem item = (ClickStrategyMenuItem) source;
+			client.setProperty(CommonProperty.SETTING_CLICK_END_SKETCH, item.getClickStrategy().getKey());
+			client.saveUserSettings(false);
 		}
 	}
 
