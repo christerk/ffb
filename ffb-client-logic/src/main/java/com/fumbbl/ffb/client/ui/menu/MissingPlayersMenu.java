@@ -27,7 +27,7 @@ public class MissingPlayersMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 
 	}
 

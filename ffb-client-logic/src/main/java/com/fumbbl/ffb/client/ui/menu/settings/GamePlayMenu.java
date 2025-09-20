@@ -90,7 +90,7 @@ public class GamePlayMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		exposedMenus = new HashMap<>();
 
 		createAutomoveMenu();

@@ -128,6 +128,8 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		HelpMenu helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(helpMenu);
 
+		subMenus.forEach(FfbMenu::init);
+
 		refresh();
 	}
 

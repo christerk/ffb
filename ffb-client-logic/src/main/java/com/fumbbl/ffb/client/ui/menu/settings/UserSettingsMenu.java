@@ -37,7 +37,7 @@ public class UserSettingsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		subMenus = new HashSet<>();
 
 		ClientGraphicsMenu clientGraphicsMenu = new ClientGraphicsMenu(client, dimensionProvider, styleProvider, layoutSettings);
@@ -50,6 +50,8 @@ public class UserSettingsMenu extends FfbMenu {
 		add(gamePlayMenu);
 
 		createLocalPropertiesItem();
+
+		subMenus.forEach(FfbMenu::init);
 	}
 
 	@Override

@@ -119,7 +119,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		createIconsMenu();
 		createPitchMenu();
 		createBackgroundMenu();

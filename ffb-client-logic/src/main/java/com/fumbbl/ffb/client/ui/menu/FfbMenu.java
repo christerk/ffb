@@ -32,10 +32,9 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
         this.dimensionProvider = dimensionProvider;
         this.styleProvider = styleProvider;
         this.layoutSettings = layoutSettings;
-        init();
     }
 
-    protected abstract void init();
+    public abstract void init();
 
     public abstract boolean refresh();
 

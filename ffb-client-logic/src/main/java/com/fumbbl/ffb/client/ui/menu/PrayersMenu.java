@@ -29,7 +29,7 @@ public class PrayersMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 
 	}
 

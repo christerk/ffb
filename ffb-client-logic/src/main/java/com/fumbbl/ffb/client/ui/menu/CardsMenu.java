@@ -31,7 +31,7 @@ public class CardsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		fCurrentActiveCardsHome = null;
 		fCurrentActiveCardsAway = null;
 

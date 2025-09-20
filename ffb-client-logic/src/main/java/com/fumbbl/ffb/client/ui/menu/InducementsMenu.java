@@ -44,7 +44,7 @@ public class InducementsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		fCurrentInducementTotalHome = -1;
 		fCurrentUsedCardsHome = 0;
 		fCurrentInducementTotalAway = -1;

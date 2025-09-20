@@ -76,7 +76,7 @@ public class ClientSettingsMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		createSoundMenu();
 		createMarkingMenu();
 		createClientUiMenu();

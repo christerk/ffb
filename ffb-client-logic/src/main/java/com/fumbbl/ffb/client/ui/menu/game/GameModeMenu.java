@@ -23,7 +23,7 @@ public abstract class GameModeMenu extends FfbMenu {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         createGameStatisticsMenuItem();
         createSpecificMenuItems();
     }

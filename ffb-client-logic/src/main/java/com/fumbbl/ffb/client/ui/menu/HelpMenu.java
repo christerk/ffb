@@ -27,7 +27,7 @@ public class HelpMenu extends FfbMenu {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         aboutMenuItem = new JMenuItem(dimensionProvider, "About", KeyEvent.VK_A);
         aboutMenuItem.addActionListener(this);
         add(aboutMenuItem);

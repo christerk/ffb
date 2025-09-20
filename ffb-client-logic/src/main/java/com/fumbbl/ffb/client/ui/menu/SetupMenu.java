@@ -27,7 +27,7 @@ public class SetupMenu extends FfbMenu {
 	}
 
 	@Override
-	protected void init() {
+	public void init() {
 		fLoadSetupMenuItem = new JMenuItem(dimensionProvider, "Load Setup", KeyEvent.VK_L);
 		String menuSetupLoad = client.getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
 		if (StringTool.isProvided(menuSetupLoad)) {
