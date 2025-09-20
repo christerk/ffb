@@ -119,6 +119,34 @@ public class ReplayMenu extends GameModeMenu {
 	@Override
 	public void subClassRefresh() {
 		updateJoinedCoachesMenu();
+		refreshClickSettingsMenuItems();
+	}
+
+	private void refreshClickSettingsMenuItems() {
+		// Get current settings from client properties
+		String startSketchKey = client.getProperty(CommonProperty.SETTING_CLICK_START_SKETCH);
+		String addPointKey = client.getProperty(CommonProperty.SETTING_CLICK_ADD_POINT);
+		String endSketchKey = client.getProperty(CommonProperty.SETTING_CLICK_END_SKETCH);
+
+		if (startSketchKey == null) {
+			startSketchKey = IClientPropertyValue.SETTING_CLICK_LEFT;
+		}
+		if (addPointKey == null) {
+			addPointKey = IClientPropertyValue.SETTING_CLICK_LEFT;
+		}
+		if (endSketchKey == null) {
+			endSketchKey = IClientPropertyValue.SETTING_CLICK_DOUBLE;
+		}
+
+		selectClickStrategyMenuItem(startSketchItems, startSketchKey);
+		selectClickStrategyMenuItem(addPointItems, addPointKey);
+		selectClickStrategyMenuItem(endSketchItems, endSketchKey);
+	}
+
+	private void selectClickStrategyMenuItem(Set<ClickStrategyMenuItem> items, String key) {
+		for (ClickStrategyMenuItem item : items) {
+			item.setSelected(item.getClickStrategy().getKey().equals(key));
+		}
 	}
 
 	@SuppressWarnings("SuspiciousMethodCalls")
