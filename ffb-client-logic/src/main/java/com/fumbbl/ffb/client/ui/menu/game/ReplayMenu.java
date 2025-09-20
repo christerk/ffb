@@ -130,12 +130,15 @@ public class ReplayMenu extends GameModeMenu {
 
 		if (startSketchKey == null) {
 			startSketchKey = IClientPropertyValue.SETTING_CLICK_LEFT;
+			client.setProperty(CommonProperty.SETTING_CLICK_START_SKETCH, startSketchKey);
 		}
 		if (addPointKey == null) {
 			addPointKey = IClientPropertyValue.SETTING_CLICK_LEFT;
+			client.setProperty(CommonProperty.SETTING_CLICK_ADD_POINT, addPointKey);
 		}
 		if (endSketchKey == null) {
 			endSketchKey = IClientPropertyValue.SETTING_CLICK_DOUBLE;
+			client.setProperty(CommonProperty.SETTING_CLICK_END_SKETCH, endSketchKey);
 		}
 
 		// For startSketchItems, all are enabled
