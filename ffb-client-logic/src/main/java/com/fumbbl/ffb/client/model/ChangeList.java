@@ -27,6 +27,8 @@ public class ChangeList {
 			.addFeature("Tacklezone Overlays: Can be activated in the game play menu if enabled in the ruleset (contributed by Garcangel)")
 			.addImprovement("Auto Marking: Add Wrestle to default markings")
 			.addFeature("Auto Marking: Add second auto marking option to keep order from website")
+			.addFeature("Sketching: Allow various click behaviors")
+			.addBugfix("Replay menu did not scale during runtime")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
