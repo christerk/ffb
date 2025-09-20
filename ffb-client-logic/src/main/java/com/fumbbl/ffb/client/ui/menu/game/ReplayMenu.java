@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ReplayMenu extends GameModeMenu {
 	private JMenu joinedCoachesMenu;
@@ -41,6 +40,7 @@ public class ReplayMenu extends GameModeMenu {
 	private JRadioButtonMenuItem customSketchCursor;
 	private JRadioButtonMenuItem defaultSketchCursor;
 	private String currentControllingCoach;
+	private final List<String> currentCoaches;
 	private final Set<String> hiddenCoaches;
 	private final Set<String> preventedCoaches;
 	private final ClientSketchManager sketchManager;
@@ -63,6 +63,7 @@ public class ReplayMenu extends GameModeMenu {
 		hiddenCoaches = new HashSet<>();
 		preventedCoaches = new HashSet<>();
 		currentControllingCoach = "";
+		currentCoaches = new ArrayList<>();
 	}
 
 	@Override
@@ -219,13 +220,11 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void updateJoinedCoachesMenu() {
 		String controllingCoach = client.getClientData().getCoachControllingReplay();
-		List<String> previousCoaches = transferMenuItems.stream()
-			.map(JMenuItem::getName)
-			.sorted()
-			.collect(Collectors.toList());
 
 		List<String> coaches = new ArrayList<>(client.getClientData().getSpectators());
-		if (coaches.equals(previousCoaches) &&
+		coaches.sort(String::compareTo);
+
+		if (coaches.equals(currentCoaches) &&
 			(!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach)) &&
 			sketchManager.preventedCoaches().equals(preventedCoaches) &&
 			sketchManager.hiddenCoaches().equals(hiddenCoaches)) {
@@ -233,6 +232,8 @@ public class ReplayMenu extends GameModeMenu {
 		}
 
 		currentControllingCoach = controllingCoach;
+		currentCoaches.clear();
+		currentCoaches.addAll(coaches);
 		joinedCoachesMenu.removeAll();
 		transferMenuItems.clear();
 		sketchAllowedMenuItems.clear();
@@ -245,8 +246,6 @@ public class ReplayMenu extends GameModeMenu {
 
 		String clientCoach = client.getParameters().getCoach();
 		boolean clientHasControl = clientCoach.equals(controllingCoach);
-
-		coaches.sort(String::compareTo);
 
 		Dimension dimension = dimensionProvider.unscaledDimension(Component.MENU_IMAGE_ICON);
 		ImageIcon ballIcon = loadIcon(dimension, IIconProperty.GAME_BALL);

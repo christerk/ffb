@@ -88,23 +88,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	public void init() {
 
-		Arrays.stream(this.getComponents()).filter(comp -> comp != gameModeMenu).forEach(this::remove);
+		Arrays.stream(this.getComponents()).forEach(this::remove);
 
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
-			if (gameModeMenu == null) {
-				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry);
-				add(gameModeMenu);
-				gameModeMenu.init();
-			}
+			gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry);
 		} else {
-			if (this.gameModeMenu != null) {
-				this.remove(gameModeMenu);
-			}
 			gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings);
-			add(gameModeMenu);
-			gameModeMenu.init();
 		}
+
+		add(gameModeMenu);
 
 		setupMenu = new SetupMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(setupMenu);
@@ -130,7 +123,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		HelpMenu helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(helpMenu);
 
-		subMenus.stream().filter(comp -> comp != gameModeMenu).forEach(FfbMenu::init);
+		subMenus.forEach(FfbMenu::init);
 
 		refresh();
 	}
