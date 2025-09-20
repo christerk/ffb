@@ -231,6 +231,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
 		JPanel panelMain = new JPanel();
+		//noinspection MagicConstant
 		panelMain.setLayout(new BoxLayout(panelMain, axis));
 		panelMain.add(fSideBarHome);
 		panelMain.add(fieldPanel);

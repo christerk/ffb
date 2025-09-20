@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui.menu.game;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -14,19 +15,21 @@ import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
-import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.sketch.SketchState;
-import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReplayMenu extends GameModeMenu {
