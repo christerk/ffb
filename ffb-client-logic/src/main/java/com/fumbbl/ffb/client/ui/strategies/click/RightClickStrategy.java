@@ -2,7 +2,8 @@ package com.fumbbl.ffb.client.ui.strategies.click;
 
 import java.awt.event.MouseEvent;
 
-public class RightClickStrategy implements ClickStrategy {
+@SuppressWarnings("unused")
+ public class RightClickStrategy implements ClickStrategy {
 	@Override
 	public boolean applies(MouseEvent event) {
 		return event.getButton() == MouseEvent.BUTTON3;

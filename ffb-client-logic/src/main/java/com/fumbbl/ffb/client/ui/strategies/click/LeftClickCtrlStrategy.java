@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui.strategies.click;
 
 import java.awt.event.MouseEvent;
 
+@SuppressWarnings("unused")
 public class LeftClickCtrlStrategy implements ClickStrategy {
     @Override
     public boolean applies(MouseEvent event) {
