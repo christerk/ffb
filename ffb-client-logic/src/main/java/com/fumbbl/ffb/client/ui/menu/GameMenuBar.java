@@ -49,7 +49,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 	private final Set<FfbMenu> subMenus = new HashSet<>();
 
-	public GameMenuBar(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager) {
+	public GameMenuBar(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager, ClickStrategyRegistry clickStrategyRegistry) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
@@ -58,7 +58,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
-		this.clickStrategyRegistry = new ClickStrategyRegistry();
+		this.clickStrategyRegistry = clickStrategyRegistry;
 
 		init();
 

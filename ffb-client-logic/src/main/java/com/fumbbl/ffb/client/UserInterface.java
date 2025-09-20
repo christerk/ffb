@@ -25,6 +25,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +55,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private GameTitle fGameTitle;
 	private final PlayerIconFactory fPlayerIconFactory;
 	private final MouseEntropySource fMouseEntropySource;
+	private final ClickStrategyRegistry clickStrategyRegistry;
 
 	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
@@ -94,7 +96,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSoundEngine.init();
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
-		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager));
+		clickStrategyRegistry = new ClickStrategyRegistry();
+		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager, clickStrategyRegistry));
 		setGameTitle(new GameTitle());
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
@@ -453,4 +456,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 	}
 
+	public ClickStrategyRegistry getClickStrategyRegistry() {
+		return clickStrategyRegistry;
+	}
 }
