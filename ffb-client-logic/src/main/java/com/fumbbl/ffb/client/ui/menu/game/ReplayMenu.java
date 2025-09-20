@@ -40,7 +40,6 @@ public class ReplayMenu extends GameModeMenu {
 	private final Set<String> hiddenCoaches;
 	private final Set<String> preventedCoaches;
 	private final ClientSketchManager sketchManager;
-	private final List<ClickStrategy> clickStrategies;
 
 	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
 										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager) {
@@ -54,17 +53,31 @@ public class ReplayMenu extends GameModeMenu {
 		hiddenCoaches = new HashSet<>();
 		preventedCoaches = new HashSet<>();
 		currentControllingCoach = "";
-
-		// Dynamically load all ClickStrategy implementations using Scanner
-		Scanner<ClickStrategy> scanner = new Scanner<>(ClickStrategy.class);
-		this.clickStrategies = new ArrayList<>(scanner.getSubclassInstances());
-		this.clickStrategies.sort(Comparator.comparingInt(ClickStrategy::getOrder));
 	}
 
 	@Override
 	protected void createSpecificMenuItems() {
 		createJoinedCoachesMenu();
 		createCursorMenu();
+		createClickBehaviorMenu();
+	}
+
+	private void createClickBehaviorMenu() {
+		// Dynamically load all ClickStrategy implementations using Scanner
+		Scanner<ClickStrategy> scanner = new Scanner<>(ClickStrategy.class);
+		List<ClickStrategy> clickStrategies = new ArrayList<>(scanner.getSubclassInstances());
+		clickStrategies.sort(Comparator.comparingInt(ClickStrategy::getOrder));
+
+		// Create Click Behavior menu and submenus
+		JMenu clickBehaviorMenu = new JMenu(dimensionProvider, "Click Behavior");
+		JMenu startSketchMenu = new JMenu(dimensionProvider, "Start Sketch");
+		JMenu addPointMenu = new JMenu(dimensionProvider, "Add Point");
+		JMenu endSketchMenu = new JMenu(dimensionProvider, "End Sketch");
+
+		clickBehaviorMenu.add(startSketchMenu);
+		clickBehaviorMenu.add(addPointMenu);
+		clickBehaviorMenu.add(endSketchMenu);
+		add(clickBehaviorMenu);
 	}
 
 	@Override
@@ -284,7 +297,7 @@ public class ReplayMenu extends GameModeMenu {
 	}
 
 	// Inner class for menu item using ClickStrategy
-	private class ClickStrategyMenuItem extends com.fumbbl.ffb.client.ui.swing.JMenuItem {
+	private static class ClickStrategyMenuItem extends JRadioButtonMenuItem {
 		private final ClickStrategy strategy;
 
 		public ClickStrategyMenuItem(DimensionProvider dimensionProvider, ClickStrategy strategy) {
