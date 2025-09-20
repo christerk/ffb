@@ -22,7 +22,7 @@ public class Scanner<T extends IKeyedItem> {
 
 
 	public Scanner(Class<T> cls) {
-		rawScanner = new RawScanner<T>(cls);
+		rawScanner = new RawScanner<>(cls);
 	}
 
 	public Collection<T> getSubclasses(GameOptions options) {
