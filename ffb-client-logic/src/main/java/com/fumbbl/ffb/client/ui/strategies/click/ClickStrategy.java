@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.client.ui.strategies.click;
 
+import com.fumbbl.ffb.IKeyedItem;
+
 import java.awt.event.MouseEvent;
 
-public interface ClickStrategy {
+public interface ClickStrategy extends IKeyedItem {
 	boolean applies(MouseEvent event);
 
 	/**
@@ -15,4 +17,9 @@ public interface ClickStrategy {
 	 * modifier-based left clicks are ordered alphabetically by modifier: Alt (1), Ctrl (2), Shift (3).
 	 */
 	int getOrder();
+
+
+	default String getKey() {
+		return this.getClass().getSimpleName();
+	}
 }

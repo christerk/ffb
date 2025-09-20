@@ -17,6 +17,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.sketch.SketchState;
+import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ public class ReplayMenu extends GameModeMenu {
 	private final Set<String> hiddenCoaches;
 	private final Set<String> preventedCoaches;
 	private final ClientSketchManager sketchManager;
+	private final List<ClickStrategy> clickStrategies;
 
 	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
 										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager) {
@@ -52,6 +54,11 @@ public class ReplayMenu extends GameModeMenu {
 		hiddenCoaches = new HashSet<>();
 		preventedCoaches = new HashSet<>();
 		currentControllingCoach = "";
+
+		// Dynamically load all ClickStrategy implementations using Scanner
+		Scanner<ClickStrategy> scanner = new Scanner<>(ClickStrategy.class);
+		this.clickStrategies = new ArrayList<>(scanner.getSubclassInstances());
+		this.clickStrategies.sort(Comparator.comparingInt(ClickStrategy::getOrder));
 	}
 
 	@Override
