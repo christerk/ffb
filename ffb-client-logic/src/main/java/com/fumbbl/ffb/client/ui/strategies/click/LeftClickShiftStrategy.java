@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client.ui.strategies.click;
 
+import com.fumbbl.ffb.IClientPropertyValue;
+
 import java.awt.event.MouseEvent;
 
 @SuppressWarnings("unused")
@@ -17,5 +19,10 @@ public class LeftClickShiftStrategy implements ClickStrategy {
     @Override
     public int getOrder() {
         return 3; // Shift is third among modifiers
+    }
+
+    @Override
+    public String getKey() {
+        return IClientPropertyValue.SETTING_CLICK_LEFT_SHIFT;
     }
 }

@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.ui.strategies.click;
 
 import java.awt.event.MouseEvent;
 
+import com.fumbbl.ffb.IClientPropertyValue;
+
 @SuppressWarnings("unused")
 public class DoubleClickStrategy implements ClickStrategy {
 	@Override
@@ -18,5 +20,9 @@ public class DoubleClickStrategy implements ClickStrategy {
 	public int getOrder() {
 		return 4;
 	}
-}
 
+	@Override
+	public String getKey() {
+		return IClientPropertyValue.SETTING_CLICK_DOUBLE;
+	}
+}

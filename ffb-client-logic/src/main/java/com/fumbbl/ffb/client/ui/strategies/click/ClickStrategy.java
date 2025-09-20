@@ -18,8 +18,4 @@ public interface ClickStrategy extends IKeyedItem {
 	 */
 	int getOrder();
 
-
-	default String getKey() {
-		return this.getClass().getSimpleName();
-	}
 }
