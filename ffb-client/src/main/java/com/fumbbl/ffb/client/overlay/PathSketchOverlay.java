@@ -190,13 +190,13 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 				if (isOnline) {
 					client.getCommunication().sendSketchAddCoordinate(activeSketch.get().getId(), coordinate);
 				}
-			} else if (startStrategy.applies(e)) {
-				sketchManager.create(coordinate, sketchColor.getRGB());
-				drawSketches();
-				if (isOnline) {
-					sketchManager.activeSketch().ifPresent(sketch ->
-						client.getCommunication().sendAddSketch(sketch));
-				}
+			}
+		} else if (startStrategy.applies(e)) {
+			sketchManager.create(coordinate, sketchColor.getRGB());
+			drawSketches();
+			if (isOnline) {
+				sketchManager.activeSketch().ifPresent(sketch ->
+					client.getCommunication().sendAddSketch(sketch));
 			}
 		}
 	}
