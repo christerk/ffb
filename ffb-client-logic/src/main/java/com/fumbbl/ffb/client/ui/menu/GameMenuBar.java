@@ -95,6 +95,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			if (gameModeMenu == null) {
 				gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry);
 				add(gameModeMenu);
+				gameModeMenu.init();
 			}
 		} else {
 			if (this.gameModeMenu != null) {
@@ -102,6 +103,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			}
 			gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings);
 			add(gameModeMenu);
+			gameModeMenu.init();
 		}
 
 		setupMenu = new SetupMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
@@ -128,7 +130,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		HelpMenu helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(helpMenu);
 
-		subMenus.forEach(FfbMenu::init);
+		subMenus.stream().filter(comp -> comp != gameModeMenu).forEach(FfbMenu::init);
 
 		refresh();
 	}

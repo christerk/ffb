@@ -73,8 +73,6 @@ public class ReplayMenu extends GameModeMenu {
 	}
 
 	private void createClickBehaviorMenu() {
-		// Use strategies from registry
-
 		// Create Click Behavior menu and submenus
 		JMenu clickBehaviorMenu = new JMenu(dimensionProvider, "Click Behavior");
 		JMenu startSketchMenu = new JMenu(dimensionProvider, "Start Sketch");
