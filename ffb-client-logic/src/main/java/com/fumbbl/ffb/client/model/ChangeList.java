@@ -29,6 +29,7 @@ public class ChangeList {
 			.addFeature("Auto Marking: Add second auto marking option to keep order from website")
 			.addFeature("Sketching: Allow various click behaviors")
 			.addBugfix("Replay menu did not scale during runtime")
+			.addBugfix("Auto Marking: Markings did not update in case of a serious injury")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")

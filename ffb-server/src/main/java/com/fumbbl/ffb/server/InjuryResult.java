@@ -84,7 +84,7 @@ public class InjuryResult implements IJsonSerializable {
 		PlayerState oldPlayerState = game.getFieldModel().getPlayerState(defender);
 		if (injuryContext.getPlayerState() != null) {
 			// Make sure the player isn't converted e.g. from a stun to prone (for example when
-			// fouling a stunned player) or in case of two cas vs a multiblock player a BH does override a RIP
+			// fouling a stunned player) or in case of two cas from a multiblock player a BH does override a RIP
 			if (!basePrecedenceList.contains(oldPlayerState.getBase()) ||
 				basePrecedenceList.indexOf(injuryContext.getPlayerState().getBase()) > basePrecedenceList.indexOf(oldPlayerState.getBase())) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(defender);
@@ -155,6 +155,9 @@ public class InjuryResult implements IJsonSerializable {
 				}
 			}
 			game.getFieldModel().add(new BloodSpot(injuryContext.getDefenderPosition(), injuryContext.getSufferedInjury()));
+		}
+		if (injuryContext.getSufferedInjury() != null && injuryContext.getSufferedInjury().getBase() == PlayerState.SERIOUS_INJURY) {
+			pStep.getGameState().updatePlayerMarkings();
 		}
 	}
 
