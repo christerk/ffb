@@ -64,6 +64,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
 		fChatInputField = new JTextField(dimensionProvider, 35);
+		fChatInputField.setFocusTraversalKeysEnabled(false);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.PLAYER_ACTIONS);
 		getClient().getActionKeyBindings().addKeyBindings(fChatInputField, ActionKeyGroup.TURN_ACTIONS);
 
