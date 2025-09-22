@@ -111,7 +111,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
-		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider);
+		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
 		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 

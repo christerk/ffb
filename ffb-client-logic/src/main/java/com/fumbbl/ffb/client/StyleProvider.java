@@ -9,6 +9,7 @@ import java.util.Map;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME_COLOR;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_MENTION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
@@ -32,6 +33,7 @@ public class StyleProvider {
 		put(SETTING_BACKGROUND_CHAT, Color.WHITE);
 		put(SETTING_BACKGROUND_LOG, Color.WHITE);
 		put(SETTING_BACKGROUND_FRAME_COLOR, Color.WHITE);
+		put(SETTING_BACKGROUND_MENTION, new Color(255, 247, 160));
 		put(SETTING_FONT_COLOR_TEXT, Color.BLACK);
 		put(SETTING_FONT_COLOR_AWAY, Color.BLUE);
 		put(SETTING_FONT_COLOR_HOME, Color.RED);
@@ -69,6 +71,7 @@ public class StyleProvider {
 	private Color fieldMarker = defaults.get(SETTING_FONT_COLOR_FIELD_MARKER);
 	private Color tackleZoneHome = defaults.get(SETTING_TZ_COLOR_HOME);
 	private Color tackleZoneAway = defaults.get(SETTING_TZ_COLOR_AWAY);
+	private Color mentionBackground = defaults.get(SETTING_BACKGROUND_MENTION);
 
 	private boolean swapTeamColors;
 
@@ -246,5 +249,13 @@ public class StyleProvider {
 
 	public void setTackleZoneAway(Color tackleZoneAway) {
 		this.tackleZoneAway = tackleZoneAway;
+	}
+
+	public Color getMentionBackground() {
+    return mentionBackground;
+	}
+
+	public void setMentionBackground(Color mentionBackground) {
+		this.mentionBackground = mentionBackground;
 	}
 }

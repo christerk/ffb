@@ -6,6 +6,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,6 +19,9 @@ public class ChatLogDocument extends DefaultStyledDocument {
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
 	public static final String DEFAULT_FONT_FAMILY = "Arial";
+
+	public static final int CHAT_FONT_BASE_SIZE = 12;
+	public static final int CHAT_FONT_BASE_SIZE_LARGE = 14;
 
 	private final Style defaultStyle;
 
@@ -51,8 +55,8 @@ public class ChatLogDocument extends DefaultStyledDocument {
 
 		// initStyles
 
-		int defaultFontSize = dimensionProvider.scale(12);
-		int largerSize = dimensionProvider.scale(14);
+		int defaultFontSize = dimensionProvider.scale(CHAT_FONT_BASE_SIZE);
+		int largerSize = dimensionProvider.scale(CHAT_FONT_BASE_SIZE_LARGE);
 
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
 
@@ -110,15 +114,33 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setFontSize(spectator, defaultFontSize);
 		StyleConstants.setForeground(spectator, styleProvider.getSpec());
 
+		Style spectatorBold = addStyle(TextStyle.SPECTATOR_BOLD.getName(), defaultStyle);
+		StyleConstants.setFontFamily(spectatorBold, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(spectatorBold, defaultFontSize);
+		StyleConstants.setForeground(spectatorBold, styleProvider.getSpec());
+		StyleConstants.setBold(spectatorBold, true);
+
 		Style admin = addStyle(TextStyle.ADMIN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(admin, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(admin, defaultFontSize);
 		StyleConstants.setForeground(admin, styleProvider.getAdmin());
 
+		Style adminBold = addStyle(TextStyle.ADMIN_BOLD.getName(), defaultStyle);
+		StyleConstants.setFontFamily(adminBold, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(adminBold, defaultFontSize);
+		StyleConstants.setForeground(adminBold, styleProvider.getAdmin());
+		StyleConstants.setBold(adminBold, true);
+
 		Style dev = addStyle(TextStyle.DEV.getName(), defaultStyle);
 		StyleConstants.setFontFamily(dev, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(dev, defaultFontSize);
 		StyleConstants.setForeground(dev, styleProvider.getDev());
+
+		Style devBold = addStyle(TextStyle.DEV_BOLD.getName(), defaultStyle);
+		StyleConstants.setFontFamily(devBold, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(devBold, defaultFontSize);
+		StyleConstants.setForeground(devBold, styleProvider.getDev());
+		StyleConstants.setBold(devBold, true);
 
 		Style turn = addStyle(TextStyle.TURN.getName(), defaultStyle);
 		StyleConstants.setFontFamily(turn, DEFAULT_FONT_FAMILY);
@@ -137,6 +159,13 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setFontSize(turnAway, largerSize);
 		StyleConstants.setBold(turnAway, true);
 		StyleConstants.setForeground(turnAway, styleProvider.getAway());
+		
+		Style mention = addStyle(TextStyle.MENTION.getName(), defaultStyle);
+		StyleConstants.setFontFamily(mention, DEFAULT_FONT_FAMILY);
+		StyleConstants.setFontSize(mention, defaultFontSize);
+		StyleConstants.setBold(mention, true);
+		StyleConstants.setForeground(mention, styleProvider.getText());
+		StyleConstants.setBackground(mention, styleProvider.getMentionBackground());
 
 		// init indent
 
@@ -189,5 +218,14 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setLeftIndent(spaceAboveBelow, 0);
 		StyleConstants.setSpaceAbove(spaceAboveBelow, 4.0f);
 		StyleConstants.setSpaceBelow(spaceAboveBelow, 4.0f);
+
+		Style chatBody = addStyle(ParagraphStyle.CHAT_BODY.getName(), defaultStyle);
+		StyleConstants.setLeftIndent(chatBody, 12f);
+		StyleConstants.setFirstLineIndent(chatBody, -12f);
+		StyleConstants.setSpaceAbove(chatBody, 0f);
+		StyleConstants.setSpaceBelow(chatBody, 0f);
+
+
 	}
+
 }

@@ -38,6 +38,7 @@ public enum CommonProperty {
 	SETTING_BACKGROUND_LOG("setting.background.log", "Log", "Background", "Log Color"),
 	SETTING_BACKGROUND_FRAME("setting.background.frame", "Frame", "Background", "Frame Graphics/Color"),
 	SETTING_BACKGROUND_FRAME_COLOR("setting.background.frame.color", "Color", "Background", "Frame Color"),
+	SETTING_BACKGROUND_MENTION("setting.background.mention", "Mention", "Background", "FMention Color"),
 	SETTING_FONT_COLOR_TEXT("setting.font.color.text", "Regular text", "Color"),
 	SETTING_FONT_COLOR_AWAY("setting.font.color.away", "Away text", "Color"),
 	SETTING_FONT_COLOR_HOME("setting.font.color.home", "Home text", "Color"),
@@ -111,7 +112,7 @@ public enum CommonProperty {
 		SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY
 	};
 	public static final CommonProperty[] BACKGROUND_COLOR_SETTINGS = {
-		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME_COLOR
+		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG, SETTING_BACKGROUND_FRAME_COLOR, SETTING_BACKGROUND_MENTION,
 	};
 	public static final CommonProperty[] FONT_COLOR_SETTINGS = {
 		SETTING_FONT_COLOR_TEXT, SETTING_FONT_COLOR_AWAY,

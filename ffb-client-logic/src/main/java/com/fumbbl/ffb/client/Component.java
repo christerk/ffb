@@ -46,7 +46,13 @@ public enum Component {
 	SKETCH_TRIANGLE(new Dimension(15, 35)),
 	SKETCH_CIRCLE(new Dimension(10, 10)),
 	SKETCH_COLOR_ICON(new Dimension(16, 16)),
-	BOX_SQUARE(new Dimension(48, 48), new Dimension(55, 55), new Dimension(48, 48));
+	BOX_SQUARE(new Dimension(48, 48), new Dimension(55, 55), new Dimension(48, 48)),
+	AUTOCOMPLETE_POPUP(new Dimension(180, 0)),
+	AUTOCOMPLETE_ICON(new Dimension(14, 14)),
+	EMOJI_PICKER_BUTTON(new Dimension(13, 13)),
+	EMOJI_PICKER_ICON(new Dimension(30, 30)),
+	CHAT_ICON(new Dimension(16, 16));
+	
 
   private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
 

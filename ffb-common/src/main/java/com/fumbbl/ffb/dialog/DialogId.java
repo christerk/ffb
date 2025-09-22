@@ -28,7 +28,8 @@ public enum DialogId implements INamedObject {
 	BRIBERY_AND_CORRUPTION_RE_ROLL("briberyAndCorruptionReRoll"), SELECT_GAZE_TARGET("selectGazeTarget"),
 	CONFIRM_END_ACTION("confirmEndAction"), CHANGE_LIST("changeList"), SELECT_WEATHER("selectWeather"),
 	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal"), KICK_OFF_RESULT("kickOffResult"),
-	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice");
+	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice"), 
+	CREDITS("credits"), CREDITS_LICENSE("creditsLicense");
 
 	private final String fName;
 
