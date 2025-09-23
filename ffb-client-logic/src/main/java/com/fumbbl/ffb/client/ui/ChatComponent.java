@@ -247,6 +247,10 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		}
 	}
 
+	// Wrap chat input + emoji button in a container panel.
+	// This preserves the original text field border around both,
+	// while letting the button appear "inside" the field. Adding
+	// the button directly would draw a second border and look wrong.
 	private JComponent buildChatInputPanel() {
 		final int pad = dimensionProvider.scale(2);
 		Border original = fChatInputField.getBorder();

@@ -34,6 +34,9 @@ public class AutocompleteGenerator {
     this.client = client;
   }
 
+  // Note: call toSearchTerm() inside each case.
+  // Currently all triggers use the same rule, but kept local
+  // in case different token -> search term rules are needed later.
   public List<String> getSuggestions(String input, int caretPosition) {
     String token = extractToken(input, caretPosition);
     if (token == null) {

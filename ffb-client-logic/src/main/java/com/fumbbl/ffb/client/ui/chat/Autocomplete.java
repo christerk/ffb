@@ -122,6 +122,7 @@ public class Autocomplete {
       Point position = new Point(caretRect.x, caretRect.y - size.height - padding);
       popup.show(input, position.x, position.y);
 
+      // Ensure caret focus returns to input after popup is shown. Otherwise popup creation can momentarily steal focus.
       SwingUtilities.invokeLater(() -> input.requestFocusInWindow());
     } catch (BadLocationException ignored) {
       hide();

@@ -30,13 +30,13 @@ public class ChatButtonComponent extends JPanel {
   private final DimensionProvider dimensionProvider;
   private final IconCache iconCache;
   private final JTextField chatInput;
-  private final FantasyFootballClient fClient;
+  private final FantasyFootballClient client;
 
   private ChatLogTextPane chatTextPane;
   private EmojiPicker picker;
 
   public ChatButtonComponent(FantasyFootballClient client, JTextField chatInput, DimensionProvider dimensionProvider, IconCache iconCache) {
-    this.fClient = client;
+    this.client = client;
     this.chatInput = chatInput;
     this.dimensionProvider = dimensionProvider;
     this.iconCache = iconCache;
@@ -84,9 +84,11 @@ public class ChatButtonComponent extends JPanel {
   }
 
   private void showPicker() {
+    // Recreate picker if user closed it, otherwise reuse existing instance.
+    // Keeps desktop free of multiple pickers while allowing reopen.
     if (picker == null || picker.isClosed()) {
-      picker = new EmojiPicker(fClient.getUserInterface(), chatInput);
-      fClient.getUserInterface().getDesktop().add(picker);
+      picker = new EmojiPicker(client.getUserInterface(), chatInput);
+      client.getUserInterface().getDesktop().add(picker);
     }
     positionPicker();
     picker.setVisible(true);
@@ -101,10 +103,12 @@ public class ChatButtonComponent extends JPanel {
     }
   }
 
+  // Position picker anchored to bottom-right of visible chat area.
+  // Used convertPoint so coordinates are relative to desktop layer,
+  // ensures picker positions correctly under all client layouts
   private void positionPicker() {
     Rectangle r = chatTextPane.getVisibleRect();
-    Point anchor = SwingUtilities.convertPoint(chatTextPane, r.x + r.width, r.y + r.height,
-      fClient.getUserInterface().getDesktop());
+    Point anchor = SwingUtilities.convertPoint(chatTextPane, r.x + r.width, r.y + r.height, client.getUserInterface().getDesktop());
     Dimension ps = picker.getPreferredSize();
     picker.setBounds(anchor.x - ps.width, anchor.y - ps.height, ps.width, ps.height);
   }

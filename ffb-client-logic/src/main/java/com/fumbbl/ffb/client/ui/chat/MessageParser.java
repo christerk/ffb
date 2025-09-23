@@ -61,7 +61,7 @@ public final class MessageParser {
 
 	private static List<ChatSegment> buildSegments(String message, List<Match> matches, String coach,	TextStyle style, IconCache iconCache, DimensionProvider dimensionProvider) {
 		
-		int offset = dimensionProvider.dimension(Component.CHAT_ICON).width / 5;
+		int offset = dimensionProvider.dimension(Component.CHAT_ICON).height / 5;
 
 		List<ChatSegment> segments = new ArrayList<>();
 		int position = 0;
