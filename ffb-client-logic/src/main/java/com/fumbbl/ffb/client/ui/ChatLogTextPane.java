@@ -120,9 +120,8 @@ public class ChatLogTextPane extends JTextPane {
 	/**
 	 * Batch insert of chat segments.
 	 *
-	 * Groups text and emoji inserts into a single run on the EDT.
-	 * This avoids latency from 150+ individual inserts
-	 * (1000 ms → <10 ms in stress test).
+	 * Performs all inserts in one EDT run, avoiding overhead from many
+	 * small append calls (e.g. 150+ segments in stress test).
 	 */
 	public void appendBatch(List<ChatSegment> segments, ParagraphStyle paragraphStyle) {
 		try {
