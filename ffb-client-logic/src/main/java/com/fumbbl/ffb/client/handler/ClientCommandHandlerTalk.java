@@ -64,7 +64,10 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
 				ChatComponent chat = getClient().getUserInterface().getChat();
 				String prefix = status.toString();
 				
+				long start = System.nanoTime();
 				chat.parseAndAppend(style, prefixStyle, prefix, talk);
+				long elapsedMicros = (System.nanoTime() - start) / 1_000; // µs
+				System.out.println("parseAndAppend took " + elapsedMicros + " µs");
 
 			}
 		}

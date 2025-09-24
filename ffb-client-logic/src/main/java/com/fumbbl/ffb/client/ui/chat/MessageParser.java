@@ -61,7 +61,11 @@ public final class MessageParser {
 
 	private static List<ChatSegment> buildSegments(String message, List<Match> matches, String coach,	TextStyle style, IconCache iconCache, DimensionProvider dimensionProvider) {
 		
-		int offset = dimensionProvider.dimension(Component.CHAT_ICON).height / 6;
+		boolean isEmojiOnly = isEmojiOnlyMessage(message);
+		
+		Component iconComponent = isEmojiOnly ? Component.CHAT_ICON_LARGE : Component.CHAT_ICON;
+		
+		int offset = dimensionProvider.dimension(iconComponent).height / 5;
 		
 		List<ChatSegment> segments = new ArrayList<>();
 		int position = 0;
@@ -76,7 +80,7 @@ public final class MessageParser {
 			if (match.isEmoji) {
 				if (EmojiLookup.isEmoji(match.text)) {
 					String path = EmojiLookup.getPath(match.text);
-					ImageIcon icon = iconCache.getEmojiIcon(path, Component.CHAT_ICON, dimensionProvider);
+					ImageIcon icon = iconCache.getEmojiIcon(path, iconComponent, dimensionProvider);
 					segments.add(new ChatSegment(icon, offset));
 				} else {
 					segments.add(new ChatSegment(style, match.text));
@@ -96,8 +100,9 @@ public final class MessageParser {
 		return segments;
 	}
 
-	public static boolean containsEmoji(List<ChatSegment> segments) {
-		return segments.stream().anyMatch(seg -> seg.icon != null);
+	private static boolean isEmojiOnlyMessage(String message) {
+		String withoutEmojis = EMOJI_PATTERN.matcher(message).replaceAll("");
+		return withoutEmojis.trim().isEmpty();
 	}
 
 	private static class Match {

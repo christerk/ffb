@@ -51,7 +51,8 @@ public enum Component {
 	AUTOCOMPLETE_ICON(new Dimension(14, 14)),
 	EMOJI_PICKER_BUTTON(new Dimension(13, 13)),
 	EMOJI_PICKER_ICON(new Dimension(30, 30)),
-	CHAT_ICON(new Dimension(16, 16));
+	CHAT_ICON(new Dimension(14, 14)),
+	CHAT_ICON_LARGE(new Dimension(28, 28));
 	
 
   private final Map<ClientLayout, Dimension> dimensions = new HashMap<>();
