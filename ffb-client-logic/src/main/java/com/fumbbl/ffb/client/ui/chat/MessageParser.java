@@ -61,8 +61,8 @@ public final class MessageParser {
 
 	private static List<ChatSegment> buildSegments(String message, List<Match> matches, String coach,	TextStyle style, IconCache iconCache, DimensionProvider dimensionProvider) {
 		
-		int offset = dimensionProvider.dimension(Component.CHAT_ICON).height / 5;
-
+		int offset = dimensionProvider.dimension(Component.CHAT_ICON).height / 6;
+		
 		List<ChatSegment> segments = new ArrayList<>();
 		int position = 0;
 		
@@ -94,6 +94,10 @@ public final class MessageParser {
 		}
 		
 		return segments;
+	}
+
+	public static boolean containsEmoji(List<ChatSegment> segments) {
+		return segments.stream().anyMatch(seg -> seg.icon != null);
 	}
 
 	private static class Match {
