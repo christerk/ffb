@@ -139,7 +139,9 @@ public class Autocomplete {
   }
 
   public void commit() {
-    if (!isVisible()) return;
+    if (!isVisible()) {
+      return;
+    }
 
     String selected = list.getSelectedValue();
     if (selected != null) {
