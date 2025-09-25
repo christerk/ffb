@@ -116,7 +116,7 @@ public class DialogCredits extends Dialog {
 					try {
 						Desktop.getDesktop().browse(new URI(desc));
 					} catch (IOException | URISyntaxException ex) {
-						ex.printStackTrace();
+						getClient().logWithOutGameId(ex);
 					}
 				}
 			}
