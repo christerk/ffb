@@ -25,23 +25,13 @@ import java.util.List;
  */
 public class DialogCredits extends Dialog {
 
-	private final String fontOpen;
-	private final String fontBoldOpen;
-	private final String fontMediumBoldOpen;
-	private final String fontClose = "</font>";
-	private final String fontBoldClose = "</b></font>";
-
 	private final List<CreditEntry> entries = new ArrayList<>();
 
 	public DialogCredits(FantasyFootballClient client) {
 		super(client, "Credits", true);
 
 		DimensionProvider dimensionProvider = client.getUserInterface().getUiDimensionProvider();
-		fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\">";
-		fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
-		fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(11) + "px\"><b>";
 
-		// Add initial credits
 		addCredits();
 
 		JScrollPane scrollPane = new JScrollPane(createEditorPane());
@@ -71,6 +61,14 @@ public class DialogCredits extends Dialog {
 	}
 
 	private JEditorPane createEditorPane() {
+
+		DimensionProvider dimensionProvider = getClient().getUserInterface().getUiDimensionProvider();
+		String fontOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\">";
+		String fontBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(9) + "px\"><b>";
+		String fontMediumBoldOpen = "<font face=\"Sans Serif\" style=\"font-size:" + dimensionProvider.scale(11) + "px\"><b>";
+		String fontClose = "</font>";
+		String fontBoldClose = "</b></font>";
+
 		JEditorPane pane = new JEditorPane();
 		pane.setEditable(false);
 		pane.setContentType("text/html");
