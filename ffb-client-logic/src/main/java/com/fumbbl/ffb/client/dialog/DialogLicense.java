@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public class DialogLicense extends Dialog {
 
-	public DialogLicense(FantasyFootballClient client, DialogCredits.CreditEntry entry) {
+	public DialogLicense(FantasyFootballClient client, CreditEntry entry) {
 		super(client, entry.name + " License", true);
 
 		DimensionProvider dimensionProvider = client.getUserInterface().getUiDimensionProvider();

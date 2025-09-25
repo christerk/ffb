@@ -149,18 +149,4 @@ public class DialogCredits extends Dialog {
 			getCloseListener().dialogClosed(this);
 		}
 	}
-
-	static class CreditEntry {
-		final String name;
-		final String licenseName;
-		final String homepageUrl;
-		final String licenseResource;
-
-		CreditEntry(String name, String licenseName, String homepageUrl, String licenseResource) {
-			this.name = name;
-			this.licenseName = licenseName;
-			this.homepageUrl = homepageUrl;
-			this.licenseResource = licenseResource;
-		}
-	}
 }
