@@ -94,7 +94,7 @@ public final class MessageParser {
 		
 		if (position < message.length()) {
 			String text = message.substring(position);
-      segments.add(new ChatSegment(style, text));
+			segments.add(new ChatSegment(style, text));
 		}
 		
 		return segments;
