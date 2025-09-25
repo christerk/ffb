@@ -136,14 +136,17 @@ public class ChatLogTextPane extends JTextPane {
 							insertIcon(new OffsetIcon(segment.icon.getImage(), segment.offset));
 						} else if (segment.text != null) {
 							TextStyle style = (segment.style == null ? TextStyle.NONE : segment.style);
-							fChatLogDocument.insertString(fChatLogDocument.getLength(), segment.text, fChatLogDocument.getStyle(style.getName()));
+							fChatLogDocument.insertString(fChatLogDocument.getLength(), segment.text,
+								fChatLogDocument.getStyle(style.getName()));
 						} else {
-							fChatLogDocument.insertString(fChatLogDocument.getLength(),	ChatLogDocument.LINE_SEPARATOR,	fChatLogDocument.getStyle(TextStyle.NONE.getName()));
+							fChatLogDocument.insertString(fChatLogDocument.getLength(),	ChatLogDocument.LINE_SEPARATOR,
+								fChatLogDocument.getStyle(TextStyle.NONE.getName()));
 						}
 					}
 
 					int endOffset = fChatLogDocument.getParagraphElement(startOffset).getEndOffset();
-					fChatLogDocument.setParagraphAttributes(startOffset, endOffset - startOffset,	fChatLogDocument.getStyle(paragraphStyle.getName()),false	);
+					fChatLogDocument.setParagraphAttributes(startOffset, endOffset - startOffset,
+						fChatLogDocument.getStyle(paragraphStyle.getName()),false	);
 
 				} catch (BadLocationException ex) {
 					throw new FantasyFootballException(ex);
