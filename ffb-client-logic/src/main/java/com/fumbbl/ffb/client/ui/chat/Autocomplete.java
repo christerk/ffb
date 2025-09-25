@@ -75,7 +75,7 @@ public class Autocomplete {
     list.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 1) {
+        if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1) {
           commit();
         }
       }
