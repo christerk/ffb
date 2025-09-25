@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_MENTION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
@@ -92,6 +93,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
+	private JMenuItem mentionBackground;
 	private JMenuItem textFontColor;
 	private JMenuItem awayFontColor;
 	private JMenuItem homeFontColor;
@@ -179,6 +181,9 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 		refreshUi |= refreshColorMenu(CommonProperty.SETTING_BACKGROUND_LOG, logBackground,
 			styleProvider::getLogBackground, styleProvider::setLogBackground);
+
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_BACKGROUND_MENTION, mentionBackground,
+    	styleProvider::getMentionBackground, styleProvider::setMentionBackground);
 
 		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_TEXT, textFontColor,
 			styleProvider::getText, styleProvider::setText);
@@ -365,6 +370,15 @@ public class ClientGraphicsMenu extends FfbMenu {
 			Color color = JColorChooser.showDialog(this, "Choose log background color", defaultColor);
 			if (color != null) {
 				client.setProperty(CommonProperty.SETTING_BACKGROUND_LOG, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
+		if (source == mentionBackground) {
+			Color defaultColor = styleProvider.getMentionBackground();
+			Color color = JColorChooser.showDialog(this, "Choose mention background color", defaultColor);
+			if (color != null) {
+				client.setProperty(CommonProperty.SETTING_BACKGROUND_MENTION, String.valueOf(color.getRGB()));
 				client.saveUserSettings(true);
 			}
 		}
@@ -732,6 +746,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		add(backgroundStyles);
 		addColorItem(SETTING_BACKGROUND_CHAT, styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
 		addColorItem(SETTING_BACKGROUND_LOG, styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
+		addColorItem(SETTING_BACKGROUND_MENTION, styleProvider.getMentionBackground(), backgroundStyles, (item) -> mentionBackground = item);
 		backgroundStyles.add(createFrameBackgroundMenu());
 	}
 
