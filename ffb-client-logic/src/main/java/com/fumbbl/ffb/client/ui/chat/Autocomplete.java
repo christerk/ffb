@@ -123,7 +123,7 @@ public class Autocomplete {
       popup.show(input, position.x, position.y);
 
       // Ensure caret focus returns to input after popup is shown. Otherwise popup creation can momentarily steal focus.
-      SwingUtilities.invokeLater(() -> input.requestFocusInWindow());
+      SwingUtilities.invokeLater(input::requestFocusInWindow);
     } catch (BadLocationException ignored) {
       hide();
     }
