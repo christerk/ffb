@@ -46,7 +46,6 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	private final StyleProvider styleProvider;
 	private final FantasyFootballClient fClient;
 	private Autocomplete autocomplete;
-	private JPanel inputPanel;
 	private final IconCache iconCache;
 	private final ChatButtonComponent fChatButtonComponent;
 
@@ -142,7 +141,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		add(fChatScrollPane, BorderLayout.CENTER);
 		
 		fChatButtonComponent = new ChatButtonComponent(fClient, fChatInputField, dimensionProvider, iconCache);
-		inputPanel = new JPanel(new BorderLayout(0, 0));
+		JPanel inputPanel = new JPanel(new BorderLayout(0, 0));
 		inputPanel.setOpaque(false);
 		inputPanel.add(buildChatInputPanel(), BorderLayout.CENTER);
 		add(inputPanel, BorderLayout.SOUTH);
