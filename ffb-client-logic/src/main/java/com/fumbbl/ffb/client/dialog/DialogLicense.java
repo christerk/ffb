@@ -46,7 +46,7 @@ public class DialogLicense extends Dialog {
 
 		pack();
 		setLocationToCenter();
-    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
 	private String loadLicense(String resourcePath) {
