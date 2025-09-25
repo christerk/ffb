@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.handler.talk;
 
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.TalkConstants;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -10,18 +11,7 @@ import java.util.HashSet;
 
 public class TalkHandlerEmote extends TalkHandler {
 	public TalkHandlerEmote() {
-		super(new HashSet<String>() {{
-			add("/aah");
-			add("/boo");
-			add("/cheer");
-			add("/clap");
-			add("/crickets");
-			add("/hurt");
-			add("/laugh");
-			add("/ooh");
-			add("/shock");
-			add("/stomp");
-		}}, 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
+		super(new HashSet<>(TalkConstants.EMOTES), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
 	}
 
 	@Override

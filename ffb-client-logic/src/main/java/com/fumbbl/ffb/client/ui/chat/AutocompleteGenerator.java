@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.ui.chat;
 
+import com.fumbbl.ffb.TalkConstants;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.util.UtilClientChat;
 
@@ -21,12 +22,6 @@ import java.util.stream.Collectors;
 public class AutocompleteGenerator {
 
   private final FantasyFootballClient client;
-
-  // NOTE: This list must match TalkHandlerEmote.java on the server
-  private static final List<String> COMMANDS = Arrays.asList(
-    "/aah", "/boo", "/cheer", "/clap", "/crickets", "/hurt",
-    "/laugh", "/ooh", "/shock", "/stomp"
-  );
 
   private static final int MAX_SUGGESTIONS = 12;
 
@@ -58,7 +53,7 @@ public class AutocompleteGenerator {
         return filterCandidates(spectators, token, toSearchTerm(token));
 
       case '/':
-        return filterCandidates(COMMANDS, token, toSearchTerm(token));
+        return filterCandidates(TalkConstants.EMOTES, token, toSearchTerm(token));
 
       default:
         return Collections.emptyList();
