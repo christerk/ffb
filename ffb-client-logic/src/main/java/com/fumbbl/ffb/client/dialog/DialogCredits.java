@@ -6,7 +6,6 @@ import com.fumbbl.ffb.dialog.DialogId;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
 import java.io.IOException;
@@ -104,23 +103,20 @@ public class DialogCredits extends Dialog {
 		pane.setText(html.toString());
 		pane.setCaretPosition(0);
 
-		pane.addHyperlinkListener(new HyperlinkListener() {
-			@Override
-			public void hyperlinkUpdate(HyperlinkEvent e) {
-				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					String desc = e.getDescription();
-					if (desc.startsWith("license://")) {
-						String name = desc.substring("license://".length());
-						CreditEntry entry = findEntry(name);
-						if (entry != null) {
-							getClient().getUserInterface().showDialog(new DialogLicense(getClient(), entry), null);
-						}
-					} else if (desc.startsWith("http")) {
-						try {
-							Desktop.getDesktop().browse(new URI(desc));
-						} catch (IOException | URISyntaxException ex) {
-							ex.printStackTrace();
-						}
+		pane.addHyperlinkListener(e -> {
+			if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+				String desc = e.getDescription();
+				if (desc.startsWith("license://")) {
+					String name = desc.substring("license://".length());
+					CreditEntry entry = findEntry(name);
+					if (entry != null) {
+						getClient().getUserInterface().showDialog(new DialogLicense(getClient(), entry), null);
+					}
+				} else if (desc.startsWith("http")) {
+					try {
+						Desktop.getDesktop().browse(new URI(desc));
+					} catch (IOException | URISyntaxException ex) {
+						ex.printStackTrace();
 					}
 				}
 			}
