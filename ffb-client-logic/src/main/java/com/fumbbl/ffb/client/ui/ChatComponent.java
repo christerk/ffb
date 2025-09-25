@@ -141,11 +141,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		add(fChatScrollPane, BorderLayout.CENTER);
 		
 		fChatButtonComponent = new ChatButtonComponent(fClient, fChatInputField, dimensionProvider, iconCache);
-		JPanel inputPanel = new JPanel(new BorderLayout(0, 0));
-		inputPanel.setOpaque(false);
-		inputPanel.add(buildChatInputPanel(), BorderLayout.CENTER);
-		add(inputPanel, BorderLayout.SOUTH);
-
+		add(buildChatInputPanel(), BorderLayout.SOUTH);
 
 		fChatTextPane.addMouseMotionListener(this);
 		fChatScrollPane.addMouseMotionListener(this);
