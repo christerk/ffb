@@ -14,6 +14,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.beans.PropertyVetoException;
 
 
 /**
@@ -94,7 +95,7 @@ public class ChatButtonComponent extends JPanel {
     picker.setVisible(true);
     try {
       picker.setSelected(true);
-    } catch (java.beans.PropertyVetoException ignored) {}
+    } catch (PropertyVetoException ignored) {}
   }
 
   private void hidePicker() {
