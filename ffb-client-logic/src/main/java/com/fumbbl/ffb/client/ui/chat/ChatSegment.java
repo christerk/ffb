@@ -24,7 +24,7 @@ public class ChatSegment {
   }
 
   public ChatSegment(ImageIcon icon, int offset) {
-    this.style = null;
+    this.style = TextStyle.NONE;
     this.text = null;
     this.icon = icon;
     this.offset = offset;
