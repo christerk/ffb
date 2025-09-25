@@ -25,6 +25,10 @@ public class AutocompleteGenerator {
 
   private static final int MAX_SUGGESTIONS = 12;
 
+  private static final char TRIGGER_EMOJI   = ':';
+  private static final char TRIGGER_MENTION = '@';
+  private static final char TRIGGER_COMMAND = '/';
+
   public AutocompleteGenerator(FantasyFootballClient client) {
     this.client = client;
   }
@@ -40,19 +44,19 @@ public class AutocompleteGenerator {
 
     char trigger = token.charAt(0);
     switch (trigger) {
-      case ':':
+      case TRIGGER_EMOJI:
         if (EmojiLookup.isAlias(token)) {
           return Collections.emptyList();
         }
         return filterCandidates(EmojiLookup.getShortcodes(), token, toSearchTerm(token));
 
-      case '@':
+      case TRIGGER_MENTION:
         Collection<String> spectators = client.getClientData().getSpectators().stream()
           .map(name -> "@" + name)
           .collect(Collectors.toList());
         return filterCandidates(spectators, token, toSearchTerm(token));
 
-      case '/':
+      case TRIGGER_COMMAND:
         return filterCandidates(TalkConstants.EMOTES, token, toSearchTerm(token));
 
       default:
@@ -107,12 +111,12 @@ public class AutocompleteGenerator {
       }
 
       switch (character) {
-        case ':':
+        case TRIGGER_EMOJI:
           String token = input.substring(index, caretPosition);
           return token.length() > 1 ? token : null;
-        case '@':
+        case TRIGGER_MENTION:
           return input.substring(index, caretPosition);
-        case '/':
+        case TRIGGER_COMMAND:
           if (index == 0) {
             return input.substring(index, caretPosition);
           }
