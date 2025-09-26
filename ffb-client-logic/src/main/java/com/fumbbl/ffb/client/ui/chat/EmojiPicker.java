@@ -30,6 +30,8 @@ public class EmojiPicker extends JInternalFrame {
   public EmojiPicker(UserInterface ui, JTextField chatInput) {
     super("Pick Emoji", false, true, false, false);
 
+    setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+    
     this.dimensionProvider = ui.getUiDimensionProvider();
     this.iconCache = ui.getIconCache();
     this.pad = dimensionProvider.scale(1);

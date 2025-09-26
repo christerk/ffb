@@ -85,9 +85,8 @@ public class ChatButtonComponent extends JPanel {
   }
 
   private void showPicker() {
-    // Recreate picker if user closed it, otherwise reuse existing instance.
-    // Keeps desktop free of multiple pickers while allowing reopen.
-    if (picker == null || picker.isClosed()) {
+
+    if (picker == null) {
       picker = new EmojiPicker(client.getUserInterface(), chatInput);
       client.getUserInterface().getDesktop().add(picker);
     }
@@ -104,9 +103,6 @@ public class ChatButtonComponent extends JPanel {
     }
   }
 
-  // Position picker anchored to bottom-right of visible chat area.
-  // Used convertPoint so coordinates are relative to desktop layer,
-  // ensures picker positions correctly under all client layouts
   private void positionPicker() {
     Rectangle r = chatTextPane.getVisibleRect();
     Point anchor = SwingUtilities.convertPoint(chatTextPane, r.x + r.width, r.y + r.height, client.getUserInterface().getDesktop());
