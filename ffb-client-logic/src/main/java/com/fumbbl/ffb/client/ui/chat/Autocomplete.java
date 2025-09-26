@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client.ui.chat;
 
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -33,6 +35,7 @@ public class Autocomplete {
   private final DefaultListModel<String> model;
   private final JScrollPane scrollPane;
   private final AutocompleteGenerator generator;
+  private final FantasyFootballClient client;
 
   private static final int MAX_ROWS_VISIBLE = 8;
 
@@ -43,6 +46,7 @@ public class Autocomplete {
   public Autocomplete(JTextComponent input, FantasyFootballClient client, DimensionProvider dimensionProvider, IconCache iconCache) {
     this.input = input;
     this.dimensionProvider = dimensionProvider;
+    this.client = client;
     this.generator = new AutocompleteGenerator(client);
 
     model = new DefaultListModel<>();
@@ -103,6 +107,13 @@ public class Autocomplete {
 
   public void update() {
     try {
+
+      String setting = client.getProperty(CommonProperty.SETTING_AUTOCOMPLETE);
+      if (IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF.equals(setting)) {
+        hide();
+        return;
+      }
+      
       List<String> matches = generator.getSuggestions(input.getText(), input.getCaretPosition());
       if (matches.isEmpty()) {
         hide();

@@ -82,6 +82,8 @@ public enum CommonProperty {
 	SETTING_CLICK_START_SKETCH("setting.click.startSketch", "Start Sketch Click", "Configuration"),
 	SETTING_CLICK_ADD_POINT("setting.click.addPoint", "Add Point Click", "Configuration"),
 	SETTING_CLICK_END_SKETCH("setting.click.endSketch", "End Sketch Click", "Configuration"),
+
+	SETTING_AUTOCOMPLETE("setting.autocomplete", "Autocomplete", "Configuration"),
 	;
 
 	public static final CommonProperty[] _SAVED_USER_SETTINGS = {SETTING_SOUND_MODE, SETTING_UI_LAYOUT,
