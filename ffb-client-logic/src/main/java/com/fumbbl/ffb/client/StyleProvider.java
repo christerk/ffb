@@ -26,6 +26,7 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_AWAY;
 import static com.fumbbl.ffb.CommonProperty.SETTING_TZ_COLOR_HOME;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_MENTION;
 
 public class StyleProvider {
 
@@ -50,6 +51,7 @@ public class StyleProvider {
 		put(SETTING_FONT_COLOR_FIELD_MARKER, new Color(1.0f, 1.0f, 1.0f, 1.0f));
 		put(SETTING_TZ_COLOR_AWAY, Color.BLUE);
 		put(SETTING_TZ_COLOR_HOME, Color.RED);
+		put(SETTING_FONT_COLOR_MENTION, Color.BLACK);
 	}};
 
 	private Color chatBackground = defaults.get(SETTING_BACKGROUND_CHAT);
@@ -72,6 +74,7 @@ public class StyleProvider {
 	private Color tackleZoneHome = defaults.get(SETTING_TZ_COLOR_HOME);
 	private Color tackleZoneAway = defaults.get(SETTING_TZ_COLOR_AWAY);
 	private Color mentionBackground = defaults.get(SETTING_BACKGROUND_MENTION);
+	private Color mentionFont = defaults.get(SETTING_FONT_COLOR_MENTION);
 
 	private boolean swapTeamColors;
 
@@ -257,5 +260,13 @@ public class StyleProvider {
 
 	public void setMentionBackground(Color mentionBackground) {
 		this.mentionBackground = mentionBackground;
+	}
+
+	public Color getMentionFont() {
+		return mentionFont;
+	}
+
+	public void setMentionFont(Color mentionFont) {
+		this.mentionFont = mentionFont;
 	}
 }

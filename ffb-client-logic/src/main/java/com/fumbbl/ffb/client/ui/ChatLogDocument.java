@@ -164,7 +164,7 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		StyleConstants.setFontFamily(mention, DEFAULT_FONT_FAMILY);
 		StyleConstants.setFontSize(mention, defaultFontSize);
 		StyleConstants.setBold(mention, true);
-		StyleConstants.setForeground(mention, styleProvider.getText());
+		StyleConstants.setForeground(mention, styleProvider.getMentionFont());
 		StyleConstants.setBackground(mention, styleProvider.getMentionBackground());
 
 		// init indent

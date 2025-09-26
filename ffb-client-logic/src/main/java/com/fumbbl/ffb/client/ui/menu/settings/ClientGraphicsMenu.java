@@ -42,6 +42,7 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_AWA
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_MENTION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
@@ -108,6 +109,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 	private JMenuItem additionalHomePlayerMarkerFontColor;
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
+	private JMenuItem mentionFontColor;
 	private JMenuItem tzColorHome;
 	private JMenuItem tzColorAway;
 
@@ -226,6 +228,9 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_FIELD_MARKER, fieldMarkerFontColor,
 			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_MENTION, mentionFontColor,
+			styleProvider::getMentionFont, styleProvider::setMentionFont);
 
 		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_HOME, tzColorHome,
 			styleProvider::getTackleZoneHomeUnswapped, styleProvider::setTackleZoneHome);
@@ -524,6 +529,15 @@ public class ClientGraphicsMenu extends FfbMenu {
 			}
 		}
 
+		if (source == mentionFontColor) {
+			Color defaultColor = styleProvider.getMentionFont();
+			Color color = JColorChooser.showDialog(this, "Choose mention font color", defaultColor);
+			if (color != null) {
+				client.setProperty(SETTING_FONT_COLOR_MENTION, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
 		if (source == tzColorAway) {
 			Color defaultColor = styleProvider.getTackleZoneAwayUnswapped();
 			Color color = JColorChooser.showDialog(this, "Choose away tacklezone color", defaultColor);
@@ -761,6 +775,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		addColorItem(SETTING_FONT_COLOR_ADMIN, styleProvider.getAdmin(), colors, (item) -> adminFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_DEV, styleProvider.getDev(), colors, (item) -> devFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_INPUT, styleProvider.getInput(), colors, (item) -> inputFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_MENTION, styleProvider.getMentionFont(), colors, (item) -> mentionFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME, styleProvider.getFrame(), colors, (item) -> frameFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), colors, (item) -> frameFontShadowColor = item);
 		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), colors, (item) -> homePlayerMarkerFontColor = item);
