@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.ui.chat;
 
-import com.fumbbl.ffb.TalkConstants;
+import com.fumbbl.ffb.SpecCommand;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.util.UtilClientChat;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * Provides the parsing and suggestion logic for chat autocomplete.
- *
+ * <p>
  * Responsible for:
  * - Extracting the current token at the caret
  * - Computing possible completions (emoji, mentions, commands)
@@ -26,7 +26,7 @@ public class AutocompleteGenerator {
   private static final int MAX_SUGGESTIONS = 12;
 
   private static final char TRIGGER_EMOJI   = ':';
-  private static final char TRIGGER_MENTION = '@';
+  public static final char TRIGGER_MENTION = '@';
   private static final char TRIGGER_COMMAND = '/';
 
   public AutocompleteGenerator(FantasyFootballClient client) {
@@ -34,7 +34,7 @@ public class AutocompleteGenerator {
   }
 
   // Note: call toSearchTerm() inside each case.
-  // Currently all triggers use the same rule, but kept local
+  // Currently, all triggers use the same rule, but kept local
   // in case different token -> search term rules are needed later.
   public List<String> getSuggestions(String input, int caretPosition) {
     String token = extractToken(input, caretPosition);
@@ -57,7 +57,7 @@ public class AutocompleteGenerator {
         return filterCandidates(spectators, token, toSearchTerm(token));
 
       case TRIGGER_COMMAND:
-        return filterCandidates(TalkConstants.EMOTES, token, toSearchTerm(token));
+        return filterCandidates(SpecCommand.asStrings(), token, toSearchTerm(token));
 
       default:
         return Collections.emptyList();

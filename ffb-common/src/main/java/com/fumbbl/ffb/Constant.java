@@ -13,7 +13,9 @@ import com.fumbbl.ffb.skill.bb2020.SureFeet;
 import com.fumbbl.ffb.skill.bb2020.special.BalefulHex;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

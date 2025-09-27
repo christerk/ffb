@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.server.handler.talk;
 
+import com.fumbbl.ffb.SpecCommand;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.TalkConstants;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 
 public class TalkHandlerEmote extends TalkHandler {
 	public TalkHandlerEmote() {
-		super(new HashSet<>(TalkConstants.EMOTES), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
+		super(SpecCommand.effectsAsStrings(), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
 	}
 
 	@Override
@@ -19,35 +19,35 @@ public class TalkHandlerEmote extends TalkHandler {
 
 		String coach = server.getSessionManager().getCoachForSession(session);
 
-		switch (commands[0]) {
-			case "/aah":
+		switch (SpecCommand.fromCommand(commands[0])) {
+			case AAH:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_AAH);
 				break;
-			case "/boo":
+			case BOO:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_BOO);
 				break;
-			case "/cheer":
+			case CHEER:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CHEER);
 				break;
-			case "/clap":
+			case CLAP:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CLAP);
 				break;
-			case "/crickets":
+			case CRICKETS:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CRICKETS);
 				break;
-			case "/hurt":
+			case HURT:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_HURT);
 				break;
-			case "/laugh":
+			case LAUGH:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_LAUGH);
 				break;
-			case "/ooh":
+			case OOH:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_OOH);
 				break;
-			case "/shock":
+			case SHOCK:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_SHOCK);
 				break;
-			case "/stomp":
+			case STOMP:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_STOMP);
 				break;
 			default:

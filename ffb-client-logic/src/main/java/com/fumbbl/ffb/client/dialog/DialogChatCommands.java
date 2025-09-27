@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.SpecCommand;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.model.Game;
 import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.*;
+import java.util.Arrays;
 
 public class DialogChatCommands extends Dialog {
 
@@ -83,17 +85,8 @@ public class DialogChatCommands extends Dialog {
 		html.append("<td colspan=\"2\">").append(fontMediumBoldOpen).append("Spectator Commands")
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
-		html.append(commandLine("/aah", "aaahing spectators"));
-		html.append(commandLine("/boo", "booing spectators"));
-		html.append(commandLine("/cheer", "cheering spectators"));
-		html.append(commandLine("/clap", "clapping spectators"));
-		html.append(commandLine("/crickets", "the sound of crickets in the grass"));
-		html.append(commandLine("/hurt", "ouch"));
-		html.append(commandLine("/laugh", "laughing spectators"));
-		html.append(commandLine("/ooh", "ooohing spectators"));
-		html.append(commandLine("/shock", "shocked, gasping spectators"));
-		html.append(commandLine("/stomp", "spectators stomping their feet"));
-		html.append(commandLine("/specs", "shows all logged in spectators by name - can also be used by playing coaches"));
+		Arrays.stream(SpecCommand.values()).forEach(command ->
+			html.append(commandLine(command.getCommand(), command.getDescription())));
 		html.append("</table>\n");
 
 		if (getClient().getMode() == ClientMode.SPECTATOR) {

@@ -11,9 +11,11 @@ import java.util.*;
 import java.util.regex.*;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.client.ui.chat.AutocompleteGenerator.TRIGGER_MENTION;
+
 /**
  * Parses a chat message into structured segments.
- *
+ * <p>
  * Converts raw text into typed segments (text, emoji, mention),
  * resolving emoji paths and handling fallbacks when icons aren't found.
  *
@@ -48,7 +50,7 @@ public final class MessageParser {
 		}
 
 		if (StringTool.isProvided(coach)) {
-			Pattern mentionPattern = Pattern.compile("@" + Pattern.quote(coach) + "(?![\\p{Alnum}_])");
+			Pattern mentionPattern = Pattern.compile(TRIGGER_MENTION + Pattern.quote(coach) + "(?![\\p{Alnum}_])");
 			Matcher mentionMatcher = mentionPattern.matcher(message);
 			while (mentionMatcher.find()) {
 				matches.add(new Match(mentionMatcher.group(), mentionMatcher.start(), mentionMatcher.end(), false));
