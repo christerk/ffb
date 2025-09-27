@@ -653,6 +653,30 @@ public class IconCache {
 		return null;
 	}
 
+	public ImageIcon getEmojiIcon(String path, Component component, DimensionProvider dimensionProvider) {
+		if (!StringTool.isProvided(path) || component == null) {
+			return null;
+		}
+
+		String key = path + "_" + component.name() + "_" + dimensionProvider.cacheKey();
+		BufferedImage bufferedImage = scaledIcons.get(key);
+
+		if (bufferedImage == null) {
+			loadIconFromArchive(path);
+			BufferedImage raw = getUnscaledIconByUrl(path);
+			if (raw == null) {
+				return null;
+			}
+
+			bufferedImage = dimensionProvider.scaleEmoji(raw, component);
+			scaledIcons.put(key, bufferedImage);
+		}
+
+		return new ImageIcon(bufferedImage);
+	}
+
+
+
 	public static String findTeamLogoUrl(Team pTeam) {
 		String iconUrl = null;
 		if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {

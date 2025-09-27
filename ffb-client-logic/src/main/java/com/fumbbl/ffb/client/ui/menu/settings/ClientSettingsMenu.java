@@ -69,6 +69,9 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem localIconCacheOffMenuItem;
 	private JRadioButtonMenuItem localIconCacheOnMenuItem;
 	private JMenuItem localIconCacheSelectMenuItem;
+
+	private JRadioButtonMenuItem autocompleteOnMenuItem;
+	private JRadioButtonMenuItem autocompleteOffMenuItem;
 	
 	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
@@ -83,6 +86,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		createScaleItem();
 		createLogMenu();
 		createLocalIconCacheMenu();
+		createAutocompleteMenu();
 	}
 
 	@Override
@@ -112,6 +116,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		String localIconCacheSetting = client.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE);
 		localIconCacheOffMenuItem.setSelected(true);
 		localIconCacheOnMenuItem.setSelected(IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON.equals(localIconCacheSetting));
+
+		String autocompleteSetting = client.getProperty(CommonProperty.SETTING_AUTOCOMPLETE);
+		autocompleteOnMenuItem.setSelected(true);
+		autocompleteOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF.equals(autocompleteSetting));
 		
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
@@ -245,6 +253,15 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE, IClientPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
 			client.saveUserSettings(true);
 			client.getCommunication().sendUpdatePlayerMarkings(false, null);
+		}
+
+		if (source == autocompleteOnMenuItem) {
+			client.setProperty(CommonProperty.SETTING_AUTOCOMPLETE, IClientPropertyValue.SETTING_AUTOCOMPLETE_ON);
+			client.saveUserSettings(true);
+		}
+		if (source == autocompleteOffMenuItem) {
+			client.setProperty(CommonProperty.SETTING_AUTOCOMPLETE, IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF);
+			client.saveUserSettings(true);
 		}
 	}
 
@@ -530,6 +547,24 @@ public class ClientSettingsMenu extends FfbMenu {
 		playersMarkingManualMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingManualMenuItem);
 		playerMarkingMenu.add(playersMarkingManualMenuItem);
+	}
+
+	private void createAutocompleteMenu() {
+		JMenu autocompleteMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_AUTOCOMPLETE);
+		autocompleteMenu.setMnemonic(KeyEvent.VK_A);
+		add(autocompleteMenu);
+
+		ButtonGroup group = new ButtonGroup();
+
+		autocompleteOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		autocompleteOnMenuItem.addActionListener(this);
+		group.add(autocompleteOnMenuItem);
+		autocompleteMenu.add(autocompleteOnMenuItem);
+
+		autocompleteOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		autocompleteOffMenuItem.addActionListener(this);
+		group.add(autocompleteOffMenuItem);
+		autocompleteMenu.add(autocompleteOffMenuItem);
 	}
 	
 	private void showError(String title, String[] error) {

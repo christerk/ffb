@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
 import com.fumbbl.ffb.client.dialog.DialogChatCommands;
+import com.fumbbl.ffb.client.dialog.DialogCredits;
 import com.fumbbl.ffb.client.dialog.DialogKeyBindings;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 
@@ -20,6 +21,7 @@ public class HelpMenu extends FfbMenu {
     private JMenuItem keyBindingsMenuItem;
     private JMenuItem changeListItem;
     private JMenuItem autoMarkingItem;
+    private JMenuItem creditsItem;
 
     public HelpMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
         super("Help", client, dimensionProvider, styleProvider, layoutSettings);
@@ -47,6 +49,10 @@ public class HelpMenu extends FfbMenu {
         keyBindingsMenuItem = new JMenuItem(dimensionProvider, "Key Bindings", KeyEvent.VK_K);
         keyBindingsMenuItem.addActionListener(this);
         add(keyBindingsMenuItem);
+
+        creditsItem = new JMenuItem(dimensionProvider, "Credits", KeyEvent.VK_R);
+        creditsItem.addActionListener(this);
+        add(creditsItem);
     }
 
     @Override
@@ -68,6 +74,8 @@ public class HelpMenu extends FfbMenu {
             showDialog(DialogAutoMarking.create(client, false));
         } else if (source == keyBindingsMenuItem) {
             showDialog(new DialogKeyBindings(client));
+        } else if (source == creditsItem) {
+            showDialog(new DialogCredits(client));
         }
     }
 }

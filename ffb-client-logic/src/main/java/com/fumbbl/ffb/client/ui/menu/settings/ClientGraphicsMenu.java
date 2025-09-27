@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_CHAT;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_FRAME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_LOG;
+import static com.fumbbl.ffb.CommonProperty.SETTING_BACKGROUND_MENTION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_ADMIN;
@@ -41,6 +42,7 @@ import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_AWA
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_PLAYER_MARKER_HOME;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_SPEC;
 import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_TEXT;
+import static com.fumbbl.ffb.CommonProperty.SETTING_FONT_COLOR_MENTION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_ICONS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_CUSTOMIZATION;
 import static com.fumbbl.ffb.CommonProperty.SETTING_PITCH_MARKINGS;
@@ -92,6 +94,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private JMenuItem chatBackground;
 	private JMenuItem logBackground;
+	private JMenuItem mentionBackground;
 	private JMenuItem textFontColor;
 	private JMenuItem awayFontColor;
 	private JMenuItem homeFontColor;
@@ -106,6 +109,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 	private JMenuItem additionalHomePlayerMarkerFontColor;
 	private JMenuItem additionalAwayPlayerMarkerFontColor;
 	private JMenuItem fieldMarkerFontColor;
+	private JMenuItem mentionFontColor;
 	private JMenuItem tzColorHome;
 	private JMenuItem tzColorAway;
 
@@ -180,6 +184,9 @@ public class ClientGraphicsMenu extends FfbMenu {
 		refreshUi |= refreshColorMenu(CommonProperty.SETTING_BACKGROUND_LOG, logBackground,
 			styleProvider::getLogBackground, styleProvider::setLogBackground);
 
+		refreshUi |= refreshColorMenu(CommonProperty.SETTING_BACKGROUND_MENTION, mentionBackground,
+    	styleProvider::getMentionBackground, styleProvider::setMentionBackground);
+
 		refreshUi |= refreshColorMenu(CommonProperty.SETTING_FONT_COLOR_TEXT, textFontColor,
 			styleProvider::getText, styleProvider::setText);
 
@@ -221,6 +228,9 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_FIELD_MARKER, fieldMarkerFontColor,
 			styleProvider::getFieldMarker, styleProvider::setFieldMarker);
+
+		refreshUi |= refreshColorMenu(SETTING_FONT_COLOR_MENTION, mentionFontColor,
+			styleProvider::getMentionFont, styleProvider::setMentionFont);
 
 		refreshUi |= refreshColorMenu(SETTING_TZ_COLOR_HOME, tzColorHome,
 			styleProvider::getTackleZoneHomeUnswapped, styleProvider::setTackleZoneHome);
@@ -369,6 +379,15 @@ public class ClientGraphicsMenu extends FfbMenu {
 			}
 		}
 
+		if (source == mentionBackground) {
+			Color defaultColor = styleProvider.getMentionBackground();
+			Color color = JColorChooser.showDialog(this, "Choose mention background color", defaultColor);
+			if (color != null) {
+				client.setProperty(CommonProperty.SETTING_BACKGROUND_MENTION, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
 		if (source == frameBackgroundIcons) {
 			client.setProperty(CommonProperty.SETTING_BACKGROUND_FRAME, IClientPropertyValue.SETTING_BACKGROUND_FRAME_ICONS);
 			client.saveUserSettings(true);
@@ -506,6 +525,15 @@ public class ClientGraphicsMenu extends FfbMenu {
 			Color color = JColorChooser.showDialog(this, "Choose field marker color", defaultColor);
 			if (color != null) {
 				client.setProperty(SETTING_FONT_COLOR_FIELD_MARKER, String.valueOf(color.getRGB()));
+				client.saveUserSettings(true);
+			}
+		}
+
+		if (source == mentionFontColor) {
+			Color defaultColor = styleProvider.getMentionFont();
+			Color color = JColorChooser.showDialog(this, "Choose mention font color", defaultColor);
+			if (color != null) {
+				client.setProperty(SETTING_FONT_COLOR_MENTION, String.valueOf(color.getRGB()));
 				client.saveUserSettings(true);
 			}
 		}
@@ -732,6 +760,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		add(backgroundStyles);
 		addColorItem(SETTING_BACKGROUND_CHAT, styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
 		addColorItem(SETTING_BACKGROUND_LOG, styleProvider.getLogBackground(), backgroundStyles, (item) -> logBackground = item);
+		addColorItem(SETTING_BACKGROUND_MENTION, styleProvider.getMentionBackground(), backgroundStyles, (item) -> mentionBackground = item);
 		backgroundStyles.add(createFrameBackgroundMenu());
 	}
 
@@ -746,6 +775,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 		addColorItem(SETTING_FONT_COLOR_ADMIN, styleProvider.getAdmin(), colors, (item) -> adminFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_DEV, styleProvider.getDev(), colors, (item) -> devFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_INPUT, styleProvider.getInput(), colors, (item) -> inputFontColor = item);
+		addColorItem(SETTING_FONT_COLOR_MENTION, styleProvider.getMentionFont(), colors, (item) -> mentionFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME, styleProvider.getFrame(), colors, (item) -> frameFontColor = item);
 		addColorItem(SETTING_FONT_COLOR_FRAME_SHADOW, styleProvider.getFrameShadow(), colors, (item) -> frameFontShadowColor = item);
 		addColorItem(SETTING_FONT_COLOR_PLAYER_MARKER_HOME, styleProvider.getPlayerMarkerHome(), colors, (item) -> homePlayerMarkerFontColor = item);

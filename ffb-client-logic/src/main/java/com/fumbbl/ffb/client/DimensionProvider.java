@@ -97,6 +97,25 @@ public abstract class DimensionProvider {
 		return scaledImage;
 	}
 
+	public BufferedImage scaleEmoji(BufferedImage image, Component component) {
+		if (image == null || component == null) {
+			return null;
+		}
+
+		Dimension dim = dimension(component);
+		int size = dim.width;
+
+		// I used SCALE_SMOOTH here instead of bilinear scaling because the quality difference was noticeable
+		Image scaled = image.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+
+		BufferedImage buffered = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = buffered.createGraphics();
+		g2d.drawImage(scaled, 0, 0, null);
+		g2d.dispose();
+
+		return buffered;
+	}
+
 	public Icon scaleIcon(ImageIcon icon) {
 		icon.setImage(icon.getImage().getScaledInstance(scale(icon.getIconWidth()), scale(icon.getIconHeight()), 0));
 		return icon;

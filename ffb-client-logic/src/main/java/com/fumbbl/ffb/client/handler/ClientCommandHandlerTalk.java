@@ -32,33 +32,45 @@ public class ClientCommandHandlerTalk extends ClientCommandHandler {
 		String[] allTalk = talkCommand.getTalks();
 		if (ArrayTool.isProvided(allTalk)) {
 			for (String talk : allTalk) {
+
 				StringBuilder status = new StringBuilder();
 				TextStyle style = TextStyle.NONE;
+				TextStyle prefixStyle = TextStyle.NONE;
+
 				if (StringTool.isProvided(coach)) {
 					status.append("<");
 					status.append(talkCommand.getMode().getPrefix());
 					status.append(coach);
 					status.append("> ");
+
 					if (coach.equals(game.getTeamHome().getCoach())) {
 						style = TextStyle.HOME;
+						prefixStyle = TextStyle.HOME_BOLD;
 					} else if (coach.equals(game.getTeamAway().getCoach())) {
 						style = TextStyle.AWAY;
+						prefixStyle = TextStyle.AWAY_BOLD;
 					} else if (talkCommand.getMode() == ServerCommandTalk.Mode.STAFF) {
 						style = TextStyle.ADMIN;
+						prefixStyle = TextStyle.ADMIN_BOLD;
 					} else if (talkCommand.getMode() == ServerCommandTalk.Mode.DEV) {
 						style = TextStyle.DEV;
+						prefixStyle = TextStyle.DEV_BOLD;
 					} else {
 						style = TextStyle.SPECTATOR;
+						prefixStyle = TextStyle.SPECTATOR_BOLD;
 					}
 				}
-				status.append(talk);
+
 				ChatComponent chat = getClient().getUserInterface().getChat();
-				chat.append(style, status.toString());
+				String prefix = status.toString();
+				
+				chat.parseAndAppend(style, prefixStyle, prefix, talk);
+
 			}
 		}
 
 		return true;
-
 	}
+
 
 }

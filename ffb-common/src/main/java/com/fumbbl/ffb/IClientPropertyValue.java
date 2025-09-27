@@ -103,5 +103,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_CLICK_LEFT_SHIFT = "clickLeftShift";
 	String SETTING_CLICK_DOUBLE = "clickDouble";
 
+	String SETTING_AUTOCOMPLETE_ON = "on";
+	String SETTING_AUTOCOMPLETE_OFF = "off";
 
 }
