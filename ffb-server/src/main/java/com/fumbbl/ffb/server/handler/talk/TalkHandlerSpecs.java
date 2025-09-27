@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.server.handler.talk;
 
-import com.fumbbl.ffb.SpecCommand;
+import com.fumbbl.ffb.ChatCommand;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class TalkHandlerSpecs extends TalkHandler {
 	public TalkHandlerSpecs() {
 		super(new HashSet<String>() {{
-			add(SpecCommand.SPECS.getCommand());
+			add(ChatCommand.SPECS.getCommand());
 		}}, 0, TalkRequirements.Client.NONE, TalkRequirements.Environment.NONE);
 	}
 

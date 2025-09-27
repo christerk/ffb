@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.SpecCommand;
+import com.fumbbl.ffb.ChatCommand;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -85,7 +85,7 @@ public class DialogChatCommands extends Dialog {
 		html.append("<td colspan=\"2\">").append(fontMediumBoldOpen).append("Spectator Commands")
 			.append(_FONT_BOLD_CLOSE).append("</td>\n");
 		html.append("</tr>\n");
-		Arrays.stream(SpecCommand.values()).forEach(command ->
+		Arrays.stream(ChatCommand.values()).forEach(command ->
 			html.append(commandLine(command.getCommand(), command.getDescription())));
 		html.append("</table>\n");
 

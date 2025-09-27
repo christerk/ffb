@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.ui.chat;
 
-import com.fumbbl.ffb.SpecCommand;
+import com.fumbbl.ffb.ChatCommand;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.util.UtilClientChat;
 
@@ -60,8 +60,8 @@ public class AutocompleteGenerator {
       case TRIGGER_COMMAND:
         Set<String> candidates;
         switch (client.getMode()) {
-          case PLAYER: candidates = SpecCommand.controlCommandsAsStrings(); break;
-          case SPECTATOR: candidates = SpecCommand.asStrings(); break;
+          case PLAYER: candidates = ChatCommand.controlCommandsAsStrings(); break;
+          case SPECTATOR: candidates = ChatCommand.asStrings(); break;
           default: candidates = Collections.emptySet(); break;
         }
         return filterCandidates(candidates, token, toSearchTerm(token));

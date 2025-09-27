@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.server.handler.talk;
 
-import com.fumbbl.ffb.SpecCommand;
+import com.fumbbl.ffb.ChatCommand;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -10,7 +10,7 @@ import org.eclipse.jetty.websocket.api.Session;
 @SuppressWarnings("unused")
 public class TalkHandlerEmote extends TalkHandler {
 	public TalkHandlerEmote() {
-		super(SpecCommand.effectsAsStrings(), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
+		super(ChatCommand.effectsAsStrings(), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);
 	}
 
 	@Override
@@ -18,12 +18,12 @@ public class TalkHandlerEmote extends TalkHandler {
 
 		String coach = server.getSessionManager().getCoachForSession(session);
 
-		SpecCommand specCommand = SpecCommand.fromCommand(commands[0]);
-		if (specCommand == null) {
+		ChatCommand chatCommand = ChatCommand.fromCommand(commands[0]);
+		if (chatCommand == null) {
 			return;
 		}
 
-		switch (specCommand) {
+		switch (chatCommand) {
 			case AAH:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_AAH);
 				break;
