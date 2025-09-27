@@ -3,7 +3,7 @@ import javax.swing.text.JTextComponent;
 
 /**
  * Utility methods for chat components.
- *
+ * <p>
  * Provides helpers for text insertion and mention checks used by
  * autocomplete and message parsing.
  *

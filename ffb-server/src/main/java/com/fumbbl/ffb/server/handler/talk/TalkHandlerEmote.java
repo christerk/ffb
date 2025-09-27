@@ -18,7 +18,12 @@ public class TalkHandlerEmote extends TalkHandler {
 
 		String coach = server.getSessionManager().getCoachForSession(session);
 
-		switch (SpecCommand.fromCommand(commands[0])) {
+		SpecCommand specCommand = SpecCommand.fromCommand(commands[0]);
+		if (specCommand == null) {
+			return;
+		}
+
+		switch (specCommand) {
 			case AAH:
 				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_AAH);
 				break;
