@@ -88,6 +88,7 @@ public class AutocompleteGenerator {
         }
       }
     }
+    Collections.sort(results);
     return results;
   }
 
