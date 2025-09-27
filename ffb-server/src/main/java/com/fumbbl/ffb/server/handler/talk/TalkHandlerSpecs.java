@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.HashSet;
 
+@SuppressWarnings("unused")
 public class TalkHandlerSpecs extends TalkHandler {
 	public TalkHandlerSpecs() {
 		super(new HashSet<String>() {{

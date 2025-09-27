@@ -7,8 +7,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.util.HashSet;
-
+@SuppressWarnings("unused")
 public class TalkHandlerEmote extends TalkHandler {
 	public TalkHandlerEmote() {
 		super(SpecCommand.effectsAsStrings(), 0, TalkRequirements.Client.SPEC, TalkRequirements.Environment.NONE);

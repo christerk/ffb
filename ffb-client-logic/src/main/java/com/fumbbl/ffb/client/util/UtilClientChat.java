@@ -24,9 +24,4 @@ public final class UtilClientChat {
     comp.setText(newText);
     comp.setCaretPosition(start + insertion.length());
   }
-
-  public static boolean isMention(String token, String coachName) {
-    return token.equals("@" + coachName);
-  }
-
 }

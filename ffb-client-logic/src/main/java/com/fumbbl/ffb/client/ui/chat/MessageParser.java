@@ -38,7 +38,7 @@ public final class MessageParser {
 		}
 		List<Match> matches = findMatches(message, coach);
 		
-		return buildSegments(message, matches, coach, style, iconCache, dimensionProvider);
+		return buildSegments(message, matches, style, iconCache, dimensionProvider);
 	}
 
 	private static List<Match> findMatches(String message, String coach) {
@@ -61,7 +61,7 @@ public final class MessageParser {
 		return matches;
 	}
 
-	private static List<ChatSegment> buildSegments(String message, List<Match> matches, String coach,	TextStyle style, IconCache iconCache, DimensionProvider dimensionProvider) {
+	private static List<ChatSegment> buildSegments(String message, List<Match> matches, TextStyle style, IconCache iconCache, DimensionProvider dimensionProvider) {
 		
 		boolean isEmojiOnly = isEmojiOnlyMessage(message);
 		
