@@ -54,4 +54,8 @@ public enum SpecCommand {
 	public static Set<String> effectsAsStrings() {
 		return Arrays.stream(values()).filter(SpecCommand::isEffect).map(SpecCommand::getCommand).collect(Collectors.toSet());
 	}
+
+	public static Set<String> controlCommandsAsStrings() {
+		return Arrays.stream(values()).filter(command -> !command.isEffect()).map(SpecCommand::getCommand).collect(Collectors.toSet());
+	}
 }

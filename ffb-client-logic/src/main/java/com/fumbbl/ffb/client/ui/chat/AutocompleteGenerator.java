@@ -58,7 +58,13 @@ public class AutocompleteGenerator {
         return filterCandidates(spectators, token, toSearchTerm(token));
 
       case TRIGGER_COMMAND:
-        return filterCandidates(SpecCommand.asStrings(), token, toSearchTerm(token));
+        Set<String> candidates;
+        switch (client.getMode()) {
+          case PLAYER: candidates = SpecCommand.controlCommandsAsStrings(); break;
+          case SPECTATOR: candidates = SpecCommand.asStrings(); break;
+          default: candidates = Collections.emptySet(); break;
+        }
+        return filterCandidates(candidates, token, toSearchTerm(token));
 
       default:
         return Collections.emptyList();
