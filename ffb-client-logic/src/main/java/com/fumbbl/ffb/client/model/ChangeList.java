@@ -30,6 +30,10 @@ public class ChangeList {
 			.addFeature("Sketching: Allow various click behaviors")
 			.addBugfix("Replay menu did not scale during runtime")
 			.addBugfix("Auto Marking: Markings did not update in case of a serious injury")
+			.addFeature("Chat: It is now possible to use @coachName to mention other coaches in chat (contributed by Garcangel)")
+			.addFeature("Chat: You can now use emojis, either via text shortcut or dialog (contributed by Garcangel)")
+			.addFeature("Chat Autocompletion: Emojis, mentions and commands can be autocompleted (contributed by Garcangel)")
+			.addImprovement("Chat: Long words are now wrapped in the chat log, multiline messages are indented, name of sender is rendered in bold and a small margin gets added between messages for better readability (contributed by Garcangel)")
 		);
 
 		versions.add(new VersionChangeList("2.36.1")
