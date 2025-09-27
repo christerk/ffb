@@ -52,7 +52,8 @@ public class AutocompleteGenerator {
 
       case TRIGGER_MENTION:
         Collection<String> spectators = client.getClientData().getSpectators().stream()
-          .map(name -> "@" + name)
+          .filter(spec -> !spec.equals(client.getParameters().getCoach()))
+          .map(name -> TRIGGER_MENTION + name)
           .collect(Collectors.toList());
         return filterCandidates(spectators, token, toSearchTerm(token));
 
