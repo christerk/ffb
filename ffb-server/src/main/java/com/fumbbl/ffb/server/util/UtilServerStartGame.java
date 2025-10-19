@@ -188,6 +188,9 @@ public class UtilServerStartGame {
 			}
 			loadingService.loadMarker(gameState, sessionOfHomeCoach, true, loadAuto, sortMode);
 
+			loadAuto = false;
+			sortMode = null;
+
 			userSettingsQuery.execute(sessionManager.getCoachForSession(sessionOfAwayCoach));
 			settingValue = userSettingsQuery.getSettingValue(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
 			if (CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO.equalsIgnoreCase(settingValue)) {
