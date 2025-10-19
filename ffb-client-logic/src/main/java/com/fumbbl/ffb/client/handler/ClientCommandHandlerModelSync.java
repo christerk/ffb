@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.ClientData;
@@ -17,6 +18,7 @@ import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.change.ModelChange;
+import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -30,11 +32,18 @@ import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Kalimar
  */
 public class ClientCommandHandlerModelSync extends ClientCommandHandler implements IAnimationListener {
+
+	private static final Set<ModelChangeId> IGNORE_PLAYER_MARKER = new HashSet<ModelChangeId>() {{
+		add(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER);
+		add(ModelChangeId.FIELD_MODEL_REMOVE_PLAYER_MARKER);
+	}};
 
 	private ServerCommandModelSync fSyncCommand;
 	private ClientCommandHandlerMode fMode;
@@ -76,7 +85,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 		}
 
 		ModelChangeList modelChangeList = fSyncCommand.getModelChanges();
-		modelChangeList.applyTo(game);
+		modelChangeList.applyTo(game, ClientMode.PLAYER == getClient().getMode() ? Collections.emptySet() : IGNORE_PLAYER_MARKER);
 
 		UserInterface userInterface = getClient().getUserInterface();
 

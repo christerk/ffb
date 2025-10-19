@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.Game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -67,9 +68,12 @@ public class ModelChangeList implements IJsonSerializable {
 		return fChanges.size();
 	}
 
-	public void applyTo(Game pGame) {
+	public void applyTo(Game pGame, Set<ModelChangeId> ignore) {
 		ModelChangeProcessor processor = new ModelChangeProcessor();
 		for (ModelChange change : getChanges()) {
+			if (ignore.contains(change.getChangeId())) {
+				continue;
+			}
 			processor.apply(pGame, change);
 		}
 	}
