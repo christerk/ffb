@@ -1,0 +1,14 @@
+{
+  "autoMarkingRecords": [
+    {
+      "skillArray": [
+        "Dodge"
+      ],
+      "injuryAttributes": [],
+      "applyTo": "BOTH",
+      "gainedOnly": false,
+      "marking": "C",
+      "applyRepeatedly": false
+    }
+  ]
+}
