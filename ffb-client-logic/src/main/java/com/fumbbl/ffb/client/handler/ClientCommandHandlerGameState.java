@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.client.handler;
 
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -11,10 +9,6 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
-import com.fumbbl.ffb.marking.FieldMarker;
-import com.fumbbl.ffb.marking.PlayerMarker;
-import com.fumbbl.ffb.marking.TransientPlayerMarker;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Roster;
@@ -27,18 +21,19 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class ClientCommandHandlerGameState extends ClientCommandHandler implements IDialogCloseListener {
 
+	private final SubHandlerGameStateMarking subHandler;
+
 	protected ClientCommandHandlerGameState(FantasyFootballClient pClient) {
 		super(pClient);
+		this.subHandler = new SubHandlerGameStateMarking(pClient);
 	}
 
 	public NetCommandId getId() {
@@ -49,21 +44,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		ServerCommandGameState gameStateCommand = (ServerCommandGameState) pNetCommand;
 
-		TransientPlayerMarker[] transientPlayerMarkers = getClient().getGame().getFieldModel().getTransientPlayerMarkers();
-		PlayerMarker[] playerMarkers = getClient().getGame().getFieldModel().getPlayerMarkers();
-		FieldMarker[] transientFieldMarkers = getClient().getGame().getFieldModel().getTransientFieldMarkers();
-		FieldMarker[] fieldMarkers = getClient().getGame().getFieldModel().getFieldMarkers();
-
-		Game game = gameStateCommand.getGame();
-		getClient().setGame(game);
-		FieldModel fieldModel = game.getFieldModel();
-
-		Arrays.stream(transientPlayerMarkers).forEach(fieldModel::addTransient);
-		Arrays.stream(transientFieldMarkers).forEach(fieldModel::addTransient);
-		if (!IClientPropertyValue.AUTO_MARKING.contains(getClient().getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE))) {
-			Arrays.stream(playerMarkers).forEach(fieldModel::add);
-			Arrays.stream(fieldMarkers).forEach(fieldModel::add);
-		}
+		Game game = subHandler.handleNetCommand(gameStateCommand);
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -85,7 +66,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		// load pitches for default, basic and custom (if defined)
 		addIconUrl(iconUrls,
-				iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
+			iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_DEFAULT), Weather.NICE));
 		addIconUrl(iconUrls, iconCache.buildPitchUrl(getClient().getProperty(IIconProperty.PITCH_URL_BASIC), Weather.NICE));
 		String pitchUrl = game.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
 		if (StringTool.isProvided(pitchUrl)) {
