@@ -26,7 +26,7 @@ class SubHandlerGameStateMarking {
 
 		Game game = gameStateCommand.getGame();
 		client.setGame(game);
-		boolean firstGameState = client.getGame().getId() > 0;
+		boolean firstGameState = client.getGame().getId() == 0;
 		if (firstGameState) {
 
 			FieldModel fieldModel = game.getFieldModel();
