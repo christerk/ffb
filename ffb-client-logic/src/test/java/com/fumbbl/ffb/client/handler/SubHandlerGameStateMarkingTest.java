@@ -1,5 +1,8 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.marking.FieldMarker;
@@ -13,12 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 class SubHandlerGameStateMarkingTest {
 
     private SubHandlerGameStateMarking handler;
@@ -52,7 +57,12 @@ class SubHandlerGameStateMarkingTest {
     }
 
     @Test
-    public void testFirstGameStateHandling() {
+    public void testManualReplayInitialGameState() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.REPLAY);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(0L);
+
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
         marker1.setHomeText("home1");
@@ -71,7 +81,7 @@ class SubHandlerGameStateMarkingTest {
         existingFieldModel.add(marker1);
         existingFieldModel.add(marker2);
         existingFieldModel.addTransient(transientMarker);
-        existingFieldModel.add(fieldMarker);	
+        existingFieldModel.add(fieldMarker);
         
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -87,4 +97,378 @@ class SubHandlerGameStateMarkingTest {
         assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
     }
 
+    @Test
+    public void testManualReplayGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.REPLAY);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create and add markers
+        PlayerMarker existingMarker = new PlayerMarker("existing");
+        existingFieldModel.add(existingMarker);
+        
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        incomingFieldModel.add(incomingMarker);
+        
+        // Execute
+        Game result = handler.handleNetCommand(command);
+        
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+        
+        // All markers should remain existing
+        assertArrayEquals(new PlayerMarker[]{incomingMarker}, result.getFieldModel().getPlayerMarkers());
+    }
+
+    @Test
+    public void testManualPlayerGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.PLAYER);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field and Player markers should be incoming, Transients existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{incomingMarker}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testManualSpectatorGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.SPECTATOR);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticReplayInitialGameState() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.REPLAY);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(0L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to existing model
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // All markers should be transferred
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticPlayerGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.PLAYER);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticSpectatorGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.SPECTATOR);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticReplayGameStateUpdate() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.REPLAY);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to existing model
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // All markers should remain existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testManualPlayerReconnecting() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.PLAYER);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field and Player markers should be incoming, Transients existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{incomingMarker}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testManualSpectatorReconnecting() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.SPECTATOR);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticPlayerReconnecting() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.PLAYER);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
+
+    @Test
+    public void testAutomaticSpectatorReconnecting() {
+        // Set up client mode and marking type
+        given(client.getMode()).willReturn(ClientMode.SPECTATOR);
+        given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
+        given(incomingGame.getId()).willReturn(1L);
+
+        // Create markers
+        PlayerMarker marker1 = new PlayerMarker("player1");
+        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
+        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
+
+        // Add markers to models
+        existingFieldModel.add(marker1);
+        existingFieldModel.add(fieldMarker);
+        existingFieldModel.addTransient(transientMarker);
+
+        PlayerMarker incomingMarker = new PlayerMarker("incoming");
+        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
+        incomingFieldModel.add(incomingMarker);
+        incomingFieldModel.add(incomingFieldMarker);
+
+        // Execute
+        Game result = handler.handleNetCommand(command);
+
+        // Verify game was set
+        assertSame(incomingGame, result);
+        verify(client).setGame(incomingGame);
+
+        // Field markers incoming, rest existing
+        FieldModel resultModel = result.getFieldModel();
+        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+    }
 }
