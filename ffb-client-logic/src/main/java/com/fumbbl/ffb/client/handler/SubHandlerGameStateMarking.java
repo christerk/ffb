@@ -10,8 +10,12 @@ import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 
 import java.util.Arrays;
 
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
+
 class SubHandlerGameStateMarking {
-	
+
 	private final FantasyFootballClient client;
 
 	protected SubHandlerGameStateMarking(FantasyFootballClient client) {
@@ -19,26 +23,39 @@ class SubHandlerGameStateMarking {
 	}
 
 	public Game handleNetCommand(ServerCommandGameState gameStateCommand) {
-		TransientPlayerMarker[] transientPlayerMarkers = client.getGame().getFieldModel().getTransientPlayerMarkers();
-		PlayerMarker[] playerMarkers = client.getGame().getFieldModel().getPlayerMarkers();
-		FieldMarker[] transientFieldMarkers = client.getGame().getFieldModel().getTransientFieldMarkers();
-		FieldMarker[] fieldMarkers = client.getGame().getFieldModel().getFieldMarkers();
+		Game existingGame = client.getGame();
+		Game incomingGame = gameStateCommand.getGame();
 
-		Game game = gameStateCommand.getGame();
-		client.setGame(game);
-		boolean firstGameState = client.getGame().getId() == 0;
-		if (firstGameState) {
+		// Get existing markers
+		TransientPlayerMarker[] existingTransientPlayerMarkers = existingGame.getFieldModel().getTransientPlayerMarkers();
+		PlayerMarker[] existingPlayerMarkers = existingGame.getFieldModel().getPlayerMarkers();
+		FieldMarker[] existingTransientFieldMarkers = existingGame.getFieldModel().getTransientFieldMarkers();
+		FieldMarker[] existingFieldMarkers = existingGame.getFieldModel().getFieldMarkers();
 
-			FieldModel fieldModel = game.getFieldModel();
+		// Set new game
+		client.setGame(incomingGame);
+		FieldModel fieldModel = incomingGame.getFieldModel();
 
-			Arrays.stream(transientPlayerMarkers).forEach(fieldModel::addTransient);
-			Arrays.stream(transientFieldMarkers).forEach(fieldModel::addTransient);
+		// Always keep existing transient markers
+		Arrays.stream(existingTransientPlayerMarkers).forEach(fieldModel::addTransient);
+		Arrays.stream(existingTransientFieldMarkers).forEach(fieldModel::addTransient);
+
+		boolean reconnecting = incomingGame.getStarted() != null;
+		boolean isInitialState = !reconnecting && existingGame.getId() == 0;
+		boolean isReplay = client.getMode() == ClientMode.REPLAY;
+		boolean isManualMarking = CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL
+			.equals(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE));
+
+		if (isInitialState || isReplay) {
 			Arrays.stream(fieldModel.getFieldMarkers()).forEach(fieldModel::remove);
-			Arrays.stream(fieldModel.getPlayerMarkers()).forEach(fieldModel::remove);
-
-			Arrays.stream(playerMarkers).forEach(fieldModel::add);
-			Arrays.stream(fieldMarkers).forEach(fieldModel::add);
+			Arrays.stream(existingFieldMarkers).forEach(fieldModel::add);
 		}
-		return game;
+
+		if (isInitialState || isReplay || !isManualMarking || client.getMode() == ClientMode.SPECTATOR) {
+			Arrays.stream(fieldModel.getPlayerMarkers()).forEach(fieldModel::remove);
+			Arrays.stream(existingPlayerMarkers).forEach(fieldModel::add);
+		}
+
+		return incomingGame;
 	}
 }
