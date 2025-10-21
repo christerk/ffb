@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 
+import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -25,6 +26,15 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 class SubHandlerGameStateMarkingTest {
+
+    private static final PlayerMarker INCOMING_PLAYER = new PlayerMarker("incomingPlayer");
+    private static final PlayerMarker EXISTING_PLAYER = new PlayerMarker("existingPlayer");
+    private static final TransientPlayerMarker INCOMING_TRANSIENT_PLAYER = new TransientPlayerMarker("incomingTransientPlayer", TransientPlayerMarker.Mode.APPEND);
+    private static final TransientPlayerMarker EXISTING_TRANSIENT_PLAYER = new TransientPlayerMarker("existingTransientPlayer", TransientPlayerMarker.Mode.APPEND);
+    private static final FieldMarker INCOMING_FIELD = new FieldMarker(new FieldCoordinate(0,0), "incomingField", "");
+    private static final FieldMarker EXISTING_FIELD = new FieldMarker(new FieldCoordinate(0,0), "existingField", "");
+    private static final FieldMarker INCOMING_TRANSIENT_FIELD = new FieldMarker(new FieldCoordinate(0,0), "incomingTransientField", "");
+    private static final FieldMarker EXISTING_TRANSIENT_FIELD = new FieldMarker(new FieldCoordinate(0,0), "existingTransientField", "");
 
     private SubHandlerGameStateMarking handler;
     private ServerCommandGameState command;
@@ -61,10 +71,9 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(0L);
 
         // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
+        PlayerMarker marker1 = INCOMING_PLAYER;
         marker1.setHomeText("home1");
         marker1.setAwayText("away1");
         PlayerMarker marker2 = new PlayerMarker("player2"); 
@@ -102,7 +111,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create and add markers
         PlayerMarker existingMarker = new PlayerMarker("existing");
@@ -127,7 +136,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.PLAYER);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -163,7 +172,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.SPECTATOR);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -230,7 +239,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.PLAYER);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -266,7 +275,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.SPECTATOR);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -302,7 +311,7 @@ class SubHandlerGameStateMarkingTest {
         // Set up client mode and marking type
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -331,9 +340,10 @@ class SubHandlerGameStateMarkingTest {
     @Test
     public void testManualPlayerReconnecting() {
         // Set up client mode and marking type
+        given(incomingGame.getStarted()).willReturn(new Date());
         given(client.getMode()).willReturn(ClientMode.PLAYER);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -367,9 +377,10 @@ class SubHandlerGameStateMarkingTest {
     @Test
     public void testManualSpectatorReconnecting() {
         // Set up client mode and marking type
+        given(incomingGame.getStarted()).willReturn(new Date());
         given(client.getMode()).willReturn(ClientMode.SPECTATOR);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -403,9 +414,10 @@ class SubHandlerGameStateMarkingTest {
     @Test
     public void testAutomaticPlayerReconnecting() {
         // Set up client mode and marking type
+        given(incomingGame.getStarted()).willReturn(new Date());
         given(client.getMode()).willReturn(ClientMode.PLAYER);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
@@ -439,9 +451,10 @@ class SubHandlerGameStateMarkingTest {
     @Test
     public void testAutomaticSpectatorReconnecting() {
         // Set up client mode and marking type
+        given(incomingGame.getStarted()).willReturn(new Date());
         given(client.getMode()).willReturn(ClientMode.SPECTATOR);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
-        given(incomingGame.getId()).willReturn(1L);
+        given(existingGame.getId()).willReturn(1L);
 
         // Create markers
         PlayerMarker marker1 = new PlayerMarker("player1");
