@@ -16,25 +16,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 class SubHandlerGameStateMarkingTest {
 
 	private static final PlayerMarker INCOMING_PLAYER = new PlayerMarker("incomingPlayer");
 	private static final PlayerMarker EXISTING_PLAYER = new PlayerMarker("existingPlayer");
-	private static final TransientPlayerMarker INCOMING_TRANSIENT_PLAYER = new TransientPlayerMarker("incomingTransientPlayer", TransientPlayerMarker.Mode.APPEND);
 	private static final TransientPlayerMarker EXISTING_TRANSIENT_PLAYER = new TransientPlayerMarker("existingTransientPlayer", TransientPlayerMarker.Mode.APPEND);
 	private static final FieldMarker INCOMING_FIELD = new FieldMarker(new FieldCoordinate(0, 0), "incomingField", "");
 	private static final FieldMarker EXISTING_FIELD = new FieldMarker(new FieldCoordinate(0, 0), "existingField", "");
-	private static final FieldMarker INCOMING_TRANSIENT_FIELD = new FieldMarker(new FieldCoordinate(0, 0), "incomingTransientField", "");
 	private static final FieldMarker EXISTING_TRANSIENT_FIELD = new FieldMarker(new FieldCoordinate(0, 0), "existingTransientField", "");
 
 	private SubHandlerGameStateMarking handler;
@@ -49,16 +46,13 @@ class SubHandlerGameStateMarkingTest {
 	@Mock
 	private Game existingGame;
 
-	private FieldModel incomingFieldModel;
-	private FieldModel existingFieldModel;
-
 	@BeforeEach
 	public void setUp() {
 		handler = new SubHandlerGameStateMarking(client);
 
 		// Create real FieldModel instances
-		existingFieldModel = new FieldModel(existingGame);
-		incomingFieldModel = new FieldModel(incomingGame);
+		FieldModel existingFieldModel = new FieldModel(existingGame);
+		FieldModel incomingFieldModel = new FieldModel(incomingGame);
 
 		// Add existing markers
 		existingFieldModel.add(EXISTING_PLAYER);
@@ -69,8 +63,6 @@ class SubHandlerGameStateMarkingTest {
 		// Add incoming markers
 		incomingFieldModel.add(INCOMING_PLAYER);
 		incomingFieldModel.add(INCOMING_FIELD);
-		incomingFieldModel.addTransient(INCOMING_TRANSIENT_PLAYER);
-		incomingFieldModel.addTransient(INCOMING_TRANSIENT_FIELD);
 
 		given(incomingGame.getFieldModel()).willReturn(incomingFieldModel);
 		given(existingGame.getFieldModel()).willReturn(existingFieldModel);
