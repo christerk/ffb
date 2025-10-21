@@ -59,6 +59,18 @@ class SubHandlerGameStateMarkingTest {
         existingFieldModel = new FieldModel(existingGame);
         incomingFieldModel = new FieldModel(incomingGame);
         
+        // Add existing markers
+        existingFieldModel.add(EXISTING_PLAYER);
+        existingFieldModel.add(EXISTING_FIELD);
+        existingFieldModel.addTransient(EXISTING_TRANSIENT_PLAYER);
+        existingFieldModel.addTransient(EXISTING_TRANSIENT_FIELD);
+        
+        // Add incoming markers
+        incomingFieldModel.add(INCOMING_PLAYER);
+        incomingFieldModel.add(INCOMING_FIELD);
+        incomingFieldModel.addTransient(INCOMING_TRANSIENT_PLAYER);
+        incomingFieldModel.addTransient(INCOMING_TRANSIENT_FIELD);
+        
         given(incomingGame.getFieldModel()).willReturn(incomingFieldModel);
         given(existingGame.getFieldModel()).willReturn(existingFieldModel);
         given(client.getGame()).willReturn(existingGame);
@@ -72,26 +84,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
 
-        // Create markers
-        PlayerMarker marker1 = INCOMING_PLAYER;
-        marker1.setHomeText("home1");
-        marker1.setAwayText("away1");
-        PlayerMarker marker2 = new PlayerMarker("player2"); 
-        marker2.setHomeText("home2");
-        marker2.setAwayText("away2");
-        
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-        transientMarker.setHomeText("transient_home");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        fieldMarker.setHomeText("field_home");
-        fieldMarker.setAwayText("field_away");
-        
-        // Add markers to existing field model
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(marker2);
-        existingFieldModel.addTransient(transientMarker);
-        existingFieldModel.add(fieldMarker);
-        
         // Execute
         Game result = handler.handleNetCommand(command);
         
@@ -101,9 +93,9 @@ class SubHandlerGameStateMarkingTest {
         
         // Assert markers were transferred correctly
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1, marker2}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{EXISTING_FIELD, EXISTING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
     }
 
     @Test
@@ -112,13 +104,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
         given(existingGame.getId()).willReturn(1L);
-
-        // Create and add markers
-        PlayerMarker existingMarker = new PlayerMarker("existing");
-        existingFieldModel.add(existingMarker);
-        
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        incomingFieldModel.add(incomingMarker);
         
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -127,8 +112,8 @@ class SubHandlerGameStateMarkingTest {
         assertSame(incomingGame, result);
         verify(client).setGame(incomingGame);
         
-        // All markers should remain existing
-        assertArrayEquals(new PlayerMarker[]{incomingMarker}, result.getFieldModel().getPlayerMarkers());
+        // All markers should be incoming
+        assertArrayEquals(new PlayerMarker[]{INCOMING_PLAYER}, result.getFieldModel().getPlayerMarkers());
     }
 
     @Test
@@ -137,21 +122,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.PLAYER);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
         given(existingGame.getId()).willReturn(1L);
-
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
 
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -162,9 +132,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field and Player markers should be incoming, Transients existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{incomingMarker}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{INCOMING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -173,21 +143,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.SPECTATOR);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
         given(existingGame.getId()).willReturn(1L);
-
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
 
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -198,9 +153,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -209,16 +164,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(incomingGame.getId()).willReturn(0L);
-
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to existing model
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
 
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -229,9 +174,9 @@ class SubHandlerGameStateMarkingTest {
 
         // All markers should be transferred
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{EXISTING_FIELD, EXISTING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -241,21 +186,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -265,9 +195,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -277,21 +207,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -301,9 +216,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -312,16 +227,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getMode()).willReturn(ClientMode.REPLAY);
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(existingGame.getId()).willReturn(1L);
-
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to existing model
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
 
         // Execute
         Game result = handler.handleNetCommand(command);
@@ -332,9 +237,9 @@ class SubHandlerGameStateMarkingTest {
 
         // All markers should remain existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{fieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{EXISTING_FIELD, EXISTING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -345,21 +250,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -369,9 +259,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field and Player markers should be incoming, Transients existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{incomingMarker}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{INCOMING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -382,21 +272,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_MANUAL);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -406,9 +281,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -419,21 +294,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -443,9 +303,9 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 
     @Test
@@ -456,21 +316,6 @@ class SubHandlerGameStateMarkingTest {
         given(client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE)).willReturn(CommonPropertyValue.SETTING_PLAYER_MARKING_TYPE_AUTO);
         given(existingGame.getId()).willReturn(1L);
 
-        // Create markers
-        PlayerMarker marker1 = new PlayerMarker("player1");
-        FieldMarker fieldMarker = new FieldMarker(new FieldCoordinate(5, 5));
-        TransientPlayerMarker transientMarker = new TransientPlayerMarker("transient1", TransientPlayerMarker.Mode.APPEND);
-
-        // Add markers to models
-        existingFieldModel.add(marker1);
-        existingFieldModel.add(fieldMarker);
-        existingFieldModel.addTransient(transientMarker);
-
-        PlayerMarker incomingMarker = new PlayerMarker("incoming");
-        FieldMarker incomingFieldMarker = new FieldMarker(new FieldCoordinate(6, 6));
-        incomingFieldModel.add(incomingMarker);
-        incomingFieldModel.add(incomingFieldMarker);
-
         // Execute
         Game result = handler.handleNetCommand(command);
 
@@ -480,8 +325,8 @@ class SubHandlerGameStateMarkingTest {
 
         // Field markers incoming, rest existing
         FieldModel resultModel = result.getFieldModel();
-        assertArrayEquals(new PlayerMarker[]{marker1}, resultModel.getPlayerMarkers());
-        assertArrayEquals(new FieldMarker[]{incomingFieldMarker}, resultModel.getFieldMarkers());
-        assertArrayEquals(new TransientPlayerMarker[]{transientMarker}, resultModel.getTransientPlayerMarkers());
+        assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+        assertArrayEquals(new FieldMarker[]{INCOMING_FIELD, INCOMING_TRANSIENT_FIELD}, resultModel.getFieldMarkers());
+        assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
     }
 }
