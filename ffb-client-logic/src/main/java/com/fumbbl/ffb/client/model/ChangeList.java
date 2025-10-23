@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.37.1")
+			.addBugfix("Player markings should now be applied correctly again")
 		);
 
 		versions.add(new VersionChangeList("2.37.0")

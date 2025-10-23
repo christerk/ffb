@@ -51,7 +51,7 @@ class SubHandlerGameStateMarking {
 			Arrays.stream(existingFieldMarkers).forEach(fieldModel::add);
 		}
 
-		if (isInitialState || isReplay || !isManualMarking || client.getMode() == ClientMode.SPECTATOR) {
+		if (client.getMode() != ClientMode.PLAYER || isInitialState || (!reconnecting && !isManualMarking)) {
 			Arrays.stream(fieldModel.getPlayerMarkers()).forEach(fieldModel::remove);
 			Arrays.stream(existingPlayerMarkers).forEach(fieldModel::add);
 		}
