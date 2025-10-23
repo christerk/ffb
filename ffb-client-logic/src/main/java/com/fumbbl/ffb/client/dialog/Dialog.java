@@ -1,7 +1,11 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -13,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
@@ -31,12 +36,23 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private final FantasyFootballClient fClient;
 	private boolean fChatInputFocus;
 
+	private final JPanel contentPanel;
+
 	public Dialog(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
 		super(pTitle, false, pCloseable);
 		fClient = pClient;
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		addMouseListener(this);
 		addInternalFrameListener(this);
+
+		// Initialize the scroll pane and content panel
+		contentPanel = new JPanel();
+		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+		JScrollPane scrollPane = new JScrollPane(contentPanel);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		super.setContentPane(scrollPane);
 	}
 
 	public FantasyFootballClient getClient() {
@@ -173,5 +189,36 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		// workaround for issue with gtk laf where dropdowns do not communicate their correct size before this point
 		// https://stackoverflow.com/a/79707250/1506428
 		pack();
+	}
+
+	// Override add to route components to the content panel
+	@Override
+	public void add(java.awt.Component comp, Object constraints) {
+		if (contentPanel == null) {
+			super.add(comp, constraints);
+			return;
+		}
+		contentPanel.add(comp, constraints);
+	}
+
+	@Override
+	public void pack() {
+		Dimension clientSize = getClient().getUserInterface().getSize();
+		int maxWidth = (int)(clientSize.width * 0.9);
+		int maxHeight = (int)(clientSize.height * 0.9);
+
+		// First pack to get the preferred size
+		super.pack();
+
+		// Then constrain the size if needed
+		Dimension currentSize = getSize();
+		int width = Math.min(currentSize.width, maxWidth);
+		int height = Math.min(currentSize.height, maxHeight);
+		setSize(width, height);
+	}
+
+	@Override
+	public Container getContentPane() {
+		return this.contentPanel;
 	}
 }

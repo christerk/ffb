@@ -115,6 +115,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 			fProgressBar.setValue(pProgress);
 			if (StringTool.isProvided(pMessage)) {
 				fMessageLabel.setText(pMessage);
+				pack();
 			}
 		} else {
 			try {
@@ -122,6 +123,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 					fProgressBar.setValue(pProgress);
 					if (StringTool.isProvided(pMessage)) {
 						fMessageLabel.setText(pMessage);
+						pack();
 					}
 				});
 			} catch (InterruptedException | InvocationTargetException ignored) {
