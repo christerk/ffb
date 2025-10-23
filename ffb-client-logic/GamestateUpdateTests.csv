@@ -1,8 +1,0 @@
-ClientSettings;;Initial Gamestate;;;;GameState Update;;;;Reconnecting;;;
-MarkingSetting;ClientMode;FieldMarker;Transient FieldMarker;PlayerMarker;TransientPlayerMarker;FieldMarker;Transient FieldMarker;PlayerMarker;TransientPlayerMarker;FieldMarker;Transient FieldMarker;PlayerMarker;TransientPlayerMarker
-Manual;Replay;Existing;Existing;Existing;Existing;Existing;Existing;Existing;Existing;;;;
-;Player;Existing;Existing;Existing;Existing;Incoming;Existing;Incoming;Existing;Incoming;Existing;Incoming;Existing
-;Spectator;;;;;Incoming;Existing;Existing;Existing;Incoming;Existing;Existing;Existing
-Automatic;Replay;Existing;Existing;Existing;Existing;Existing;Existing;Existing;Existing;;;;
-;Player;Existing;Existing;Existing;Existing;Incoming;Existing;Existing;Existing;Incoming;Existing;Existing;Existing
-;Spectator;;;;;Incoming;Existing;Existing;Existing;Incoming;Existing;Existing;Existing

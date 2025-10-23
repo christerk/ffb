@@ -349,7 +349,7 @@ class SubHandlerGameStateMarkingTest {
 		FieldModel resultModel = result.getFieldModel();
 		assertArrayEquals(new FieldMarker[]{INCOMING_FIELD}, resultModel.getFieldMarkers());
 		assertArrayEquals(new FieldMarker[]{EXISTING_TRANSIENT_FIELD}, resultModel.getTransientFieldMarkers());
-		assertArrayEquals(new PlayerMarker[]{EXISTING_PLAYER}, resultModel.getPlayerMarkers());
+		assertArrayEquals(new PlayerMarker[]{INCOMING_PLAYER}, resultModel.getPlayerMarkers());
 		assertArrayEquals(new TransientPlayerMarker[]{EXISTING_TRANSIENT_PLAYER}, resultModel.getTransientPlayerMarkers());
 	}
 
