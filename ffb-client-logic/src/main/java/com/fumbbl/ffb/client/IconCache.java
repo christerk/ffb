@@ -51,7 +51,7 @@ public class IconCache {
 	private static final Pattern _PATTERN_PITCH = Pattern.compile("\\?pitch=([a-z]+)$");
 	private static final String LOCAL_CACHE_MAP_FILE = "map.json";
 	private static final JsonStringMapOption JSON_OPTION = new JsonStringMapOption("map");
-	private final Map<String, BufferedImage> fIconByKey;
+	private final BaseImageMap fIconByKey;
 	private final Map<String, BufferedImage> scaledIcons;
 
 	private Properties fIconUrlProperties;
@@ -66,7 +66,7 @@ public class IconCache {
 
 	public IconCache(FantasyFootballClient pClient) {
 		fClient = pClient;
-		fIconByKey = new HashMap<>();
+		fIconByKey = new BaseImageMap();
 		scaledIcons = new HashMap<>();
 		fCurrentIndexPerKey = new HashMap<>();
 		try {
@@ -145,22 +145,6 @@ public class IconCache {
 
 				@SuppressWarnings("deprecation") JsonObject jsonObject = JsonObject.readFrom(reader);
 				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
-
-				List<String> urlsToRemove = new ArrayList<>();
-
-				localCacheMap.forEach((url, filename) -> {
-					try {
-						BufferedImage image = ImageIO.read(new File(localCacheFolder + filename));
-						fIconByKey.put(url, image);
-					} catch (IOException e) {
-						urlsToRemove.add(url);
-					}
-				});
-
-				if (!urlsToRemove.isEmpty()) {
-					urlsToRemove.forEach(localCacheMap::remove);
-					updateMapFile();
-				}
 
 			} catch (Exception e) {
 				getClient().logWithOutGameId(e);
@@ -676,7 +660,6 @@ public class IconCache {
 	}
 
 
-
 	public static String findTeamLogoUrl(Team pTeam) {
 		String iconUrl = null;
 		if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
@@ -695,5 +678,31 @@ public class IconCache {
 
 	public void clear() {
 		scaledIcons.clear();
+	}
+
+	private class BaseImageMap extends HashMap<String, BufferedImage> {
+
+		@Override
+		public BufferedImage get(Object key) {
+			String url = (String) key;
+
+			BufferedImage image = super.get(url);
+			if (image != null) {
+				return image;
+			}
+
+			try {
+				String filename = localCacheMap.get(url);
+				if (!StringTool.isProvided(filename)) {
+					return null;
+				}
+				image = ImageIO.read(new File(localCacheFolder + filename));
+				put(url, image);
+			} catch (IOException e) {
+				localCacheMap.remove(url);
+				updateMapFile();
+			}
+			return image;
+		}
 	}
 }

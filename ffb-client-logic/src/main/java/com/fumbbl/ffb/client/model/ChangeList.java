@@ -15,6 +15,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("2.37.1")
 			.addBugfix("Player markings should now be applied correctly again")
 			.addImprovement("Dialogs exceeding client size now show scroll bars")
+			.addImprovement("Local Icon Cache: Icons are now loaded lazy to reduce memory usage")
 		);
 
 		versions.add(new VersionChangeList("2.37.0")
