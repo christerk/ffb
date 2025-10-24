@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Player markings should now be applied correctly again")
 			.addImprovement("Dialogs exceeding client size now show scroll bars")
 			.addImprovement("Local Icon Cache: Icons are now loaded lazy to reduce memory usage")
+			.addBugfix("Furious Outburst: Ball was lost when ball carrier used Furious Outburst")
 		);
 
 		versions.add(new VersionChangeList("2.37.0")

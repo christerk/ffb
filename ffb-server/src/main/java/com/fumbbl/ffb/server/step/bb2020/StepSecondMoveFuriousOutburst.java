@@ -3,18 +3,35 @@ package com.fumbbl.ffb.server.step.bb2020;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.MoveSquare;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -134,9 +151,14 @@ public class StepSecondMoveFuriousOutburst extends AbstractStep {
 				Player<?> target = game.getPlayerById(selectedPlayerId);
 				fieldModel.setPlayerState(target, fieldModel.getPlayerState(target).changeSelectedStabTarget(false));
 			}
+			boolean stayInEndzone = UtilServerSteps.checkTouchdown(getGameState());
+			FieldCoordinateBounds opponentEndzone = game.isHomePlaying() ? FieldCoordinateBounds.ENDZONE_AWAY : FieldCoordinateBounds.ENDZONE_HOME;
 			eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), FieldCoordinateBounds.FIELD, 3, false))
-				.filter(coordinate -> fieldModel.getPlayer(coordinate) == null).collect(Collectors.toSet()));
+				.filter(coordinate -> fieldModel.getPlayer(coordinate) == null)
+				.filter(coordinate -> !stayInEndzone || opponentEndzone.isInBounds(coordinate))
+				.collect(Collectors.toSet()));
 			fieldModel.add(eligibleSquares.stream().map(coordinate -> new MoveSquare(coordinate, 0, 0)).toArray(MoveSquare[]::new));
+			withBall = UtilPlayer.hasBall(game, actingPlayer.getPlayer());
 		} else {
 			Player<?> player = actingPlayer.getPlayer();
 			getResult().setAnimation(new Animation(AnimationType.TRICKSTER, fieldModel.getPlayerCoordinate(player), coordinate, player.getId()));

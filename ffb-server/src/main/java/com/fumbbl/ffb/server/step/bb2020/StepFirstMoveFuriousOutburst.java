@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -138,6 +139,7 @@ public class StepFirstMoveFuriousOutburst extends AbstractStep {
 			eligibleSquares.addAll(Arrays.stream(fieldModel.findAdjacentCoordinates(fieldModel.getPlayerCoordinate(target), FieldCoordinateBounds.FIELD, 1, false))
 				.filter(coordinate -> fieldModel.getPlayer(coordinate) == null).collect(Collectors.toSet()));
 			fieldModel.add(eligibleSquares.stream().map(coordinate -> new MoveSquare(coordinate, 0, 0)).toArray(MoveSquare[]::new));
+			withBall = UtilPlayer.hasBall(game, actingPlayer.getPlayer());
 		} else {
 			Player<?> player = actingPlayer.getPlayer();
 			getResult().setAnimation(new Animation(AnimationType.TRICKSTER, fieldModel.getPlayerCoordinate(player), coordinate, player.getId()));
