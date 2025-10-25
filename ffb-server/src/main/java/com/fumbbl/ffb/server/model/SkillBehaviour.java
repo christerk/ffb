@@ -64,7 +64,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		playerModifiers.add(playerModifier);
 	}
 
-	protected void registerModifier(InjuryContextModification injuryContextModification) {
+	protected void registerModifier(InjuryContextModification<?> injuryContextModification) {
 		this.injuryContextModification = injuryContextModification;
 	}
 
@@ -81,7 +81,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	}
 
 	@Override
-	public InjuryContextModification getInjuryContextModification() {
+	public InjuryContextModification<?> getInjuryContextModification() {
 		return injuryContextModification;
 	}
 
