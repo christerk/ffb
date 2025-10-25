@@ -8,16 +8,18 @@ import java.util.Map;
 
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
+import com.fumbbl.ffb.factory.ILoggingFacade;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.Scanner;
 
+@SuppressWarnings("rawtypes")
 public class FactoryManager {
 	public FactoryManager() {
 
 	}
 
-	public Map<Factory, INamedObjectFactory> getFactoriesForContext(FactoryContext context) {
+	public Map<Factory, INamedObjectFactory> getFactoriesForContext(FactoryContext context, ILoggingFacade logger) {
 		Map<Factory, INamedObjectFactory> factories = new HashMap<>();
 		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
 
@@ -34,7 +36,7 @@ public class FactoryManager {
 					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException |
 									 IllegalArgumentException
 									 | InvocationTargetException e) {
-						e.printStackTrace();
+						logger.logWithOutGameId(e);
 					}
 				}
 			}

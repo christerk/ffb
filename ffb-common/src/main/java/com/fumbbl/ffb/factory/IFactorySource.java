@@ -4,7 +4,7 @@ import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FactoryType.FactoryContext;
 
-public interface IFactorySource {
+public interface IFactorySource extends ILoggingFacade {
 
 	FactoryManager getFactoryManager();
 
@@ -12,11 +12,7 @@ public interface IFactorySource {
 
 	IFactorySource forContext(FactoryContext context);
 
+	@SuppressWarnings("rawtypes")
 	<T extends INamedObjectFactory> T getFactory(Factory factory);
 
-	void logError(long gameId, String message);
-
-	void logDebug(long gameId, String message);
-
-	void logWithOutGameId(Throwable throwable);
 }
