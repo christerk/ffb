@@ -49,7 +49,7 @@ public class Scanner<T extends IKeyedItem> {
 				Arrays.stream(cls.getAnnotations()).anyMatch(annotation ->
 					annotation instanceof RulesCollection
 						&& ((RulesCollection) annotation).value()
-						.matches(options.getRulesVersion())))
+						.isOrExtends(options.getRulesVersion())))
 			.collect(Collectors.toSet());
 	}
 
@@ -61,7 +61,7 @@ public class Scanner<T extends IKeyedItem> {
 				if (a instanceof RulesCollection) {
 					hasRulesAnnotation = true;
 					Rules rule = ((RulesCollection) a).value();
-					if (rule.matches(options.getRulesVersion())) {
+					if (rule.isOrExtends(options.getRulesVersion())) {
 
 						addInstance(cls, result);
 					}

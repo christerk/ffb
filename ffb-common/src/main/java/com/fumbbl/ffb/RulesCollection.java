@@ -8,12 +8,29 @@ import java.lang.annotation.RetentionPolicy;
 public @interface RulesCollection {
 
 	enum Rules {
-		COMMON,
-		BB2016,
-		BB2020;
+		COMMON(null),
+		BB2016(COMMON),
+		BB2020(COMMON),
+		BB2025(BB2020);
 
-		public boolean matches(Rules other) {
-			return this == COMMON || other == COMMON || this == other;
+		private final Rules extending;
+
+		Rules(Rules extending) {
+			this.extending = extending;
+		}
+
+		public boolean isOrExtends(Rules other) {
+			if (this == other) {
+				return true;
+			}
+			Rules extended = this.extending;
+			while (extended != null) {
+				if (extended == other) {
+					return true;
+				}
+				extended = extended.extending;
+			}
+			return false;
 		}
 	}
 

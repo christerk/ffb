@@ -43,7 +43,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		RulesCollection skillRules = skillClass.getAnnotation(RulesCollection.class);
 		RulesCollection behaviourRules = getClass().getAnnotation(RulesCollection.class);
 		
-		if (!skillRules.value().matches(behaviourRules.value())) {
+		if (!skillRules.value().isOrExtends(behaviourRules.value())) {
 			throw new FantasyFootballException("Skill behaviour rule does not match skill rule");
 		}
 	}
