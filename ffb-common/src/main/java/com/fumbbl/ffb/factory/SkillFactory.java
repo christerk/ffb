@@ -72,7 +72,7 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 	public void initialize(Game game) {
 		Scanner<Skill> scanner = new Scanner<>(Skill.class);
 
-		scanner.getSubclasses(game.getOptions()).forEach(this::addSkill);
+		scanner.getSubclassInstances(game.getOptions()).forEach(this::addSkill);
 		skills.values().forEach(Skill::postConstruct);
 	}
 }

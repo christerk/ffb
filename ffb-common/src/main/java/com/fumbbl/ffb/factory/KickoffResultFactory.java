@@ -33,7 +33,7 @@ public class KickoffResultFactory implements INamedObjectFactory<KickoffResult> 
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(KickoffResultMapping.class).getSubclasses(game.getOptions())
+		new Scanner<>(KickoffResultMapping.class).getSubclassInstances(game.getOptions())
 			.stream().findFirst().ifPresent(mapping -> this.mapping = mapping);
 	}
 

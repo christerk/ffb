@@ -14,9 +14,9 @@ import com.fumbbl.ffb.util.Scanner;
 
 public class FactoryManager {
 	public FactoryManager() {
-		
+
 	}
-	
+
 	public Map<Factory, INamedObjectFactory> getFactoriesForContext(FactoryContext context) {
 		Map<Factory, INamedObjectFactory> factories = new HashMap<>();
 		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
@@ -24,21 +24,22 @@ public class FactoryManager {
 		for (Class<INamedObjectFactory> factoryClass : scanner.getClassesImplementing()) {
 			for (Annotation a : factoryClass.getAnnotations()) {
 				if (a instanceof FactoryType) {
-					Factory factoryType = ((FactoryType)a).value();
+					Factory factoryType = ((FactoryType) a).value();
 					try {
 						Constructor<INamedObjectFactory> constructor = factoryClass.getConstructor();
 						INamedObjectFactory factory = constructor.newInstance();
 						if (factoryType.context == context) {
 							factories.put(factoryType, factory);
 						}
-					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException e) {
+					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException |
+									 IllegalArgumentException
+									 | InvocationTargetException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		}
-		
+
 		return factories;
 	}
 
@@ -46,19 +47,12 @@ public class FactoryManager {
 		Map<Factory, INamedObjectFactory> factories = new HashMap<>();
 		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
 
-		for (Class<INamedObjectFactory> factoryClass : scanner.getClassesImplementing(gameOptions)) {
-			for (Annotation a : factoryClass.getAnnotations()) {
+		for (INamedObjectFactory factory : scanner.getInstancesImplementing(gameOptions)) {
+			for (Annotation a : factory.getClass().getAnnotations()) {
 				if (a instanceof FactoryType) {
-					Factory factoryType = ((FactoryType)a).value();
-					try {
-						Constructor<INamedObjectFactory> constructor = factoryClass.getConstructor();
-						INamedObjectFactory factory = constructor.newInstance();
-						if (factoryType.context == context) {
-							factories.put(factoryType, factory);
-						}
-					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-						e.printStackTrace();
+					Factory factoryType = ((FactoryType) a).value();
+					if (factoryType.context == context) {
+						factories.put(factoryType, factory);
 					}
 				}
 			}

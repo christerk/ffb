@@ -32,6 +32,16 @@ public @interface RulesCollection {
 			}
 			return false;
 		}
+
+		public int getHierarchyLevel() {
+			int level = 0;
+			Rules extended = this.extending;
+			while (extended != null) {
+				level++;
+				extended = extended.extending;
+			}
+			return level;
+		}
 	}
 
 	Rules value() default Rules.COMMON;
