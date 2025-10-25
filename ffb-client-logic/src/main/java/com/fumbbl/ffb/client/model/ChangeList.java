@@ -12,6 +12,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("3.0.0") {
+
+		});
+
 		versions.add(new VersionChangeList("2.37.1")
 			.addBugfix("Player markings should now be applied correctly again")
 			.addImprovement("Dialogs exceeding client size now show scroll bars")
