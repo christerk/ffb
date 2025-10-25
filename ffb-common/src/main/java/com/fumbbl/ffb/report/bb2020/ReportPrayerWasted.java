@@ -34,8 +34,7 @@ public class ReportPrayerWasted extends NoDiceReport {
 		return ReportId.PRAYER_WASTED;
 	}
 
-	@Override
-	public String getName() {
+	public String getPrayerName() {
 		return name;
 	}
 
