@@ -4,14 +4,12 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.util.Scanner;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -55,17 +53,6 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 
 	public Skill forClass(Class<? extends Skill> c) {
 		return skillMap.get(c);
-	}
-
-	public Collection<ISkillBehaviour<? extends Skill>> getBehaviours() {
-		Collection<ISkillBehaviour<? extends Skill>> result = new HashSet<>();
-		skills.values().forEach(s -> {
-			ISkillBehaviour<? extends Skill> behaviour = s.getSkillBehaviour();
-			if (behaviour != null) {
-				result.add(behaviour);
-			}
-		});
-		return result;
 	}
 
 	@Override
