@@ -63,7 +63,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		fCommandHandlerFactory = new ClientCommandHandlerFactory(this);
 
 		factoryManager = new FactoryManager();
-		factories = factoryManager.getFactoriesForContext(getContext());
+		factories = factoryManager.getFactoriesForContext(getContext(), this);
 		setGame(new Game(getFactorySource(), factoryManager));
 
 		fCommunication = new ClientCommunication(this);

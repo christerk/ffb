@@ -38,7 +38,7 @@ public class InducementTypeFactory implements INamedObjectFactory<InducementType
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(InducementCollection.class).getSubclasses(game.getOptions())
+		new Scanner<>(InducementCollection.class).getSubclassInstances(game.getOptions())
 				.stream().findFirst().ifPresent(types -> this.types = types);
 	}
 

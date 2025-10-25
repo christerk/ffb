@@ -31,7 +31,7 @@ public abstract class GenerifiedModifierFactory<
 	@Override
 	public void initialize(Game game) {
 		getScanner()
-			.getSubclasses(game.getOptions()).stream().findFirst()
+			.getSubclassInstances(game.getOptions()).stream().findFirst()
 			.ifPresent(this::setModifierCollection);
 		modifierAggregator = game.getModifierAggregator();
 	}

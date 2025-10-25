@@ -92,13 +92,19 @@ public class StepFactory {
 
 	private void initialize() {
 
-		new Scanner<>(IStep.class).getClassesImplementing(fGameState.getGame().getOptions())
-			.forEach(stepClass -> {
+		new Scanner<>(IStep.class).getInstancesImplementing(fGameState.getGame().getOptions(), (cls) -> {
+				Constructor<? extends IStep> constructor;
+				try {
+					constructor = cls.getConstructor(GameState.class);
+					return constructor.newInstance(fGameState);
+				} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+					throw new StepException("Error constructing Step for class " + cls.getCanonicalName(), e);
+				}
+			})
+			.forEach(step -> {
 
 				try {
-					Constructor<? extends IStep> constructor = stepClass.getConstructor(GameState.class);
-					IStep step = constructor.newInstance(fGameState);
-					stepRegistry.put(step.getId(), constructor);
+					stepRegistry.put(step.getId(), step.getClass().getConstructor(GameState.class));
 
 					StepHook hook = step.getClass().getAnnotation(StepHook.class);
 					if (hook != null) {
@@ -106,8 +112,8 @@ public class StepFactory {
 						hooks.get(hookPoint).add(step.getId());
 					}
 
-				} catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-					throw new StepException("Error constructing Step for class " + stepClass.getCanonicalName(), e);
+				} catch (NoSuchMethodException e) {
+					throw new StepException("Error constructing Step for class " + step.getClass().getCanonicalName(), e);
 				}
 			});
 

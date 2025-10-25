@@ -10,8 +10,6 @@ public interface SeriousInjury extends INamedObject {
 
 	String getRecovery();
 
-	boolean isLasting();
-
 	InjuryAttribute getInjuryAttribute();
 
 	boolean isDead();

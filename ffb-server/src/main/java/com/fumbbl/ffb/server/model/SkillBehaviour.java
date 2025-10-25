@@ -43,7 +43,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		RulesCollection skillRules = skillClass.getAnnotation(RulesCollection.class);
 		RulesCollection behaviourRules = getClass().getAnnotation(RulesCollection.class);
 		
-		if (!skillRules.value().matches(behaviourRules.value())) {
+		if (!behaviourRules.value().isOrExtends(skillRules.value())) {
 			throw new FantasyFootballException("Skill behaviour rule does not match skill rule");
 		}
 	}
@@ -64,7 +64,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		playerModifiers.add(playerModifier);
 	}
 
-	protected void registerModifier(InjuryContextModification injuryContextModification) {
+	protected void registerModifier(InjuryContextModification<?> injuryContextModification) {
 		this.injuryContextModification = injuryContextModification;
 	}
 
@@ -81,7 +81,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	}
 
 	@Override
-	public InjuryContextModification getInjuryContextModification() {
+	public InjuryContextModification<?> getInjuryContextModification() {
 		return injuryContextModification;
 	}
 

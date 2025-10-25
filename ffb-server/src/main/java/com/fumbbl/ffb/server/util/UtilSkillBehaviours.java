@@ -18,7 +18,7 @@ public class UtilSkillBehaviours {
 	public static void registerBehaviours(Game game, DebugLog log) {
 
 		Scanner<SkillBehaviour> scanner = new Scanner<>(SkillBehaviour.class);
-		Collection<SkillBehaviour> skillBehaviours = scanner.getSubclasses(game.getOptions());
+		Collection<SkillBehaviour> skillBehaviours = scanner.getSubclassInstances(game.getOptions());
 		Set<String> packageNames = new HashSet<>();
 		SkillFactory skillFactory = game.getRules().getSkillFactory();
 		for (SkillBehaviour<Skill> behaviour : skillBehaviours) {

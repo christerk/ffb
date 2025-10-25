@@ -29,6 +29,6 @@ public class PrayerHandlerFactory implements INamedObjectFactory<PrayerHandler> 
 
 	@Override
 	public void initialize(Game game) {
-		handlers.addAll(new Scanner<>(PrayerHandler.class).getSubclasses(game.getOptions()));
+		handlers.addAll(new Scanner<>(PrayerHandler.class).getSubclassInstances(game.getOptions()));
 	}
 }

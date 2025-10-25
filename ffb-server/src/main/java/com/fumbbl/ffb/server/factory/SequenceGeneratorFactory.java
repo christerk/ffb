@@ -26,7 +26,7 @@ public class SequenceGeneratorFactory implements INamedObjectFactory<SequenceGen
 	@SuppressWarnings("unchecked")
 	public void initialize(Game game) {
 
-		new Scanner<>(SequenceGenerator.class).getSubclasses(game.getOptions()).forEach(
+		new Scanner<>(SequenceGenerator.class).getSubclassInstances(game.getOptions()).forEach(
 			generator -> {
 				if (generators.containsKey(generator.getName())) {
 					throw new FantasyFootballException("Duplicate sequence generator " + generator.getName() + " for " + game.getOptions().getRulesVersion().name());

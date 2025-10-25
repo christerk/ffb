@@ -15,11 +15,11 @@ public class PrayerWastedMessage extends ReportMessageBase<ReportPrayerWasted> {
 	@Override
 	protected void render(ReportPrayerWasted report) {
 		if (StringTool.isProvided(report.getPlayerId())) {
-			println(getIndent() + 1, TextStyle.EXPLANATION, "Prayer " + report.getName() + " is wasted since there are no eligible skills.");
+			println(getIndent() + 1, TextStyle.EXPLANATION, "Prayer " + report.getPrayerName() + " is wasted since there are no eligible skills.");
 			print(getIndent() + 1, true, game.getPlayerById(report.getPlayerId()));
 			println(getIndent() + 1, TextStyle.EXPLANATION, " was the selected player");
 		} else {
-			println(getIndent() + 1, TextStyle.EXPLANATION, "Prayer " + report.getName() + " is wasted since there are no eligible players.");
+			println(getIndent() + 1, TextStyle.EXPLANATION, "Prayer " + report.getPrayerName() + " is wasted since there are no eligible players.");
 		}
 	}
 }
