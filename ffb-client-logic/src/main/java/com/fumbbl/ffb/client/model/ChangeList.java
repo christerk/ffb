@@ -13,6 +13,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("2.37.2")
+			.addBugfix("Player markings in replays vanished when going backwards")
 		);
 
 		versions.add(new VersionChangeList("2.37.1")
