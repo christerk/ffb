@@ -119,8 +119,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
 			html.append(commandLine("/set_player_home &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on home team on square defined by coordinate."));
 			html.append(commandLine("/set_player_away &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on away team on square defined by coordinate."));
-			html.append(commandLine("/set_reroll_home &lt;amount&gt;", "sets the number of rerolls for the home team."));
-			html.append(commandLine("/set_reroll_away &lt;amount&gt;", "sets the number of rerolls for the away team."));
+			html.append(commandLine("/set_rerolls_home &lt;amount&gt;", "sets the number of rerolls for the home team."));
+			html.append(commandLine("/set_rerolls_away &lt;amount&gt;", "sets the number of rerolls for the away team."));
 			html.append(commandLine("/skill_home &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on home team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/skill_away &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on away team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/standup_home &lt;playerlist&gt;", "stands players on the home team up."));
@@ -176,7 +176,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_activated &lt;true|false&gt; &lt;playerlist&gt;", "sets players on your team to (not) activated for this turn."));
 			html.append(commandLine("/set_ball &lt;x coordinate&gt; &lt;y coordinate&gt;", "moves ball to square defined by coordinate."));
 			html.append(commandLine("/set_player &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on your team on square defined by coordinate."));
-			html.append(commandLine("/set_reroll &lt;amount&gt;", "sets the number of rerolls for your team."));
+			html.append(commandLine("/set_rerolls &lt;amount&gt;", "sets the number of rerolls for your team."));
 			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/standup &lt;playerlist&gt;", "stands players on your team up."));
 			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
