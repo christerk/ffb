@@ -165,7 +165,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		Optional<Skill> skill = UtilCards.getSkillWithProperty(player, NamedProperties.canAvoidFallingDown);
 
 		if (!skill.isPresent()) {
-			if (state.isEndTurn() == Boolean.TRUE && StringTool.isProvided(goToLabelOnFailure)) {
+			if (StringTool.isProvided(goToLabelOnFailure)) {
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 			} else {
 				getResult().setNextAction(StepAction.NEXT_STEP);
