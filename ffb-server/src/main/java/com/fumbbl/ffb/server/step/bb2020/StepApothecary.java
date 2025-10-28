@@ -165,6 +165,13 @@ public class StepApothecary extends AbstractStep {
 						return true;
 					}
 					return false;
+				case REMOVE_INJURY_RESULT:
+					ApothecaryMode apothecaryMode = (ApothecaryMode) parameter.getValue();
+					if (apothecaryMode == fApothecaryMode) {
+						fInjuryResult = null;
+						return true;
+					}
+					return false;
 				case USING_PILING_ON:
 					Boolean usingPilingOn = (Boolean) parameter.getValue();
 					if ((ApothecaryMode.DEFENDER == fApothecaryMode) && (usingPilingOn != null) && !usingPilingOn) {

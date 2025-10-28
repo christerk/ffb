@@ -154,7 +154,7 @@ public class Scanner<T extends IKeyedItem> {
 	private Set<T> getInstancesForMostRecentRules(Set<Class<T>> unfiltered, Function<Class<T>, T> instanceGenerator) {
 		return unfiltered.stream().map(instanceGenerator)
 			.collect(Collectors.groupingBy(IKeyedItem::getKey)).values().stream().map(classGroup -> classGroup.stream()
-				.min(Comparator.comparing(instance ->
+				.max(Comparator.comparing(instance ->
 					instance.getClass().getAnnotation(RulesCollection.class).value().getHierarchyLevel())
 				).orElseThrow(() -> new FantasyFootballException("No classes found in group.")))
 			.collect(Collectors.toSet());

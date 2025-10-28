@@ -60,6 +60,7 @@ public enum SkillUse implements INamedObject {
 	PASS_JUMP_WITHOUT_MODIFIERS("passJumpWithoutModifiers", "to pass the jump roll ignoring modifiers"),
 	PASS_RUSH_WITHOUT_MODIFIERS("passRushWithoutModifiers", "to pass the rush roll ignoring modifiers"),
 	QUICK_BITE("quickBite", "to try to get the ball"),
+	STEADY_FOOTING("steadyFooting", "to keep standing"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
 
 	private final String fName;

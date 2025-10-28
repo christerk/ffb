@@ -112,7 +112,7 @@ public abstract class ReportSkillRoll implements IReport {
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
-		if (fRollModifierList.size() > 0) {
+		if (!fRollModifierList.isEmpty()) {
 			JsonArray modifierArray = new JsonArray();
 			for (RollModifier<?> modifier : fRollModifierList) {
 				modifierArray.add(UtilJson.toJsonValue(modifier));

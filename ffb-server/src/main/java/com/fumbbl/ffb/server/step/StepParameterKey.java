@@ -117,6 +117,7 @@ public enum StepParameterKey {
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean
+	REMOVE_INJURY_RESULT, // ApothecaryMode
 	RESET_FOR_FAILED_BLOCK, // Boolean
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean

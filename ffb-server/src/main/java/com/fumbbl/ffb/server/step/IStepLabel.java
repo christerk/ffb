@@ -53,5 +53,5 @@ public interface IStepLabel {
 	String SELECT = "select";
 	String SHADOWING = "shadowing";
 	String SKIP_PILE_DRIVER = "skipPileDriver";
-
+	String STEADY_FOOTING = "steadyFooting";
 }

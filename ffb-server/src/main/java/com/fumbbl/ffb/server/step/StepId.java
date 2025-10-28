@@ -168,6 +168,7 @@ public enum StepId implements INamedObject {
 	STAB("stab"), // action.block
 	STALLING_PLAYER("stallingPlayer"), // action.common
 	STAND_UP("standUp"), // action.select
+	STEADY_FOOTING("steadyFooting"), // action.common
 	SWARMING("swarming"), // phase.kickoff
 	SWOOP("swoop"), // action.ttm
 	TAKE_ROOT("takeRoot"), // action.common

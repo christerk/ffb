@@ -20,11 +20,6 @@ public class ReportDodgeRoll extends ReportSkillRoll {
 	}
 
 	public ReportDodgeRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
-												 boolean pReRolled, RollModifier<?>[] pRollModifiers) {
-		this(pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers, null);
-	}
-
-	public ReportDodgeRoll(String pPlayerId, boolean pSuccessful, int pRoll, int pMinimumRoll,
 												 boolean pReRolled, RollModifier<?>[] pRollModifiers, StatBasedRollModifier statBasedRollModifier) {
 		super(pPlayerId, pSuccessful, pRoll, pMinimumRoll, pReRolled, pRollModifiers);
 		this.statBasedRollModifier = statBasedRollModifier;

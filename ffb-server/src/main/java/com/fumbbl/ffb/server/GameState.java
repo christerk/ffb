@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
+import com.fumbbl.ffb.server.model.SteadyFootingState;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
@@ -67,6 +68,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private BlitzTurnState blitzTurnState;
 	private PrayerState prayerState = new PrayerState();
 	private ActiveEffects activeEffects = new ActiveEffects();
+	private final SteadyFootingState steadyFootingState = new SteadyFootingState();
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -121,6 +123,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setBlitzTurnState(BlitzTurnState blitzTurnState) {
 		this.blitzTurnState = blitzTurnState;
+	}
+
+	public SteadyFootingState getSteadyFootingState() {
+		return steadyFootingState;
 	}
 
 	public long getId() {
@@ -394,6 +400,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 
 		IServerJsonOption.ACTIVE_EFFECTS.addTo(jsonObject, activeEffects.toJsonValue());
+
+		//TODO steady footing
 		return jsonObject;
 	}
 
@@ -457,6 +465,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (IServerJsonOption.ACTIVE_EFFECTS.isDefinedIn(jsonObject)) {
 			activeEffects = new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
 		}
+
+		//TODO steady footing
 		return this;
 	}
 
