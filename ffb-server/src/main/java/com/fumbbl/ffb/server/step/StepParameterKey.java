@@ -81,6 +81,7 @@ public enum StepParameterKey {
 	INDUCEMENT_PHASE, // InducementPhase
 	INDUCEMENT_USE, // InducementUse
 	INJURY_RESULT, // InjuryResult
+	INJURY_RESULT_FROM_ACTUAL_DROP, // InjuryResult
 	INJURY_TYPE, // InjuryType
 	INTERCEPTOR_ID, // String
 	IS_KICKED_PLAYER, // Boolean
@@ -117,7 +118,6 @@ public enum StepParameterKey {
 	ATTACKER_POISONED, // Boolean
 	DEFENDER_POISONED, // Boolean
 	RE_ROLL_USED, // Boolean
-	REMOVE_INJURY_RESULT, // ApothecaryMode
 	RESET_FOR_FAILED_BLOCK, // Boolean
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean

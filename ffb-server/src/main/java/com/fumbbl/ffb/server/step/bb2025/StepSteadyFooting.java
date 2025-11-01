@@ -102,6 +102,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					state.setPlayerId(null);
 					state.setApothecaryMode(null);
 				}
+				consume(parameter);
 				return true;
 			case INJURY_TYPE:
 				InjuryTypeServer<?> injuryType = (InjuryTypeServer<?>) parameter.getValue();
@@ -194,6 +195,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			} else {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
+			if (state.getInjuryResult() != null) {
+				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
+			}
 			state.clear();
 			return;
 		}
@@ -204,6 +208,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 				} else {
 					getResult().setNextAction(StepAction.NEXT_STEP);
+				}
+				if (state.getInjuryResult() != null) {
+					publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
 				}
 				state.clear();
 				return;
@@ -221,9 +228,6 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-			if (state.getInjuryResult() != null) {
-				publishParameter(StepParameter.from(StepParameterKey.REMOVE_INJURY_RESULT, state.getInjuryResult()));
-			}
 			if (state.getInjuryType() != null) {
 				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, null));
 			}
@@ -244,6 +248,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
+		}
+		if (state.getInjuryResult() != null) {
+			publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
 		}
 		state.clear();
 	}

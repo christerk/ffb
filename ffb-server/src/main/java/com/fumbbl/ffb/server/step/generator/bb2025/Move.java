@@ -28,6 +28,7 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 			from(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, params.getBallAndChainRrSetting()));
 		sequence.add(StepId.INIT_ACTIVATION);
 		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
+		sequence.add(StepId.STEADY_FOOTING);
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
@@ -45,9 +46,7 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		sequence.add(StepId.HYPNOTIC_GAZE, IStepLabel.HYPNOTIC_GAZE,
 			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING));
 		sequence.add(StepId.MOVE_BALL_AND_CHAIN, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
-			from(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.STEADY_FOOTING));
-		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+			from(StepParameterKey.GOTO_LABEL_ON_FALL_DOWN, IStepLabel.FALL_DOWN));
 
 		sequence.add(StepId.MOVE);
 		// Do GFI twice to deal with Ball and Chain separately.
