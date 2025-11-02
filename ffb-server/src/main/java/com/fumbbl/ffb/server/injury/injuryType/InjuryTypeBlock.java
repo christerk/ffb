@@ -50,8 +50,8 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		if (stunty != null) {
 			injuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
 		}
-		// do not use injuryModifiers on blocking own team-mate with b&c
-		if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
+		// do not use injuryModifiers on blocking own team-mate with b&c or for BB2025 USE_ARMOUR_MODIFIERS_ONLY mode
+		if (mode != Mode.USE_ARMOUR_MODIFIERS_ONLY && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
 				pDefender, isStab(), isFoul(), isVomitLike());
 			injuryContext.addInjuryModifiers(injuryModifiers);
@@ -82,9 +82,14 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 			if (chainsaw != null) {
 				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
+			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY || mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
+				if (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY) {
+					armorModifiers.removeIf(modifier -> 
+						!modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue) && 
+						!modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock));
+				}
 				Optional<ArmorModifier> claw = armorModifiers.stream()
 					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst();
 				if (claw.isPresent()) {
@@ -116,6 +121,6 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	}
 
 	public enum Mode {
-		REGULAR, USE_MODIFIERS_AGAINST_TEAM_MATES, DO_NOT_USE_MODIFIERS
+		REGULAR, USE_MODIFIERS_AGAINST_TEAM_MATES, DO_NOT_USE_MODIFIERS, USE_ARMOUR_MODIFIERS_ONLY
 	}
 }
