@@ -6,7 +6,10 @@ import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
+/**
+ * Same as 2020 Pogo Stick
+ */
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class Pogo extends Skill {
 	public Pogo() {
 		super("Pogo", SkillCategory.TRAIT);
