@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
+import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -122,6 +123,9 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	private void executeStep() {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		if (dropPlayerContext != null && dropPlayerContext.getInjuryResult() != null) {
+			dropPlayerContext.getDeferredCommands().forEach(DeferredCommand::execute);
+			dropPlayerContext.getStepParameters().forEach(this::publishParameter);
+
 			Game game = getGameState().getGame();
 
 			InjuryResult injuryResult = dropPlayerContext.getInjuryResult();

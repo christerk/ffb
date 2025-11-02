@@ -9,57 +9,93 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.step.DeferredCommand;
+import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.util.ArrayTool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DropPlayerContext implements IJsonSerializable {
 	private InjuryResult injuryResult;
-	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak, alreadyDropped,
-		modifiedInjuryEndsTurn, endTurnWithoutKnockdown;
+	private boolean endTurn, eligibleForSafePairOfHands, requiresArmourBreak, alreadyDropped, modifiedInjuryEndsTurn,
+		endTurnWithoutKnockdown;
 	private String label, playerId;
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
 	private StepParameterKey[] additionalVictimStateKeys;
+	private final List<StepParameter> stepParameters = new ArrayList<>();
+	private final List<DeferredCommand> deferredCommands = new ArrayList<>();
 
 	public DropPlayerContext() {
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, String playerId, ApothecaryMode apothecaryMode, boolean alreadyDropped) {
+	public DropPlayerContext(InjuryResult injuryResult, String playerId, ApothecaryMode apothecaryMode,
+													 boolean alreadyDropped) {
 		this(injuryResult, false, false, null, playerId, apothecaryMode, false, alreadyDropped);
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
 													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, null);
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			null);
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, alreadyDropped, null);
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 boolean alreadyDropped) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			alreadyDropped, null);
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, StepParameterKey victimStateKey) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, false, victimStateKey);
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 StepParameterKey victimStateKey) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			false,
+			victimStateKey);
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, StepParameterKey victimStateKey, StepParameterKey[] additionalVictimStateKeys) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, false, victimStateKey, false, false, additionalVictimStateKeys);
-	}
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped,
-														StepParameterKey victimStateKey) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak, alreadyDropped,
-			victimStateKey,  false, false, null);
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 StepParameterKey victimStateKey, StepParameterKey[] additionalVictimStateKeys) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			false,
+			victimStateKey, false, false, additionalVictimStateKeys);
 	}
 
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands, String label,
-														String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak, boolean alreadyDropped,
-														StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn, boolean endTurnWithoutKnockdown, StepParameterKey[] additionalVictimStateKeys) {
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 boolean alreadyDropped, StepParameterKey victimStateKey) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			alreadyDropped, victimStateKey, false, false, null);
+	}
+
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 boolean alreadyDropped, StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn,
+													 boolean endTurnWithoutKnockdown, StepParameterKey[] additionalVictimStateKeys) {
+		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
+			alreadyDropped, victimStateKey, modifiedInjuryEndsTurn, endTurnWithoutKnockdown, additionalVictimStateKeys,
+			null, null);
+	}
+
+	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
+													 String label,
+													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
+													 boolean alreadyDropped, StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn,
+													 boolean endTurnWithoutKnockdown, StepParameterKey[] additionalVictimStateKeys,
+													 List<StepParameter> stepParameters, List<DeferredCommand> deferredCommands) {
 		this.injuryResult = injuryResult;
 		this.endTurn = endTurn;
 		this.eligibleForSafePairOfHands = eligibleForSafePairOfHands;
@@ -72,6 +108,12 @@ public class DropPlayerContext implements IJsonSerializable {
 		this.endTurnWithoutKnockdown = endTurnWithoutKnockdown;
 		this.modifiedInjuryEndsTurn = modifiedInjuryEndsTurn;
 		this.additionalVictimStateKeys = additionalVictimStateKeys;
+		if (stepParameters != null) {
+			this.stepParameters.addAll(stepParameters);
+		}
+		if (deferredCommands != null) {
+			this.deferredCommands.addAll(deferredCommands);
+		}
 	}
 
 	public InjuryResult getInjuryResult() {
@@ -127,6 +169,14 @@ public class DropPlayerContext implements IJsonSerializable {
 		return additionalVictimStateKeys;
 	}
 
+	public List<StepParameter> getStepParameters() {
+		return Collections.unmodifiableList(stepParameters);
+	}
+
+	public List<DeferredCommand> getDeferredCommands() {
+		return Collections.unmodifiableList(deferredCommands);
+	}
+
 	@Override
 	public DropPlayerContext initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -150,10 +200,12 @@ public class DropPlayerContext implements IJsonSerializable {
 		}
 
 		if (IJsonOption.STEP_PARAMETER_KEYS.isDefinedIn(jsonObject)) {
-			additionalVictimStateKeys = Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
-				.map(StepParameterKey::valueOf).toArray(StepParameterKey[]::new);
+			additionalVictimStateKeys =
+				Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
+					.map(StepParameterKey::valueOf).toArray(StepParameterKey[]::new);
 		}
 
+		// TODO
 		return this;
 	}
 
@@ -174,9 +226,12 @@ public class DropPlayerContext implements IJsonSerializable {
 		IServerJsonOption.MODIFIED_INJURY_ENDS_TURN.addTo(jsonObject, modifiedInjuryEndsTurn);
 		IServerJsonOption.END_TURN_WITHOUT_KNOCKDOWN.addTo(jsonObject, endTurnWithoutKnockdown);
 		if (ArrayTool.isProvided(additionalVictimStateKeys)) {
-			String[] keys = Arrays.stream(additionalVictimStateKeys).map(StepParameterKey::name).collect(Collectors.toList()).toArray(new String[]{});
+			String[] keys = Arrays.stream(additionalVictimStateKeys).map(StepParameterKey::name).collect(Collectors.toList())
+				.toArray(new String[]{});
 			IJsonOption.STEP_PARAMETER_KEYS.addTo(jsonObject, keys);
 		}
+
+		//TODO
 		return jsonObject;
 	}
 }

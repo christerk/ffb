@@ -65,7 +65,7 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepApothecary extends AbstractStep {
 
 	private ApothecaryMode fApothecaryMode;
