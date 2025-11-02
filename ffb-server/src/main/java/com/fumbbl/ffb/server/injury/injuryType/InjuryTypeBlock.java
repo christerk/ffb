@@ -85,6 +85,14 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY || mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
+				if (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY) {
+					// BB2025: Only apply Claws and Mighty Blow from attacker
+					armorModifiers = armorModifiers.stream()
+						.filter(modifier -> 
+							modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue) || 
+							modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))
+						.collect(java.util.stream.Collectors.toSet());
+				}
 				Optional<ArmorModifier> claw = armorModifiers.stream()
 					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst();
 				if (claw.isPresent()) {
