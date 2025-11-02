@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class Insignificant extends Skill {
 
   public Insignificant() {
-		super("Insignificant", SkillCategory.TRAIT);
-	}
+    super("Insignificant", SkillCategory.TRAIT);
+  }
   
 }
