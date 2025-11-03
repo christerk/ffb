@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class Fumblerooski extends Skill {
 
 	public Fumblerooski() {
-		super("Fumblerooski", SkillCategory.PASSING);
+		super("Fumblerooski", SkillCategory.DEVIOUS);
 	}
 
 	@Override

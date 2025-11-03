@@ -9,7 +9,7 @@ public enum SkillCategory implements INamedObject {
 
 	GENERAL("General"), AGILITY("Agility"), PASSING("Passing"), STRENGTH("Strength"),
 	MUTATION("Mutation", "Mutations"), MUTATIONS("Mutations"), EXTRAORDINARY("Extraordinary"), STAT_INCREASE("Stat Increase"),
-	STAT_DECREASE("Stat Decrease"), TRAIT("Trait");
+	STAT_DECREASE("Stat Decrease"), TRAIT("Trait"), DEVIOUS("Devious");
 
 	private final String fName;
 	private final String altName;
