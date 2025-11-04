@@ -140,8 +140,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 
 				if (!dropPlayerContext.isAlreadyDropped() && (!dropPlayerContext.isRequiresArmourBreak() || injuryResult.injuryContext().isArmorBroken())) {
 					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(dropPlayerContext.getPlayerId()),
-						dropPlayerContext.getApothecaryMode(), dropPlayerContext.isEligibleForSafePairOfHands(),
-						StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP));
+						dropPlayerContext.getApothecaryMode(), dropPlayerContext.isEligibleForSafePairOfHands()));
 					if (dropPlayerContext.isEndTurn()) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
@@ -158,8 +157,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, injuryResult));
-				getGameState().getSteadyFootingState().clear();
+				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 				if (StringTool.isProvided(dropPlayerContext.getLabel())) {
 					getResult().setNextAction(StepAction.GOTO_LABEL, dropPlayerContext.getLabel());
 				}

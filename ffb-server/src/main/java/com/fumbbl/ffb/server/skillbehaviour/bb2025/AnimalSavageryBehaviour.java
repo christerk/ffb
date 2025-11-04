@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.DropPlayerContextBuilder;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
+import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -273,9 +274,10 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		DropPlayerContext dropPlayerContext =
 			DropPlayerContextBuilder.builder().injuryResult(injuryResult).endTurn(endTurn).eligibleForSafePairOfHands(true)
 				.label(label).playerId(game.getDefenderId()).apothecaryMode(ApothecaryMode.ANIMAL_SAVAGERY)
-				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys)
-				.stepParameters(endTurnParameters).deferredCommands(deferredCommands).build();
-		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT, dropPlayerContext));
+				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys).stepParameters(endTurnParameters)
+				.deferredCommands(deferredCommands).build();
+		step.publishParameter(
+			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 
 	}
 

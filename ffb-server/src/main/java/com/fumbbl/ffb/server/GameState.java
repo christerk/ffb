@@ -68,7 +68,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private BlitzTurnState blitzTurnState;
 	private PrayerState prayerState = new PrayerState();
 	private ActiveEffects activeEffects = new ActiveEffects();
-	private final SteadyFootingState steadyFootingState = new SteadyFootingState();
 
 	private enum StepExecutionMode {
 		Start, HandleCommand
@@ -123,10 +122,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setBlitzTurnState(BlitzTurnState blitzTurnState) {
 		this.blitzTurnState = blitzTurnState;
-	}
-
-	public SteadyFootingState getSteadyFootingState() {
-		return steadyFootingState;
 	}
 
 	public long getId() {
@@ -401,7 +396,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		IServerJsonOption.ACTIVE_EFFECTS.addTo(jsonObject, activeEffects.toJsonValue());
 
-		//TODO steady footing
 		return jsonObject;
 	}
 
@@ -466,7 +460,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			activeEffects = new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
 		}
 
-		//TODO steady footing
 		return this;
 	}
 

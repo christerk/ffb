@@ -81,7 +81,6 @@ public enum StepParameterKey {
 	INDUCEMENT_PHASE, // InducementPhase
 	INDUCEMENT_USE, // InducementUse
 	INJURY_RESULT, // InjuryResult
-	INJURY_RESULT_FROM_ACTUAL_DROP, // InjuryResult
 	INJURY_TYPE, // InjuryType
 	INTERCEPTOR_ID, // String
 	IS_KICKED_PLAYER, // Boolean
@@ -125,6 +124,7 @@ public enum StepParameterKey {
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
+	STEADY_FOOTING_CONTEXT, // SteadFootingContext
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean

@@ -5,27 +5,14 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
-import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 
 public class SteadyFootingState implements IJsonSerializable {
 
-	private DropPlayerContext dropPlayerContext;
 	private CatchScatterThrowInMode catchScatterThrowInMode;
 	private Boolean endTurn;
 	private Boolean endPlayerAction;
-	private InjuryResult injuryResult;
 	private String playerId;
 	private ApothecaryMode apothecaryMode;
-	private InjuryTypeServer<?> injuryType;
-
-	public DropPlayerContext getDropPlayerContext() {
-		return dropPlayerContext;
-	}
-
-	public void setDropPlayerContext(DropPlayerContext dropPlayerContext) {
-		this.dropPlayerContext = dropPlayerContext;
-	}
 
 	public CatchScatterThrowInMode getCatchScatterThrowInMode() {
 		return catchScatterThrowInMode;
@@ -51,14 +38,6 @@ public class SteadyFootingState implements IJsonSerializable {
 		this.endPlayerAction = endPlayerAction;
 	}
 
-	public InjuryResult getInjuryResult() {
-		return injuryResult;
-	}
-
-	public void setInjuryResult(InjuryResult injuryResult) {
-		this.injuryResult = injuryResult;
-	}
-
 	public String getPlayerId() {
 		return playerId;
 	}
@@ -75,23 +54,13 @@ public class SteadyFootingState implements IJsonSerializable {
 		this.apothecaryMode = apothecaryMode;
 	}
 
-	public InjuryTypeServer<?> getInjuryType() {
-		return injuryType;
-	}
-
-	public void setInjuryType(InjuryTypeServer<?> injuryType) {
-		this.injuryType = injuryType;
-	}
 
 	public void clear()  {
-		dropPlayerContext = null;
 		catchScatterThrowInMode = null;
 		endTurn = null;
 		endPlayerAction = null;
-		injuryResult = null;
 		playerId = null;
 		apothecaryMode = null;
-		injuryType = null;
 	}
 
 	@Override
