@@ -56,9 +56,8 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED));
 		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.STEADY_FOOTING));
-		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
+		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.PROJECTILE_VOMIT, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.ATTACKER_DROPPED));
 
