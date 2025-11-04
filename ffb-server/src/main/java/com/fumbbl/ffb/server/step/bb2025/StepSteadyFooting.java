@@ -43,7 +43,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 	private static final int MINMUM_ROLL = 6;
 	private Boolean useSkill;
-	private String goToLabelOnFailure;
+	private String goToLabelOnFailure, goToLabelOnSuccess;
 	private ApothecaryMode apothecaryMode;
 	private final SteadyFootingState state = new SteadyFootingState();
 	private SteadyFootingContext context;
@@ -65,6 +65,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 				switch (parameter.getKey()) {
 					case GOTO_LABEL_ON_FAILURE:
 						goToLabelOnFailure = (String) parameter.getValue();
+						break;
+					case GOTO_LABEL_ON_SUCCESS:
+						goToLabelOnSuccess = (String) parameter.getValue();
 						break;
 					case APOTHECARY_MODE:
 						apothecaryMode = (ApothecaryMode) parameter.getValue();
@@ -200,7 +203,11 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-			getResult().setNextAction(StepAction.NEXT_STEP);
+			if (StringTool.isProvided(goToLabelOnSuccess)) {
+				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSuccess);
+			} else {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
 			return;
 		}
 
