@@ -108,11 +108,6 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
-		sequence.jump(IStepLabel.ATTACKER_DROPPED);
-		sequence.add(StepId.DROP_FALLING_PLAYERS);
-		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-		sequence.add(StepId.FALL_DOWN);
-
 		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);
 
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
