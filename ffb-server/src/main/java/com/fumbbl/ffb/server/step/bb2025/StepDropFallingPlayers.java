@@ -42,7 +42,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepDropFallingPlayers extends AbstractStep {
 
 	public static class StepState {
