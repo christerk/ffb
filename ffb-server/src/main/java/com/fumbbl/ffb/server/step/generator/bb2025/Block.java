@@ -72,8 +72,11 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 
 		// GFI for ball & chain should go here.
-		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.NEXT),
+		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.STEADY_FOOTING),
 			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
+		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.NEXT));
+
 		sequence.add(StepId.BLOCK_BALL_AND_CHAIN, IStepLabel.NEXT,
 			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
 		sequence.add(StepId.BLOCK_ROLL);
