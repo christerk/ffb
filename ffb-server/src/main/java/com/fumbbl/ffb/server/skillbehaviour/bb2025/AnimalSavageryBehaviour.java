@@ -162,7 +162,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 						if (players.isEmpty()) {
 
-							new AnimalSavageryEndTurnCommand(game).execute();
+							new AnimalSavageryEndTurnCommand(game).execute(step);
 
 							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 							if (actingPlayer.isStandingUp()) {
@@ -274,10 +274,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		DropPlayerContext dropPlayerContext =
 			DropPlayerContextBuilder.builder().injuryResult(injuryResult).endTurn(endTurn).eligibleForSafePairOfHands(true)
 				.label(label).playerId(game.getDefenderId()).apothecaryMode(ApothecaryMode.ANIMAL_SAVAGERY)
-				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys).stepParameters(endTurnParameters)
-				.deferredCommands(deferredCommands).build();
+				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys).build();
 		step.publishParameter(
-			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
+			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext, endTurnParameters, deferredCommands)));
 
 	}
 

@@ -21,14 +21,20 @@ import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunned;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropGFI;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
+import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Step in block sequence to drop falling players and handle the skill
@@ -39,7 +45,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
  * Sets stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
  * Sets stepParameter INJURY_RESULT for all steps on the stack. Sets
  * stepParameter USING_PILING_ON for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2025)
@@ -82,7 +88,8 @@ public class StepDropFallingPlayers extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
+			pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 			commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), state);
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -107,8 +114,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		if ((defenderState != null) && (defenderState.getBase() == PlayerState.HIT_ON_GROUND)) {
 			defenderState = defenderState.changeBase(PlayerState.FALLING);
 		}
-		if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) &&
-			(defenderCoordinate != null))) {
+		if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null))) {
 
 			InjuryTypeBlock.Mode mode = (attackerState != null && attackerState.getBase() == PlayerState.FALLING) ?
 				InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
@@ -133,32 +139,35 @@ public class StepDropFallingPlayers extends AbstractStep {
 			!state.oldDefenderState.isProneOrStunned());
 
 		if (state.injuryResultDefender != null) {
-			publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+			DropPlayerContext dropPlayerContext =
 				new DropPlayerContext(state.injuryResultDefender, droppedOwnTeam, true, null, game.getDefenderId(),
-					ApothecaryMode.DEFENDER, false)));
+					ApothecaryMode.DEFENDER, false);
+			publishParameter(
+				new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 		} else if (droppedOwnTeam) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 
-		if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) &&
-			(attackerCoordinate != null)) {
+		List<DeferredCommand> deferredCommands = new ArrayList<>();
+
+		if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			InjuryResult injuryResultAttacker;
 			if (actingPlayer.isFellFromRush()) {
 				injuryResultAttacker =
-					UtilServerInjury.handleInjury(this, new InjuryTypeDropGFI(), game.getDefender(),
-						actingPlayer.getPlayer(),
+					UtilServerInjury.handleInjury(this, new InjuryTypeDropGFI(), game.getDefender(), actingPlayer.getPlayer(),
 						attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			} else {
-				publishParameters(
-					UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
+				deferredCommands.add(new DropPlayerCommand(actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true));
 				injuryResultAttacker =
 					UtilServerInjury.handleInjury(this, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
 						game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			}
-			publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
+			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
+				new SteadyFootingContext(injuryResultAttacker, null, deferredCommands)));
 		}
-		getResult().setNextAction(StepAction.NEXT_STEP);	}
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
 
 	// JSON serialization
 

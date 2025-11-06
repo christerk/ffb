@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -47,6 +48,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private ApothecaryMode apothecaryMode;
 	private final SteadyFootingState state = new SteadyFootingState();
 	private SteadyFootingContext context;
+	private PlayerState oldDefenderState;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -113,6 +115,11 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			case CATCH_SCATTER_THROW_IN_MODE:
 				state.setCatchScatterThrowInMode((CatchScatterThrowInMode) parameter.getValue());
 				return true;
+			case OLD_DEFENDER_STATE:
+				if (this.apothecaryMode == ApothecaryMode.DEFENDER) {
+					this.oldDefenderState = (PlayerState) parameter.getValue();
+					return true;
+				}
 			default:
 				break;
 		}
@@ -203,6 +210,13 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+			if (oldDefenderState != null) {
+				game.getFieldModel().setPlayerState(player, oldDefenderState);
+			}
+			PlayerState playerState = game.getFieldModel().getPlayerState(player);
+			if (apothecaryMode == ApothecaryMode.ATTACKER && playerState.getBase() == PlayerState.FALLING) {
+				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.MOVING));
+			}
 			if (StringTool.isProvided(goToLabelOnSuccess)) {
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSuccess);
 			} else {
@@ -237,6 +251,10 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		if (context.getInjuryType() != null) {
 			publishParameter(StepParameter.from(StepParameterKey.INJURY_TYPE, context.getInjuryType()));
 		}
+		context.getDeferredCommands().forEach(command -> {
+			command.execute(this);
+		});
+		context.getStepParameters().forEach(this::publishParameter);
 		state.clear();
 	}
 

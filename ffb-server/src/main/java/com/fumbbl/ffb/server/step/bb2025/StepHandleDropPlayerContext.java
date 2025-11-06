@@ -123,8 +123,6 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	private void executeStep() {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		if (dropPlayerContext != null && dropPlayerContext.getInjuryResult() != null) {
-			dropPlayerContext.getDeferredCommands().forEach(DeferredCommand::execute);
-			dropPlayerContext.getStepParameters().forEach(this::publishParameter);
 
 			Game game = getGameState().getGame();
 

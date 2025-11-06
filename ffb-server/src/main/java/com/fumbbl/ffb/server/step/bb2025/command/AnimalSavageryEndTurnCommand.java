@@ -1,9 +1,12 @@
 package com.fumbbl.ffb.server.step.bb2025.command;
 
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.step.DeferredCommand;
+import com.fumbbl.ffb.server.step.IStep;
 
 public class AnimalSavageryEndTurnCommand implements DeferredCommand {
 	private final Game game;
@@ -12,7 +15,7 @@ public class AnimalSavageryEndTurnCommand implements DeferredCommand {
 		this.game = game;
 	}
 
-	public void execute() {
+	public void execute(IStep step) {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:
@@ -44,6 +47,18 @@ public class AnimalSavageryEndTurnCommand implements DeferredCommand {
 				break;
 		}
 		game.setPassCoordinate(null);
+	}
+
+	@Override
+	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
+		//TODO
+		return null;
+	}
+
+	@Override
+	public JsonValue toJsonValue() {
+		//TODO
+		return null;
 	}
 
 }
