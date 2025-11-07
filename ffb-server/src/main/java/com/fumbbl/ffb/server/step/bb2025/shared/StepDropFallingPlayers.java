@@ -164,7 +164,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 						game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			}
 			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-				new SteadyFootingContext(injuryResultAttacker, null, deferredCommands)));
+				new SteadyFootingContext(injuryResultAttacker, deferredCommands)));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

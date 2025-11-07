@@ -8,14 +8,10 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.IStep;
 
-public class AnimalSavageryEndTurnCommand implements DeferredCommand {
-	private final Game game;
-
-	public AnimalSavageryEndTurnCommand(Game game) {
-		this.game = game;
-	}
+public class AnimalSavageryCancelActionCommand implements DeferredCommand {
 
 	public void execute(IStep step) {
+		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
 			case BLITZ:

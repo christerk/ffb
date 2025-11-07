@@ -7,7 +7,6 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.DeferredCommand;
-import com.fumbbl.ffb.server.step.StepParameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,46 +16,36 @@ public class SteadyFootingContext implements IJsonSerializable {
 	private DropPlayerContext dropPlayerContext;
 	private InjuryTypeServer<?> injuryType;
 	private InjuryResult injuryResult;
-	private final List<StepParameter> stepParameters = new ArrayList<>();
 	private final List<DeferredCommand> deferredCommands = new ArrayList<>();
 
 	public SteadyFootingContext(DropPlayerContext dropPlayerContext) {
-		this(dropPlayerContext, null, null);
+		this(dropPlayerContext, null);
 	}
 
 	public SteadyFootingContext(InjuryTypeServer<?> injuryType) {
-		this(injuryType, null, null);
+		this(injuryType, null);
 	}
 
 	public SteadyFootingContext(InjuryResult injuryResult) {
-		this(injuryResult, null, null);
+		this(injuryResult, null);
 	}
 
-	public SteadyFootingContext(DropPlayerContext dropPlayerContext, List<StepParameter> stepParameters, List<DeferredCommand> deferredCommands) {
+	public SteadyFootingContext(DropPlayerContext dropPlayerContext, List<DeferredCommand> deferredCommands) {
 		this.dropPlayerContext = dropPlayerContext;
-		if (stepParameters != null) {
-			this.stepParameters.addAll(stepParameters);
-		}
 		if (deferredCommands != null) {
 			this.deferredCommands.addAll(deferredCommands);
 		}
 	}
 
-	public SteadyFootingContext(InjuryTypeServer<?> injuryType, List<StepParameter> stepParameters, List<DeferredCommand> deferredCommands) {
+	public SteadyFootingContext(InjuryTypeServer<?> injuryType, List<DeferredCommand> deferredCommands) {
 		this.injuryType = injuryType;
-		if (stepParameters != null) {
-			this.stepParameters.addAll(stepParameters);
-		}
 		if (deferredCommands != null) {
 			this.deferredCommands.addAll(deferredCommands);
 		}
 	}
 
-	public SteadyFootingContext(InjuryResult injuryResult, List<StepParameter> stepParameters, List<DeferredCommand> deferredCommands) {
+	public SteadyFootingContext(InjuryResult injuryResult, List<DeferredCommand> deferredCommands) {
 		this.injuryResult = injuryResult;
-		if (stepParameters != null) {
-			this.stepParameters.addAll(stepParameters);
-		}
 		if (deferredCommands != null) {
 			this.deferredCommands.addAll(deferredCommands);
 		}
@@ -82,10 +71,6 @@ public class SteadyFootingContext implements IJsonSerializable {
 			return injuryResult.injuryContext().getApothecaryMode();
 		}
 		return ApothecaryMode.ATTACKER;
-	}
-
-	public List<StepParameter> getStepParameters() {
-		return Collections.unmodifiableList(stepParameters);
 	}
 
 	public List<DeferredCommand> getDeferredCommands() {
