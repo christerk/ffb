@@ -172,8 +172,6 @@ public class DropPlayerContext implements IJsonSerializable {
 				Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
 					.map(StepParameterKey::valueOf).toArray(StepParameterKey[]::new);
 		}
-
-		// TODO
 		return this;
 	}
 
@@ -198,8 +196,6 @@ public class DropPlayerContext implements IJsonSerializable {
 				.toArray(new String[]{});
 			IJsonOption.STEP_PARAMETER_KEYS.addTo(jsonObject, keys);
 		}
-
-		//TODO
 		return jsonObject;
 	}
 }
