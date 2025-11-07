@@ -49,6 +49,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private final SteadyFootingState state = new SteadyFootingState();
 	private SteadyFootingContext context;
 	private PlayerState oldDefenderState;
+	private boolean skip = false;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -120,6 +121,13 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					this.oldDefenderState = (PlayerState) parameter.getValue();
 					return true;
 				}
+				break;
+			case ATTACKER_ALREADY_DOWN:
+				if (this.apothecaryMode == ApothecaryMode.ATTACKER) {
+					skip = (Boolean) parameter.getValue();
+					return true;
+				}
+				break;
 			default:
 				break;
 		}
@@ -169,7 +177,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 		Optional<Skill> skill = UtilCards.getSkillWithProperty(player, NamedProperties.canAvoidFallingDown);
 
-		if (!skill.isPresent()) {
+		if (skip || !skill.isPresent()) {
 			fail();
 			return;
 		}
@@ -251,9 +259,11 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		if (context.getInjuryType() != null) {
 			publishParameter(StepParameter.from(StepParameterKey.INJURY_TYPE, context.getInjuryType()));
 		}
-		context.getDeferredCommands().forEach(command -> {
-			command.execute(this);
-		});
+		if (apothecaryMode == ApothecaryMode.ATTACKER) {
+			publishParameter(StepParameter.from(StepParameterKey.ATTACKER_ALREADY_DOWN, true));
+		}
+
+		context.getDeferredCommands().forEach(command -> command.execute(this));
 		context.getStepParameters().forEach(this::publishParameter);
 		state.clear();
 	}

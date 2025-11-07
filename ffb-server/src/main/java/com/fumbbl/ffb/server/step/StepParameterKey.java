@@ -16,6 +16,7 @@ public enum StepParameterKey {
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	ASK_FOR_BLOCK_KIND, // Boolean
+	ATTACKER_ALREADY_DOWN, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
 	BLOCK_DEFENDER_ID, // String
