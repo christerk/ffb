@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step.bb2025;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -23,7 +22,6 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
-import com.fumbbl.ffb.server.model.SteadyFootingState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -46,10 +44,10 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private Boolean useSkill;
 	private String goToLabelOnFailure, goToLabelOnSuccess;
 	private ApothecaryMode apothecaryMode;
-	private final SteadyFootingState state = new SteadyFootingState();
 	private SteadyFootingContext context;
 	private PlayerState oldDefenderState;
 	private boolean skip = false;
+	private String playerId;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -96,26 +94,17 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					InjuryTypeServer<?> injuryType = steadyFootingContext.getInjuryType();
 
 					if (dropPlayerContext != null) {
-						state.setPlayerId(dropPlayerContext.getPlayerId());
+						playerId = dropPlayerContext.getPlayerId();
 					} else if (injuryResult != null) {
-						state.setPlayerId(injuryResult.injuryContext().getDefenderId());
+						playerId = injuryResult.injuryContext().getDefenderId();
 					} else if (injuryType != null) {
-						state.setPlayerId(getGameState().getGame().getActingPlayer().getPlayerId());
+						playerId = getGameState().getGame().getActingPlayer().getPlayerId();
 					}
 
 					consume(parameter);
 					return true;
 				}
 				return false;
-			case END_TURN:
-				state.setEndTurn((Boolean) parameter.getValue());
-				return true;
-			case END_PLAYER_ACTION:
-				state.setEndPlayerAction((Boolean) parameter.getValue());
-				return true;
-			case CATCH_SCATTER_THROW_IN_MODE:
-				state.setCatchScatterThrowInMode((CatchScatterThrowInMode) parameter.getValue());
-				return true;
 			case OLD_DEFENDER_STATE:
 				if (this.apothecaryMode == ApothecaryMode.DEFENDER) {
 					this.oldDefenderState = (PlayerState) parameter.getValue();
@@ -173,7 +162,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			return;
 		}
 
-		Player<?> player = game.getPlayerById(state.getPlayerId());
+		Player<?> player = game.getPlayerById(playerId);
 
 		Optional<Skill> skill = UtilCards.getSkillWithProperty(player, NamedProperties.canAvoidFallingDown);
 
@@ -265,7 +254,6 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 		context.getDeferredCommands().forEach(command -> command.execute(this));
 		context.getStepParameters().forEach(this::publishParameter);
-		state.clear();
 	}
 
 	// JSON serialization

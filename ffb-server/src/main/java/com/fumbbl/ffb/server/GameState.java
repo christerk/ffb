@@ -18,7 +18,6 @@ import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
-import com.fumbbl.ffb.server.model.SteadyFootingState;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
