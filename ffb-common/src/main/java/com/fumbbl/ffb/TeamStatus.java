@@ -17,7 +17,6 @@ public enum TeamStatus implements INamedObject {
 		fName = pName;
 	}
 
-	// TODO: this should be unnecessary
 	public int getId() {
 		return fId;
 	}

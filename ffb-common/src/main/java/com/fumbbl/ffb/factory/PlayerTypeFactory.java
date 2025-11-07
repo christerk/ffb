@@ -21,7 +21,6 @@ public class PlayerTypeFactory implements INamedObjectFactory<PlayerType> {
 					return type;
 				}
 			}
-			// TODO: clear this up with Christer. should be "Regular" instead
 			if (StringTool.isProvided(pName) && pName.equalsIgnoreCase("Normal")) {
 				return PlayerType.REGULAR;
 			}
@@ -31,8 +30,6 @@ public class PlayerTypeFactory implements INamedObjectFactory<PlayerType> {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

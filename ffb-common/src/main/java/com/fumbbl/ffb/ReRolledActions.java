@@ -90,7 +90,6 @@ public class ReRolledActions {
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -6,7 +6,6 @@ public class Fireball extends InjuryType {
 
 	public Fireball() {
 		super("fireball", false, SendToBoxReason.FIREBALL);
-		// TODO Auto-generated constructor stub
 	}
 
 }
