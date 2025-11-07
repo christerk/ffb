@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025;
+package com.fumbbl.ffb.server.step.bb2025.block;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;

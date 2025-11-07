@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,7 +18,6 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
-import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
