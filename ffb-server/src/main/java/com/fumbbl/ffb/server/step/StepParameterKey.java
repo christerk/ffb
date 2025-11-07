@@ -19,6 +19,7 @@ public enum StepParameterKey {
 	ATTACKER_ALREADY_DOWN, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
+	BALL_KNOCKED_LOSE, // Boolean
 	BLOCK_DEFENDER_ID, // String
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult

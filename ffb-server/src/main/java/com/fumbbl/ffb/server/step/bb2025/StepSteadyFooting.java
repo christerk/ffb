@@ -46,8 +46,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private ApothecaryMode apothecaryMode;
 	private SteadyFootingContext context;
 	private PlayerState oldDefenderState;
-	private boolean skip = false;
+	private boolean skip;
 	private String playerId;
+	private boolean removeCatchMode = true;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -117,6 +118,10 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					return true;
 				}
 				break;
+			case BALL_KNOCKED_LOSE:
+				removeCatchMode = !toPrimitive((Boolean) parameter.getValue());
+				consume(parameter);
+				return true;
 			default:
 				break;
 		}
@@ -206,7 +211,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		if (successful) {
 			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
-			publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+			if (removeCatchMode) {
+				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+			}
 			if (oldDefenderState != null) {
 				game.getFieldModel().setPlayerState(player, oldDefenderState);
 			}
