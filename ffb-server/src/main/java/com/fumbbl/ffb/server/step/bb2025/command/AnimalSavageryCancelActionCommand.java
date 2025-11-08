@@ -1,14 +1,15 @@
 package com.fumbbl.ffb.server.step.bb2025.command;
 
-import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.step.DeferredCommand;
+import com.fumbbl.ffb.server.step.DeferredCommandId;
 import com.fumbbl.ffb.server.step.IStep;
 
-public class AnimalSavageryCancelActionCommand implements DeferredCommand {
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class AnimalSavageryCancelActionCommand extends DeferredCommand {
 
 	public void execute(IStep step) {
 		Game game = step.getGameState().getGame();
@@ -46,17 +47,9 @@ public class AnimalSavageryCancelActionCommand implements DeferredCommand {
 	}
 
 	@Override
-	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
-		//TODO
-		return null;
+	public DeferredCommandId getId() {
+		return DeferredCommandId.ANIMAL_SAVAGERY_CANCEL_ACTION;
 	}
-
-	@Override
-	public JsonValue toJsonValue() {
-		//TODO
-		return null;
-	}
-
 }
 
 

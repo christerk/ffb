@@ -49,6 +49,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
     JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
+    JsonEnumWithNameOption DEFERRED_COMMAND_ID = new JsonEnumWithNameOption("deferredCommandId", Factory.DEFERRED_COMMAND_ID);
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);
     JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");

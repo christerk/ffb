@@ -22,6 +22,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.net.commands.InternalServerCommandApplyAutomatedPlayerMarkings;
+import com.fumbbl.ffb.server.step.DeferredCommandFactory;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepException;
@@ -63,6 +64,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private transient ModelChangeList fChangeList;
 	private final transient Map<String, Long> fSpectatorCooldownTime;
 	private StepFactory stepFactory;
+	private DeferredCommandFactory deferredCommandFactory;
 	private PassState passState;
 	private BlitzTurnState blitzTurnState;
 	private PrayerState prayerState = new PrayerState();
@@ -86,6 +88,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void initRulesDependentMembers() {
 		stepFactory = new StepFactory(this);
+		deferredCommandFactory = new DeferredCommandFactory(this);
 	}
 
 	public void setServer(FantasyFootballServer pServer) {
@@ -510,5 +513,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			}
 		}
 
+	}
+
+	public DeferredCommandFactory getDeferredCommandFactory() {
+		return deferredCommandFactory;
 	}
 }

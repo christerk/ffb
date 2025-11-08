@@ -260,7 +260,6 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		}
 
 		context.getDeferredCommands().forEach(command -> command.execute(this));
-		context.getStepParameters().forEach(this::publishParameter);
 	}
 
 	// JSON serialization

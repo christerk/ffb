@@ -1,17 +1,23 @@
 package com.fumbbl.ffb.server.step.bb2025.command;
 
-import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.ApothecaryMode;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.DeferredCommand;
+import com.fumbbl.ffb.server.step.DeferredCommandId;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 
-public class DropPlayerCommand implements DeferredCommand {
-	private final String playerId;
-	private final ApothecaryMode apothecaryMode;
-	private final boolean eligibleForSafePairOfHands;
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class DropPlayerCommand extends DeferredCommand {
+	private String playerId;
+	private ApothecaryMode apothecaryMode;
+	private boolean eligibleForSafePairOfHands;
+
+	public DropPlayerCommand(){}
 
 	public DropPlayerCommand(String playerId, ApothecaryMode apothecaryMode, boolean eligibleForSafePairOfHands) {
 		this.playerId = playerId;
@@ -26,14 +32,23 @@ public class DropPlayerCommand implements DeferredCommand {
 	}
 
 	@Override
-	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
-		//TODO
+	public DeferredCommandId getId() {
+		return DeferredCommandId.DROP_PLAYER;
+	}
+
+	@Override
+	public DropPlayerCommand initChildMember(IFactorySource source, JsonObject jsonObject) {
+		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		eligibleForSafePairOfHands = IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.getFrom(source, jsonObject);
 		return null;
 	}
 
 	@Override
-	public JsonValue toJsonValue() {
-		//TODO
-		return null;
+	public JsonObject addChildMember(JsonObject jsonObject) {
+		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS.addTo(jsonObject, eligibleForSafePairOfHands);
+		return jsonObject;
 	}
 }

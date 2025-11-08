@@ -1,12 +1,13 @@
 package com.fumbbl.ffb.server.step.bb2025.command;
 
-import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.step.DeferredCommand;
+import com.fumbbl.ffb.server.step.DeferredCommandId;
 import com.fumbbl.ffb.server.step.IStep;
 
-public class StandingUpCommand implements DeferredCommand {
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class StandingUpCommand extends DeferredCommand {
 
 	@Override
 	public void execute(IStep step) {
@@ -15,15 +16,8 @@ public class StandingUpCommand implements DeferredCommand {
 	}
 
 	@Override
-	public Object initFrom(IFactorySource source, JsonValue jsonValue) {
-		//TODO
-		return null;
-	}
-
-	@Override
-	public JsonValue toJsonValue() {
-		//TODO
-		return null;
+	public DeferredCommandId getId() {
+		return DeferredCommandId.STAND_UP;
 	}
 
 }
