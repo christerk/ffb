@@ -90,6 +90,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
+	public static final ISkillProperty canMoveAfterHandOff = new NamedProperty("Can Move After Hand Off");
 	public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty(
 		"Can Move During Kick Off Scatter");
 	public static final ISkillProperty canMoveOpenTeamMate = new NamedProperty("Can Move Open Team-mate");
