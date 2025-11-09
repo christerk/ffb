@@ -232,8 +232,11 @@ public class UtilPlayer {
 					&& Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));
+				boolean putTheBootInIsCancelled = Arrays.stream(adjacentPlayersWithTacklezones)
+					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
+					.anyMatch(skill -> skill.canCancel(NamedProperties.canAlwaysAssistFouls));
 				boolean canAlwaysAssistFouls =
-						offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls)
+						(offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls) && !putTheBootInIsCancelled)
 						|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD) 
 								&& offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFoulsWithSg));
 				if ((adjacentPlayersWithTacklezones.length < 1)
