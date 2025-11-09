@@ -112,10 +112,8 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 
 		sequence.add(StepId.END_BLOCKING, IStepLabel.END_BLOCKING);
-		// may insert endTurn sequence add this point
 
 		gameState.getStepStack().push(sequence.getSequence());
-
 	}
 
 }

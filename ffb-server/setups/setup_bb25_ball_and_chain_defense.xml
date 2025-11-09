@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamSetup name="BB25 Control Screen" teamId="teamBB25BallAndChainDefense">
+	<!-- Beast with Tentacles/Foul Appearance directly ahead of the Fanatic -->
+	<player nr="1">
+		<coordinate x="9" y="7" />
+	</player>
+	<!-- Shadowing pestigor offset to test pursuit suppression -->
+	<player nr="2">
+		<coordinate x="9" y="6" />
+	</player>
+	<!-- Prone test piece: place adjacent for immediate push+armour rolls (set prone manually after kick-off) -->
+	<player nr="3">
+		<coordinate x="10" y="7" />
+	</player>
+	<!-- Stand Firm rotter to verify forced follow-up -->
+	<player nr="4">
+		<coordinate x="9" y="8" />
+	</player>
+	<!-- Spare marker to manipulate tackle zones -->
+	<player nr="5">
+		<coordinate x="10" y="6" />
+	</player>
+</teamSetup>
+

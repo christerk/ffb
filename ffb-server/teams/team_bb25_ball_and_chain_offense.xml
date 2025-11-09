@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<team id="teamBB25BallAndChainOffense">
+
+	<coach>TestCoachA</coach>
+	<name>BB25 Ball &amp; Chain Offense</name>
+	<race>Goblin</race>
+	<rosterId>goblin.lrb6</rosterId>
+	<reRolls>0</reRolls>
+	<fanFactor>0</fanFactor>
+	<apothecaries>0</apothecaries>
+	<teamRating>100</teamRating>
+	<currentTeamValue>100</currentTeamValue>
+	<teamStrength>100</teamStrength>
+	<division>[Test]</division>
+	<dedicatedFans>0</dedicatedFans>
+
+	<treasury>0</treasury>
+	<!-- Primary Ball & Chain piece -->
+	<player nr="1" id="teamBB25BallAndChainOffense1">
+		<name>Fanatic Test</name>
+		<gender>male</gender>
+		<positionId>goblin.fanatic</positionId>
+		<skillList>
+			<skill>Ball &amp; Chain</skill>
+		</skillList>
+	</player>
+
+	<!-- Support for hand-offs and ball placement -->
+	<player nr="2" id="teamBB25BallAndChainOffense2">
+		<name>Carrier</name>
+		<gender>male</gender>
+		<positionId>goblin.goblin</positionId>
+		<skillList>
+			<skill>Sure Hands</skill>
+			<skill>On the Ball</skill>
+		</skillList>
+	</player>
+
+	<!-- Trickster style to help with bounce testing -->
+	<player nr="3" id="teamBB25BallAndChainOffense3">
+		<name>Trickster Assist</name>
+		<gender>male</gender>
+		<positionId>goblin.goblin</positionId>
+		<skillList>
+			<skill>Trickster</skill>
+		</skillList>
+	</player>
+
+	<!-- Generic goblin for marking squares -->
+	<player nr="4" id="teamBB25BallAndChainOffense4">
+		<name>Marker</name>
+		<gender>male</gender>
+		<positionId>goblin.goblin</positionId>
+		<skillList/>
+	</player>
+
+	<!-- Troll for anchoring the line and providing Really Stupid checks -->
+	<player nr="5" id="teamBB25BallAndChainOffense5">
+		<name>Troll Anchor</name>
+		<gender>male</gender>
+		<positionId>goblin.troll</positionId>
+		<skillList>
+			<skill>Guard</skill>
+		</skillList>
+	</player>
+
+</team>
+

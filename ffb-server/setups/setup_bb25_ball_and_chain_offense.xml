@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamSetup name="BB25 Fanatic Test" teamId="teamBB25BallAndChainOffense">
+	<!-- Fanatic in centre-left ready to start Ball & Chain action -->
+	<player nr="1">
+		<coordinate x="8" y="7" />
+	</player>
+	<!-- Ball carrier behind to stage rush/bounce scenarios -->
+	<player nr="2">
+		<coordinate x="6" y="7" />
+	</player>
+	<!-- Trickster assist offset to the north -->
+	<player nr="3">
+		<coordinate x="6" y="5" />
+	</player>
+	<!-- Marker goblin to the south -->
+	<player nr="4">
+		<coordinate x="6" y="9" />
+	</player>
+	<!-- Troll anchor on the line -->
+	<player nr="5">
+		<coordinate x="5" y="7" />
+	</player>
+</teamSetup>
+
