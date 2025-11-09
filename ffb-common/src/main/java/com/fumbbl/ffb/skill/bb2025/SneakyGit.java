@@ -3,7 +3,6 @@ package com.fumbbl.ffb.skill.bb2025;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
@@ -17,11 +16,6 @@ public class SneakyGit extends Skill {
 
 	public SneakyGit() {
 		super("Sneaky Git", SkillCategory.DEVIOUS);
-	}
-
-	@Override
-	public void postConstruct() {
-		registerProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 
 }
