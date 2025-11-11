@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -21,7 +22,8 @@ public abstract class DeferredCommand implements IJsonSerializable, INamedObject
 	@Override
 	public final DeferredCommand initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		DeferredCommandId idFromJson = (DeferredCommandId) IServerJsonOption.DEFERRED_COMMAND_ID.getFrom(source, jsonObject);
+		DeferredCommandId idFromJson = (DeferredCommandId) UtilJson.toEnumWithName(source.getFactory(FactoryType.Factory.DEFERRED_COMMAND_ID), jsonObject);
+
 		if (getId() != idFromJson) {
 				throw new IllegalStateException("Wrong command id. Expected " + getId().getName() + " received "
 					+ ((idFromJson != null) ? idFromJson.getName() : "null"));

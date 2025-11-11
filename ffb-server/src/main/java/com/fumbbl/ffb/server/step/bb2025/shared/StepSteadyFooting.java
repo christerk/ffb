@@ -9,6 +9,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2025.ReportSteadyFootingRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
@@ -267,14 +269,37 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		//TODO
+
+		if (context != null) {
+			IServerJsonOption.STEADY_FOOTING_CONTEXT.addTo(jsonObject, context.toJsonValue());
+		}
+
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
+		IServerJsonOption.SKILL_USED.addTo(jsonObject, useSkill);
+		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToLabelOnSuccess);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.SKIP.addTo(jsonObject, skip);
+		IServerJsonOption.REMOVE_CATCH_MODE.addTo(jsonObject, removeCatchMode);
 		return jsonObject;
 	}
 
 	@Override
 	public StepSteadyFooting initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
-		//TODO
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		useSkill = IServerJsonOption.SKILL_USED.getFrom(source, jsonObject);
+		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		skip = IServerJsonOption.SKIP.getFrom(source, jsonObject);
+		removeCatchMode = IServerJsonOption.REMOVE_CATCH_MODE.getFrom(source, jsonObject);
+		if (IServerJsonOption.STEADY_FOOTING_CONTEXT.isDefinedIn(jsonObject)) {
+			context = new SteadyFootingContext().initFrom(source, IServerJsonOption.STEADY_FOOTING_CONTEXT.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 }

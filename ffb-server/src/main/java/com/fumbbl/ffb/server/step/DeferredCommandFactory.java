@@ -1,28 +1,24 @@
 package com.fumbbl.ffb.server.step;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.INamedObjectFactory;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.Scanner;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeferredCommandFactory {
+@FactoryType(FactoryType.Factory.DEFERRED_COMMAND)
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class DeferredCommandFactory implements INamedObjectFactory<DeferredCommand> {
 
-	private final GameState fGameState;
 	private final Map<DeferredCommandId, Constructor<? extends DeferredCommand>> registry = new HashMap<>();
-
-	public DeferredCommandFactory(GameState pGameState) {
-		fGameState = pGameState;
-		initialize();
-	}
 
 	public DeferredCommand forId(DeferredCommandId id) {
 
@@ -47,29 +43,10 @@ public class DeferredCommandFactory {
 
 	}
 
-	// JSON serialization
-
-	public DeferredCommand forJsonValue(IFactorySource source, JsonValue pJsonValue) {
-		if ((pJsonValue == null) || pJsonValue.isNull()) {
-			return null;
-		}
-		DeferredCommand command = null;
-		JsonObject jsonObject = UtilJson.toJsonObject(pJsonValue);
-		DeferredCommandId id = (DeferredCommandId) IServerJsonOption.DEFERRED_COMMAND_ID.getFrom(source, jsonObject);
-		if (id != null) {
-			command = forId(id);
-			if (command != null) {
-				command.initFrom(source, pJsonValue);
-			}
-		}
-		return command;
-	}
-
-	private void initialize() {
-
-		new Scanner<>(DeferredCommand.class).getSubclassInstances(fGameState.getGame().getOptions())
+	@Override
+	public void initialize(Game game) {
+		new Scanner<>(DeferredCommand.class).getSubclassInstances(game.getOptions())
 			.forEach(command -> {
-
 				try {
 					registry.put(command.getId(), command.getClass().getConstructor());
 
@@ -77,6 +54,11 @@ public class DeferredCommandFactory {
 					throw new FantasyFootballException("Error constructing DeferredCommand for class " + command.getClass().getCanonicalName(), e);
 				}
 			});
-
 	}
+
+	@Override
+	public INamedObject forName(String pName) {
+		return Arrays.stream(DeferredCommandId.values()).filter(value -> value.getName().equals(pName)).findFirst().map(this::forId).orElse(null);
+	}
+
 }
