@@ -13,7 +13,7 @@ import com.fumbbl.ffb.skill.bb2020.Frenzy;
 import java.util.Collections;
 
 /**
- * Once per half, when lart declares a Blitz Action he may gain the Frenzy Skill 
+ * Once per half, when Glart declares a Blitz Action he may gain the Frenzy Skill 
  * until the end of his activation. Glatt may not use the Grab Skill during a 
  * Turn in which he uses this special rule.
  */
