@@ -102,6 +102,7 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_GORED, playerActions, ActionKey.PLAYER_ACTION_GORED);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BLACK_INK, playerActions, ActionKey.PLAYER_ACTION_BLACK_INK);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BREATHE_FIRE, playerActions, ActionKey.PLAYER_ACTION_BREATHE_FIRE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_SLASHING_NAILS, playerActions, ActionKey.PLAYER_ACTION_SLASHING_NAILS);
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 

@@ -77,6 +77,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.THE_FLASHING_BLADE);
 			add(ClientAction.VICIOUS_VINES);
 			add(ClientAction.FURIOUS_OUTBURST);
+			add(ClientAction.SLASHING_NAILS);
 		}};
 	}
 
@@ -106,6 +107,11 @@ public class SelectLogicModule extends LogicModule {
 					break;
 				case MOVE:
 					communication.sendActingPlayer(player, PlayerAction.MOVE, false);
+					break;
+				case SLASHING_NAILS:
+					communication.sendActingPlayer(player, PlayerAction.BLITZ_MOVE, false);
+					Skill slashingNails = player.getSkillWithProperty(NamedProperties.canGainClawsForBlitz);
+					communication.sendUseSkill(slashingNails, true, player.getId());
 					break;
 				case STAND_UP:
 					communication.sendActingPlayer(player, PlayerAction.STAND_UP, false);
@@ -249,6 +255,9 @@ public class SelectLogicModule extends LogicModule {
 			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz)) {
 				context.add(ClientAction.FRENZIED_RUSH);
 			}
+			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainClawsForBlitz)) {
+				context.add(ClientAction.SLASHING_NAILS);
+			}			
 		}
 		if (isFoulActionAvailable(player)) {
 			context.add(ClientAction.FOUL);

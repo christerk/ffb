@@ -35,6 +35,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 	int KEY_PROJECTILE_VOMIT = KeyEvent.VK_V;
 	int KEY_FRENZIED_RUSH = KeyEvent.VK_E;
+	int KEY_SLASHING_NAILS = KeyEvent.VK_N;
 	int KEY_SHOT_TO_NOTHING = KeyEvent.VK_N;
 	int KEY_SHOT_TO_NOTHING_BOMB = KeyEvent.VK_V;
 	int KEY_TREACHEROUS = KeyEvent.VK_A;

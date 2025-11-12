@@ -66,6 +66,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			put(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, ClientAction.THE_FLASHING_BLADE);
 			put(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, ClientAction.VICIOUS_VINES);
 			put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
+			put(IPlayerPopupMenuKeys.KEY_SLASHING_NAILS, ClientAction.SLASHING_NAILS);
 		}};
 	}
 
@@ -112,6 +113,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			case PLAYER_ACTION_FRENZIED_RUSH:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
 				break;
+			case PLAYER_ACTION_SLASHING_NAILS:
+				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS);
+				break;				
 			case PLAYER_ACTION_FOUL:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
 				break;
@@ -210,6 +214,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		configs.put(ClientAction.RECOVER, new MenuItemConfig("Recover tackle zone & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_RECOVER));
 		configs.put(ClientAction.STAND_UP_BLITZ, new MenuItemConfig("Stand Up & End Move (using Blitz)", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
 		configs.put(ClientAction.STAND_UP, new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
+		configs.put(ClientAction.SLASHING_NAILS, new MenuItemConfig("Slashing Nails Blitz", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS));
 
 		return configs;
 	}

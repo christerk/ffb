@@ -66,6 +66,7 @@ public class NamedProperties {
 		}
 	};
 	public static final ISkillProperty canFoulAfterBlock = new NamedProperty("Can Foul After Block");
+	public static final ISkillProperty canGainClawsForBlitz = new NamedProperty("Can Gain Claws For Blitz");
 	public static final ISkillProperty canGainFrenzyForBlitz = new NamedProperty("Can Gain Frenzy For Blitz");
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
