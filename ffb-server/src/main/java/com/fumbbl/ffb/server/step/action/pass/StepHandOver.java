@@ -9,7 +9,6 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportHandOver;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -87,10 +86,7 @@ public final class StepHandOver extends AbstractStepWithReRoll {
 			publishParameter(
 					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_HAND_OFF));
 		}
-		boolean allowMoveAfterHandOff = thrower.hasSkillProperty(NamedProperties.canMoveAfterHandOff);
-		if (!allowMoveAfterHandOff) {
-			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-		}
+		publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
