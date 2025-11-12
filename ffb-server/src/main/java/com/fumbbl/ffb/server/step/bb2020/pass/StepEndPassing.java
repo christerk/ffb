@@ -170,9 +170,6 @@ public final class StepEndPassing extends AbstractStep {
 		boolean allowMoverAfterPass = PassingDistance.QUICK_PASS == passingDistance
 			&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterQuickPass)
 			&& !fPassFumble;
-		boolean allowMoveAfterHandOff =
-			game.getThrowerAction() == PlayerAction.HAND_OVER
-			&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterHandOff);
 		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble && actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier());
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
@@ -257,7 +254,7 @@ public final class StepEndPassing extends AbstractStep {
 					|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher)
 					|| (fPassFumble && !dontDropFumble));
 
-				fEndPlayerAction |= !((allowMoverAfterPass || allowMoveAfterHandOff)
+				fEndPlayerAction |= !(allowMoverAfterPass
 					&& UtilPlayer.isNextMovePossible(game, false));
 
 				if (fEndTurn || fEndPlayerAction) {
