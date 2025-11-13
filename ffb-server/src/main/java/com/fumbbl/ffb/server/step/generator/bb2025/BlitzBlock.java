@@ -12,12 +12,12 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class Block extends com.fumbbl.ffb.server.step.generator.Block {
+public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
 		GameState gameState = params.getGameState();
-		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push blockSequence onto stack");
+		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push blitzBlockSequence onto stack");
 
 		Sequence sequence = new Sequence(gameState);
 
@@ -29,27 +29,14 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()),
 			from(StepParameterKey.PUBLISH_DEFENDER, params.isPublishDefender()),
 			from(StepParameterKey.USING_BREATHE_FIRE, params.isUsingBreatheFire()));
-		sequence.add(StepId.INIT_ACTIVATION);
-		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
-			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()));
-		sequence.add(StepId.STEADY_FOOTING);
-		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-		sequence.add(StepId.PLACE_BALL);
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.SET_DEFENDER, from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()));
-		sequence.add(StepId.GOTO_LABEL, from(StepParameterKey.GOTO_LABEL, IStepLabel.NEXT),
-			from(StepParameterKey.ALTERNATE_GOTO_LABEL, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BONE_HEAD, IStepLabel.NEXT,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.TAKE_ROOT);
-		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.DUMP_OFF);
-		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.STEADY_FOOTING));
+		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
+			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.FALL_DOWN));
+
+		if (params.isFrenzyBlock()) {
+			sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		}
+		sequence.add(StepId.HORNS);
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.TRICKSTER);
@@ -70,15 +57,6 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER),
 			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-
-		// GFI for ball & chain should go here.
-		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.STEADY_FOOTING),
-			from(StepParameterKey.BALL_AND_CHAIN_GFI, true));
-		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.NEXT));
-
-		sequence.add(StepId.BLOCK_BALL_AND_CHAIN, IStepLabel.NEXT,
-			from(StepParameterKey.GOTO_LABEL_ON_PUSHBACK, IStepLabel.PUSHBACK));
 		sequence.add(StepId.BLOCK_ROLL);
 		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.JUGGERNAUT),
@@ -97,21 +75,26 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 
 		// on blockChoice = POW or PUSHBACK
 		sequence.add(StepId.PUSHBACK, IStepLabel.PUSHBACK);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE, from(StepParameterKey.RETAIN_MODEL_DATA, true));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.add(StepId.SHADOWING);
+		sequence.add(StepId.PICK_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
+		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
+		sequence.add(StepId.FALL_DOWN, IStepLabel.FALL_DOWN);
+		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE, from(StepParameterKey.RETAIN_MODEL_DATA, true));
+		sequence.add(StepId.RESET_FUMBLEROOSKIE, from(StepParameterKey.RESET_FOR_FAILED_BLOCK, true));
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
-		sequence.add(StepId.STEADY_FOOTING, IStepLabel.ATTACKER_DROPPED, from(StepParameterKey.APOTHECARY_MODE,
-			ApothecaryMode.ATTACKER));
-		sequence.add(StepId.PLACE_BALL);
+		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);
 
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 
