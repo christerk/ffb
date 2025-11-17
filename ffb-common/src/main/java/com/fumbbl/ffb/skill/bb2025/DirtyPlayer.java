@@ -7,11 +7,10 @@ import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.InjuryModifierContext;
-import com.fumbbl.ffb.modifiers.VariableArmourModifier;
-import com.fumbbl.ffb.modifiers.VariableInjuryModifierAttacker;
+import com.fumbbl.ffb.modifiers.StaticArmourModifier;
+import com.fumbbl.ffb.modifiers.StaticInjuryModifierAttacker;
 
 /**
  * When this player performs a Foul Action, they may apply a +1 modifier to 
@@ -22,18 +21,18 @@ import com.fumbbl.ffb.modifiers.VariableInjuryModifierAttacker;
 public class DirtyPlayer extends Skill {
 
 	public DirtyPlayer() {
-		super("Dirty Player", SkillCategory.DEVIOUS, 1);
+		super("Dirty Player", SkillCategory.DEVIOUS);
 	}
 
 	@Override
 	public void postConstruct() {
-		registerModifier(new VariableArmourModifier("Dirty Player",false) {
+		registerModifier(new StaticArmourModifier("Dirty Player", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
 				return context.isFoul();
 			}
 		});
-		registerModifier(new VariableInjuryModifierAttacker("Dirty Player",false) {
+		registerModifier(new StaticInjuryModifierAttacker("Dirty Player", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)
@@ -44,11 +43,6 @@ public class DirtyPlayer extends Skill {
 		});
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnFoul);
 
-	}
-
-	@Override
-	public SkillValueEvaluator evaluator() {
-		return SkillValueEvaluator.MODIFIER;
 	}
 
 }
