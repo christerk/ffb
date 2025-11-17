@@ -27,7 +27,7 @@ public class BrutalBlockModification extends InjuryContextModification<Modificat
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.ADD_INJURY_MODIFIER;
 	}
 }
