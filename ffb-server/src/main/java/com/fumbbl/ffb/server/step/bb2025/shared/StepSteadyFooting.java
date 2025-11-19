@@ -173,7 +173,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 		Optional<Skill> skill = UtilCards.getSkillWithProperty(player, NamedProperties.canAvoidFallingDown);
 
-		if (skip || !skill.isPresent()) {
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused()) {
 			fail();
 			return;
 		}
@@ -219,7 +221,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			if (oldDefenderState != null) {
 				game.getFieldModel().setPlayerState(player, oldDefenderState);
 			}
-			PlayerState playerState = game.getFieldModel().getPlayerState(player);
+			playerState = game.getFieldModel().getPlayerState(player);
 			if (apothecaryMode == ApothecaryMode.ATTACKER && playerState.getBase() == PlayerState.FALLING) {
 				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.MOVING));
 			}

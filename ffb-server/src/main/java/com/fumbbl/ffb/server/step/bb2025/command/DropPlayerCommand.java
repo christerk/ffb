@@ -17,7 +17,10 @@ public class DropPlayerCommand extends DeferredCommand {
 	private ApothecaryMode apothecaryMode;
 	private boolean eligibleForSafePairOfHands;
 
-	public DropPlayerCommand(){}
+	@SuppressWarnings("unused")
+	public DropPlayerCommand(){
+		// for json deserialization
+	}
 
 	public DropPlayerCommand(String playerId, ApothecaryMode apothecaryMode, boolean eligibleForSafePairOfHands) {
 		this.playerId = playerId;
@@ -28,7 +31,7 @@ public class DropPlayerCommand extends DeferredCommand {
 	@Override
 	public void execute(IStep step) {
 		Player<?> player = step.getGameState().getGame().getPlayerById(playerId);
-		UtilServerInjury.dropPlayer(step, player, apothecaryMode, eligibleForSafePairOfHands);
+		step.publishParameters(UtilServerInjury.dropPlayer(step, player, apothecaryMode, eligibleForSafePairOfHands));
 	}
 
 	@Override
