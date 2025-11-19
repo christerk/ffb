@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -158,7 +158,6 @@ public class StepApothecary extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-				case INJURY_RESULT_FROM_ACTUAL_DROP:
 				case INJURY_RESULT:
 					InjuryResult injuryResult = (InjuryResult) parameter.getValue();
 					if ((injuryResult != null) && (fApothecaryMode == injuryResult.injuryContext().getApothecaryMode())) {

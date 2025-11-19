@@ -9,15 +9,10 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.step.DeferredCommand;
-import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DropPlayerContext implements IJsonSerializable {
@@ -28,8 +23,6 @@ public class DropPlayerContext implements IJsonSerializable {
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
 	private StepParameterKey[] additionalVictimStateKeys;
-	private final List<StepParameter> stepParameters = new ArrayList<>();
-	private final List<DeferredCommand> deferredCommands = new ArrayList<>();
 
 	public DropPlayerContext() {
 	}
@@ -85,17 +78,6 @@ public class DropPlayerContext implements IJsonSerializable {
 													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
 													 boolean alreadyDropped, StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn,
 													 boolean endTurnWithoutKnockdown, StepParameterKey[] additionalVictimStateKeys) {
-		this(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode, requiresArmourBreak,
-			alreadyDropped, victimStateKey, modifiedInjuryEndsTurn, endTurnWithoutKnockdown, additionalVictimStateKeys,
-			null, null);
-	}
-
-	public DropPlayerContext(InjuryResult injuryResult, boolean endTurn, boolean eligibleForSafePairOfHands,
-													 String label,
-													 String playerId, ApothecaryMode apothecaryMode, boolean requiresArmourBreak,
-													 boolean alreadyDropped, StepParameterKey victimStateKey, boolean modifiedInjuryEndsTurn,
-													 boolean endTurnWithoutKnockdown, StepParameterKey[] additionalVictimStateKeys,
-													 List<StepParameter> stepParameters, List<DeferredCommand> deferredCommands) {
 		this.injuryResult = injuryResult;
 		this.endTurn = endTurn;
 		this.eligibleForSafePairOfHands = eligibleForSafePairOfHands;
@@ -108,12 +90,6 @@ public class DropPlayerContext implements IJsonSerializable {
 		this.endTurnWithoutKnockdown = endTurnWithoutKnockdown;
 		this.modifiedInjuryEndsTurn = modifiedInjuryEndsTurn;
 		this.additionalVictimStateKeys = additionalVictimStateKeys;
-		if (stepParameters != null) {
-			this.stepParameters.addAll(stepParameters);
-		}
-		if (deferredCommands != null) {
-			this.deferredCommands.addAll(deferredCommands);
-		}
 	}
 
 	public InjuryResult getInjuryResult() {
@@ -169,14 +145,6 @@ public class DropPlayerContext implements IJsonSerializable {
 		return additionalVictimStateKeys;
 	}
 
-	public List<StepParameter> getStepParameters() {
-		return Collections.unmodifiableList(stepParameters);
-	}
-
-	public List<DeferredCommand> getDeferredCommands() {
-		return Collections.unmodifiableList(deferredCommands);
-	}
-
 	@Override
 	public DropPlayerContext initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -204,8 +172,6 @@ public class DropPlayerContext implements IJsonSerializable {
 				Arrays.stream(IJsonOption.STEP_PARAMETER_KEYS.getFrom(source, UtilJson.toJsonObject(jsonValue)))
 					.map(StepParameterKey::valueOf).toArray(StepParameterKey[]::new);
 		}
-
-		// TODO
 		return this;
 	}
 
@@ -230,8 +196,6 @@ public class DropPlayerContext implements IJsonSerializable {
 				.toArray(new String[]{});
 			IJsonOption.STEP_PARAMETER_KEYS.addTo(jsonObject, keys);
 		}
-
-		//TODO
 		return jsonObject;
 	}
 }

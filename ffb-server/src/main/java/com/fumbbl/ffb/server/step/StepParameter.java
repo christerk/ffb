@@ -6,8 +6,8 @@ package com.fumbbl.ffb.server.step;
  */
 public final class StepParameter {
 
-	private StepParameterKey fKey;
-	private Object fValue;
+	private final StepParameterKey fKey;
+	private final Object fValue;
 	private boolean fConsumed;
 
 	public StepParameter(StepParameterKey pKey, Object pValue) {
@@ -52,9 +52,7 @@ public final class StepParameter {
 		if (getClass() != obj.getClass())
 			return false;
 		StepParameter other = (StepParameter) obj;
-		if (fKey != other.fKey)
-			return false;
-		return true;
+		return fKey == other.fKey;
 	}
 
 }

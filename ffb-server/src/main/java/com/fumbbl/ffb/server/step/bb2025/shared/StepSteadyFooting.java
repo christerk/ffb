@@ -1,14 +1,15 @@
-package com.fumbbl.ffb.server.step.bb2025;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -18,10 +19,11 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2025.ReportSteadyFootingRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
-import com.fumbbl.ffb.server.model.SteadyFootingState;
+import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -42,7 +44,13 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 	private static final int MINMUM_ROLL = 6;
 	private Boolean useSkill;
-	private String goToLabelOnFailure;
+	private String goToLabelOnFailure, goToLabelOnSuccess;
+	private ApothecaryMode apothecaryMode;
+	private SteadyFootingContext context;
+	private PlayerState oldDefenderState;
+	private boolean skip;
+	private String playerId;
+	private boolean removeCatchMode = true;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -62,6 +70,12 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					case GOTO_LABEL_ON_FAILURE:
 						goToLabelOnFailure = (String) parameter.getValue();
 						break;
+					case GOTO_LABEL_ON_SUCCESS:
+						goToLabelOnSuccess = (String) parameter.getValue();
+						break;
+					case APOTHECARY_MODE:
+						apothecaryMode = (ApothecaryMode) parameter.getValue();
+						break;
 					default:
 						break;
 				}
@@ -71,49 +85,44 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
-		SteadyFootingState state = getGameState().getSteadyFootingState();
 
 		switch (parameter.getKey()) {
-			case DROP_PLAYER_CONTEXT:
-				DropPlayerContext dropPlayerContext = (DropPlayerContext) parameter.getValue();
-				state.setDropPlayerContext(dropPlayerContext);
-				if (dropPlayerContext != null) {
-					state.setPlayerId(dropPlayerContext.getPlayerId());
-				} else {
-					state.setPlayerId(null);
+			case STEADY_FOOTING_CONTEXT:
+				SteadyFootingContext steadyFootingContext = (SteadyFootingContext) parameter.getValue();
+				if (apothecaryMode == null || apothecaryMode == steadyFootingContext.getApothecaryMode()) {
+					context = steadyFootingContext;
+
+					DropPlayerContext dropPlayerContext = steadyFootingContext.getDropPlayerContext();
+					InjuryResult injuryResult = steadyFootingContext.getInjuryResult();
+					InjuryTypeServer<?> injuryType = steadyFootingContext.getInjuryType();
+
+					if (dropPlayerContext != null) {
+						playerId = dropPlayerContext.getPlayerId();
+					} else if (injuryResult != null) {
+						playerId = injuryResult.injuryContext().getDefenderId();
+					} else if (injuryType != null) {
+						playerId = getGameState().getGame().getActingPlayer().getPlayerId();
+					}
+
+					consume(parameter);
+					return true;
 				}
-				return true;
-			case END_TURN:
-				state.setEndTurn((Boolean) parameter.getValue());
-				return true;
-			case END_PLAYER_ACTION:
-				state.setEndPlayerAction((Boolean) parameter.getValue());
-				return true;
-			case CATCH_SCATTER_THROW_IN_MODE:
-				state.setCatchScatterThrowInMode((CatchScatterThrowInMode) parameter.getValue());
-				return true;
-			case INJURY_RESULT:
-				InjuryResult injuryResult = (InjuryResult) parameter.getValue();
-				state.setInjuryResult(injuryResult);
-				if (injuryResult != null) {
-					state.setPlayerId(injuryResult.injuryContext().getDefenderId());
-					state.setApothecaryMode(injuryResult.injuryContext().getApothecaryMode());
-				} else {
-					state.setPlayerId(null);
-					state.setApothecaryMode(null);
+				return false;
+			case OLD_DEFENDER_STATE:
+				if (this.apothecaryMode == ApothecaryMode.DEFENDER) {
+					this.oldDefenderState = (PlayerState) parameter.getValue();
+					return true;
 				}
+				break;
+			case ATTACKER_ALREADY_DOWN:
+				if (this.apothecaryMode == ApothecaryMode.ATTACKER) {
+					skip = (Boolean) parameter.getValue();
+					return true;
+				}
+				break;
+			case BALL_KNOCKED_LOSE:
+				removeCatchMode = !toPrimitive((Boolean) parameter.getValue());
 				consume(parameter);
-				return true;
-			case INJURY_TYPE:
-				InjuryTypeServer<?> injuryType = (InjuryTypeServer<?>) parameter.getValue();
-				state.setInjuryType(injuryType);
-				if (injuryType !=null) {
-					state.setPlayerId(getGameState().getGame().getActingPlayer().getPlayerId());
-					state.setApothecaryMode(ApothecaryMode.ATTACKER);
-				} else {
-					state.setPlayerId(null);
-					state.setApothecaryMode(null);
-				}
 				return true;
 			default:
 				break;
@@ -154,24 +163,20 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		SteadyFootingState state = getGameState().getSteadyFootingState();
 
-		if (state.getDropPlayerContext() == null && state.getInjuryResult() == null && state.getInjuryType() == null) {
+		if (context == null) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 
-		Player<?> player = game.getPlayerById(state.getPlayerId());
+		Player<?> player = game.getPlayerById(playerId);
 
 		Optional<Skill> skill = UtilCards.getSkillWithProperty(player, NamedProperties.canAvoidFallingDown);
 
-		if (!skill.isPresent()) {
-			if (StringTool.isProvided(goToLabelOnFailure)) {
-				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
-			} else {
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			}
-			state.clear();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused()) {
+			fail();
 			return;
 		}
 
@@ -190,29 +195,13 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		}
 
 		if (!useSkill) {
-			if (StringTool.isProvided(goToLabelOnFailure)) {
-				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
-			} else {
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			}
-			if (state.getInjuryResult() != null) {
-				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
-			}
-			state.clear();
+			fail();
 			return;
 		}
 
 		if (ReRolledActions.STEADY_FOOTING == getReRolledAction()) {
 			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
-				if (StringTool.isProvided(goToLabelOnFailure)) {
-					getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
-				} else {
-					getResult().setNextAction(StepAction.NEXT_STEP);
-				}
-				if (state.getInjuryResult() != null) {
-					publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
-				}
-				state.clear();
+				fail();
 				return;
 			}
 		}
@@ -224,15 +213,23 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportSteadyFootingRoll(player.getId(), successful, roll, MINMUM_ROLL, reRolled));
 
 		if (successful) {
-			publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT, null));
 			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
-			publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-			if (state.getInjuryType() != null) {
-				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, null));
+			if (removeCatchMode) {
+				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 			}
-			state.clear();
-			getResult().setNextAction(StepAction.NEXT_STEP);
+			if (oldDefenderState != null) {
+				game.getFieldModel().setPlayerState(player, oldDefenderState);
+			}
+			playerState = game.getFieldModel().getPlayerState(player);
+			if (apothecaryMode == ApothecaryMode.ATTACKER && playerState.getBase() == PlayerState.FALLING) {
+				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.MOVING));
+			}
+			if (StringTool.isProvided(goToLabelOnSuccess)) {
+				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnSuccess);
+			} else {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
 			return;
 		}
 
@@ -244,15 +241,29 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			return;
 		}
 
+		fail();
+	}
+
+	private void fail() {
 		if (StringTool.isProvided(goToLabelOnFailure)) {
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
-		if (state.getInjuryResult() != null) {
-			publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, state.getInjuryResult()));
+		if (context.getDropPlayerContext() != null) {
+			publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT, context.getDropPlayerContext()));
 		}
-		state.clear();
+		if (context.getInjuryResult() != null) {
+			publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, context.getInjuryResult()));
+		}
+		if (context.getInjuryType() != null) {
+			publishParameter(StepParameter.from(StepParameterKey.INJURY_TYPE, context.getInjuryType()));
+		}
+		if (apothecaryMode == ApothecaryMode.ATTACKER) {
+			publishParameter(StepParameter.from(StepParameterKey.ATTACKER_ALREADY_DOWN, true));
+		}
+
+		context.getDeferredCommands().forEach(command -> command.execute(this));
 	}
 
 	// JSON serialization
@@ -260,14 +271,37 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		//TODO
+
+		if (context != null) {
+			IServerJsonOption.STEADY_FOOTING_CONTEXT.addTo(jsonObject, context.toJsonValue());
+		}
+
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
+		IServerJsonOption.SKILL_USED.addTo(jsonObject, useSkill);
+		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
+		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, goToLabelOnFailure);
+		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToLabelOnSuccess);
+		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IServerJsonOption.SKIP.addTo(jsonObject, skip);
+		IServerJsonOption.REMOVE_CATCH_MODE.addTo(jsonObject, removeCatchMode);
 		return jsonObject;
 	}
 
 	@Override
 	public StepSteadyFooting initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
-		//TODO
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		useSkill = IServerJsonOption.SKILL_USED.getFrom(source, jsonObject);
+		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
+		goToLabelOnSuccess = IServerJsonOption.GOTO_LABEL_ON_SUCCESS.getFrom(source, jsonObject);
+		goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
+		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		skip = IServerJsonOption.SKIP.getFrom(source, jsonObject);
+		removeCatchMode = IServerJsonOption.REMOVE_CATCH_MODE.getFrom(source, jsonObject);
+		if (IServerJsonOption.STEADY_FOOTING_CONTEXT.isDefinedIn(jsonObject)) {
+			context = new SteadyFootingContext().initFrom(source, IServerJsonOption.STEADY_FOOTING_CONTEXT.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 }

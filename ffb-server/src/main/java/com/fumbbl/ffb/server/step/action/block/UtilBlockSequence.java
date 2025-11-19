@@ -27,7 +27,7 @@ public class UtilBlockSequence {
 	/**
 	 * Initializes pushback by setting the starting square, handles skill
 	 * STRIP_BALL.
-	 * 
+	 * <p>
 	 * Sets stepParameter STARTING_PUSHBACK_SQUARE for all steps on the stack. Sets
 	 * stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
 	 */
@@ -56,7 +56,7 @@ public class UtilBlockSequence {
 				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCanForceOpponentToDropBall, true, SkillUse.STEAL_BALL));
 				parameterSet
 					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-				actingPlayer.markSkillUsed(skillCanForceOpponentToDropBall);
+				parameterSet.add(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, true));
 				if (game.getDefender() != null) {
 					boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
 					if (!defenderHasTacklezones && skillCanCounterOpponentForcingDropBall != null) {

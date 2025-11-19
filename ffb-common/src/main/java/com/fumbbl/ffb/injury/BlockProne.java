@@ -6,7 +6,6 @@ public class BlockProne extends InjuryType {
 
 	public BlockProne() {
 		super("blockProne", false, SendToBoxReason.BLOCKED);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

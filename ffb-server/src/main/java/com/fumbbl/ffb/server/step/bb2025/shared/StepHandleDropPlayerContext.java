@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,7 +18,6 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
-import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -123,8 +122,6 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 	private void executeStep() {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		if (dropPlayerContext != null && dropPlayerContext.getInjuryResult() != null) {
-			dropPlayerContext.getDeferredCommands().forEach(DeferredCommand::execute);
-			dropPlayerContext.getStepParameters().forEach(this::publishParameter);
 
 			Game game = getGameState().getGame();
 
@@ -140,8 +137,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 
 				if (!dropPlayerContext.isAlreadyDropped() && (!dropPlayerContext.isRequiresArmourBreak() || injuryResult.injuryContext().isArmorBroken())) {
 					publishParameters(UtilServerInjury.dropPlayer(this, game.getPlayerById(dropPlayerContext.getPlayerId()),
-						dropPlayerContext.getApothecaryMode(), dropPlayerContext.isEligibleForSafePairOfHands(),
-						StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP));
+						dropPlayerContext.getApothecaryMode(), dropPlayerContext.isEligibleForSafePairOfHands()));
 					if (dropPlayerContext.isEndTurn()) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
@@ -158,8 +154,7 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 
-				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT_FROM_ACTUAL_DROP, injuryResult));
-				getGameState().getSteadyFootingState().clear();
+				publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResult));
 				if (StringTool.isProvided(dropPlayerContext.getLabel())) {
 					getResult().setNextAction(StepAction.GOTO_LABEL, dropPlayerContext.getLabel());
 				}

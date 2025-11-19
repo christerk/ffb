@@ -323,32 +323,16 @@ public class UtilServerInjury {
 		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode, false);
 	}
 
-	/**
-	 *
-	 * @param bacInjuryResultKey key to use for Ball&Chain injury result
-	 */
-	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
-																						boolean eligibleForSafePairOfHands, StepParameterKey bacInjuryResultKey) {
-		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands, bacInjuryResultKey);
-	}
-
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
 																						boolean eligibleForSafePairOfHands) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
-	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
-		return dropPlayer(pStep, pPlayer, pPlayerBase, pApothecaryMode, eligibleForSafePairOfHands,
-			StepParameterKey.INJURY_RESULT);
-	}
-
 	// drops the given player
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
-	// sets stepParameter defined by bacInjuryResultKey if player has skill Ball&Chain
+	// sets StepParameterKey.INJURY_RESULT if player has skill Ball&Chain
 	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands,
-																						 StepParameterKey bacInjuryResultKey) {
+																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -356,7 +340,7 @@ public class UtilServerInjury {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerCoordinate != null) && (playerState != null)) {
 			if (pPlayer.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
-				pStep.publishParameter(new StepParameter(bacInjuryResultKey,
+				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 					UtilServerInjury.handleInjury(pStep, new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null,
 						null, pApothecaryMode)));
 			} else {

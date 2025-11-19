@@ -21,7 +21,6 @@ public class RawScanner<T2> {
 				try {
 					result.add((Class<T2>) Class.forName(classInfo.getName()));
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

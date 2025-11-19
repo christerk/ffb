@@ -36,7 +36,6 @@ public class FuriousOutburst extends com.fumbbl.ffb.server.step.generator.Furiou
 		sequence.add(StepId.TAKE_ROOT);
 		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.BLOOD_LUST);
-		sequence.add(StepId.INIT_LOOK_INTO_MY_EYES);
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.FIRST_MOVE_FURIOUS_OUTBURST, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END));
