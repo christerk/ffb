@@ -33,7 +33,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerFromBombCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;

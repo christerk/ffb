@@ -1,0 +1,21 @@
+package com.fumbbl.ffb.server.skillbehaviour.mixed;
+
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.server.model.SkillBehaviour;
+import com.fumbbl.ffb.skill.mixed.ArmourIncrease;
+
+@RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
+public class ArmourIncreaseBehaviour extends SkillBehaviour<ArmourIncrease> {
+	public ArmourIncreaseBehaviour() {
+		super();
+
+		registerModifier(player -> player.setArmour(
+			Math.min(
+				Math.min(11, player.getPosition().getArmour() + 2),
+				player.getArmour() + 1)
+			)
+		);
+	}
+}
