@@ -1,17 +1,18 @@
 package com.fumbbl.ffb;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-
+@Repeatable(RulesCollections.class)
 public @interface RulesCollection {
 
 	enum Rules {
 		COMMON(null),
 		BB2016(COMMON),
 		BB2020(COMMON),
-		BB2025(BB2020);
+		BB2025(COMMON);
 
 		private final Rules extending;
 
