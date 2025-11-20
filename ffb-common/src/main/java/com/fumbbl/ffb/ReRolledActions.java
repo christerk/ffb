@@ -5,10 +5,10 @@ import com.fumbbl.ffb.skill.common.FoulAppearance;
 import com.fumbbl.ffb.skill.common.JumpUp;
 import com.fumbbl.ffb.skill.common.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
-import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
-import com.fumbbl.ffb.skill.bb2020.BreatheFire;
-import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
-import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
+import com.fumbbl.ffb.skill.mixed.AnimalSavagery;
+import com.fumbbl.ffb.skill.mixed.BreatheFire;
+import com.fumbbl.ffb.skill.mixed.ProjectileVomit;
+import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
 import com.fumbbl.ffb.skill.bb2020.special.ThenIStartedBlastin;
 

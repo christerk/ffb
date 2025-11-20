@@ -3,7 +3,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2016;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
-import com.fumbbl.ffb.skill.common.AgilityIncrease;
+import com.fumbbl.ffb.skill.mixed.AgilityIncrease;
 
 @RulesCollection(Rules.BB2016)
 public class AgilityIncreaseBehaviour extends SkillBehaviour<AgilityIncrease> {

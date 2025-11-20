@@ -31,7 +31,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.bb2020.DivingTackle;
+import com.fumbbl.ffb.skill.mixed.DivingTackle;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 

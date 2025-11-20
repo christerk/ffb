@@ -23,7 +23,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury;
 import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
+import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)

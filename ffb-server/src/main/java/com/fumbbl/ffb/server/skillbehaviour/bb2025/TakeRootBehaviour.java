@@ -20,7 +20,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.block.StepPushback;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.TakeRoot;
+import com.fumbbl.ffb.skill.mixed.TakeRoot;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2025)

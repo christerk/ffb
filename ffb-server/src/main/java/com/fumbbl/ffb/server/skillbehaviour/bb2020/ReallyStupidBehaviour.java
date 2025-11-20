@@ -26,7 +26,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.common.StepReallyStupid;
 import com.fumbbl.ffb.server.step.action.common.StepReallyStupid.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.ReallyStupid;
+import com.fumbbl.ffb.skill.mixed.ReallyStupid;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
