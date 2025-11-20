@@ -14,7 +14,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.block.StepHorns;
 import com.fumbbl.ffb.server.step.action.block.StepHorns.StepState;
-import com.fumbbl.ffb.skill.Horns;
+import com.fumbbl.ffb.skill.common.Horns;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.COMMON)

@@ -6,7 +6,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
-import com.fumbbl.ffb.skill.Dauntless;
+import com.fumbbl.ffb.skill.common.Dauntless;
 import com.fumbbl.ffb.skill.bb2020.BreakTackle;
 import com.fumbbl.ffb.skill.bb2020.MightyBlow;
 import com.fumbbl.ffb.skill.bb2020.SureFeet;

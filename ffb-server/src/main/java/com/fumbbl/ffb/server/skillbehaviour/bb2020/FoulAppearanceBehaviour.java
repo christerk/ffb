@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepFoulAppearance;
 import com.fumbbl.ffb.server.step.bb2020.StepFoulAppearance.StepState;
 import com.fumbbl.ffb.server.step.bb2020.multiblock.StepFoulAppearanceMultiple;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.FoulAppearance;
+import com.fumbbl.ffb.skill.common.FoulAppearance;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;

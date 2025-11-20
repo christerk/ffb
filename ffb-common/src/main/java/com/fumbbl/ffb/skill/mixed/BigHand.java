@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -13,7 +13,8 @@ import com.fumbbl.ffb.modifiers.PickupModifier;
  * completely functional. The player ignores modifier(s) for enemy tackle zones
  * or Pouring Rain weather when he attempts to pick up the ball.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
+@RulesCollection(Rules.BB2020)
 public class BigHand extends Skill {
 
 	public BigHand() {

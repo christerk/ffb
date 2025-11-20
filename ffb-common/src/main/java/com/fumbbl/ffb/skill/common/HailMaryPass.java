@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.common;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -26,7 +26,6 @@ public class HailMaryPass extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canPassToAnySquare);
-
 	}
 
 }

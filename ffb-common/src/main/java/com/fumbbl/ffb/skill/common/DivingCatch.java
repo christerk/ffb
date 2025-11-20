@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill;
+package com.fumbbl.ffb.skill.common;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.RulesCollection;

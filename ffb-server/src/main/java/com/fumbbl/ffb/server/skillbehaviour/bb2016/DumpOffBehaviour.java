@@ -20,7 +20,7 @@ import com.fumbbl.ffb.server.step.action.block.StepDumpOff.StepState;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.DumpOff;
+import com.fumbbl.ffb.skill.common.DumpOff;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

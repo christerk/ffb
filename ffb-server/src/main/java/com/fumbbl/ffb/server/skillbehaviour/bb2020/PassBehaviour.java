@@ -36,7 +36,7 @@ import com.fumbbl.ffb.server.step.bb2020.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.skill.common.Pass;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 

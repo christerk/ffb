@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.select.StepJumpUp;
 import com.fumbbl.ffb.server.step.action.select.StepJumpUp.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.JumpUp;
+import com.fumbbl.ffb.skill.common.JumpUp;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;

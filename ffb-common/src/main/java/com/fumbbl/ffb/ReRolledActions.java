@@ -1,9 +1,9 @@
 package com.fumbbl.ffb;
 
-import com.fumbbl.ffb.skill.Dauntless;
-import com.fumbbl.ffb.skill.FoulAppearance;
-import com.fumbbl.ffb.skill.JumpUp;
-import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.skill.common.Dauntless;
+import com.fumbbl.ffb.skill.common.FoulAppearance;
+import com.fumbbl.ffb.skill.common.JumpUp;
+import com.fumbbl.ffb.skill.common.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
 import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
 import com.fumbbl.ffb.skill.bb2020.BreatheFire;
@@ -90,6 +90,7 @@ public class ReRolledActions {
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException e) {
+			//noinspection CallToPrintStackTrace
 			e.printStackTrace();
 		}
 	}

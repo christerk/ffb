@@ -20,7 +20,7 @@ import com.fumbbl.ffb.server.step.action.block.StepJuggernaut;
 import com.fumbbl.ffb.server.step.action.block.StepJuggernaut.StepState;
 import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.Juggernaut;
+import com.fumbbl.ffb.skill.common.Juggernaut;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.COMMON)

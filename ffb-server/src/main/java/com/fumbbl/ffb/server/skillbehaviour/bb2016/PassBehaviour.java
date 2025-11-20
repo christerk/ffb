@@ -24,7 +24,7 @@ import com.fumbbl.ffb.server.step.bb2016.pass.StepPass.StepState;
 import com.fumbbl.ffb.server.step.bb2016.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.skill.common.Pass;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)
