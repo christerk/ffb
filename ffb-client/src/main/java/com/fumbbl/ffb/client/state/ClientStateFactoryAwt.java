@@ -2,6 +2,9 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.common.ClientStateLogin;
+import com.fumbbl.ffb.client.state.common.ClientStateReplay;
+import com.fumbbl.ffb.client.state.common.ClientStateSpectate;
 import com.fumbbl.ffb.util.Scanner;
 
 import java.lang.reflect.Constructor;

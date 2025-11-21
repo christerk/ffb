@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -11,6 +11,9 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
+import com.fumbbl.ffb.client.state.AbstractClientStateMove;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.RangeGridHandler;
 import com.fumbbl.ffb.client.state.logic.ThrowTeamMateLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.layer.FieldLayerOverPlayers;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.PushbackLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;

@@ -1,9 +1,10 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.BoxType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.WaitForSetupLogicModule;
 import com.fumbbl.ffb.client.ui.SideBarComponent;

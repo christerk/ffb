@@ -296,7 +296,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		return handleResize(pActionKey);
 	}
 
-	protected boolean handleResize(ActionKey pActionKey) {
+	public boolean handleResize(ActionKey pActionKey) {
 		GameMenuBar gameMenuBar = getClient().getUserInterface().getGameMenuBar();
 		switch (pActionKey) {
 			case RESIZE_LARGER:

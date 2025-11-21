@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -6,15 +6,16 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogInformation;
+import com.fumbbl.ffb.client.state.AbstractClientStateMove;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
-import com.fumbbl.ffb.client.state.logic.PassBlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.KickoffReturnLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -26,12 +27,10 @@ import java.util.Map;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.COMMON)
-public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogicModule> {
+public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffReturnLogicModule> {
 
-	private DialogInformation fInfoDialog;
-
-	public ClientStatePassBlock(FantasyFootballClientAwt pClient) {
-		super(pClient, new PassBlockLogicModule(pClient));
+	public ClientStateKickoffReturn(FantasyFootballClientAwt pClient) {
+		super(pClient, new KickoffReturnLogicModule(pClient));
 	}
 
 	@Override
@@ -47,7 +46,6 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 		}
 	}
 
-	@Override
 	public void clickOnField(FieldCoordinate pCoordinate) {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
@@ -63,23 +61,9 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 	@Override
 	protected Map<Integer, ClientAction> actionMapping() {
 		return new HashMap<Integer, ClientAction>() {{
-			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
-			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
 		}};
-	}
-
-	@Override
-	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
-		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
-		Map<ClientAction, MenuItemConfig> jump = new HashMap<>();
-		influences.put(Influences.IS_JUMPING, jump);
-		jump.put(ClientAction.JUMP, new MenuItemConfig("Don't Jump", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_JUMP));
-		Map<ClientAction, MenuItemConfig> hasActed = new HashMap<>();
-		influences.put(Influences.HAS_ACTED, hasActed);
-		hasActed.put(ClientAction.END_MOVE, new MenuItemConfig("End Move", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
-		return influences;
 	}
 
 	@Override
@@ -87,17 +71,24 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
 		itemConfigs.put(ClientAction.MOVE, new MenuItemConfig("Move", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
-		itemConfigs.put(ClientAction.JUMP, new MenuItemConfig("Jump", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_JUMP));
-		itemConfigs.put(ClientAction.BOUNDING_LEAP, new MenuItemConfig("Jump (Bounding Leap)", IIconProperty.ACTION_JUMP, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP));
 		itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 
 		return itemConfigs;
 	}
 
+	@Override
+	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
+		Map<ClientAction, MenuItemConfig> hasActed = new HashMap<>();
+		influences.put(Influences.HAS_ACTED, hasActed);
+		hasActed.put(ClientAction.END_MOVE, new MenuItemConfig("End Move", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+		return influences;
+
+	}
+
 	public boolean actionKeyPressed(ActionKey pActionKey) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
 		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
 		switch (pActionKey) {
@@ -129,12 +120,6 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 			case PLAYER_ACTION_MOVE:
 				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
 				break;
-			case PLAYER_ACTION_JUMP:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_JUMP);
-				break;
-			case PLAYER_ACTION_BOUNDING_LEAP:
-				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
-				return true;
 			default:
 				actionHandled = handleResize(pActionKey);
 				break;
@@ -144,16 +129,8 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 
 	@Override
 	public void postEndTurn() {
-
-		if (logicModule.isTurnEnding()) {
-			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-			sideBarHome.refresh();
-		} else {
-			fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
-				new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},
-				DialogInformation.OK_DIALOG, IIconProperty.GAME_REF);
-			fInfoDialog.showDialog(pDialog -> fInfoDialog.hideDialog());
-		}
+		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+		sideBarHome.refresh();
 	}
 
 }

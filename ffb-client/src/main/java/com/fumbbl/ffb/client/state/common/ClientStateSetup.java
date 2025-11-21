@@ -1,8 +1,9 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.AbstractClientStateSetup;
 import com.fumbbl.ffb.client.state.logic.SetupLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.net.NetCommand;

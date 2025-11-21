@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameList;
@@ -13,6 +13,7 @@ import com.fumbbl.ffb.client.dialog.DialogLogin;
 import com.fumbbl.ffb.client.dialog.DialogTeamChoice;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.LoginLogicModule;
 import com.fumbbl.ffb.dialog.DialogJoinParameter;

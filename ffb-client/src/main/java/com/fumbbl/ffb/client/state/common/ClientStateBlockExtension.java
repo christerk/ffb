@@ -1,8 +1,11 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
@@ -73,7 +76,7 @@ public class ClientStateBlockExtension {
   }
 
 
-  protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
+ public Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
     Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
     Map<ClientAction, MenuItemConfig> putrid = new HashMap<>();
     influences.put(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION, putrid);

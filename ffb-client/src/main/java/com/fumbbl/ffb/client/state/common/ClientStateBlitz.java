@@ -1,7 +1,9 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.AbstractClientStateBlitz;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;

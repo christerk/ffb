@@ -1,8 +1,9 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.AbstractClientStateSetup;
 import com.fumbbl.ffb.client.state.logic.SwarmingLogicModule;
 
 @RulesCollection(RulesCollection.Rules.COMMON)

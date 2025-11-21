@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.common;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
@@ -11,6 +11,7 @@ import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.DialogReplayModeChoice;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.ChatComponent;
