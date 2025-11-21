@@ -12,7 +12,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.pass.StepBombardier;
 import com.fumbbl.ffb.server.step.action.pass.StepBombardier.StepState;
-import com.fumbbl.ffb.skill.bb2020.Bombardier;
+import com.fumbbl.ffb.skill.bb2025.Bombardier;
 
 @RulesCollection(Rules.BB2025)
 public class BombardierBehaviour extends SkillBehaviour<Bombardier> {
