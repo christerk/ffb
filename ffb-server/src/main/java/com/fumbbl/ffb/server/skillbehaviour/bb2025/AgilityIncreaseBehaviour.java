@@ -5,8 +5,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.bb2025.AgilityIncrease;
 
-@RulesCollection(Rules.BB2016)
-@RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class AgilityIncreaseBehaviour extends SkillBehaviour<AgilityIncrease> {
 	public AgilityIncreaseBehaviour() {
 		super();
