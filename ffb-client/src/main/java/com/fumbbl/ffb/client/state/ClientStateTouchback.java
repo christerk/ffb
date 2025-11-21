@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.TouchbackLogicModule;
@@ -15,9 +16,10 @@ import java.util.Map;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateTouchback extends ClientStateAwt<TouchbackLogicModule> {
 
-	protected ClientStateTouchback(FantasyFootballClientAwt pClient) {
+	public ClientStateTouchback(FantasyFootballClientAwt pClient) {
 		super(pClient, new TouchbackLogicModule(pClient));
 	}
 

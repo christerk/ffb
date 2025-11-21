@@ -6,7 +6,7 @@ package com.fumbbl.ffb;
  */
 public enum ClientStateId implements INamedObject {
 
-	LOGIN("login"), RE_ROLL("reRoll"), START_GAME("startGame"), SELECT_PLAYER("selectPlayer"), MOVE("move"),
+	LOGIN("login"), START_GAME("startGame"), SELECT_PLAYER("selectPlayer"), MOVE("move"),
 	BLOCK("block"), BLITZ("blitz"), HAND_OVER("handOver"), PASS("pass"), SPECTATE("spectate"), SETUP("setup"),
 	KICKOFF("kickoff"), PUSHBACK("pushback"), INTERCEPTION("interception"), FOUL("foul"), HIGH_KICK("highKick"),
 	QUICK_SNAP("quickSnap"), TOUCHBACK("touchback"), WAIT_FOR_OPPONENT("waitForOpponent"), REPLAY("replay"),

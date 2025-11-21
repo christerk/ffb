@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.SetupLogicModule;
@@ -9,11 +10,12 @@ import com.fumbbl.ffb.net.NetCommand;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateSetup extends AbstractClientStateSetup<SetupLogicModule> {
 
 	protected boolean fLoadDialog;
 
-	protected ClientStateSetup(FantasyFootballClientAwt pClient) {
+	public ClientStateSetup(FantasyFootballClientAwt pClient) {
 		super(pClient, new SetupLogicModule(pClient));
 	}
 

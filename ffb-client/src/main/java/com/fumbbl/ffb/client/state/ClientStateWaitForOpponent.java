@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -11,9 +12,10 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLogicModule> {
 
-	protected ClientStateWaitForOpponent(FantasyFootballClientAwt pClient) {
+	public ClientStateWaitForOpponent(FantasyFootballClientAwt pClient) {
 		super(pClient, new WaitForOpponentLogicModule(pClient));
 	}
 

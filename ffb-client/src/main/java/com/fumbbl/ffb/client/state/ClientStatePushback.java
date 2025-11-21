@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -18,9 +19,10 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 
-	protected ClientStatePushback(FantasyFootballClientAwt pClient) {
+	public ClientStatePushback(FantasyFootballClientAwt pClient) {
 		super(pClient, new PushbackLogicModule(pClient));
 	}
 

@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.IProgressListener;
@@ -24,6 +25,7 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> implements IDialogCloseListener, IProgressListener {
 
 	private enum DialogState {
@@ -36,7 +38,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	private DialogProgressBar fDialogProgress;
 	private DialogState currentDialog = DialogState.NONE;
 
-	protected ClientStateReplay(FantasyFootballClientAwt pClient) {
+	public ClientStateReplay(FantasyFootballClientAwt pClient) {
 		super(pClient, new ReplayLogicModule(pClient));
 
 		logicModule.setCallbacks(new ReplayCallbacksAwt(this));

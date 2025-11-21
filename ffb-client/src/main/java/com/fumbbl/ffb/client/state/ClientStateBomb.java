@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -22,11 +23,12 @@ import java.util.*;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 
 	private final RangeGridHandler fRangeGridHandler;
 
-	protected ClientStateBomb(FantasyFootballClientAwt pClient) {
+	public ClientStateBomb(FantasyFootballClientAwt pClient) {
 		super(pClient, new BombLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, false);
 	}

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.GameTitle;
@@ -15,9 +16,10 @@ import java.util.Map;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 
-	protected ClientStateSpectate(FantasyFootballClientAwt pClient) {
+	public ClientStateSpectate(FantasyFootballClientAwt pClient) {
 		super(pClient, new SpectateLogicModule(pClient));
 	}
 

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
@@ -22,9 +23,10 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffReturnLogicModule> {
 
-	protected ClientStateKickoffReturn(FantasyFootballClientAwt pClient) {
+	public ClientStateKickoffReturn(FantasyFootballClientAwt pClient) {
 		super(pClient, new KickoffReturnLogicModule(pClient));
 	}
 

@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
 
 	private final ClientStateBlockExtension extension = new ClientStateBlockExtension();

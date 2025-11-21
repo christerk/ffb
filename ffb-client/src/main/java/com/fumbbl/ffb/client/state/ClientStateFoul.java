@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -23,11 +24,12 @@ import java.util.Optional;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
 
   private Player<?> target;
 
-  protected ClientStateFoul(FantasyFootballClientAwt client) {
+  public ClientStateFoul(FantasyFootballClientAwt client) {
     super(client, new FoulLogicModule(client));
   }
 

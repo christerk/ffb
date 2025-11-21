@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
@@ -9,6 +10,7 @@ import com.fumbbl.ffb.client.state.logic.bb2020.PutridRegurgitationBlockLogicMod
 import java.util.HashMap;
 import java.util.Map;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStatePutridRegurgitationBlock extends AbstractClientStateBlock<PutridRegurgitationBlockLogicModule> {
 	public ClientStatePutridRegurgitationBlock(FantasyFootballClientAwt pClient) {
 		super(pClient, new PutridRegurgitationBlockLogicModule(pClient));

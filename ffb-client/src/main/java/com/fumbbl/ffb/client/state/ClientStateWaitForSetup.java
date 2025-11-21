@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.BoxType;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -15,11 +16,12 @@ import java.util.Map;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateWaitForSetup extends ClientStateAwt<WaitForSetupLogicModule> {
 
 	private boolean fReservesBoxOpened;
 
-	protected ClientStateWaitForSetup(FantasyFootballClientAwt pClient) {
+	public ClientStateWaitForSetup(FantasyFootballClientAwt pClient) {
 		super(pClient, new WaitForSetupLogicModule(pClient));
 	}
 

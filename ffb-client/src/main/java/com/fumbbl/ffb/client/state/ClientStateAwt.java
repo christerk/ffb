@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener, IKeyedItem {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -63,6 +64,11 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	// Interface Methods
+
+	@Override
+	public String getKey() {
+		return logicModule.getId().name();
+	}
 
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {

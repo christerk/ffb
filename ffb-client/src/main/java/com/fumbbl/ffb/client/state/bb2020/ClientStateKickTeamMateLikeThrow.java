@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -22,6 +23,7 @@ import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<KickTeamMateLikeThrowLogicModule> {
 
 	private boolean fShowRangeRuler;

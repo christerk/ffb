@@ -94,9 +94,17 @@ public class Scanner<T extends IKeyedItem> {
 	 * Return instances of all classes extending T valid for the rules version in options.
 	 */
 	public Collection<T> getSubclassInstances(GameOptions options) {
+		return getSubclassInstances(options, defaultGenerator);
+	}
+
+	/**
+	 * Return instances of all classes extending T valid for the rules version in options.
+	 * @param instanceGenerator generator to invoke constructors with arguments
+	 */
+	public Collection<T> getSubclassInstances(GameOptions options, Function<Class<T>, T> instanceGenerator) {
 		Set<Class<T>> classes = rawScanner.getSubclasses();
 
-		return collectInstancesForRuleVersion(options, classes, defaultGenerator);
+		return collectInstancesForRuleVersion(options, classes, instanceGenerator);
 	}
 
 	/**

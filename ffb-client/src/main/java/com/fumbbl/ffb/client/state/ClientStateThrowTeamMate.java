@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RangeRuler;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -26,12 +27,13 @@ import com.fumbbl.ffb.util.UtilRangeRuler;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamMateLogicModule> {
 
 	private boolean fShowRangeRuler;
 	private final RangeGridHandler fRangeGridHandler;
 
-	protected ClientStateThrowTeamMate(FantasyFootballClientAwt pClient) {
+	public ClientStateThrowTeamMate(FantasyFootballClientAwt pClient) {
 		super(pClient, new ThrowTeamMateLogicModule(pClient));
 		fRangeGridHandler = new RangeGridHandler(pClient, true);
 	}

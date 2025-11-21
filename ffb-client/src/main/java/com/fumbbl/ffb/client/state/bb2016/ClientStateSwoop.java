@@ -1,8 +1,10 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.bb2016;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.AbstractClientStateMove;
 import com.fumbbl.ffb.client.state.logic.SwoopLogicModule;
 import com.fumbbl.ffb.model.Player;
 
@@ -10,9 +12,10 @@ import com.fumbbl.ffb.model.Player;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> {
 
-	protected ClientStateSwoop(FantasyFootballClientAwt pClient) {
+	public ClientStateSwoop(FantasyFootballClientAwt pClient) {
 		super(pClient, new SwoopLogicModule(pClient));
 	}
 

@@ -1,13 +1,15 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.QuickSnapLogicModule;
 
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateQuickSnap extends AbstractClientStateSetup<QuickSnapLogicModule> {
 
-	protected ClientStateQuickSnap(FantasyFootballClientAwt pClient) {
+	public ClientStateQuickSnap(FantasyFootballClientAwt pClient) {
 		super(pClient, new QuickSnapLogicModule(pClient));
 	}
 

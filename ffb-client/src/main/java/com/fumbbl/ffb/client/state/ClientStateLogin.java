@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state;
 import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.GameList;
 import com.fumbbl.ffb.GameListEntry;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TeamListEntry;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
@@ -32,11 +33,12 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implements IDialogCloseListener {
 
 	private ServerStatus fLastServerError;
 	private boolean loginDialogVisible;
-	protected ClientStateLogin(FantasyFootballClientAwt pClient) {
+	public ClientStateLogin(FantasyFootballClientAwt pClient) {
 		super(pClient, new LoginLogicModule(pClient));
 	}
 

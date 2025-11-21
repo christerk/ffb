@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state;
 
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.logic.BlitzLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -11,8 +12,9 @@ import com.fumbbl.ffb.model.Player;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateBlitz extends AbstractClientStateBlitz<BlitzLogicModule> {
-	protected ClientStateBlitz(FantasyFootballClientAwt client) {
+	public ClientStateBlitz(FantasyFootballClientAwt client) {
 		super(client, new BlitzLogicModule(client));
 	}
 

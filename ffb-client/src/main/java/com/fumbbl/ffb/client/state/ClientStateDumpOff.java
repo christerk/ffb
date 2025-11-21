@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.DumpOffLogicModule;
@@ -13,9 +14,10 @@ import com.fumbbl.ffb.model.Player;
  *
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModule> {
 
-	protected ClientStateDumpOff(FantasyFootballClientAwt pClient) {
+	public ClientStateDumpOff(FantasyFootballClientAwt pClient) {
 		super(pClient, new DumpOffLogicModule(pClient));
 	}
 

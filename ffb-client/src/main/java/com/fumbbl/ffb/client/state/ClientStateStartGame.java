@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state;
 
 import com.fumbbl.ffb.BoxType;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -13,9 +14,10 @@ import java.util.Map;
  * 
  * @author Kalimar
  */
+@RulesCollection(RulesCollection.Rules.COMMON)
 public class ClientStateStartGame extends ClientStateAwt<StartGameLogicModule> {
 
-	protected ClientStateStartGame(FantasyFootballClientAwt pClient) {
+	public ClientStateStartGame(FantasyFootballClientAwt pClient) {
 		super(pClient, new StartGameLogicModule(pClient));
 	}
 
