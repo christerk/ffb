@@ -162,9 +162,18 @@ public class Scanner<T extends IKeyedItem> {
 
 	private Set<T> getInstancesForMostRecentRules(Set<Class<T>> unfiltered, Function<Class<T>, T> instanceGenerator) {
 		return unfiltered.stream().map(instanceGenerator).collect(Collectors.groupingBy(IKeyedItem::getKey)).values()
-			.stream().map(classGroup -> classGroup.stream().max(Comparator.comparing(
-					instance -> instance.getClass().getAnnotation(RulesCollection.class).value().getHierarchyLevel()))
+			.stream().map(classGroup -> classGroup.stream().max(Comparator.comparing(this::getHierarchyLevel))
 				.orElseThrow(() -> new FantasyFootballException("No classes found in group."))).collect(Collectors.toSet());
+	}
+
+	private int getHierarchyLevel(T instance) {
+		RulesCollection singleRule = instance.getClass().getAnnotation(RulesCollection.class);
+		if (singleRule != null) {
+			return singleRule.value().getHierarchyLevel();
+		}
+		RulesCollections rules = instance.getClass().getAnnotation(RulesCollections.class);
+		return Arrays.stream(rules.value()).map(rule -> rule.value().getHierarchyLevel())
+			.max(Comparator.comparingInt(value -> value)).orElse(0);
 	}
 
 	private Collection<T> collectInstances(Set<Class<T>> classes) {
