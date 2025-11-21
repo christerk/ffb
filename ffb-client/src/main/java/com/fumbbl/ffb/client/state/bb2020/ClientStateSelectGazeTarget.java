@@ -69,7 +69,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 		// clicks on fields are ignored
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -113,7 +113,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);

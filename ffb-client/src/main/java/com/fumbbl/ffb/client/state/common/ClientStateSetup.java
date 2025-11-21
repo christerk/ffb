@@ -20,7 +20,7 @@ public class ClientStateSetup extends AbstractClientStateSetup<SetupLogicModule>
 		super(pClient, new SetupLogicModule(pClient));
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		switch (pActionKey) {
 			case MENU_SETUP_LOAD:
 				fLoadDialog = true;

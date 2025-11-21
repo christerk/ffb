@@ -59,7 +59,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
@@ -86,7 +86,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();

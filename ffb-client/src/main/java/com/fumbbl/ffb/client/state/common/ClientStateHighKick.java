@@ -47,7 +47,7 @@ public class ClientStateHighKick extends ClientStateAwt<HighKickLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 

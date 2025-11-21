@@ -37,7 +37,7 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled;
 		if (pActionKey == ActionKey.MENU_REPLAY) {
 			actionHandled = true;
@@ -50,7 +50,7 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 

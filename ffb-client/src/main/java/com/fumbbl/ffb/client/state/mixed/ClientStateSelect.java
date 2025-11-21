@@ -45,7 +45,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
 			put(IPlayerPopupMenuKeys.KEY_BLITZ, ClientAction.BLITZ);
@@ -75,7 +75,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		}};
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		UserInterface userInterface = getClient().getUserInterface();

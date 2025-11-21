@@ -160,7 +160,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_HAIL_MARY_BOMB, ClientAction.HAIL_MARY_BOMB);
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
@@ -175,7 +175,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		}};
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		if (pActionKey == null) {
 			return false;
 		}

@@ -55,7 +55,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 
@@ -108,7 +108,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		fDialogProgress.showDialog(this);
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled;
 		if (logicModule.replayStopped(pActionKey)) {
 			actionHandled = true;

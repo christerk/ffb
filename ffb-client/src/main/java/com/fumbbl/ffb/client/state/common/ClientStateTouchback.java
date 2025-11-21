@@ -61,7 +61,7 @@ public class ClientStateTouchback extends ClientStateAwt<TouchbackLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 

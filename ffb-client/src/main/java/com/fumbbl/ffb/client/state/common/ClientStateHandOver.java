@@ -33,7 +33,7 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		super(pClient, new HandOverLogicModule(pClient));
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());

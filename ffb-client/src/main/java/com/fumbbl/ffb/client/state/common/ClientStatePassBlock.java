@@ -64,7 +64,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
@@ -97,7 +97,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 		return itemConfigs;
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();

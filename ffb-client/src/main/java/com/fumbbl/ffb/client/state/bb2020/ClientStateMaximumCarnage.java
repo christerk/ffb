@@ -30,7 +30,7 @@ public class ClientStateMaximumCarnage extends AbstractClientStateBlock<MaximumC
 		return itemConfigs;
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		boolean actionHandled = true;
@@ -43,7 +43,7 @@ public class ClientStateMaximumCarnage extends AbstractClientStateBlock<MaximumC
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		Map<Integer, ClientAction> actions = new HashMap<>();
 		actions.put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 		return actions;

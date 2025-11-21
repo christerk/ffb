@@ -176,7 +176,7 @@ public class ClientStateLogin extends ClientStateAwt<LoginLogicModule> implement
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 

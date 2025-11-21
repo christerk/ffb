@@ -20,7 +20,7 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 		super(pClient, new GazeLogicModule(pClient));
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();

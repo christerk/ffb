@@ -58,7 +58,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 		return true;
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
@@ -129,7 +129,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);

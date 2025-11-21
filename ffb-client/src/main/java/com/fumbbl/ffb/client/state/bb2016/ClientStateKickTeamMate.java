@@ -97,7 +97,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_SHORT, ClientAction.PASS_SHORT);
 			put(IPlayerPopupMenuKeys.KEY_LONG, ClientAction.PASS_LONG);

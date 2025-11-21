@@ -131,7 +131,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 }

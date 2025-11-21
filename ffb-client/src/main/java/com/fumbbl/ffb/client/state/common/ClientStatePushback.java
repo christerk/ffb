@@ -66,7 +66,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		logicModule.playerInteraction(pPlayer);
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Direction moveDirection = UtilClientActionKeys.findMoveDirection(pActionKey);
 		if (moveDirection != null) {
 			return logicModule.pushbackTo(moveDirection);
@@ -75,7 +75,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 }

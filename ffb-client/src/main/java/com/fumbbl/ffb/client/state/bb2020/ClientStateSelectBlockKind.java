@@ -69,7 +69,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 			return new HashMap<Integer, ClientAction>() {{
 				put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
@@ -86,7 +86,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Game game = getClient().getGame();
 		if (!game.isHomePlaying()) {
 			return false;

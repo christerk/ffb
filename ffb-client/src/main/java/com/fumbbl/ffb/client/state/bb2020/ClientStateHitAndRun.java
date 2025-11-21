@@ -74,13 +74,13 @@ public class ClientStateHitAndRun extends ClientStateAwt<HitAndRunLogicModule> {
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_HIT_AND_RUN, ClientAction.HIT_AND_RUN);
 		}};
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		if (pActionKey == null) {
 			return false;
 		}

@@ -177,7 +177,7 @@ public class ClientStateKickTeamMateLikeThrow extends AbstractClientStateMove<Ki
 		super.tearDown();
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		if (pActionKey == ActionKey.PLAYER_ACTION_RANGE_GRID) {
 			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			return true;

@@ -25,7 +25,7 @@ public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLo
 		setClickable(false);
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		switch (pActionKey) {
 			case TOOLBAR_ILLEGAL_PROCEDURE:
@@ -39,7 +39,7 @@ public class ClientStateWaitForOpponent extends ClientStateAwt<WaitForOpponentLo
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return Collections.emptyMap();
 	}
 

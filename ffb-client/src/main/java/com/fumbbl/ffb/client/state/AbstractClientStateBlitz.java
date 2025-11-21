@@ -35,12 +35,12 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 		return IIconProperty.CURSOR_BLOCK;
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		return extension.actionKeyPressed(this, pActionKey) || super.actionKeyPressed(pActionKey);
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
