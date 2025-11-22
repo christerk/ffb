@@ -17,7 +17,7 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2016.StepFoulAppearance;
 import com.fumbbl.ffb.server.step.bb2016.StepFoulAppearance.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.FoulAppearance;
+import com.fumbbl.ffb.skill.common.FoulAppearance;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

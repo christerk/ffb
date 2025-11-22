@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state.bb2016;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
@@ -26,6 +27,7 @@ import java.util.Map;
  *
  * @author Christer
  */
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicModule> {
 
 	public ClientStateKickTeamMate(FantasyFootballClientAwt pClient) {
@@ -95,7 +97,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_SHORT, ClientAction.PASS_SHORT);
 			put(IPlayerPopupMenuKeys.KEY_LONG, ClientAction.PASS_LONG);

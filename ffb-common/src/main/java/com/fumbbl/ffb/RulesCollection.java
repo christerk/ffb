@@ -1,10 +1,11 @@
 package com.fumbbl.ffb;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-
+@Repeatable(RulesCollections.class)
 public @interface RulesCollection {
 
 	enum Rules {

@@ -296,4 +296,9 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	public List<Overlay> getOverlays() {
 		return Collections.singletonList(pathSketchOverlay);
 	}
+
+	@Override
+	public void initRulesDependentMembers() {
+		fStateFactory.registerStatesForRules();
+	}
 }

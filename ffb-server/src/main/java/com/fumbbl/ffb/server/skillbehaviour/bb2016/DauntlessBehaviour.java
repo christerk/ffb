@@ -22,7 +22,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.block.StepDauntless;
 import com.fumbbl.ffb.server.step.action.block.StepDauntless.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Dauntless;
+import com.fumbbl.ffb.skill.common.Dauntless;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

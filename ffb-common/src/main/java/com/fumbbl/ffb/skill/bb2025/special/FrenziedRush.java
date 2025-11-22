@@ -8,7 +8,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
-import com.fumbbl.ffb.skill.bb2020.Frenzy;
+import com.fumbbl.ffb.skill.mixed.Frenzy;
 
 import java.util.Collections;
 
