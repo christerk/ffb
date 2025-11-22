@@ -310,6 +310,7 @@ public class ClientReplayer implements ActionListener {
 			start = fLastReplayPosition;
 		}
 		if (start == 0) {
+			activeMarkingCommand = Integer.MIN_VALUE;
 			Game oldGame = getClient().getGame();
 			FieldMarker[] oldFieldMarker = null;
 			TransientPlayerMarker[] oldPlayerMarker = null;
