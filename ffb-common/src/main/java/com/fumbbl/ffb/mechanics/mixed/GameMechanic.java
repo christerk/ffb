@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
 		add(TurnMode.KICKOFF);

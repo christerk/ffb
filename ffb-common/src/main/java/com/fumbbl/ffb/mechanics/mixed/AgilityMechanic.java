@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.Wording;
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.PlayerState;
@@ -12,6 +12,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 	@Override
 	public SendToBoxReason raisedByNurgleReason() {

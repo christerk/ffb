@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 
 	public Player<?>[] findThrowableTeamMates(Game pGame, Player<?> pThrower) {

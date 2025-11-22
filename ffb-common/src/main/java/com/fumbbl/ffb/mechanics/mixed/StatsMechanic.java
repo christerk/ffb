@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.injury.context.InjuryContext;
@@ -8,6 +8,7 @@ import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.modifiers.PlayerStatLimit;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StatsMechanic extends com.fumbbl.ffb.mechanics.StatsMechanic {
 	@Override
 	public boolean drawPassing() {

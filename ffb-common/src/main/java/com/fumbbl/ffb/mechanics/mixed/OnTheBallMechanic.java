@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.bb2020;
+package com.fumbbl.ffb.mechanics.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class OnTheBallMechanic extends com.fumbbl.ffb.mechanics.OnTheBallMechanic {
 	@Override
 	public Set<Player<?>> findPassBlockers(Game game, Team pTeam, boolean pCheckCanReach) {
