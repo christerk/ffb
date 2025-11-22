@@ -102,6 +102,12 @@ public class ActionKeyBindings {
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_GORED, playerActions, ActionKey.PLAYER_ACTION_GORED);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BLACK_INK, playerActions, ActionKey.PLAYER_ACTION_BLACK_INK);
 		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BREATHE_FIRE, playerActions, ActionKey.PLAYER_ACTION_BREATHE_FIRE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_BOUNDING_LEAP, playerActions, ActionKey.PLAYER_ACTION_BOUNDING_LEAP);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_THEN_I_STARTED_BLASTIN, playerActions, ActionKey.PLAYER_ACITON_THEN_I_STARTED_BLASTIN);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_THE_FLASHING_BLADE, playerActions, ActionKey.PLAYER_ACTION_THE_FLASHING_BLADE);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_VICIOUS_VINES, playerActions, ActionKey.PLAYER_ACTION_VICIOUS_VINES);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_FURIOUS_OUTBURST, playerActions, ActionKey.PLAYER_ACTION_VICIOUS_VINES);
+		addActionBinding(IClientProperty.KEY_PLAYER_ACTION_MORE_ACTIONS, playerActions, ActionKey.PLAYER_ACTION_MORE_ACTIONS);
 
 		fActionsByGroup.put(ActionKeyGroup.PLAYER_ACTIONS, playerActions);
 

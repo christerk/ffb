@@ -131,35 +131,38 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			return true;
 		}
 		if (menuIndex == 0) {
-		switch (pActionKey) {
-			case PLAYER_ACTION_BLOCK:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
-				break;
-			case PLAYER_ACTION_MOVE:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
-				break;
-			case PLAYER_ACTION_BLITZ:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
-				break;
-			case PLAYER_ACTION_FOUL:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
-				break;
-			case PLAYER_ACTION_STAND_UP:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
-				break;
-			case PLAYER_ACTION_HAND_OVER:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
-				break;
-			case PLAYER_ACTION_PASS:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
-				break;
-			case PLAYER_ACTION_MULTIPLE_BLOCK:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
-				break;
-			case PLAYER_ACTION_GAZE:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
-				break;
-		}
+			switch (pActionKey) {
+				case PLAYER_ACTION_BLOCK:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
+					break;
+				case PLAYER_ACTION_MOVE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
+					break;
+				case PLAYER_ACTION_BLITZ:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
+					break;
+				case PLAYER_ACTION_FOUL:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
+					break;
+				case PLAYER_ACTION_STAND_UP:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
+					break;
+				case PLAYER_ACTION_HAND_OVER:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
+					break;
+				case PLAYER_ACTION_PASS:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
+					break;
+				case PLAYER_ACTION_MULTIPLE_BLOCK:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
+					break;
+				case PLAYER_ACTION_GAZE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
+					break;
+				default:
+					actionHandled = super.actionKeyPressed(pActionKey);
+					break;
+			}
 		} else {
 			switch (pActionKey) {
 				case PLAYER_ACTION_FRENZIED_RUSH:

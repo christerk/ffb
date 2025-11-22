@@ -277,9 +277,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public final void menuItemSelected(Player<?> player, int pMenuKey) {
 		if (pMenuKey == IPlayerPopupMenuKeys.KEY_MORE_ACTION) {
-			popupIndex = (popupIndex + 1) % popupMenus.size();
-			fPopupMenu = popupMenus.get(popupIndex);
-			showPopupMenuForPlayer(player);
+			switchPopup(player);
 			return;
 		}
 		prePerform(pMenuKey);
@@ -288,6 +286,12 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			logicModule.perform(player, action);
 		}
 		postPerform(pMenuKey);
+	}
+
+	private void switchPopup(Player<?> player) {
+		popupIndex = (popupIndex + 1) % popupMenus.size();
+		fPopupMenu = popupMenus.get(popupIndex);
+		showPopupMenuForPlayer(player);
 	}
 
 	protected abstract Map<Integer, ClientAction> actionMapping(int menuIndex);
@@ -349,6 +353,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			case RESIZE_SMALLER3:
 			case RESIZE_SMALLER4:
 				gameMenuBar.decreaseScaling();
+				return true;
+			case PLAYER_ACTION_MORE_ACTIONS:
+				Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
+				switchPopup(selectedPlayer);
 				return true;
 			default:
 				break;
