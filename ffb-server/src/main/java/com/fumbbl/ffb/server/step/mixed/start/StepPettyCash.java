@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.start;
+package com.fumbbl.ffb.server.step.mixed.start;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.step.StepId;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepPettyCash extends AbstractStep {
 
 	public StepPettyCash(GameState pGameState) {

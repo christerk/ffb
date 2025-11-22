@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.start;
+package com.fumbbl.ffb.server.step.mixed.start;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -18,12 +18,13 @@ import com.fumbbl.ffb.server.step.StepId;
 
 /**
  * Step in start game sequence to roll spectators.
- *
- * Updates persistence. Pushes kickoffSequence on stack when finishing.
+ * <p>
+ * Updates persistence.
  *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepSpectators extends AbstractStep {
 
 	public StepSpectators(GameState pGameState) {
