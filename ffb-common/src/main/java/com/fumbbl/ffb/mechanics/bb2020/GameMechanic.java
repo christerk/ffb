@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
-import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
@@ -9,7 +8,6 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
@@ -20,7 +18,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
@@ -94,16 +91,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public SendToBoxReason raisedByNurgleReason() {
-		return SendToBoxReason.PLAGUE_RIDDEN;
-	}
-
-	@Override
-	public String raisedByNurgleMessage() {
-		return " is now Plague Ridden and will join team ";
-	}
-
-	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
 		return !modesProhibitingReRolls.contains(turnMode);
 	}
@@ -138,21 +125,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
-	}
-
-	@Override
-	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
-		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE) && teamResult.getRaisedDead() == 0;
-	}
-
-	@Override
-	public boolean infectedGoesToReserves() {
-		return true;
-	}
-
-	@Override
-	public boolean canRaiseDead(Team team) {
-		return team.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
 	}
 
 	@Override
@@ -296,16 +268,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public int audience(TeamResult teamResult) {
 		return teamResult.getFanFactor();
-	}
-
-	@Override
-	public PlayerType raisedNurgleType() {
-		return PlayerType.PLAGUE_RIDDEN;
-	}
-
-	@Override
-	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
-		return !ApothecaryType.forPlayer(game, defender, playerState).isEmpty();
 	}
 
 	@Override

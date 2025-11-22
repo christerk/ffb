@@ -3,10 +3,8 @@ package com.fumbbl.ffb.mechanics.bb2016;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
@@ -57,16 +55,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public SendToBoxReason raisedByNurgleReason() {
-		return SendToBoxReason.NURGLES_ROT;
-	}
-
-	@Override
-	public String raisedByNurgleMessage() {
-		return " has been infected with Nurgle's Rot and will join team ";
-	}
-
-	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
 		return !modesProhibitingReRolls.contains(turnMode);
 	}
@@ -101,21 +89,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return true;
-	}
-
-	@Override
-	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
-		return true;
-	}
-
-	@Override
-	public boolean infectedGoesToReserves() {
-		return false;
-	}
-
-	@Override
-	public boolean canRaiseDead(Team team) {
-		return team.getRoster().hasNecromancer();
 	}
 
 	@Override
@@ -247,18 +220,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public int audience(TeamResult teamResult) {
 		return teamResult.getFame();
-	}
-
-	@Override
-	public PlayerType raisedNurgleType() {
-		return PlayerType.RAISED_FROM_DEAD;
-	}
-
-	@Override
-	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
-		return defender.getPlayerType() != PlayerType.STAR &&
-			((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
-				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
 	}
 
 	@Override
