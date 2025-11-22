@@ -12,7 +12,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;

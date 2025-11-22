@@ -4,7 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.report.IReport;
@@ -18,6 +18,7 @@ public class ReportBriberyAndCorruptionReRoll extends NoDiceReport {
 	private String teamId;
 	private BriberyAndCorruptionAction action;
 
+	@SuppressWarnings("unused")
 	public ReportBriberyAndCorruptionReRoll() {
 		super();
 	}

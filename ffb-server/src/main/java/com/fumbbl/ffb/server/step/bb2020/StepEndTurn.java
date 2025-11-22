@@ -29,7 +29,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -959,7 +959,7 @@ public class StepEndTurn extends AbstractStep {
 			return false;
 		}
 		List<String> playerIds = playersForArgue(team, game);
-		if (playerIds.size() > 0) {
+		if (!playerIds.isEmpty()) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
 				int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);
