@@ -27,7 +27,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsCount;
 import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
-import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
+import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;

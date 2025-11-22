@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.report.bb2020.ReportThrowAtStallingPlayer;
+import com.fumbbl.ffb.report.mixed.ReportThrowAtStallingPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARockStalling;

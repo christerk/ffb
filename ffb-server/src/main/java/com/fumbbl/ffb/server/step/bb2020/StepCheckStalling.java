@@ -15,7 +15,7 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.report.bb2020.ReportStallerDetected;
+import com.fumbbl.ffb.report.mixed.ReportStallerDetected;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.AbstractStep;

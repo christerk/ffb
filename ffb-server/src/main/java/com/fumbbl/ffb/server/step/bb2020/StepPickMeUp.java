@@ -16,7 +16,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.report.bb2020.ReportPickMeUp;
+import com.fumbbl.ffb.report.mixed.ReportPickMeUp;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;

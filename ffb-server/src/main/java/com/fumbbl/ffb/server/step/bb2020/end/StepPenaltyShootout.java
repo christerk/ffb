@@ -10,7 +10,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.report.bb2020.ReportPenaltyShootout;
+import com.fumbbl.ffb.report.mixed.ReportPenaltyShootout;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;

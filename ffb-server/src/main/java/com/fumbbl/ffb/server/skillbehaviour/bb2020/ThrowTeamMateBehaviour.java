@@ -18,7 +18,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.bb2020.ReportThrowTeamMateRoll;
+import com.fumbbl.ffb.report.mixed.ReportThrowTeamMateRoll;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;

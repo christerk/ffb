@@ -4,7 +4,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.report.bb2020.ReportDedicatedFans;
+import com.fumbbl.ffb.report.mixed.ReportDedicatedFans;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;

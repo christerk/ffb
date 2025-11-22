@@ -3,7 +3,7 @@ package com.fumbbl.ffb.server.step.bb2020.end;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
-import com.fumbbl.ffb.report.bb2020.ReportWinnings;
+import com.fumbbl.ffb.report.mixed.ReportWinnings;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;

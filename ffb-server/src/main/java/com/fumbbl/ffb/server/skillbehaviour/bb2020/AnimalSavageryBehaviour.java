@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
-import com.fumbbl.ffb.report.bb2020.ReportAnimalSavagery;
+import com.fumbbl.ffb.report.mixed.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;

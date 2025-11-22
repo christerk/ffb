@@ -15,7 +15,7 @@ import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.report.bb2020.ReportBreatheFire;
+import com.fumbbl.ffb.report.mixed.ReportBreatheFire;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;

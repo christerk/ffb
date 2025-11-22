@@ -6,7 +6,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.bb2020.ReportIndomitable;
+import com.fumbbl.ffb.report.mixed.ReportIndomitable;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;

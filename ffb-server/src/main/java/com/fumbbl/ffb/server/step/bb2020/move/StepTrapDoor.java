@@ -15,7 +15,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
-import com.fumbbl.ffb.report.bb2020.ReportTrapDoor;
+import com.fumbbl.ffb.report.mixed.ReportTrapDoor;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTrapDoorFall;

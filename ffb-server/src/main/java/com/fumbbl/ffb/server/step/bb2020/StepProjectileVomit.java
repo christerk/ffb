@@ -12,7 +12,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.report.bb2020.ReportProjectileVomit;
+import com.fumbbl.ffb.report.mixed.ReportProjectileVomit;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
