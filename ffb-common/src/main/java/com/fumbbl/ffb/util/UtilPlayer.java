@@ -1,10 +1,21 @@
 package com.fumbbl.ffb.util;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -12,7 +23,12 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -102,7 +118,7 @@ public class UtilPlayer {
 		return adjacentPlayers.toArray(new Player[0]);
 	}
 
-	public static Player<?>[] findNonAdjacentBlockablePlayersWithExactDistance(Game pGame, Team pTeam, FieldCoordinate pCoordinate, int distance) {
+	public static Player<?>[] findNonAdjacentBlockablePlayersTwoSquaresAway(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
 		Set<Player<?>> targetPlayers = Arrays.stream(UtilPlayer.findBlockablePlayers(pGame, pTeam, pCoordinate, 2)).collect(Collectors.toSet());
 		Set<Player<?>> adjacentPlayers = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(pGame, pTeam, pCoordinate)).collect(Collectors.toSet());
 		targetPlayers.removeAll(adjacentPlayers);
@@ -219,7 +235,8 @@ public class UtilPlayer {
 	}
 
 	public static int findFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
-		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
 
 		int foulAssists = 0;
 		FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);

@@ -1,27 +1,22 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 
@@ -43,13 +38,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		add(TurnMode.BETWEEN_TURNS);
 	}};
 
-	private static final Set<TurnMode> modesAllowingPro = new HashSet<TurnMode>() {{
-		add(TurnMode.REGULAR);
-		add(TurnMode.BLITZ);
-		add(TurnMode.BOMB_HOME);
-		add(TurnMode.BOMB_AWAY);
-	}};
-
 	@Override
 	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
@@ -67,16 +55,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		}
 
 		return null;
-	}
-
-	@Override
-	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
-		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits())
-			&& !playerState.isProneOrStunned() && !playerState.isStunned()
-			&& game.getActingPlayer().getPlayer() == player
-			&& modesAllowingPro.contains(game.getTurnMode())
-			&& (!game.getTurnMode().isBombTurn() || player.getId().equals(originalBomberId));
 	}
 
 	@Override
@@ -107,21 +85,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
-		return !(usingMultiBlock && fieldModel.isMultiBlockTarget(player.getId()));
-	}
-
-	@Override
-	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
-		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
-	}
-
-	@Override
-	public boolean canPreventStripBall(PlayerState playerState) {
-		return playerState.hasTacklezones();
-	}
-
-	@Override
 	public boolean isFoulActionAllowed(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
@@ -143,11 +106,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
-		return TurnMode.BLITZ != turnMode;
-	}
-
-	@Override
-	public boolean allowsCancellingGuard(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
 
@@ -184,30 +142,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 				return 5;
 			}
 		};
-	}
-
-	@Override
-	public String calculatePlayerLevel(Game game, Player<?> player) {
-		int gainedSkills = (int) player.skillInfos().stream()
-			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
-				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE).count();
-
-		switch (gainedSkills) {
-			case 0:
-				return "Rookie";
-			case 1:
-				return "Experienced";
-			case 2:
-				return "Veteran";
-			case 3:
-				return "Emerging";
-			case 4:
-				return "Star";
-			case 5:
-				return "Super Star";
-			default:
-				return "Legend";
-		}
 	}
 
 	@Override

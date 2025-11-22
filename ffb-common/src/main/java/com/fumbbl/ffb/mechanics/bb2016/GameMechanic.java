@@ -1,17 +1,12 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
@@ -37,11 +32,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		turnData.setReRollUsed(true);
 		turnData.setReRolls(turnData.getReRolls() - 1);
 		return null;
-	}
-
-	@Override
-	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
-		return true;
 	}
 
 	@Override
@@ -72,21 +62,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
-		return true;
-	}
-
-	@Override
-	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
-		return true;
-	}
-
-	@Override
-	public boolean canPreventStripBall(PlayerState playerState) {
-		return true;
-	}
-
-	@Override
 	public boolean isFoulActionAllowed(TurnMode turnMode) {
 		return true;
 	}
@@ -109,11 +84,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
 		return true;
-	}
-
-	@Override
-	public boolean allowsCancellingGuard(TurnMode turnMode) {
-		return false;
 	}
 
 	@Override
@@ -151,28 +121,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		};
 	}
 
-	@Override
-	public String calculatePlayerLevel(Game game, Player<?> player) {
-		PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-		int oldSpps = playerResult.getCurrentSpps();
-		if (oldSpps > 175) {
-			return "Legend";
-		} else if (oldSpps > 75) {
-			return "Super Star";
-		} else if (oldSpps > 50) {
-			return "Star";
-		} else if (oldSpps > 30) {
-			return "Emerging";
-		} else if (oldSpps > 15) {
-			return "Veteran";
-		} else if (oldSpps > 5) {
-			return "Experienced";
-		} else {
-			return "Rookie";
-		}
-	}
-
-	@Override
+		@Override
 	public boolean touchdownEndsGame(Game game) {
 		return game.getHalf() == 3;
 	}

@@ -11,6 +11,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -195,7 +196,8 @@ public class UtilServerReRoll {
       originalBomberId = passState.getOriginalBombardier();
     }
     PlayerState playerState = game.getFieldModel().getPlayerState(player);
-    GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+    SkillMechanic mechanic =
+      (SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
     return (mechanic.eligibleForPro(game, player, originalBomberId) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
       && !playerState.hasUsedPro());
   }
