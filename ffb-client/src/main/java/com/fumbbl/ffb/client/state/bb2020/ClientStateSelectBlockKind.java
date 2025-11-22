@@ -1,10 +1,11 @@
 package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
-import com.fumbbl.ffb.client.state.ClientStateBlockExtension;
+import com.fumbbl.ffb.client.state.common.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
 
 	private final ClientStateBlockExtension extension = new ClientStateBlockExtension();
@@ -67,7 +69,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 			return new HashMap<Integer, ClientAction>() {{
 				put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
@@ -84,7 +86,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	}
 
 	@Override
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		Game game = getClient().getGame();
 		if (!game.isHomePlaying()) {
 			return false;

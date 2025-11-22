@@ -11,6 +11,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -21,6 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
@@ -46,6 +48,7 @@ public class UtilServerReRoll {
     Game game = gameState.getGame();
     StepResult stepResult = pStep.getResult();
     GameMechanic gameMechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+    RollMechanic rollMechanic = (RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
     if (pReRollSource != null) {
       boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
       boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof HasIdForSingleUseReRoll;
@@ -73,7 +76,7 @@ public class UtilServerReRoll {
 
         if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
           int roll = gameState.getDiceRoller().rollSkill();
-          int minimumRoll = gameMechanic.minimumLonerRoll(pPlayer);
+          int minimumRoll = rollMechanic.minimumLonerRoll(pPlayer);
           successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
           stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
         } else {
@@ -89,7 +92,7 @@ public class UtilServerReRoll {
           if (successful) {
             game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
             int roll = gameState.getDiceRoller().rollSkill();
-            successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, gameMechanic.minimumProRoll());
+            successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, rollMechanic.minimumProRoll());
             stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
           }
         } else {
@@ -193,7 +196,8 @@ public class UtilServerReRoll {
       originalBomberId = passState.getOriginalBombardier();
     }
     PlayerState playerState = game.getFieldModel().getPlayerState(player);
-    GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+    SkillMechanic mechanic =
+      (SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
     return (mechanic.eligibleForPro(game, player, originalBomberId) && player.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
       && !playerState.hasUsedPro());
   }

@@ -557,7 +557,7 @@ public abstract class LogicModule {
 		return (playerState != null) && playerState.isActive() && playerState.getBase() == PlayerState.STANDING
 			&& mechanic.isBlockActionAllowed(game.getTurnMode())
 			&& player.hasUnusedSkillProperty(NamedProperties.canBlockOverDistance)
-			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 2));
+			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersTwoSquaresAway(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player)));
 	}
 
 	protected boolean isFuriousOutburstAvailable(Player<?> player) {

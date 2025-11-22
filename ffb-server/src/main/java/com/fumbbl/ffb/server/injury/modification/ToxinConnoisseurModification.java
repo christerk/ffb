@@ -27,7 +27,7 @@ public class ToxinConnoisseurModification extends InjuryContextModification<Modi
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.ADD_INJURY_MODIFIER;
 	}
 }

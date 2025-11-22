@@ -28,4 +28,9 @@ public abstract class RollMechanic implements Mechanic {
 	public abstract int multiBlockAttackerModifier();
 
 	public abstract int multiBlockDefenderModifier();
+
+	public abstract int minimumLonerRoll(Player<?> player);
+
+	public abstract int minimumProRoll();
+
 }

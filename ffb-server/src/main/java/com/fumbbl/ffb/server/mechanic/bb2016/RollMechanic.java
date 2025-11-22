@@ -50,6 +50,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				} else if ((total == 9) && (defender != null) && isStunty) {
 					playerState = new PlayerState(PlayerState.BADLY_HURT);
 				} else if (total > 9) {
+					//noinspection DataFlowIssue
 					playerState = null;
 				} else if (total > 7) {
 					playerState = new PlayerState(PlayerState.KNOCKED_OUT);
@@ -186,4 +187,15 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRoll());
 		}
 	}
+
+	@Override
+	public int minimumLonerRoll(Player<?> player) {
+		return 4;
+	}
+
+	@Override
+	public int minimumProRoll() {
+		return 4;
+	}
+
 }

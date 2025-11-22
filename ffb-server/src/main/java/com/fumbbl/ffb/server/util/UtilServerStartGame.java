@@ -225,6 +225,7 @@ public class UtilServerStartGame {
 			mvps.setValue(0);
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
+			//ruleSet.setValue(RulesCollection.Rules.BB2020.name());
 			ruleSet.setValue(RulesCollection.Rules.BB2025.name());
 			//ruleSet.setValue("BB2016");
 			game.getOptions().addOption(ruleSet);

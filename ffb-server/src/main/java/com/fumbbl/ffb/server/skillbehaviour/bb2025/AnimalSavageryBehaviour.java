@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.DropPlayerContextBuilder;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
+import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -39,13 +40,14 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2020.StepAnimalSavagery;
 import com.fumbbl.ffb.server.step.bb2020.StepAnimalSavagery.StepState;
-import com.fumbbl.ffb.server.step.bb2025.command.AnimalSavageryEndTurnCommand;
+import com.fumbbl.ffb.server.step.bb2025.command.AnimalSavageryCancelActionCommand;
+import com.fumbbl.ffb.server.step.bb2025.command.AnimalSavageryControlCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.StandingUpCommand;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
+import com.fumbbl.ffb.skill.mixed.AnimalSavagery;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -161,7 +163,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 						if (players.isEmpty()) {
 
-							new AnimalSavageryEndTurnCommand(game).execute();
+							new AnimalSavageryCancelActionCommand().execute(step);
 
 							PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 							if (actingPlayer.isStandingUp()) {
@@ -221,9 +223,8 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryTypeBlock.Mode mode =
-			(actingPlayer.isStandingUp() || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam()) ?
-				InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
+		// BB2025: Animal Savagery lash-outs only apply attacker Claws/Mighty Blow to armour
+		InjuryTypeBlock.Mode mode = InjuryTypeBlock.Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult =
 			UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false), actingPlayer.getPlayer(),
 				game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
@@ -236,13 +237,10 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		StepParameterKey[] additionalStateKeys = null;
 
 		List<DeferredCommand> deferredCommands = new ArrayList<>();
-		List<StepParameter> endTurnParameters = new ArrayList<>();
 		if (endTurn) {
-			deferredCommands.add(new StandingUpCommand(game));
-			deferredCommands.add(new AnimalSavageryEndTurnCommand(game));
-			endTurnParameters.add(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
-			endTurnParameters.add(
-				new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
+			deferredCommands.add(new StandingUpCommand());
+			deferredCommands.add(new AnimalSavageryCancelActionCommand());
+			deferredCommands.add(new AnimalSavageryControlCommand());
 		} else {
 
 			TurnData turnData = game.isHomePlaying() ? game.getTurnDataHome() : game.getTurnDataAway();
@@ -273,9 +271,9 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		DropPlayerContext dropPlayerContext =
 			DropPlayerContextBuilder.builder().injuryResult(injuryResult).endTurn(endTurn).eligibleForSafePairOfHands(true)
 				.label(label).playerId(game.getDefenderId()).apothecaryMode(ApothecaryMode.ANIMAL_SAVAGERY)
-				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys)
-				.stepParameters(endTurnParameters).deferredCommands(deferredCommands).build();
-		step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT, dropPlayerContext));
+				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys).build();
+		step.publishParameter(
+			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext, deferredCommands)));
 
 	}
 

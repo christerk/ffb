@@ -22,7 +22,7 @@ import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.skillbehaviour.bb2020.SingleReRollUseState;
+import com.fumbbl.ffb.server.step.mixed.SingleReRollUseState;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -44,10 +44,12 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	private State state = new State();
 	private final Set<StepParameterKey> parameterToConsume = new HashSet<>();
 
+	@SuppressWarnings("unused")
 	public StepBlockRollMultiple(GameState pGameState) {
 		super(pGameState);
 	}
 
+	@SuppressWarnings("unused")
 	public StepBlockRollMultiple(GameState pGameState, StepAction defaultStepResult) {
 		super(pGameState, defaultStepResult);
 	}

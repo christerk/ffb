@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.model.Player;
 import java.util.HashMap;
 import java.util.Map;
 
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectGazeTargetLogicModule> {
 
 	public ClientStateSelectGazeTarget(FantasyFootballClientAwt pClient) {
@@ -67,7 +69,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 		// clicks on fields are ignored
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -111,7 +113,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);

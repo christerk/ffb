@@ -2,13 +2,9 @@ package com.fumbbl.ffb.server.model;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.step.DeferredCommand;
-import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Builder for DropPlayerContext to simplify construction in tests and production code.
@@ -26,8 +22,6 @@ public class DropPlayerContextBuilder {
 	private ApothecaryMode apothecaryMode;
 	private StepParameterKey victimStateKey;
 	private StepParameterKey[] additionalVictimStateKeys;
-	private final List<StepParameter> stepParameters = new ArrayList<>();
-	private final List<DeferredCommand> deferredCommands = new ArrayList<>();
 
 	private DropPlayerContextBuilder() {
 	}
@@ -51,12 +45,6 @@ public class DropPlayerContextBuilder {
 		builder.victimStateKey = original.getVictimStateKey();
 		builder.additionalVictimStateKeys = original.getAdditionalVictimStateKeys();
 
-		if (original.getStepParameters() != null) {
-			builder.stepParameters.addAll(original.getStepParameters());
-		}
-		if (original.getDeferredCommands() != null) {
-			builder.deferredCommands.addAll(original.getDeferredCommands());
-		}
 		return builder;
 	}
 
@@ -120,37 +108,9 @@ public class DropPlayerContextBuilder {
 		return this;
 	}
 
-	public DropPlayerContextBuilder stepParameters(List<StepParameter> parameters) {
-		if (parameters != null) {
-			this.stepParameters.addAll(parameters);
-		}
-		return this;
-	}
-
-	public DropPlayerContextBuilder stepParameter(StepParameter parameter) {
-		if (parameter != null) {
-			this.stepParameters.add(parameter);
-		}
-		return this;
-	}
-
-	public DropPlayerContextBuilder deferredCommands(List<DeferredCommand> commands) {
-		if (commands != null) {
-			this.deferredCommands.addAll(commands);
-		}
-		return this;
-	}
-
-	public DropPlayerContextBuilder deferredCommand(DeferredCommand command) {
-		if (command != null) {
-			this.deferredCommands.add(command);
-		}
-		return this;
-	}
-
 	public DropPlayerContext build() {
 		return new DropPlayerContext(injuryResult, endTurn, eligibleForSafePairOfHands, label, playerId, apothecaryMode,
 			requiresArmourBreak, alreadyDropped, victimStateKey, modifiedInjuryEndsTurn, endTurnWithoutKnockdown,
-			additionalVictimStateKeys, stepParameters, deferredCommands);
+			additionalVictimStateKeys);
 	}
 }

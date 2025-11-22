@@ -29,7 +29,7 @@ import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.ThrowTeamMate;
+import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
 
 import java.util.Set;
 
