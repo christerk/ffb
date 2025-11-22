@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.inducement.bb2020;
+package com.fumbbl.ffb.inducement.bb2025;
 
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.RulesCollection;
@@ -14,13 +14,11 @@ import com.fumbbl.ffb.option.GameOptionInt;
 import java.util.HashSet;
 import java.util.Set;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCollection {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
 		add(new InducementType("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg", "Bloodweiser Kegs",
 			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
-
-		add(new InducementType("card", null, null, null, null, null));
 
 		add(new InducementType("bribes", "Bribes", "Bribe", "Bribes", GameOptionId.INDUCEMENT_BRIBES_MAX, GameOptionId.INDUCEMENT_BRIBES_COST,
 			GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST, true, IIconProperty.RESOURCE_BRIBE, Usage.AVOID_BAN) {
@@ -30,8 +28,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
 			}
 		});
-		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
-			GameOptionId.INDUCEMENT_PRAYERS_COST, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
+		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST_2025,
+			GameOptionId.INDUCEMENT_PRAYERS_COST_2025, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
 
 		add(new InducementType("briberyAndCorruption", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRolls",
 			GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
