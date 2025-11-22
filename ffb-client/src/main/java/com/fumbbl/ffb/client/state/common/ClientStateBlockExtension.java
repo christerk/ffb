@@ -55,7 +55,7 @@ public class ClientStateBlockExtension {
       case PLAYER_ACTION_BLACK_INK:
         clientState.menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
         return true;
-      case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+      case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
         clientState.menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
         return true;
       case PLAYER_ACTION_BREATHE_FIRE:

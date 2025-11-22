@@ -108,7 +108,7 @@ public class ClientStateSynchronousMultiBlock extends ClientStateAwt<Synchronous
 				case PLAYER_ACTION_CATCH_OF_THE_DAY:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 					return true;
-				case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					return true;
 				default:
