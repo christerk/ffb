@@ -27,10 +27,6 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
 
-	public abstract int minimumLonerRoll(Player<?> player);
-
-	public abstract int minimumProRoll();
-
 	public abstract boolean eligibleForPro(Game game, Player<?> player, String originalBomberId);
 
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);

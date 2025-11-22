@@ -21,7 +21,6 @@ import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -68,16 +67,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		}
 
 		return null;
-	}
-
-	@Override
-	public int minimumLonerRoll(Player<?> player) {
-		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
-	}
-
-	@Override
-	public int minimumProRoll() {
-		return 3;
 	}
 
 	@Override

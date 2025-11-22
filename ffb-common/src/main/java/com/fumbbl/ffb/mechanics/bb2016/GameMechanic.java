@@ -40,16 +40,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public int minimumLonerRoll(Player<?> player) {
-		return 4;
-	}
-
-	@Override
-	public int minimumProRoll() {
-		return 4;
-	}
-
-	@Override
 	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
 		return true;
 	}
