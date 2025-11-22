@@ -85,6 +85,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, ClientAction.THE_FLASHING_BLADE);
 				put(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, ClientAction.VICIOUS_VINES);
 				put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
+				put(IPlayerPopupMenuKeys.KEY_SLASHING_NAILS, ClientAction.SLASHING_NAILS);
 			}
 		}};
 	}
@@ -131,35 +132,35 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			return true;
 		}
 		if (menuIndex == 0) {
-		switch (pActionKey) {
-			case PLAYER_ACTION_BLOCK:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
-				break;
-			case PLAYER_ACTION_MOVE:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
-				break;
-			case PLAYER_ACTION_BLITZ:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
-				break;
-			case PLAYER_ACTION_FOUL:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
-				break;
-			case PLAYER_ACTION_STAND_UP:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
-				break;
-			case PLAYER_ACTION_HAND_OVER:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
-				break;
-			case PLAYER_ACTION_PASS:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
-				break;
-			case PLAYER_ACTION_MULTIPLE_BLOCK:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
-				break;
-			case PLAYER_ACTION_GAZE:
-				menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
-				break;
-		}
+			switch (pActionKey) {
+				case PLAYER_ACTION_BLOCK:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
+					break;
+				case PLAYER_ACTION_MOVE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
+					break;
+				case PLAYER_ACTION_BLITZ:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLITZ);
+					break;
+				case PLAYER_ACTION_FOUL:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FOUL);
+					break;
+				case PLAYER_ACTION_STAND_UP:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAND_UP);
+					break;
+				case PLAYER_ACTION_HAND_OVER:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_HAND_OVER);
+					break;
+				case PLAYER_ACTION_PASS:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PASS);
+					break;
+				case PLAYER_ACTION_MULTIPLE_BLOCK:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK);
+					break;
+				case PLAYER_ACTION_GAZE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
+					break;
+			}
 		} else {
 			switch (pActionKey) {
 				case PLAYER_ACTION_FRENZIED_RUSH:
@@ -195,6 +196,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				case PLAYER_ACTION_FURIOUS_OUTBURST:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
 					break;
+				case PLAYER_ACTION_SLASHING_NAILS:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS);
+					break;		
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey);
 					break;
@@ -282,6 +286,8 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
 		configs.put(ClientAction.STAND_UP,
 			new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
+		configs.put(ClientAction.SLASHING_NAILS, 
+			new MenuItemConfig("Slashing Nails Blitz", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS));	
 
 		return configs;
 	}
