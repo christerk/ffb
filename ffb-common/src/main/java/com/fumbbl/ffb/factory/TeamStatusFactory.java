@@ -14,7 +14,6 @@ import com.fumbbl.ffb.model.Game;
 @RulesCollection(Rules.COMMON)
 public class TeamStatusFactory implements INamedObjectFactory {
 
-	// TODO: this method should no longer be necessary
 	public TeamStatus forId(int pId) {
 		switch (pId) {
 		case 0:
@@ -47,8 +46,6 @@ public class TeamStatusFactory implements INamedObjectFactory {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

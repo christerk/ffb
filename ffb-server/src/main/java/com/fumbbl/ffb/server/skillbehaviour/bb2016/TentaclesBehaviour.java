@@ -22,7 +22,7 @@ import com.fumbbl.ffb.server.step.bb2016.move.StepTentacles;
 import com.fumbbl.ffb.server.step.bb2016.move.StepTentacles.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.Tentacles;
+import com.fumbbl.ffb.skill.common.Tentacles;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 

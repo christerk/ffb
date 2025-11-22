@@ -9,10 +9,10 @@ import com.eclipsesource.json.JsonValue;
  */
 public abstract class JsonAbstractOption {
 
-	private String fKey;
+	private final String fKey;
 
 	public JsonAbstractOption(String pKey) {
-		if ((pKey == null) || (pKey.length() == 0)) {
+		if ((pKey == null) || (pKey.isEmpty())) {
 			throw new IllegalArgumentException("Parameter key must not be null or empty.");
 		}
 		fKey = pKey;
@@ -40,6 +40,7 @@ public abstract class JsonAbstractOption {
 		if (pValue != null) {
 			pJsonObject.add(getKey(), pValue);
 		} else {
+			//noinspection deprecation
 			pJsonObject.add(getKey(), JsonValue.NULL);
 		}
 	}

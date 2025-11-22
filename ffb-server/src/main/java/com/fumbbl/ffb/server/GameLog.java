@@ -21,7 +21,7 @@ public class GameLog implements IJsonSerializable {
 
 	private final List<ServerCommand> fServerCommands;
 
-	private transient int fLastCommitedCommandNr; // TODO: can be removed
+	private transient int fLastCommitedCommandNr;
 	private final transient GameState fGameState;
 
 	public GameLog(GameState pGameState) {

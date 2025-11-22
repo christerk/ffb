@@ -66,7 +66,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Kickoff;
 import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.bb2020.Loner;
+import com.fumbbl.ffb.skill.mixed.Loner;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
@@ -475,7 +475,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			UtilBox.putPlayerIntoBox(game, mercenary);
 		}
 
-		if (addedPlayerList.size() > 0) {
+		if (!addedPlayerList.isEmpty()) {
 			RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 			UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 		}
@@ -536,7 +536,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (removedPlayerList.size() > 0) {
+			if (!removedPlayerList.isEmpty()) {
 				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAR);
 				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAR);
 				for (Player<?> player : removedPlayerList) {
@@ -547,7 +547,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (addedPlayerList.size() > 0) {
+			if (!addedPlayerList.isEmpty()) {
 				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 			}
@@ -599,7 +599,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (removedPlayerList.size() > 0) {
+			if (!removedPlayerList.isEmpty()) {
 				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAFF);
 				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAFF);
 				for (Player<?> player : removedPlayerList) {
@@ -610,7 +610,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (addedPlayerList.size() > 0) {
+			if (!addedPlayerList.isEmpty()) {
 				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 			}

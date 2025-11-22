@@ -131,7 +131,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_JUMP, ClientAction.JUMP);
@@ -205,7 +205,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		return menuItems;
 	}
 
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		boolean actionHandled = true;
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
@@ -270,7 +270,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 				case PLAYER_ACTION_BOUNDING_LEAP:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP);
 					return true;
-				case PLAYER_ACITON_THEN_I_STARTED_BLASTIN:
+				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					return true;
 				default:

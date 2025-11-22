@@ -284,7 +284,6 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 
 			String pitchUrl = game.getOptions().getOptionWithDefault(GameOptionId.PITCH_URL).getValueAsString();
 			if (StringTool.isProvided(pitchUrl) && !userInterface.getIconCache().loadIconFromArchive(pitchUrl)) {
-				// TODO: add dialog to show pitch download ...
 				userInterface.getIconCache().loadIconFromUrl(pitchUrl);
 			}
 			userInterface.getFieldComponent().getLayerField().init();

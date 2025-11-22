@@ -45,7 +45,7 @@ public class AvOrInjModification extends InjuryContextModification<ModificationP
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.ADD_ARMOUR_MODIFIER;
 	}
 }

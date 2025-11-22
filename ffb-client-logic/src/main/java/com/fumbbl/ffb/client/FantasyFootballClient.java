@@ -322,4 +322,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public abstract List<Overlay> getOverlays();
 
+	public abstract void initRulesDependentMembers();
+
 }

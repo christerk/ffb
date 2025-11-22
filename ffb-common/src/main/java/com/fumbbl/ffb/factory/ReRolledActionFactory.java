@@ -40,8 +40,6 @@ public class ReRolledActionFactory implements INamedObjectFactory {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

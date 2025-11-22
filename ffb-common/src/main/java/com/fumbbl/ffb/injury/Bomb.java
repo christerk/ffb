@@ -6,7 +6,6 @@ public class Bomb extends InjuryType {
 
 	public Bomb() {
 		super("bomb", false, SendToBoxReason.BOMB);
-		// TODO Auto-generated constructor stub
 	}
 
 }

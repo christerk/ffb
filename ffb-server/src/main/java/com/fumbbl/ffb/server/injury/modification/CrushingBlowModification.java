@@ -46,7 +46,7 @@ public class CrushingBlowModification extends InjuryContextModification<Modifica
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.ADD_ARMOUR_MODIFIER;
 	}
 }
