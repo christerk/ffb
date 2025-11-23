@@ -199,6 +199,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return null;
 	}
 
+	public String getSkillNameFromProperty(ISkillProperty property) {
+    Skill s = getSkillWithProperty(property);
+    return s != null ? s.getName() : "";
+	}
+
 	public int getAgilityWithModifiers() {
 		return getStatWithModifiers(PlayerStatKey.AG, getAgility());
 	}

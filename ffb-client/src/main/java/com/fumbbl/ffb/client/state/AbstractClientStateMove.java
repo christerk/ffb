@@ -18,6 +18,7 @@ import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.*;
@@ -172,6 +173,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 
 	@Override
 	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
+
+		Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
+
 		LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs = new LinkedHashMap<>();
 
 		itemConfigs.put(ClientAction.PASS, new MenuItemConfig("Pass Ball (any square)", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_PASS));
@@ -189,7 +193,8 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		itemConfigs.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
 		itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
 		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
-		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
+		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN,
+			new MenuItemConfig(selectedPlayer, NamedProperties.canBlastRemotePlayer, IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 
 		return itemConfigs;
 	}
