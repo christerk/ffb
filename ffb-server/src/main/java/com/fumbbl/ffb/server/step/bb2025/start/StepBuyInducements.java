@@ -8,22 +8,15 @@ import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
-import com.fumbbl.ffb.factory.CardFactory;
-import com.fumbbl.ffb.factory.CardTypeFactory;
+import com.fumbbl.ffb.dialog.DialogBuyPrayersAndInducementsParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.inducement.Card;
-import com.fumbbl.ffb.inducement.CardChoice;
-import com.fumbbl.ffb.inducement.CardChoices;
-import com.fumbbl.ffb.inducement.CardType;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
-import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
@@ -35,20 +28,16 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.change.ModelChange;
-import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
-import com.fumbbl.ffb.net.commands.ClientCommandSelectCardToBuy;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
-import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
+import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.mixed.ReportDoubleHiredStaff;
-import com.fumbbl.ffb.server.CardDeck;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -77,7 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -96,18 +84,12 @@ public final class StepBuyInducements extends AbstractStep {
 	private Integer usedInducementGoldHome = 0;
 	private Integer usedInducementGoldAway = 0;
 	private boolean parallel;
-	private CardChoices cardChoices = new CardChoices();
-	private List<Card> usedCards = new ArrayList<>();
-	private ClientCommandSelectCardToBuy.Selection currentSelection;
 	private Phase phase = Phase.INIT;
 
 	private final List<ClientCommandBuyInducements> buyInducementCommands = new ArrayList<>();
 
-	private final transient Map<CardType, CardDeck> fDeckByType;
-
 	public StepBuyInducements(GameState pGameState) {
 		super(pGameState);
-		fDeckByType = new HashMap<>();
 	}
 
 	public StepId getId() {
@@ -125,12 +107,6 @@ public final class StepBuyInducements extends AbstractStep {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-				case CLIENT_SELECT_CARD_TO_BUY:
-
-					ClientCommandSelectCardToBuy buyCardCommand = (ClientCommandSelectCardToBuy) pReceivedCommand.getCommand();
-					currentSelection = buyCardCommand.getSelection();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-					break;
 				case CLIENT_BUY_INDUCEMENTS:
 					ClientCommandBuyInducements command = (ClientCommandBuyInducements) pReceivedCommand.getCommand();
 					if (parallel) {
@@ -201,11 +177,7 @@ public final class StepBuyInducements extends AbstractStep {
 				break;
 			case HOME:
 			case AWAY:
-				if (currentSelection != null) {
-					handleCard();
-				} else {
-					swapTeam();
-				}
+				swapTeam();
 				break;
 			default:
 				break;
@@ -246,9 +218,7 @@ public final class StepBuyInducements extends AbstractStep {
 
 		} else {
 
-			buildDecks();
-			int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
-				+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+			int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
 
 			Team overDog;
 
@@ -303,18 +273,13 @@ public final class StepBuyInducements extends AbstractStep {
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private boolean showDialog(Team team, int freeCash, boolean usesTreasury, boolean allowSpending) {
-		int availableGold = getAvailableGold(freeCash, usesTreasury, allowSpending);
-
-		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
-		int cardSlots = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.MAX_NR_OF_CARDS);
-		boolean canBuyCards = cardSlots > 0 && availableGold >= cardPrice && fDeckByType.entrySet().stream().anyMatch(entry -> entry.getValue().size() > 1);
+	private boolean showDialog(Team team, int freeCash, boolean usesUnlimitedTreasury, boolean allowSpending) {
+		int availableGold = getAvailableGold(freeCash, usesUnlimitedTreasury, allowSpending);
 
 		boolean canBuyInducements = minimumInducementCost(team) <= availableGold;
 
-		if (canBuyCards || canBuyInducements) {
-			UtilServerDialog.showDialog(getGameState(),
-				createDialogParameter(team.getId(), availableGold, canBuyCards, cardSlots, cardPrice, usesTreasury), false);
+		if (canBuyInducements) {
+			UtilServerDialog.showDialog(getGameState(), new DialogBuyPrayersAndInducementsParameter(team.getId(), availableGold, usesUnlimitedTreasury), false);
 			return true;
 		}
 
@@ -329,18 +294,15 @@ public final class StepBuyInducements extends AbstractStep {
 		if (phase == Phase.HOME && availableInducementGoldAway == null) {
 			phase = Phase.AWAY;
 			team = game.getTeamAway();
-			usedCards.clear();
 		} else if (phase == Phase.AWAY && availableInducementGoldHome == null) {
 			phase = Phase.HOME;
 			team = game.getTeamHome();
-			usedCards.clear();
 		} else {
 			phase = Phase.DONE;
 			return;
 		}
 
-		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
-			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
 
 		if (!showDialog(team, freeCash, parallel || UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY), true)) {
 			phase = Phase.DONE;
@@ -357,78 +319,6 @@ public final class StepBuyInducements extends AbstractStep {
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);
-	}
-
-	private void handleCard() {
-		int cardPrice = UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.CARDS_SPECIAL_PLAY_COST);
-		CardChoice choice = currentSelection.isInitialDeckChoice() ? cardChoices.getInitial() : cardChoices.getRerolled();
-		if (choice.getChoiceOne() != null) {
-			usedCards.add(choice.getChoiceOne());
-		}
-		if (choice.getChoiceTwo() != null) {
-			usedCards.add(choice.getChoiceTwo());
-		}
-		Card chosenCard = currentSelection.isFirstCardChoice() ? choice.getChoiceOne() : choice.getChoiceTwo();
-		updateChoices();
-		String changeKey = phase == Phase.HOME ? ModelChange.HOME : ModelChange.AWAY;
-		getGameState().getGame().notifyObservers(new ModelChange(ModelChangeId.INDUCEMENT_SET_CARD_CHOICES, changeKey, cardChoices));
-
-		// we have to update the card choices on client side first before adding the card as that will trigger the redraw
-		// otherwise the model change for card choices might arrive after the coach clicked "Buy Card" again and thus the old choices could be displayed
-		if (chosenCard != null) {
-			if (phase == Phase.HOME) {
-				availableInducementGoldHome -= cardPrice;
-				getGameState().getGame().getTurnDataHome().getInducementSet().addAvailableCard(chosenCard);
-			} else {
-				availableInducementGoldAway -= cardPrice;
-				getGameState().getGame().getTurnDataAway().getInducementSet().addAvailableCard(chosenCard);
-			}
-		}
-	}
-
-	private void updateChoices() {
-		currentSelection = null;
-		List<CardType> types = fDeckByType.entrySet().stream().filter(entry -> entry.getValue().size() > 1).map(Map.Entry::getKey).collect(Collectors.toList());
-		cardChoices = new CardChoices(createChoice(drawRandom(types)), createChoice(drawRandom(types)));
-	}
-
-	private CardChoice createChoice(CardType type) {
-		List<Card> availableCards = new ArrayList<>(fDeckByType.get(type).getCards());
-		availableCards.removeAll(usedCards);
-		return new CardChoice()
-			.withType(type)
-			.withChoiceOne(drawRandom(availableCards))
-			.withChoiceTwo(drawRandom(availableCards));
-	}
-
-	private <T> T drawRandom(List<T> all) {
-		T drawn = all.get(getGameState().getDiceRoller().rollDice(all.size()) - 1);
-		all.remove(drawn);
-		return drawn;
-	}
-
-	private void buildDecks() {
-		Game game = getGameState().getGame();
-		fDeckByType.clear();
-		((CardTypeFactory) game.getFactory(FactoryType.Factory.CARD_TYPE)).getCardTypes().forEach(type -> {
-			CardDeck deck = new CardDeck(type);
-			deck.build(game);
-			fDeckByType.put(type, deck);
-		});
-	}
-
-	private DialogBuyCardsAndInducementsParameter createDialogParameter(String pTeamId, int availableGold, boolean canBuyCards, int cardSlots, int cardPrice, boolean usesTreasury) {
-
-		if (canBuyCards) {
-			updateChoices();
-		}
-		DialogBuyCardsAndInducementsParameter dialogParameter =
-			new DialogBuyCardsAndInducementsParameter(pTeamId, canBuyCards, cardSlots, availableGold, cardChoices, cardPrice, usesTreasury);
-		for (CardType type : fDeckByType.keySet()) {
-			CardDeck deck = fDeckByType.get(type);
-			dialogParameter.put(type, deck.size());
-		}
-		return dialogParameter;
 	}
 
 	private int addMercenaries(Team pTeam, String[] pPositionIds, Skill[] pSkills) {
@@ -682,8 +572,7 @@ public final class StepBuyInducements extends AbstractStep {
 
 		boolean alwaysUseTreasury = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 
-		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH)
-			+ UtilGameOption.getIntOption(game, GameOptionId.FREE_CARD_CASH);
+		int freeCash = UtilGameOption.getIntOption(game, GameOptionId.FREE_INDUCEMENT_CASH);
 
 		TeamResult teamResultHome = game.getGameResult().getTeamResultHome();
 		if (teamResultHome.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
@@ -766,15 +655,6 @@ public final class StepBuyInducements extends AbstractStep {
 			IServerJsonOption.INDUCEMENT_GOLD_HOME.addTo(jsonObject, availableInducementGoldHome);
 		}
 
-		IServerJsonOption.CARD_CHOICES.addTo(jsonObject, cardChoices.toJsonValue());
-
-		IServerJsonOption.CARDS_USED.addTo(jsonObject, usedCards.stream().map(Card::getName).collect(Collectors.toList()));
-
-
-		if (currentSelection != null) {
-			IServerJsonOption.CARD_SELECTION.addTo(jsonObject, currentSelection.name());
-		}
-
 		JsonArray commandArray = new JsonArray();
 
 		buyInducementCommands.stream().map(ClientCommandBuyInducements::toJsonValue).forEach(commandArray::add);
@@ -792,23 +672,6 @@ public final class StepBuyInducements extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		availableInducementGoldAway = IServerJsonOption.INDUCEMENT_GOLD_AWAY.getFrom(source, jsonObject);
 		availableInducementGoldHome = IServerJsonOption.INDUCEMENT_GOLD_HOME.getFrom(source, jsonObject);
-
-		JsonObject choiceObject = IServerJsonOption.CARD_CHOICES.getFrom(source, jsonObject);
-		if (choiceObject != null) {
-			cardChoices = new CardChoices().initFrom(source, jsonObject);
-		}
-
-		CardFactory cardFactory = source.getFactory(FactoryType.Factory.CARD);
-
-		String[] selectedCardNames = IJsonOption.CARDS_USED.getFrom(source, jsonObject);
-		if (selectedCardNames != null) {
-			usedCards = Arrays.stream(selectedCardNames).map(cardFactory::forName).collect(Collectors.toList());
-		}
-
-		String selectionName = IServerJsonOption.CARD_SELECTION.getFrom(source, jsonObject);
-		if (selectionName != null) {
-			currentSelection = ClientCommandSelectCardToBuy.Selection.valueOf(selectionName);
-		}
 
 		JsonArray commandArray = IServerJsonOption.INDUCEMENT_COMMANDS.getFrom(source, jsonObject);
 
