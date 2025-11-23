@@ -3,15 +3,16 @@ package com.fumbbl.ffb.client.dialog.inducements;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.ui.swing.JTabbedPane;
 import com.fumbbl.ffb.dialog.DialogBuyPrayersAndInducementsParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -77,8 +78,13 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 	}
 
 	private JTabbedPane horizontalMainPanel(GameOptions gameOptions) {
-		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Inducements", buildLeftPanel(gameOptions));
+		JTabbedPane tabbedPane = new JTabbedPane(dimensionProvider());
+		int border = dimensionProvider().scale(10);
+		tabbedPane.setBorder(BorderFactory.createEmptyBorder(border, border, border, border));
+		Font oldFont = tabbedPane.getFont();
+		tabbedPane.setFont(fontCache().font(Font.BOLD, oldFont.getSize(), dimensionProvider()));
+		tabbedPane.setForeground(new Color(89, 89, 89));
+		tabbedPane.addTab("Inducements", buildLeftPanel(gameOptions, false));
 		tabbedPane.addTab("Stars/Mercs", buildRightPanel(gameOptions));
 
 		return tabbedPane;
