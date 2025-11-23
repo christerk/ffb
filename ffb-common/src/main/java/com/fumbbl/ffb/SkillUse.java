@@ -62,7 +62,8 @@ public enum SkillUse implements INamedObject {
 	PASS_RUSH_WITHOUT_MODIFIERS("passRushWithoutModifiers", "to pass the rush roll ignoring modifiers"),
 	QUICK_BITE("quickBite", "to try to get the ball"),
 	STEADY_FOOTING("steadyFooting", "to keep standing"),
-	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
+	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones"),
+	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up");
 
 	private final String fName;
 	private final String fDescription;
