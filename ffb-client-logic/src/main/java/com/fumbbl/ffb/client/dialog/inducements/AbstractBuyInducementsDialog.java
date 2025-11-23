@@ -111,7 +111,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		return buttonPanel;
 	}
 
-	private JPanel buildLeftPanel(GameOptions gameOptions) {
+	protected JPanel buildLeftPanel(GameOptions gameOptions) {
 
 		int verticalStrut = dimensionProvider().scale(10);
 
@@ -136,7 +136,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	}
 
-	private JPanel buildRightPanel(GameOptions gameOptions) {
+	protected JPanel buildRightPanel(GameOptions gameOptions) {
 
 		// Right Panel
 		JPanel rightPanel = new JPanel();

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.bb2020;
+package com.fumbbl.ffb.client.report.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -6,18 +6,18 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
+import com.fumbbl.ffb.report.bb2025.ReportPrayersAndInducementsBought;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ReportMessageType(ReportId.CARDS_AND_INDUCEMENTS_BOUGHT)
-@RulesCollection(Rules.BB2020)
-public class CardsAndInducementsBoughtMessage extends ReportMessageBase<ReportCardsAndInducementsBought> {
+@ReportMessageType(ReportId.PRAYERS_AND_INDUCEMENTS_BOUGHT)
+@RulesCollection(Rules.BB2025)
+public class PrayersAndInducementsBoughtMessage extends ReportMessageBase<ReportPrayersAndInducementsBought> {
 
     @Override
-    protected void render(ReportCardsAndInducementsBought report) {
+    protected void render(ReportPrayersAndInducementsBought report) {
   		if (!statusReport.inducementsBoughtReportReceived) {
   			statusReport.inducementsBoughtReportReceived = true;
   			println(getIndent(), TextStyle.BOLD, "Buy Inducements");
@@ -30,18 +30,11 @@ public class CardsAndInducementsBoughtMessage extends ReportMessageBase<ReportCa
   		}
   		StringBuilder status = new StringBuilder();
   		status.append(" buys ");
-  		int boughtItems = report.getCards() + report.getInducements() + report.getStars() + report.getMercenaries();
+  		int boughtItems = report.getInducements() + report.getStars() + report.getMercenaries();
   		if (boughtItems == 0) {
   			status.append("no Inducements.");
   		} else {
   			List<String> itemList = new ArrayList<>();
-  			if (report.getCards() > 0) {
-  				if (report.getCards() == 1) {
-  					itemList.add("1 Card");
-  				} else {
-  					itemList.add(StringTool.bind("$1 Cards", report.getCards()));
-  				}
-  			}
   			if (report.getInducements() > 0) {
   				if (report.getInducements() == 1) {
   					itemList.add("1 Inducement");

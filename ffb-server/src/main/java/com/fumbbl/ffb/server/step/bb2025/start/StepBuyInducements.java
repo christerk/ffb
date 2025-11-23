@@ -35,7 +35,7 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
-import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
+import com.fumbbl.ffb.report.bb2025.ReportPrayersAndInducementsBought;
 import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.mixed.ReportDoubleHiredStaff;
 import com.fumbbl.ffb.server.FantasyFootballServer;
@@ -625,7 +625,7 @@ public final class StepBuyInducements extends AbstractStep {
 		return teamHome.getTeamValue() + spentMoneyHome;
 	}
 
-	private ReportCardsAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
+	private ReportPrayersAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
 		Game game = getGameState().getGame();
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
@@ -640,7 +640,7 @@ public final class StepBuyInducements extends AbstractStep {
 				nrOfInducements += inducement.getValue();
 			}
 		}
-		return new ReportCardsAndInducementsBought(pTeam.getId(), inducementSet.getAllCards().length, nrOfInducements, nrOfStars, nrOfMercenaries, gold, newTv);
+		return new ReportPrayersAndInducementsBought(pTeam.getId(), nrOfInducements, nrOfStars, nrOfMercenaries, gold, newTv);
 	}
 
 	// JSON serialization

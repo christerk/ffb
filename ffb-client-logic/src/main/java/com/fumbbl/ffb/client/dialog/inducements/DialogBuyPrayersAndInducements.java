@@ -8,27 +8,29 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-/**
- * @author Kalimar
- */
 public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog {
 
 	private final Font boldFont;
 	private final Font regularFont;
 	private final JLabel labelAvailableGold;
-	@SuppressWarnings({"FieldCanBeLocal", "unused"})
-	private final JPanel dynamicPanel = new JPanel();
 	private int availableGold, maximumGold;
 	private final boolean superInitialized;
 	private final DialogBuyPrayersAndInducementsParameter parameter;
 
 	public DialogBuyPrayersAndInducements(FantasyFootballClient pClient, DialogBuyPrayersAndInducementsParameter pParameter) {
 
-		super(pClient, "Buy Cards And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
+		super(pClient, "Buy Prayers And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
 		this.parameter = pParameter;
 		superInitialized = true;
 
@@ -38,7 +40,6 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 
 		boldFont = fontCache.font(Font.BOLD, 12, dimensionProvider());
 		regularFont = fontCache.font(Font.PLAIN, 11, dimensionProvider());
-
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 
@@ -66,7 +67,7 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 	}
 
 
-	private JPanel verticalMainPanel(JPanel horizontalMainPanel) {
+	private JPanel verticalMainPanel(JTabbedPane horizontalMainPanel) {
 		JPanel verticalMainPanel = new JPanel();
 		verticalMainPanel.setLayout(new BoxLayout(verticalMainPanel, BoxLayout.Y_AXIS));
 		verticalMainPanel.add(goldPanel());
@@ -75,11 +76,12 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 		return verticalMainPanel;
 	}
 
-	private JPanel horizontalMainPanel(GameOptions gameOptions) {
-		JPanel horizontalMainPanel = new JPanel();
-		horizontalMainPanel.setLayout(new BoxLayout(horizontalMainPanel, BoxLayout.X_AXIS));
-		horizontalMainPanel.add(buildInducementPanel(gameOptions));
-		return horizontalMainPanel;
+	private JTabbedPane horizontalMainPanel(GameOptions gameOptions) {
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Inducements", buildLeftPanel(gameOptions));
+		tabbedPane.addTab("Stars/Mercs", buildRightPanel(gameOptions));
+
+		return tabbedPane;
 	}
 
 	private JPanel goldPanel() {
@@ -111,7 +113,7 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 	}
 
 	public DialogId getId() {
-		return DialogId.BUY_CARDS_AND_INDUCEMENTS;
+		return DialogId.BUY_PRAYERS_AND_INDUCEMENTS;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {

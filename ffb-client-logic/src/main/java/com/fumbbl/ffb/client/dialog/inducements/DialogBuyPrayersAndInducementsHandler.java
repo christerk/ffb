@@ -36,7 +36,7 @@ public class DialogBuyPrayersAndInducementsHandler extends DialogHandler {
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.BUY_PRAYERS_AND_INDUCEMENTS)) {
-			DialogBuyCardsAndInducements buyInducementsDialog = (DialogBuyCardsAndInducements) pDialog;
+			DialogBuyPrayersAndInducements buyInducementsDialog = (DialogBuyPrayersAndInducements) pDialog;
 			getClient().getCommunication().sendBuyInducements(buyInducementsDialog.getTeamId(),
 				buyInducementsDialog.getAvailableGold(), buyInducementsDialog.getSelectedInducements(),
 				buyInducementsDialog.getSelectedStarPlayerIds(), buyInducementsDialog.getSelectedMercenaryIds(),
