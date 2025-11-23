@@ -133,5 +133,4 @@ public abstract class AbstractClientStateBlock<T extends BlockLogicModule> exten
 
 	}
 
-	// /skill add "Blastin'_Solves_Everything" 4
 }

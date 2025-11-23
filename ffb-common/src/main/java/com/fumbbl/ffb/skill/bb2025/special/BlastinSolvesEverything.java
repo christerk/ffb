@@ -6,7 +6,6 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
-// /skill add "Blastin'_Solves_Everything" 5
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class BlastinSolvesEverything extends Skill {
 
