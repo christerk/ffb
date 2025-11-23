@@ -1,6 +1,5 @@
-package com.fumbbl.ffb.server.step.generator.common;
+package com.fumbbl.ffb.server.step.generator.bb2025;
 
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -12,7 +11,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 
 	public Kickoff() {
@@ -46,8 +45,6 @@ public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 		sequence.add(StepId.APPLY_KICKOFF_RESULT, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF),
 			from(StepParameterKey.GOTO_LABEL_ON_BLITZ, IStepLabel.BLITZ_TURN));
 		// may insert send off steps at this point
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HOME));
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.AWAY));
 		sequence.jump(IStepLabel.KICKOFF_ANIMATION);
 		sequence.add(StepId.BLITZ_TURN, IStepLabel.BLITZ_TURN);
 		// may insert selectSequence at this point

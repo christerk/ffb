@@ -18,11 +18,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.Kickoff;
+import com.fumbbl.ffb.server.step.generator.mixed.Kickoff;
 
 /**
  * Step in start game sequence to roll spectators.
- *
+ * <p>
  * Updates persistence. Pushes kickoffSequence on stack when finishing.
  *
  * @author Kalimar

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.mixed.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -35,12 +35,8 @@ import com.fumbbl.ffb.server.util.UtilServerSetup;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 
-/**
- * Step in kickoff sequence to setup the playing team.
- *
- * @author Kalimar
- */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepSetup extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
