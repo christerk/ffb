@@ -85,7 +85,7 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 		tabbedPane.setFont(fontCache().font(Font.BOLD, oldFont.getSize(), dimensionProvider()));
 		tabbedPane.setForeground(new Color(89, 89, 89));
 		tabbedPane.addTab("Inducements", buildLeftPanel(gameOptions, false));
-		tabbedPane.addTab("Stars/Mercs", buildRightPanel(gameOptions));
+		tabbedPane.addTab("Stars/Mercs", buildRightPanel(gameOptions, true));
 
 		return tabbedPane;
 	}

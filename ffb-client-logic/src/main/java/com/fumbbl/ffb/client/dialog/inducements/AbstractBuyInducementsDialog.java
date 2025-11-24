@@ -130,8 +130,8 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			labelPanel.add(Box.createHorizontalGlue());
 
 			leftPanel.add(labelPanel);
-			leftPanel.add(Box.createVerticalStrut(verticalStrut));
 		}
+		leftPanel.add(Box.createVerticalStrut(verticalStrut));
 
 		((InducementTypeFactory) gameOptions.getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
 			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages()))
@@ -142,12 +142,20 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		return leftPanel;
 
 	}
-
 	protected JPanel buildRightPanel(GameOptions gameOptions) {
+		return buildRightPanel(gameOptions, false);
+	}
+
+	protected JPanel buildRightPanel(GameOptions gameOptions, boolean addPadding) {
 
 		// Right Panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+
+		if (addPadding) {
+			int verticalStrut = dimensionProvider().scale(10);
+			rightPanel.add(Box.createVerticalStrut(verticalStrut));
+		}
 
 		fTableModelStarPlayers = new StarPlayerTableModel(this, gameOptions);
 		int maxStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
