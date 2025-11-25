@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step.generator.bb2025;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
@@ -18,31 +17,16 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 	public void pushSequence(SequenceParams params) {
 		GameState gameState = params.getGameState();
 
-		gameState.getServer().getDebugLog().log(IServerLogLevel.DEBUG, gameState.getId(), "push moveSequence onto stack");
-
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.INIT_MOVING, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),
 			from(StepParameterKey.MOVE_STACK, params.getMoveStack()),
 			from(StepParameterKey.GAZE_VICTIM_ID, params.getGazeVictimId()),
 			from(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, params.getBallAndChainRrSetting()));
-		sequence.add(StepId.INIT_ACTIVATION);
-		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
-		sequence.add(StepId.STEADY_FOOTING);
-		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-		sequence.add(StepId.PLACE_BALL);
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.SET_DEFENDER, from(StepParameterKey.BLOCK_DEFENDER_ID, params.getGazeVictimId()),
-			from(StepParameterKey.IGNORE_NULL_VALUE, true));
-		sequence.add(StepId.GOTO_LABEL, from(StepParameterKey.GOTO_LABEL, IStepLabel.NEXT),
-			from(StepParameterKey.ALTERNATE_GOTO_LABEL, IStepLabel.END_MOVING));
-		sequence.add(StepId.BONE_HEAD, IStepLabel.NEXT,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
-		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
-		sequence.add(StepId.TAKE_ROOT);
-		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_MOVING));
+
+		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END_MOVING).withEventualDefender(params.getGazeVictimId())
+			.preventNullDefender().addTo(sequence);
+
 		sequence.add(StepId.HYPNOTIC_GAZE, IStepLabel.HYPNOTIC_GAZE,
 			from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING));
 		sequence.add(StepId.MOVE_BALL_AND_CHAIN, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_MOVING),

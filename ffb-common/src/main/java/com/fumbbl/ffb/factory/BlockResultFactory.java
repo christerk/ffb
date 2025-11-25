@@ -40,8 +40,6 @@ public class BlockResultFactory implements INamedObjectFactory<BlockResult> {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

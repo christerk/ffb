@@ -38,6 +38,8 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 
 	public abstract void registerStates();
 
+	public abstract void registerStatesForRules();
+
 	public ClientState<? extends LogicModule, T> getStateForId(ClientStateId pClientStateId) {
 		return fClientStateById.get(pClientStateId);
 	}

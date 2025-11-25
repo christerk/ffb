@@ -1,14 +1,33 @@
 package com.fumbbl.ffb.client.ui;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.client.ClientData;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.PlayerIconFactory;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.Position;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
@@ -16,8 +35,13 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -25,8 +49,12 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -327,7 +355,9 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.setFont(sppFont);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Game game = getSideBar().getClient().getGame();
-			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			SkillMechanic mechanic =
+				(SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
+
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(getPlayer());
 			StringBuilder sppInfo = new StringBuilder();
 			if ((playerResult != null) && (getPlayer() != null)) {

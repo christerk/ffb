@@ -46,7 +46,7 @@ public class GhostlyFlamesModification extends InjuryContextModification<Modific
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.INCREASE_CHAINSAW_DAMAGE;
 	}
 }

@@ -1,0 +1,57 @@
+package com.fumbbl.ffb.client.state.common;
+
+import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.client.ActionKey;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.GameTitle;
+import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.SpectateLogicModule;
+
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * 
+ * @author Kalimar
+ */
+@RulesCollection(RulesCollection.Rules.COMMON)
+public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
+
+	public ClientStateSpectate(FantasyFootballClientAwt pClient) {
+		super(pClient, new SpectateLogicModule(pClient));
+	}
+
+	public void setUp() {
+		super.setUp();
+		setClickable(false);
+		if (logicModule.canSwitchToSpectate()) {
+			UserInterface userInterface = getClient().getUserInterface();
+			GameTitle gameTitle = userInterface.getGameTitle();
+			gameTitle.setClientMode(ClientMode.SPECTATOR);
+			userInterface.setGameTitle(gameTitle);
+			userInterface.getGameMenuBar().refresh();
+		}
+
+	}
+
+	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
+		boolean actionHandled;
+		if (pActionKey == ActionKey.MENU_REPLAY) {
+			actionHandled = true;
+			logicModule.startReplay();
+			getClient().getUserInterface().refresh();
+		} else {
+			actionHandled = handleResize(pActionKey);
+		}
+		return actionHandled;
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
+		return Collections.emptyMap();
+	}
+
+}

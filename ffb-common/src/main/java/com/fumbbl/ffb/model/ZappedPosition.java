@@ -13,7 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.skill.Dodge;
+import com.fumbbl.ffb.skill.common.Dodge;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.UtilXml;
 import org.xml.sax.Attributes;

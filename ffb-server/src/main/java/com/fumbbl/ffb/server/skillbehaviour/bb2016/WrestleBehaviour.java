@@ -24,7 +24,7 @@ import com.fumbbl.ffb.server.step.action.block.StepWrestle;
 import com.fumbbl.ffb.server.step.action.block.StepWrestle.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
-import com.fumbbl.ffb.skill.Wrestle;
+import com.fumbbl.ffb.skill.common.Wrestle;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2016)

@@ -16,6 +16,10 @@ public class ChangeList {
 
 		});
 
+		versions.add(new VersionChangeList("2.37.2")
+			.addBugfix("Player markings in replays vanished when going backwards")
+		);
+
 		versions.add(new VersionChangeList("2.37.1")
 			.addBugfix("Player markings should now be applied correctly again")
 			.addImprovement("Dialogs exceeding client size now show scroll bars")

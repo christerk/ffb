@@ -11,7 +11,7 @@ import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -120,13 +120,13 @@ public class UtilServerInjury {
 
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
-				GameMechanic gameMechanic =
-					(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+				InjuryMechanic mechanic =
+					(InjuryMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
 				if (!pInjuryType.canUseApo() ||
 					(injuryContext.isKnockedOut() && pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if (gameMechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
+				} else if (mechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
@@ -229,8 +229,8 @@ public class UtilServerInjury {
 		boolean nurglesRot = false;
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
-		GameMechanic mechanic =
-			(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		InjuryMechanic mechanic =
+			(InjuryMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 		Player<?> deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome() :
@@ -283,8 +283,8 @@ public class UtilServerInjury {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
-			GameMechanic mechanic =
-				(GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			InjuryMechanic mechanic =
+				(InjuryMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 			PlayerType playerType = raiseType == RaiseType.ROTTER ? mechanic.raisedNurgleType() :
 				PlayerType.RAISED_FROM_DEAD;
 
@@ -323,32 +323,16 @@ public class UtilServerInjury {
 		return dropPlayer(pStep, pPlayer, PlayerState.STUNNED, pApothecaryMode, false);
 	}
 
-	/**
-	 *
-	 * @param bacInjuryResultKey key to use for Ball&Chain injury result
-	 */
-	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
-																						boolean eligibleForSafePairOfHands, StepParameterKey bacInjuryResultKey) {
-		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands, bacInjuryResultKey);
-	}
-
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
 																						boolean eligibleForSafePairOfHands) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
-	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
-		return dropPlayer(pStep, pPlayer, pPlayerBase, pApothecaryMode, eligibleForSafePairOfHands,
-			StepParameterKey.INJURY_RESULT);
-	}
-
 	// drops the given player
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
-	// sets stepParameter defined by bacInjuryResultKey if player has skill Ball&Chain
+	// sets StepParameterKey.INJURY_RESULT if player has skill Ball&Chain
 	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands,
-																						 StepParameterKey bacInjuryResultKey) {
+																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -356,7 +340,7 @@ public class UtilServerInjury {
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 		if ((playerCoordinate != null) && (playerState != null)) {
 			if (pPlayer.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
-				pStep.publishParameter(new StepParameter(bacInjuryResultKey,
+				pStep.publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
 					UtilServerInjury.handleInjury(pStep, new InjuryTypeBallAndChain(), null, pPlayer, playerCoordinate, null,
 						null, pApothecaryMode)));
 			} else {

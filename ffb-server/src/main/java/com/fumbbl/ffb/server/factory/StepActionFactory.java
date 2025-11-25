@@ -25,8 +25,6 @@ public class StepActionFactory implements INamedObjectFactory {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

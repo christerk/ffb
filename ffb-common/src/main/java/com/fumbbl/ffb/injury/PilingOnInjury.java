@@ -6,7 +6,6 @@ public class PilingOnInjury extends InjuryType {
 
 	public PilingOnInjury() {
 		super("pilingOnInjury", true, SendToBoxReason.PILED_ON);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -8,8 +8,6 @@ import com.fumbbl.ffb.model.skill.Skill;
  */
 public class JumpModifier extends RollModifier<JumpContext> {
 
-	// TODO: create factory for this
-
 	private final String fName, reportString;
 	private final int fModifier, multiplier;
 	private final ModifierType type;

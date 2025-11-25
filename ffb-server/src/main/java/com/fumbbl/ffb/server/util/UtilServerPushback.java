@@ -6,8 +6,8 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PushbackMode;
 import com.fumbbl.ffb.PushbackSquare;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -62,7 +62,8 @@ public class UtilServerPushback {
 
 		List<PushbackSquare> pushbackSquares = new ArrayList<>();
 		FieldCoordinate startCoordinate = pStartingSquare.getCoordinate();
-		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
 
 		FieldCoordinate northCoordinate = new FieldCoordinate(startCoordinate.getX(), startCoordinate.getY() - 1);
 		FieldCoordinate northEastCoordinate = new FieldCoordinate(startCoordinate.getX() + 1, startCoordinate.getY() - 1);
@@ -90,7 +91,7 @@ public class UtilServerPushback {
 			}
 		}
 
-		if (pushbackSquares.size() == 0) {
+		if (pushbackSquares.isEmpty()) {
 
 			switch (pStartingSquare.getDirection()) {
 			case NORTH:
@@ -136,8 +137,7 @@ public class UtilServerPushback {
 			}
 
 			List<PushbackSquare> validPushbackSquares = new ArrayList<>();
-			for (int i = 0; i < pushbackSquares.size(); i++) {
-				PushbackSquare pushbackSquare = pushbackSquares.get(i);
+			for (PushbackSquare pushbackSquare : pushbackSquares) {
 				if (FieldCoordinateBounds.FIELD.isInBounds(pushbackSquare.getCoordinate())) {
 					validPushbackSquares.add(pushbackSquare);
 				}
@@ -145,7 +145,7 @@ public class UtilServerPushback {
 			pushbackSquares = validPushbackSquares;
 
 
-			if (pushbackSquares.size() > 0) {
+			if (!pushbackSquares.isEmpty()) {
 
 				boolean freeSquare = false;
 				FieldModel fieldModel = pGame.getFieldModel();
@@ -159,11 +159,11 @@ public class UtilServerPushback {
 
 				if (freeSquare) {
 					List<PushbackSquare> freePushBackSquares = new ArrayList<>();
-					for (int i = 0; i < pushbackSquares.size(); i++) {
-						FieldCoordinate coordinate = pushbackSquares.get(i).getCoordinate();
+					for (PushbackSquare pushbackSquare : pushbackSquares) {
+						FieldCoordinate coordinate = pushbackSquare.getCoordinate();
 						Player<?> player = fieldModel.getPlayer(coordinate);
 						if (player == null && mechanic.isValidPushbackSquare(fieldModel, coordinate)) {
-							freePushBackSquares.add(pushbackSquares.get(i));
+							freePushBackSquares.add(pushbackSquare);
 						}
 					}
 					pushbackSquares = freePushBackSquares;
@@ -179,7 +179,7 @@ public class UtilServerPushback {
 
 		}
 
-		return pushbackSquares.toArray(new PushbackSquare[pushbackSquares.size()]);
+		return pushbackSquares.toArray(new PushbackSquare[0]);
 
 	}
 

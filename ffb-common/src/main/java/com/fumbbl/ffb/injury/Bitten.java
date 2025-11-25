@@ -7,7 +7,6 @@ public class Bitten extends InjuryType {
 
 	public Bitten() {
 		super("bitten", false, SendToBoxReason.BITTEN);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

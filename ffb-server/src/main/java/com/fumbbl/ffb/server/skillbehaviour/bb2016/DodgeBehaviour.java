@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge;
 import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
-import com.fumbbl.ffb.skill.Dodge;
+import com.fumbbl.ffb.skill.common.Dodge;
 import com.fumbbl.ffb.util.ArrayTool;
 
 @RulesCollection(Rules.BB2016)
@@ -87,6 +87,12 @@ public class DodgeBehaviour extends SkillBehaviour<Dodge> {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 			PushbackSquare startingSquare = UtilServerPushback.findStartingSquare(attackerCoordinate, defenderCoordinate,
 				game.isHomePlaying());
+
+			if (startingSquare == null) {
+				// should not happen
+				state.usingDodge = false;
+				return;
+			}
 
 			PushbackSquare[] regularPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare,
 				PushbackMode.REGULAR);
