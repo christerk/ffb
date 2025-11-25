@@ -240,9 +240,6 @@ public class GameOptionFactory {
 			case INDUCEMENT_PRAYERS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Prayers cost $1 gps each.");
-			case INDUCEMENT_PRAYERS_COST_2025:
-				return new GameOptionInt(pOptionId).setDefault(10000)
-					.setMessage("Prayers cost $1 gps each.");
 			case INDUCEMENT_PRAYERS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(0)
 					.setMessage("Prayers are limited to $1.");

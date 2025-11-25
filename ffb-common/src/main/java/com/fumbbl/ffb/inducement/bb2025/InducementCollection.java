@@ -28,8 +28,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
 			}
 		});
-		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST_2025,
-			GameOptionId.INDUCEMENT_PRAYERS_COST_2025, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
+		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
+			GameOptionId.INDUCEMENT_PRAYERS_COST, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
 
 		add(new InducementType("briberyAndCorruption", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRolls",
 			GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
