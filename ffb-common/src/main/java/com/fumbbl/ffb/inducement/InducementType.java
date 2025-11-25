@@ -16,7 +16,7 @@ import java.util.Set;
 public class InducementType implements INamedObject {
 
 	private final String fName, fDescription, fSingular, fPlural, slotIconProperty;
-	private final GameOptionId maxId, costId, reducedCostId;
+	private final GameOptionId maxId, costId, reducedCostId, extendedMaxId;
 	private final boolean usesGenericSlot;
 	private final int priority;
 	private final Set<Usage> usages = new HashSet<>();
@@ -44,6 +44,12 @@ public class InducementType implements INamedObject {
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
 												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty,
 												int priority, Usage... usages) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, reducedCostId, usesGenericSlot, maxId, slotIconProperty, priority, usages);
+	}
+
+	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, GameOptionId extendedMaxId,
+												String slotIconProperty, int priority, Usage... usages) {
 		fName = pName;
 		fDescription = pDescription;
 		fSingular = pSingular;
@@ -52,6 +58,7 @@ public class InducementType implements INamedObject {
 		this.costId = costId;
 		this.reducedCostId = reducedCostId;
 		this.usesGenericSlot = usesGenericSlot;
+		this.extendedMaxId = extendedMaxId;
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));
 		}
@@ -109,6 +116,10 @@ public class InducementType implements INamedObject {
 
 	public GameOptionId getActualCostId(Team team) {
 		return useReducedCostId(team) ? getReducedCostId() : getCostId();
+	}
+
+	public GameOptionId getExtendedMaxId() {
+		return extendedMaxId;
 	}
 
 	protected boolean useReducedCostId(Team team) {
