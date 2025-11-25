@@ -240,7 +240,7 @@ public class UtilPlayer {
 			- findDefensiveFoulAssists(pGame, pAttacker, pDefender);
 	}
 
-	private static int findOffensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender, SkillMechanic mechanic) {
+	public static int findOffensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender, SkillMechanic mechanic) {
 		int assists = 0;
 		FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);
 
@@ -271,7 +271,7 @@ public class UtilPlayer {
 		return assists;
 	}
 
-	private static int findDefensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
+	public static int findDefensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
 		int assists = 0;
 		FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(pAttacker);
 
