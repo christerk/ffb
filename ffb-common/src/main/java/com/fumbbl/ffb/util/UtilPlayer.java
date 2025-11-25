@@ -1,18 +1,32 @@
 package com.fumbbl.ffb.util;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.TargetSelectionState;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
-import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.option.UtilGameOption;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -102,7 +116,7 @@ public class UtilPlayer {
 		return adjacentPlayers.toArray(new Player[0]);
 	}
 
-	public static Player<?>[] findNonAdjacentBlockablePlayersWithExactDistance(Game pGame, Team pTeam, FieldCoordinate pCoordinate, int distance) {
+	public static Player<?>[] findNonAdjacentBlockablePlayersTwoSquaresAway(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
 		Set<Player<?>> targetPlayers = Arrays.stream(UtilPlayer.findBlockablePlayers(pGame, pTeam, pCoordinate, 2)).collect(Collectors.toSet());
 		Set<Player<?>> adjacentPlayers = Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(pGame, pTeam, pCoordinate)).collect(Collectors.toSet());
 		targetPlayers.removeAll(adjacentPlayers);
@@ -219,44 +233,58 @@ public class UtilPlayer {
 	}
 
 	public static int findFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
-		GameMechanic mechanic = (GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
 
-		int foulAssists = 0;
+		return findOffensiveFoulAssists(pGame, pAttacker, pDefender, mechanic)
+			- findDefensiveFoulAssists(pGame, pAttacker, pDefender);
+	}
+
+	private static int findOffensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender, SkillMechanic mechanic) {
+		int assists = 0;
 		FieldCoordinate coordinateDefender = pGame.getFieldModel().getPlayerCoordinate(pDefender);
-		for (Player<?> offensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender,
-			false)) {
+
+		for (Player<?> offensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateDefender, false)) {
 			if (offensiveAssist != pAttacker) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(offensiveAssist);
-				Player<?>[] adjacentPlayersWithTacklezones = findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
+				Player<?>[] adjacentPlayersWithTacklezones =
+					findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
+
 				boolean guardIsCanceled = mechanic.allowsCancellingGuard(pGame.getTurnMode())
 					&& Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));
-				boolean putTheBootInIsCancelled = Arrays.stream(adjacentPlayersWithTacklezones)
+
+				boolean canAlwaysAssistIsCancelled = Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.canAlwaysAssistFouls));
-				boolean canAlwaysAssistFouls =
-						(offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFouls) && !putTheBootInIsCancelled)
-						|| (UtilGameOption.isOptionEnabled(pGame, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD) 
-								&& offensiveAssist.hasSkillProperty(NamedProperties.canAlwaysAssistFoulsWithSg));
+
+				boolean canAlwaysAssistFouls = mechanic.canAlwaysAssistFoul(pGame, offensiveAssist) && !canAlwaysAssistIsCancelled;
+
 				if ((adjacentPlayersWithTacklezones.length < 1)
 					|| canAlwaysAssistFouls
 					|| (offensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) && !guardIsCanceled)) {
-					foulAssists++;
+					assists++;
 				}
 			}
 		}
+		return assists;
+	}
+
+	private static int findDefensiveFoulAssists(Game pGame, Player<?> pAttacker, Player<?> pDefender) {
+		int assists = 0;
 		FieldCoordinate coordinateAttacker = pGame.getFieldModel().getPlayerCoordinate(pAttacker);
-		for (Player<?> defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker,
-			false)) {
+
+		for (Player<?> defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker, false)) {
 			if (defensiveAssist != pDefender) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
-				if (defensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) || findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
-					foulAssists--;
+				if (defensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones)
+					|| findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
+					assists++;
 				}
 			}
 		}
-		return foulAssists;
+		return assists;
 	}
 
 	public static int findStandUpAssists(Game pGame, Player<?> timmmberPlayer) {

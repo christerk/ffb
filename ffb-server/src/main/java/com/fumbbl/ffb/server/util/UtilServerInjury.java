@@ -11,7 +11,7 @@ import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -120,13 +120,13 @@ public class UtilServerInjury {
 
 		if (injuryContext.getPlayerState() != null) {
 			if (injuryContext.isCasualty() || injuryContext.isKnockedOut()) {
-				GameMechanic gameMechanic =
-					(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+				InjuryMechanic mechanic =
+					(InjuryMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 				injuryContext.setSufferedInjury(injuryContext.getPlayerState());
 				if (!pInjuryType.canUseApo() ||
 					(injuryContext.isKnockedOut() && pDefender.hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll))) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if (gameMechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
+				} else if (mechanic.canUseApo(game, pDefender, injuryContext.getPlayerState())) {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 				} else {
 					injuryContext.setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
@@ -229,8 +229,8 @@ public class UtilServerInjury {
 		boolean nurglesRot = false;
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
-		GameMechanic mechanic =
-			(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		InjuryMechanic mechanic =
+			(InjuryMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 		Player<?> deadPlayer = game.getPlayerById(pInjuryResult.injuryContext().getDefenderId());
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome() :
@@ -283,8 +283,8 @@ public class UtilServerInjury {
 		RosterPlayer raisedPlayer = null;
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		if (zombiePosition != null) {
-			GameMechanic mechanic =
-				(GameMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+			InjuryMechanic mechanic =
+				(InjuryMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
 			PlayerType playerType = raiseType == RaiseType.ROTTER ? mechanic.raisedNurgleType() :
 				PlayerType.RAISED_FROM_DEAD;
 

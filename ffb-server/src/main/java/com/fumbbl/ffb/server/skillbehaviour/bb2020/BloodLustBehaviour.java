@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2020.StepBloodLust;
 import com.fumbbl.ffb.server.step.bb2020.StepBloodLust.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.Bloodlust;
+import com.fumbbl.ffb.skill.mixed.Bloodlust;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 

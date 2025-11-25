@@ -21,7 +21,7 @@ public class SneakyGit extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canAlwaysAssistFoulsWithSg);
+		registerProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 
 }

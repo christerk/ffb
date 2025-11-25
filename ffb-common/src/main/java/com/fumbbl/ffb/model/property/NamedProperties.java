@@ -27,7 +27,6 @@ public class NamedProperties {
 	public static final ISkillProperty canAddStrengthToDodge = new NamedProperty("Can Add Strength To Dodge");
 	public static final ISkillProperty canAddStrengthToPass = new NamedProperty("Can Add Strength To Pass");
 	public static final ISkillProperty canAlwaysAssistFouls = new NamedProperty("Can Always Assist Fouls");
-	public static final ISkillProperty canAlwaysAssistFoulsWithSg = new NamedProperty("Can Always Assist Fouls With Sneaky Git");
 	public static final ISkillProperty canAttackOpponentForBallAfterCatch = new NamedProperty("Can Attack Opponent For Ball After Catch");
 	public static final ISkillProperty canAttemptCatchInAdjacentSquares = new NamedProperty(
 		"Can Attempt Catch In Adjacent Squares");
@@ -91,6 +90,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
+	public static final ISkillProperty canMoveAfterHandOff = new NamedProperty("Can Move After Hand Off");
 	public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty(
 		"Can Move During Kick Off Scatter");
 	public static final ISkillProperty canMoveOpenTeamMate = new NamedProperty("Can Move Open Team-mate");

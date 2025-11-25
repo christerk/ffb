@@ -29,23 +29,9 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()),
 			from(StepParameterKey.PUBLISH_DEFENDER, params.isPublishDefender()),
 			from(StepParameterKey.USING_BREATHE_FIRE, params.isUsingBreatheFire()));
-		sequence.add(StepId.INIT_ACTIVATION);
-		sequence.add(StepId.ANIMAL_SAVAGERY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING),
-			from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()));
-		sequence.add(StepId.STEADY_FOOTING);
-		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-		sequence.add(StepId.PLACE_BALL);
-		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ANIMAL_SAVAGERY));
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.SET_DEFENDER, from(StepParameterKey.BLOCK_DEFENDER_ID, params.getBlockDefenderId()));
-		sequence.add(StepId.GOTO_LABEL, from(StepParameterKey.GOTO_LABEL, IStepLabel.NEXT),
-			from(StepParameterKey.ALTERNATE_GOTO_LABEL, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BONE_HEAD, IStepLabel.NEXT,
-			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.REALLY_STUPID, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.TAKE_ROOT);
-		sequence.add(StepId.UNCHANNELLED_FURY, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.BLOOD_LUST, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
+		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END_BLOCKING).withOldDefender(params.getBlockDefenderId())
+			.withEventualDefender(params.getBlockDefenderId()).addTo(sequence);
+
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.DUMP_OFF);
 		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
