@@ -14,17 +14,20 @@ import com.fumbbl.ffb.json.UtilJson;
 public class DialogBuyPrayersAndInducementsParameter implements IDialogParameter {
 
 	private String fTeamId;
-	private int availableGold;
+	private int availableGold, pettyCash, treasury;
 	private boolean usesTreasury;
 
 	public DialogBuyPrayersAndInducementsParameter() {
 	}
 
-	public DialogBuyPrayersAndInducementsParameter(String teamId, int availableGold, boolean usesTreasury) {
+	public DialogBuyPrayersAndInducementsParameter(String teamId, int availableGold, boolean usesTreasury, int pettyCash,
+																								 int treasury) {
 		this();
 		fTeamId = teamId;
 		this.availableGold = availableGold;
 		this.usesTreasury = usesTreasury;
+		this.pettyCash = pettyCash;
+		this.treasury = treasury;
 	}
 
 	public DialogId getId() {
@@ -43,10 +46,17 @@ public class DialogBuyPrayersAndInducementsParameter implements IDialogParameter
 		return usesTreasury;
 	}
 
-	// transformation
+	public int getPettyCash() {
+		return pettyCash;
+	}
+
+	public int getTreasury() {
+		return treasury;
+	}
+// transformation
 
 	public IDialogParameter transform() {
-		return new DialogBuyPrayersAndInducementsParameter(getTeamId(), availableGold, usesTreasury);
+		return new DialogBuyPrayersAndInducementsParameter(getTeamId(), availableGold, usesTreasury, pettyCash, treasury);
 	}
 
 	// JSON serialization
@@ -56,11 +66,9 @@ public class DialogBuyPrayersAndInducementsParameter implements IDialogParameter
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
 		IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, availableGold);
-		// build array of inner jsonObjects with cardType + nrOfCards
-		JsonArray nrOfCardsPerType = new JsonArray();
-		IJsonOption.NR_OF_CARDS_PER_TYPE.addTo(jsonObject, nrOfCardsPerType);
-
 		IJsonOption.USES_TREASURY.addTo(jsonObject, usesTreasury);
+		IJsonOption.PETTY_CASH.addTo(jsonObject, pettyCash);
+		IJsonOption.TREASURY.addTo(jsonObject, treasury);
 		return jsonObject;
 	}
 
@@ -72,6 +80,8 @@ public class DialogBuyPrayersAndInducementsParameter implements IDialogParameter
 		if (IJsonOption.USES_TREASURY.isDefinedIn(jsonObject)) {
 			usesTreasury = IJsonOption.USES_TREASURY.getFrom(source, jsonObject);
 		}
+		pettyCash = IJsonOption.PETTY_CASH.getFrom(source, jsonObject);
+		treasury = IJsonOption.TREASURY.getFrom(source, jsonObject);
 		return this;
 	}
 

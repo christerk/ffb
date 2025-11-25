@@ -83,6 +83,7 @@ public final class StepBuyInducements extends AbstractStep {
 	private Integer availableInducementGoldAway;
 	private Integer usedInducementGoldHome = 0;
 	private Integer usedInducementGoldAway = 0;
+	private transient int pettyCash, treasury;
 	private boolean parallel;
 	private Phase phase = Phase.INIT;
 
@@ -117,10 +118,10 @@ public final class StepBuyInducements extends AbstractStep {
 
 						Team team = game.getTeamById(command.getTeamId());
 						if (team == game.getTeamHome()) {
-							int newTvHome = getNewTv(usedInducementGoldHome, game.getTurnDataHome(), team);
+							int newTvHome = getNewTv(usedInducementGoldHome, team);
 							getResult().addReport(generateReport(team, usedInducementGoldHome, newTvHome));
 						} else {
-							int newTvAway = getNewTv(usedInducementGoldAway, game.getTurnDataAway(), team);
+							int newTvAway = getNewTv(usedInducementGoldAway, team);
 							getResult().addReport(generateReport(team, usedInducementGoldAway, newTvAway));
 						}
 					}
@@ -256,16 +257,33 @@ public final class StepBuyInducements extends AbstractStep {
 		int availableGold;
 		if (phase == Phase.HOME) {
 			if (allowSpending) {
-				availableInducementGoldHome = useTreasury ? freeCash + game.getTeamHome().getTreasury() : usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
+				if (useTreasury) {
+					availableInducementGoldHome = treasury = freeCash + game.getTeamHome().getTreasury();
+					pettyCash = 0;
+				} else {
+					availableInducementGoldHome =
+						pettyCash = usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
+					treasury = Math.min(50000, game.getTeamHome().getTreasury());
+				}
 			} else {
 				availableInducementGoldHome = 0;
+				pettyCash = 0;
+				treasury = 0;
 			}
 			availableGold = availableInducementGoldHome;
 		} else {
 			if (allowSpending) {
-				availableInducementGoldAway = useTreasury ? freeCash + game.getTeamAway().getTreasury() : usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
+				if (useTreasury) {
+					availableInducementGoldAway = treasury = freeCash + game.getTeamAway().getTreasury();
+					pettyCash = 0;
+				} else {
+					availableInducementGoldAway = pettyCash = usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
+					treasury = 0;
+				}
 			} else {
 				availableInducementGoldAway = 0;
+				pettyCash = 0;
+				treasury = 0;
 			}
 			availableGold = availableInducementGoldAway;
 		}
@@ -279,7 +297,9 @@ public final class StepBuyInducements extends AbstractStep {
 		boolean canBuyInducements = minimumInducementCost(team) <= availableGold;
 
 		if (canBuyInducements) {
-			UtilServerDialog.showDialog(getGameState(), new DialogBuyPrayersAndInducementsParameter(team.getId(), availableGold, usesUnlimitedTreasury), false);
+			UtilServerDialog.showDialog(getGameState(),
+				new DialogBuyPrayersAndInducementsParameter(team.getId(), availableGold, usesUnlimitedTreasury, pettyCash, treasury),
+				false);
 			return true;
 		}
 
