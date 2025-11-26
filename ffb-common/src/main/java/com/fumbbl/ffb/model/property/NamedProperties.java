@@ -144,6 +144,7 @@ public class NamedProperties {
 			"Flip Same Team Opponent to Other Team");
 	public static final ISkillProperty forceOpponentToDropBallOnPushback = new NamedProperty(
 		"Force Opponent To Drop Ball On Pushback");
+	public static final ISkillProperty forceOpponentToFollowUp = new NamedProperty("Force Opponent To Follow Up");
 	public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
