@@ -250,20 +250,13 @@ public class UtilPlayer {
 				Player<?>[] adjacentPlayersWithTacklezones =
 					findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAssist, false);
 
-				boolean guardIsCanceled = mechanic.allowsCancellingGuard(pGame.getTurnMode())
-					&& Arrays.stream(adjacentPlayersWithTacklezones)
-					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
-					.anyMatch(skill -> skill.canCancel(NamedProperties.assistsFoulsInTacklezones));
-
 				boolean canAlwaysAssistIsCancelled = Arrays.stream(adjacentPlayersWithTacklezones)
 					.flatMap(player -> player.getSkillsIncludingTemporaryOnes().stream())
 					.anyMatch(skill -> skill.canCancel(NamedProperties.canAlwaysAssistFouls));
 
 				boolean canAlwaysAssistFouls = mechanic.canAlwaysAssistFoul(pGame, offensiveAssist) && !canAlwaysAssistIsCancelled;
 
-				if ((adjacentPlayersWithTacklezones.length < 1)
-					|| canAlwaysAssistFouls
-					|| (offensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones) && !guardIsCanceled)) {
+				if ((adjacentPlayersWithTacklezones.length < 1)	|| canAlwaysAssistFouls) {
 					assists++;
 				}
 			}
@@ -278,8 +271,7 @@ public class UtilPlayer {
 		for (Player<?> defensiveAssist : findAdjacentPlayersWithTacklezones(pGame, pDefender.getTeam(), coordinateAttacker, false)) {
 			if (defensiveAssist != pDefender) {
 				FieldCoordinate coordinateAssist = pGame.getFieldModel().getPlayerCoordinate(defensiveAssist);
-				if (defensiveAssist.hasSkillProperty(NamedProperties.assistsFoulsInTacklezones)
-					|| findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
+				if (findAdjacentPlayersWithTacklezones(pGame, pAttacker.getTeam(), coordinateAssist, false).length < 2) {
 					assists++;
 				}
 			}
