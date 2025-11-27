@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.mixed;
+package com.fumbbl.ffb.mechanics.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -10,13 +10,10 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
-import com.fumbbl.ffb.option.GameOptionId;
-import com.fumbbl.ffb.option.UtilGameOption;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
@@ -83,8 +80,7 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
 	@Override
 	public boolean canAlwaysAssistFoul(Game game, Player<?> assistant) {
-		return UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
-			&& assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
+		return assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 
 }

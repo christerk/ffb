@@ -204,6 +204,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USING_SHADOWING = new JsonBooleanOption("usingShadowing");
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
     JsonBooleanMapOption USING_STAND_FIRM = new JsonBooleanMapOption("usingStandFirm");
+    JsonBooleanOption USING_TAUNT = new JsonBooleanOption("usingTaunt");
     JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
     JsonBooleanOption USING_TRICKSTER = new JsonBooleanOption("usingTrickster");
     JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");
