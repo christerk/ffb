@@ -23,24 +23,34 @@ import java.awt.event.KeyEvent;
 public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog {
 
 	private final Font boldFont;
-	private final Font regularFont;
-	private final JLabel labelAvailableGold;
+	private final JLabel labelAvailableTreasury;
+	private final JLabel labelAvailablePettyCash;
+	private JLabel labelHint;
+	private final JPanel hintPanel;
+	private final int treasury;
+	private final int pettyCash;
 	private int availableGold, maximumGold;
 	private final boolean superInitialized;
-	private final DialogBuyPrayersAndInducementsParameter parameter;
 
-	public DialogBuyPrayersAndInducements(FantasyFootballClient pClient, DialogBuyPrayersAndInducementsParameter pParameter) {
+	public DialogBuyPrayersAndInducements(FantasyFootballClient pClient,
+																				DialogBuyPrayersAndInducementsParameter pParameter) {
 
 		super(pClient, "Buy Prayers And Inducements", pParameter.getTeamId(), pParameter.getAvailableGold(), false);
-		this.parameter = pParameter;
 		superInitialized = true;
-
-		labelAvailableGold = new JLabel(dimensionProvider());
+		treasury = pParameter.getTreasury();
+		pettyCash = pParameter.getPettyCash();
 
 		FontCache fontCache = pClient.getUserInterface().getFontCache();
 
 		boldFont = fontCache.font(Font.BOLD, 12, dimensionProvider());
-		regularFont = fontCache.font(Font.PLAIN, 11, dimensionProvider());
+
+		hintPanel = hintPanel();
+
+		labelAvailableTreasury = new JLabel(dimensionProvider());
+		labelAvailablePettyCash = new JLabel(dimensionProvider());
+		labelAvailableTreasury.setFont(boldFont);
+		labelAvailablePettyCash.setFont(boldFont);
+		labelAvailableTreasury.setForeground(Color.RED);
 
 		GameOptions gameOptions = pClient.getGame().getOptions();
 
@@ -59,20 +69,12 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 		setLocation(p.x, 10);
 	}
 
-
-	private JLabel label(String text, Font font) {
-		JLabel label = new JLabel(dimensionProvider());
-		label.setText(text);
-		label.setFont(font);
-		return label;
-	}
-
-
 	private JPanel verticalMainPanel(JTabbedPane horizontalMainPanel) {
 		JPanel verticalMainPanel = new JPanel();
 		verticalMainPanel.setLayout(new BoxLayout(verticalMainPanel, BoxLayout.Y_AXIS));
 		verticalMainPanel.add(goldPanel());
 		verticalMainPanel.add(horizontalMainPanel);
+		verticalMainPanel.add(hintPanel);
 		verticalMainPanel.add(buttonPanel());
 		return verticalMainPanel;
 	}
@@ -90,16 +92,34 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 		return tabbedPane;
 	}
 
+	private JPanel hintPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(Box.createVerticalStrut(dimensionProvider().scale(5)));
+		labelHint = new JLabel(dimensionProvider());
+		labelHint.setFont(boldFont);
+		labelHint.setForeground(Color.RED);
+		JPanel labelPanel = new JPanel();
+		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+		labelPanel.add(Box.createHorizontalGlue());
+		labelPanel.add(labelHint);
+		labelPanel.add(Box.createHorizontalGlue());
+		panel.add(labelPanel);
+		panel.add(Box.createVerticalStrut(dimensionProvider().scale(5)));
+		return panel;
+	}
+
 	private JPanel goldPanel() {
-		JPanel panelGold = new JPanel();
-		panelGold.setLayout(new BoxLayout(panelGold, BoxLayout.X_AXIS));
-
-		labelAvailableGold.setFont(boldFont);
-
-		panelGold.add(Box.createHorizontalGlue());
-		panelGold.add(labelAvailableGold);
-		panelGold.add(Box.createHorizontalGlue());
-		return panelGold;
+		JPanel availableGoldPanel = new JPanel();
+		availableGoldPanel.setLayout(new BoxLayout(availableGoldPanel, BoxLayout.X_AXIS));
+		availableGoldPanel.add(Box.createHorizontalGlue());
+		if (pettyCash > 0) {
+			availableGoldPanel.add(labelAvailablePettyCash);
+			availableGoldPanel.add(Box.createHorizontalGlue());
+		}
+		availableGoldPanel.add(labelAvailableTreasury);
+		availableGoldPanel.add(Box.createHorizontalGlue());
+		return availableGoldPanel;
 	}
 
 	private void showDialog() {
@@ -109,12 +129,27 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 	}
 
 
-
 	protected void updateGoldValue() {
 		if (superInitialized) {
-			labelAvailableGold.setText((parameter.isUsesTreasury() ? "Treasury: " : "Petty Cash: ") + StringTool.formatThousands(availableGold) + " gp");
-			labelAvailableGold.setForeground(parameter.isUsesTreasury() ? Color.RED : Color.BLACK);
+			int spentTreasury;
+			if (pettyCash == 0) {
+				labelAvailableTreasury.setText("Treasury: " + StringTool.formatThousands(availableGold) + " gp");
+				spentTreasury = maximumGold - availableGold;
+			} else {
+				int availablePettyCash = Math.max(0, availableGold - treasury);
+				int availableTreasury = Math.min(availableGold, treasury);
+				labelAvailableTreasury.setText("Treasury: " + StringTool.formatThousands(availableTreasury) + " gp");
+				labelAvailablePettyCash.setText("Petty Cash: " + StringTool.formatThousands(availablePettyCash) + " gp");
+				spentTreasury = treasury - availableTreasury;
+			}
+			if (spentTreasury > 0) {
+				labelHint.setText("You will spend " + StringTool.formatThousands(spentTreasury) + " gp from your treasury!");
+				hintPanel.setVisible(true);
+			} else {
+				hintPanel.setVisible(false);
+			}
 			validate();
+			pack();
 		}
 	}
 
@@ -164,6 +199,6 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 		Dimension frameSize = getClient().getUserInterface().getSize();
 		Dimension menuBarSize = getClient().getUserInterface().getGameMenuBar().getSize();
 		setLocation((frameSize.width - dialogSize.width) / 2,
-				((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
+			((frameSize.height - dialogSize.height) / 2) - menuBarSize.height);
 	}
 }
