@@ -23,10 +23,14 @@ public class UtilPassing {
 	public static Player<?>[] findInterceptors(Game pGame, Player<?> pThrower, FieldCoordinate pTargetCoordinate) {
 		List<Player<?>> interceptors = new ArrayList<>();
 		if ((pTargetCoordinate != null) && (pThrower != null)) {
+			boolean passesNotIntercepted = pThrower.hasSkillProperty(NamedProperties.passesAreNotIntercepted);
 			FieldCoordinate throwerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pThrower);
 			Team otherTeam = pGame.getTeamHome().hasPlayer(pThrower) ? pGame.getTeamAway() : pGame.getTeamHome();
 			Player<?>[] otherPlayers = otherTeam.getPlayers();
 			for (Player<?> otherPlayer : otherPlayers) {
+				if (passesNotIntercepted && !UtilCards.hasSkillToCancelProperty(otherPlayer, NamedProperties.passesAreNotIntercepted)) {
+					continue; // Cloud Burster 2025: no interception unless cancelled (e.g., Very Long Legs 2025)
+				}
 				PlayerState interceptorState = pGame.getFieldModel().getPlayerState(otherPlayer);
 				FieldCoordinate interceptorCoordinate = pGame.getFieldModel().getPlayerCoordinate(otherPlayer);
 				if ((interceptorCoordinate != null) && (interceptorState != null) && interceptorState.hasTacklezones()
