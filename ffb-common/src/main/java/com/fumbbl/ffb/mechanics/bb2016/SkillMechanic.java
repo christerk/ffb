@@ -8,6 +8,9 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
@@ -57,4 +60,11 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 			return "Rookie";
 		}
 	}
+
+	@Override
+	public boolean canAlwaysAssistFoul(Game game, Player<?> assistant) {
+		return UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
+			&& assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
+	}
+
 }

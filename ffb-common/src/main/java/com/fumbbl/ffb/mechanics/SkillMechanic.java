@@ -24,4 +24,7 @@ public abstract class SkillMechanic implements Mechanic {
 	public abstract boolean allowsCancellingGuard(TurnMode turnMode);
 
 	public abstract String calculatePlayerLevel(Game game, Player<?> player);
+
+	public abstract boolean canAlwaysAssistFoul(Game game, Player<?> assistant);
+
 }
