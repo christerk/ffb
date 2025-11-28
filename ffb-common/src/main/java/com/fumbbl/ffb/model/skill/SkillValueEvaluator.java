@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.model.skill;
 
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
 import com.fumbbl.ffb.model.Roster;
@@ -110,6 +111,11 @@ public interface SkillValueEvaluator {
 		private String map(String key, Roster roster) {
 			if (key.equalsIgnoreCase(ANIMOSITY_TO_ALL)) {
 				return "all team-mates";
+			}
+
+			Keyword keyword = Keyword.forName(key);
+			if (keyword != Keyword.UNKNOWN) {
+				return keyword.getName();
 			}
 
 			Optional<? extends Position> position = Arrays.stream(roster.getPositions())
