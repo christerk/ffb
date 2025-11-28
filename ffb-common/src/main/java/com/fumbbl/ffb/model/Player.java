@@ -403,7 +403,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 			add(ANIMOSITY_TO_ALL);
 			add(player.getPositionId());
 			add(player.getRace());
-			player.getPosition().getKeywords().forEach(keyword -> add(keyword.getName()));
+			addAll(player.positionKeywordNames());
 		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
 
 		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
@@ -445,4 +445,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
 	}
 
+	public Set<String> positionKeywordNames() {
+		return getPosition().getKeywords().stream()
+			.map(Keyword::getName)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toSet());
+	}
 }
