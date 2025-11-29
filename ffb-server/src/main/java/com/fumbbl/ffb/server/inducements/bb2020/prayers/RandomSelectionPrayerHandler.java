@@ -2,8 +2,8 @@ package com.fumbbl.ffb.server.inducements.bb2020.prayers;
 
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerWasted;
+import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
+import com.fumbbl.ffb.report.mixed.ReportPrayerWasted;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.List;

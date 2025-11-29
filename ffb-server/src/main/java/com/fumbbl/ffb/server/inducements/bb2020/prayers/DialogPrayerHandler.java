@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerWasted;
+import com.fumbbl.ffb.report.mixed.ReportPrayerWasted;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.List;

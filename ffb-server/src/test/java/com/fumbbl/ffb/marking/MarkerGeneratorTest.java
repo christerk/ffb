@@ -6,7 +6,7 @@ import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.bb2020.SeriousInjury;
 import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.mechanics.bb2020.StatsMechanic;
+import com.fumbbl.ffb.mechanics.mixed.StatsMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;

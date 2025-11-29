@@ -49,7 +49,8 @@ public enum GameOptionId implements INamedObject {
 
 	INDUCEMENT_APOS_COST("inducementAposCost"), INDUCEMENT_APOS_MAX("inducementAposMax"),
 	INDUCEMENT_BRIBES_COST("inducementBribesCost"), INDUCEMENT_BRIBES_REDUCED_COST("inducementBribesReducedCost"),
-	INDUCEMENT_BRIBES_MAX("inducementBribesMax"), INDUCEMENT_CHEFS_COST("inducementChefsCost"),
+	INDUCEMENT_BRIBES_MAX("inducementBribesMax"), INDUCEMENT_BRIBES_EXTENDED_MAX("inducementBribesExtendedMax"),
+	INDUCEMENT_CHEFS_COST("inducementChefsCost"),
 	INDUCEMENT_CHEFS_REDUCED_COST("inducementChefsReducedCost"), INDUCEMENT_CHEFS_MAX("inducementChefsMax"),
 	INDUCEMENT_EXTRA_TRAINING_COST("inducementExtraTrainingCost"),
 	INDUCEMENT_EXTRA_TRAINING_MAX("inducementExtraTrainingMax"), INDUCEMENT_IGORS_COST("inducementIgorsCost"),
@@ -71,6 +72,7 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_WEATHER_MAGE_MAX("inducementWeatherMageMax"), INDUCEMENT_WEATHER_MAGE_COST("inducementWeatherMageCost"),
 	INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV("inducementsAllowSpendingTreasuryOnEqualCTV"),
 	INDUCEMENTS_ALWAYS_USE_TREASURY("inducementsAlwaysUseTreasury"), INDUCEMENTS_ALLOW_OVERDOG_SPENDING("inducementsAllowOverdogSpending"),
+	INDUCEMENT_DUMMY("inducementDummy"),
 
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),

@@ -19,7 +19,7 @@ import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportKickoffScatter;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportEvent;
+import com.fumbbl.ffb.report.mixed.ReportEvent;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;

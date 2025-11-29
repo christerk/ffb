@@ -9,14 +9,6 @@ public enum Usage {
 	LONER, REGENERATION, REROLL, REROLL_ARGUE, REROLL_ONES_ON_KOS,
 	SPELL, SPOT_FOUL, STAFF, STAR, STEAL_REROLL, UNSPECIFIC;
 
-	public static final Set<Usage> REQUIRE_EXPLICIT_SELECTION = new HashSet<Usage>() {{
-		add(LONER);
-		add(STAR);
-		add(GAME_MODIFICATION);
-		add(STAFF);
-		add(REROLL_ONES_ON_KOS);
-	}};
-
 	public static final Set<Usage> EXCLUDE_FROM_RESULT = new HashSet<Usage>() {{
 		add(LONER);
 		add(STAR);

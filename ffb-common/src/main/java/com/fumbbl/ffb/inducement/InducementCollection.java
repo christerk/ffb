@@ -16,13 +16,9 @@ import java.util.stream.Stream;
 
 public abstract class InducementCollection implements IKeyedItem {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
-		add(new InducementType("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg", "Bloodweiser Kegs",
-			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
 
 		add(new InducementType("extraTeamTraining", "Extra Training", "Extra Team Training", "Extra Team Trainings",
 			GameOptionId.INDUCEMENT_EXTRA_TRAINING_MAX, GameOptionId.INDUCEMENT_EXTRA_TRAINING_COST, Usage.REROLL));
-
-		add(new InducementType("card", null, null, null, null, null));
 
 		add(new InducementType("wanderingApothecaries", "Wandering Apo.", "Wandering Apothecary", "Wandering Apothecaries",
 			GameOptionId.INDUCEMENT_APOS_MAX, GameOptionId.INDUCEMENT_APOS_COST, Usage.APOTHECARY) {

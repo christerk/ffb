@@ -18,6 +18,11 @@ import java.util.Set;
 public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCollection {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
 
+		add(new InducementType("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg", "Bloodweiser Kegs",
+			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
+
+		add(new InducementType("card", null, null, null, null, null));
+
 		add(new InducementType("bribes", "Bribes", "Bribe", "Bribes", GameOptionId.INDUCEMENT_BRIBES_MAX, GameOptionId.INDUCEMENT_BRIBES_COST,
 				GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST, true, IIconProperty.RESOURCE_BRIBE, Usage.AVOID_BAN) {
 			private final List<String> ROSTERS_WITH_CHEAP_BRIBES = new ArrayList<String>() {

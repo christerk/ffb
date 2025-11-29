@@ -225,7 +225,7 @@ public class UtilServerStartGame {
 			mvps.setValue(0);
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
-			//ruleSet.setValue(RulesCollection.Rules.BB2020.name());
+			ruleSet.setValue(RulesCollection.Rules.BB2020.name());
 			ruleSet.setValue(RulesCollection.Rules.BB2025.name());
 			//ruleSet.setValue("BB2016");
 			game.getOptions().addOption(ruleSet);
@@ -238,6 +238,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean prayer = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG);
 			prayer.setValue(false);
 			game.getOptions().addOption(prayer);
+			GameOptionInt prayerMax = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_MAX);
+			prayerMax.setValue(3);
+			game.getOptions().addOption(prayerMax);
+			GameOptionInt prayerCost = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_COST);
+			prayerCost.setValue(10000);
+			game.getOptions().addOption(prayerCost);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
 			game.getOptions().addOption(claw);

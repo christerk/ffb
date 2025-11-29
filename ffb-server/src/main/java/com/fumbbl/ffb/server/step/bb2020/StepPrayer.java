@@ -10,7 +10,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerRoll;
+import com.fumbbl.ffb.report.mixed.ReportPrayerRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;

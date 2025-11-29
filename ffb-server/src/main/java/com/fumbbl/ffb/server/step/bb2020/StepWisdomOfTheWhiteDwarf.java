@@ -22,7 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
-import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
+import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.report.bb2020.ReportSkillUseOtherPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;

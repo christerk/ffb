@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerAmount;
+import com.fumbbl.ffb.report.mixed.ReportPrayerAmount;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.AbstractStep;

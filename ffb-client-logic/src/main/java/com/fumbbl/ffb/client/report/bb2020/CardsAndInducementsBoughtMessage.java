@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ReportMessageType(ReportId.CARDS_AND_INDUCEMENTS_BOUGHT)
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2020)
 public class CardsAndInducementsBoughtMessage extends ReportMessageBase<ReportCardsAndInducementsBought> {
 
     @Override

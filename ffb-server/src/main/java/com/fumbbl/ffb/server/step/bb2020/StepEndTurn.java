@@ -29,7 +29,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -56,14 +56,14 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
-import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
-import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
-import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportShowStarReRoll;
-import com.fumbbl.ffb.report.bb2020.ReportShowStarReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
+import com.fumbbl.ffb.report.mixed.ReportArgueTheCallRoll;
+import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
+import com.fumbbl.ffb.report.mixed.ReportBrilliantCoachingReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportPrayerEnd;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportShowStarReRoll;
+import com.fumbbl.ffb.report.mixed.ReportShowStarReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -85,7 +85,7 @@ import com.fumbbl.ffb.server.step.generator.EndGame;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
-import com.fumbbl.ffb.server.step.generator.common.Kickoff;
+import com.fumbbl.ffb.server.step.generator.mixed.Kickoff;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -959,7 +959,7 @@ public class StepEndTurn extends AbstractStep {
 			return false;
 		}
 		List<String> playerIds = playersForArgue(team, game);
-		if (playerIds.size() > 0) {
+		if (!playerIds.isEmpty()) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
 				int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);

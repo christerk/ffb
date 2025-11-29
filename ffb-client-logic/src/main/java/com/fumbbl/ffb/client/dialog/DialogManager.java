@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyInducementsHandler;
+import com.fumbbl.ffb.client.dialog.inducements.DialogBuyPrayersAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogUseInducementHandler;
 import com.fumbbl.ffb.model.Game;
 
@@ -215,6 +216,9 @@ public class DialogManager {
 						break;
 					case PENALTY_SHOOTOUT:
 						setDialogHandler(new DialogPenaltyShootoutHandler(getClient()));
+						break;
+					case BUY_PRAYERS_AND_INDUCEMENTS:
+						setDialogHandler(new DialogBuyPrayersAndInducementsHandler(getClient()));
 						break;
 					default:
 						break;

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
@@ -18,6 +19,12 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.fumbbl.ffb.inducement.Usage.GAME_MODIFICATION;
+import static com.fumbbl.ffb.inducement.Usage.LONER;
+import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
+import static com.fumbbl.ffb.inducement.Usage.STAFF;
+import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
@@ -199,5 +206,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean allowMovementInEndZone() {
 		return true;
+	}
+
+	@Override
+	public Set<Usage> explicitlySelectedInducements() {
+		return new HashSet<Usage>() {{
+			add(LONER);
+			add(STAR);
+			add(GAME_MODIFICATION);
+			add(STAFF);
+			add(REROLL_ONES_ON_KOS);
+		}};
 	}
 }

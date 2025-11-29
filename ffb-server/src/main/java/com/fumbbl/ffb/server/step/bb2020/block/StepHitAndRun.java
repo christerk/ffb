@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportHitAndRun;
+import com.fumbbl.ffb.report.mixed.ReportHitAndRun;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
