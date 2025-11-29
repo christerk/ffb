@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.mixed.Kickoff;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 
 /**
  * Step in start game sequence to roll spectators.

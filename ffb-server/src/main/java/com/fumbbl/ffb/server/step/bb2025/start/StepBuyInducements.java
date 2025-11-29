@@ -52,7 +52,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.bb2025.Kickoff;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.mixed.Loner;

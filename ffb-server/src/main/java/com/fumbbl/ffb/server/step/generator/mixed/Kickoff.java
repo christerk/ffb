@@ -8,17 +8,12 @@ import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
-
-	public Kickoff() {
-		super(Type.Kickoff);
-	}
+public class Kickoff extends com.fumbbl.ffb.server.step.generator.Kickoff {
 
 	@Override
 	public void pushSequence(SequenceParams params) {
@@ -28,7 +23,7 @@ public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 
 		Sequence sequence = new Sequence(gameState);
 
-		if (params.withCoinChoice) {
+		if (params.isWithCoinChoice()) {
 			sequence.add(StepId.COIN_CHOICE);
 			sequence.add(StepId.RECEIVE_CHOICE);
 		}
@@ -60,14 +55,5 @@ public class Kickoff extends SequenceGenerator<Kickoff.SequenceParams> {
 		// continues with endTurnSequence after that
 
 		gameState.getStepStack().push(sequence.getSequence());
-	}
-
-	public static class SequenceParams extends SequenceGenerator.SequenceParams {
-		private final boolean withCoinChoice;
-
-		public SequenceParams(GameState gameState, boolean withCoinChoice) {
-			super(gameState);
-			this.withCoinChoice = withCoinChoice;
-		}
 	}
 }

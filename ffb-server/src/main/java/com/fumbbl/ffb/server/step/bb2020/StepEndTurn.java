@@ -85,7 +85,7 @@ import com.fumbbl.ffb.server.step.generator.EndGame;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
-import com.fumbbl.ffb.server.step.generator.mixed.Kickoff;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
