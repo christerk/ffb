@@ -372,9 +372,6 @@ public class StepEndBlocking extends AbstractStep {
 					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), targetPlayerId));
 					PlayerResult playerResult = game.getGameResult().getPlayerResult(activePlayer);
 					playerResult.setFouls(playerResult.getFouls() + 1);
-					if (!activePlayer.hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
-						game.getTurnData().setFoulUsed(true);
-					}
 
 					// go-for-it
 				} else {
