@@ -79,6 +79,7 @@ import java.util.stream.Stream;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepBuyInducements extends AbstractStep {
 
+	public static final int MAX_UNDERDOG_ALLOWANCE = 50000;
 	private Integer availableInducementGoldHome;
 	private Integer availableInducementGoldAway;
 	private Integer usedInducementGoldHome = 0;
@@ -265,9 +266,10 @@ public final class StepBuyInducements extends AbstractStep {
 					availableInducementGoldHome = treasury = freeCash + game.getTeamHome().getTreasury();
 					pettyCash = 0;
 				} else {
-					availableInducementGoldHome =
-						pettyCash = usedInducementGoldAway + game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff();
-					treasury = Math.min(50000, game.getTeamHome().getTreasury());
+					pettyCash = Math.max(usedInducementGoldAway - freeCash, 0) +
+						game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff() + freeCash;
+					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamHome().getTreasury());
+					availableInducementGoldHome = pettyCash + treasury;
 				}
 			} else {
 				availableInducementGoldHome = 0;
@@ -281,9 +283,10 @@ public final class StepBuyInducements extends AbstractStep {
 					availableInducementGoldAway = treasury = freeCash + game.getTeamAway().getTreasury();
 					pettyCash = 0;
 				} else {
-					availableInducementGoldAway =
-						pettyCash = usedInducementGoldHome + game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff();
-					treasury = Math.min(50000, game.getTeamAway().getTreasury());
+					pettyCash = Math.max(usedInducementGoldHome - freeCash, 0) +
+						game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff() + freeCash;
+					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamAway().getTreasury());
+					availableInducementGoldAway = pettyCash + treasury;
 				}
 			} else {
 				availableInducementGoldAway = 0;
@@ -602,14 +605,14 @@ public final class StepBuyInducements extends AbstractStep {
 		if (teamResultHome.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
 			teamResultHome.setTreasurySpentOnInducements(Math.max(0, usedInducementGoldHome - freeCash));
 		} else {
-			teamResultHome.setPettyCashUsed(usedInducementGoldHome);
+			setUnderDogCashValues(teamResultHome, usedInducementGoldHome, availableInducementGoldHome, freeCash);
 		}
 
 		TeamResult teamResultAway = game.getGameResult().getTeamResultAway();
 		if (teamResultAway.getPettyCashFromTvDiff() == 0 || alwaysUseTreasury) {
 			teamResultAway.setTreasurySpentOnInducements(Math.max(0, usedInducementGoldAway - freeCash));
 		} else {
-			teamResultAway.setPettyCashUsed(usedInducementGoldAway);
+			setUnderDogCashValues(teamResultAway, usedInducementGoldAway, availableInducementGoldAway, freeCash);
 		}
 
 		InducementTypeFactory inducementTypeFactory = game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
@@ -650,6 +653,20 @@ public final class StepBuyInducements extends AbstractStep {
 
 	private int getNewTv(Integer usedInducementGoldHome, Team teamHome) {
 		return teamHome.getTeamValue() + usedInducementGoldHome;
+	}
+
+	private void setUnderDogCashValues(TeamResult teamResult, int usedInducementGold, int availableInducementGold,
+																		 int freeCash) {
+		int unspent = availableInducementGold - usedInducementGold;
+		int unspentAllowance = Math.min(unspent, MAX_UNDERDOG_ALLOWANCE);
+		int treasurySpentOnInducements = MAX_UNDERDOG_ALLOWANCE - unspentAllowance;
+		teamResult.setTreasurySpentOnInducements(treasurySpentOnInducements);
+
+		int usedPettyCash = usedInducementGold - treasurySpentOnInducements - freeCash;
+
+		teamResult.setPettyCashUsed(Math.min(usedPettyCash, availableInducementGold - freeCash));
+
+
 	}
 
 	private ReportPrayersAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
