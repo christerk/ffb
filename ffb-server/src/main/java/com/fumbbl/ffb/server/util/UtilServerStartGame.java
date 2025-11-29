@@ -238,6 +238,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean prayer = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG);
 			prayer.setValue(false);
 			game.getOptions().addOption(prayer);
+			GameOptionInt prayerMax = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_MAX);
+			prayerMax.setValue(3);
+			game.getOptions().addOption(prayerMax);
+			GameOptionInt prayerCost = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_COST);
+			prayerCost.setValue(10000);
+			game.getOptions().addOption(prayerCost);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
 			game.getOptions().addOption(claw);

@@ -12,6 +12,8 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -133,8 +135,11 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		}
 		leftPanel.add(Box.createVerticalStrut(verticalStrut));
 
+		GameMechanic mechanic =
+			((GameMechanic) getClient().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name()));
+
 		((InducementTypeFactory) gameOptions.getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages()))
+			.filter(type -> !mechanic.explicitlySelectedInducements().containsAll(type.getUsages()))
 			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());

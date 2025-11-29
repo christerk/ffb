@@ -5,6 +5,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
@@ -68,4 +69,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean rollForChefAtStartOfHalf();
 
 	public abstract boolean allowMovementInEndZone();
+
+	public abstract Set<Usage> explicitlySelectedInducements();
 }
