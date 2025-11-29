@@ -4,7 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
-import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
+import com.fumbbl.ffb.factory.mixed.PrayerFactory;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;

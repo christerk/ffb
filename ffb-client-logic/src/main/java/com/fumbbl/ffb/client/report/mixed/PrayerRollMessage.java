@@ -5,7 +5,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
-import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
+import com.fumbbl.ffb.factory.mixed.PrayerFactory;
 import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportPrayerRoll;

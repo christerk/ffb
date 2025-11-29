@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.factory.bb2020;
+package com.fumbbl.ffb.factory.mixed;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @FactoryType(FactoryType.Factory.PRAYER)
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class PrayerFactory implements INamedObjectFactory<Prayer> {
 	private Map<Integer, Prayer> prayers;
 
@@ -36,26 +38,27 @@ public class PrayerFactory implements INamedObjectFactory<Prayer> {
 		return prayers.get(roll);
 	}
 
+	public List<Integer> allPrayerRolls() {
+		return new ArrayList<>(prayers.keySet());
+	}
+
 	public List<Integer> availablePrayerRolls(InducementSet teamInducements, InducementSet opponentInducements) {
-		return prayers.entrySet().stream().filter(entry ->
-		{
+		return prayers.entrySet().stream().filter(entry -> {
 			Prayer prayer = entry.getValue();
-			return !teamInducements.getPrayers().contains(prayer)
-				&& !(prayer.affectsBothTeams() && opponentInducements.getPrayers().contains(prayer));
+			return !teamInducements.getPrayers().contains(prayer) &&
+				!(prayer.affectsBothTeams() && opponentInducements.getPrayers().contains(prayer));
 		}).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 
 	public List<Prayer> sort(Set<Prayer> unsortedPrayers) {
-		return prayers.entrySet().stream()
-			.sorted(Comparator.comparingInt(Map.Entry::getKey))
-			.map(Map.Entry::getValue)
-			.filter(unsortedPrayers::contains)
-			.collect(Collectors.toList());
+		return prayers.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).map(Map.Entry::getValue)
+			.filter(unsortedPrayers::contains).collect(Collectors.toList());
 	}
 
 	@Override
 	public void initialize(Game game) {
-		boolean useLeagueTable = ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE)).isEnabled();
+		boolean useLeagueTable = ((GameOptionBoolean) game.getOptions()
+			.getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE)).isEnabled();
 		Prayers allPrayers = new Prayers();
 		prayers = new HashMap<>(allPrayers.getExhibitionPrayers());
 		if (useLeagueTable) {

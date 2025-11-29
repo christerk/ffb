@@ -5,7 +5,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
+import com.fumbbl.ffb.factory.mixed.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
