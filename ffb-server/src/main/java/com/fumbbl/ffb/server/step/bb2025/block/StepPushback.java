@@ -11,19 +11,14 @@ import com.fumbbl.ffb.Pushback;
 import com.fumbbl.ffb.PushbackMode;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportPushback;
-import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
@@ -42,11 +37,9 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Stack;
 
 /**
@@ -234,20 +227,6 @@ public class StepPushback extends AbstractStep {
 		Game game = getGameState().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		fieldModel.updatePlayerAndBallPosition(pPlayer, pCoordinate);
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer != null) {
-			Player<?> attacker = actingPlayer.getPlayer();
-			if (attacker != null
-				&& attacker.hasSkillProperty(NamedProperties.canEyeGouge)
-				&& attacker.getTeam() != pPlayer.getTeam()) {
-				PlayerState pushedState = fieldModel.getPlayerState(pPlayer).changeEyeGouged(true);
-				Optional<Skill> eyeGougeSkill = UtilCards.getSkillWithProperty(attacker, NamedProperties.canEyeGouge);
-				eyeGougeSkill.ifPresent(skill ->
-					getResult().addReport(new ReportSkillUse(attacker.getId(), skill, true, SkillUse.EYE_GOUGED))
-				);
-				fieldModel.setPlayerState(pPlayer, pushedState);
-			}
-		}
 		UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 		if (fieldModel.isBallMoving() && pCoordinate.equals(fieldModel.getBallCoordinate())) {
 			publishParameter(

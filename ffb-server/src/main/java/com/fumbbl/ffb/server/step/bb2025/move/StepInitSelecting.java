@@ -441,7 +441,6 @@ public final class StepInitSelecting extends AbstractStep {
 		} else {
 			prepareStandingUp();
 			if ((actingPlayer.getPlayerAction() == PlayerAction.REMOVE_CONFUSION)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.RECOVER_ASSISTS)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP)
 				|| (actingPlayer.getPlayerAction() == PlayerAction.STAND_UP_BLITZ)) {
 				getResult().setNextAction(StepAction.NEXT_STEP);

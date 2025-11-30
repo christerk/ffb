@@ -442,10 +442,6 @@ public final class StepEndSelecting extends AbstractStep {
         FuriousOutburst furiousGenerator = (FuriousOutburst) factory.forName(SequenceGenerator.Type.FuriousOutburst.name());
         furiousGenerator.pushSequence(foParams);
         break;
-      case RECOVER_ASSISTS:
-        actingPlayer.setHasMoved(true);
-        endGenerator.pushSequence(endParams);
-        break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
     }
