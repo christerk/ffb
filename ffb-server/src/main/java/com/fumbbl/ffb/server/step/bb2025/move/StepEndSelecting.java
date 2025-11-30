@@ -14,7 +14,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;

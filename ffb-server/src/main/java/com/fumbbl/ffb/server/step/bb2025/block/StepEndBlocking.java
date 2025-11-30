@@ -217,23 +217,14 @@ public class StepEndBlocking extends AbstractStep {
 
 		if (fDefenderPushed) {
 			Player<?> attacker = actingPlayer.getPlayer();
-			Player<?> defender = game.getDefender();
 			PlayerState defenderState = fieldModel.getPlayerState(game.getDefender());
 
-			System.out.println("EyeGouge check: attacker="
-				+ (attacker != null ? attacker.getId() : "null")
-				+ ", defender=" + (defender != null ? defender.getId() : "null")
-				+ ", defenderState=" + (defenderState != null ? defenderState.getBase() : "null"));
+			if (attacker.hasSkillProperty(NamedProperties.canEyeGouge) && defenderState.getBase() == PlayerState.STANDING) {
 
-			if (attacker.hasSkillProperty(NamedProperties.canEyeGouge)
-				&& defenderState.getBase() == PlayerState.STANDING) {
-
-				fieldModel.setPlayerState(defender, defenderState.changeEyeGouged(true));
-				System.out.println("EyeGouge applied to defender " + defender.getId());
-
+				fieldModel.setPlayerState(game.getDefender(), defenderState.changeEyeGouged(true));
 				Optional<Skill> eyeGougeSkill = UtilCards.getSkillWithProperty(attacker, NamedProperties.canEyeGouge);
 				eyeGougeSkill.ifPresent(skill ->
-						getResult().addReport(new ReportSkillUse(attacker.getId(), skill, true, SkillUse.EYE_GOUGED))
+					getResult().addReport(new ReportSkillUse(attacker.getId(), skill, true, SkillUse.EYE_GOUGED))
 				);
 			}
 		}
