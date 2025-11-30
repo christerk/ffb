@@ -94,6 +94,8 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.PLACE_BALL, IStepLabel.DEFENDER_DROPPED);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 
+		sequence.add(StepId.STEADY_FOOTING, IStepLabel.ATTACKER_DROPPED, from(StepParameterKey.APOTHECARY_MODE,
+			ApothecaryMode.ATTACKER));
 		sequence.add(StepId.PLACE_BALL, IStepLabel.ATTACKER_DROPPED);
 
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
