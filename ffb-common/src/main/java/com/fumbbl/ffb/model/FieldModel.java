@@ -18,9 +18,10 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.CardEffectFactory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -422,8 +423,10 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
+		PrayerFactory factory = getGame().getFactory(Factory.PRAYER);
 		Player<?> player = getGame().getPlayerById(playerId);
-		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
+		player.addTemporarySkills(factory.intensivePrayer().getName(), Collections.singleton(new SkillWithValue(skill,
+			String.valueOf(skill.getDefaultSkillValue()))));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING, playerId, skill);
 	}
 

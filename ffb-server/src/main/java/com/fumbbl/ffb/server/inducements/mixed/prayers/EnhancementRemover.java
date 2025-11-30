@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 

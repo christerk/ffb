@@ -1,29 +1,19 @@
-package com.fumbbl.ffb.factory.mixed;
+package com.fumbbl.ffb.factory;
 
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.factory.INamedObjectFactory;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
-import com.fumbbl.ffb.inducement.bb2020.Prayers;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
-import com.fumbbl.ffb.option.GameOptionBoolean;
-import com.fumbbl.ffb.option.GameOptionId;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@FactoryType(FactoryType.Factory.PRAYER)
-@RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
-public class PrayerFactory implements INamedObjectFactory<Prayer> {
-	private Map<Integer, Prayer> prayers;
+
+public abstract class PrayerFactory implements INamedObjectFactory<Prayer> {
+	protected Map<Integer, Prayer> prayers;
 
 	public Prayer forName(String pName) {
 		for (Prayer prayer : prayers.values()) {
@@ -55,14 +45,10 @@ public class PrayerFactory implements INamedObjectFactory<Prayer> {
 			.filter(unsortedPrayers::contains).collect(Collectors.toList());
 	}
 
+	public abstract Prayer intensivePrayer();
+
+	public abstract Prayer valueOf(String enumName);
+
 	@Override
-	public void initialize(Game game) {
-		boolean useLeagueTable = ((GameOptionBoolean) game.getOptions()
-			.getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_USE_LEAGUE_TABLE)).isEnabled();
-		Prayers allPrayers = new Prayers();
-		prayers = new HashMap<>(allPrayers.getExhibitionPrayers());
-		if (useLeagueTable) {
-			prayers.putAll(allPrayers.getLeagueOnlyPrayers());
-		}
-	}
+	public abstract void initialize(Game game);
 }

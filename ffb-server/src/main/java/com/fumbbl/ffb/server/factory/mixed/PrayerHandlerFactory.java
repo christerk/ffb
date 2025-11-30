@@ -3,7 +3,7 @@ package com.fumbbl.ffb.server.factory.mixed;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.inducements.mixed.prayers.PrayerHandler;
 import com.fumbbl.ffb.util.Scanner;

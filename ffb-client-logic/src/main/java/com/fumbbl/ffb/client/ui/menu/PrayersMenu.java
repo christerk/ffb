@@ -7,8 +7,8 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
-import com.fumbbl.ffb.factory.mixed.PrayerFactory;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.factory.PrayerFactory;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Game;
 
 import java.awt.Color;

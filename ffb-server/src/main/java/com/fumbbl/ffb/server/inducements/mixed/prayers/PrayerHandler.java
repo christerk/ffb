@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
 import com.fumbbl.ffb.INamedObject;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;

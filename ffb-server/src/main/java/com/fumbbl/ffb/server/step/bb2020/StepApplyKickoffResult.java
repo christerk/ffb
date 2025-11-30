@@ -16,7 +16,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
-import com.fumbbl.ffb.factory.mixed.PrayerFactory;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
