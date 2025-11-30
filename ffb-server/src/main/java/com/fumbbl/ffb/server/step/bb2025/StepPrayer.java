@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -7,10 +7,11 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.mixed.PrayerFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSkillSelection;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerRoll;
+import com.fumbbl.ffb.report.bb2025.ReportPrayerRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
@@ -27,7 +28,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.Optional;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPrayer extends AbstractStep {
 	private int roll;
 	private String teamId, playerId;
@@ -103,7 +104,9 @@ public class StepPrayer extends AbstractStep {
 
 		if (firstRun) {
 			firstRun = false;
-			getResult().addReport(new ReportPrayerRoll(roll));
+			Game game = getGameState().getGame();
+			String teamName = game.getTeamById(teamId).getName();
+			getResult().addReport(new ReportPrayerRoll(teamName, roll, game.getTeamHome().getId().equals(teamId)));
 
 			if (prayerHandler.isPresent()) {
 				prayerHandler.get().initEffect(this, getGameState(), teamId);

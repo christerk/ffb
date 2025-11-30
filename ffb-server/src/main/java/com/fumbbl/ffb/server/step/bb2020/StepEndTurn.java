@@ -70,7 +70,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.PrayerState;
 import com.fumbbl.ffb.server.ServerMode;
-import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
+import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;

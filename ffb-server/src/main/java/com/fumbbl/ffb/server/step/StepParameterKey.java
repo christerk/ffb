@@ -113,6 +113,8 @@ public enum StepParameterKey {
 	PLAYER_ID_TO_REMOVE, // String
 	PLAYER_ID_DAUNTLESS_SUCCESS, // String
 	PLAYER_WAS_PUSHED, // Boolean
+	PRAYERS_BOUGHT_AWAY, // Integer
+	PRAYERS_BOUGHT_HOME, // Integer
 	PRAYER_ROLL, // Integer
 	PUBLISH_DEFENDER, // Boolean
 	PUSH_SELECT, // Boolean

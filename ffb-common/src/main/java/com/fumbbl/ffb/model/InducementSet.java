@@ -6,7 +6,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.bb2020.PrayerFactory;
+import com.fumbbl.ffb.factory.mixed.PrayerFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
