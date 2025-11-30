@@ -15,7 +15,7 @@ public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 	protected abstract PlayerSelector selector();
 
 	@Override
-	final boolean initEffect(GameState gameState, Team prayingTeam) {
+	public final boolean initEffect(GameState gameState, Team prayingTeam) {
 		List<Player<?>> players = selector().selectPlayers(prayingTeam, gameState.getGame(), affectedPlayers(gameState));
 		if (players.isEmpty()) {
 			reports.add(new ReportPrayerWasted(this.handledPrayer().getName()));

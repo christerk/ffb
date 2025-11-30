@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 
 public abstract class DialogPrayerHandler extends PrayerHandler {
 
-	PlayerSelector selector = PlayerSelector.INSTANCE;
+	public abstract PlayerSelector selector();
 
 	@Override
-	final boolean initEffect(GameState gameState, Team prayingTeam) {
+	public final boolean initEffect(GameState gameState, Team prayingTeam) {
 		SkillFactory factory = gameState.getGame().getFactory(FactoryType.Factory.SKILL);
 		StatsMechanic mechanic = (StatsMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 
 		Set<Skill> skillsFromEnhancement = handledPrayer().enhancements(mechanic).getSkills().stream().map(SkillClassWithValue::getSkill).map(factory::forClass).collect(Collectors.toSet());
 
-		List<Player<?>> players = selector.eligiblePlayers(prayingTeam, gameState.getGame(), skillsFromEnhancement);
+		List<Player<?>> players = selector().eligiblePlayers(prayingTeam, gameState.getGame(), skillsFromEnhancement);
 		if (players.isEmpty()) {
 			reports.add(new ReportPrayerWasted(this.handledPrayer().getName()));
 			return true;
@@ -42,7 +42,7 @@ public abstract class DialogPrayerHandler extends PrayerHandler {
 
 	@Override
 	public final void removeEffectInternal(GameState gameState, Team team) {
-		enhancementRemover.removeEnhancement(gameState, team, selector, handledPrayer());
+		enhancementRemover.removeEnhancement(gameState, team, selector(), handledPrayer());
 	}
 
 }

@@ -20,7 +20,7 @@ public enum Prayer implements com.fumbbl.ffb.inducement.Prayer {
 		"Trapdoors appear. On a roll of 1 a player stepping on them falls through them",
 		InducementDuration.UNTIL_END_OF_GAME, true),
 	FRIENDS_WITH_THE_REF("Friends with the Ref", "Argue the call succeeds on 5+", InducementDuration.UNTIL_END_OF_GAME),
-	STILETTO("Stiletto", "One random player avaliable to play this game gains Stab",
+	STILETTO("Stiletto", "One random player available to play this game gains Stab",
 		InducementDuration.UNTIL_END_OF_GAME,	false,
 		true) {
 		@Override
@@ -49,7 +49,7 @@ public enum Prayer implements com.fumbbl.ffb.inducement.Prayer {
 			return " gains 1 AV";
 		}
 	}, KNUCKLE_DUSTERS("Knuckle Dusters",
-		"One chosen player available to play this game gains Mighty Blow (+1)",
+		"One chosen player available to play this game gains Mighty Blow",
 		InducementDuration.UNTIL_END_OF_GAME, false, true) {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {

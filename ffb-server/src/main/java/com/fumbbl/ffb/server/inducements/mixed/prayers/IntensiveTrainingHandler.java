@@ -1,12 +1,10 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.SkillChoiceMode;
 import com.fumbbl.ffb.dialog.DialogSelectSkillParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -23,14 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
-public class IntensiveTrainingHandler extends DialogPrayerHandler {
-
-	@Override
-	Prayer handledPrayer() {
-		return Prayer.INTENSIVE_TRAINING;
-	}
+public abstract class IntensiveTrainingHandler extends DialogPrayerHandler {
 
 	@Override
 	protected void createDialog(List<Player<?>> players, GameState gameState, Team team) {
@@ -48,7 +39,7 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 		if (!skills.isEmpty()) {
 			UtilServerDialog.showDialog(gameState, new DialogSelectSkillParameter(player.getId(), skills, SkillChoiceMode.INTENSIVE_TRAINING), false);
 		} else {
-			reports.add(new ReportPrayerWasted(Prayer.INTENSIVE_TRAINING.getName(), player.getId()));
+			reports.add(new ReportPrayerWasted(handledPrayer().getName(), player.getId()));
 		}
 	}
 
@@ -65,7 +56,7 @@ public class IntensiveTrainingHandler extends DialogPrayerHandler {
 	}
 
 	@Override
-	AnimationType animationType() {
+	public AnimationType animationType() {
 		return AnimationType.PRAYER_INTENSIVE_TRAINING;
 	}
 }

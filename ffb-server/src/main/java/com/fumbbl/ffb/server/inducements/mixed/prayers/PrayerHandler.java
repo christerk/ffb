@@ -32,9 +32,9 @@ public abstract class PrayerHandler implements INamedObject {
 		return prayer == handledPrayer();
 	}
 
-	abstract Prayer handledPrayer();
+	public abstract Prayer handledPrayer();
 
-	abstract AnimationType animationType();
+	public abstract AnimationType animationType();
 
 	public final void initEffect(IStep step, GameState gameState, String prayingTeamId) {
 		if (step != null) {
@@ -66,15 +66,15 @@ public abstract class PrayerHandler implements INamedObject {
 		}
 	}
 
-	void applySelection(Game game, PrayerDialogSelection selection) {
+	public void applySelection(Game game, PrayerDialogSelection selection) {
 	}
 
 	/**
 	 * @return true if handler logic is complete
 	 */
-	abstract boolean initEffect(GameState gameState, Team prayingTeam);
+	public abstract boolean initEffect(GameState gameState, Team prayingTeam);
 
-	abstract void removeEffectInternal(GameState gameState, Team team);
+	public abstract void removeEffectInternal(GameState gameState, Team team);
 
 	public void removeEffect(GameState gameState, Team team) {
 		removeEffectInternal(gameState, team);

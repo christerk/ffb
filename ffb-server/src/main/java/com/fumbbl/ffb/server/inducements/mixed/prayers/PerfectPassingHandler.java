@@ -1,21 +1,12 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
-public class PerfectPassingHandler extends PrayerHandler {
-	@Override
-	Prayer handledPrayer() {
-		return Prayer.PERFECT_PASSING;
-	}
-
-	@Override
-	boolean initEffect(GameState gameState, Team prayingTeam) {
+public abstract class PerfectPassingHandler extends PrayerHandler {
+		@Override
+	public boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addGetAdditionalCompletionSpp(prayingTeam);
 		return true;
 	}
@@ -26,7 +17,7 @@ public class PerfectPassingHandler extends PrayerHandler {
 	}
 
 	@Override
-	AnimationType animationType() {
+	public AnimationType animationType() {
 		return AnimationType.PRAYER_PERFECT_PASSING;
 	}
 

@@ -1,21 +1,12 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
-public class FoulingFrenzyHandler extends PrayerHandler {
+public abstract class FoulingFrenzyHandler extends PrayerHandler {
 	@Override
-	Prayer handledPrayer() {
-		return Prayer.FOULING_FRENZY;
-	}
-
-	@Override
-	boolean initEffect(GameState gameState, Team prayingTeam) {
+	public boolean initEffect(GameState gameState, Team prayingTeam) {
 		gameState.getPrayerState().addFoulingFrenzy(prayingTeam);
 		return true;
 	}
@@ -26,7 +17,7 @@ public class FoulingFrenzyHandler extends PrayerHandler {
 	}
 
 	@Override
-	AnimationType animationType() {
+	public AnimationType animationType() {
 		return AnimationType.PRAYER_FOULING_FRENZY;
 	}
 }

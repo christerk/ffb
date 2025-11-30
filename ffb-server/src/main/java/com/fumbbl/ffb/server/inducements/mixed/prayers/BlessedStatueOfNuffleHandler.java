@@ -1,20 +1,12 @@
 package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
 import com.fumbbl.ffb.PlayerChoiceMode;
-import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.model.AnimationType;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
-public class BlessedStatueOfNuffleHandler extends SelectPlayerPrayerHandler {
-	@Override
-	Prayer handledPrayer() {
-		return Prayer.BLESSED_STATUE_OF_NUFFLE;
-	}
+public abstract class BlessedStatueOfNuffleHandler extends SelectPlayerPrayerHandler {
 
 	@Override
-	AnimationType animationType() {
+	public AnimationType animationType() {
 		return AnimationType.PRAYER_BLESSED_STATUE_OF_NUFFLE;
 	}
 
