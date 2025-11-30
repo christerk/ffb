@@ -77,6 +77,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.THE_FLASHING_BLADE);
 			add(ClientAction.VICIOUS_VINES);
 			add(ClientAction.FURIOUS_OUTBURST);
+			add(ClientAction.RECOVER_ASSISTS);
 		}};
 	}
 
@@ -207,6 +208,11 @@ public class SelectLogicModule extends LogicModule {
 						communication.sendActingPlayer(player, PlayerAction.FURIOUS_OUTPBURST, false);
 					}
 					break;
+				case RECOVER_ASSISTS:
+					if (isRecoverFromEyeGougeActionAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.RECOVER_ASSISTS, false);
+					}
+					break;	
 				default:
 					break;
 			}
@@ -299,6 +305,9 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isStandUpActionAvailable(player)) {
 			context.add(ClientAction.STAND_UP);
+		}
+		if (isRecoverFromEyeGougeActionAvailable(player)) {
+			context.add(ClientAction.RECOVER_ASSISTS);
 		}
 		return context;
 	}

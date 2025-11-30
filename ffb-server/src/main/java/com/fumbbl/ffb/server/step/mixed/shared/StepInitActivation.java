@@ -33,7 +33,7 @@ public class StepInitActivation extends AbstractStep {
 		if (targetSelectionState != null) {
 			targetSelectionState.setOldActingPlayerState(playerState);
 		}
-		game.getFieldModel().setPlayerState(player, playerState.recoverTacklezones());
+		game.getFieldModel().setPlayerState(player, playerState.recoverTacklezones().clearEyeGouge());
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 }

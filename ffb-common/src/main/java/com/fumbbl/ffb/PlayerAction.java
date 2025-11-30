@@ -26,7 +26,8 @@ public enum PlayerAction implements INamedObject {
 	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
 	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
-	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst");
+	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
+	RECOVER_ASSISTS("recoverAssists", 14, "recovers ability to assist");
 
 	private final String fName;
 	private final int fType;

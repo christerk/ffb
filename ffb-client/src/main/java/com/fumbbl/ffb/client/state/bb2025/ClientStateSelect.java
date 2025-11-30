@@ -70,6 +70,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_THROW_TEAM_MATE, ClientAction.THROW_TEAM_MATE);
 				put(IPlayerPopupMenuKeys.KEY_KICK_TEAM_MATE, ClientAction.KICK_TEAM_MATE);
 				put(IPlayerPopupMenuKeys.KEY_RECOVER, ClientAction.RECOVER);
+				put(IPlayerPopupMenuKeys.KEY_RECOVER_ASSISTS, ClientAction.RECOVER_ASSISTS);
 				put(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK, ClientAction.MULTIPLE_BLOCK);
 				put(IPlayerPopupMenuKeys.KEY_BOMB, ClientAction.BOMB);
 				put(IPlayerPopupMenuKeys.KEY_GAZE, ClientAction.GAZE);
@@ -285,6 +286,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
 		configs.put(ClientAction.STAND_UP,
 			new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
+		configs.put(ClientAction.RECOVER_ASSISTS,
+    	new MenuItemConfig("Recover assists & End Move", IIconProperty.ACTION_STAND_UP,
+        IPlayerPopupMenuKeys.KEY_RECOVER));
 
 		return configs;
 	}

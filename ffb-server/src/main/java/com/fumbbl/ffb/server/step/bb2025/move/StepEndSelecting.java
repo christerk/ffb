@@ -14,6 +14,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -440,6 +441,10 @@ public final class StepEndSelecting extends AbstractStep {
         SequenceGenerator.SequenceParams foParams = new SequenceGenerator.SequenceParams(getGameState());
         FuriousOutburst furiousGenerator = (FuriousOutburst) factory.forName(SequenceGenerator.Type.FuriousOutburst.name());
         furiousGenerator.pushSequence(foParams);
+        break;
+      case RECOVER_ASSISTS:
+        actingPlayer.setHasMoved(true);
+        endGenerator.pushSequence(endParams);
         break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

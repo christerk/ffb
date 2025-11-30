@@ -63,7 +63,8 @@ public enum SkillUse implements INamedObject {
 	QUICK_BITE("quickBite", "to try to get the ball"),
 	STEADY_FOOTING("steadyFooting", "to keep standing"),
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones"),
-	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up");
+	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up"),
+	EYE_GOUGED("eyeGouged", "to gouge %g opponent's eyes");
 
 	private final String fName;
 	private final String fDescription;
