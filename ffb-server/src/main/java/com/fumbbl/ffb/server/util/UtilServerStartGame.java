@@ -286,6 +286,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean tacklezones = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_TACKLEZONE_OVERLAYS);
 			tacklezones.setValue(true);
 			game.getOptions().addOption(tacklezones);
+			GameOptionInt reducedMaxBribes = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_BRIBES_REDUCED_MAX);
+			reducedMaxBribes.setValue(5);
+			game.getOptions().addOption(reducedMaxBribes);
+			GameOptionInt reducedMaxChefs = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_CHEFS_REDUCED_MAX);
+			reducedMaxChefs.setValue(5);
+			game.getOptions().addOption(reducedMaxChefs);
 		}
 	}
 

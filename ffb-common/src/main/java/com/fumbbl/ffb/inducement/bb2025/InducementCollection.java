@@ -61,7 +61,7 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
 
 		add(new InducementType("bribes", "Bribes", "Bribe", "Bribes", GameOptionId.INDUCEMENT_BRIBES_MAX, GameOptionId.INDUCEMENT_BRIBES_COST,
-			GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST, true, GameOptionId.INDUCEMENT_BRIBES_EXTENDED_MAX,
+			GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST, true, GameOptionId.INDUCEMENT_BRIBES_REDUCED_MAX,
 			IIconProperty.RESOURCE_BRIBE, 0, Usage.AVOID_BAN) {
 
 			@Override
@@ -108,7 +108,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
-			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, IIconProperty.RESOURCE_MASTER_CHEF, Usage.STEAL_REROLL) {
+			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, GameOptionId.INDUCEMENT_CHEFS_REDUCED_MAX,
+			IIconProperty.RESOURCE_MASTER_CHEF, 0, Usage.STEAL_REROLL) {
 			@Override
 			protected boolean useReducedCostId(Team team) {
 				return team.getRoster().getKeywords().contains(Keyword.MASTER_CHEF);
@@ -116,15 +117,15 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 		});
 
 		add(new InducementType("biasedRef", "Biased Referee", "Biased Referee", "Biased Referees",
-			GameOptionId.INDUCEMENT_BIASED_REF_MAX, GameOptionId.INDUCEMENT_BIASED_REF_COST, GameOptionId.INDUCEMENT_BIASED_REF_REDUCED_COST, true,
-			IIconProperty.RESOURCE_BIASED_REF, Usage.ADD_TO_ARGUE_ROLL, Usage.SPOT_FOUL) {
+			GameOptionId.INDUCEMENT_BIASED_REF_MAX, GameOptionId.INDUCEMENT_BIASED_REF_COST,
+			GameOptionId.INDUCEMENT_BIASED_REF_REDUCED_COST, true, GameOptionId.INDUCEMENT_BIASED_REF_REDUCED_MAX,
+			IIconProperty.RESOURCE_BIASED_REF, 0, Usage.ADD_TO_ARGUE_ROLL, Usage.SPOT_FOUL) {
 
 			@Override
 			protected boolean useReducedCostId(Team team) {
 				return team.getSpecialRules().contains(SpecialRule.BRIBERY_AND_CORRUPTION);
 			}
 		});
-
 
 		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
 
