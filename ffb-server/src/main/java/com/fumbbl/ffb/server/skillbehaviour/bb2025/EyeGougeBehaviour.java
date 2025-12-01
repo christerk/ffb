@@ -38,40 +38,29 @@ public class EyeGougeBehaviour extends SkillBehaviour<EyeGouge> {
 
         Player<?> pusher = state.attacker;
         Player<?> target = state.defender;
-        System.out.println("EyeGouge hook: pusher=" + (pusher == null ? "null" : pusher.getId())
-          + " target=" + (target == null ? "null" : target.getId()));
         if (pusher == null || target == null) {
+          // TODO check to see if this is necessary
           return false;
         }
 
         PlayerState pusherState = fieldModel.getPlayerState(pusher);
-        System.out.println("EyeGouge pusher state=" + (pusherState == null ? "null" : pusherState.getBase())
-          + " standing=" + (pusherState != null && pusherState.isStanding())
-          + " distracted=" + (pusherState != null && pusherState.isDistracted()));
-
         if (pusherState == null
           || !pusher.hasSkillProperty(NamedProperties.canEyeGouge)
           || !pusherState.isStanding()
           || pusherState.isDistracted()) {
-          System.out.println("EyeGouge skip pusher");
           return false;
         }
-
+        
         if (target.getTeam() == pusher.getTeam()) {
-          System.out.println("EyeGouge skip target same team");
+          // TODO check to see if this is necessary
           return false;
         }
 
         PlayerState targetState = fieldModel.getPlayerState(target);
-        System.out.println("EyeGouge target state=" + (targetState == null ? "null" : targetState.getBase())
-          + " standing=" + (targetState != null && targetState.isStanding()));
-
         if (targetState == null || !targetState.isStanding()) {
-          System.out.println("EyeGouge skip target not standing");
           return false;
         }
 
-        System.out.println("EyeGouge APPLY to " + target.getId());
         fieldModel.setPlayerState(target, targetState.changeEyeGouged(true));
         UtilCards.getSkillWithProperty(pusher, NamedProperties.canEyeGouge)
           .ifPresent(skill ->
