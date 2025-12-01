@@ -239,6 +239,15 @@ public class PlayerState {
 		return ((PRONE == getBase()) || (STUNNED == getBase()));
 	}
 
+	// added this to keep the same wording as the rulebook
+	public boolean isStanding() {
+		return ((STANDING == getBase()) || (MOVING == getBase()) || (BLOCKED == getBase()));
+	}
+
+	public boolean isDistracted() {
+		return isConfused() || isHypnotized();
+	}
+
 	private PlayerState changeBit(int pMask, boolean pBit) {
 		if (pBit) {
 			return new PlayerState(getId() | pMask);

@@ -32,7 +32,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -213,20 +212,6 @@ public class StepEndBlocking extends AbstractStep {
 
 		if (actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES) {
 			actingPlayer.markSkillUsed(NamedProperties.canBlockOverDistance);
-		}
-
-		if (fDefenderPushed) {
-			Player<?> attacker = actingPlayer.getPlayer();
-			PlayerState defenderState = fieldModel.getPlayerState(game.getDefender());
-
-			if (attacker.hasSkillProperty(NamedProperties.canEyeGouge) && defenderState.getBase() == PlayerState.STANDING) {
-
-				fieldModel.setPlayerState(game.getDefender(), defenderState.changeEyeGouged(true));
-				Optional<Skill> eyeGougeSkill = UtilCards.getSkillWithProperty(attacker, NamedProperties.canEyeGouge);
-				eyeGougeSkill.ifPresent(skill ->
-					getResult().addReport(new ReportSkillUse(attacker.getId(), skill, true, SkillUse.EYE_GOUGED))
-				);
-			}
 		}
 
 		if (fEndTurn || fEndPlayerAction) {
