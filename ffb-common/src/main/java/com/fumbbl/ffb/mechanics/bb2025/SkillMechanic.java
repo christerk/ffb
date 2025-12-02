@@ -36,9 +36,6 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
 	@Override
 	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
-		if (fieldModel.getPlayerState(player).isEyeGouged()) {
-			return false;
-		}
 		return !(usingMultiBlock && fieldModel.isMultiBlockTarget(player.getId()));
 	}
 

@@ -41,6 +41,9 @@ public class ServerUtilPlayer {
 
 		for (Player<?> offensiveAssist : offensiveAssists) {
 			if (offensiveAssist != attacker) {
+				if (game.getFieldModel().getPlayerState(offensiveAssist).isEyeGouged()) {
+          continue;
+        }
 				FieldCoordinate coordinateAssist = game.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				Player<?>[] defensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, defenderTeam, coordinateAssist,
 					false);

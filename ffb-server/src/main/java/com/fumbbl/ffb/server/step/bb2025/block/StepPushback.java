@@ -146,15 +146,13 @@ public class StepPushback extends AbstractStep {
 				}
 			}
 			state.doPush = (fieldModel.getPlayer(lastPushback.getCoordinate()) == null);
+			state.pusherId = lastPushback.getPlayerId(); // subsequent: previous defender becomes pusher
 		}
 		// calculate new pushback squares
 		if (!state.doPush && (state.startingPushbackSquare != null)) {
 
-
-			if (state.attacker == null && game.getActingPlayer() != null) {
-				state.attacker = game.getActingPlayer().getPlayer(); // first push: acting player
-			} else {
-				state.attacker = state.defender; // subsequent: previous defender becomes attacker
+			if (state.pusherId == null && game.getActingPlayer() != null) {
+				state.pusherId = game.getActingPlayer().getPlayerId(); // first push: acting player
 			}
 
 			FieldCoordinate defenderCoordinate = state.startingPushbackSquare.getCoordinate();
@@ -255,6 +253,7 @@ public class StepPushback extends AbstractStep {
 		IServerJsonOption.USING_GRAB.addTo(jsonObject, state.grabbing);
 		IServerJsonOption.USING_SIDE_STEP.addTo(jsonObject, state.sideStepping);
 		IServerJsonOption.USING_STAND_FIRM.addTo(jsonObject, state.standingFirm);
+		IServerJsonOption.PUSHBACK_PUSHER_ID.addTo(jsonObject, state.pusherId);
 		return jsonObject;
 	}
 
@@ -273,6 +272,8 @@ public class StepPushback extends AbstractStep {
 		state.grabbing = IServerJsonOption.USING_GRAB.getFrom(source, jsonObject);
 		state.sideStepping = IServerJsonOption.USING_SIDE_STEP.getFrom(source, jsonObject);
 		state.standingFirm = IServerJsonOption.USING_STAND_FIRM.getFrom(source, jsonObject);
+		state.pusherId = IServerJsonOption.PUSHBACK_PUSHER_ID.getFrom(source, jsonObject);
+
 		return this;
 	}
 
@@ -283,6 +284,7 @@ public class StepPushback extends AbstractStep {
 		public Map<String, Boolean> sideStepping;
 		public Map<String, Boolean> standingFirm;
 		public Stack<Pushback> pushbackStack;
+		public String pusherId;
 
 		// Transients
 		public Player<?> defender;
@@ -290,8 +292,6 @@ public class StepPushback extends AbstractStep {
 		public boolean freeSquareAroundDefender;
 		public PushbackMode pushbackMode;
 		public PushbackSquare[] pushbackSquares;
-
-		// Transients for chain-push handling
-		public Player<?> attacker;
+		
 	}
 }

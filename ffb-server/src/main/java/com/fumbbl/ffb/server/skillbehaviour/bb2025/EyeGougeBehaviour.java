@@ -36,28 +36,20 @@ public class EyeGougeBehaviour extends SkillBehaviour<EyeGouge> {
         Game game = step.getGameState().getGame();
         FieldModel fieldModel = game.getFieldModel();
 
-        Player<?> pusher = state.attacker;
+        Player<?> pusher = game.getPlayerById(state.pusherId);
         Player<?> target = state.defender;
-        if (pusher == null || target == null) {
-          // TODO check to see if this is necessary
-          return false;
-        }
 
         PlayerState pusherState = fieldModel.getPlayerState(pusher);
-        if (pusherState == null
+        PlayerState targetState = fieldModel.getPlayerState(target);
+        
+        // We could replace both ".isStanding()" and ".isDistracted()" for ".hasTacklezones"
+        // but left it like this to keep the rules wording.
+        if (target.getTeam() == pusher.getTeam()
           || !pusher.hasSkillProperty(NamedProperties.canEyeGouge)
           || !pusherState.isStanding()
+          || pusherState.isDistracted() 
+          || !targetState.isStanding()
           || pusherState.isDistracted()) {
-          return false;
-        }
-        
-        if (target.getTeam() == pusher.getTeam()) {
-          // TODO check to see if this is necessary
-          return false;
-        }
-
-        PlayerState targetState = fieldModel.getPlayerState(target);
-        if (targetState == null || !targetState.isStanding()) {
           return false;
         }
 

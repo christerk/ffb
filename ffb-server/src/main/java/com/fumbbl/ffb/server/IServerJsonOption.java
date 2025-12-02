@@ -147,6 +147,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
+    JsonStringOption PUSHBACK_PUSHER_ID = new JsonStringOption("pushbackPusherId");
     JsonBooleanOption REMOVE_CATCH_MODE = new JsonBooleanOption("removeCatchMode");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
