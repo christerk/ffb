@@ -45,7 +45,7 @@ public class EyeGougeBehaviour extends SkillBehaviour<EyeGouge> {
         // We could replace both ".isStanding()" and ".isDistracted()" for ".hasTacklezones"
         // but left it like this to keep the rules wording.
         if (target.getTeam() == pusher.getTeam()
-          || !pusher.hasSkillProperty(NamedProperties.canEyeGouge)
+          || !pusher.hasSkillProperty(NamedProperties.canRemoveOpponentAssists)
           || !pusherState.isStanding()
           || pusherState.isDistracted() 
           || !targetState.isStanding()
@@ -54,7 +54,7 @@ public class EyeGougeBehaviour extends SkillBehaviour<EyeGouge> {
         }
 
         fieldModel.setPlayerState(target, targetState.changeEyeGouged(true));
-        UtilCards.getSkillWithProperty(pusher, NamedProperties.canEyeGouge)
+        UtilCards.getSkillWithProperty(pusher, NamedProperties.canRemoveOpponentAssists)
           .ifPresent(skill ->
             step.getResult().addReport(new ReportSkillUse(pusher.getId(), skill, true, SkillUse.EYE_GOUGED)));
         return false;
