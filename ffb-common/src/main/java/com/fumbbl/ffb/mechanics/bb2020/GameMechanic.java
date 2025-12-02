@@ -18,8 +18,10 @@ import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -153,13 +155,15 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean touchdownEndsGame(Game game) {
-		return game.getHalf() == 3 && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
+		return game.getHalf() == 3 &&
+			((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
 	}
 
 	@Override
 	public RosterPosition riotousRookiesPosition(Roster roster) {
-		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
-			.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
+		List<RosterPosition> rosterPositions =
+			Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
+				.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
 		if (rosterPositions.isEmpty()) {
 			return null;
 		}
@@ -169,10 +173,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isLegalConcession(Game game, Team team) {
-		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
-			.map(player -> game.getFieldModel().getPlayerState(player))
-			.filter(PlayerState::canBeSetUpNextDrive)
-			.count() <= 3;
+		return game.getTurnMode() == TurnMode.SETUP &&
+			Arrays.stream(team.getPlayers()).map(player -> game.getFieldModel().getPlayerState(player))
+				.filter(PlayerState::canBeSetUpNextDrive).count() <= 3;
 	}
 
 	@Override
@@ -205,7 +208,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 		switch (weather) {
 			case SWELTERING_HEAT:
-				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next kick-off.";
+				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next " +
+					"kick-off.";
 			case VERY_SUNNY:
 				return "A -1 modifier applies to all passing rolls.";
 			case NICE:
@@ -222,7 +226,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
+		return new HashSet<Class<? extends Skill>>() {{
+			add(WisdomOfTheWhiteDwarf.class);
+		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
 	}
 
 	@Override

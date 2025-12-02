@@ -17,7 +17,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
-import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifierFactory;
+import com.fumbbl.ffb.factory.mixed.CasualtyModifierFactory;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.NoDiceReport;
 import com.fumbbl.ffb.report.ReportId;
