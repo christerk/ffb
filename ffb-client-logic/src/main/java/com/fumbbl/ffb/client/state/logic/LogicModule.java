@@ -575,6 +575,6 @@ public abstract class LogicModule {
 	public boolean isRecoverFromEyeGougeActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return playerState != null && playerState.isEyeGouged()	&& playerState.isActive()	&& playerState.getBase() != PlayerState.PRONE;
+		return playerState != null && playerState.isEyeGouged()	&& playerState.isActive() && playerState.getBase() != PlayerState.PRONE;
 	}
 }

@@ -71,7 +71,6 @@ public class NamedProperties {
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canGazeAutomatically = new NamedProperty("Can Gaze Automatically");
 	public static final ISkillProperty canGazeDuringMove = new NamedProperty("Can Gaze During Move");
-	public static final ISkillProperty canRemoveOpponentAssists = new NamedProperty("Can Remove Opponent Assists");
 	public static final ISkillProperty canGetBallOnGround = new NamedProperty("Can Get Ball On Ground");
 	public static final ISkillProperty canGrantReRollAfterTouchdown = new NamedProperty("Can Grant Re-Roll After Touchdown");
 	public static final ISkillProperty canGrantSkillsToTeamMates = new NamedProperty("Can Grant Skills to Team-Mates");
@@ -110,6 +109,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
+	public static final ISkillProperty canRemoveOpponentAssists = new NamedProperty("Can Remove Opponent Assists");
 	public static final ISkillProperty canReRollAnyNumberOfBlockDice = new NamedProperty("Can Re-Roll Any Number Of Block Dice");
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
