@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -11,7 +11,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepInitActivation extends AbstractStep {
 	public StepInitActivation(GameState pGameState) {
