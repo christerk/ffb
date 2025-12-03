@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.block.StepStab;
 import com.fumbbl.ffb.server.step.action.block.StepStab.StepState;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
-import com.fumbbl.ffb.skill.bb2020.Stab;
+import com.fumbbl.ffb.skill.mixed.Stab;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)

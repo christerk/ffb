@@ -353,7 +353,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		return Stream.concat(
 			Stream.concat(
 				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost).filter(i -> i > 0),
-				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
+				factory.allTypes().stream().filter(type -> type.getActualCostId(team) != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);

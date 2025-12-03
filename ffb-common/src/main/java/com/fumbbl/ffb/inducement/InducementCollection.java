@@ -39,7 +39,7 @@ public abstract class InducementCollection implements IKeyedItem {
 			GameOptionId.INDUCEMENT_WIZARDS_COST, null, true, IIconProperty.RESOURCE_WIZARD, Usage.SPELL) {
 			@Override
 			public int availability(Team team, GameOptions options) {
-				IGameOption wizardOption = options.getOptionWithDefault(getMaxId());
+				IGameOption wizardOption = options.getOptionWithDefault(getActualMaxId(team));
 				if (!wizardOption.isChanged()) {
 					return ((GameOptionBoolean) options.getOptionWithDefault(GameOptionId.WIZARD_AVAILABLE)).isEnabled() ? 1
 						: 0;

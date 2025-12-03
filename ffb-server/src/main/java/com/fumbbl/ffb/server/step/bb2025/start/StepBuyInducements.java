@@ -31,7 +31,6 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
-import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
@@ -50,9 +49,9 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.mixed.Loner;
@@ -87,6 +86,7 @@ public final class StepBuyInducements extends AbstractStep {
 	private transient int pettyCash, treasury;
 	private boolean parallel;
 	private Phase phase = Phase.INIT;
+	private int prayersBoughtHome, prayersBoughtAway;
 
 	private final List<ClientCommandBuyInducements> buyInducementCommands = new ArrayList<>();
 
@@ -140,34 +140,48 @@ public final class StepBuyInducements extends AbstractStep {
 
 	private void handleBuyInducements(Game game, ClientCommandBuyInducements buyInducementsCommand) {
 		if (game.getTeamHome().getId().equals(buyInducementsCommand.getTeamId())) {
-			game.getTurnDataHome().getInducementSet().add(buyInducementsCommand.getInducementSet());
-			int starCost = addStarPlayers(game.getTeamHome(), buyInducementsCommand.getStarPlayerPositionIds());
-			int staffCost = addStaff(game.getTeamHome(), buyInducementsCommand.getStaffPositionIds());
-			int mercCost = addMercenaries(game.getTeamHome(), buyInducementsCommand.getMercenaryPositionIds(),
-				buyInducementsCommand.getMercenarySkills());
-			int inducementCost = inducementCosts(game.getTeamHome(), buyInducementsCommand.getInducementSet());
-			usedInducementGoldHome = starCost + mercCost + inducementCost + staffCost;
-			if (usedInducementGoldHome > availableInducementGoldHome) {
-				throw new FantasyFootballException(
-					"Team " + game.getTeamHome().getName() + " with id " + game.getTeamHome().getId() +
-						" spent more gold than should be available, spent " + (usedInducementGoldHome) + " vs available " +
-						(availableInducementGoldHome));
-			}
+			usedInducementGoldHome = handleTeamInducements(game.getTurnDataHome(), game.getTeamHome(), buyInducementsCommand,
+				availableInducementGoldHome);
 		} else {
-			game.getTurnDataAway().getInducementSet().add(buyInducementsCommand.getInducementSet());
-			int starCost = addStarPlayers(game.getTeamAway(), buyInducementsCommand.getStarPlayerPositionIds());
-			int staffCost = addStaff(game.getTeamAway(), buyInducementsCommand.getStaffPositionIds());
-			int mercCost = addMercenaries(game.getTeamAway(), buyInducementsCommand.getMercenaryPositionIds(),
-				buyInducementsCommand.getMercenarySkills());
-			int inducementCost = inducementCosts(game.getTeamAway(), buyInducementsCommand.getInducementSet());
-			usedInducementGoldAway = starCost + mercCost + inducementCost + staffCost;
-			if (usedInducementGoldAway > availableInducementGoldAway) {
-				throw new FantasyFootballException(
-					"Team " + game.getTeamAway().getName() + " with id " + game.getTeamAway().getId() +
-						" spent more gold than should be available, spent " + (usedInducementGoldAway) + " vs available " +
-						(availableInducementGoldAway));
-			}
+			usedInducementGoldAway = handleTeamInducements(game.getTurnDataAway(), game.getTeamAway(), buyInducementsCommand,
+				availableInducementGoldAway);
 		}
+	}
+
+	private int handleTeamInducements(TurnData turnData, Team team, ClientCommandBuyInducements buyInducementsCommand,
+																		int availableInducementGold) {
+
+		InducementSet inducementSet = buyInducementsCommand.getInducementSet();
+		int inducementCost = inducementCosts(team, inducementSet);
+
+		InducementTypeFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE);
+		factory.allTypes().stream().filter(type -> type.getUsages().contains(Usage.GAME_MODIFICATION)).findFirst()
+			.ifPresent(type -> {
+				if (inducementSet.getInducementTypes().contains(type)) {
+					Inducement prayers = inducementSet.get(type);
+					inducementSet.removeInducement(prayers);
+					if (team == getGameState().getGame().getTeamHome()) {
+						prayersBoughtHome = prayers.getValue();
+					} else {
+						prayersBoughtAway = prayers.getValue();
+					}
+				}
+			}
+		);
+
+		turnData.getInducementSet().add(inducementSet);
+		int starCost = addStarPlayers(team, buyInducementsCommand.getStarPlayerPositionIds());
+		int staffCost = addStaff(team, buyInducementsCommand.getStaffPositionIds());
+		int mercCost =
+			addMercenaries(team, buyInducementsCommand.getMercenaryPositionIds(),
+				buyInducementsCommand.getMercenarySkills());
+		int usedInducementGold = starCost + mercCost + inducementCost + staffCost;
+		if (usedInducementGold > availableInducementGold) {
+			throw new FantasyFootballException(
+				"Team " + team.getName() + " with id " + team.getId() + " spent more gold than should be available, spent " +
+					(usedInducementGold) + " vs available " + (availableInducementGold));
+		}
+		return usedInducementGold;
 	}
 
 	private void executeStep() {
@@ -344,7 +358,7 @@ public final class StepBuyInducements extends AbstractStep {
 		return Stream.concat(Stream.concat(
 					Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost)
 						.filter(i -> i > 0),
-					factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card"))
+					factory.allTypes().stream().filter(type -> type.getActualCostId(team) != null && !type.getName().equals("card"))
 						.map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))),
 				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(
 					pos -> pos.getCost() +
@@ -586,16 +600,13 @@ public final class StepBuyInducements extends AbstractStep {
 		((RiotousRookies) factory.forName(SequenceGenerator.Type.RiotousRookies.name())).pushSequence(
 			new SequenceGenerator.SequenceParams(getGameState()));
 
-		boolean usePrayers = ((GameOptionBoolean) getGameState().getGame().getOptions()
-			.getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG)).isEnabled();
-
-		if (usePrayers) {
-			Sequence prayerSequence = new Sequence(getGameState());
-			prayerSequence.add(StepId.PRAYERS);
-			getGameState().getStepStack().push(prayerSequence.getSequence());
-			publishParameter(StepParameter.from(StepParameterKey.TV_HOME, newTvHome));
-			publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
-		}
+		Sequence prayerSequence = new Sequence(getGameState());
+		prayerSequence.add(StepId.PRAYERS);
+		getGameState().getStepStack().push(prayerSequence.getSequence());
+		publishParameter(StepParameter.from(StepParameterKey.TV_HOME, newTvHome));
+		publishParameter(StepParameter.from(StepParameterKey.TV_AWAY, newTvAway));
+		publishParameter(StepParameter.from(StepParameterKey.PRAYERS_BOUGHT_HOME, prayersBoughtHome));
+		publishParameter(StepParameter.from(StepParameterKey.PRAYERS_BOUGHT_AWAY, prayersBoughtAway));
 
 		boolean alwaysUseTreasury = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALWAYS_USE_TREASURY);
 
