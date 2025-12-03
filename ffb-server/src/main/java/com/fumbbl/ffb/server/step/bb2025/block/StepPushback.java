@@ -160,8 +160,6 @@ public class StepPushback extends AbstractStep {
 			if (state.defender == null) {
 				throw new IllegalStateException("Defender unknown at this point - cannot continue.");
 			}
-
-			state.defender = fieldModel.getPlayer(defenderCoordinate);
 			state.pushbackMode = PushbackMode.REGULAR;
 			state.pushbackSquares = UtilServerPushback.findPushbackSquares(game, state.startingPushbackSquare,
 				state.pushbackMode);
@@ -291,7 +289,6 @@ public class StepPushback extends AbstractStep {
 		public boolean doPush;
 		public boolean freeSquareAroundDefender;
 		public PushbackMode pushbackMode;
-		public PushbackSquare[] pushbackSquares;
-		
+		public PushbackSquare[] pushbackSquares;		
 	}
 }
