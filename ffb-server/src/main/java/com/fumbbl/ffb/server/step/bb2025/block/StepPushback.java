@@ -37,6 +37,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -151,7 +152,7 @@ public class StepPushback extends AbstractStep {
 		// calculate new pushback squares
 		if (!state.doPush && (state.startingPushbackSquare != null)) {
 
-			if (state.pusherId == null && game.getActingPlayer() != null) {
+			if (!StringTool.isProvided(state.pusherId) && game.getActingPlayer() != null) {
 				state.pusherId = game.getActingPlayer().getPlayerId(); // first push: acting player
 			}
 
