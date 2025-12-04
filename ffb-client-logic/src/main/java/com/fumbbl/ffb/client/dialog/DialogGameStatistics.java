@@ -181,7 +181,7 @@ public class DialogGameStatistics extends Dialog {
 				.append(gameResult.getTeamResultAway().totalPassing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
-		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Rushing").append(_FONT_BOLD_CLOSE)
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Carried Ball").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
 				.append(gameResult.getTeamResultHome().totalRushing()).append(_FONT_BOLD_CLOSE).append("</td>\n");
