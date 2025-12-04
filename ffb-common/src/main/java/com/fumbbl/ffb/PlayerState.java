@@ -38,6 +38,7 @@ public class PlayerState {
 	private static final int _BIT_SELECTED_BLITZ_TARGET = 0x04000;
 	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x08000;
 	private static final int _BIT_SELECTED_GAZE_TARGET = 0x10000;
+	private static final int _BIT_EYE_GOUGED = 0x20000;
 
 	private static final int[] _BASE_MASK = new int[]{
 		0x00000, // UNKNOWN
@@ -148,6 +149,18 @@ public class PlayerState {
 		return changeHypnotized(false).changeConfused(false);
 	}
 
+	public boolean isEyeGouged() {
+		return hasBit(_BIT_EYE_GOUGED);
+	}
+
+	public PlayerState changeEyeGouged(boolean gouged) {
+		return changeBit(_BIT_EYE_GOUGED, gouged);
+	}
+
+	public PlayerState clearEyeGouge() {
+		return changeEyeGouged(false);
+	}
+
 	public boolean isSelectedStabTarget() {
 		return hasBit(_BIT_SELECTED_STAB_TARGET);
 	}
@@ -224,6 +237,15 @@ public class PlayerState {
 
 	public boolean canBeFouled() {
 		return ((PRONE == getBase()) || (STUNNED == getBase()));
+	}
+
+	// added this to keep the same wording as the rulebook
+	public boolean isStanding() {
+		return ((STANDING == getBase()) || (MOVING == getBase()) || (BLOCKED == getBase()));
+	}
+
+	public boolean isDistracted() {
+		return isConfused() || isHypnotized();
 	}
 
 	private PlayerState changeBit(int pMask, boolean pBit) {

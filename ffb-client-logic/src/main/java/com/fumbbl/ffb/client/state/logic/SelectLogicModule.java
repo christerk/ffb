@@ -289,7 +289,7 @@ public class SelectLogicModule extends LogicModule {
 		if (isFuriousOutburstAvailable(player)) {
 			context.add(ClientAction.FURIOUS_OUTBURST);
 		}
-		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player)) {
+		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player) || isRecoverFromEyeGougeActionAvailable(player)) {
 			context.add(ClientAction.RECOVER);
 		}
 		if (isStandUpActionAvailable(player)

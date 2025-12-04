@@ -278,7 +278,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			new MenuItemConfig("Furious Outburst", IIconProperty.ACTION_FURIOUS_OUTBURST,
 				IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST));
 		configs.put(ClientAction.RECOVER,
-			new MenuItemConfig("Recover tackle zone & End Move", IIconProperty.ACTION_STAND_UP,
+			new MenuItemConfig("Recover & End Move", IIconProperty.ACTION_STAND_UP,
 				IPlayerPopupMenuKeys.KEY_RECOVER));
 		configs.put(ClientAction.STAND_UP_BLITZ,
 			new MenuItemConfig("Stand Up & End Move (using Blitz)", IIconProperty.ACTION_STAND_UP,

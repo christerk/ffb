@@ -571,4 +571,10 @@ public abstract class LogicModule {
 			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
 			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));
 	}
+
+	public boolean isRecoverFromEyeGougeActionAvailable(Player<?> player) {
+		Game game = client.getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return playerState != null && playerState.isEyeGouged()	&& playerState.isActive() && playerState.getBase() != PlayerState.PRONE;
+	}
 }
