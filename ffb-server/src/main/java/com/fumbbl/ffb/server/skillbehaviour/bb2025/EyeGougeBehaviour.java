@@ -48,8 +48,7 @@ public class EyeGougeBehaviour extends SkillBehaviour<EyeGouge> {
           || !pusher.hasSkillProperty(NamedProperties.canRemoveOpponentAssists)
           || !pusherState.isStanding()
           || pusherState.isDistracted() 
-          || !targetState.isStanding()
-          || pusherState.isDistracted()) {
+          || !targetState.isStanding()) {
           return false;
         }
 
