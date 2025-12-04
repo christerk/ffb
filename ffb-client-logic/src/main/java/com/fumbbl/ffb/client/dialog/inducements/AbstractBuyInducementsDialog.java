@@ -12,6 +12,8 @@ import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -51,7 +53,8 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	private int maximumGold;
 
 
-	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold, boolean closeable) {
+	public AbstractBuyInducementsDialog(FantasyFootballClient client, String title, String teamId, int availableGold,
+																			boolean closeable) {
 		super(client, title, closeable);
 		maximumGold = availableGold;
 		setAvailableGold(maximumGold);
@@ -66,10 +69,10 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 		GameOptions gameOptions = client.getGame().getOptions();
 
-		mercExtraCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
-			.getValue();
-		mercSkillCost = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST))
-			.getValue();
+		mercExtraCost =
+			((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST)).getValue();
+		mercSkillCost =
+			((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_SKILL_COST)).getValue();
 	}
 
 	protected JPanel buildInducementPanel(GameOptions gameOptions) {
@@ -111,23 +114,32 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		return buttonPanel;
 	}
 
-	private JPanel buildLeftPanel(GameOptions gameOptions) {
+	protected JPanel buildLeftPanel(GameOptions gameOptions) {
+		return buildLeftPanel(gameOptions, true);
+	}
+
+	protected JPanel buildLeftPanel(GameOptions gameOptions, boolean includeLabel) {
 
 		int verticalStrut = dimensionProvider().scale(10);
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
-		JPanel labelPanel = new JPanel();
-		labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
-		labelPanel.add(new JLabel(dimensionProvider(), "Inducements:"));
-		labelPanel.add(Box.createHorizontalGlue());
+		if (includeLabel) {
+			JPanel labelPanel = new JPanel();
+			labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
+			labelPanel.add(new JLabel(dimensionProvider(), "Inducements:"));
+			labelPanel.add(Box.createHorizontalGlue());
 
-		leftPanel.add(labelPanel);
+			leftPanel.add(labelPanel);
+		}
 		leftPanel.add(Box.createVerticalStrut(verticalStrut));
 
+		GameMechanic mechanic =
+			((GameMechanic) getClient().getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name()));
+
 		((InducementTypeFactory) gameOptions.getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
-			.filter(type -> !Usage.REQUIRE_EXPLICIT_SELECTION.containsAll(type.getUsages()))
+			.filter(type -> !mechanic.explicitlySelectedInducements().containsAll(type.getUsages()))
 			.forEach(type -> createPanel(type, leftPanel, verticalStrut, gameOptions));
 
 		leftPanel.add(Box.createVerticalGlue());
@@ -135,12 +147,20 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		return leftPanel;
 
 	}
+	protected JPanel buildRightPanel(GameOptions gameOptions) {
+		return buildRightPanel(gameOptions, false);
+	}
 
-	private JPanel buildRightPanel(GameOptions gameOptions) {
+	protected JPanel buildRightPanel(GameOptions gameOptions, boolean addPadding) {
 
 		// Right Panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+
+		if (addPadding) {
+			int verticalStrut = dimensionProvider().scale(10);
+			rightPanel.add(Box.createVerticalStrut(verticalStrut));
+		}
 
 		fTableModelStarPlayers = new StarPlayerTableModel(this, gameOptions);
 		int maxStars = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STARS_MAX)).getValue();
@@ -148,7 +168,8 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		if (maxStars > 0) {
 
 			fTableStarPlayers = new StarPlayerTable(dimensionProvider(), fTableModelStarPlayers);
-			configureTable(rightPanel, fTableStarPlayers, fTableModelStarPlayers, "Star Players (varying Gold 0-" + maxStars + "):", 148);
+			configureTable(rightPanel, fTableStarPlayers, fTableModelStarPlayers,
+				"Star Players (varying Gold 0-" + maxStars + "):", 148);
 		}
 
 		tableModelInfamousStaff = new InfamousStaffTableModel(this, gameOptions);
@@ -158,13 +179,14 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		if (maxStaff > 0) {
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
 			tableInfamousStaff = new InfamousStaffTable(dimensionProvider(), tableModelInfamousStaff);
-			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff, "Infamous Coaching Staff (varying Gold 0-" + maxStaff + "):", 55);
+			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff,
+				"Infamous Coaching Staff (varying Gold 0-" + maxStaff + "):", 55);
 		}
 
 		fTableModelMercenaries = new MercenaryTableModel(this, gameOptions);
 
-		int maxMercs = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX))
-			.getValue();
+		int maxMercs =
+			((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_MERCENARIES_MAX)).getValue();
 		if (maxMercs > 0) {
 			fTableMercenaries = new MercenaryTable(dimensionProvider(), fTableModelMercenaries);
 			fTableMercenaries.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -205,14 +227,14 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	}
 
-	private void configureTable(JPanel rightPanel, JTable playerTable, AbstractTableModel tableModel, String label, int height) {
+	private void configureTable(JPanel rightPanel, JTable playerTable, AbstractTableModel tableModel, String label,
+															int height) {
 		playerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		playerTable.getSelectionModel().addListSelectionListener(pE -> {
 			if (!pE.getValueIsAdjusting()) {
 				int selectedRowIndex = playerTable.getSelectionModel().getLeadSelectionIndex();
 				if (selectedRowIndex >= 0) {
-					getClient().getClientData()
-						.setSelectedPlayer((Player<?>) tableModel.getValueAt(selectedRowIndex, 4));
+					getClient().getClientData().setSelectedPlayer((Player<?>) tableModel.getValueAt(selectedRowIndex, 4));
 					getClient().getUserInterface().refreshSideBars();
 				}
 			}
@@ -247,8 +269,9 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			return;
 		}
 		int cost = findInducementCost(fTeam, pInducementType, gameOptions);
-		DropDownPanel panel = new DropDownPanel(dimensionProvider(), pInducementType, maxCount, pInducementType.getDescription(), cost, this,
-			getAvailableGold());
+		DropDownPanel panel =
+			new DropDownPanel(dimensionProvider(), pInducementType, maxCount, pInducementType.getDescription(), cost, this,
+				getAvailableGold());
 		pAddToPanel.add(panel);
 		if (pVertStrut > 0) {
 			pAddToPanel.add(Box.createVerticalStrut(pVertStrut));
@@ -372,7 +395,8 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		List<Skill> mercenarySkills = new ArrayList<>();
 		for (int i = 0; i < fTableModelMercenaries.getRowCount(); i++) {
 			if ((Boolean) fTableModelMercenaries.getValueAt(i, 0)) {
-				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL).forName((String) fTableModelMercenaries.getValueAt(i, 4));
+				Skill mercenarySkill = getClient().getGame().getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL)
+					.forName((String) fTableModelMercenaries.getValueAt(i, 4));
 				mercenarySkills.add(mercenarySkill);
 			}
 		}
@@ -417,10 +441,13 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		});
 		return indSet;
 	}
+
 	protected abstract void updateGoldValue();
+
 	public String getTeamId() {
 		return fTeamId;
 	}
+
 	public Team getTeam() {
 		return fTeam;
 	}

@@ -25,7 +25,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportRaiseDead;
 import com.fumbbl.ffb.report.ReportRegenerationRoll;
-import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRoll;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;

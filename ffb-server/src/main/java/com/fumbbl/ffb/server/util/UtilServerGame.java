@@ -29,7 +29,7 @@ import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportMasterChefRoll;
 import com.fumbbl.ffb.report.ReportPlayerAction;
 import com.fumbbl.ffb.report.ReportStartHalf;
-import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
+import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.report.bb2020.ReportTwoForOne;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;

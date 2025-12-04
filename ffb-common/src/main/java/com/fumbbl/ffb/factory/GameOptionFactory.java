@@ -115,6 +115,9 @@ public class GameOptionFactory {
 					.setMessage("Bribes for reduced price can be purchased for $1 gps each.");
 			case INDUCEMENT_BRIBES_MAX:
 				return new GameOptionInt(pOptionId).setDefault(3).setMessage("Coaches may purchase up to $1 bribe(s).");
+			case INDUCEMENT_BRIBES_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(6).setMessage("Coaches may purchase up to $1 bribe(s) for " +
+					"reduced costs.");
 			case INDUCEMENT_CHEFS_COST:
 				return new GameOptionInt(pOptionId).setDefault(300000)
 					.setMessage("Halfling Master Chefs can be purchased for $1 gps each.");
@@ -124,6 +127,9 @@ public class GameOptionFactory {
 			case INDUCEMENT_CHEFS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1)
 					.setMessage("Coaches may purchase up to $1 Halfling Master Chef(s).");
+			case INDUCEMENT_CHEFS_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Halfling Master Chef(s) for reduced costs.");
 			case INDUCEMENT_IGORS_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Igors can be purchased for $1 gps each.");
 			case INDUCEMENT_IGORS_MAX:
@@ -292,6 +298,9 @@ public class GameOptionFactory {
 			case INDUCEMENT_BIASED_REF_COST:
 				return new GameOptionInt(pOptionId).setDefault(120000)
 					.setMessage("Biased Refs can be hired for $1 gps each.");
+			case INDUCEMENT_BIASED_REF_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Biased Refs for reduced " +
+					"costs.");
 			case INDUCEMENT_BIASED_REF_REDUCED_COST:
 				return new GameOptionInt(pOptionId).setDefault(80000)
 					.setMessage("Biased Ref for reduced price can be purchased for $1 gps each.");

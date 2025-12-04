@@ -10,6 +10,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
@@ -17,8 +18,10 @@ import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +29,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.inducement.Usage.GAME_MODIFICATION;
+import static com.fumbbl.ffb.inducement.Usage.LONER;
+import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
+import static com.fumbbl.ffb.inducement.Usage.STAFF;
+import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
@@ -146,13 +155,15 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean touchdownEndsGame(Game game) {
-		return game.getHalf() == 3 && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
+		return game.getHalf() == 3 &&
+			((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
 	}
 
 	@Override
 	public RosterPosition riotousRookiesPosition(Roster roster) {
-		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
-			.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
+		List<RosterPosition> rosterPositions =
+			Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
+				.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
 		if (rosterPositions.isEmpty()) {
 			return null;
 		}
@@ -162,10 +173,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isLegalConcession(Game game, Team team) {
-		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
-			.map(player -> game.getFieldModel().getPlayerState(player))
-			.filter(PlayerState::canBeSetUpNextDrive)
-			.count() <= 3;
+		return game.getTurnMode() == TurnMode.SETUP &&
+			Arrays.stream(team.getPlayers()).map(player -> game.getFieldModel().getPlayerState(player))
+				.filter(PlayerState::canBeSetUpNextDrive).count() <= 3;
 	}
 
 	@Override
@@ -198,7 +208,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 		switch (weather) {
 			case SWELTERING_HEAT:
-				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next kick-off.";
+				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next " +
+					"kick-off.";
 			case VERY_SUNNY:
 				return "A -1 modifier applies to all passing rolls.";
 			case NICE:
@@ -215,7 +226,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
+		return new HashSet<Class<? extends Skill>>() {{
+			add(WisdomOfTheWhiteDwarf.class);
+		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -231,5 +244,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean allowMovementInEndZone() {
 		return false;
+	}
+
+	@Override
+	public Set<Usage> explicitlySelectedInducements() {
+		return new HashSet<Usage>() {{
+			add(LONER);
+			add(STAR);
+			add(GAME_MODIFICATION);
+			add(STAFF);
+			add(REROLL_ONES_ON_KOS);
+		}};
 	}
 }

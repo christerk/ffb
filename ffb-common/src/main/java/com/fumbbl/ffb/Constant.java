@@ -8,10 +8,9 @@ import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.skill.common.Dauntless;
 import com.fumbbl.ffb.skill.bb2020.BreakTackle;
-import com.fumbbl.ffb.skill.bb2020.MightyBlow;
+import com.fumbbl.ffb.skill.mixed.MightyBlow;
 import com.fumbbl.ffb.skill.mixed.SureFeet;
-import com.fumbbl.ffb.skill.bb2020.special.BalefulHex;
-import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
+import com.fumbbl.ffb.skill.mixed.special.BalefulHex;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,16 +39,9 @@ public class Constant {
 		add(new SkillClassWithValue(SureFeet.class));
 	}};
 
-	public static Set<String> getEnhancementSkillsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return new HashSet<Class<? extends Skill>>() {{
-			add(WisdomOfTheWhiteDwarf.class);
-		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
-	}
-
 	public static Set<String> getEnhancementSkillsToRemoveAtEndOfTurnWhenNotSettingActive(SkillFactory skillFactory) {
 		return new HashSet<Class<? extends Skill>>() {{
 			add(BalefulHex.class);
 		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
 	}
-
 }

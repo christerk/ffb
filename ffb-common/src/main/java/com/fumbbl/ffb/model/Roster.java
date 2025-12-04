@@ -376,9 +376,7 @@ public class Roster implements IXmlSerializable, IJsonSerializable {
 			}
 		}
 
-
 		return this;
-
 	}
 
 }
