@@ -41,7 +41,7 @@ public class SidestepBehaviour extends SkillBehaviour<Sidestep> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Skill cancellingSkill = null;
-				if (state.defender.getId().equals(game.getDefenderId())) {
+				if (state.defender.getTeam() != actingPlayer.getPlayer().getTeam()) {
 					cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
 				}
 				boolean attackerHasConflictingSkill = cancellingSkill != null && cancellingSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
