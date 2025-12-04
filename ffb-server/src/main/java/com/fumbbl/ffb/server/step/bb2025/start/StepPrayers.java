@@ -116,9 +116,6 @@ public class StepPrayers extends AbstractStep {
 	private void addPrayerSequences(Sequence sequence, Team team, int prayerAmount, List<Integer> availablePrayerRolls) {
 		while (prayerAmount-- > 0) {
 			Collections.shuffle(availablePrayerRolls);
-			Collections.sort(availablePrayerRolls);
-			availablePrayerRolls.remove(8);
-			availablePrayerRolls.add(0, 9);
 			int roll = availablePrayerRolls.remove(0);
 			sequence.add(StepId.PRAYER,
 				StepParameter.from(StepParameterKey.PRAYER_ROLL, roll),

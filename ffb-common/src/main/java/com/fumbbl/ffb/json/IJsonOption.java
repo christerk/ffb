@@ -103,6 +103,7 @@ public interface IJsonOption {
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
 	JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");
+	JsonIntOption CATCHES_WITH_ADDITIONAL_SPP = new JsonIntOption("catchesWithAdditionalSpp");
 	JsonStringOption CHALLENGE = new JsonStringOption("challenge");
 	JsonBooleanOption CHANGE_TO_MOVE = new JsonBooleanOption("changeToMove");
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");

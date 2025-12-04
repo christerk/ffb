@@ -374,6 +374,9 @@ public class ModelChangeProcessor {
 			case PLAYER_RESULT_SET_CASUALTIES:
 				getPlayerResult(pGame, pModelChange.getKey()).setCasualties((Integer) pModelChange.getValue());
 				return true;
+			case PLAYER_RESULT_SET_CATCHES_WITH_ADDITIONAL_SPP:
+				getPlayerResult(pGame, pModelChange.getKey()).setCatchesWithAdditionalSpp((Integer) pModelChange.getValue());
+				return true;
 			case PLAYER_RESULT_SET_CASUALTIES_WITH_ADDITIONAL_SPP:
 				getPlayerResult(pGame, pModelChange.getKey()).setCasualtiesWithAdditionalSpp((Integer) pModelChange.getValue());
 				return true;

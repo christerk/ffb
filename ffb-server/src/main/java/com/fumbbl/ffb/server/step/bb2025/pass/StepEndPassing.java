@@ -198,6 +198,10 @@ public final class StepEndPassing extends AbstractStep {
 		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
 		FieldCoordinate endCoordinate =  game.getFieldModel().getPlayerCoordinate(catcher);
 
+		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher))) {
+			getGameState().getPrayerState().addCatch(game.getGameResult().getPlayerResult(catcher));
+		}
+
 		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher) || ballWasSnatched)
 			&& game.getThrower().getTeam().hasPlayer(catcher)
 			&& endCoordinate.equals(game.getPassCoordinate())

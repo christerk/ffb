@@ -1,10 +1,11 @@
-package com.fumbbl.ffb.modifiers.bb2020;
+package com.fumbbl.ffb.modifiers.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class DodgeModifierCollection extends com.fumbbl.ffb.modifiers.DodgeModifierCollection {
 	public DodgeModifierCollection() {
 		add(new DodgeModifier("1 Prehensile Tail", "1 for being marked with Prehensile Tail", 1, 1, ModifierType.PREHENSILE_TAIL, false));

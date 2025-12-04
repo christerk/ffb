@@ -210,25 +210,11 @@ public class DialogGameStatistics extends Dialog {
 		StringBuilder fanFactorHome = new StringBuilder();
 		fanFactorHome.append(gameMechanic.fans(game.getTeamHome()));
 		int fanModifierHome = gameMechanic.fanModification(gameResult.getTeamResultHome());
-		if (fanModifierHome > 0) {
-			fanFactorHome.append(" + ").append(fanModifierHome);
-		}
-		if (fanModifierHome < 0) {
-			fanFactorHome.append(" - ").append(Math.abs(fanModifierHome));
-		}
-		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen).append(fanFactorHome)
-			.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		appendFanModifier(statistics, fanFactorHome, fanModifierHome, fontRedBoldOpen);
 		StringBuilder fanFactorAway = new StringBuilder();
 		fanFactorAway.append(gameMechanic.fans(game.getTeamAway()));
 		int fanModifierAway = gameMechanic.fanModification(gameResult.getTeamResultAway());
-		if (fanModifierAway > 0) {
-			fanFactorAway.append(" + ").append(fanModifierAway);
-		}
-		if (fanModifierAway < 0) {
-			fanFactorAway.append(" - ").append(Math.abs(fanModifierAway));
-		}
-		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen).append(fanFactorAway)
-			.append(_FONT_BOLD_CLOSE).append("</td>\n");
+		appendFanModifier(statistics, fanFactorAway, fanModifierAway, fontBlueBoldOpen);
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
 		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Assistant Coaches")
@@ -281,6 +267,17 @@ public class DialogGameStatistics extends Dialog {
 
 	}
 
+	private void appendFanModifier(StringBuilder statistics, StringBuilder fanFactor, int fanModifier, String fontBlueBoldOpen) {
+		if (fanModifier > 0) {
+			fanFactor.append(" + ").append(fanModifier);
+		}
+		if (fanModifier < 0) {
+			fanFactor.append(" - ").append(Math.abs(fanModifier));
+		}
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen).append(fanFactor)
+			.append(_FONT_BOLD_CLOSE).append("</td>\n");
+	}
+
 	private JEditorPane createTeamEditorPane(Team pTeam) {
 
 		JEditorPane teamPane = new JEditorPane();
@@ -319,6 +316,8 @@ public class DialogGameStatistics extends Dialog {
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 			.append(fontBoldOpen).append("Cas+").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
+				.append(fontBoldOpen).append("DC").append(_FONT_BOLD_CLOSE).append("</td>\n");
+		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 			.append(fontBoldOpen).append("MVP").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_TOTAL_SPP).append("\">")
 			.append(fontBoldOpen).append("SPP").append(_FONT_BOLD_CLOSE).append("</td>\n");
@@ -355,6 +354,8 @@ public class DialogGameStatistics extends Dialog {
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 				.append(formatPlayerStat(playerResult.getCasualtiesWithAdditionalSpp())).append("</td>\n");
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
+					.append(formatPlayerStat(playerResult.getCatchesWithAdditionalSpp())).append("</td>\n");
+			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 				.append(formatPlayerStat(playerResult.getPlayerAwards())).append("</td>\n");
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_TOTAL_SPP).append("\">")
 				.append(formatPlayerStat(playerResult.totalEarnedSpps())).append("</td>\n");
@@ -370,8 +371,6 @@ public class DialogGameStatistics extends Dialog {
 		statistics.append("</html>");
 
 		teamPane.setText(statistics.toString());
-		// teamPane.setPreferredSize(new Dimension(teamPane.getPreferredSize().width +
-		// 20, 250));
 		teamPane.setCaretPosition(0);
 		return teamPane;
 

@@ -102,6 +102,7 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_INTERCEPTIONS = "interceptions";
 	private static final String _XML_TAG_CASUALTIES = "casualties";
 	private static final String _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP = "casualtiesWithAdditionalSpp";
+	private static final String _XML_TAG_CATCHES_WITH_ADDITIONAL_SPP = "catchesWithAdditionalSpp";
 	private static final String _XML_TAG_PLAYER_AWARDS = "playerAwards";
 
 	private static final String _XML_TAG_STATISTICS = "statistics";
@@ -363,6 +364,9 @@ public class FumbblResult implements IXmlWriteable {
 				}
 				if (pPlayerResult.getCasualtiesWithAdditionalSpp() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP, pPlayerResult.getCasualtiesWithAdditionalSpp());
+				}
+				if (pPlayerResult.getCatchesWithAdditionalSpp() > 0) {
+					UtilXml.addValueElement(pHandler, _XML_TAG_CATCHES_WITH_ADDITIONAL_SPP, pPlayerResult.getCatchesWithAdditionalSpp());
 				}
 				if (pPlayerResult.getPlayerAwards() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_AWARDS, pPlayerResult.getPlayerAwards());
