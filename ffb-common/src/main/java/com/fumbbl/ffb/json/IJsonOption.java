@@ -122,7 +122,7 @@ public interface IJsonOption {
 	JsonArrayOption COMMAND_ARRAY = new JsonArrayOption("commandArray");
 	JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
 	JsonIntOption COMPLETIONS = new JsonIntOption("completions");
-	JsonIntOption COMPLETIONS_WITH_ADDITONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
+	JsonIntOption COMPLETIONS_WITH_ADDITIONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
 	JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", Factory.CONCEDE_GAME_STATUS);
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
 	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");

@@ -385,7 +385,7 @@ public class PlayerResult implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
 		IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
-		IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
+		IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
 		IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
 		IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
 		IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
@@ -413,7 +413,7 @@ public class PlayerResult implements IJsonSerializable {
 		String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
 		fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);
-		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.getFrom(source, jsonObject);
+		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
 		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
 		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(source, jsonObject);
 		fCasualties = IJsonOption.CASUALTIES.getFrom(source, jsonObject);
