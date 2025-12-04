@@ -52,7 +52,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 					step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, false, SkillUse.NO_TACKLEZONE));
 					state.standingFirm.put(state.defender.getId(), false);
 				} else if ((PlayerAction.BLITZ == actingPlayer.getPlayerAction()) && cancellingSkill != null
-					&& UtilCards.hasSkill(state.defender, skill)) {
+					&& UtilCards.hasSkill(state.defender, skill) && state.defender.getTeam() != actingPlayer.getPlayer().getTeam()) {
 					state.standingFirm.put(state.defender.getId(), false);
 					step.getResult().addReport(
 						new ReportSkillUse(actingPlayer.getPlayerId(), cancellingSkill, true, SkillUse.CANCEL_STAND_FIRM));
