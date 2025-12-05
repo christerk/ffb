@@ -34,6 +34,7 @@ public interface IIconProperty {
 	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
+	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
