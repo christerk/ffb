@@ -1,68 +1,80 @@
 package com.fumbbl.ffb.model;
 
-import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
-public enum Keyword {
-	VAMPIRE_LORD("Vampire Lord"),
-	THRALL("Thrall"),
-	DWARF("Dwarf"),
-	MASTER_CHEF("master chef"),
-	UNKNOWN("unknown"),
+public final class Keyword {
+
+	private static final Map<String, Keyword> REGISTRY = new LinkedHashMap<>();
+
+	// 2020 Built-in
+	public static final Keyword VAMPIRE_LORD = registerBuiltIn("Vampire Lord");
+	public static final Keyword THRALL = registerBuiltIn("Thrall");
+	public static final Keyword DWARF = registerBuiltIn("Dwarf");
+	public static final Keyword MASTER_CHEF = registerBuiltIn("master chef");
 
 	// 2025
-	ANIMAL("Animal"),
-	BEASTMAN("Beastman"),
-	BIG_GUY("Big guy"),
-	BLITZER("Blitzer"),
-	BLOCKER("Blocker"),
-	CATCHER("Catcher"),
-	CONSTRUCT("Construct"),
-	DRYAD("Dryad"),
-	ELF("Elf"),
-	GHOUL("Ghoul"),
-	GNOME("Gnome"),
-	GNOBLAR("Gnoblar"),
-	GOBLIN("Goblin"),
-	HALFLING("Halfling"),
-	HUMAN("Human"),
-	LIZARDMAN("Lizardman"),
-	LINEMAN("Lineman"),
-	MINOTAUR("Minotaur"),
-	OGRE("Ogre"),
-	ORC("Orc"),
-	RUNNER("Runner"),
-	SKELETON("Skeleton"),
-	SKAVEN("Skaven"),
-	SKINK("Skink"),
-	SNAKEMAN("Snakeman"),
-	SNOTLING("Snotling"),
-	SPAWN("Spawn"),
-	SPECIAL("Special"),
-	SPITE("Spite"),
-	SQUIRREL("Squirrel"),
-	THROWER("Thrower"),
-	TREEMAN("Treeman"),
-	TROLL("Troll"),
-	UNDEAD("Undead"),
-	VAMPIRE("Vampire"),
-	WRAITH("Wraith"),
-	WEREWOLF("Werewolf"),
-	YHETEE("Yhetee"),
-	ZOAT("Zoat"),
-	ZOMBIE("Zombie");
+	public static final Keyword BIG_GUY = registerBuiltIn("Big guy");
+	public static final Keyword LINEMAN = registerBuiltIn("Lineman");
 
+	public static final Keyword UNKNOWN = new Keyword("unknown", false);
 
 	private final String name;
+	private final String normalized;
+	private final boolean builtIn;
 
-	Keyword(String name) {
+	private Keyword(String name, boolean builtIn) {
 		this.name = name;
+		this.normalized = normalize(name);
+		this.builtIn = builtIn;
+	}
+
+	private static Keyword registerBuiltIn(String name) {
+		Keyword keyword = new Keyword(name, true);
+		REGISTRY.put(keyword.normalized, keyword);
+		return keyword;
+	}
+
+	private static String normalize(String name) {
+		return name == null ? "" : name.trim().toLowerCase();
 	}
 
 	public static Keyword forName(String name) {
-		return Arrays.stream(values()).filter(keyword -> keyword.name.equalsIgnoreCase(name)).findFirst().orElse(UNKNOWN);
+		if (name == null || name.trim().isEmpty()) {
+			return UNKNOWN;
+		}
+		String key = normalize(name);
+		return REGISTRY.computeIfAbsent(key, k -> new Keyword(name, false));
 	}
 
 	public String getName() {
 		return name;
 	}
+
+	public boolean isBuiltIn() {
+		return builtIn;
+	}
+
+	public boolean isExternal() {
+		return !builtIn && this != UNKNOWN;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Keyword)) {
+			return false;
+		}
+		Keyword keyword = (Keyword) o;
+		return Objects.equals(normalized, keyword.normalized);
+	}
+
+	@Override
+	public int hashCode() {
+		return normalized.hashCode();
+	}
+
 }

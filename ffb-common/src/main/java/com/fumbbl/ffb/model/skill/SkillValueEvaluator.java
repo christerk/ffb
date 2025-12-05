@@ -114,7 +114,7 @@ public interface SkillValueEvaluator {
 			}
 
 			Keyword keyword = Keyword.forName(key);
-			if (keyword != Keyword.UNKNOWN) {
+			if (keyword.isBuiltIn() || keyword.isExternal()) {
 				return keyword.getName();
 			}
 
