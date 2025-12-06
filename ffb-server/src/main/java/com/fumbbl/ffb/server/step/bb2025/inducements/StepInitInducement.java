@@ -1,0 +1,198 @@
+package com.fumbbl.ffb.server.step.bb2025.inducements;
+
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogUseInducementParameter;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.inducement.InducementPhase;
+import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
+import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepException;
+import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.bb2025.ThrowARock;
+import com.fumbbl.ffb.server.step.generator.common.Wizard;
+import com.fumbbl.ffb.server.step.mixed.inducements.StepWeatherMage;
+import com.fumbbl.ffb.util.ArrayTool;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * Step to init the inducement sequence.
+ * <p>
+ * Needs to be initialized with stepParameter HOME_TEAM. Needs to be initialized
+ * with stepParameter INDUCEMENT_PHASE.
+ * <p>
+ * Sets stepParameter HOME_TEAM for all steps on the stack. Sets stepParameter
+ * INDUCEMENT_PHASE for all steps on the stack. Sets stepParameter
+ * END_INDUCEMENT_PHASE for all steps on the stack.
+ *
+ * @author Kalimar
+ */
+@RulesCollection(RulesCollection.Rules.BB2025)
+public final class StepInitInducement extends AbstractStep {
+
+	private InducementPhase fInducementPhase;
+	private boolean fHomeTeam;
+	private InducementType fInducementType;
+
+	private transient boolean fEndInducementPhase;
+	private transient boolean fTouchdownOrEndOfHalf;
+
+	public StepInitInducement(GameState pGameState) {
+		super(pGameState);
+	}
+
+	public StepId getId() {
+		return StepId.INIT_INDUCEMENT;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+					// mandatory
+					case INDUCEMENT_PHASE:
+						fInducementPhase = (InducementPhase) parameter.getValue();
+						break;
+					// mandatory
+					case HOME_TEAM:
+						fHomeTeam = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		if (fInducementPhase == null) {
+			throw new StepException("StepParameter " + StepParameterKey.INDUCEMENT_PHASE + " is not initialized.");
+		}
+	}
+
+	@Override
+	public void start() {
+		super.start();
+		executeStep();
+	}
+
+	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_INDUCEMENT) {
+				ClientCommandUseInducement useInducementCommand = (ClientCommandUseInducement) pReceivedCommand.getCommand();
+				fInducementType = useInducementCommand.getInducementType();
+				fEndInducementPhase = fInducementType == null;
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			}
+		}
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+		return commandStatus;
+	}
+
+	private void executeStep() {
+		Game game = getGameState().getGame();
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		if (fEndInducementPhase) {
+			leaveStep(true);
+		} else if (fInducementType == null) {
+			fTouchdownOrEndOfHalf = UtilServerSteps.checkTouchdown(getGameState());
+			InducementType[] useableInducements = findUseableInducements();
+			if (ArrayTool.isProvided(useableInducements)) {
+				String teamId = fHomeTeam ? game.getTeamHome().getId() : game.getTeamAway().getId();
+				game.setDialogParameter(new DialogUseInducementParameter(teamId, useableInducements));
+			} else {
+				leaveStep(true);
+			}
+		} else if (fInducementType.hasUsage(Usage.SPELL)) {
+			((Wizard) factory.forName(SequenceGenerator.Type.Wizard.name()))
+				.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+			leaveStep(false);
+		} else if (fInducementType.hasUsage(Usage.CHANGE_WEATHER)) {
+			getGameState().getStepStack().push(new StepWeatherMage(getGameState()));
+			leaveStep(false);
+		} else if (fInducementType.hasUsage(Usage.THROW_ROCK)) {
+			((ThrowARock) factory.forName(SequenceGenerator.Type.ThrowARock.name()))
+				.pushSequence(new ThrowARock.SequenceParams(getGameState(), fHomeTeam));
+			leaveStep(false);
+		} else {
+			leaveStep(true);
+		}
+	}
+
+	private void leaveStep(boolean pEndInducementPhase) {
+		publishParameter(new StepParameter(StepParameterKey.END_INDUCEMENT_PHASE, pEndInducementPhase));
+		publishParameter(new StepParameter(StepParameterKey.HOME_TEAM, fHomeTeam));
+		publishParameter(new StepParameter(StepParameterKey.INDUCEMENT_PHASE, fInducementPhase));
+		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	private InducementType[] findUseableInducements() {
+		Set<InducementType> useableInducements = new HashSet<>();
+		Game game = getGameState().getGame();
+		TurnData turnData = fHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
+		if ((InducementPhase.END_OF_OWN_TURN == fInducementPhase || InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase) && !fTouchdownOrEndOfHalf) {
+			Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
+				.filter(type -> (type.hasUsage(Usage.SPELL) || type.hasUsage(Usage.THROW_ROCK)) && turnData.getInducementSet().hasUsesLeft(type))
+				.collect(Collectors.toSet());
+			game.setTurnMode(TurnMode.BETWEEN_TURNS);
+			useableInducements.addAll(availableTypes);
+			if (InducementPhase.END_OF_OPPONENT_TURN == fInducementPhase && fHomeTeam != game.isHomePlaying()) {
+				game.setHomePlaying(!game.isHomePlaying());
+			}
+		} else if (InducementPhase.START_OF_OWN_TURN == fInducementPhase) {
+			Set<InducementType> availableTypes = turnData.getInducementSet().getInducementTypes().stream()
+				.filter(type -> type.hasUsage(Usage.CHANGE_WEATHER) && turnData.getInducementSet().hasUsesLeft(type))
+				.collect(Collectors.toSet());
+			useableInducements.addAll(availableTypes);
+		}
+		return useableInducements.toArray(new InducementType[0]);
+	}
+
+
+	// JSON serialization
+
+	@Override
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.INDUCEMENT_PHASE.addTo(jsonObject, fInducementPhase);
+		IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
+		IServerJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, fInducementType);
+		return jsonObject;
+	}
+
+	@Override
+	public StepInitInducement initFrom(IFactorySource source, JsonValue jsonValue) {
+		super.initFrom(source, jsonValue);
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		fInducementPhase = (InducementPhase) IServerJsonOption.INDUCEMENT_PHASE.getFrom(source, jsonObject);
+		fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(source, jsonObject);
+		fInducementType = (InducementType) IServerJsonOption.INDUCEMENT_TYPE.getFrom(source, jsonObject);
+		return this;
+	}
+
+}

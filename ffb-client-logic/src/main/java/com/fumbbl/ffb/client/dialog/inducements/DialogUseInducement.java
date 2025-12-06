@@ -13,13 +13,8 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -37,7 +32,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard, weatherMageButton;
+	private JButton fButtonWizard, weatherMageButton, throwARockButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -124,6 +119,25 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		}
 
+		if (inducementSet.stream().anyMatch(type -> type.hasUsage(Usage.THROW_ROCK))) {
+
+			JPanel panelWizard = new JPanel();
+			panelWizard.setLayout(new BoxLayout(panelWizard, BoxLayout.X_AXIS));
+			String buttonText = "<html>" +
+				"<b>Throw A Rock</b>" +
+				"<br>Throw rock at random player (4+ to hit)" +
+				"</html>";
+			throwARockButton = new JButton(dimensionProvider(), buttonText);
+			throwARockButton.setHorizontalAlignment(SwingConstants.LEFT);
+			throwARockButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+			throwARockButton.addActionListener(this);
+			panelWizard.add(throwARockButton);
+
+			panelMain.add(panelWizard);
+			panelMain.add(Box.createVerticalStrut(5));
+
+		}
+		
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
 		fButtonContinue = new JButton(dimensionProvider(), "Continue");
@@ -150,12 +164,13 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	public void actionPerformed(ActionEvent pActionEvent) {
 		fInducement = null;
 		if (pActionEvent.getSource() == fButtonWizard) {
-			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.hasUsage(Usage.SPELL)).findFirst().orElse(null);
+			fInducement = getInducementByType(Usage.SPELL);
 		}
 		if (pActionEvent.getSource() == weatherMageButton) {
-			fInducement = ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-				.allTypes().stream().filter(type -> type.hasUsage(Usage.CHANGE_WEATHER)).findFirst().orElse(null);
+			fInducement = getInducementByType(Usage.CHANGE_WEATHER);
+		}
+		if (pActionEvent.getSource() == throwARockButton) {
+			fInducement = getInducementByType(Usage.THROW_ROCK);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {
@@ -171,6 +186,11 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
 		}
+	}
+
+	private InducementType getInducementByType(Usage spell) {
+		  return ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+			.allTypes().stream().filter(type -> type.hasUsage(spell)).findFirst().orElse(null);
 	}
 
 	public InducementType getInducement() {

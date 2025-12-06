@@ -15,16 +15,16 @@ public enum PlayerGender implements INamedObject {
 		singular, plural
 	}
 
-	private String name;
-	private String typeString;
-	private String nominative;
-	private String genitive;
-	private String dative;
-	private String self;
-	private VerbForm verbForm;
+	private final String name;
+	private final String typeString;
+	private final String nominative;
+	private final String genitive;
+	private final String dative;
+	private final String self;
+	private final VerbForm verbForm;
 
-	private PlayerGender(String pName, String pTypeString, String pNominative, String pGenitive, String pDative,
-			String pSelf, VerbForm verbForm) {
+	PlayerGender(String pName, String pTypeString, String pNominative, String pGenitive, String pDative,
+							 String pSelf, VerbForm verbForm) {
 		this.name = pName;
 		this.typeString = pTypeString;
 		this.nominative = pNominative;
