@@ -1,20 +1,16 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2025;
 
-import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
-import com.fumbbl.ffb.mechanics.AgilityMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportHypnoticGazeRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.HYPNOTIC_GAZE_ROLL)
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class HypnoticGazeRollMessage extends ReportMessageBase<ReportHypnoticGazeRoll> {
 
@@ -54,8 +50,6 @@ public class HypnoticGazeRollMessage extends ReportMessageBase<ReportHypnoticGaz
 			}
 		}
 		if (neededRoll != null) {
-			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-			neededRoll.append(mechanic.formatHypnoticGazeResult(report, player));
 			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 		}
 	}

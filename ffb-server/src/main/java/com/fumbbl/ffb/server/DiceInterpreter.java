@@ -183,6 +183,10 @@ public class DiceInterpreter {
 		return 4;
 	}
 
+	public int minimumRollHypnoticGaze() {
+		return 3;
+	}	
+
 	public int interpretFanFactorRoll(int[] pFanFactorRoll, int pFanFactor, int pScoreDiff) {
 		int fanFactorModifier = 0;
 		int fanFactorTotal = 0;
