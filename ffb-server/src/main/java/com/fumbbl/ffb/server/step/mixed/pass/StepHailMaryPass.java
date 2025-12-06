@@ -31,6 +31,7 @@ import com.fumbbl.ffb.util.StringTool;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepHailMaryPass extends AbstractStepWithReRoll {
 
 	private final StepState state;

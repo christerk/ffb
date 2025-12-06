@@ -175,6 +175,7 @@ public enum StepId implements INamedObject {
 	TENTACLES("tentacles"), // action.move
 	TEST("test"), // test
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
+	THROW_A_ROCK("throwARock"), // prayer
 	THROW_KEG("throwKeg"), // action.special
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common

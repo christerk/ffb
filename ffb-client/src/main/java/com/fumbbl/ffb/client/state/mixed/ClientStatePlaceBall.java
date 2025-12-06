@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.bb2020;
+package com.fumbbl.ffb.client.state.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStatePlaceBall extends ClientStateAwt<PlaceBallLogicModule> {
 
 	public ClientStatePlaceBall(FantasyFootballClientAwt pClient) {

@@ -103,6 +103,7 @@ public interface IJsonOption {
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
 	JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");
+	JsonIntOption CATCHES_WITH_ADDITIONAL_SPP = new JsonIntOption("catchesWithAdditionalSpp");
 	JsonStringOption CHALLENGE = new JsonStringOption("challenge");
 	JsonBooleanOption CHANGE_TO_MOVE = new JsonBooleanOption("changeToMove");
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");
@@ -122,7 +123,7 @@ public interface IJsonOption {
 	JsonArrayOption COMMAND_ARRAY = new JsonArrayOption("commandArray");
 	JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
 	JsonIntOption COMPLETIONS = new JsonIntOption("completions");
-	JsonIntOption COMPLETIONS_WITH_ADDITONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
+	JsonIntOption COMPLETIONS_WITH_ADDITIONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
 	JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", Factory.CONCEDE_GAME_STATUS);
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
 	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");

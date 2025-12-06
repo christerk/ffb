@@ -135,6 +135,8 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_BLESSED_STATUE_OF_NUFFLE, dimensionProvider.isPitchPortrait());
 			case BREATHE_FIRE:
 				return AnimationSequenceMovingEffect.createAnimationSequenceBreatheFire(pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), dimensionProvider);
+			case PRAYER_DAZZLING_CATCHING:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_DAZZLING_CATCHING, dimensionProvider.isPitchPortrait());
 			default:
 				return null;
 		}

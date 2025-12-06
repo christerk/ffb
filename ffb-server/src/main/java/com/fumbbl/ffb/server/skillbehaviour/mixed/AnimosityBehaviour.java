@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.bb2020;
+package com.fumbbl.ffb.server.skillbehaviour.mixed;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -19,6 +19,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.Animosity;
 
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 	public AnimosityBehaviour() {
 		super();

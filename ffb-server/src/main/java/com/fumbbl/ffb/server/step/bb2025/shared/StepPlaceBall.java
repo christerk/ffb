@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -42,7 +42,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPlaceBall extends AbstractStep {
 
@@ -201,6 +200,7 @@ public class StepPlaceBall extends AbstractStep {
 	}
 
 	private void leave(Game game) {
+		game.getFieldModel().clearMoveSquares();
 		publishParameter(StepParameter.from(StepParameterKey.DROPPED_BALL_CARRIER, null));
 		if (!ballCarrierTeamTurn) {
 			game.setHomePlaying(!game.isHomePlaying());

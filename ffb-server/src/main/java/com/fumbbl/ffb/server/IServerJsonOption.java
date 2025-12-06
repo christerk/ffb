@@ -82,6 +82,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
     JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
     JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
+    JsonStringArrayOption GET_ADDITIONAL_CATCHES_SPP = new JsonStringArrayOption("getAdditionalCatchesSpp");
     JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");
     JsonIntOption GOLD_USED_AWAY = new JsonIntOption("goldUsedAway");
     JsonIntOption GOLD_USED_HOME = new JsonIntOption("goldUsedHome");

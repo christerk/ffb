@@ -29,6 +29,10 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		super();
 	}
 
+	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes) {
+		this(pTeamId, pInducementTypes, new Card[0]);
+	}
+
 	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes, Card[] pCards) {
 		fTeamId = pTeamId;
 		fInducementTypes = pInducementTypes;

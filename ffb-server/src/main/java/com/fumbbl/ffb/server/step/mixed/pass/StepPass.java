@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.pass;
+package com.fumbbl.ffb.server.step.mixed.pass;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -68,6 +68,7 @@ import static com.fumbbl.ffb.server.step.StepParameter.from;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPass extends AbstractStepWithReRoll {
 
 	public StepPass(GameState pGameState) {

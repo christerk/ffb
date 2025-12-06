@@ -106,6 +106,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			}
 		});
 
+		add(new InducementType("throwARock", "Throw A Rock", "Throw A Rock", "Throw A Rock", GameOptionId.INDUCEMENT_DUMMY, GameOptionId.INDUCEMENT_DUMMY, Usage.THROW_ROCK));
+
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,
 			GameOptionId.INDUCEMENT_CHEFS_REDUCED_COST, true, GameOptionId.INDUCEMENT_CHEFS_REDUCED_MAX,

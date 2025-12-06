@@ -353,6 +353,7 @@ public interface IIconProperty {
 	String ANIMATION_PRAYER_STILETTO = "animation.prayer.stiletto";
 	String ANIMATION_PRAYER_THROW_A_ROCK = "animation.prayer.throw.a.rock";
 	String ANIMATION_PRAYER_UNDER_SCRUTINY = "animation.prayer.under.scrutiny";
+	String ANIMATION_PRAYER_DAZZLING_CATCHING = "animation.prayer.dazzling.catching";
 
 	// Augments
 	String AUGMENTS_SWEET_WHITE = "augments.sweet.white";
