@@ -63,7 +63,7 @@ public class DialogChangeList extends Dialog {
 			.collect(Collectors.joining());
 
 		String info = "<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
-			"<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:" + dimensionProvider.scale(10) + "px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
+			"<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:" + dimensionProvider.scale(10) + "px\">Unless stated otherwise the changes apply to 2025 rules.</div>";
 
 		contentPane.setText("<div style=\"padding:" + dimensionProvider.scale(10) + "px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
