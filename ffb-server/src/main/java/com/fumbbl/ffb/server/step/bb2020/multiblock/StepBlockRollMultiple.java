@@ -179,7 +179,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			state.blockRolls.forEach(roll -> {
 
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
-				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), false).getLeft();
+				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(getGameState(), actingPlayer.getPlayer(), defender, true, roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), false).getLeft();
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer, singleDieReRollSource);

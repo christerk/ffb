@@ -212,7 +212,7 @@ public class StepEndMoving extends AbstractStep {
 			) {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				if (playerAction != null && playerAction.isBlitzMove()) {
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 				} else {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));

@@ -122,7 +122,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 							state.defenderPosition = state.coordinateFrom;
 						}
 						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isJumping());
-						ServerUtilBlock.updateDiceDecorations(game);
+						ServerUtilBlock.updateDiceDecorations(step.getGameState());
 						step.publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
 					}
 				}

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -595,6 +596,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public boolean playingTeamHasActingPLayer() {
 		return getActingTeam().hasPlayer(fActingPlayer.getPlayer());
+	}
+
+	public Set<String> getMultiBlockTargets() {
+		return getFieldModel().getMultiBlockTargets();
 	}
 
 	// transformation

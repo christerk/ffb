@@ -244,7 +244,7 @@ public class StepRaidingParty extends AbstractStep {
 			}
 		}
 		UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
-		ServerUtilBlock.updateDiceDecorations(game);
+		ServerUtilBlock.updateDiceDecorations(getGameState());
 	}
 
 	private void prepareClientData(Game game, List<FieldCoordinate> eligibleSquares) {

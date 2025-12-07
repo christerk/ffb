@@ -6,6 +6,5 @@
 # season 3
 
 ## Kick-Off
-- 6 Cheering Fans CHANGED
 - 10 Charge CHANGED
 - 11 Dodgy Snack CHANGED

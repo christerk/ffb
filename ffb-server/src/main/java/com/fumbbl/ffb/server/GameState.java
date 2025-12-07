@@ -350,6 +350,18 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 	}
 
+	public void setTeamIdsAdditionalAssist(Set<String> teamIdsAdditionalAssist) {
+		activeEffects.setTeamIdsAdditionalAssist(teamIdsAdditionalAssist);
+	}
+
+	public boolean hasAdditionalAssist(String teamId) {
+		return activeEffects.getTeamIdsAdditionalAssist().contains(teamId);
+	}
+
+	public void removeAdditionalAssist(String teamId) {
+		activeEffects.removeAdditionalAssist(teamId);
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {

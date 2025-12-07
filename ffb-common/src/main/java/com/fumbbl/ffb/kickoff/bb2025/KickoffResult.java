@@ -4,14 +4,9 @@ public enum KickoffResult implements com.fumbbl.ffb.kickoff.KickoffResult {
 
 	GET_THE_REF("Get the Ref", "Each coach receives a free bribe."),
 	TIME_OUT("Time-out", "Turn marker moves back by one if kicking team is on turn 6, 7 or 8 or forward otherwise."),
-	SOLID_DEFENCE("Solid Defence", "The kicking team may reorganize D3+3 of its players."),
+	SOLID_DEFENCE("Solid Defence", "The kicking team may setup D3+3 of its players again."),
 	HIGH_KICK("High Kick", "A player on the receiving team may try to catch the ball directly."),
-	CHEERING_FANS("Cheering Fans", "The team with the most enthusiastic fans gains a Prayer to Nuffle.") {
-		@Override
-		public boolean isFanReRoll() {
-			return true;
-		}
-	},
+	CHEERING_FANS("Cheering Fans", "The team with the most enthusiastic fans gains an additonal offensive assist on their next block."),
 	WEATHER_CHANGE("Weather Change", "The weather changes suddenly."),
 	BRILLIANT_COACHING("Brilliant Coaching", "The team with the best coaching gains a re-roll.") {
 		@Override

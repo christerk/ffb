@@ -953,7 +953,11 @@ public class FieldModel implements IJsonSerializable {
 	public boolean isOutOfBounds() {
 		return outOfBounds;
 	}
-	
+
+	public Set<String> getMultiBlockTargets() {
+		return multiBlockTargets;
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {

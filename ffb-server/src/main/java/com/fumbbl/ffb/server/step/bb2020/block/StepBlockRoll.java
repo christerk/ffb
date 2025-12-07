@@ -192,7 +192,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						addDieSkill = targetSelectionState.getUsedSkills().stream()
 							.filter(skill -> skill.hasSkillProperty(NamedProperties.canAddBlockDie)).findFirst();
 					}
-					Pair<Integer, Boolean> dieCountWithAddInfo = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
+					Pair<Integer, Boolean> dieCountWithAddInfo = ServerUtilBlock.findNrOfBlockDice(getGameState(), actingPlayer.getPlayer(),
 						game.getDefender(), false, successfulDauntless, doubleTargetStrength, addDieSkill.isPresent());
 					fNrOfDice = dieCountWithAddInfo.getLeft();
 					if (addDieSkill.isPresent() && dieCountWithAddInfo.getRight()) {

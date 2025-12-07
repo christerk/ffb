@@ -17,7 +17,6 @@ import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
-import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
@@ -36,7 +35,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
-import com.fumbbl.ffb.report.mixed.ReportCheeringFans;
+import com.fumbbl.ffb.report.bb2025.ReportCheeringFans;
 import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.mixed.ReportKickoffOfficiousRef;
 import com.fumbbl.ffb.report.mixed.ReportKickoffPitchInvasion;
@@ -74,7 +73,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -469,47 +467,19 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		totalAway +=
 			game.getTeamAway().getCheerleaders() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_CHEERLEADER);
 
-		InducementSet inducementsHome = game.getTurnDataHome().getInducementSet();
-		InducementSet inducementsAway = game.getTurnDataAway().getInducementSet();
-
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_CHEERING_FANS));
 
-		PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
-		Sequence sequence = new Sequence(getGameState());
-
-		String teamId = null;
-		boolean homeGainsPrayer = (totalHome > totalAway);
-		boolean prayerAvailable = false;
-		if (homeGainsPrayer) {
-			teamId = game.getTeamHome().getId();
-			List<Integer> availablePrayerRolls = prayerFactory.availablePrayerRolls(inducementsHome, inducementsAway);
-			prayerAvailable = !availablePrayerRolls.isEmpty();
-			if (prayerAvailable) {
-				Collections.shuffle(availablePrayerRolls);
-				int roll = availablePrayerRolls.remove(0);
-				sequence.add(StepId.PRAYER,
-					StepParameter.from(StepParameterKey.PRAYER_ROLL, roll),
-					StepParameter.from(StepParameterKey.TEAM_ID, teamId));
-			}
+		Set<String> teamIds = new HashSet<>();
+		if (totalHome >= totalAway) {
+			teamIds.add(game.getTeamHome().getId());
 		}
 
-		boolean awayGainsPrayer = (totalAway > totalHome);
-		if (awayGainsPrayer) {
-			teamId = game.getTeamAway().getId();
-			List<Integer> availablePrayerRolls = prayerFactory.availablePrayerRolls(inducementsAway, inducementsHome);
-			prayerAvailable = !availablePrayerRolls.isEmpty();
-			if (prayerAvailable) {
-				Collections.shuffle(availablePrayerRolls);
-				int roll = availablePrayerRolls.remove(0);
-				sequence.add(StepId.PRAYER,
-					StepParameter.from(StepParameterKey.PRAYER_ROLL, roll),
-					StepParameter.from(StepParameterKey.TEAM_ID, teamId));
-			}
+		if (totalAway >= totalHome) {
+			teamIds.add(game.getTeamAway().getId());
 		}
 
-		getGameState().getStepStack().push(sequence.getSequence());
-
-		getResult().addReport(new ReportCheeringFans(teamId, prayerAvailable, rollHome, rollAway));
+		getGameState().setTeamIdsAdditionalAssist(teamIds);
+		getResult().addReport(new ReportCheeringFans(teamIds, rollHome, rollAway));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 	}

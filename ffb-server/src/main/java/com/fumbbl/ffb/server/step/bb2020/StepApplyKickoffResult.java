@@ -34,7 +34,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
-import com.fumbbl.ffb.report.mixed.ReportCheeringFans;
+import com.fumbbl.ffb.report.bb2020.ReportCheeringFans;
 import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.mixed.ReportKickoffOfficiousRef;
 import com.fumbbl.ffb.report.mixed.ReportKickoffPitchInvasion;
