@@ -79,7 +79,7 @@ public class DialogChangeList extends Dialog {
 		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider.scale(18)).append("px\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
 
 		if (list.hasDescription()) {
-			builder.append("div style=\"font-size:").append(dimensionProvider.scale(11)).append("px\">").append(list.getDescription()).append("</div>");
+			builder.append("<div style=\"font-size:").append(dimensionProvider.scale(11)).append("px\">").append(list.getDescription()).append("</div>");
 		}
 
 		if (list.hasBehaviorChanges()) {
