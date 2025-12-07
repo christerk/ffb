@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.TextStyle;
@@ -9,7 +9,6 @@ import com.fumbbl.ffb.report.mixed.ReportSolidDefenceRoll;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 @ReportMessageType(ReportId.SOLID_DEFENCE_ROLL)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class SolidDefenceRollMessage extends ReportMessageBase<ReportSolidDefenceRoll> {
 	@Override
 	protected void render(ReportSolidDefenceRoll report) {

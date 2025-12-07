@@ -7,12 +7,14 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
 import com.fumbbl.ffb.factory.PrayerFactory;
@@ -20,7 +22,6 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2025.KickoffResult;
-import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
@@ -31,15 +32,16 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
-import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsCount;
-import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.report.mixed.ReportCheeringFans;
 import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
 import com.fumbbl.ffb.report.mixed.ReportKickoffOfficiousRef;
 import com.fumbbl.ffb.report.mixed.ReportKickoffPitchInvasion;
+import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsCount;
+import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.report.mixed.ReportKickoffTimeout;
 import com.fumbbl.ffb.report.mixed.ReportOfficiousRefRoll;
 import com.fumbbl.ffb.report.mixed.ReportQuickSnapRoll;
@@ -67,6 +69,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
@@ -94,6 +97,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	private int nrOfPlayersAllowed, nrOfMovedPlayers;
 	private String movedPlayer;
 	private FieldCoordinate toCoordinate;
+	private final List<Player<?>> selectedPlayers = new ArrayList<>();
+	private final List<Player<?>> eligiblePlayers = new ArrayList<>();
 
 	public StepApplyKickoffResult(GameState pGameState) {
 		super(pGameState);
@@ -183,6 +188,17 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
+				case CLIENT_PLAYER_CHOICE:
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						if (TurnMode.SOLID_DEFENCE == getGameState().getGame().getTurnMode()) {
+							ClientCommandPlayerChoice commandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+							Arrays.stream(commandPlayerChoice.getPlayerIds()).map(id -> getGameState().getGame().getPlayerById(id))
+								.forEach(selectedPlayers::add);
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+
 				default:
 					break;
 			}
@@ -236,15 +252,18 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private void handleGetTheRef() {
 		Game game = getGameState().getGame();
-		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream().filter(type -> type.hasUsage(Usage.AVOID_BAN))
+		((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
+			.filter(type -> type.hasUsage(Usage.AVOID_BAN))
 			.findFirst().ifPresent(bribesType -> {
 				InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
-				Inducement bribesHome = inducementSetHome.getInducementMapping().computeIfAbsent(bribesType, (type) -> new Inducement(type, 0));
+				Inducement bribesHome =
+					inducementSetHome.getInducementMapping().computeIfAbsent(bribesType, (type) -> new Inducement(type, 0));
 				bribesHome.setValue(bribesHome.getValue() + 1);
 				inducementSetHome.addInducement(bribesHome);
 
 				InducementSet inducementSetAway = game.getTurnDataAway().getInducementSet();
-				Inducement bribesAway = inducementSetAway.getInducementMapping().computeIfAbsent(bribesType, (type) -> new Inducement(type, 0));
+				Inducement bribesAway =
+					inducementSetAway.getInducementMapping().computeIfAbsent(bribesType, (type) -> new Inducement(type, 0));
 				bribesAway.setValue(bribesAway.getValue() + 1);
 				inducementSetAway.addInducement(bribesAway);
 
@@ -257,36 +276,48 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		Game game = getGameState().getGame();
 		if (game.getTurnMode() == TurnMode.SOLID_DEFENCE) {
 			if (fEndKickoff) {
-				int movedPlayers = (int) playersAtCoordinates.keySet().stream().filter(playerId ->
-						!game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId)).equals(playersAtCoordinates.get(playerId)))
-					.count();
-				if (validSolidDefence(movedPlayers) && UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
-					getGameState().setKickingSwarmers(0);
-					game.setTurnMode(TurnMode.KICKOFF);
-					getResult().setNextAction(StepAction.NEXT_STEP);
-					playersAtCoordinates.values().forEach(coordinate -> game.getFieldModel().remove(game.getFieldModel().getFieldMarker(coordinate)));
-					for (Player<?> player : game.getActingTeam().getPlayers()) {
-						PlayerState playerState = game.getFieldModel().getPlayerState(player);
-						if (playerState.getBase() == PlayerState.PRONE) {
-							game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-						}
-					}
+				List<Player<?>> movedPlayers = playersAtCoordinates.keySet().stream().map(game::getPlayerById).filter(player ->
+					!game.getFieldModel().getPlayerCoordinate(player)
+						.equals(playersAtCoordinates.get(player.getId()))).collect(Collectors.toList());
+
+				if (validSolidDefence(movedPlayers) &&
+					UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
+					leaveSolidDefence(game);
 				} else {
 					fEndKickoff = false;
 				}
+			} else {
+				Team actingTeam = game.getActingTeam();
+				if (selectedPlayers.isEmpty()) {
+					leaveSolidDefence(game);
+				} else {
+					for (Player<?> player : actingTeam.getPlayers()) {
+						FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+						if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
+							if (selectedPlayers.contains(player)) {
+								game.getFieldModel()
+									.setPlayerState(player, game.getFieldModel().getPlayerState(player).changeBase(PlayerState.RESERVE));
+								UtilBox.putPlayerIntoBox(game, player);
+							} else {
+								game.getFieldModel()
+									.setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false));
+							}
+						}
+					}
+
+				}
 			}
-		} else {
+		} else if (eligiblePlayers.isEmpty()) {
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SOLID_DEFENSE));
-			game.setTurnMode(TurnMode.SOLID_DEFENCE);
 			Team actingTeam = game.getActingTeam();
 			for (Player<?> player : actingTeam.getPlayers()) {
 				FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 				if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
-					if (ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()), fieldCoordinate, false))) {
-						game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false));
-					} else {
+					if (!ArrayTool.isProvided(
+						UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(game.getActingTeam()),
+							fieldCoordinate, false))) {
+						eligiblePlayers.add(player);
 						playersAtCoordinates.put(player.getId(), fieldCoordinate);
-						game.getFieldModel().add(new FieldMarker(fieldCoordinate, String.valueOf(player.getNr()), String.valueOf(player.getNr())));
 					}
 				} else {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -296,14 +327,39 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				}
 			}
 			int roll = getGameState().getDiceRoller().rollDice(3);
-			nrOfPlayersAllowed = roll + 3;
+			nrOfPlayersAllowed = Math.min(roll + 3, eligiblePlayers.size());
 			getResult().addReport(new ReportSolidDefenceRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));
+			if (eligiblePlayers.isEmpty()) {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				game.setTurnMode(TurnMode.SOLID_DEFENCE);
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogPlayerChoiceParameter(actingTeam.getId(), PlayerChoiceMode.SOLID_DEFENCE,
+						eligiblePlayers.toArray(new Player[0]), null, nrOfPlayersAllowed), false);
+			}
+
 		}
 	}
 
-	private boolean validSolidDefence(int movedPlayers) {
-		if (movedPlayers > nrOfPlayersAllowed) {
-			UtilServerDialog.showDialog(getGameState(), new DialogInvalidSolidDefenceParameter(getGameState().getGame().getActingTeam().getId(), movedPlayers, nrOfPlayersAllowed), false);
+	private void leaveSolidDefence(Game game) {
+		getGameState().setKickingSwarmers(0);
+		game.setTurnMode(TurnMode.KICKOFF);
+		getResult().setNextAction(StepAction.NEXT_STEP);
+		for (Player<?> player : game.getActingTeam().getPlayers()) {
+			PlayerState playerState = game.getFieldModel().getPlayerState(player);
+			if (playerState.getBase() == PlayerState.PRONE) {
+				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+			}
+		}
+	}
+
+	private boolean validSolidDefence(List<Player<?>> movedPlayers) {
+		boolean tooManyPlayersMoved = movedPlayers.size() > nrOfPlayersAllowed;
+		movedPlayers.removeAll(selectedPlayers);
+		if (tooManyPlayersMoved || !movedPlayers.isEmpty()) {
+			UtilServerDialog.showDialog(getGameState(),
+				new DialogInvalidSolidDefenceParameter(getGameState().getGame().getActingTeam().getId(), movedPlayers.size(),
+					nrOfPlayersAllowed), false);
 			return false;
 		}
 
@@ -363,8 +419,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int rollAway = getGameState().getDiceRoller().rollDice(6);
 		int totalAway = rollAway;
 
-		totalHome += game.getTeamHome().getAssistantCoaches() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_COACH);
-		totalAway += game.getTeamAway().getAssistantCoaches() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_COACH);
+		totalHome +=
+			game.getTeamHome().getAssistantCoaches() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_COACH);
+		totalAway +=
+			game.getTeamAway().getAssistantCoaches() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_COACH);
 
 		TurnData turnDataHome = game.getTurnDataHome();
 		TurnData turnDataAway = game.getTurnDataAway();
@@ -406,8 +464,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		int rollAway = getGameState().getDiceRoller().rollDice(6);
 		int totalAway = rollAway;
 
-		totalHome += game.getTeamHome().getCheerleaders() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_CHEERLEADER);
-		totalAway += game.getTeamAway().getCheerleaders() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_CHEERLEADER);
+		totalHome +=
+			game.getTeamHome().getCheerleaders() + game.getTurnDataHome().getInducementSet().value(Usage.ADD_CHEERLEADER);
+		totalAway +=
+			game.getTeamAway().getCheerleaders() + game.getTurnDataAway().getInducementSet().value(Usage.ADD_CHEERLEADER);
 
 		InducementSet inducementsHome = game.getTurnDataHome().getInducementSet();
 		InducementSet inducementsAway = game.getTurnDataAway().getInducementSet();
@@ -509,7 +569,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					break;
 				}
 			}
-			getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(integer -> integer).toArray(), true));
+			getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]),
+				rolls.stream().mapToInt(integer -> integer).toArray(), true));
 		}
 
 		publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, fTouchback));
@@ -526,9 +587,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			if (StringTool.isProvided(movedPlayer) && toCoordinate != null) {
 				if (nrOfMovedPlayers < nrOfPlayersAllowed) {
 
-					FieldCoordinate normalizedToCoordinate = game.getTeamHome().hasPlayer(game.getPlayerById(movedPlayer)) ? toCoordinate : toCoordinate.transform();
+					FieldCoordinate normalizedToCoordinate =
+						game.getTeamHome().hasPlayer(game.getPlayerById(movedPlayer)) ? toCoordinate : toCoordinate.transform();
 
-					if (game.getFieldModel().getPlayerCoordinate(game.getPlayerById(movedPlayer)).equals(normalizedToCoordinate)) {
+					if (game.getFieldModel().getPlayerCoordinate(game.getPlayerById(movedPlayer))
+						.equals(normalizedToCoordinate)) {
 						getResult().setNextAction(StepAction.CONTINUE);
 						return;
 					}
@@ -554,7 +617,8 @@ public final class StepApplyKickoffResult extends AbstractStep {
 						)
 						.count();
 
-					getResult().addReport(new ReportKickoffSequenceActivationsCount(activePlayersOnField, nrOfMovedPlayers, nrOfPlayersAllowed));
+					getResult().addReport(
+						new ReportKickoffSequenceActivationsCount(activePlayersOnField, nrOfMovedPlayers, nrOfPlayersAllowed));
 
 					if (nrOfMovedPlayers == nrOfPlayersAllowed) {
 						fEndKickoff = true;
@@ -590,15 +654,18 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			int roll = getGameState().getDiceRoller().rollDice(3);
 			nrOfPlayersAllowed = roll + 3;
 			getResult().addReport(new ReportQuickSnapRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));
-			Arrays.stream(game.getActingTeam().getPlayers()).filter(player -> ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(
+			Arrays.stream(game.getActingTeam().getPlayers())
+				.filter(player -> ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(
 					getGameState().getGame(),
 					game.getOtherTeam(game.getActingTeam()),
 					game.getFieldModel().getPlayerCoordinate(player),
 					false
 				)))
-				.forEach(player -> game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false)));
+				.forEach(player -> game.getFieldModel()
+					.setPlayerState(player, game.getFieldModel().getPlayerState(player).changeActive(false)));
 
-			if (Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive())) {
+			if (Arrays.stream(game.getActingTeam().getPlayers())
+				.noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive())) {
 				getResult().addReport(new ReportKickoffSequenceActivationsExhausted(false));
 				endQuickSnap(game);
 			}
@@ -682,8 +749,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		if (roll == 1) {
 			getResult().setSound(SoundId.WHISTLE);
 			sequence.add(StepId.SET_ACTING_PLAYER_AND_TEAM, StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
-			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING), from(StepParameterKey.OFFICIOUS_REF, true));
-			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
+			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING),
+				from(StepParameterKey.OFFICIOUS_REF, true));
+			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING,
+				StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
 		} else {
 			publishParameters(UtilServerInjury.stunPlayer(this, game.getPlayerById(playerId), apothecaryMode));
 		}
@@ -721,7 +790,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private List<String> stunPlayers(Team team, FieldModel fieldModel, int stunned) {
 		List<String> affectedPlayers = new ArrayList<>();
-		List<Player<?>> standing = Arrays.stream(team.getPlayers()).filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).collect(Collectors.toList());
+		List<Player<?>> standing = Arrays.stream(team.getPlayers())
+			.filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING)
+			.collect(Collectors.toList());
 		for (int i = 0; i < stunned && !standing.isEmpty(); i++) {
 			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
 			Player<?> stunnedPlayer = standing.get(index);
@@ -765,6 +836,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, movedPlayer);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, toCoordinate);
 		IServerJsonOption.NR_OF_PLAYERS.addTo(jsonObject, nrOfMovedPlayers);
+		List<String> selectedIds = selectedPlayers.stream().map(Player::getId).collect(Collectors.toList());
+		IServerJsonOption.PLAYER_IDS_SELECTED.addTo(jsonObject, selectedIds);
+		List<String> eligiblePlayerIds = eligiblePlayers.stream().map(Player::getId).collect(Collectors.toList());
+		IServerJsonOption.ELIGIBLE_PLAYER_IDS.addTo(jsonObject, eligiblePlayerIds);
 		return jsonObject;
 	}
 
@@ -787,6 +862,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		movedPlayer = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		nrOfMovedPlayers = IServerJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
+		Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject))
+			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(selectedPlayers::add);
+		Arrays.stream(IServerJsonOption.ELIGIBLE_PLAYER_IDS.getFrom(source, jsonObject))
+			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(eligiblePlayers::add);
 		return this;
 	}
 

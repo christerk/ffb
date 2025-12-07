@@ -53,6 +53,7 @@ public class ReRollSources {
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException e) {
+			//noinspection CallToPrintStackTrace
 			e.printStackTrace();
 		}
 	}

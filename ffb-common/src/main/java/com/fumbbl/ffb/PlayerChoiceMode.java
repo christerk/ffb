@@ -13,7 +13,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
-	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst");
+	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -119,6 +119,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case FURIOUS_OUTBURST:
 				header.append("Select player to attack");
 				break;
+			case SOLID_DEFENCE:
+				header.append("Select to players to setup again");
+				break;
 			default:
 				break;
 		}
@@ -199,6 +202,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case FURIOUS_OUTBURST:
 				title.append("Furious Outburst");
+				break;
+			case SOLID_DEFENCE:
+				title.append("Solid Defence");
 				break;
 			default:
 				break;
@@ -281,6 +287,8 @@ public enum PlayerChoiceMode implements INamedObject {
 			case FURIOUS_OUTBURST:
 				message.append("Waiting for coach to select player to attack with furious outburst");
 				break;
+			case SOLID_DEFENCE:
+				message.append("Waiting for coach to select players to setup again");
 			default:
 				break;
 		}
