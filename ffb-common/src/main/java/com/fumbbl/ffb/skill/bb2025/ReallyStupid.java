@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -23,7 +23,6 @@ import com.fumbbl.ffb.model.skill.Skill;
  * manages to roll a successful result for a Really Stupid roll at the start of
  * a future Action or the drive ends.
  */
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class ReallyStupid extends Skill {
 
@@ -35,6 +34,10 @@ public class ReallyStupid extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.appliesConfusion);
 		registerProperty(NamedProperties.needsToRollHighToAvoidConfusion);
+	}
+
+	public String getConfusionMessage() {
+		return "is distracted";
 	}
 
 }
