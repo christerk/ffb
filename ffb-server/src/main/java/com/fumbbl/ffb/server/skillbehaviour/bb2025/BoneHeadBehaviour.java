@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledAction;
@@ -23,10 +23,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.common.StepBoneHead;
 import com.fumbbl.ffb.server.step.action.common.StepBoneHead.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.mixed.BoneHead;
+import com.fumbbl.ffb.skill.bb2025.BoneHead;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 	public BoneHeadBehaviour() {
