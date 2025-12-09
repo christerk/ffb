@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.TextStyle;
@@ -9,7 +9,6 @@ import com.fumbbl.ffb.report.mixed.ReportBlitzRoll;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 @ReportMessageType(ReportId.BLITZ_ROLL)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class BlitzRollMessage extends ReportMessageBase<ReportBlitzRoll> {
 	@Override
 	protected void render(ReportBlitzRoll report) {
