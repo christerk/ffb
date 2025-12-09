@@ -69,6 +69,10 @@ public class AnimationSequenceFactory {
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_OFFICIOUS_REF, dimensionProvider.isPitchPortrait());
 			case KICKOFF_VERY_SUNNY:
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_VERY_SUNNY, dimensionProvider.isPitchPortrait());
+			case KICKOFF_CHARGE:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_CHARGE, dimensionProvider.isPitchPortrait());
+			case KICKOFF_DODGY_SNACK:
+				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_KICKOFF_DODGY_SNACK, dimensionProvider.isPitchPortrait());
 			case SPELL_FIREBALL:
 				return AnimationSequenceSpecialEffect.createAnimationSequenceFireball(pAnimation.getStartCoordinate());
 			case SPELL_LIGHTNING:
