@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -13,7 +13,8 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 
 	public ClientStateGaze(FantasyFootballClientAwt pClient) {
