@@ -15,8 +15,8 @@ public enum KickoffResult implements com.fumbbl.ffb.kickoff.KickoffResult {
 		}
 	},
 	QUICK_SNAP("Quick Snap", "The offence may reposition D3+3 of their open players 1 square each."),
-	BLITZ("Blitz", "The defence receives a free turn for moving and blitzing. TTM is allowed but no team re-rolls can be used."),
-	OFFICIOUS_REF("Officious Ref", "A random player gets into an argument with the ref and might be sent off."),
+	CHARGE("Charge", "The kicking team can select D3+3 open players to perform Move, Blitz, TTM and KTM actions as it was a regular team turn."),
+	DODGY_SNACK("Dodgy Snack", "A random player gets either -MA and -AV for the Drive or is sent to reserves."),
 	PITCH_INVASION("Pitch Invasion", "Random players are being stunned by the crowd.");
 
 	private final String fName;

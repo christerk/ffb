@@ -236,10 +236,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			case QUICK_SNAP:
 				handleQuickSnap();
 				break;
-			case BLITZ:
+			case CHARGE:
 				handleBlitz();
 				break;
-			case OFFICIOUS_REF:
+			case DODGY_SNACK:
 				handleOfficiousRef();
 				break;
 			case PITCH_INVASION:
