@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.ttm;
+package com.fumbbl.ffb.server.step.mixed.ttm;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;

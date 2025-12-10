@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.ttm;
+package com.fumbbl.ffb.server.step.mixed.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -46,6 +46,7 @@ import java.util.Objects;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndThrowTeamMate extends AbstractStep {
 
 	private boolean fEndTurn;

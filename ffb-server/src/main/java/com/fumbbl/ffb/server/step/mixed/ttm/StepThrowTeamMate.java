@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.ttm;
+package com.fumbbl.ffb.server.step.mixed.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -23,18 +23,19 @@ import java.util.Arrays;
 
 /**
  * Step in ttm sequence to actual throw the team mate.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ * <p>
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_STATE to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
- * 
+ * <p>
  * Pushes new scatterPlayerSequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 
 	public static class StepState {

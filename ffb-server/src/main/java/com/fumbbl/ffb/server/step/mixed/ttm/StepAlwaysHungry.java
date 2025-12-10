@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.ttm;
+package com.fumbbl.ffb.server.step.mixed.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -42,6 +42,7 @@ import com.fumbbl.ffb.util.UtilCards;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepAlwaysHungry extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure;

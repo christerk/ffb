@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.bb2020;
+package com.fumbbl.ffb.server.skillbehaviour.mixed;
 
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
@@ -7,13 +7,13 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.StepModifier;
-import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractPassBehaviour;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.mixed.pass.StepHailMaryPass;
-import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.skill.mixed.special.TheBallista;
 
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 	public TheBallistaBehaviour() {
 		super();

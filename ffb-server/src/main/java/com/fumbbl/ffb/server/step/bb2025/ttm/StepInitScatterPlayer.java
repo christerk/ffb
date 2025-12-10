@@ -38,7 +38,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
-import com.fumbbl.ffb.server.step.bb2020.ttm.TtmToCrowdHandler;
+import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;

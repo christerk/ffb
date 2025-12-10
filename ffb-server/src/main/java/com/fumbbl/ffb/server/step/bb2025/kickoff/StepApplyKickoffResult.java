@@ -603,9 +603,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				endQuickSnap(game);
 			}
 		} else {
+			getResult().setAnimation(new Animation(AnimationType.KICKOFF_QUICK_SNAP));
+			UtilServerGame.syncGameModel(this);
 			game.setHomePlaying(!game.isHomePlaying());
 			game.setTurnMode(TurnMode.QUICK_SNAP);
-			getResult().setAnimation(new Animation(AnimationType.KICKOFF_QUICK_SNAP));
 			int roll = getGameState().getDiceRoller().rollDice(3);
 			nrOfPlayersAllowed = roll + 3;
 			getResult().addReport(new ReportQuickSnapRoll(game.getActingTeam().getId(), roll, nrOfPlayersAllowed));

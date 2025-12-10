@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.ttm;
+package com.fumbbl.ffb.server.step.mixed.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepDispatchScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState, oldPlayerState;

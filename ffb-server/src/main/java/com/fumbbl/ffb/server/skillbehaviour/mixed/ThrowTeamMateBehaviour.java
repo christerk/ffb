@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.bb2020;
+package com.fumbbl.ffb.server.skillbehaviour.mixed;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -25,8 +25,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
-import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate.StepState;
+import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
@@ -34,6 +34,7 @@ import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
 		super();
