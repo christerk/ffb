@@ -23,7 +23,6 @@ import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
@@ -32,6 +31,7 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.kickoff.bb2025.KickoffResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.FieldModel;
@@ -86,7 +86,6 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
 import com.fumbbl.ffb.server.step.generator.Kickoff;
-import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
@@ -480,19 +479,20 @@ public class StepEndTurn extends AbstractStep {
 			getResult().addReport(
 				new ReportTurnEnd(touchdownPlayerId, knockoutRecoveryArray, heatExhaustionArray, unzappedPlayers, faintingCount));
 
-			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
-			deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
+			deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_TURN, isHomeTurnEnding);
+			deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
 			if (fNewHalf || fTouchdown) {
 				UtilServerGame.updatePlayerStateDependentProperties(this);
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
+				deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
+				Arrays.stream(game.getPlayers()).forEach(player -> player.removeEnhancements(KickoffResult.DODGY_SNACK));
 				removeReRollsLastingForDrive(true);
 				removeReRollsLastingForDrive(false);
 				UtilServerGame.prepareForSetup(game);
 			}
 
 			if (fNewHalf) {
-				deactivateCardsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
+				deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
 				GameResult gameResult = game.getGameResult();
 				boolean drawWithOvertime = UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 					&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore());
@@ -878,11 +878,10 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private void deactivateCardsAndPrayers(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
+	private void deactivateEffectsAndPrayers(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
 		if (pDuration == null) {
 			return;
 		}
-		deactivateCards(pDuration, pIsHomeTurnEnding);
 		deactivatePrayers(pDuration, pIsHomeTurnEnding);
 	}
 
@@ -911,27 +910,6 @@ public class StepEndTurn extends AbstractStep {
 		PrayerHandlerFactory handlerFactory = getGameState().getGame().getFactory(FactoryType.Factory.PRAYER_HANDLER);
 		handlerFactory.forPrayer(prayer).ifPresent(handler -> handler.removeEffect(getGameState(), team));
 		getResult().addReport(new ReportPrayerEnd(prayer));
-	}
-
-	private void deactivateCards(InducementDuration pDuration, boolean pIsHomeTurnEnding) {
-
-		Game game = getGameState().getGame();
-		for (Card card : game.getTurnDataHome().getInducementSet().getActiveCards()) {
-			if (pDuration == card.getDuration()) {
-				if (pDuration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && pIsHomeTurnEnding) {
-					continue;
-				}
-				UtilServerCards.deactivateCard(this, card);
-			}
-		}
-		for (Card card : game.getTurnDataAway().getInducementSet().getActiveCards()) {
-			if (pDuration == card.getDuration()) {
-				if (pDuration == InducementDuration.UNTIL_END_OF_OPPONENTS_TURN && !pIsHomeTurnEnding) {
-					continue;
-				}
-				UtilServerCards.deactivateCard(this, card);
-			}
-		}
 	}
 
 	private boolean askForSecretWeaponBribes(Team team) {

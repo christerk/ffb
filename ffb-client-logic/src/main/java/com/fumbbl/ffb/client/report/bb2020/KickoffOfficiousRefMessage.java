@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -8,11 +8,10 @@ import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.mixed.ReportKickoffOfficiousRef;
+import com.fumbbl.ffb.report.bb2020.ReportKickoffOfficiousRef;
 
 @ReportMessageType(ReportId.KICKOFF_OFFICIOUS_REF)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class KickoffOfficiousRefMessage extends ReportMessageBase<ReportKickoffOfficiousRef> {
 
     @Override

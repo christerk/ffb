@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report.mixed;
+package com.fumbbl.ffb.report.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -22,17 +22,16 @@ import java.util.List;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class ReportOfficiousRefRoll implements IReport {
+public class ReportDodgySnackRoll implements IReport {
 
 	private int roll;
 	private String playerId;
 
-	public ReportOfficiousRefRoll() {
+	public ReportDodgySnackRoll() {
 	}
 
-	public ReportOfficiousRefRoll(int roll, String playerId) {
+	public ReportDodgySnackRoll(int roll, String playerId) {
 		this.roll = roll;
 		this.playerId = playerId;
 	}
@@ -46,14 +45,14 @@ public class ReportOfficiousRefRoll implements IReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.OFFICIOUS_REF_ROLL;
+		return ReportId.DODGY_SNACK_ROLL;
 	}
 
 
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportOfficiousRefRoll(roll, playerId);
+		return new ReportDodgySnackRoll(roll, playerId);
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class ReportOfficiousRefRoll implements IReport {
 		return jsonObject;
 	}
 
-	public ReportOfficiousRefRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+	public ReportDodgySnackRoll initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		roll = IJsonOption.ROLL.getFrom(source, jsonObject);

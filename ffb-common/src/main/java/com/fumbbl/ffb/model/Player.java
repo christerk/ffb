@@ -184,7 +184,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	private static Player<?> createPlayer(IFactorySource source, JsonValue jsonValue) {
 		if (jsonValue instanceof JsonObject
-			&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom(source, (JsonObject) jsonValue))) {
+				&& ZappedPlayer.KIND.equals(IJsonOption.PLAYER_KIND.getFrom(source, (JsonObject) jsonValue))) {
 			return new ZappedPlayer();
 		}
 		return new RosterPlayer();
@@ -221,7 +221,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	private int getStatWithModifiers(PlayerStatKey stat, int baseValue) {
 		int sum = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
-			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
+				.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
 
 		Optional<PlayerStatLimit> limit = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat)).map(TemporaryStatModifier::getLimit).findFirst();
 
@@ -239,11 +239,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		int decreases = 0;
 		if (pPlayerResult != null) {
 			if ((pPlayerResult.getSeriousInjury() != null)
-				&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
+					&& (pPlayerResult.getSeriousInjury().getInjuryAttribute() == pInjuryAttribute)) {
 				decreases++;
 			}
 			if ((pPlayerResult.getSeriousInjuryDecay() != null)
-				&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
+					&& (pPlayerResult.getSeriousInjuryDecay().getInjuryAttribute() == pInjuryAttribute)) {
 				decreases++;
 			}
 		}
@@ -252,7 +252,7 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	private int getStatWithModifiers(PlayerStatKey stat, Game game, int baseValue) {
 		StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
-			.forName(Mechanic.Type.STAT.name());
+				.forName(Mechanic.Type.STAT.name());
 		PlayerResult playerResult = game.getGameResult().getPlayerResult(this);
 		int decreases = findNewStatDecreases(playerResult, InjuryAttribute.forStatKey(stat));
 		switch (stat) {
@@ -294,8 +294,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public List<Skill> getSkillsIncludingTemporaryOnesWithDuplicates() {
 		return Stream.concat(
-			getTemporarySkills().values().stream().flatMap(Collection::stream).map(SkillWithValue::getSkill),
-			Arrays.stream(getSkills())
+				getTemporarySkills().values().stream().flatMap(Collection::stream).map(SkillWithValue::getSkill),
+				Arrays.stream(getSkills())
 		).collect(Collectors.toList());
 	}
 
@@ -321,22 +321,22 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean hasSkillProperty(ISkillProperty property) {
 		return Stream.concat(
-			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
-			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+				getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
+				getTemporaryProperties().values().stream().flatMap(Collection::stream)
 		).anyMatch(prop -> prop.equals(property));
 	}
 
 	public boolean hasUnusedSkillProperty(ISkillProperty property) {
 		return Stream.concat(
-			getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill)).flatMap(skill -> skill.getSkillProperties().stream()),
-			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+				getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill)).flatMap(skill -> skill.getSkillProperties().stream()),
+				getTemporaryProperties().values().stream().flatMap(Collection::stream)
 		).anyMatch(prop -> prop.equals(property));
 	}
 
 	public boolean hasSkill(ISkillProperty property) {
 		return Stream.concat(
-			getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
-			getTemporaryProperties().values().stream().flatMap(Collection::stream)
+				getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),
+				getTemporaryProperties().values().stream().flatMap(Collection::stream)
 		).anyMatch(prop -> prop.equals(property));
 	}
 
@@ -364,6 +364,10 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		addEnhancement(card.getName(), card.deactivationEnhancement(mechanic), factory);
 	}
 
+	public void addEnhancement(INamedObject namedObject, TemporaryEnhancements enhancements, SkillFactory factory) {
+		addEnhancement(namedObject.getName(), enhancements, factory);
+	}
+
 	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {
 		if (!hasActiveEnhancement(name)) {
 			addTemporaryModifiers(name, enhancements.getModifiers());
@@ -378,9 +382,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public List<SkillDisplayInfo> skillInfos() {
 		return getSkillsIncludingTemporaryOnesWithDuplicates().stream()
-			.flatMap(s -> skillInfo(s).stream())
-			.sorted(Comparator.comparing(SkillDisplayInfo::getInfo))
-			.collect(Collectors.toList());
+				.flatMap(s -> skillInfo(s).stream())
+				.sorted(Comparator.comparing(SkillDisplayInfo::getInfo))
+				.collect(Collectors.toList());
 	}
 
 	private Set<SkillDisplayInfo> skillInfo(Skill skill) {
@@ -389,8 +393,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public Set<String> temporarySkillValues(Skill skill) {
 		return getTemporarySkills().values().stream().flatMap(Collection::stream)
-			.filter(swv -> swv.getSkill() == skill)
-			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toSet());
+				.filter(swv -> swv.getSkill() == skill)
+				.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toSet());
 	}
 
 	public boolean hasAnimosityTowards(Player<?> player) {
@@ -440,8 +444,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
-			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
+				.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
+				.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
 	}
 
 }

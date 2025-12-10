@@ -7,10 +7,13 @@ import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2025.KickoffResult;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
@@ -20,19 +23,21 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.modifiers.*;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2025.ReportCheeringFans;
+import com.fumbbl.ffb.report.bb2025.ReportDodgySnackRoll;
+import com.fumbbl.ffb.report.bb2025.ReportKickoffDodgySnack;
 import com.fumbbl.ffb.report.mixed.*;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepException;
@@ -225,7 +230,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				handleCharge();
 				break;
 			case DODGY_SNACK:
-				handleOfficiousRef();
+				handleDodgeSnack();
 				break;
 			case PITCH_INVASION:
 				handlePitchInvasion();
@@ -684,77 +689,64 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 	}
 
-	private void handleOfficiousRef() {
+	private void handleDodgeSnack() {
 
-		getResult().setAnimation(new Animation(AnimationType.KICKOFF_OFFICIOUS_REF));
+		getResult().setAnimation(new Animation(AnimationType.KICKOFF_DODGY_SNACK));
 		UtilServerGame.syncGameModel(this);
 
 		Game game = getGameState().getGame();
-		GameResult gameResult = game.getGameResult();
 
-		int rollHome = getGameState().getDiceRoller().rollThrowARock();
-		int totalHome = rollHome + gameResult.getTeamResultHome().getFanFactor();
-		int rollAway = getGameState().getDiceRoller().rollThrowARock();
-		int totalAway = rollAway + gameResult.getTeamResultAway().getFanFactor();
+		int rollHome = getGameState().getDiceRoller().rollDice(6);
+		int rollAway = getGameState().getDiceRoller().rollDice(6);
 
-		String playerIdHome = null;
-		String playerIdAway = null;
+		Player<?> playerHome = null;
+		Player<?> playerAway = null;
 		List<String> playerIds = new ArrayList<>();
 
-		if (totalAway >= totalHome) {
-			Player<?> homePlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamHome()));
-			if (homePlayer != null) {
-				playerIdHome = homePlayer.getId();
-				playerIds.add(playerIdHome);
+		if (rollAway >= rollHome) {
+			playerHome = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamHome()));
+			if (playerHome != null) {
+				playerIds.add(playerHome.getId());
 			}
 		}
-		if (totalHome >= totalAway) {
-			Player<?> awayPlayer = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamAway()));
-			if (awayPlayer != null) {
-				playerIdAway = awayPlayer.getId();
-				playerIds.add(playerIdAway);
+		if (rollHome >= rollAway) {
+			playerAway = getGameState().getDiceRoller().randomPlayer(playersOnField(game, game.getTeamAway()));
+			if (playerAway != null) {
+				playerIds.add(playerAway.getId());
 			}
 		}
 
-		getResult().addReport(new ReportKickoffOfficiousRef(rollHome, rollAway, playerIds));
-
-		Set<StepParameterKey> parametersToConsume = new HashSet<StepParameterKey>() {{
-			add(StepParameterKey.END_TURN);
-			add(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE);
-			add(StepParameterKey.FOULER_HAS_BALL);
-		}};
-
+		getResult().addReport(new ReportKickoffDodgySnack(rollHome, rollAway, playerIds));
 		Sequence sequence = new Sequence(getGameState());
 
-		if (playerIdHome != null) {
-			insertSteps(game, playerIdHome, parametersToConsume, sequence, ApothecaryMode.HOME);
+		if (playerHome != null) {
+			insertSteps(game, playerHome);
 		}
 
-		if (playerIdAway != null) {
-			insertSteps(game, playerIdAway, parametersToConsume, sequence, ApothecaryMode.AWAY);
+		if (playerAway != null) {
+			insertSteps(game, playerAway);
 		}
-
-		sequence.add(StepId.SET_ACTING_TEAM, StepParameter.from(StepParameterKey.TEAM_ID, game.getActingTeam().getId()));
-
 
 		getGameState().getStepStack().push(sequence.getSequence());
-
 		getResult().setNextAction(StepAction.NEXT_STEP);
-
 	}
 
-	private void insertSteps(Game game, String playerId, Set<StepParameterKey> parametersToConsume, Sequence sequence, ApothecaryMode apothecaryMode) {
+	private void insertSteps(Game game, Player<?> player) {
 		int roll = getGameState().getDiceRoller().rollDice(6);
-		getResult().addReport(new ReportOfficiousRefRoll(roll, playerId));
+		getResult().addReport(new ReportDodgySnackRoll(roll, player.getId()));
 		if (roll == 1) {
-			getResult().setSound(SoundId.WHISTLE);
-			sequence.add(StepId.SET_ACTING_PLAYER_AND_TEAM, StepParameter.from(StepParameterKey.PLAYER_ID, playerId));
-			sequence.add(StepId.EJECT_PLAYER, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_FOULING),
-					from(StepParameterKey.OFFICIOUS_REF, true));
-			sequence.add(StepId.CONSUME_PARAMETER, IStepLabel.END_FOULING,
-					StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parametersToConsume));
+			FieldModel fieldModel = game.getFieldModel();
+			fieldModel.setPlayerState(player, fieldModel.getPlayerState(player));
+			UtilBox.putPlayerIntoBox(game, player);
 		} else {
-			publishParameters(UtilServerInjury.stunPlayer(this, game.getPlayerById(playerId), apothecaryMode));
+			MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+			StatsMechanic mechanic = (StatsMechanic) factory.forName(Mechanic.Type.STAT.name());
+			player.addEnhancement(KickoffResult.DODGY_SNACK,
+					new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
+						add(new TemporaryStatDecrementer(PlayerStatKey.AV, mechanic));
+						add(new TemporaryStatDecrementer(PlayerStatKey.MA, mechanic));
+					}}),
+					game.getFactory(FactoryType.Factory.SKILL));
 		}
 	}
 

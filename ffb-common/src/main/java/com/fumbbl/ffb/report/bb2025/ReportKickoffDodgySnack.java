@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report.mixed;
+package com.fumbbl.ffb.report.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -20,25 +20,24 @@ import java.util.stream.Collectors;
 /**
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class ReportKickoffOfficiousRef extends NoDiceReport {
+public class ReportKickoffDodgySnack extends NoDiceReport {
 
 	private int rollHome;
 	private int rollAway;
 	private final List<String> playerIds = new ArrayList<>();
 
-	public ReportKickoffOfficiousRef() {
+	public ReportKickoffDodgySnack() {
 	}
 
-	public ReportKickoffOfficiousRef(int rollHome, int rollAway, List<String> playerIds) {
+	public ReportKickoffDodgySnack(int rollHome, int rollAway, List<String> playerIds) {
 		this.rollHome = rollHome;
 		this.rollAway = rollAway;
 		this.playerIds.addAll(playerIds);
 	}
 
 	public ReportId getId() {
-		return ReportId.KICKOFF_OFFICIOUS_REF;
+		return ReportId.KICKOFF_DODGY_SNACK;
 	}
 
 	public int getRollHome() {
@@ -56,7 +55,7 @@ public class ReportKickoffOfficiousRef extends NoDiceReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportKickoffOfficiousRef(getRollAway(), getRollHome(), getPlayerIds());
+		return new ReportKickoffDodgySnack(getRollAway(), getRollHome(), getPlayerIds());
 	}
 
 	// JSON serialization
@@ -66,17 +65,17 @@ public class ReportKickoffOfficiousRef extends NoDiceReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.ROLL_HOME.addTo(jsonObject, rollHome);
 		IJsonOption.ROLL_AWAY.addTo(jsonObject, rollAway);
-		IJsonOption.PLAYER_IDS_HIT.addTo(jsonObject, playerIds);
+		IJsonOption.PLAYER_IDS.addTo(jsonObject, playerIds);
 		return jsonObject;
 	}
 
-	public ReportKickoffOfficiousRef initFrom(IFactorySource source, JsonValue jsonValue) {
+	public ReportKickoffDodgySnack initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
 		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
 		playerIds.clear();
-		String[] playerIdsArray = IJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject);
+		String[] playerIdsArray = IJsonOption.PLAYER_IDS.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(playerIdsArray)) {
 			playerIds.addAll(Arrays.stream(playerIdsArray).collect(Collectors.toList()));
 		}

@@ -36,6 +36,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -404,6 +405,13 @@ public class FieldModel implements IJsonSerializable {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 		player.addEnhancement(prayer.getName(), prayer.enhancements(mechanic), factory);
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
+	}
+
+	public void addEnhancements(Player<?> player, String name, TemporaryEnhancements enhancements) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
+		player.addEnhancement(name, enhancements, factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
 	}
 
