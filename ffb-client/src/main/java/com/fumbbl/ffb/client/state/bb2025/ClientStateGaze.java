@@ -27,8 +27,8 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 	}
 
 	@Override
-  public void clickOnPlayer(Player<?> player) {
-    InteractionResult result = logicModule.playerInteraction(player);
-    evaluateClick(result, player);
-  }
+	public void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
+		evaluateClick(result, player);
+	}
 }

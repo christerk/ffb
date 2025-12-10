@@ -42,19 +42,7 @@ public class GazeLogicModule extends MoveLogicModule {
 		}
 	}
 
-	@Override
-	public boolean playerActivationUsed() {
-		FieldModel fieldModel = client.getGame().getFieldModel();
-		if (fieldModel.getTargetSelectionState() == null) {
-			return super.playerActivationUsed();
-		}
-		return fieldModel.getTargetSelectionState().isCommitted();
-	}
-
-
-	// Added a check to see if the player had tacklezones so no prone players could
-	// be gazed or already gazed players.
-	private boolean canBeGazed(Player<?> pVictim) {
+	protected boolean canBeGazed(Player<?> pVictim) {
 		boolean result = false;
 		if (pVictim != null) {
 			Game game = client.getGame();
