@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.mixed;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.RulesCollection;
@@ -9,7 +9,6 @@ import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.Player;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateGazeMove extends AbstractClientStateMove<GazeMoveLogicModule> {
   public ClientStateGazeMove(FantasyFootballClientAwt client) {
     super(client, new GazeMoveLogicModule((client)));

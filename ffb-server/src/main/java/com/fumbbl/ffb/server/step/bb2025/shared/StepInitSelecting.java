@@ -361,7 +361,7 @@ public final class StepInitSelecting extends AbstractStep {
 								if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
 									targetSelectionState.addUsedSkill(commandUseSkill.getSkill());
 									getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
-									ServerUtilBlock.updateDiceDecorations(game);
+									ServerUtilBlock.updateDiceDecorations(getGameState());
 								}
 								publishParameter(new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, targetSelectionState.getSelectedPlayerId()));
 								publishParameter(new StepParameter(StepParameterKey.USING_STAB, false));
@@ -454,7 +454,7 @@ public final class StepInitSelecting extends AbstractStep {
 				|| (playerAction == PlayerAction.KICK_EM_BLITZ)
 				|| (playerAction.isBlockAction())
 				|| (playerAction == PlayerAction.MULTIPLE_BLOCK)) {
-				ServerUtilBlock.updateDiceDecorations(game);
+				ServerUtilBlock.updateDiceDecorations(getGameState());
 			}
 			if (playerAction.isMoving() || playerAction.isStandingUp()) {
 				if (actingPlayer.isStandingUp()
@@ -473,13 +473,13 @@ public final class StepInitSelecting extends AbstractStep {
 		FieldModel fieldModel = game.getFieldModel();
 
 		fieldModel.addMultiBlockTarget(command.getPlayerId(), command.getKind());
-		ServerUtilBlock.updateDiceDecorations(game);
+		ServerUtilBlock.updateDiceDecorations(getGameState());
 	}
 
 	private void handleUnsetBlockTarget(Game game, ClientCommandUnsetBlockTargetSelection command) {
 		FieldModel fieldModel = game.getFieldModel();
 		fieldModel.removeMultiBlockTarget(command.getPlayerId());
-		ServerUtilBlock.updateDiceDecorations(game);
+		ServerUtilBlock.updateDiceDecorations(getGameState());
 	}
 
 	// JSON serialization
