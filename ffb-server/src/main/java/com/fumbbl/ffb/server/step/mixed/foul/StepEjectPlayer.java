@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.foul;
+package com.fumbbl.ffb.server.step.mixed.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -37,6 +37,7 @@ import com.fumbbl.ffb.util.UtilBox;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEjectPlayer extends AbstractStep {
 
 	private final StepState state;

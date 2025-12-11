@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.foul;
+package com.fumbbl.ffb.server.step.mixed.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -55,6 +55,7 @@ import java.util.Optional;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBribes extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnEnd;

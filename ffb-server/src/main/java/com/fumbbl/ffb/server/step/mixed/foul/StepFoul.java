@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.foul;
+package com.fumbbl.ffb.server.step.mixed.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepFoul extends AbstractStep {
 
 	private boolean usingChainsaw;
@@ -101,12 +102,6 @@ public class StepFoul extends AbstractStep {
 		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 			new DropPlayerContext(injuryResultDefender, game.getDefenderId(), ApothecaryMode.DEFENDER, true)));
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-
-	// ByteArray serialization
-
-	public int getByteArraySerializationVersion() {
-		return 1;
 	}
 
 	// JSON serialization
