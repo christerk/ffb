@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.special;
+package com.fumbbl.ffb.server.step.mixed.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndBomb extends AbstractStep {
 
 	private String fCatcherId;
