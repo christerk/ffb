@@ -10,7 +10,7 @@ import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
-import com.fumbbl.ffb.client.state.logic.bb2020.FuriousOutburstLogicModule;
+import com.fumbbl.ffb.client.state.logic.mixed.FuriousOutburstLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.Player;

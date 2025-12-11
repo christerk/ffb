@@ -5,7 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.bb2020.PutridRegurgitationBlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.mixed.PutridRegurgitationBlockLogicModule;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -8,7 +8,7 @@ import com.fumbbl.ffb.client.state.AbstractClientStateBlock;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.bb2020.MaximumCarnageLogicModule;
+import com.fumbbl.ffb.client.state.logic.mixed.MaximumCarnageLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
