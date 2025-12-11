@@ -1,10 +1,8 @@
 package com.fumbbl.ffb.inducement;
 
 import com.fumbbl.ffb.INamedObject;
-import com.fumbbl.ffb.mechanics.StatsMechanic;
-import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 
-public interface Prayer extends INamedObject {
+public interface Prayer extends INamedObject, EnhancementProvider {
 	// expose enum method name() for serialization
 	String name();
 
@@ -13,10 +11,6 @@ public interface Prayer extends INamedObject {
 	String getDescription();
 
 	InducementDuration getDuration();
-
-	default TemporaryEnhancements enhancements(StatsMechanic mechanic) {
-		return new TemporaryEnhancements();
-	}
 
 	default String eventMessage() {
 		return "";

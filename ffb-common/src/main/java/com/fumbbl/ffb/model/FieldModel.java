@@ -36,7 +36,6 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
-import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -85,7 +84,8 @@ public class FieldModel implements IJsonSerializable {
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
 	private boolean outOfBounds;
 
-	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
+	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate;
+		// no need to serialize this, as it can be
 	// reconstructed
 	private transient Game fGame;
 
@@ -397,7 +397,8 @@ public class FieldModel implements IJsonSerializable {
 		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cardEffects.add(pCardEffect);
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
+		pPlayer.addTemporarySkills(pCardEffect.getName(),
+			pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 	}
 
@@ -408,11 +409,13 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
 	}
 
-	public void addEnhancements(Player<?> player, String name, TemporaryEnhancements enhancements) {
+	public void addEnhancements(Player<?> player, String name) {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
-		player.addEnhancement(name, enhancements, factory);
-		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
+		getGame().getEnhancementRegistry().forName(name).ifPresent(enhancement -> {
+				player.addEnhancement(name, enhancement, factory);
+				notifyObservers(ModelChangeId.FIELD_MODEL_ADD_ENHANCEMENTS, player.getId(), name);
+			}
+		);
 	}
 
 	public void addSkillEnhancements(Player<?> player, Skill skill) {
@@ -940,7 +943,7 @@ public class FieldModel implements IJsonSerializable {
 			transformedModel.add(playerMarker.transform());
 		}
 
-		for (DiceDecoration diceDecoration: getDiceDecorations()) {
+		for (DiceDecoration diceDecoration : getDiceDecorations()) {
 			transformedModel.add(diceDecoration.transform());
 		}
 
@@ -1150,7 +1153,9 @@ public class FieldModel implements IJsonSerializable {
 
 			String[] cards = IJsonOption.CARDS.getFrom(source, playerDataObject);
 			if (ArrayTool.isProvided(cards)) {
-				for (String card : cards) addCard(player, cardFactory.forName(card));
+				for (String card : cards) {
+					addCard(player, cardFactory.forName(card));
+				}
 			}
 
 			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(source, playerDataObject);

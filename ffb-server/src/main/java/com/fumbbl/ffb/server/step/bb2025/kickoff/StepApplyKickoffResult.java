@@ -2,18 +2,25 @@ package com.fumbbl.ffb.server.step.bb2025.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.ApothecaryMode;
+import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogInvalidSolidDefenceParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.InducementTypeFactory;
-import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2025.KickoffResult;
-import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
@@ -23,7 +30,6 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.modifiers.*;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -32,7 +38,14 @@ import com.fumbbl.ffb.report.ReportWeather;
 import com.fumbbl.ffb.report.bb2025.ReportCheeringFans;
 import com.fumbbl.ffb.report.bb2025.ReportDodgySnackRoll;
 import com.fumbbl.ffb.report.bb2025.ReportKickoffDodgySnack;
-import com.fumbbl.ffb.report.mixed.*;
+import com.fumbbl.ffb.report.mixed.ReportBlitzRoll;
+import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
+import com.fumbbl.ffb.report.mixed.ReportKickoffPitchInvasion;
+import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsCount;
+import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsExhausted;
+import com.fumbbl.ffb.report.mixed.ReportKickoffTimeout;
+import com.fumbbl.ffb.report.mixed.ReportQuickSnapRoll;
+import com.fumbbl.ffb.report.mixed.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -736,17 +749,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		getResult().addReport(new ReportDodgySnackRoll(roll, player.getId()));
 		if (roll == 1) {
 			FieldModel fieldModel = game.getFieldModel();
-			fieldModel.setPlayerState(player, fieldModel.getPlayerState(player));
+			fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(PlayerState.RESERVE));
 			UtilBox.putPlayerIntoBox(game, player);
 		} else {
-			MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-			StatsMechanic mechanic = (StatsMechanic) factory.forName(Mechanic.Type.STAT.name());
-			player.addEnhancement(KickoffResult.DODGY_SNACK,
-					new TemporaryEnhancements().withModifiers(new HashSet<TemporaryStatModifier>() {{
-						add(new TemporaryStatDecrementer(PlayerStatKey.AV, mechanic));
-						add(new TemporaryStatDecrementer(PlayerStatKey.MA, mechanic));
-					}}),
-					game.getFactory(FactoryType.Factory.SKILL));
+			game.getFieldModel().addEnhancements(player, KickoffResult.DODGY_SNACK.getName());
 		}
 	}
 

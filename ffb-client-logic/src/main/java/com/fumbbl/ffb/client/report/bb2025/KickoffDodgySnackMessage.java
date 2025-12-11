@@ -23,7 +23,6 @@ public class KickoffDodgySnackMessage extends ReportMessageBase<ReportKickoffDod
   		status.append("Dodgy Snack Roll Away Team [ ").append(report.getRollAway()).append(" ]");
   		println(getIndent(), TextStyle.ROLL, status.toString());
 
-  		println(getIndent() + 1, status.toString());
   		for (String playerId : report.getPlayerIds()) {
   			Player<?> player = game.getPlayerById(playerId);
   			print(getIndent() + 1, false, player);
