@@ -235,7 +235,9 @@ public class StepEndTurn extends AbstractStep {
 		game.getFieldModel().clearMultiBlockTargets();
 		UtilServerDialog.hideDialog(getGameState());
 		getGameState().getPassState().reset();
-		getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+		if (game.getTurnMode() == TurnMode.REGULAR) {
+			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+		}
 
 		boolean isHomeTurnEnding = game.isHomePlaying();
 		if (turnNr == 0) {
