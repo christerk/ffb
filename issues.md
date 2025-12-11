@@ -5,4 +5,6 @@
 
 # season 3
 
-- client state select refactoring
+## Kick-Off
+- 10 Charge CHANGED
+- 11 Dodgy Snack CHANGED

@@ -133,7 +133,7 @@ public class StepEndBlocking extends AbstractStep {
 				&& !attackerState.isConfused() && actingPlayer.hasBlocked()) {
 				actingPlayer.markSkillUsed(canBlockMultipleTimesSkill);
 				actingPlayer.setHasBlocked(false);
-				ServerUtilBlock.updateDiceDecorations(game);
+				ServerUtilBlock.updateDiceDecorations(getGameState());
 				if (PlayerAction.BLITZ == actingPlayer.getPlayerAction()) {
 					blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(),  game.getDefenderId(), fUsingStab, null));
 				} else {
@@ -160,19 +160,19 @@ public class StepEndBlocking extends AbstractStep {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.BLITZ_MOVE, actingPlayer.isJumping());
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					// this may happen for ball and chain
 				} else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
 					&& UtilPlayer.isNextMovePossible(game, false)) {
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					// this may happen on a failed bloodlust roll
 				} else if (actingPlayer.isSufferingBloodLust() && !actingPlayer.hasBlocked()) {
 					game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
 					game.setDefenderId(null);
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					blockGenerator.pushSequence(new Block.Builder(getGameState()).build());
 				} else {
 					game.setDefenderId(null); // clear defender for next multi block

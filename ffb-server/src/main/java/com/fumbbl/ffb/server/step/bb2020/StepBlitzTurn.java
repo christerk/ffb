@@ -7,7 +7,7 @@ import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.report.mixed.ReportBlitzRoll;
-import com.fumbbl.ffb.report.bb2020.ReportKickoffSequenceActivationsExhausted;
+import com.fumbbl.ffb.report.mixed.ReportKickoffSequenceActivationsExhausted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;

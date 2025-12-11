@@ -277,7 +277,7 @@ public class StepInitMoving extends AbstractStep {
 						if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
 							targetSelectionState.addUsedSkill(skill);
 							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ADD_BLOCK_DIE));
-							ServerUtilBlock.updateDiceDecorations(game);
+							ServerUtilBlock.updateDiceDecorations(getGameState());
 						}
 						if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE && !actingPlayer.hasBlocked()) {
 

@@ -324,6 +324,8 @@ public interface IIconProperty {
 	String ANIMATION_KICKOFF_OFFICIOUS_REF = "animation.kickoff.officiousRef";
 	String ANIMATION_KICKOFF_THROW_A_ROCK = "animation.kickoff.throwARock";
 	String ANIMATION_KICKOFF_VERY_SUNNY = "animation.kickoff.verySunny";
+	String ANIMATION_KICKOFF_CHARGE = "animation.kickoff.charge";
+	String ANIMATION_KICKOFF_DODGY_SNACK = "animation.kickoff.dodgySnack";
 
 	String ANIMATION_CARD_DIRTY_TRICK_FRONT = "animation.card.dirtyTrick.front";
 	String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";

@@ -25,7 +25,7 @@ import com.fumbbl.ffb.util.UtilCards;
 
 /**
  * Step in block sequence to handle the block roll.
- * 
+ * <p>
  * Sets stepParameter BLOCK_DICE_INDEX for all steps on the stack. Sets
  * stepParameter BLOCK_RESULT for all steps on the stack. Sets stepParameter
  * BLOCK_ROLL for all steps on the stack. Sets stepParameter NR_OF_BLOCK_DICE
@@ -101,7 +101,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 			if (doRoll) {
 				game.getFieldModel().clearDiceDecorations();
-				fNrOfDice = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
+				fNrOfDice = ServerUtilBlock.findNrOfBlockDice(getGameState(), actingPlayer.getPlayer(),
 						game.getDefender(), (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK), successfulDauntless);
 				fBlockRoll = getGameState().getDiceRoller().rollBlockDice(fNrOfDice);
 				getResult().addReport(new ReportBlock(game.getDefenderId()));

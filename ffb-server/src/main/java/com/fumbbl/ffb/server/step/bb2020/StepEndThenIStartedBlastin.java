@@ -79,7 +79,7 @@ public class StepEndThenIStartedBlastin extends AbstractStep {
 			endPlayerActionGenerator.pushSequence(params);
 		} else {
 			UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
-			ServerUtilBlock.updateDiceDecorations(game);
+			ServerUtilBlock.updateDiceDecorations(getGameState());
 		}
 	}
 

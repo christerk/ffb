@@ -35,14 +35,6 @@ import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
-	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
-		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
-		add(TurnMode.DUMP_OFF);
-		add(TurnMode.BLITZ);
-		add(TurnMode.QUICK_SNAP);
-		add(TurnMode.BETWEEN_TURNS);
-	}};
 
 	@Override
 	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
@@ -65,7 +57,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return !modesProhibitingReRolls.contains(turnMode);
+		return true;
 	}
 
 	@Override
@@ -112,7 +104,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
-		return TurnMode.BLITZ != turnMode;
+		return true;
 	}
 
 	@Override

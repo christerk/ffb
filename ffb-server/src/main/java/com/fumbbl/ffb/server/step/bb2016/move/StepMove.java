@@ -108,7 +108,7 @@ public class StepMove extends AbstractStep {
 			if (fMoveStackSize == 0) {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 			}
-			ServerUtilBlock.updateDiceDecorations(game);
+			ServerUtilBlock.updateDiceDecorations(getGameState());
 			getResult().setSound(actingPlayer.isDodging() ? SoundId.DODGE : SoundId.STEP);
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);

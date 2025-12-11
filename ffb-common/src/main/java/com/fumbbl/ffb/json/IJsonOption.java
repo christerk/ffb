@@ -162,8 +162,9 @@ public interface IJsonOption {
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
-	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonStringOption EFFECT = new JsonStringOption("effect");
+	JsonStringArrayOption ELIGIBLE_PLAYER_IDS = new JsonStringArrayOption("eligiblePlayerIds");
+	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
@@ -556,6 +557,7 @@ public interface IJsonOption {
 	JsonStringOption TEAM_HOME_ID = new JsonStringOption("teamHomeId");
 	JsonStringOption TEAM_HOME_NAME = new JsonStringOption("teamHomeName");
 	JsonStringOption TEAM_ID = new JsonStringOption("teamId");
+	JsonStringArrayOption TEAM_IDS_ADDITIONAL_ASSIST = new JsonStringArrayOption("teamIdsAdditionalAssist");
 	JsonObjectOption TEAM_LIST = new JsonObjectOption("teamList");
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");

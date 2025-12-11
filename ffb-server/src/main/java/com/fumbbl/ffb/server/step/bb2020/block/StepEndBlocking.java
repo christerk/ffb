@@ -104,7 +104,7 @@ public class StepEndBlocking extends AbstractStep {
 							if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
 								targetSelectionState.addUsedSkill(commandUseSkill.getSkill());
 								getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ADD_BLOCK_DIE));
-								ServerUtilBlock.updateDiceDecorations(game);
+								ServerUtilBlock.updateDiceDecorations(getGameState());
 							}
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -228,7 +228,7 @@ public class StepEndBlocking extends AbstractStep {
 				game.getFieldModel().setPlayerState(game.getDefender(), oldDefenderState);
 			}
 			game.setDefenderId(null);
-			ServerUtilBlock.updateDiceDecorations(game);
+			ServerUtilBlock.updateDiceDecorations(getGameState());
 			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
 			moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 		} else {
@@ -273,7 +273,7 @@ public class StepEndBlocking extends AbstractStep {
 					&& PlayerAction.BLITZ == actingPlayer.getPlayerAction()
 					&& targetSelectionState != null
 					&& !targetSelectionState.getUsedSkills().contains(addBlockDieSkill)) {
-					ServerUtilBlock.updateDiceDecorations(game, true);
+					ServerUtilBlock.updateDiceDecorations(getGameState(), true);
 				}
 
 				actingPlayer.setGoingForIt(true);
@@ -349,7 +349,7 @@ public class StepEndBlocking extends AbstractStep {
 				} else if (usePutridRegurgitation) {
 					blockGenerator.pushSequence(new Block.Builder(getGameState()).publishDefender(true).build());
 					UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.PUTRID_REGURGITATION_BLOCK, actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					// always set the selection state to null in case the player action got changed from blitz_move to blitz in case of e.g. take root
 					// otherwise logic for target selection will not trigger on players other than the original target
 					// there is another line like this in StepInitMoving#handleCommand
@@ -370,7 +370,7 @@ public class StepEndBlocking extends AbstractStep {
 				} else if (usePileDriver) {
 					String actingPlayerId = activePlayer.getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.FOUL, actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 					pileDriver.pushSequence(new PileDriver.SequenceParams(getGameState(), targetPlayerId));
 					PlayerResult playerResult = game.getGameResult().getPlayerResult(activePlayer);
 					playerResult.setFouls(playerResult.getFouls() + 1);
@@ -399,13 +399,13 @@ public class StepEndBlocking extends AbstractStep {
 						}
 						UtilServerGame.changeActingPlayer(this, actingPlayerId, newAction, actingPlayer.isJumping());
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-						ServerUtilBlock.updateDiceDecorations(game);
+						ServerUtilBlock.updateDiceDecorations(getGameState());
 						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 						// this may happen for ball and chain
 					} else if ((actingPlayer.getPlayerAction() == PlayerAction.MOVE)
 						&& UtilPlayer.isNextMovePossible(game, false)) {
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-						ServerUtilBlock.updateDiceDecorations(game);
+						ServerUtilBlock.updateDiceDecorations(getGameState());
 						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 					} else {
 						boolean blitzWithMoveLeft = isBlitz && UtilPlayer.isNextMovePossible(game, false);
@@ -423,7 +423,7 @@ public class StepEndBlocking extends AbstractStep {
 							actingPlayer.setHasBlocked(false);
 							actingPlayer.markSkillUnused(NamedProperties.forceSecondBlock);
 							blockGenerator.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).publishDefender(true).build());
-							ServerUtilBlock.updateDiceDecorations(game);
+							ServerUtilBlock.updateDiceDecorations(getGameState());
 						} else if (
 							usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 								&& attackerState.hasTacklezones() && hasValidOtherOpponent &&

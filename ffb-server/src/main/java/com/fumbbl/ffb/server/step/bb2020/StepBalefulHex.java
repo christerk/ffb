@@ -179,7 +179,7 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 					fieldModel.setPlayerState(targetPlayer, fieldModel.getPlayerState(targetPlayer).changeHypnotized(true).changeActive(false));
 					fieldModel.addSkillEnhancements(targetPlayer, skill);
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 				} else if (getReRolledAction() == null && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 2, false)) {
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else {
