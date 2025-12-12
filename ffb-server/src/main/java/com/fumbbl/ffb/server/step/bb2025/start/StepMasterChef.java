@@ -7,7 +7,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
@@ -35,11 +34,6 @@ public class StepMasterChef extends AbstractStep {
 			executeStep();
 		}
 		return status;
-	}
-
-	@Override
-	public boolean setParameter(StepParameter parameter) {
-		return (parameter != null) && super.setParameter(parameter);
 	}
 
 	private void executeStep() {
