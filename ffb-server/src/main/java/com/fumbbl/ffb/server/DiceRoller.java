@@ -212,6 +212,10 @@ public class DiceRoller {
 		return rollDice(6);
 	}
 
+	public int rollKickScatterDistance() {
+		return rollDice(3);
+	}
+
 	public int[] rollThrowInDistance() {
 		return rollDice(2, 6);
 	}
