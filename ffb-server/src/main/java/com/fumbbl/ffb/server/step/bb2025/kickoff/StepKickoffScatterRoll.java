@@ -175,9 +175,6 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 				UtilServerGame.handleChefRolls(this, game);
 			}
 		}
-
-
-
 	}
 
 	private Player<?> findKickingPlayer() {
