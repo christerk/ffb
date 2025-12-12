@@ -32,7 +32,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 
 import java.util.Arrays;
 import java.util.List;
@@ -169,11 +168,6 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, fTouchback));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 
-			if ((game.getHalf() < 3)
-				&& (game.getTurnDataHome().getTurnNr() == 0)
-				&& (game.getTurnDataAway().getTurnNr() == 0)) {
-				UtilServerGame.handleChefRolls(this, game);
-			}
 		}
 	}
 

@@ -113,6 +113,7 @@ public enum StepId implements INamedObject {
 	KICK_TM_DOUBLE_ROLLED("kickTeamMateDoubleRolled"), // action.kickTeamMate
 	KICKOFF("kickoff"), // phase.kickoff
 	KICKOFF_ANIMATION("kickoffAnimation"), // phase.kickoff
+	KICKOFF_CHEF("kickoffChef"), // phase.kickoff
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
