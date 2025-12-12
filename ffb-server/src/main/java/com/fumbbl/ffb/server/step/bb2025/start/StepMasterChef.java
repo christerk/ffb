@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025.kickoff;
+package com.fumbbl.ffb.server.step.bb2025.start;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
@@ -11,15 +11,15 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class StepKickoffChef extends AbstractStep {
+public class StepMasterChef extends AbstractStep {
 
-	public StepKickoffChef(GameState gameState) {
+	public StepMasterChef(GameState gameState) {
 		super(gameState);
 	}
 
 	@Override
 	public StepId getId() {
-		return StepId.KICKOFF_CHEF;
+		return StepId.MASTER_CHEF;
 	}
 
 	@Override
