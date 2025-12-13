@@ -40,7 +40,6 @@ import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.RadingParty;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
-import com.fumbbl.ffb.server.step.generator.SelectGazeTarget;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
@@ -288,7 +287,6 @@ public final class StepEndSelecting extends AbstractStep {
     BlitzMove blitzMoveGenerator = (BlitzMove) factory.forName(SequenceGenerator.Type.BlitzMove.name());
     BlitzBlock blitzBlockGenerator = (BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name());
     SelectBlitzTarget selectBlitzTarget = (SelectBlitzTarget) factory.forName(SequenceGenerator.Type.SelectBlitzTarget.name());
-    SelectGazeTarget selectGazeTarget = (SelectGazeTarget) factory.forName(SequenceGenerator.Type.SelectGazeTarget.name());
     MultiBlock multiBlock = (MultiBlock) factory.forName(SequenceGenerator.Type.MultiBlock.name());
     Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
     Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
@@ -297,9 +295,6 @@ public final class StepEndSelecting extends AbstractStep {
     switch (pPlayerAction) {
       case BLITZ_SELECT:
         selectBlitzTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-        break;
-      case GAZE_SELECT:
-        selectGazeTarget.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
         break;
       case PASS:
       case HAIL_MARY_PASS:
