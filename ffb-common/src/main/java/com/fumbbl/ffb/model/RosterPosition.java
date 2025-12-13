@@ -580,7 +580,7 @@ public class RosterPosition implements Position {
 				setAgility(Integer.parseInt(pValue));
 			}
 			if (_XML_TAG_PASSING.equals(pTag)) {
-				setPassing(pValue != null && pValue.length() > 0 ? Integer.parseInt(pValue) : 0);
+				setPassing(pValue != null && !pValue.isEmpty() ? Integer.parseInt(pValue) : 0);
 			}
 			if (_XML_TAG_ARMOUR.equals(pTag)) {
 				setArmour(Integer.parseInt(pValue));
@@ -660,13 +660,13 @@ public class RosterPosition implements Position {
 			skillValues.add(fSkillValues.get(skill));
 			displayValues.add(this.displayValues.get(skill));
 		}
-		if (skillArray.size() > 0) {
+		if (!skillArray.isEmpty()) {
 			IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
 		}
-		if (skillValues.size() > 0) {
+		if (!skillValues.isEmpty()) {
 			IJsonOption.SKILL_VALUES.addTo(jsonObject, skillValues);
 		}
-		if (displayValues.size() > 0) {
+		if (!displayValues.isEmpty()) {
 			IJsonOption.SKILL_DISPLAY_VALUES.addTo(jsonObject, displayValues);
 		}
 
@@ -724,7 +724,7 @@ public class RosterPosition implements Position {
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
 		String[] skillValues = IJsonOption.SKILL_VALUES.getFrom(source, jsonObject);
 		String[] displayValues = IJsonOption.SKILL_DISPLAY_VALUES.getFrom(source, jsonObject);
-		if ((skillArray != null) && (skillArray.size() > 0) && ArrayTool.isProvided(skillValues)) {
+		if ((skillArray != null) && (!skillArray.isEmpty()) && ArrayTool.isProvided(skillValues)) {
 			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
 			for (int i = 0; i < skillArray.size(); i++) {
 				Skill skill = (Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i));

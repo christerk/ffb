@@ -557,7 +557,7 @@ public abstract class LogicModule {
 		return (playerState != null) && playerState.isActive() && playerState.getBase() == PlayerState.STANDING
 			&& mechanic.isBlockActionAllowed(game.getTurnMode())
 			&& player.hasUnusedSkillProperty(NamedProperties.canBlockOverDistance)
-			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersWithExactDistance(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 2));
+			&& ArrayTool.isProvided(UtilPlayer.findNonAdjacentBlockablePlayersTwoSquaresAway(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player)));
 	}
 
 	protected boolean isFuriousOutburstAvailable(Player<?> player) {
@@ -570,5 +570,11 @@ public abstract class LogicModule {
 			&& !game.getTurnData().isBlitzUsed()
 			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
 			&& ArrayTool.isProvided(UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player), 3));
+	}
+
+	public boolean isRecoverFromEyeGougeActionAvailable(Player<?> player) {
+		Game game = client.getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return playerState != null && playerState.isEyeGouged()	&& playerState.isActive() && playerState.getBase() != PlayerState.PRONE;
 	}
 }

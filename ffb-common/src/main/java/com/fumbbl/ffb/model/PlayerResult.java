@@ -16,424 +16,440 @@ import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
 public class PlayerResult implements IJsonSerializable {
 
-	private int fCompletions;
-	private int fTouchdowns;
-	private int fInterceptions;
-	private int fCasualties;
-	private int fPlayerAwards;
-	private int fBlocks;
-	private int fFouls;
-	private int fRushing;
-	private int fPassing;
-	private int fTurnsPlayed;
-	private int fCurrentSpps;
-	private final transient TeamResult fTeamResult;
+    private int fCompletions;
+    private int fTouchdowns;
+    private int fInterceptions;
+    private int fCasualties;
+    private int fPlayerAwards;
+    private int fBlocks;
+    private int fFouls;
+    private int fRushing;
+    private int fPassing;
+    private int fTurnsPlayed;
+    private int fCurrentSpps;
+    private final transient TeamResult fTeamResult;
 
-	private boolean fDefecting;
-	private SeriousInjury fSeriousInjury;
-	private SeriousInjury fSeriousInjuryDecay;
-	private SendToBoxReason fSendToBoxReason;
-	private int fSendToBoxTurn;
-	private int fSendToBoxHalf;
-	private String fSendToBoxByPlayerId;
-	private boolean fHasUsedSecretWeapon;
-	private int deflections, completionsWithAdditionalSpp, casualtiesWithAdditionalSpp;
-	private transient Player<?> fPlayer;
+    private boolean fDefecting;
+    private SeriousInjury fSeriousInjury;
+    private SeriousInjury fSeriousInjuryDecay;
+    private SendToBoxReason fSendToBoxReason;
+    private int fSendToBoxTurn;
+    private int fSendToBoxHalf;
+    private String fSendToBoxByPlayerId;
+    private boolean fHasUsedSecretWeapon;
+    private int deflections, completionsWithAdditionalSpp, casualtiesWithAdditionalSpp, catchesWithAdditionalSpp;
+    private transient Player<?> fPlayer;
 
-	public PlayerResult(TeamResult pTeamResult) {
-		this(pTeamResult, null);
-	}
+    public PlayerResult(TeamResult pTeamResult) {
+        this(pTeamResult, null);
+    }
 
-	public PlayerResult(TeamResult pTeamResult, Player<?> pPlayer) {
-		fTeamResult = pTeamResult;
-		fPlayer = pPlayer;
-	}
+    public PlayerResult(TeamResult pTeamResult, Player<?> pPlayer) {
+        fTeamResult = pTeamResult;
+        fPlayer = pPlayer;
+    }
 
-	public TeamResult getTeamResult() {
-		return fTeamResult;
-	}
+    public TeamResult getTeamResult() {
+        return fTeamResult;
+    }
 
-	public Player<?> getPlayer() {
-		return fPlayer;
-	}
+    public Player<?> getPlayer() {
+        return fPlayer;
+    }
 
-	public String getPlayerId() {
-		return ((getPlayer() != null) ? getPlayer().getId() : null);
-	}
+    public String getPlayerId() {
+        return ((getPlayer() != null) ? getPlayer().getId() : null);
+    }
 
-	public SeriousInjury getSeriousInjury() {
-		return fSeriousInjury;
-	}
+    public SeriousInjury getSeriousInjury() {
+        return fSeriousInjury;
+    }
 
-	public void setSeriousInjury(SeriousInjury pSeriousInjury) {
-		if (pSeriousInjury == fSeriousInjury) {
-			return;
-		}
-		fSeriousInjury = pSeriousInjury;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY, fSeriousInjury);
-	}
+    public void setSeriousInjury(SeriousInjury pSeriousInjury) {
+        if (pSeriousInjury == fSeriousInjury) {
+            return;
+        }
+        fSeriousInjury = pSeriousInjury;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY, fSeriousInjury);
+    }
 
-	public SeriousInjury getSeriousInjuryDecay() {
-		return fSeriousInjuryDecay;
-	}
+    public SeriousInjury getSeriousInjuryDecay() {
+        return fSeriousInjuryDecay;
+    }
 
-	public void setSeriousInjuryDecay(SeriousInjury pSeriousInjuryDecay) {
-		if (pSeriousInjuryDecay == fSeriousInjuryDecay) {
-			return;
-		}
-		fSeriousInjuryDecay = pSeriousInjuryDecay;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY, fSeriousInjuryDecay);
-	}
+    public void setSeriousInjuryDecay(SeriousInjury pSeriousInjuryDecay) {
+        if (pSeriousInjuryDecay == fSeriousInjuryDecay) {
+            return;
+        }
+        fSeriousInjuryDecay = pSeriousInjuryDecay;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SERIOUS_INJURY_DECAY, fSeriousInjuryDecay);
+    }
 
-	public SendToBoxReason getSendToBoxReason() {
-		return fSendToBoxReason;
-	}
+    public SendToBoxReason getSendToBoxReason() {
+        return fSendToBoxReason;
+    }
 
-	public void setSendToBoxReason(SendToBoxReason pSendToBoxReason) {
-		if (pSendToBoxReason == fSendToBoxReason) {
-			return;
-		}
-		fSendToBoxReason = pSendToBoxReason;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_REASON, fSendToBoxReason);
-	}
+    public void setSendToBoxReason(SendToBoxReason pSendToBoxReason) {
+        if (pSendToBoxReason == fSendToBoxReason) {
+            return;
+        }
+        fSendToBoxReason = pSendToBoxReason;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_REASON, fSendToBoxReason);
+    }
 
-	public int getSendToBoxTurn() {
-		return fSendToBoxTurn;
-	}
+    public int getSendToBoxTurn() {
+        return fSendToBoxTurn;
+    }
 
-	public void setSendToBoxTurn(int pSendToBoxTurn) {
-		if (pSendToBoxTurn == fSendToBoxTurn) {
-			return;
-		}
-		fSendToBoxTurn = pSendToBoxTurn;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_TURN, fSendToBoxTurn);
-	}
+    public void setSendToBoxTurn(int pSendToBoxTurn) {
+        if (pSendToBoxTurn == fSendToBoxTurn) {
+            return;
+        }
+        fSendToBoxTurn = pSendToBoxTurn;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_TURN, fSendToBoxTurn);
+    }
 
-	public int getSendToBoxHalf() {
-		return fSendToBoxHalf;
-	}
+    public int getSendToBoxHalf() {
+        return fSendToBoxHalf;
+    }
 
-	public void setSendToBoxHalf(int pSendToBoxHalf) {
-		if (pSendToBoxHalf == fSendToBoxHalf) {
-			return;
-		}
-		fSendToBoxHalf = pSendToBoxHalf;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_HALF, fSendToBoxHalf);
-	}
+    public void setSendToBoxHalf(int pSendToBoxHalf) {
+        if (pSendToBoxHalf == fSendToBoxHalf) {
+            return;
+        }
+        fSendToBoxHalf = pSendToBoxHalf;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_HALF, fSendToBoxHalf);
+    }
 
-	public int getTurnsPlayed() {
-		return fTurnsPlayed;
-	}
+    public int getTurnsPlayed() {
+        return fTurnsPlayed;
+    }
 
-	public void setSendToBoxByPlayerId(String pSendToBoxByPlayerId) {
-		if (StringTool.isEqual(pSendToBoxByPlayerId, fSendToBoxByPlayerId)) {
-			return;
-		}
-		fSendToBoxByPlayerId = pSendToBoxByPlayerId;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_BY_PLAYER_ID, fSendToBoxByPlayerId);
-	}
+    public void setSendToBoxByPlayerId(String pSendToBoxByPlayerId) {
+        if (StringTool.isEqual(pSendToBoxByPlayerId, fSendToBoxByPlayerId)) {
+            return;
+        }
+        fSendToBoxByPlayerId = pSendToBoxByPlayerId;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_SEND_TO_BOX_BY_PLAYER_ID, fSendToBoxByPlayerId);
+    }
 
-	public String getSendToBoxByPlayerId() {
-		return fSendToBoxByPlayerId;
-	}
+    public String getSendToBoxByPlayerId() {
+        return fSendToBoxByPlayerId;
+    }
 
-	public void setTurnsPlayed(int pTurnsPlayed) {
-		if (pTurnsPlayed == fTurnsPlayed) {
-			return;
-		}
-		fTurnsPlayed = pTurnsPlayed;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TURNS_PLAYED, fTurnsPlayed);
-	}
+    public void setTurnsPlayed(int pTurnsPlayed) {
+        if (pTurnsPlayed == fTurnsPlayed) {
+            return;
+        }
+        fTurnsPlayed = pTurnsPlayed;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TURNS_PLAYED, fTurnsPlayed);
+    }
 
-	public void setHasUsedSecretWeapon(boolean pHasUsedSecretWeapon) {
-		if (pHasUsedSecretWeapon == fHasUsedSecretWeapon) {
-			return;
-		}
-		fHasUsedSecretWeapon = pHasUsedSecretWeapon;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_HAS_USED_SECRET_WEAPON, fHasUsedSecretWeapon);
-	}
+    public void setHasUsedSecretWeapon(boolean pHasUsedSecretWeapon) {
+        if (pHasUsedSecretWeapon == fHasUsedSecretWeapon) {
+            return;
+        }
+        fHasUsedSecretWeapon = pHasUsedSecretWeapon;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_HAS_USED_SECRET_WEAPON, fHasUsedSecretWeapon);
+    }
 
-	public boolean hasUsedSecretWeapon() {
-		return fHasUsedSecretWeapon;
-	}
+    public boolean hasUsedSecretWeapon() {
+        return fHasUsedSecretWeapon;
+    }
 
-	public int getCompletions() {
-		return fCompletions;
-	}
+    public int getCompletions() {
+        return fCompletions;
+    }
 
-	public void setCompletions(int pCompletions) {
-		if (pCompletions == fCompletions) {
-			return;
-		}
-		fCompletions = pCompletions;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS, fCompletions);
-	}
+    public void setCompletions(int pCompletions) {
+        if (pCompletions == fCompletions) {
+            return;
+        }
+        fCompletions = pCompletions;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS, fCompletions);
+    }
 
-	public int getCompletionsWithAdditionalSpp() {
-		return completionsWithAdditionalSpp;
-	}
+    public int getCompletionsWithAdditionalSpp() {
+        return completionsWithAdditionalSpp;
+    }
 
-	public void setCompletionsWithAdditionalSpp(int pCompletions) {
-		if (pCompletions == completionsWithAdditionalSpp) {
-			return;
-		}
-		completionsWithAdditionalSpp = pCompletions;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP, completionsWithAdditionalSpp);
-	}
+    public void setCompletionsWithAdditionalSpp(int pCompletions) {
+        if (pCompletions == completionsWithAdditionalSpp) {
+            return;
+        }
+        completionsWithAdditionalSpp = pCompletions;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP, completionsWithAdditionalSpp);
+    }
 
-	public int getTouchdowns() {
-		return fTouchdowns;
-	}
+    public int getTouchdowns() {
+        return fTouchdowns;
+    }
 
-	public void setTouchdowns(int pTouchdowns) {
-		if (pTouchdowns == fTouchdowns) {
-			return;
-		}
-		fTouchdowns = pTouchdowns;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TOUCHDOWNS, fTouchdowns);
-	}
+    public void setTouchdowns(int pTouchdowns) {
+        if (pTouchdowns == fTouchdowns) {
+            return;
+        }
+        fTouchdowns = pTouchdowns;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_TOUCHDOWNS, fTouchdowns);
+    }
 
-	public int getInterceptions() {
-		return fInterceptions;
-	}
+    public int getInterceptions() {
+        return fInterceptions;
+    }
 
-	public void setInterceptions(int pInterceptions) {
-		if (pInterceptions == fInterceptions) {
-			return;
-		}
-		fInterceptions = pInterceptions;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_INTERCEPTIONS, fInterceptions);
-	}
+    public void setInterceptions(int pInterceptions) {
+        if (pInterceptions == fInterceptions) {
+            return;
+        }
+        fInterceptions = pInterceptions;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_INTERCEPTIONS, fInterceptions);
+    }
 
-	public int getDeflections() {
-		return deflections;
-	}
+    public int getDeflections() {
+        return deflections;
+    }
 
-	public void setDeflections(int deflections) {
-		if (this.deflections == deflections) {
-			return;
-		}
-		this.deflections = deflections;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFLECTIONS, deflections);
-	}
+    public void setDeflections(int deflections) {
+        if (this.deflections == deflections) {
+            return;
+        }
+        this.deflections = deflections;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFLECTIONS, deflections);
+    }
 
-	public int getCasualties() {
-		return fCasualties;
-	}
+    public int getCasualties() {
+        return fCasualties;
+    }
 
-	public void setCasualties(int pCasualties) {
-		if (pCasualties == fCasualties) {
-			return;
-		}
-		fCasualties = pCasualties;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES, fCasualties);
-	}
+    public void setCasualties(int pCasualties) {
+        if (pCasualties == fCasualties) {
+            return;
+        }
+        fCasualties = pCasualties;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES, fCasualties);
+    }
 
-	public int getCasualtiesWithAdditionalSpp() {
-		return casualtiesWithAdditionalSpp;
-	}
+    public int getCasualtiesWithAdditionalSpp() {
+        return casualtiesWithAdditionalSpp;
+    }
 
-	public void setCasualtiesWithAdditionalSpp(int pCasualties) {
-		if (pCasualties == casualtiesWithAdditionalSpp) {
-			return;
-		}
-		casualtiesWithAdditionalSpp = pCasualties;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES_WITH_ADDITIONAL_SPP, casualtiesWithAdditionalSpp);
-	}
+    public void setCasualtiesWithAdditionalSpp(int pCasualties) {
+        if (pCasualties == casualtiesWithAdditionalSpp) {
+            return;
+        }
+        casualtiesWithAdditionalSpp = pCasualties;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CASUALTIES_WITH_ADDITIONAL_SPP, casualtiesWithAdditionalSpp);
+    }
 
-	public int getPlayerAwards() {
-		return fPlayerAwards;
-	}
+    public int getPlayerAwards() {
+        return fPlayerAwards;
+    }
 
-	public void setPlayerAwards(int pPlayerAwards) {
-		if (pPlayerAwards == fPlayerAwards) {
-			return;
-		}
-		fPlayerAwards = pPlayerAwards;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PLAYER_AWARDS, fPlayerAwards);
-	}
+    public void setPlayerAwards(int pPlayerAwards) {
+        if (pPlayerAwards == fPlayerAwards) {
+            return;
+        }
+        fPlayerAwards = pPlayerAwards;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PLAYER_AWARDS, fPlayerAwards);
+    }
 
-	public int getBlocks() {
-		return fBlocks;
-	}
+    public int getBlocks() {
+        return fBlocks;
+    }
 
-	public void setBlocks(int pBlocks) {
-		if (pBlocks == fBlocks) {
-			return;
-		}
-		fBlocks = pBlocks;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_BLOCKS, fBlocks);
-	}
+    public void setBlocks(int pBlocks) {
+        if (pBlocks == fBlocks) {
+            return;
+        }
+        fBlocks = pBlocks;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_BLOCKS, fBlocks);
+    }
 
-	public int getFouls() {
-		return fFouls;
-	}
+    public int getFouls() {
+        return fFouls;
+    }
 
-	public void setFouls(int pFouls) {
-		if (pFouls == fFouls) {
-			return;
-		}
-		fFouls = pFouls;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_FOULS, fFouls);
-	}
+    public void setFouls(int pFouls) {
+        if (pFouls == fFouls) {
+            return;
+        }
+        fFouls = pFouls;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_FOULS, fFouls);
+    }
 
-	public int getRushing() {
-		return fRushing;
-	}
+    public int getRushing() {
+        return fRushing;
+    }
 
-	public void setRushing(int pRushing) {
-		if (pRushing == fRushing) {
-			return;
-		}
-		fRushing = pRushing;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_RUSHING, fRushing);
-	}
+    public void setRushing(int pRushing) {
+        if (pRushing == fRushing) {
+            return;
+        }
+        fRushing = pRushing;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_RUSHING, fRushing);
+    }
 
-	public int getPassing() {
-		return fPassing;
-	}
+    public int getPassing() {
+        return fPassing;
+    }
 
-	public void setPassing(int pPassing) {
-		if (pPassing == fPassing) {
-			return;
-		}
-		fPassing = pPassing;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PASSING, fPassing);
-	}
+    public void setPassing(int pPassing) {
+        if (pPassing == fPassing) {
+            return;
+        }
+        fPassing = pPassing;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_PASSING, fPassing);
+    }
 
-	public int getCurrentSpps() {
-		return fCurrentSpps;
-	}
+    public int getCurrentSpps() {
+        return fCurrentSpps;
+    }
 
-	public void setCurrentSpps(int pCurrentSpps) {
-		if (pCurrentSpps == fCurrentSpps) {
-			return;
-		}
-		fCurrentSpps = pCurrentSpps;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CURRENT_SPPS, fCurrentSpps);
-	}
+    public void setCurrentSpps(int pCurrentSpps) {
+        if (pCurrentSpps == fCurrentSpps) {
+            return;
+        }
+        fCurrentSpps = pCurrentSpps;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CURRENT_SPPS, fCurrentSpps);
+    }
 
-	public boolean isDefecting() {
-		return fDefecting;
-	}
+    public boolean isDefecting() {
+        return fDefecting;
+    }
 
-	public void setDefecting(boolean pDefecting) {
-		if (pDefecting == fDefecting) {
-			return;
-		}
-		fDefecting = pDefecting;
-		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFECTING, fDefecting);
-	}
+    public void setDefecting(boolean pDefecting) {
+        if (pDefecting == fDefecting) {
+            return;
+        }
+        fDefecting = pDefecting;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFECTING, fDefecting);
+    }
 
-	public int totalEarnedSpps() {
+    public int getCatchesWithAdditionalSpp() {
+        return catchesWithAdditionalSpp;
+    }
 
-		GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+    public void setCatchesWithAdditionalSpp(int catchesWithAdditionalSpp) {
+        if (this.catchesWithAdditionalSpp == catchesWithAdditionalSpp) {
+            return;
+        }
+        this.catchesWithAdditionalSpp = catchesWithAdditionalSpp;
+        notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CATCHES_WITH_ADDITIONAL_SPP, catchesWithAdditionalSpp);
+    }
 
-		return ((getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-			+ getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp());
-	}
+    public int totalEarnedSpps() {
 
-	public Game getGame() {
-		return getTeamResult().getGame();
-	}
+        GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-	public void init(PlayerResult pPlayerResult) {
-		if (pPlayerResult != null) {
-			fPlayer = pPlayerResult.getPlayer();
-			fCompletions = pPlayerResult.getCompletions();
-			completionsWithAdditionalSpp = pPlayerResult.getCompletionsWithAdditionalSpp();
-			fTouchdowns = pPlayerResult.getTouchdowns();
-			fInterceptions = pPlayerResult.getInterceptions();
-			deflections = pPlayerResult.getDeflections();
-			fCasualties = pPlayerResult.getCasualties();
-			casualtiesWithAdditionalSpp = pPlayerResult.getCasualtiesWithAdditionalSpp();
-			fPlayerAwards = pPlayerResult.getPlayerAwards();
-			fBlocks = pPlayerResult.getBlocks();
-			fFouls = pPlayerResult.getFouls();
-			fRushing = pPlayerResult.getRushing();
-			fPassing = pPlayerResult.getPassing();
-			fTurnsPlayed = pPlayerResult.getTurnsPlayed();
-			fCurrentSpps = pPlayerResult.getCurrentSpps();
-			fDefecting = pPlayerResult.isDefecting();
-			fSeriousInjury = pPlayerResult.getSeriousInjury();
-			fSendToBoxReason = pPlayerResult.getSendToBoxReason();
-			fSendToBoxTurn = pPlayerResult.getSendToBoxTurn();
-			fSendToBoxHalf = pPlayerResult.getSendToBoxHalf();
-			fSendToBoxByPlayerId = pPlayerResult.getSendToBoxByPlayerId();
-			fHasUsedSecretWeapon = pPlayerResult.hasUsedSecretWeapon();
-		}
-	}
+        return (getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
+                + getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp() + getCatchesWithAdditionalSpp();
+    }
 
-	// change tracking
+    public Game getGame() {
+        return getTeamResult().getGame();
+    }
 
-	private void notifyObservers(ModelChangeId pModelChangeId, Object pValue) {
-		if ((getGame() == null) || (pModelChangeId == null) || !StringTool.isProvided(getPlayerId())) {
-			return;
-		}
-		ModelChange modelChange = new ModelChange(pModelChangeId, getPlayerId(), pValue);
-		getGame().notifyObservers(modelChange);
-	}
+    public void init(PlayerResult pPlayerResult) {
+        if (pPlayerResult != null) {
+            fPlayer = pPlayerResult.getPlayer();
+            fCompletions = pPlayerResult.getCompletions();
+            completionsWithAdditionalSpp = pPlayerResult.getCompletionsWithAdditionalSpp();
+            fTouchdowns = pPlayerResult.getTouchdowns();
+            fInterceptions = pPlayerResult.getInterceptions();
+            deflections = pPlayerResult.getDeflections();
+            fCasualties = pPlayerResult.getCasualties();
+            casualtiesWithAdditionalSpp = pPlayerResult.getCasualtiesWithAdditionalSpp();
+            fPlayerAwards = pPlayerResult.getPlayerAwards();
+            fBlocks = pPlayerResult.getBlocks();
+            fFouls = pPlayerResult.getFouls();
+            fRushing = pPlayerResult.getRushing();
+            fPassing = pPlayerResult.getPassing();
+            fTurnsPlayed = pPlayerResult.getTurnsPlayed();
+            fCurrentSpps = pPlayerResult.getCurrentSpps();
+            fDefecting = pPlayerResult.isDefecting();
+            fSeriousInjury = pPlayerResult.getSeriousInjury();
+            fSendToBoxReason = pPlayerResult.getSendToBoxReason();
+            fSendToBoxTurn = pPlayerResult.getSendToBoxTurn();
+            fSendToBoxHalf = pPlayerResult.getSendToBoxHalf();
+            fSendToBoxByPlayerId = pPlayerResult.getSendToBoxByPlayerId();
+            fHasUsedSecretWeapon = pPlayerResult.hasUsedSecretWeapon();
+            catchesWithAdditionalSpp = pPlayerResult.getCatchesWithAdditionalSpp();
+        }
+    }
 
-	// JSON serialization
+    // change tracking
 
-	public JsonObject toJsonValue() {
-		JsonObject jsonObject = new JsonObject();
-		IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
-		IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
-		IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
-		IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
-		IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
-		IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
-		IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.addTo(jsonObject, casualtiesWithAdditionalSpp);
-		IJsonOption.PLAYER_AWARDS.addTo(jsonObject, fPlayerAwards);
-		IJsonOption.BLOCKS.addTo(jsonObject, fBlocks);
-		IJsonOption.FOULS.addTo(jsonObject, fFouls);
-		IJsonOption.RUSHING.addTo(jsonObject, fRushing);
-		IJsonOption.PASSING.addTo(jsonObject, fPassing);
-		IJsonOption.CURRENT_SPPS.addTo(jsonObject, fCurrentSpps);
-		IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
-		IJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
-		IJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
-		IJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
-		IJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
-		IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.addTo(jsonObject, fSendToBoxByPlayerId);
-		IJsonOption.TURNS_PLAYED.addTo(jsonObject, fTurnsPlayed);
-		IJsonOption.HAS_USED_SECRET_WEAPON.addTo(jsonObject, fHasUsedSecretWeapon);
-		IJsonOption.DEFECTING.addTo(jsonObject, fDefecting);
-		return jsonObject;
-	}
+    private void notifyObservers(ModelChangeId pModelChangeId, Object pValue) {
+        if ((getGame() == null) || (pModelChangeId == null) || !StringTool.isProvided(getPlayerId())) {
+            return;
+        }
+        ModelChange modelChange = new ModelChange(pModelChangeId, getPlayerId(), pValue);
+        getGame().notifyObservers(modelChange);
+    }
 
-	public PlayerResult initFrom(IFactorySource source, JsonValue jsonValue) {
-		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
-		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
-		fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);
-		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.getFrom(source, jsonObject);
-		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
-		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(source, jsonObject);
-		fCasualties = IJsonOption.CASUALTIES.getFrom(source, jsonObject);
-		casualtiesWithAdditionalSpp = IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
-		fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(source, jsonObject);
-		fBlocks = IJsonOption.BLOCKS.getFrom(source, jsonObject);
-		fFouls = IJsonOption.FOULS.getFrom(source, jsonObject);
-		fRushing = IJsonOption.RUSHING.getFrom(source, jsonObject);
-		fPassing = IJsonOption.PASSING.getFrom(source, jsonObject);
-		fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(source, jsonObject);
-		fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
-		fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
-		fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);
-		fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(source, jsonObject);
-		fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(source, jsonObject);
-		fSendToBoxByPlayerId = IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.getFrom(source, jsonObject);
-		fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(source, jsonObject);
-		fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(source, jsonObject);
-		fDefecting = IJsonOption.DEFECTING.getFrom(source, jsonObject);
-		return this;
-	}
+    // JSON serialization
+
+    public JsonObject toJsonValue() {
+        JsonObject jsonObject = new JsonObject();
+        IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
+        IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
+        IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
+        IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
+        IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
+        IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
+        IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.addTo(jsonObject, casualtiesWithAdditionalSpp);
+        IJsonOption.PLAYER_AWARDS.addTo(jsonObject, fPlayerAwards);
+        IJsonOption.BLOCKS.addTo(jsonObject, fBlocks);
+        IJsonOption.FOULS.addTo(jsonObject, fFouls);
+        IJsonOption.RUSHING.addTo(jsonObject, fRushing);
+        IJsonOption.PASSING.addTo(jsonObject, fPassing);
+        IJsonOption.CURRENT_SPPS.addTo(jsonObject, fCurrentSpps);
+        IJsonOption.SERIOUS_INJURY.addTo(jsonObject, fSeriousInjury);
+        IJsonOption.SERIOUS_INJURY_DECAY.addTo(jsonObject, fSeriousInjuryDecay);
+        IJsonOption.SEND_TO_BOX_REASON.addTo(jsonObject, fSendToBoxReason);
+        IJsonOption.SEND_TO_BOX_TURN.addTo(jsonObject, fSendToBoxTurn);
+        IJsonOption.SEND_TO_BOX_HALF.addTo(jsonObject, fSendToBoxHalf);
+        IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.addTo(jsonObject, fSendToBoxByPlayerId);
+        IJsonOption.TURNS_PLAYED.addTo(jsonObject, fTurnsPlayed);
+        IJsonOption.HAS_USED_SECRET_WEAPON.addTo(jsonObject, fHasUsedSecretWeapon);
+        IJsonOption.DEFECTING.addTo(jsonObject, fDefecting);
+        IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.addTo(jsonObject, catchesWithAdditionalSpp);
+        return jsonObject;
+    }
+
+    public PlayerResult initFrom(IFactorySource source, JsonValue jsonValue) {
+        JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+        String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+        fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
+        fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);
+        completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
+        fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
+        fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(source, jsonObject);
+        fCasualties = IJsonOption.CASUALTIES.getFrom(source, jsonObject);
+        casualtiesWithAdditionalSpp = IJsonOption.CASUALTIES_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
+        fPlayerAwards = IJsonOption.PLAYER_AWARDS.getFrom(source, jsonObject);
+        fBlocks = IJsonOption.BLOCKS.getFrom(source, jsonObject);
+        fFouls = IJsonOption.FOULS.getFrom(source, jsonObject);
+        fRushing = IJsonOption.RUSHING.getFrom(source, jsonObject);
+        fPassing = IJsonOption.PASSING.getFrom(source, jsonObject);
+        fCurrentSpps = IJsonOption.CURRENT_SPPS.getFrom(source, jsonObject);
+        fSeriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+        fSeriousInjuryDecay = (SeriousInjury) IJsonOption.SERIOUS_INJURY_DECAY.getFrom(source, jsonObject);
+        fSendToBoxReason = (SendToBoxReason) IJsonOption.SEND_TO_BOX_REASON.getFrom(source, jsonObject);
+        fSendToBoxTurn = IJsonOption.SEND_TO_BOX_TURN.getFrom(source, jsonObject);
+        fSendToBoxHalf = IJsonOption.SEND_TO_BOX_HALF.getFrom(source, jsonObject);
+        fSendToBoxByPlayerId = IJsonOption.SEND_TO_BOX_BY_PLAYER_ID.getFrom(source, jsonObject);
+        fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(source, jsonObject);
+        fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(source, jsonObject);
+        fDefecting = IJsonOption.DEFECTING.getFrom(source, jsonObject);
+        if (IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.isDefinedIn(jsonObject)) {
+            catchesWithAdditionalSpp = IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
+        }
+        return this;
+    }
 
 }

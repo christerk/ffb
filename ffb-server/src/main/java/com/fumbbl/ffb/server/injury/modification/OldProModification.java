@@ -17,7 +17,7 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.report.bb2020.ReportOldPro;
+import com.fumbbl.ffb.report.mixed.ReportOldPro;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;

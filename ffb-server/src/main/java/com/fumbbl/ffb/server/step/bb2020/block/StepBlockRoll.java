@@ -26,7 +26,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
-import com.fumbbl.ffb.report.bb2020.ReportBlockReRoll;
+import com.fumbbl.ffb.report.mixed.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -192,7 +192,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						addDieSkill = targetSelectionState.getUsedSkills().stream()
 							.filter(skill -> skill.hasSkillProperty(NamedProperties.canAddBlockDie)).findFirst();
 					}
-					Pair<Integer, Boolean> dieCountWithAddInfo = ServerUtilBlock.findNrOfBlockDice(game, actingPlayer.getPlayer(),
+					Pair<Integer, Boolean> dieCountWithAddInfo = ServerUtilBlock.findNrOfBlockDice(getGameState(), actingPlayer.getPlayer(),
 						game.getDefender(), false, successfulDauntless, doubleTargetStrength, addDieSkill.isPresent());
 					fNrOfDice = dieCountWithAddInfo.getLeft();
 					if (addDieSkill.isPresent() && dieCountWithAddInfo.getRight()) {

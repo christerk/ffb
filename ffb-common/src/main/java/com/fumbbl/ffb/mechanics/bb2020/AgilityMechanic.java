@@ -16,7 +16,7 @@ import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
-import com.fumbbl.ffb.report.bb2020.ReportDodgeRoll;
+import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
 
 import java.util.Collections;
 import java.util.Set;

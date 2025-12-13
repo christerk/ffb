@@ -5,10 +5,10 @@ import com.fumbbl.ffb.model.Team;
 
 public class OpponentPlayerSelector extends PlayerSelector {
 
-	static PlayerSelector INSTANCE = new OpponentPlayerSelector();
+	public static PlayerSelector INSTANCE = new OpponentPlayerSelector();
 
 	@Override
-	protected Team determineTeam(Team team, Game game) {
+	public Team determineTeam(Team team, Game game) {
 		return game.getOtherTeam(team);
 	}
 }

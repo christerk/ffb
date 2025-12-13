@@ -16,7 +16,7 @@ import java.util.Set;
 public class InducementType implements INamedObject {
 
 	private final String fName, fDescription, fSingular, fPlural, slotIconProperty;
-	private final GameOptionId maxId, costId, reducedCostId;
+	private final GameOptionId maxId, costId, reducedCostId, reducedMaxId;
 	private final boolean usesGenericSlot;
 	private final int priority;
 	private final Set<Usage> usages = new HashSet<>();
@@ -37,13 +37,22 @@ public class InducementType implements INamedObject {
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty, Usage... usages) {
-		this(pName, pDescription, pSingular, pPlural, maxId, costId, reducedCostId, usesGenericSlot, slotIconProperty, 0, usages);
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot,
+												String slotIconProperty, Usage... usages) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, reducedCostId, usesGenericSlot, slotIconProperty, 0,
+			usages);
 	}
 
 	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
-												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot, String slotIconProperty,
-												int priority, Usage... usages) {
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot,
+												String slotIconProperty, int priority, Usage... usages) {
+		this(pName, pDescription, pSingular, pPlural, maxId, costId, reducedCostId, usesGenericSlot, maxId,
+			slotIconProperty, priority, usages);
+	}
+
+	public InducementType(String pName, String pDescription, String pSingular, String pPlural, GameOptionId maxId,
+												GameOptionId costId, GameOptionId reducedCostId, boolean usesGenericSlot,
+												GameOptionId reducedMaxId, String slotIconProperty, int priority, Usage... usages) {
 		fName = pName;
 		fDescription = pDescription;
 		fSingular = pSingular;
@@ -52,6 +61,7 @@ public class InducementType implements INamedObject {
 		this.costId = costId;
 		this.reducedCostId = reducedCostId;
 		this.usesGenericSlot = usesGenericSlot;
+		this.reducedMaxId = reducedMaxId;
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));
 		}
@@ -75,11 +85,11 @@ public class InducementType implements INamedObject {
 		return fName;
 	}
 
-	public GameOptionId getMaxId() {
+	private GameOptionId getMaxId() {
 		return maxId;
 	}
 
-	public GameOptionId getCostId() {
+	private GameOptionId getCostId() {
 		return costId;
 	}
 
@@ -111,12 +121,24 @@ public class InducementType implements INamedObject {
 		return useReducedCostId(team) ? getReducedCostId() : getCostId();
 	}
 
+	public GameOptionId getActualMaxId(Team team) {
+		return useReducedMaxId(team) ? getReducedMaxId() : getMaxId();
+	}
+
+	public GameOptionId getReducedMaxId() {
+		return reducedMaxId;
+	}
+
+	protected boolean useReducedMaxId(Team team) {
+		return useReducedCostId(team);
+	}
+
 	protected boolean useReducedCostId(Team team) {
 		return false;
 	}
 
 	public int availability(Team team, GameOptions options) {
-		IGameOption gameOption = options.getOptionWithDefault(getMaxId());
+		IGameOption gameOption = options.getOptionWithDefault(getActualMaxId(team));
 
 		if (gameOption instanceof GameOptionInt) {
 			return ((GameOptionInt) gameOption).getValue();

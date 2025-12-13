@@ -7,8 +7,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn;
-import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn.StepState;
+import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn.StepState;
 import com.fumbbl.ffb.skill.bb2020.MonstrousMouth;
 import com.fumbbl.ffb.util.UtilCards;
 

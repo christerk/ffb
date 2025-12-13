@@ -53,7 +53,7 @@ public class ReRollSources {
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
+			//noinspection CallToPrintStackTrace
 			e.printStackTrace();
 		}
 	}

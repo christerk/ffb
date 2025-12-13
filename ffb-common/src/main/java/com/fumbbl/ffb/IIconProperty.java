@@ -34,6 +34,7 @@ public interface IIconProperty {
 	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
+	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -323,6 +324,8 @@ public interface IIconProperty {
 	String ANIMATION_KICKOFF_OFFICIOUS_REF = "animation.kickoff.officiousRef";
 	String ANIMATION_KICKOFF_THROW_A_ROCK = "animation.kickoff.throwARock";
 	String ANIMATION_KICKOFF_VERY_SUNNY = "animation.kickoff.verySunny";
+	String ANIMATION_KICKOFF_CHARGE = "animation.kickoff.charge";
+	String ANIMATION_KICKOFF_DODGY_SNACK = "animation.kickoff.dodgySnack";
 
 	String ANIMATION_CARD_DIRTY_TRICK_FRONT = "animation.card.dirtyTrick.front";
 	String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";
@@ -352,6 +355,7 @@ public interface IIconProperty {
 	String ANIMATION_PRAYER_STILETTO = "animation.prayer.stiletto";
 	String ANIMATION_PRAYER_THROW_A_ROCK = "animation.prayer.throw.a.rock";
 	String ANIMATION_PRAYER_UNDER_SCRUTINY = "animation.prayer.under.scrutiny";
+	String ANIMATION_PRAYER_DAZZLING_CATCHING = "animation.prayer.dazzling.catching";
 
 	// Augments
 	String AUGMENTS_SWEET_WHITE = "augments.sweet.white";

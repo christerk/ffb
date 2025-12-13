@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
-import com.fumbbl.ffb.report.bb2020.ReportPlayerEvent;
+import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;

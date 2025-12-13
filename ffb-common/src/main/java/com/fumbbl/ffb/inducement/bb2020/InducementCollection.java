@@ -17,6 +17,11 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCollection {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
+		add(new InducementType("bloodweiserBabes", "Bloodweiser Kegs", "Bloodweiser Keg", "Bloodweiser Kegs",
+			GameOptionId.INDUCEMENT_KEGS_MAX, GameOptionId.INDUCEMENT_KEGS_COST, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.KNOCKOUT_RECOVERY));
+
+		add(new InducementType("card", null, null, null, null, null));
+
 		add(new InducementType("bribes", "Bribes", "Bribe", "Bribes", GameOptionId.INDUCEMENT_BRIBES_MAX, GameOptionId.INDUCEMENT_BRIBES_COST,
 			GameOptionId.INDUCEMENT_BRIBES_REDUCED_COST, true, IIconProperty.RESOURCE_BRIBE, Usage.AVOID_BAN) {
 
@@ -29,8 +34,8 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 			GameOptionId.INDUCEMENT_PRAYERS_COST, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
 
 		add(new InducementType("briberyAndCorruption", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRoll", "Bribery and Corruption ReRolls",
-			GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
-			GameOptionId.INDUCEMENT_PRAYERS_COST, true, IIconProperty.RESOURCE_RE_ROLL_ARGUE, Usage.REROLL_ARGUE));
+			GameOptionId.INDUCEMENT_DUMMY, GameOptionId.INDUCEMENT_DUMMY,
+			GameOptionId.INDUCEMENT_DUMMY, true, IIconProperty.RESOURCE_RE_ROLL_ARGUE, Usage.REROLL_ARGUE));
 
 		add(new InducementType("halflingMasterChef", "Halfling Master Chef", "Halfling Master Chef", "Halfling Master Chefs",
 			GameOptionId.INDUCEMENT_CHEFS_MAX, GameOptionId.INDUCEMENT_CHEFS_COST,

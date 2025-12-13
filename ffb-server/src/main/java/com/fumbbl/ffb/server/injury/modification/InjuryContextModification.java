@@ -117,7 +117,7 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return false;
 	}
 
-	abstract SkillUse skillUse();
+	protected abstract SkillUse skillUse();
 
 	public boolean isValidType(InjuryType injuryType) {
 		return validInjuryTypes.contains(injuryType.getClass());

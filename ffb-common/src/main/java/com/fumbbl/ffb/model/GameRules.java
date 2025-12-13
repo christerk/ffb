@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class GameRules implements IFactorySource {
 
-	private Map<Factory, INamedObjectFactory> factories;
+	private Map<Factory, INamedObjectFactory<?>> factories;
 	private final FactoryManager manager;
 	private final IFactorySource applicationSource;
 
@@ -24,7 +24,7 @@ public class GameRules implements IFactorySource {
 
 	public void initialize(Game game) {
 		factories = manager.getFactoriesForContext(getContext(), game.getOptions());
-		for (INamedObjectFactory factory : factories.values()) {
+		for (INamedObjectFactory<?> factory : factories.values()) {
 			factory.initialize(game);
 		}
 		initialized = true;
@@ -38,7 +38,7 @@ public class GameRules implements IFactorySource {
 		return this.getFactory(Factory.SKILL);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public <T extends INamedObjectFactory> T getFactory(Factory factory) {
 		return (T) factories.get(factory);

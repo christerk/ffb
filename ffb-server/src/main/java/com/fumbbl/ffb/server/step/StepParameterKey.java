@@ -16,8 +16,10 @@ public enum StepParameterKey {
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	ASK_FOR_BLOCK_KIND, // Boolean
+	ATTACKER_ALREADY_DOWN, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
+	BALL_KNOCKED_LOSE, // Boolean
 	BLOCK_DEFENDER_ID, // String
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult
@@ -81,7 +83,6 @@ public enum StepParameterKey {
 	INDUCEMENT_PHASE, // InducementPhase
 	INDUCEMENT_USE, // InducementUse
 	INJURY_RESULT, // InjuryResult
-	INJURY_RESULT_FROM_ACTUAL_DROP, // InjuryResult
 	INJURY_TYPE, // InjuryType
 	INTERCEPTOR_ID, // String
 	IS_KICKED_PLAYER, // Boolean
@@ -112,6 +113,8 @@ public enum StepParameterKey {
 	PLAYER_ID_TO_REMOVE, // String
 	PLAYER_ID_DAUNTLESS_SUCCESS, // String
 	PLAYER_WAS_PUSHED, // Boolean
+	PRAYERS_BOUGHT_AWAY, // Integer
+	PRAYERS_BOUGHT_HOME, // Integer
 	PRAYER_ROLL, // Integer
 	PUBLISH_DEFENDER, // Boolean
 	PUSH_SELECT, // Boolean
@@ -125,6 +128,7 @@ public enum StepParameterKey {
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
+	STEADY_FOOTING_CONTEXT, // SteadFootingContext
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean

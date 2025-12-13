@@ -7,8 +7,10 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogSwarmingPlayersParameter;
 import com.fumbbl.ffb.model.Game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
  * @author Kalimar
  */
 public class DialogSwarmingPlayersHandler extends DialogHandler {
@@ -24,9 +26,16 @@ public class DialogSwarmingPlayersHandler extends DialogHandler {
 		int amount = ((DialogSwarmingPlayersParameter) game.getDialogParameter()).getAmount();
 
 		if ((ClientMode.PLAYER == getClient().getMode()) && game.isHomePlaying()) {
+			List<String> messages = new ArrayList<>();
+			if (((DialogSwarmingPlayersParameter) game.getDialogParameter()).isRestrictPlacement()) {
+				messages.add("You may place up to " + amount + " players with the Swarming skill in your half.");
+				messages.add("They cannot be placed at the Line of Scrimmage or in the wide zones.");
+			} else {
+				messages.add("You may place up to " + amount + " Lineman players in your half.");
+			}
+
 			setDialog(new DialogInformation(getClient(), "Place swarming players",
-					new String[] { "You may place up to " + amount + " players with the Swarming skill in your half.",
-							"They cannot be placed at the Line of Scrimmage or in the wide zones." },
+					messages.toArray(new String[0]),
 					DialogInformation.OK_DIALOG, IIconProperty.GAME_REF));
 			getDialog().showDialog(this);
 

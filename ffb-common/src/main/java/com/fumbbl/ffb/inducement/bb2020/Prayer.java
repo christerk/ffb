@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.inducement.bb2020;
 
-import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.skill.SkillClassWithValue;
@@ -9,14 +8,14 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
-import com.fumbbl.ffb.skill.Pro;
-import com.fumbbl.ffb.skill.bb2020.Loner;
-import com.fumbbl.ffb.skill.bb2020.MightyBlow;
-import com.fumbbl.ffb.skill.bb2020.Stab;
+import com.fumbbl.ffb.skill.common.Pro;
+import com.fumbbl.ffb.skill.mixed.Loner;
+import com.fumbbl.ffb.skill.mixed.MightyBlow;
+import com.fumbbl.ffb.skill.mixed.Stab;
 
 import java.util.HashSet;
 
-public enum Prayer implements INamedObject {
+public enum Prayer implements com.fumbbl.ffb.inducement.Prayer {
 	TREACHEROUS_TRAPDOOR("Treacherous Trapdoor",
 		"Trapdoors appear. On a roll of 1 a player stepping on them falls through them",
 		InducementDuration.UNTIL_END_OF_HALF, true),
@@ -157,26 +156,22 @@ public enum Prayer implements INamedObject {
 		return name;
 	}
 
+	@Override
 	public boolean affectsBothTeams() {
 		return affectsBothTeams;
 	}
 
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
+	@Override
 	public InducementDuration getDuration() {
 		return duration;
 	}
 
-	public TemporaryEnhancements enhancements(StatsMechanic mechanic) {
-		return new TemporaryEnhancements();
-	}
-
-	public String eventMessage() {
-		return "";
-	}
-
+	@Override
 	public boolean isChangingPlayer() {
 		return changingPlayer;
 	}

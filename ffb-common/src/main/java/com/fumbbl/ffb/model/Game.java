@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -74,6 +75,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private final IFactorySource applicationSource;
 	private ModifierAggregator modifierAggregator;
 	private TeamState teamState = TeamState.FULL;
+	private EnhancementRegistry enhancementRegistry;
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
@@ -118,6 +120,7 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		modifierAggregator = new ModifierAggregator();
 		rules.initialize(this);
 		modifierAggregator.init(this);
+		enhancementRegistry = new EnhancementRegistry(this);
 	}
 
 	public IFactorySource getApplicationSource() {
@@ -126,6 +129,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public ModifierAggregator getModifierAggregator() {
 		return modifierAggregator;
+	}
+
+	public EnhancementRegistry getEnhancementRegistry() {
+		return enhancementRegistry;
 	}
 
 	public GameRules getRules() {
@@ -595,6 +602,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public boolean playingTeamHasActingPLayer() {
 		return getActingTeam().hasPlayer(fActingPlayer.getPlayer());
+	}
+
+	public Set<String> getMultiBlockTargets() {
+		return getFieldModel().getMultiBlockTargets();
 	}
 
 	// transformation

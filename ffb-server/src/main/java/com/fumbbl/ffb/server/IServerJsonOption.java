@@ -49,6 +49,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
     JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
+    JsonEnumWithNameOption DEFERRED_COMMAND_ID = new JsonEnumWithNameOption("deferredCommandId", Factory.DEFERRED_COMMAND_ID);
+    JsonArrayOption DEFERRED_COMMANDS = new JsonArrayOption("deferredCommands");
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);
     JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
@@ -80,6 +82,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
     JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
     JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
+    JsonStringArrayOption GET_ADDITIONAL_CATCHES_SPP = new JsonStringArrayOption("getAdditionalCatchesSpp");
     JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");
     JsonIntOption GOLD_USED_AWAY = new JsonIntOption("goldUsedAway");
     JsonIntOption GOLD_USED_HOME = new JsonIntOption("goldUsedHome");
@@ -145,6 +148,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
+    JsonStringOption PUSHBACK_PUSHER_ID = new JsonStringOption("pushbackPusherId");
+    JsonBooleanOption REMOVE_CATCH_MODE = new JsonBooleanOption("removeCatchMode");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
@@ -164,6 +169,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
 
     JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
+    JsonObjectOption STEADY_FOOTING_CONTEXT = new JsonObjectOption("steadyFootingContext");
     JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
     JsonStringOption STEP_PHASE = new JsonStringOption("stepPhase");
     JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
@@ -200,6 +206,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USING_SHADOWING = new JsonBooleanOption("usingShadowing");
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
     JsonBooleanMapOption USING_STAND_FIRM = new JsonBooleanMapOption("usingStandFirm");
+    JsonBooleanOption USING_TAUNT = new JsonBooleanOption("usingTaunt");
     JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
     JsonBooleanOption USING_TRICKSTER = new JsonBooleanOption("usingTrickster");
     JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");

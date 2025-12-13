@@ -14,8 +14,8 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2020.block.StepPushback;
-import com.fumbbl.ffb.server.step.bb2020.block.StepPushback.StepState;
+import com.fumbbl.ffb.server.step.bb2025.block.StepPushback;
+import com.fumbbl.ffb.server.step.bb2025.block.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
@@ -27,7 +27,7 @@ public class SidestepBehaviour extends SkillBehaviour<Sidestep> {
 	public SidestepBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepPushback, StepState>(3) {
+		registerModifier(new StepModifier<StepPushback, StepState>(4) {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepPushback step, StepState state,
@@ -41,7 +41,7 @@ public class SidestepBehaviour extends SkillBehaviour<Sidestep> {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Skill cancellingSkill = null;
-				if (state.defender.getId().equals(game.getDefenderId())) {
+				if (state.defender.getTeam() != actingPlayer.getPlayer().getTeam()) {
 					cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
 				}
 				boolean attackerHasConflictingSkill = cancellingSkill != null && cancellingSkill.conflictsWithAnySkill(actingPlayer.getPlayer());

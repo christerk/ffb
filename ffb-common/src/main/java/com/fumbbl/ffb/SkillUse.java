@@ -30,6 +30,7 @@ public enum SkillUse implements INamedObject {
 	INCREASE_CHAINSAW_DAMAGE("increaseChainsawDamage", "to add +4 instead of +3 to armour roll"),
 	ADD_INJURY_MODIFIER("addInjuryModifier", "to add +1 to injury roll"),
 	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
+	RE_ROLL_ARMOUR("reRollArmour", "to re-roll the armour roll"),
 	FUMBLED_PLAYER_LANDS_SAFELY("fumbledPlayerLandsSafely", "to let the fumbled player land safely"),
 	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
 	GAIN_GAZE("gainFrenzy", "to gain the Hypnotic Gaze skill"),
@@ -61,7 +62,9 @@ public enum SkillUse implements INamedObject {
 	PASS_RUSH_WITHOUT_MODIFIERS("passRushWithoutModifiers", "to pass the rush roll ignoring modifiers"),
 	QUICK_BITE("quickBite", "to try to get the ball"),
 	STEADY_FOOTING("steadyFooting", "to keep standing"),
-	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
+	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones"),
+	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up"),
+	EYE_GOUGED("eyeGouged", "to prevent the pushed player from assisting blocks");
 
 	private final String fName;
 	private final String fDescription;

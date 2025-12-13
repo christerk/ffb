@@ -21,7 +21,7 @@ import com.fumbbl.ffb.server.step.bb2020.block.StepPushback;
 import com.fumbbl.ffb.server.step.bb2020.block.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
-import com.fumbbl.ffb.skill.bb2020.Grab;
+import com.fumbbl.ffb.skill.mixed.Grab;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 

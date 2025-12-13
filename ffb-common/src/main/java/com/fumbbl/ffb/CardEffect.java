@@ -1,7 +1,7 @@
 package com.fumbbl.ffb;
 
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.skill.JumpUp;
+import com.fumbbl.ffb.skill.common.JumpUp;
 import com.fumbbl.ffb.skill.bb2016.NoHands;
 import com.fumbbl.ffb.skill.bb2016.ReallyStupid;
 import com.fumbbl.ffb.skill.bb2016.BoneHead;
@@ -40,7 +40,7 @@ public enum CardEffect implements INamedObject {
 	},
 	POISONED("Poisoned");
 
-	private String fName;
+	private final String fName;
 
 	CardEffect(String pName) {
 		fName = pName;

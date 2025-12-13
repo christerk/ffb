@@ -1,0 +1,75 @@
+package com.fumbbl.ffb.client.state.common;
+
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.KickoffLogicModule;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.ui.SideBarComponent;
+import com.fumbbl.ffb.client.util.UtilClientCursor;
+import com.fumbbl.ffb.model.Player;
+
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * @author Kalimar
+ */
+@RulesCollection(RulesCollection.Rules.COMMON)
+public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
+
+	public ClientStateKickoff(FantasyFootballClientAwt pClient) {
+		super(pClient, new KickoffLogicModule(pClient));
+	}
+
+	public void clickOnField(FieldCoordinate pCoordinate) {
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case HANDLED:
+				getClient().getUserInterface().getFieldComponent().refresh();
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void clickOnPlayer(Player<?> pPlayer) {
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case HANDLED:
+				getClient().getUserInterface().getFieldComponent().refresh();
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	@Override
+	public void postEndTurn() {
+		if (logicModule.turnIsEnding()) {
+			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+			sideBarHome.refresh();
+			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
+		}
+	}
+
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
+		super.mouseOverField(pCoordinate);
+		determineCursor(logicModule.fieldPeek(pCoordinate));
+		return true;
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
+		return Collections.emptyMap();
+	}
+
+	@Override
+	protected String validCursor() {
+		return IIconProperty.CURSOR_PASS;
+	}
+}

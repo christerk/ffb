@@ -18,9 +18,10 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.CardEffectFactory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -83,7 +84,8 @@ public class FieldModel implements IJsonSerializable {
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
 	private boolean outOfBounds;
 
-	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
+	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate;
+		// no need to serialize this, as it can be
 	// reconstructed
 	private transient Game fGame;
 
@@ -395,7 +397,8 @@ public class FieldModel implements IJsonSerializable {
 		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cardEffects.add(pCardEffect);
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
+		pPlayer.addTemporarySkills(pCardEffect.getName(),
+			pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 	}
 
@@ -404,6 +407,15 @@ public class FieldModel implements IJsonSerializable {
 		StatsMechanic mechanic = (StatsMechanic) getGame().getFactory(Factory.MECHANIC).forName(Mechanic.Type.STAT.name());
 		player.addEnhancement(prayer.getName(), prayer.enhancements(mechanic), factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
+	}
+
+	public void addEnhancements(Player<?> player, String name) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		getGame().getEnhancementRegistry().forName(name).ifPresent(enhancement -> {
+				player.addEnhancement(name, enhancement, factory);
+				notifyObservers(ModelChangeId.FIELD_MODEL_ADD_ENHANCEMENTS, player.getId(), name);
+			}
+		);
 	}
 
 	public void addSkillEnhancements(Player<?> player, Skill skill) {
@@ -422,8 +434,10 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
+		PrayerFactory factory = getGame().getFactory(Factory.PRAYER);
 		Player<?> player = getGame().getPlayerById(playerId);
-		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
+		player.addTemporarySkills(factory.intensivePrayer().getName(), Collections.singleton(new SkillWithValue(skill,
+			String.valueOf(skill.getDefaultSkillValue()))));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING, playerId, skill);
 	}
 
@@ -929,7 +943,7 @@ public class FieldModel implements IJsonSerializable {
 			transformedModel.add(playerMarker.transform());
 		}
 
-		for (DiceDecoration diceDecoration: getDiceDecorations()) {
+		for (DiceDecoration diceDecoration : getDiceDecorations()) {
 			transformedModel.add(diceDecoration.transform());
 		}
 
@@ -950,7 +964,11 @@ public class FieldModel implements IJsonSerializable {
 	public boolean isOutOfBounds() {
 		return outOfBounds;
 	}
-	
+
+	public Set<String> getMultiBlockTargets() {
+		return multiBlockTargets;
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
@@ -1135,7 +1153,9 @@ public class FieldModel implements IJsonSerializable {
 
 			String[] cards = IJsonOption.CARDS.getFrom(source, playerDataObject);
 			if (ArrayTool.isProvided(cards)) {
-				for (String card : cards) addCard(player, cardFactory.forName(card));
+				for (String card : cards) {
+					addCard(player, cardFactory.forName(card));
+				}
 			}
 
 			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(source, playerDataObject);

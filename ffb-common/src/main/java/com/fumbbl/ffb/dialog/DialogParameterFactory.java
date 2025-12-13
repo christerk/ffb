@@ -129,6 +129,8 @@ public class DialogParameterFactory {
                 return new DialogBloodlustActionParameter();
             case PENALTY_SHOOTOUT:
                 return new DialogPenaltyShootoutParameter();
+            case BUY_PRAYERS_AND_INDUCEMENTS:
+                return new DialogBuyPrayersAndInducementsParameter();
             default:
                 return null;
         }

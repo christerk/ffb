@@ -12,7 +12,7 @@ import com.fumbbl.ffb.factory.INamedObjectFactory;
  * @author Kalimar
  */
 public class JsonEnumWithNameOption extends JsonAbstractOption {
-	private Factory factory;
+	private final Factory factory;
 	
 	public JsonEnumWithNameOption(String pKey, Factory factory) {
 		super(pKey);
@@ -36,16 +36,13 @@ public class JsonEnumWithNameOption extends JsonAbstractOption {
 	}
 
 	private JsonValue asJsonValue(INamedObject pEnumWithName) {
-		if (pEnumWithName == null) {
-			return JsonValue.NULL;
-		}
-		return JsonValue.valueOf(pEnumWithName.getName());
+		return UtilJson.toJsonValue(pEnumWithName);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes"})
 	private <T extends INamedObjectFactory> T getFactory(IFactorySource factorySource) {
 		IFactorySource source = factorySource.forContext(factory.context);
 
-		return (T) source.getFactory(factory);
+		return source.getFactory(factory);
 	}
 }

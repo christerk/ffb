@@ -90,6 +90,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
+	public static final ISkillProperty canMoveAfterHandOff = new NamedProperty("Can Move After Hand Off");
 	public static final ISkillProperty canMoveDuringKickOffScatter = new NamedProperty(
 		"Can Move During Kick Off Scatter");
 	public static final ISkillProperty canMoveOpenTeamMate = new NamedProperty("Can Move Open Team-mate");
@@ -108,6 +109,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
+	public static final ISkillProperty canRemoveOpponentAssists = new NamedProperty("Can Remove Opponent Assists");
 	public static final ISkillProperty canReRollAnyNumberOfBlockDice = new NamedProperty("Can Re-Roll Any Number Of Block Dice");
 	public static final ISkillProperty canRerollBothDowns = new NamedProperty("Can Reroll Both Downs");
 	public static final ISkillProperty canRerollDodge = new NamedProperty("Can Reroll Dodge");
@@ -143,6 +145,7 @@ public class NamedProperties {
 			"Flip Same Team Opponent to Other Team");
 	public static final ISkillProperty forceOpponentToDropBallOnPushback = new NamedProperty(
 		"Force Opponent To Drop Ball On Pushback");
+	public static final ISkillProperty forceOpponentToFollowUp = new NamedProperty("Force Opponent To Follow Up");
 	public static final ISkillProperty forceFollowup = new NamedProperty("Force Followup");
 	public static final ISkillProperty forceFullMovement = new NamedProperty("Force Full Movement");
 	public static final ISkillProperty forceRollBeforeBeingBlocked = new NamedProperty("Force Roll Before Being Blocked");
@@ -198,6 +201,7 @@ public class NamedProperties {
 	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");
 	public static final ISkillProperty failedRushForJumpAlwaysLandsInTargetSquare = new NamedProperty("Failed Rush For Jump Always Lands In Target Square");
 	public static final ISkillProperty passesAreInterceptedEasier = new NamedProperty("Passes Are Intercepted Easier");
+	public static final ISkillProperty passesAreNotIntercepted = new NamedProperty("Passes Are Not Intercepted");
 	public static final ISkillProperty placedProneCausesInjuryRoll = new NamedProperty("Placed Prone Causes Injury Roll");
 	public static final ISkillProperty preventArmourModifications = new NamedProperty("Prevent Armour Modifications");
 	public static final ISkillProperty preventAutoMove = new NamedProperty("Prevent AutoMove");

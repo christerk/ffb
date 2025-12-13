@@ -103,6 +103,7 @@ public interface IJsonOption {
 	JsonIntArrayOption CASUALTY_ROLL = new JsonIntArrayOption("casualtyRoll");
 	JsonIntArrayOption CASUALTY_ROLL_DECAY = new JsonIntArrayOption("casualtyRollDecay");
 	JsonStringOption CATCHER_ID = new JsonStringOption("catcherId");
+	JsonIntOption CATCHES_WITH_ADDITIONAL_SPP = new JsonIntOption("catchesWithAdditionalSpp");
 	JsonStringOption CHALLENGE = new JsonStringOption("challenge");
 	JsonBooleanOption CHANGE_TO_MOVE = new JsonBooleanOption("changeToMove");
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");
@@ -122,7 +123,7 @@ public interface IJsonOption {
 	JsonArrayOption COMMAND_ARRAY = new JsonArrayOption("commandArray");
 	JsonIntOption COMMAND_NR = new JsonIntOption("commandNr");
 	JsonIntOption COMPLETIONS = new JsonIntOption("completions");
-	JsonIntOption COMPLETIONS_WITH_ADDITONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
+	JsonIntOption COMPLETIONS_WITH_ADDITIONAL_SPP = new JsonIntOption("completionsWithAdditionalSpp");
 	JsonEnumWithNameOption CONCEDE_GAME_STATUS = new JsonEnumWithNameOption("concedeGameStatus", Factory.CONCEDE_GAME_STATUS);
 	JsonBooleanOption CONCEDED = new JsonBooleanOption("conceded");
 	JsonBooleanOption CONCEDED_LEGALLY = new JsonBooleanOption("concededLegally");
@@ -161,8 +162,9 @@ public interface IJsonOption {
 	JsonIntArrayOption DISTANCE_ROLL = new JsonIntArrayOption("distanceRoll");
 	JsonStringOption DIVISION = new JsonStringOption("division");
 	JsonBooleanOption DOUBLE_TARGET_STRENGTH = new JsonBooleanOption("doubleTargetStrength");
-	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonStringOption EFFECT = new JsonStringOption("effect");
+	JsonStringArrayOption ELIGIBLE_PLAYER_IDS = new JsonStringArrayOption("eligiblePlayerIds");
+	JsonFieldCoordinateOption END_COORDINATE = new JsonFieldCoordinateOption("endCoordinate");
 	JsonIntOption ENTROPY = new JsonIntOption("entropy");
 	JsonBooleanOption ESCAPED = new JsonBooleanOption("escaped");
 	JsonBooleanOption EXHAUSTED = new JsonBooleanOption("exhausted");
@@ -391,6 +393,8 @@ public interface IJsonOption {
 	JsonStringOption PRAYER = new JsonStringOption("prayer");
 	JsonBooleanOption PRAYER_AVAILABLE = new JsonBooleanOption("prayerAvailable");
 	JsonStringArrayOption PRAYERS = new JsonStringArrayOption("prayers");
+	JsonIntOption PRAYERS_BOUGHT_AWAY = new JsonIntOption("prayersBoughtAway");
+	JsonIntOption PRAYERS_BOUGHT_HOME = new JsonIntOption("prayersBoughtHome");
 	JsonBooleanOption PREVENT = new JsonBooleanOption("prevent");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
@@ -412,6 +416,7 @@ public interface IJsonOption {
 	JsonObjectOption REPORT_LIST = new JsonObjectOption("reportList");
 	JsonArrayOption REPORTS = new JsonArrayOption("reports");
 	JsonBooleanOption REQUIRES_ARMOUR_BREAK = new JsonBooleanOption("requiresArmourBreak");
+	JsonBooleanOption RESTRICT_PLACEMENT = new JsonBooleanOption("restrictPlacement");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
 	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");
@@ -553,6 +558,7 @@ public interface IJsonOption {
 	JsonStringOption TEAM_HOME_ID = new JsonStringOption("teamHomeId");
 	JsonStringOption TEAM_HOME_NAME = new JsonStringOption("teamHomeName");
 	JsonStringOption TEAM_ID = new JsonStringOption("teamId");
+	JsonStringArrayOption TEAM_IDS_ADDITIONAL_ASSIST = new JsonStringArrayOption("teamIdsAdditionalAssist");
 	JsonObjectOption TEAM_LIST = new JsonObjectOption("teamList");
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");

@@ -61,7 +61,7 @@ public class SavageMaulingModification extends InjuryContextModification<Modific
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.RE_ROLL_INJURY;
 	}
 }

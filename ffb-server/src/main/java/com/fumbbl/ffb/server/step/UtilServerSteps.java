@@ -78,7 +78,7 @@ public class UtilServerSteps {
 		UtilServerGame.changeActingPlayer(pStep, pPlayerId, pPlayerAction, jumping);
 		if (StringTool.isProvided(pPlayerId)) {
 			UtilServerPlayerMove.updateMoveSquares(pStep.getGameState(), actingPlayer.isJumping());
-			ServerUtilBlock.updateDiceDecorations(pStep.getGameState().getGame());
+			ServerUtilBlock.updateDiceDecorations(pStep.getGameState());
 		}
 	}
 

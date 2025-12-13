@@ -7,7 +7,7 @@ import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportSwarmingRoll;
+import com.fumbbl.ffb.report.mixed.ReportSwarmingRoll;
 
 @ReportMessageType(ReportId.SWARMING_PLAYERS_ROLL)
 @RulesCollection(Rules.BB2016)

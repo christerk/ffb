@@ -33,6 +33,7 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Card.SequenceParams;
 import com.fumbbl.ffb.server.step.generator.common.Wizard;
+import com.fumbbl.ffb.server.step.mixed.inducements.StepWeatherMage;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.util.ArrayTool;
 

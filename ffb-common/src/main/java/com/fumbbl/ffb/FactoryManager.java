@@ -45,8 +45,8 @@ public class FactoryManager {
 		return factories;
 	}
 
-	public Map<Factory, INamedObjectFactory> getFactoriesForContext(FactoryContext context, GameOptions gameOptions) {
-		Map<Factory, INamedObjectFactory> factories = new HashMap<>();
+	public Map<Factory, INamedObjectFactory<?>> getFactoriesForContext(FactoryContext context, GameOptions gameOptions) {
+		Map<Factory, INamedObjectFactory<?>> factories = new HashMap<>();
 		Scanner<INamedObjectFactory> scanner = new Scanner<>(INamedObjectFactory.class);
 
 		for (INamedObjectFactory factory : scanner.getInstancesImplementing(gameOptions)) {

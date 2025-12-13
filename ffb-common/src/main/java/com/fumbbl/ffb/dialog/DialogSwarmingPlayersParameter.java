@@ -10,6 +10,7 @@ import com.fumbbl.ffb.json.UtilJson;
 public class DialogSwarmingPlayersParameter implements IDialogParameter {
 
 	private int amount;
+	private boolean restrictPlacement;
 
 	@Override
 	public DialogId getId() {
@@ -20,16 +21,25 @@ public class DialogSwarmingPlayersParameter implements IDialogParameter {
 	}
 
 	public DialogSwarmingPlayersParameter(int amount) {
+		this(amount, true);
+	}
+
+	public DialogSwarmingPlayersParameter(int amount, boolean restrictPlacement) {
 		this.amount = amount;
+		this.restrictPlacement = restrictPlacement;
 	}
 
 	@Override
 	public IDialogParameter transform() {
-		return new DialogSwarmingPlayersParameter(amount);
+		return new DialogSwarmingPlayersParameter(amount, restrictPlacement);
 	}
 
 	public int getAmount() {
 		return amount;
+	}
+
+	public boolean isRestrictPlacement() {
+		return restrictPlacement;
 	}
 
 	@Override
@@ -37,6 +47,11 @@ public class DialogSwarmingPlayersParameter implements IDialogParameter {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
 		amount = IJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(source, jsonObject);
+		if (IJsonOption.RESTRICT_PLACEMENT.isDefinedIn(jsonObject)) {
+			restrictPlacement = IJsonOption.RESTRICT_PLACEMENT.getFrom(source, jsonObject);
+		} else {
+			restrictPlacement = true;
+		}
 		return this;
 	}
 
@@ -45,6 +60,7 @@ public class DialogSwarmingPlayersParameter implements IDialogParameter {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
 		IJsonOption.SWARMING_PLAYER_AMOUNT.addTo(jsonObject, amount);
+		IJsonOption.RESTRICT_PLACEMENT.addTo(jsonObject, restrictPlacement);
 		return jsonObject;
 	}
 }

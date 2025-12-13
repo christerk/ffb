@@ -19,11 +19,12 @@ import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogBuyCardsAndInducementsParameter;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardChoices;
 import com.fumbbl.ffb.inducement.Inducement;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
@@ -49,6 +50,7 @@ public class ModelChangeProcessor {
 			return false;
 		}
 		SkillFactory skillFactory = pGame.getFactory(FactoryType.Factory.SKILL);
+		PrayerFactory prayerFactory = pGame.getFactory(FactoryType.Factory.PRAYER);
 
 		switch (pModelChange.getChangeId()) {
 
@@ -131,11 +133,15 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().addCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_CARD_EFFECT:
-				pGame.getFieldModel().addCardEffect(pGame.getPlayerById(pModelChange.getKey()),
-					(CardEffect) pModelChange.getValue());
+				pGame.getFieldModel()
+					.addCardEffect(pGame.getPlayerById(pModelChange.getKey()), (CardEffect) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_DICE_DECORATION:
 				pGame.getFieldModel().add((DiceDecoration) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_ADD_ENHANCEMENTS:
+				pGame.getFieldModel()
+					.addEnhancements(pGame.getPlayerById(pModelChange.getKey()), (String) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_INTENSIVE_TRAINING:
 				pGame.getFieldModel().addIntensiveTrainingSkill(pModelChange.getKey(), (Skill) pModelChange.getValue());
@@ -151,13 +157,15 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().add(marker);
 				return true;
 			case FIELD_MODEL_ADD_PRAYER:
-				pGame.getFieldModel().addPrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()), Prayer.valueOf((String) pModelChange.getValue()));
+				pGame.getFieldModel().addPrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()),
+					prayerFactory.valueOf((String) pModelChange.getValue()));
 				return true;
 			case FIELD_MODEL_ADD_PUSHBACK_SQUARE:
 				pGame.getFieldModel().add((PushbackSquare) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_SKILL_ENHANCEMENTS:
-				pGame.getFieldModel().addSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), skillFactory.forName((String) pModelChange.getValue()));
+				pGame.getFieldModel().addSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()),
+					skillFactory.forName((String) pModelChange.getValue()));
 				return true;
 			case FIELD_MODEL_ADD_TRACK_NUMBER:
 				pGame.getFieldModel().add((TrackNumber) pModelChange.getValue());
@@ -166,20 +174,19 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().add((TrapDoor) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_WISDOM:
-				Constant.getGrantAbleSkills(skillFactory).stream()
-					.filter(swv -> swv.getSkill().equals(pModelChange.getValue())).findFirst().ifPresent(swv ->
-						pGame.getFieldModel().addWisdomSkill(pModelChange.getKey(), swv)
-					);
+				Constant.getGrantAbleSkills(skillFactory).stream().filter(swv -> swv.getSkill().equals(pModelChange.getValue()))
+					.findFirst().ifPresent(swv -> pGame.getFieldModel().addWisdomSkill(pModelChange.getKey(), swv));
 				return true;
 			case FIELD_MODEL_KEEP_DEACTIVATED_CARD:
-				pGame.getFieldModel().keepDeactivatedCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
+				pGame.getFieldModel()
+					.keepDeactivatedCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_CARD:
 				pGame.getFieldModel().removeCard(pGame.getPlayerById(pModelChange.getKey()), (Card) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_CARD_EFFECT:
-				pGame.getFieldModel().removeCardEffect(pGame.getPlayerById(pModelChange.getKey()),
-					(CardEffect) pModelChange.getValue());
+				pGame.getFieldModel()
+					.removeCardEffect(pGame.getPlayerById(pModelChange.getKey()), (CardEffect) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_DICE_DECORATION:
 				pGame.getFieldModel().remove((DiceDecoration) pModelChange.getValue());
@@ -197,13 +204,15 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().remove((PlayerMarker) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_PRAYER:
-				pGame.getFieldModel().removePrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()), Prayer.valueOf((String) pModelChange.getValue()));
+				pGame.getFieldModel().removePrayerEnhancements(pGame.getPlayerById(pModelChange.getKey()),
+					prayerFactory.valueOf((String) pModelChange.getValue()));
 				return true;
 			case FIELD_MODEL_REMOVE_PUSHBACK_SQUARE:
 				pGame.getFieldModel().remove((PushbackSquare) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_SKILL_ENHANCEMENTS:
-				pGame.getFieldModel().removeSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), (String) pModelChange.getValue());
+				pGame.getFieldModel()
+					.removeSkillEnhancements(pGame.getPlayerById(pModelChange.getKey()), (String) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_REMOVE_TRACK_NUMBER:
 				pGame.getFieldModel().remove((TrackNumber) pModelChange.getValue());
@@ -234,12 +243,12 @@ public class ModelChangeProcessor {
 				pGame.getFieldModel().setOutOfBounds((boolean) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
-				pGame.getFieldModel().setPlayerCoordinate(pGame.getPlayerById(pModelChange.getKey()),
-					(FieldCoordinate) pModelChange.getValue());
+				pGame.getFieldModel()
+					.setPlayerCoordinate(pGame.getPlayerById(pModelChange.getKey()), (FieldCoordinate) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_PLAYER_STATE:
-				pGame.getFieldModel().setPlayerState(pGame.getPlayerById(pModelChange.getKey()),
-					(PlayerState) pModelChange.getValue());
+				pGame.getFieldModel()
+					.setPlayerState(pGame.getPlayerById(pModelChange.getKey()), (PlayerState) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_SET_RANGE_RULER:
 				pGame.getFieldModel().setRangeRuler((RangeRuler) pModelChange.getValue());
@@ -340,7 +349,8 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_CARD_CHOICES:
 				IDialogParameter dialogParameter = pGame.getDialogParameter();
 				if (dialogParameter instanceof DialogBuyCardsAndInducementsParameter) {
-					((DialogBuyCardsAndInducementsParameter) dialogParameter).setCardChoices((CardChoices) pModelChange.getValue());
+					((DialogBuyCardsAndInducementsParameter) dialogParameter).setCardChoices(
+						(CardChoices) pModelChange.getValue());
 				}
 				return true;
 			case INDUCEMENT_SET_DEACTIVATE_CARD:
@@ -368,6 +378,9 @@ public class ModelChangeProcessor {
 			case PLAYER_RESULT_SET_CASUALTIES:
 				getPlayerResult(pGame, pModelChange.getKey()).setCasualties((Integer) pModelChange.getValue());
 				return true;
+			case PLAYER_RESULT_SET_CATCHES_WITH_ADDITIONAL_SPP:
+				getPlayerResult(pGame, pModelChange.getKey()).setCatchesWithAdditionalSpp((Integer) pModelChange.getValue());
+				return true;
 			case PLAYER_RESULT_SET_CASUALTIES_WITH_ADDITIONAL_SPP:
 				getPlayerResult(pGame, pModelChange.getKey()).setCasualtiesWithAdditionalSpp((Integer) pModelChange.getValue());
 				return true;
@@ -375,7 +388,8 @@ public class ModelChangeProcessor {
 				getPlayerResult(pGame, pModelChange.getKey()).setCompletions((Integer) pModelChange.getValue());
 				return true;
 			case PLAYER_RESULT_SET_COMPLETIONS_WITH_ADDITIONAL_SPP:
-				getPlayerResult(pGame, pModelChange.getKey()).setCompletionsWithAdditionalSpp((Integer) pModelChange.getValue());
+				getPlayerResult(pGame, pModelChange.getKey()).setCompletionsWithAdditionalSpp(
+					(Integer) pModelChange.getValue());
 				return true;
 			case PLAYER_RESULT_SET_CURRENT_SPPS:
 				getPlayerResult(pGame, pModelChange.getKey()).setCurrentSpps((Integer) pModelChange.getValue());
@@ -518,10 +532,12 @@ public class ModelChangeProcessor {
 				getTurnData(pGame, isHomeData(pModelChange)).setReRolls((Integer) pModelChange.getValue());
 				return true;
 			case TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE:
-				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive((Integer) pModelChange.getValue());
+				getTurnData(pGame, isHomeData(pModelChange)).setReRollsBrilliantCoachingOneDrive(
+					(Integer) pModelChange.getValue());
 				return true;
 			case TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE:
-				getTurnData(pGame, isHomeData(pModelChange)).setReRollsPumpUpTheCrowdOneDrive((Integer) pModelChange.getValue());
+				getTurnData(pGame, isHomeData(pModelChange)).setReRollsPumpUpTheCrowdOneDrive(
+					(Integer) pModelChange.getValue());
 				return true;
 			case TURN_DATA_SET_RE_ROLLS_SHOW_STAR_ONE_DRIVE:
 				getTurnData(pGame, isHomeData(pModelChange)).setReRollShowStarOneDrive((Integer) pModelChange.getValue());
@@ -637,8 +653,8 @@ public class ModelChangeProcessor {
 			case INDUCEMENT_SET_DEACTIVATE_CARD:
 			case INDUCEMENT_SET_REMOVE_AVAILABLE_CARD:
 			case INDUCEMENT_SET_REMOVE_INDUCEMENT:
-				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
-					pModelChange.getValue());
+				return new ModelChange(pModelChange.getChangeId(),
+					isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME, pModelChange.getValue());
 
 			case TEAM_RESULT_SET_CONCEDED:
 			case TEAM_RESULT_SET_DEDICATED_FANS_MODIFIER:
@@ -677,8 +693,8 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_TURN_NR:
 			case TURN_DATA_SET_TURN_STARTED:
 			case TURN_DATA_SET_COACH_BANNED:
-				return new ModelChange(pModelChange.getChangeId(), isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME,
-					pModelChange.getValue());
+				return new ModelChange(pModelChange.getChangeId(),
+					isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME, pModelChange.getValue());
 
 			default:
 				return new ModelChange(pModelChange.getChangeId(), pModelChange.getKey(), pModelChange.getValue());

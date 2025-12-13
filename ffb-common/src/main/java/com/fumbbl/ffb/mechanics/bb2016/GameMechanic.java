@@ -1,19 +1,13 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
@@ -25,6 +19,12 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.fumbbl.ffb.inducement.Usage.GAME_MODIFICATION;
+import static com.fumbbl.ffb.inducement.Usage.LONER;
+import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
+import static com.fumbbl.ffb.inducement.Usage.STAFF;
+import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
@@ -39,31 +39,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		turnData.setReRollUsed(true);
 		turnData.setReRolls(turnData.getReRolls() - 1);
 		return null;
-	}
-
-	@Override
-	public int minimumLonerRoll(Player<?> player) {
-		return 4;
-	}
-
-	@Override
-	public int minimumProRoll() {
-		return 4;
-	}
-
-	@Override
-	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
-		return true;
-	}
-
-	@Override
-	public SendToBoxReason raisedByNurgleReason() {
-		return SendToBoxReason.NURGLES_ROT;
-	}
-
-	@Override
-	public String raisedByNurgleMessage() {
-		return " has been infected with Nurgle's Rot and will join team ";
 	}
 
 	@Override
@@ -94,36 +69,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
-		return true;
-	}
-
-	@Override
-	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
-		return true;
-	}
-
-	@Override
-	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
-		return true;
-	}
-
-	@Override
-	public boolean infectedGoesToReserves() {
-		return false;
-	}
-
-	@Override
-	public boolean canRaiseDead(Team team) {
-		return team.getRoster().hasNecromancer();
-	}
-
-	@Override
-	public boolean canPreventStripBall(PlayerState playerState) {
-		return true;
-	}
-
-	@Override
 	public boolean isFoulActionAllowed(TurnMode turnMode) {
 		return true;
 	}
@@ -146,11 +91,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
 		return true;
-	}
-
-	@Override
-	public boolean allowsCancellingGuard(TurnMode turnMode) {
-		return false;
 	}
 
 	@Override
@@ -188,28 +128,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		};
 	}
 
-	@Override
-	public String calculatePlayerLevel(Game game, Player<?> player) {
-		PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
-		int oldSpps = playerResult.getCurrentSpps();
-		if (oldSpps > 175) {
-			return "Legend";
-		} else if (oldSpps > 75) {
-			return "Super Star";
-		} else if (oldSpps > 50) {
-			return "Star";
-		} else if (oldSpps > 30) {
-			return "Emerging";
-		} else if (oldSpps > 15) {
-			return "Veteran";
-		} else if (oldSpps > 5) {
-			return "Experienced";
-		} else {
-			return "Rookie";
-		}
-	}
-
-	@Override
+		@Override
 	public boolean touchdownEndsGame(Game game) {
 		return game.getHalf() == 3;
 	}
@@ -250,18 +169,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public PlayerType raisedNurgleType() {
-		return PlayerType.RAISED_FROM_DEAD;
-	}
-
-	@Override
-	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
-		return defender.getPlayerType() != PlayerType.STAR &&
-			((game.getTeamHome().hasPlayer(defender) && game.getTurnDataHome().getApothecaries() > 0)
-				|| (game.getTeamAway().hasPlayer(defender) && game.getTurnDataAway().getApothecaries() > 0));
-	}
-
-	@Override
 	public String weatherDescription(Weather weather) {
 
 		switch (weather) {
@@ -299,5 +206,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean allowMovementInEndZone() {
 		return true;
+	}
+
+	@Override
+	public Set<Usage> explicitlySelectedInducements() {
+		return new HashSet<Usage>() {{
+			add(LONER);
+			add(STAR);
+			add(GAME_MODIFICATION);
+			add(STAFF);
+			add(REROLL_ONES_ON_KOS);
+		}};
 	}
 }
