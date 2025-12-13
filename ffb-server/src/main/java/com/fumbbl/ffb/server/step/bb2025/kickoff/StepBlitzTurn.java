@@ -3,10 +3,13 @@ package com.fumbbl.ffb.server.step.bb2025.kickoff;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.factory.MechanicsFactory;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -14,7 +17,6 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 
@@ -61,7 +63,10 @@ public final class StepBlitzTurn extends AbstractStep {
         } else {
 
             Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-            UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam, true);
+
+            MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+            SetupMechanic mechanic = (SetupMechanic) mechanicsFactory.forName(Mechanic.Type.SETUP.name());
+            mechanic.pinPlayersInTacklezones(getGameState(), blitzingTeam, true);
 
             game.setTurnMode(TurnMode.BLITZ);
             long currentTimeMillis = System.currentTimeMillis();

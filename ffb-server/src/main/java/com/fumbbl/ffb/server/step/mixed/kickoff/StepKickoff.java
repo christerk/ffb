@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.mixed.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,12 +26,13 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
  * Step in the kickoff sequence to place the kickoff.
- * 
+ * <p>
  * Sets stepParameter KICKOFF_START_COORDINATE for all steps on the stack.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepKickoff extends AbstractStep {
 
 	private FieldCoordinate fKickoffStartCoordinate;

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report;
+package com.fumbbl.ffb.report.mixed;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -7,6 +7,9 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.UtilReport;
 import com.fumbbl.ffb.stats.DicePoolStat;
 import com.fumbbl.ffb.stats.DieBase;
 import com.fumbbl.ffb.stats.DieStat;
@@ -15,12 +18,14 @@ import com.fumbbl.ffb.stats.TeamMapping;
 import java.util.Collections;
 import java.util.List;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportSwarmingRoll implements IReport {
 
 	private String teamId;
 	private int amount, roll = -1, limit = -1;
 
+	@SuppressWarnings("unused")
 	public ReportSwarmingRoll() {
 	}
 

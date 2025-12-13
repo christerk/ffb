@@ -7,6 +7,7 @@ import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -21,6 +22,7 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
@@ -47,6 +49,7 @@ import com.fumbbl.ffb.report.mixed.ReportSolidDefenceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.IStepLabel;
@@ -59,7 +62,6 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -276,7 +278,9 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				int movedPlayers = (int) playersAtCoordinates.keySet().stream().filter(playerId ->
 						!game.getFieldModel().getPlayerCoordinate(game.getPlayerById(playerId)).equals(playersAtCoordinates.get(playerId)))
 					.count();
-				if (validSolidDefence(movedPlayers) && UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
+				MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+				SetupMechanic mechanic = (SetupMechanic) factory.forName(Mechanic.Type.SETUP.name());
+				if (validSolidDefence(movedPlayers) && mechanic.checkSetup(getGameState(), game.isHomePlaying(), getGameState().getKickingSwarmers())) {
 					getGameState().setKickingSwarmers(0);
 					game.setTurnMode(TurnMode.KICKOFF);
 					getResult().setNextAction(StepAction.NEXT_STEP);
@@ -360,10 +364,12 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			} else {
 				game.setHomePlaying(!game.isHomePlaying());
 				game.setTurnMode(TurnMode.HIGH_KICK);
+				MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+				SetupMechanic mechanic = (SetupMechanic) factory.forName(Mechanic.Type.SETUP.name());
 				if (game.isHomePlaying()) {
-					UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), game.getTeamHome());
+					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamHome());
 				} else {
-					UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), game.getTeamAway());
+					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamAway());
 				}
 			}
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_HIGH_KICK));

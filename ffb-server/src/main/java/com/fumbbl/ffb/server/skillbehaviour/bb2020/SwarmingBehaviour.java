@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportSwarmingRoll;
+import com.fumbbl.ffb.report.mixed.ReportSwarmingRoll;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepAction;

@@ -1,12 +1,12 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.AbstractClientStateSetup;
-import com.fumbbl.ffb.client.state.logic.mixed.SwarmingLogicModule;
+import com.fumbbl.ffb.client.state.logic.bb2025.SwarmingLogicModule;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSwarming extends AbstractClientStateSetup<SwarmingLogicModule> {
 
 	public ClientStateSwarming(FantasyFootballClientAwt pClient) {

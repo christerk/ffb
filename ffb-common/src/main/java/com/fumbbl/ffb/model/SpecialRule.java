@@ -7,6 +7,7 @@ public enum SpecialRule {
 	BRIBERY_AND_CORRUPTION("Bribery and Corruption"),
 	FAVOURED_OF_NURGLE("Favoured of Nurgle"),
 	LOW_COST_LINEMEN("Low Cost Linemen"),
+	SWARMING("Swarming"),
 	MASTERS_OF_UNDEATH("Masters of Undeath");
 
 	private final String ruleName;

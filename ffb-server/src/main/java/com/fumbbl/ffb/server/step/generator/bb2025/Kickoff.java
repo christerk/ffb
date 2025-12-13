@@ -27,14 +27,14 @@ public class Kickoff extends com.fumbbl.ffb.server.step.generator.Kickoff {
 		}
 		sequence.add(StepId.INIT_KICKOFF);
 		// inserts inducement sequence at this point
-		sequence.add(StepId.SETUP, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
+		sequence.add(StepId.SETUP);
 		// inserts inducement sequence at this point
-		sequence.add(StepId.SETUP, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF));
+		sequence.add(StepId.SETUP);
+		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
+		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.MASTER_CHEF);
 		sequence.add(StepId.KICKOFF);		
 		sequence.add(StepId.KICKOFF_SCATTER_ROLL);
-		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
-		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.KICKOFF_RETURN);
 		// may insert select sequence at this point
 		sequence.add(StepId.KICKOFF_RESULT_ROLL);
