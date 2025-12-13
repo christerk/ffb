@@ -49,8 +49,8 @@ public class GazeLogicModule extends MoveLogicModule {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			FieldCoordinate actorCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 			FieldCoordinate victimCoordinate = game.getFieldModel().getPlayerCoordinate(pVictim);
-			Team actorTeam = game.getTeamHome().hasPlayer(actingPlayer.getPlayer()) ? game.getTeamHome() : game.getTeamAway();
-			Team victimTeam = game.getTeamHome().hasPlayer(pVictim) ? game.getTeamHome() : game.getTeamAway();
+			Team actorTeam = game.getActingTeam();
+			Team victimTeam = pVictim.getTeam();
 			result = (UtilPlayer.canGaze(game, actingPlayer.getPlayer()) && (victimCoordinate != null)
 					&& victimCoordinate.isAdjacent(actorCoordinate) && (actorTeam != victimTeam)
 					&& (game.getFieldModel().getPlayerState(pVictim).hasTacklezones()));

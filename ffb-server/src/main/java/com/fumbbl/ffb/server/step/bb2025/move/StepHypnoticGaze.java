@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2025.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
@@ -9,6 +10,8 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -33,6 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -118,7 +122,8 @@ public class StepHypnoticGaze extends AbstractStepWithReRoll {
 		if (doGaze && gazeSkill.isPresent()) {
 			actingPlayer.markSkillUsed(gazeSkill.get());
 			int roll = getGameState().getDiceRoller().rollSkill();
-			int minimumRoll = DiceInterpreter.getInstance().minimumRollHypnoticGaze();
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			int minimumRoll = mechanic.minimumRollHypnoticGaze(actingPlayer.getPlayer(), Collections.emptySet());
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.HYPNOTIC_GAZE) && (getReRollSource() != null));
 			if (!reRolled) {
