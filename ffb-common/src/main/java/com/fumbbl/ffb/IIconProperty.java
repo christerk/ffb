@@ -192,6 +192,7 @@ public interface IIconProperty {
 	String ACTION_THE_FLASHING_BLADE = "action.theFlashingBlade";
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
+	String ACTION_SECURE_THE_BALL = "action.secureTheBall";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";

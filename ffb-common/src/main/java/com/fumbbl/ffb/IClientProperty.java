@@ -64,6 +64,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_VICIOUS_VINES = "key.player.action.viciousVines";
 	String KEY_PLAYER_ACTION_FURIOUS_OUTBURST = "key.player.action.furiousOutburst";
 	String KEY_PLAYER_ACTION_MORE_ACTIONS = "key.player.action.moreActions";
+	String KEY_PLAYER_ACTION_SECURE_THE_BALL = "key.player.action.secureTheBall";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";

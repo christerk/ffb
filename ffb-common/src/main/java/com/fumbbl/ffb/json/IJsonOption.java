@@ -458,6 +458,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption SCATTER_DIRECTION = new JsonEnumWithNameOption("scatterDirection", Factory.DIRECTION);
 	JsonDateOption SCHEDULED = new JsonDateOption("scheduled");
 	JsonIntOption SCORE = new JsonIntOption("score");
+	JsonBooleanOption SECURE_THE_BALL_USED = new JsonBooleanOption("secureTheBallUsed");
 	JsonBooleanOption SELECTED = new JsonBooleanOption("selected");
 	JsonIntOption SELECTED_INDEX = new JsonIntOption("selectedIndex");
 	JsonArrayOption SELECTED_BLOCK_TARGETS = new JsonArrayOption("selectedBlockTargets");

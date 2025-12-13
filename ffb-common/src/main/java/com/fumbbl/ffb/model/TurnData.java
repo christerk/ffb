@@ -37,6 +37,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean fCoachBanned;
 	private boolean ktmUsed;
 	private boolean bombUsed;
+	private boolean secureTheBallUsed;
 	private InducementSet fInducementSet;
 	private LeaderState fLeaderState;
 
@@ -283,6 +284,18 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_PLAGUE_DOCTORS, plagueDoctors);
 	}
 
+	public boolean isSecureTheBallUsed() {
+		return secureTheBallUsed;
+	}
+
+	public void setSecureTheBallUsed(boolean secureTheBallUsed) {
+		if (this.secureTheBallUsed == secureTheBallUsed) {
+			return;
+		}
+		this.secureTheBallUsed = secureTheBallUsed;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_SECURE_THE_BALL_USED, secureTheBallUsed);
+	}
+
 	public boolean isHomeData() {
 		return fHomeData;
 	}
@@ -334,6 +347,7 @@ public class TurnData implements IJsonSerializable {
 		setReRollUsed(false);
 		setKtmUsed(false);
 		setBombUsed(false);
+		setSecureTheBallUsed(false);
 	}
 
 	public void init(TurnData pTurnData) {
@@ -354,6 +368,7 @@ public class TurnData implements IJsonSerializable {
 			fCoachBanned = pTurnData.isCoachBanned();
 			ktmUsed = pTurnData.isKtmUsed();
 			bombUsed = pTurnData.isBombUsed();
+			secureTheBallUsed = pTurnData.isSecureTheBallUsed();
 		}
 	}
 
@@ -387,6 +402,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.COACH_BANNED.addTo(jsonObject, fCoachBanned);
 		IJsonOption.KTM_USED.addTo(jsonObject, ktmUsed);
 		IJsonOption.BOMB_USED.addTo(jsonObject, bombUsed);
+		IJsonOption.SECURE_THE_BALL_USED.addTo(jsonObject, secureTheBallUsed);
 		IJsonOption.LEADER_STATE.addTo(jsonObject, fLeaderState);
 		if (fInducementSet != null) {
 			IJsonOption.INDUCEMENT_SET.addTo(jsonObject, fInducementSet.toJsonValue());
@@ -419,6 +435,9 @@ public class TurnData implements IJsonSerializable {
 		bombUsed = bombValue != null && bombValue;
 		Boolean coachBanned = IJsonOption.COACH_BANNED.getFrom(source, jsonObject);
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
+		Boolean secureTheBallValue = IJsonOption.SECURE_THE_BALL_USED.getFrom(source, jsonObject);
+		secureTheBallUsed = secureTheBallValue != null && secureTheBallValue;
+
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet(this);
 		fInducementSet.initFrom(source, IJsonOption.INDUCEMENT_SET.getFrom(source, jsonObject));

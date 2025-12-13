@@ -355,6 +355,9 @@ public class StepInitMoving extends AbstractStep {
 						case KICK_TEAM_MATE_MOVE:
 							game.getTurnData().setKtmUsed(true);
 							break;
+						case SECURE_THE_BALL:
+							game.getTurnData().setSecureTheBallUsed(true);
+							break;
 						default:
 							break;
 					}

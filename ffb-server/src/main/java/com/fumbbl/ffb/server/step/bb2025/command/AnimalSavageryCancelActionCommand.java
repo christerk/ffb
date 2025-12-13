@@ -40,6 +40,9 @@ public class AnimalSavageryCancelActionCommand extends DeferredCommand {
 					game.getTurnData().setFoulUsed(true);
 				}
 				break;
+			case SECURE_THE_BALL:
+				game.getTurnData().setSecureTheBallUsed(true);
+				break;
 			default:
 				break;
 		}

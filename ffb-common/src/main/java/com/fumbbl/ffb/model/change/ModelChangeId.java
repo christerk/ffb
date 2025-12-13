@@ -173,9 +173,9 @@ public enum ModelChangeId implements INamedObject {
 	TURN_DATA_SET_PASS_USED("turnDataSetPassUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_PLAGUE_DOCTORS("turnDataSetPlagueDoctors", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_KTM_USED("turnDataSetKtmUsed", ModelChangeDataType.BOOLEAN),
+	TURN_DATA_SET_SECURE_THE_BALL_USED("turnDataSecureTheBallUsed", ModelChangeDataType.BOOLEAN),
 	TURN_DATA_SET_RE_ROLLS("turnDataSetReRolls", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE("turnDataSetReRollsBrilliantCoachingOneDrive", ModelChangeDataType.INTEGER),
-
 	TURN_DATA_SET_RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE("turnDataSetReRollsPumpUpTheCrowdOneDrive", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLLS_SHOW_STAR_ONE_DRIVE("turnDataSetReRollsShowStarOneDrive", ModelChangeDataType.INTEGER),
 	TURN_DATA_SET_RE_ROLLS_SINGLE_USE("turnDataSetReRollsSingleUse", ModelChangeDataType.INTEGER),

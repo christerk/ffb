@@ -111,6 +111,7 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case MOVE:
 								case STAND_UP:
 								case STAND_UP_BLITZ:
+								case SECURE_THE_BALL:
 									clientStateId = ClientStateId.MOVE;
 									break;
 								case BLITZ_MOVE:

@@ -1,10 +1,13 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -77,6 +80,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.THE_FLASHING_BLADE);
 			add(ClientAction.VICIOUS_VINES);
 			add(ClientAction.FURIOUS_OUTBURST);
+			add(ClientAction.SECURE_THE_BALL);
 		}};
 	}
 
@@ -207,6 +211,11 @@ public class SelectLogicModule extends LogicModule {
 						communication.sendActingPlayer(player, PlayerAction.FURIOUS_OUTPBURST, false);
 					}
 					break;
+				case SECURE_THE_BALL:
+					if (isSecureTheBallActionAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.SECURE_THE_BALL, false);
+					}
+					break;
 				default:
 					break;
 			}
@@ -299,6 +308,9 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isStandUpActionAvailable(player)) {
 			context.add(ClientAction.STAND_UP);
+		}
+		if (isSecureTheBallActionAvailable(player)) {
+			context.add(ClientAction.SECURE_THE_BALL);
 		}
 		return context;
 	}
