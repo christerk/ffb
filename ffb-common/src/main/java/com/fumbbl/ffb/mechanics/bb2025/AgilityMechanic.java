@@ -55,9 +55,9 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-  public int minimumRollHypnoticGaze(Player<?> player, Set<GazeModifier> modifiers) {
-    return 3;
-  }
+	public int minimumRollHypnoticGaze(Player<?> player, Set<GazeModifier> modifiers) {
+		return 3;
+	}
 
 	@Override
 	public int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers) {
