@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -40,7 +40,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Arrays;
 import java.util.List;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlackInk extends AbstractStep {
 
@@ -175,7 +174,7 @@ public class StepBlackInk extends AbstractStep {
 			if (StringTool.isProvided(playerId)) {
 
 				getResult().setSound(SoundId.HYPNO);
-				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeHypnotized(true));
+				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeConfused(true));
 				actingPlayer.markSkillUsed(skill);
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 				ServerUtilBlock.updateDiceDecorations(getGameState());
