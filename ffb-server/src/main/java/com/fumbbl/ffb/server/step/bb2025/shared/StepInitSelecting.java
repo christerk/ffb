@@ -110,10 +110,6 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
 							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
 							forceGotoOnDispatch = true;
-						} else if (playerAction == PlayerAction.GAZE_MOVE && targetSelectionState == null) {
-							fDispatchPlayerAction = PlayerAction.GAZE_SELECT;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
-							forceGotoOnDispatch = true;
 						} else {
 							if (playerAction != null && playerAction.isStandingUp()) {
 								actingPlayer.setStandingUp(true);

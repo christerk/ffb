@@ -1,8 +1,9 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.mixed;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.util.UtilPlayer;
