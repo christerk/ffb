@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -13,12 +13,7 @@ import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
-import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.*;
 
 import java.util.Objects;
 
@@ -33,7 +28,6 @@ import static com.fumbbl.ffb.PlayerAction.*;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBloodLust extends AbstractStepWithReRoll {
 
@@ -74,7 +68,8 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_BLOODLUST_ACTION) {
 				if (((ClientCommandBloodlustAction) pReceivedCommand.getCommand()).isChange()) {
-					state.bloodlustAction = getAlternateAction(getGameState().getGame().getActingPlayer().getPlayerAction());
+					state.bloodlustAction =
+							getAlternateAction(getGameState().getGame().getActingPlayer().getPlayerAction());
 				}
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}

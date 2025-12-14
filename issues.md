@@ -5,6 +5,6 @@
 
 # season 3
 
-## Kick-Off
-- 10 Charge CHANGED
-- 11 Dodgy Snack CHANGED
+- secure the ball
+- stalling
+- passing

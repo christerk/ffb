@@ -11,7 +11,7 @@ import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
-import com.fumbbl.ffb.client.state.logic.SelectLogicModule;
+import com.fumbbl.ffb.client.state.logic.bb2025.SelectLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
@@ -73,6 +73,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK, ClientAction.MULTIPLE_BLOCK);
 				put(IPlayerPopupMenuKeys.KEY_BOMB, ClientAction.BOMB);
 				put(IPlayerPopupMenuKeys.KEY_GAZE, ClientAction.GAZE);
+				put(IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL, ClientAction.SECURE_THE_BALL);
 			} else {
 				put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
 				put(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, ClientAction.GAZE_ZOAT);
@@ -158,6 +159,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 					break;
 				case PLAYER_ACTION_GAZE:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE);
+					break;
+				case PLAYER_ACTION_SECURE_THE_BALL:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL);
 					break;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey);
@@ -285,6 +289,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_STAND_UP_BLITZ));
 		configs.put(ClientAction.STAND_UP,
 			new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
+		configs.put(ClientAction.SECURE_THE_BALL,
+				new MenuItemConfig("Secure The Ball", IIconProperty.ACTION_SECURE_THE_BALL, IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL));
+
 
 		return configs;
 	}

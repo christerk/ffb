@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -17,8 +17,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.mixed.shared.StepBloodLust;
-import com.fumbbl.ffb.server.step.mixed.shared.StepBloodLust.StepState;
+import com.fumbbl.ffb.server.step.bb2025.shared.StepBloodLust;
+import com.fumbbl.ffb.server.step.bb2025.shared.StepBloodLust.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.Bloodlust;
@@ -29,7 +29,6 @@ import java.util.Arrays;
 
 import static com.fumbbl.ffb.PlayerAction.*;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 	public BloodLustBehaviour() {
@@ -113,10 +112,10 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 				}
 				if (status == ActionStatus.FAILURE) {
 					if (Arrays.asList(new PlayerAction[]
-							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}
+							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK, SECURE_THE_BALL}
 						)
 						.contains(actingPlayer.getPlayerAction())) {
-						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK}).contains(actingPlayer.getPlayerAction());
+						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, BLITZ_MOVE, GAZE_MOVE, MULTIPLE_BLOCK, SECURE_THE_BALL}).contains(actingPlayer.getPlayerAction());
 
 						UtilServerDialog.showDialog(step.getGameState(), new DialogBloodlustActionParameter(changeToMove), false);
 						step.getResult().setNextAction(StepAction.CONTINUE);

@@ -69,7 +69,7 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.TRAP_DOOR));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 
-		sequence.add(StepId.END_MOVING, IStepLabel.END_MOVING);
+		sequence.add(StepId.END_MOVING, IStepLabel.END_MOVING, from(StepParameterKey.BLOOD_LUST_ACTION, params.getBloodlustAction()));
 		// may insert endTurn or block sequence add this point
 
 		gameState.getStepStack().push(sequence.getSequence());

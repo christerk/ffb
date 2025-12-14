@@ -8,6 +8,7 @@ public enum Keyword {
 	DWARF("Dwarf"),
 	MASTER_CHEF("Master Chef"),
 	LINEMAN("Lineman"),
+	BIG_GUY("Big Guy"),
 	UNKNOWN("unknown");
 
 	private final String name;

@@ -26,7 +26,8 @@ public enum PlayerAction implements INamedObject {
 	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
 	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
-	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst");
+	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
+	SECURE_THE_BALL("secureTheBall", 48, "secures the ball");
 
 	private final String fName;
 	private final int fType;
@@ -63,7 +64,7 @@ public enum PlayerAction implements INamedObject {
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
 			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE
-			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ;
+			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ || this == SECURE_THE_BALL;
 	}
 
 	public boolean isPassing() {

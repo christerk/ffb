@@ -55,7 +55,7 @@ public class ServerUtilBlock {
 			if (kicksDowned) {
 				targetPlayers = UtilPlayer.findAdjacentPronePlayers(game, otherTeam, coordinateAttacker);
 			} else if (viciousVines) {
-				targetPlayers = UtilPlayer.findNonAdjacentBlockablePlayersTwoSquaresAway(game, otherTeam, coordinateAttacker);
+				targetPlayers = UtilPlayer.findBlockablePlayersTwoSquaresAway(game, otherTeam, coordinateAttacker);
 			} else {
 				targetPlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, coordinateAttacker);
 			}

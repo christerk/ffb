@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -13,6 +13,8 @@ import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 
@@ -25,7 +27,6 @@ import com.fumbbl.ffb.util.UtilActingPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepTakeRoot extends AbstractStepWithReRoll {
 
@@ -109,6 +110,9 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 				UtilActingPlayer.changeActingPlayer(game, actingPlayer.getPlayerId(), PlayerAction.FOUL,
 					actingPlayer.isJumping());
 				break;
+			case SECURE_THE_BALL:
+				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
+				// fall through
 			case MOVE:
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 				break;

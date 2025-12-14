@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -20,7 +20,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
-import com.fumbbl.ffb.report.ReportPickupRoll;
+import com.fumbbl.ffb.report.mixed.ReportPickupRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -51,7 +51,6 @@ import java.util.Set;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure, thrownPlayerId;
