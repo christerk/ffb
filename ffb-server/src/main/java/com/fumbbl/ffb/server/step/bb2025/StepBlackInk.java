@@ -90,7 +90,7 @@ public class StepBlackInk extends AbstractStep {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						Game game = getGameState().getGame();
 						ActingPlayer actingPlayer = game.getActingPlayer();
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically), false, SkillUse.REMOVE_TACKLEZONE));
+						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically), false, SkillUse.DISTRACT_OPPONENT));
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						if (!actingPlayer.hasActed()) {
 							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), oldPlayerState);
@@ -159,7 +159,7 @@ public class StepBlackInk extends AbstractStep {
 				if (eligiblePlayers.isEmpty()) {
 					return;
 				}
-				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.REMOVE_TACKLEZONE));
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.DISTRACT_OPPONENT));
 
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.BLACK_INK, eligiblePlayers.toArray(new Player<?>[0]), null, 1), false);
