@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.pass;
+package com.fumbbl.ffb.server.step.bb2025.pass;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -60,7 +60,6 @@ import java.util.Set;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepIntercept extends AbstractStepWithReRoll {
 
@@ -177,7 +176,7 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			if (state.getOldTurnMode() != null) {
 				game.setTurnMode(state.getOldTurnMode());
 			}
-			state.setDeflectionSuccessful(doIntercept);
+			state.setInterceptionSuccessful(doIntercept);
 			if (doIntercept) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
@@ -221,16 +220,14 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		if (successful) {
 			status = ActionStatus.SUCCESS;
 			game.getFieldModel().setOutOfBounds(false);
-			if (easyIntercept) {
-				if (isBomb) {
-					game.getFieldModel().setBombMoving(false);
-					publishParameter(StepParameter.from(StepParameterKey.INTERCEPTOR_ID, pInterceptor.getId()));
-				} else {
-					game.getFieldModel().setBallMoving(false);
-				}
-				passState.setInterceptionSuccessful(true);
-				getResult().setSound(SoundId.YOINK);
+			passState.setInterceptionSuccessful(true);
+			if (isBomb) {
+				game.getFieldModel().setBombMoving(false);
+				publishParameter(StepParameter.from(StepParameterKey.INTERCEPTOR_ID, pInterceptor.getId()));
+			} else {
+				game.getFieldModel().setBallMoving(false);
 			}
+			getResult().setSound(SoundId.YOINK);
 		} else {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.INTERCEPTION) {
