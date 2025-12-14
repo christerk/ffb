@@ -227,7 +227,9 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 			} else {
 				game.getFieldModel().setBallMoving(false);
 			}
-			getResult().setSound(SoundId.YOINK);
+			if (easyIntercept) {
+				getResult().setSound(SoundId.YOINK);
+			}
 		} else {
 			status = ActionStatus.FAILURE;
 			if (getReRolledAction() != ReRolledActions.INTERCEPTION) {
