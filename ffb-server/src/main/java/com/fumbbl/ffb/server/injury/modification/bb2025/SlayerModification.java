@@ -1,9 +1,9 @@
 package com.fumbbl.ffb.server.injury.modification.bb2025;
 
-import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.server.injury.modification.AvOrInjModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
@@ -15,8 +15,7 @@ public class SlayerModification extends AvOrInjModification {
   }
 
   private boolean defenderIsBigGuy(Game game, String playerId) {
-    // TODO: extend once Star Players that count as Big Guys (e.g. Morg, Grak) are flagged as such
-    return game.getPlayerById(playerId).getPosition().getType() == PlayerType.BIG_GUY;
+    return game.getPlayerById(playerId).getPosition().getKeywords().contains(Keyword.BIG_GUY);
   }
 
   @Override
