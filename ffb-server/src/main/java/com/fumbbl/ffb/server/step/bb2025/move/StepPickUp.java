@@ -2,7 +2,15 @@ package com.fumbbl.ffb.server.step.bb2025.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PickupModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -13,17 +21,25 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
-import com.fumbbl.ffb.report.ReportPickupRoll;
+import com.fumbbl.ffb.report.bb2025.ReportPickupRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepException;
+import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -169,19 +185,21 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
-			Set<PickupModifier> pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
+			Set<PickupModifier> pickupModifiers;
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll;
 			if (secureTheBall) {
 				minimumRoll = 2;
+				pickupModifiers = Collections.emptySet();
 			} else {
+				pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
 				minimumRoll = mechanic.minimumRollPickup(player, pickupModifiers);
 			}
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
 			getResult().addReport(new ReportPickupRoll(player.getId(), successful, roll,
-				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0])));
+				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0]), secureTheBall));
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {

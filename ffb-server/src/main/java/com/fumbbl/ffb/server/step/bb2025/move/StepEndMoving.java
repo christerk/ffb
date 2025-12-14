@@ -2,7 +2,11 @@ package com.fumbbl.ffb.server.step.bb2025.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -11,12 +15,27 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.*;
-import com.fumbbl.ffb.server.step.generator.*;
+import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
+import com.fumbbl.ffb.server.step.StepId;
+import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.BlitzBlock;
+import com.fumbbl.ffb.server.step.generator.BlitzMove;
+import com.fumbbl.ffb.server.step.generator.Block;
+import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.Foul;
+import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -47,7 +66,7 @@ public class StepEndMoving extends AbstractStep {
 	private Boolean fFeedingAllowed;
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
-	private PlayerAction fDispatchPlayerAction;
+	private PlayerAction fDispatchPlayerAction, bloodlustAction;
 	private String fBlockDefenderId, thrownPlayerId;
 
 	public StepEndMoving(GameState pGameState) {
@@ -106,6 +125,10 @@ public class StepEndMoving extends AbstractStep {
 					thrownPlayerId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
+				case BLOOD_LUST_ACTION:
+					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
@@ -137,7 +160,7 @@ public class StepEndMoving extends AbstractStep {
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (useSkill.isSkillUsed() &&
-							useSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
+						useSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
 						commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
 					}
 				default:
@@ -156,8 +179,18 @@ public class StepEndMoving extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
 		UtilServerDialog.hideDialog(getGameState());
-		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState()) || (fEndPlayerAction && actingPlayer.getPlayerAction() == PlayerAction.SECURE_THE_BALL &&
-				!UtilPlayer.hasBall(game, actingPlayer.getPlayer()));
+		boolean triesToSecureBall =
+			actingPlayer.getPlayerAction() == PlayerAction.SECURE_THE_BALL &&
+				!(actingPlayer.isSufferingBloodLust() && bloodlustAction == PlayerAction.MOVE);
+		boolean secureTheBallFailed = fEndPlayerAction && triesToSecureBall &&
+			!UtilPlayer.hasBall(game, actingPlayer.getPlayer());
+
+			if (secureTheBallFailed) {
+			getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "could not secure the ball, causing a " +
+				"turnover"));
+		}
+
+		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState()) || secureTheBallFailed;
 		if (fFeedingAllowed == null) {
 			fFeedingAllowed = true; // feeding allowed if not specified otherwise
 		}
@@ -172,67 +205,68 @@ public class StepEndMoving extends AbstractStep {
 			if (StringTool.isProvided(targetId)) {
 				FieldCoordinate targetCoord = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetId));
 				adjacentTarget = targetCoord != null &&
-						targetCoord.isAdjacent(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
+					targetCoord.isAdjacent(game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()));
 			}
 		}
 
 		if (fEndTurn || fEndPlayerAction) {
 			endGenerator.pushSequence(
-					new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+				new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			// block defender set by ball and chain
 		} else if (StringTool.isProvided(fBlockDefenderId)) {
 			boolean askForBlockKind = false;
 			boolean enabled = ((GameOptionBoolean) game.getOptions()
-					.getOptionWithDefault(GameOptionId.ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN)).isEnabled();
+				.getOptionWithDefault(GameOptionId.ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN)).isEnabled();
 			if (enabled) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(game.getPlayerById(fBlockDefenderId));
 				askForBlockKind = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.providesBlockAlternative) &&
-						!playerState.isStunned() && !playerState.isProneOrStunned();
+					!playerState.isStunned() && !playerState.isProneOrStunned();
 				if (askForBlockKind) {
 					game.setDefenderId(fBlockDefenderId);
 				}
 			}
 			((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-					.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId)
-							.askForBlockKind(askForBlockKind).build());
+				.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId)
+					.askForBlockKind(askForBlockKind).build());
 			// this may happen on a failed TAKE_ROOT roll
 		} else {
 			PlayerAction playerAction = actingPlayer.getPlayerAction();
 			if (StringTool.isProvided(actingPlayer.getPlayerId()) && (playerAction != null)
-					&& !playerAction.isMoving() &&
-					!((playerAction == PlayerAction.PASS || playerAction == PlayerAction.HAND_OVER)
-							&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
+				&& !playerAction.isMoving() &&
+				!((playerAction == PlayerAction.PASS || playerAction == PlayerAction.HAND_OVER)
+					&& !UtilPlayer.hasBall(game, actingPlayer.getPlayer()))) {
 				pushSequenceForPlayerAction(playerAction);
 			} else if (ArrayTool.isProvided(fMoveStack)) {
 				if (PlayerAction.BLITZ_MOVE == playerAction) {
 					blitzMoveGenerator.pushSequence(
-							new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+						new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
 				} else {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart));
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart,
+					null,	bloodlustAction));
 				}
 			} else if (UtilPlayer.isNextMovePossible(game, false)
-					|| ((PlayerAction.HAND_OVER_MOVE == playerAction) &&
-					UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
-					|| ((PlayerAction.PASS_MOVE == playerAction) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
-					|| ((PlayerAction.FOUL_MOVE == playerAction) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
-					|| ((PlayerAction.GAZE_MOVE == playerAction) &&
-					UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
-					|| ((PlayerAction.KICK_TEAM_MATE_MOVE == playerAction) &&
-					UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
-					|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) &&
-					UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))
-					|| playerAction != null && playerAction.isBlitzMove() && adjacentTarget
+				|| ((PlayerAction.HAND_OVER_MOVE == playerAction) &&
+				UtilPlayer.canHandOver(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.PASS_MOVE == playerAction) && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.FOUL_MOVE == playerAction) && UtilPlayer.canFoul(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.GAZE_MOVE == playerAction) &&
+				UtilPlayer.isNextToGazeTarget(game, actingPlayer.getPlayer()))
+				|| ((PlayerAction.KICK_TEAM_MATE_MOVE == playerAction) &&
+				UtilPlayer.canKickTeamMate(game, actingPlayer.getPlayer(), false))
+				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) &&
+				UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))
+				|| playerAction != null && playerAction.isBlitzMove() && adjacentTarget
 			) {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				if (playerAction != null && playerAction.isBlitzMove()) {
 					ServerUtilBlock.updateDiceDecorations(getGameState());
 					blitzMoveGenerator.pushSequence(new BlitzMove.SequenceParams(getGameState()));
 				} else {
-					moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), bloodlustAction));
 				}
 			} else {
 				endGenerator.pushSequence(
-						new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+					new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -255,19 +289,19 @@ public class StepEndMoving extends AbstractStep {
 				case VICIOUS_VINES:
 				case BLOCK:
 					((Block) factory.forName(SequenceGenerator.Type.Block.name()))
-							.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).build());
+						.pushSequence(new Block.Builder(getGameState()).useChainsaw(usingChainsaw).build());
 					return true;
 				case BLITZ:
 				case BLITZ_MOVE:
 				case PUTRID_REGURGITATION_MOVE:
 				case KICK_EM_BLITZ:
 					((BlitzBlock) factory.forName(SequenceGenerator.Type.BlitzBlock.name()))
-							.pushSequence(new BlitzBlock.SequenceParams(getGameState(), usingChainsaw));
+						.pushSequence(new BlitzBlock.SequenceParams(getGameState(), usingChainsaw));
 					return true;
 				case FOUL:
 				case FOUL_MOVE:
 					((Foul) factory.forName(SequenceGenerator.Type.Foul.name()))
-							.pushSequence(new Foul.SequenceParams(getGameState()));
+						.pushSequence(new Foul.SequenceParams(getGameState()));
 					return true;
 				case HAND_OVER:
 				case HAND_OVER_MOVE:
@@ -275,21 +309,21 @@ public class StepEndMoving extends AbstractStep {
 				case PASS_MOVE:
 				case HAIL_MARY_PASS:
 					((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
-							.pushSequence(new Pass.SequenceParams(getGameState()));
+						.pushSequence(new Pass.SequenceParams(getGameState()));
 					return true;
 				case THROW_TEAM_MATE:
 				case THROW_TEAM_MATE_MOVE:
 					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
-							.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, false));
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, false));
 					return true;
 				case KICK_TEAM_MATE:
 				case KICK_TEAM_MATE_MOVE:
 					((ThrowTeamMate) factory.forName(SequenceGenerator.Type.ThrowTeamMate.name()))
-							.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, true));
+						.pushSequence(new ThrowTeamMate.SequenceParams(getGameState(), thrownPlayerId, true));
 					return true;
 				case GAZE:
 					((Move) factory.forName(SequenceGenerator.Type.Move.name()))
-							.pushSequence(new Move.SequenceParams(getGameState()));
+						.pushSequence(new Move.SequenceParams(getGameState()));
 					return true;
 				default:
 					break;
@@ -311,6 +345,7 @@ public class StepEndMoving extends AbstractStep {
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
+		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		return jsonObject;
 	}
 
@@ -326,6 +361,8 @@ public class StepEndMoving extends AbstractStep {
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
+		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
+
 		return this;
 	}
 

@@ -99,8 +99,6 @@ public class StepBloodLust extends AbstractStepWithReRoll {
 				return THROW_TEAM_MATE_MOVE;
 			case KICK_TEAM_MATE:
 				return KICK_TEAM_MATE_MOVE;
-			case SECURE_THE_BALL:
-				return SECURE_THE_BALL;
 			default:
 				return MOVE;
 		}

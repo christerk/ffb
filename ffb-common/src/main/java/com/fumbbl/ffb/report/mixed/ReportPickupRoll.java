@@ -1,10 +1,13 @@
-package com.fumbbl.ffb.report;
+package com.fumbbl.ffb.report.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.modifiers.RollModifier;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.ReportSkillRoll;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ReportPickupRoll extends ReportSkillRoll {
 
 	public ReportPickupRoll() {
