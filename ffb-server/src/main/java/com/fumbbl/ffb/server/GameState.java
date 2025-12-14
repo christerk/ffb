@@ -362,6 +362,19 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.removeAdditionalAssist(teamId);
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public boolean isStalling() {
+		return activeEffects.isStalling();
+	}
+
+	public void stallingDetected() {
+		activeEffects.setStalling(true);
+	}
+
+	public void resetStalling() {
+		activeEffects.setStalling(false);
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {

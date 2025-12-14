@@ -518,6 +518,7 @@ public interface IJsonOption {
 	JsonIntOption SPEED = new JsonIntOption("speed");
 	JsonIntOption SPIRALLING_EXPENSES = new JsonIntOption("spirallingExpenses");
 	JsonStringArrayOption STAFF_POSITION_IDS = new JsonStringArrayOption("staffPositionIds");
+	JsonBooleanOption STALLING = new JsonBooleanOption("stalling");
 	JsonBooleanOption STANDING_UP = new JsonBooleanOption("standingUp");
 	JsonStringOption STAR_PLAYER_NAME = new JsonStringOption("starPlayerName");
 	JsonStringArrayOption STAR_PLAYER_POSITION_IDS = new JsonStringArrayOption("starPlayerPositionIds");

@@ -14,7 +14,7 @@ import java.util.Set;
 public class ActiveEffects implements IJsonSerializable {
 
 	private Weather oldWeather;
-	private boolean skipRestoreWeather;
+	private boolean skipRestoreWeather, stalling;
 	private final Set<String> teamIdsAdditionalAssist = new HashSet<>();
 
 	public Weather getOldWeather() {
@@ -45,6 +45,14 @@ public class ActiveEffects implements IJsonSerializable {
 		teamIdsAdditionalAssist.remove(teamId);
 	}
 
+	public boolean isStalling() {
+		return stalling;
+	}
+
+	public void setStalling(boolean stalling) {
+		this.stalling = stalling;
+	}
+
 	@Override
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -56,6 +64,10 @@ public class ActiveEffects implements IJsonSerializable {
 			teamIdsAdditionalAssist.addAll(Arrays.asList(IServerJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.getFrom(source, jsonObject)));
 		}
 
+		if (IServerJsonOption.STALLING.isDefinedIn(jsonObject)) {
+			stalling = IServerJsonOption.STALLING.getFrom(source, jsonObject);
+		}
+
 		return this;
 	}
 
@@ -65,6 +77,7 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.WEATHER.addTo(jsonObject, oldWeather);
 		IServerJsonOption.SKIP_RESTORE_WEATHER.addTo(jsonObject, skipRestoreWeather);
 		IServerJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.addTo(jsonObject, teamIdsAdditionalAssist);
+		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		return jsonObject;
 	}
 }

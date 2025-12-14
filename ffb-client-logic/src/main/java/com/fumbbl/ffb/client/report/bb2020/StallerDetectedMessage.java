@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.TextStyle;
@@ -10,7 +10,6 @@ import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 @ReportMessageType(ReportId.STALLER_DETECTED)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StallerDetectedMessage extends ReportMessageBase<ReportStallerDetected> {
 	@Override
 	protected void render(ReportStallerDetected report) {

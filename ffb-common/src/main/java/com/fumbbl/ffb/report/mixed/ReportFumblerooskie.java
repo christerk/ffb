@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report.bb2020;
+package com.fumbbl.ffb.report.mixed;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -12,11 +12,13 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class ReportFumblerooskie extends NoDiceReport {
 
 	private String playerId;
 	private boolean used;
 
+	@SuppressWarnings("unused")
 	public ReportFumblerooskie() {
 	}
 

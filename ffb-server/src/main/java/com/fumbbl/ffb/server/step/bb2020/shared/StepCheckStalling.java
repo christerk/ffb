@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2020.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepCheckStalling extends AbstractStep {
 	private boolean ignoreActedFlag = true;
 
