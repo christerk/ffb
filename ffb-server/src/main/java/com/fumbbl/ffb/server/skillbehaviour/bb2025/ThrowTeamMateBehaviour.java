@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -33,7 +33,6 @@ import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
 
 import java.util.Set;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 	public ThrowTeamMateBehaviour() {
@@ -124,8 +123,6 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					return PassResult.FUMBLE;
 				} else if (roll == 6 || resultAfterModifiers >= passValue) {
 					return PassResult.ACCURATE;
-				} else if (resultAfterModifiers <= 1) {
-					return PassResult.WILDLY_INACCURATE;
 				} else {
 					return PassResult.INACCURATE;
 				}

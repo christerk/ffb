@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.pass;
+package com.fumbbl.ffb.server.step.bb2020.pass;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -52,7 +52,6 @@ import java.util.List;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepMissedPass extends AbstractStep {
 
 	private final List<Integer> rollList = new ArrayList<>();

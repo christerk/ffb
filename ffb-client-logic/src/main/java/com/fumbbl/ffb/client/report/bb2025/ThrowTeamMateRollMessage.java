@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2025;
 
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RulesCollection;
@@ -12,7 +12,6 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportThrowTeamMateRoll;
 
 @ReportMessageType(ReportId.THROW_TEAM_MATE_ROLL)
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamMateRoll> {
 
@@ -52,14 +51,10 @@ public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamM
 			if (report.getPassResult() == PassResult.ACCURATE) {
 				status.append("superbly");
 			} else {
-				status.append("successfully");
+				status.append("with a subpar result");
 			}
 			status.append(".");
 			println(getIndent() + 2, status.toString());
-		} else if (report.getPassResult() == PassResult.WILDLY_INACCURATE) {
-			print(getIndent() + 2, " lets ");
-			print(getIndent() + 2, false, thrownPlayer);
-			println(getIndent() + 2, " deviate.");
 		} else {
 			print(getIndent() + 2, " fumbles ");
 			print(getIndent() + 2, false, thrownPlayer);
@@ -68,18 +63,18 @@ public class ThrowTeamMateRollMessage extends ReportMessageBase<ReportThrowTeamM
 		if (report.isSuccessful() && !report.isReRolled() && canThrow) {
 			neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(report.getMinimumRoll());
 			if (report.isKick()) {
-				neededRoll.append("+ to avoid a fumble or terrible kick");
+				neededRoll.append("+ to avoid a Fumbled Kick");
 			} else {
-				neededRoll.append("+ to avoid a fumble or terrible throw");
+				neededRoll.append("+ to avoid a Fumbled Throw");
 			}
 		}
 		if (!report.isSuccessful() && !report.isReRolled() && canThrow) {
 			neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll());
 			if (report.isKick()) {
-				neededRoll.append("+ to have at least a successful kick");
+				neededRoll.append("+ to make at least a Subpar Kick");
 
 			} else {
-				neededRoll.append("+ to have at least a successful throw");
+				neededRoll.append("+ to make at least a Subpar Throw");
 			}
 		}
 		if (neededRoll != null) {
