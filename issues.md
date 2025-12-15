@@ -5,6 +5,8 @@
 
 # season 3
 
-- secure the ball
-- stalling
-- passing
+## Re-Rolls
+- Team Captain
+- Mascot (with optional TRR)
+- TRR for Pro on Block die (with Mascot)
+- Leader
