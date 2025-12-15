@@ -2,11 +2,11 @@ package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.mechanics.GameMechanic;
@@ -24,17 +24,17 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.report.ReportInducement;
-import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportMasterChefRoll;
 import com.fumbbl.ffb.report.ReportPlayerAction;
 import com.fumbbl.ffb.report.ReportStartHalf;
-import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.report.bb2020.ReportTwoForOne;
+import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
@@ -213,8 +213,10 @@ public class UtilServerGame {
 
 	public static void updatePlayerStateDependentProperties(IStep pStep) {
 		Game game = pStep.getGameState().getGame();
-		updateLeaderReRollsForTeam(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel(), pStep);
-		updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
+		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic mechanic = (StateMechanic) factory.forName(Mechanic.Type.STATE.name());
+		mechanic.updateLeaderReRollsForTeam(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel(), pStep);
+		mechanic.updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamHome(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamAway(), game.getFieldModel(), pStep);
 		updateSingleUseReRolls(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel());
@@ -247,35 +249,6 @@ public class UtilServerGame {
 		step.getResult().addReport(new ReportTwoForOne(player.getId(), partner.getId(), true));
 	}
 
-	private static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-																								 IStep pStep) {
-		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
-			if (teamHasLeaderOnField(pTeam, pFieldModel)) {
-				if (LeaderState.NONE.equals(pTurnData.getLeaderState())) {
-					pTurnData.setLeaderState(LeaderState.AVAILABLE);
-					pTurnData.setReRolls(pTurnData.getReRolls() + 1);
-					pStep.getResult().addReport(new ReportLeader(pTeam.getId(), pTurnData.getLeaderState()));
-				}
-			} else {
-				if (LeaderState.AVAILABLE.equals(pTurnData.getLeaderState())) {
-					pTurnData.setLeaderState(LeaderState.NONE);
-					pTurnData.setReRolls(Math.max(pTurnData.getReRolls() - 1, 0));
-					pStep.getResult().addReport(new ReportLeader(pTeam.getId(), pTurnData.getLeaderState()));
-				}
-			}
-		}
-	}
-
-	protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-		for (Player<?> player : pTeam.getPlayers()) {
-			if (playerOnField(player, pFieldModel)
-				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static void updateSingleUseReRolls(TurnData turnData, Team team, FieldModel fieldModel) {
 		int reRolls = (int) Arrays.stream(team.getPlayers())
 			.filter(player -> UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch))
@@ -284,11 +257,6 @@ public class UtilServerGame {
 			.count();
 
 		turnData.setSingleUseReRolls(reRolls);
-	}
-
-	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
-		FieldCoordinate fieldCoordinate = pFieldModel.getPlayerCoordinate(pPlayer);
-		return ((fieldCoordinate != null) && !fieldCoordinate.isBoxCoordinate());
 	}
 
 	private static void addApothecaries(IStep pStep, boolean pHomeTeam) {
