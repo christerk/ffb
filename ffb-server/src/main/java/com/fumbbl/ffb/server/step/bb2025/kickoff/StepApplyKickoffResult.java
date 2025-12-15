@@ -314,6 +314,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			}
 		} else if (eligiblePlayers.isEmpty()) {
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_SOLID_DEFENSE));
+			UtilServerGame.syncGameModel(this);
 			Team actingTeam = game.getActingTeam();
 			for (Player<?> player : actingTeam.getPlayers()) {
 				FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);

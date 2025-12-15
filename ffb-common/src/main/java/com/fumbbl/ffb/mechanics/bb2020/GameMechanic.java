@@ -256,4 +256,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			add(REROLL_ONES_ON_KOS);
 		}};
 	}
+
+	@Override
+	public boolean playersForGoActivations() {
+		return false;
+	}
 }
