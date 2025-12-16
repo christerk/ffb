@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
@@ -149,15 +148,10 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private SeriousInjury mapSIRoll(Game game, InjuryContext injuryContext, int roll) {
 		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
-		List<SeriousInjury> injuriesWithReduceableStats = orderedInjuries.stream().filter(
-			injury -> {
-				InjuryAttribute attribute = injury.getInjuryAttribute();
-				return canBeReduced(attribute, currentValue(attribute, defender));
-			}).collect(Collectors.toList());
-
 		SeriousInjury originalInjury = mapSIRoll(roll);
+		InjuryAttribute attribute = originalInjury.getInjuryAttribute();
 
-		if (injuriesWithReduceableStats.isEmpty() || injuriesWithReduceableStats.contains(originalInjury)) {
+		if (canBeReduced(attribute, currentValue(attribute, defender))) {
 			return originalInjury;
 		}
 
