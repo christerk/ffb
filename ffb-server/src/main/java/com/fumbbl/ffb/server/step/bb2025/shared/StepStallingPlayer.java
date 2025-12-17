@@ -21,12 +21,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARockStalling;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
-import com.fumbbl.ffb.server.step.AbstractStep;
-import com.fumbbl.ffb.server.step.StepAction;
-import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
@@ -73,13 +68,15 @@ public class StepStallingPlayer extends AbstractStep {
 		Player<?> player = actingPlayer.getPlayer();
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
 		boolean gotRid = gotRidOfBall(playerAction, game);
-		boolean noStalling = !getGameState().isStalling() || gotRid;
+		boolean scored = UtilServerSteps.checkTouchdown(getGameState());
+		boolean noStalling = !getGameState().isStalling() || gotRid || scored;
+
 
 		getGameState().resetStalling();
 
 		if (noStalling || game.getFieldModel().getPlayerState(player).isProneOrStunned()) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
-			if (gotRid) {
+			if (gotRid || scored) {
 				getResult().addReport(new ReportPlayerEvent(player.getId(), "did not stall after all"));
 			}
 			return;
