@@ -1,44 +1,46 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.mixed.kickoff;
 
-import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.InducementPhase;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 
 /**
- * Step to end kickoff sequence.
- * <p>
- * Pushes endTurnSequence and selectSequence on stack when finishing.
+ * Step to init the kickoff sequence.
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
-public final class StepEndKickoff extends AbstractStep {
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
+public final class StepInitKickoff extends AbstractStep {
 
-	public StepEndKickoff(GameState pGameState) {
+	public StepInitKickoff(GameState pGameState) {
 		super(pGameState);
 	}
 
 	public StepId getId() {
-		return StepId.END_KICKOFF;
+		return StepId.INIT_KICKOFF;
 	}
 
 	@Override
 	public void start() {
-		super.start();
 		executeStep();
 	}
 
@@ -53,25 +55,31 @@ public final class StepEndKickoff extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
+		if (game.getTurnMode() == TurnMode.START_GAME) {
+			MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+			StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
+
+			UtilServerDialog.hideDialog(getGameState());
+			stateMechanic.startHalf(this, 1);
+			game.setTurnMode(TurnMode.SETUP);
+			game.startTurn();
+			UtilServerGame.updatePlayerStateDependentProperties(this);
+			UtilServerGame.prepareForSetup(game);
+		}
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()))
-			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
-			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
-			game.isHomePlaying()));
+			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP,
+				!game.isHomePlaying()));
+		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
+			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_SETUP,
+				game.isHomePlaying()));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
-
 
 	// JSON serialization
 
 	@Override
-	public JsonObject toJsonValue() {
-		return super.toJsonValue();
-	}
-
-	@Override
-	public StepEndKickoff initFrom(IFactorySource source, JsonValue jsonValue) {
+	public StepInitKickoff initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		return this;
 	}

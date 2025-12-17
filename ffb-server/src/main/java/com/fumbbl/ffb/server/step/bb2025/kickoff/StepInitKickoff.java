@@ -1,14 +1,17 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.bb2025.kickoff;
 
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.InducementPhase;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -24,7 +27,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepInitKickoff extends AbstractStep {
 
 	public StepInitKickoff(GameState pGameState) {
@@ -52,11 +55,13 @@ public final class StepInitKickoff extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		if (game.getTurnMode() == TurnMode.START_GAME) {
+			MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+			StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
+
 			UtilServerDialog.hideDialog(getGameState());
-			UtilServerGame.startHalf(this, 1);
+			stateMechanic.startHalf(this, 1);
 			game.setTurnMode(TurnMode.SETUP);
 			game.startTurn();
-			UtilServerGame.updatePlayerStateDependentProperties(this);
 			UtilServerGame.prepareForSetup(game);
 		}
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);

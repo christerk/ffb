@@ -19,7 +19,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndTurn;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
