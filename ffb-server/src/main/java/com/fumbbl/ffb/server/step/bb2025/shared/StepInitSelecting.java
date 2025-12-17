@@ -7,7 +7,6 @@ import com.fumbbl.ffb.dialog.DialogConfirmEndActionParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.*;
-import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.*;
 import com.fumbbl.ffb.option.GameOptionBoolean;
@@ -25,15 +24,9 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Step to init the select sequence.
@@ -55,14 +48,6 @@ import java.util.stream.Collectors;
  */
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepInitSelecting extends AbstractStep {
-
-	private final Set<ISkillProperty> rollAtActivation = new HashSet<ISkillProperty>() {{
-		add(NamedProperties.appliesConfusion);
-		add(NamedProperties.needsToRollForActionBlockingIsEasier);
-		add(NamedProperties.needsToRollForActionButKeepsTacklezone);
-		add(NamedProperties.becomesImmovable);
-	}};
-
 	private String fGotoLabelOnEnd;
 	private PlayerAction fDispatchPlayerAction;
 	private boolean fEndTurn;
@@ -70,6 +55,8 @@ public final class StepInitSelecting extends AbstractStep {
 	private boolean forceGotoOnDispatch;
 
 	private transient boolean fUpdatePersistence;
+
+	private final StallingExtension stallingExtension = new StallingExtension();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -515,23 +502,10 @@ public final class StepInitSelecting extends AbstractStep {
 		Game game = getGameState().getGame();
 		Player<?> player = game.getActingPlayer().getPlayer();
 
-		return UtilPlayer.hasBall(game, player)
-			&& player.getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream())
-			.noneMatch(rollAtActivation::contains)
-			&& !ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(player.getTeam()),
-			game.getFieldModel().getPlayerCoordinate(player), false))
-			&& hasOpenPathToEndzone(game, player);
+		return stallingExtension.isConsideredStalling(game, player);
 	}
 
-	private boolean hasOpenPathToEndzone(Game game, Player<?> player) {
-		FieldCoordinateBounds endzoneBounds =
-			game.getTeamHome().hasPlayer(player) ? FieldCoordinateBounds.ENDZONE_AWAY : FieldCoordinateBounds.ENDZONE_HOME;
 
-		Set<FieldCoordinate> endZoneCoordinates =
-			Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
-
-		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.getShortestPath(game, endZoneCoordinates, player, 0));
-	}
 
 
 	// JSON serialization

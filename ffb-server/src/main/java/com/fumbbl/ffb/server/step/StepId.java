@@ -75,6 +75,7 @@ public enum StepId implements INamedObject {
 	FAN_FACTOR("fanFactor"), // game.end
 	FIRST_MOVE_FURIOUS_OUTBURST("firstMoveFuriousOutburst"),
 	FOLLOWUP("followup"), // action.block
+	FORGONE_STALLING("forgoneStalling"), // action.common
 	FOUL("foul"), // action.foul
 	FOUL_APPEARANCE("foulAppearance"), // action.block
 	FOUL_APPEARANCE_MULTIPLE("foulAppearanceMultiple"), // action.multiBlock 2020
