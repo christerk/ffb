@@ -9,4 +9,6 @@
 - Team Captain
 - Mascot (with optional TRR)
 - TRR for Pro on Block die (with Mascot)
-- Leader
+
+## Stalling
+- no check after td

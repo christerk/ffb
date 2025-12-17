@@ -17,7 +17,6 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 
 /**
@@ -76,7 +75,6 @@ public final class StepBlitzTurn extends AbstractStep {
                 UtilServerTimer.startTurnTimer(getGameState(), currentTimeMillis);
             }
             game.startTurn();
-            UtilServerGame.updatePlayerStateDependentProperties(this);
             // insert select sequence into kickoff sequence after this step
             getGameState().pushCurrentStepOnStack();
             SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);

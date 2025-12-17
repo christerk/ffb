@@ -23,6 +23,7 @@ import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -72,6 +73,7 @@ import com.fumbbl.ffb.server.PrayerState;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -247,6 +249,8 @@ public class StepEndTurn extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
 		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
+		MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
 
 		Player<?> touchdownPlayer = null;
 
@@ -383,7 +387,7 @@ public class StepEndTurn extends AbstractStep {
 					getResult().setSound(SoundId.WHISTLE);
 					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-					UtilServerGame.resetSpecialSkillAtEndOfDrive(game);
+					stateMechanic.resetSpecialSkillAtEndOfDrive(game);
 
 					if (mechanic.touchdownEndsGame(game)) {
 						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -496,7 +500,7 @@ public class StepEndTurn extends AbstractStep {
 				boolean drawWithOvertime = UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 					&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore());
 				if (game.getHalf() == 1 || (game.getHalf() == 2 && drawWithOvertime)) {
-					UtilServerGame.startHalf(this, game.getHalf() + 1);
+					stateMechanic.startHalf(this, game.getHalf() + 1);
 				}
 			}
 
