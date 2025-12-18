@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.mixed;
+package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class JumpMechanic extends com.fumbbl.ffb.mechanics.JumpMechanic {
 	@Override
 	public boolean isAvailableAsNextMove(Game game, ActingPlayer actingPlayer, boolean jumping) {

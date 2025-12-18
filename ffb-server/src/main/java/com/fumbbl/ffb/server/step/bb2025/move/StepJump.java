@@ -189,8 +189,6 @@ public class StepJump extends AbstractStepWithReRoll {
 				switch (leap()) {
 					case SUCCESS:
 						actingPlayer.setJumping(false);
-						actingPlayer.setHasJumped(true);
-						actingPlayer.markSkillUsed(NamedProperties.canLeap);
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						break;
 					case FAILURE:
@@ -208,8 +206,6 @@ public class StepJump extends AbstractStepWithReRoll {
 	private void handleFailure(Game game) {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		actingPlayer.setJumping(false);
-		actingPlayer.setHasJumped(true);
-		actingPlayer.markSkillUsed(NamedProperties.canLeap);
 		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
 			new SteadyFootingContext(new InjuryTypeDropJump(game.getDefender()))));
 		if (roll > 1) {

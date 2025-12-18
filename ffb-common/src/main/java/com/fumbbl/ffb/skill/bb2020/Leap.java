@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -15,7 +15,6 @@ import com.fumbbl.ffb.modifiers.ModifierType;
  * marked can be reduced by 1 to a minimum of -1.
  */
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class Leap extends Skill {
 
 	public Leap() {
