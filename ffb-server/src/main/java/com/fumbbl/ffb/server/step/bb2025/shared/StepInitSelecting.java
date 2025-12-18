@@ -9,8 +9,11 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.*;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
+import com.fumbbl.ffb.report.mixed.ReportFumblerooskie;
+import com.fumbbl.ffb.report.mixed.ReportStallerDetected;
 import com.fumbbl.ffb.server.GameCache;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -45,7 +48,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
  */
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepInitSelecting extends AbstractStep {
-
 	private String fGotoLabelOnEnd;
 	private PlayerAction fDispatchPlayerAction;
 	private boolean fEndTurn;
@@ -53,6 +55,8 @@ public final class StepInitSelecting extends AbstractStep {
 	private boolean forceGotoOnDispatch;
 
 	private transient boolean fUpdatePersistence;
+
+	private final StallingExtension stallingExtension = new StallingExtension();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -131,6 +135,8 @@ public final class StepInitSelecting extends AbstractStep {
 
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 								playerAction, actingPlayerCommand.isJumping());
+
+							checkForStaller();
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
@@ -158,10 +164,12 @@ public final class StepInitSelecting extends AbstractStep {
 								actingPlayer.setHasMoved(false);
 								actingPlayer.setCurrentMove(0);
 								actingPlayer.setStandingUp(false);
+								getGameState().resetStalling();
 								fEndPlayerAction = true;
 								commandStatus = StepCommandStatus.EXECUTE_STEP;
 							}
 						} else {
+							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
@@ -481,6 +489,24 @@ public final class StepInitSelecting extends AbstractStep {
 		fieldModel.removeMultiBlockTarget(command.getPlayerId());
 		ServerUtilBlock.updateDiceDecorations(getGameState());
 	}
+
+	private void checkForStaller() {
+		if (((GameOptionBoolean) getGameState().getGame().getOptions()
+			.getOptionWithDefault(GameOptionId.ENABLE_STALLING_CHECK)).isEnabled() && !getGameState().isStalling() && isConsideredStalling()) {
+			getResult().addReport(new ReportStallerDetected(getGameState().getGame().getActingPlayer().getPlayerId()));
+			getGameState().stallingDetected();
+		}
+	}
+
+	private boolean isConsideredStalling() {
+		Game game = getGameState().getGame();
+		Player<?> player = game.getActingPlayer().getPlayer();
+
+		return stallingExtension.isConsideredStalling(game, player);
+	}
+
+
+
 
 	// JSON serialization
 

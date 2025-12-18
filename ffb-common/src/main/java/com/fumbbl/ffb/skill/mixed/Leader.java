@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.common;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -18,7 +18,8 @@ import com.fumbbl.ffb.model.skill.Skill;
  * be carried over into Overtime if not used, but the team does not receive a
  * new Leader re-roll at the start of Overtime.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
+@RulesCollection(Rules.BB2020)
 public class Leader extends Skill {
 
 	public Leader() {

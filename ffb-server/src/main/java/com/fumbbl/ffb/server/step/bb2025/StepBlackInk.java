@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -40,7 +40,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
 import java.util.Arrays;
 import java.util.List;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlackInk extends AbstractStep {
 
@@ -91,7 +90,7 @@ public class StepBlackInk extends AbstractStep {
 						commandStatus = StepCommandStatus.SKIP_STEP;
 						Game game = getGameState().getGame();
 						ActingPlayer actingPlayer = game.getActingPlayer();
-						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically), false, SkillUse.REMOVE_TACKLEZONE));
+						getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomatically), false, SkillUse.DISTRACT_OPPONENT));
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						if (!actingPlayer.hasActed()) {
 							game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), oldPlayerState);
@@ -160,7 +159,7 @@ public class StepBlackInk extends AbstractStep {
 				if (eligiblePlayers.isEmpty()) {
 					return;
 				}
-				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.REMOVE_TACKLEZONE));
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.DISTRACT_OPPONENT));
 
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(game.getActingTeam().getId(), PlayerChoiceMode.BLACK_INK, eligiblePlayers.toArray(new Player<?>[0]), null, 1), false);
@@ -175,7 +174,7 @@ public class StepBlackInk extends AbstractStep {
 			if (StringTool.isProvided(playerId)) {
 
 				getResult().setSound(SoundId.HYPNO);
-				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeHypnotized(true));
+				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeConfused(true));
 				actingPlayer.markSkillUsed(skill);
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
 				ServerUtilBlock.updateDiceDecorations(getGameState());

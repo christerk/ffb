@@ -19,6 +19,7 @@ import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 
 /**
  * Step in the kickoff sequence to place the kickoff.
@@ -74,6 +75,7 @@ public final class StepKickoff extends AbstractStep {
 		if (fKickoffStartCoordinate != null) {
 			Game game = getGameState().getGame();
 			UtilServerDialog.hideDialog(getGameState());
+			UtilServerGame.updatePlayerStateDependentProperties(this);
 			publishParameter(new StepParameter(StepParameterKey.KICKOFF_START_COORDINATE, fKickoffStartCoordinate));
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			Inducement generator = (Inducement) factory.forName(SequenceGenerator.Type.Inducement.name());

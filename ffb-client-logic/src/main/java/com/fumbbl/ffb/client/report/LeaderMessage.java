@@ -14,7 +14,7 @@ public class LeaderMessage extends ReportMessageBase<ReportLeader> {
     protected void render(ReportLeader report) {
   		StringBuilder status = new StringBuilder();
   		LeaderState leaderState = report.getLeaderState();
-
+		setIndent(0);
   		if (LeaderState.AVAILABLE.equals(leaderState)) {
   			printTeamName(game, false, report.getTeamId());
   			status.append(" gain a Leader re-roll.");

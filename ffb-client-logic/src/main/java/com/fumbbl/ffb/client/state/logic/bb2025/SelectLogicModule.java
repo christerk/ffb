@@ -111,6 +111,11 @@ public class SelectLogicModule extends LogicModule {
 				case MOVE:
 					communication.sendActingPlayer(player, PlayerAction.MOVE, false);
 					break;
+				case SECURE_THE_BALL:
+					if (isSecureTheBallActionAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.SECURE_THE_BALL, false);
+					}
+					break;
 				case STAND_UP:
 					communication.sendActingPlayer(player, PlayerAction.STAND_UP, false);
 					break;
@@ -209,11 +214,6 @@ public class SelectLogicModule extends LogicModule {
 				case FURIOUS_OUTBURST:
 					if (isFuriousOutburstAvailable(player)) {
 						communication.sendActingPlayer(player, PlayerAction.FURIOUS_OUTPBURST, false);
-					}
-					break;
-				case SECURE_THE_BALL:
-					if (isSecureTheBallActionAvailable(player)) {
-						communication.sendActingPlayer(player, PlayerAction.SECURE_THE_BALL, false);
 					}
 					break;
 				default:

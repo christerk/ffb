@@ -1,18 +1,14 @@
-package com.fumbbl.ffb.server.step.generator.common;
+package com.fumbbl.ffb.server.step.generator.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.Sequence;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
-public class EndTurn extends SequenceGenerator<SequenceGenerator.SequenceParams> {
-
-	public EndTurn() {
-		super(Type.EndTurn);
-	}
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class EndTurn extends com.fumbbl.ffb.server.step.generator.EndTurn {
 
 	@Override
 	public void pushSequence(SequenceParams params) {

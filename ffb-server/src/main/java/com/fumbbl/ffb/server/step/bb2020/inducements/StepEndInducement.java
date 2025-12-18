@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.inducements;
+package com.fumbbl.ffb.server.step.bb2020.inducements;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -17,10 +17,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.mixed.shared.StepCheckStalling;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCheckStalling;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndTurn;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
@@ -35,7 +35,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndInducement extends AbstractStep {
 
     private boolean fEndInducementPhase;

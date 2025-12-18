@@ -204,6 +204,9 @@ public class PassLogicModule extends MoveLogicModule {
 		if (isThenIStartedBlastinAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
+		if (isFumblerooskieAvailable()) {
+			actionContext.add(ClientAction.FUMBLEROOSKIE);
+		}
 		actionContext.add(ClientAction.END_MOVE);
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);

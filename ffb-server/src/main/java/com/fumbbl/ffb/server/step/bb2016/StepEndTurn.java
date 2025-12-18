@@ -15,6 +15,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogArgueTheCallParameter;
 import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementDuration;
@@ -22,6 +23,7 @@ import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.InducementSet;
@@ -46,6 +48,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -159,6 +162,8 @@ public class StepEndTurn extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
 		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
+		MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
 
 		if (!fWithinSecretWeaponHandling) {
 
@@ -305,14 +310,14 @@ public class StepEndTurn extends AbstractStep {
 						GameResult gameResult = game.getGameResult();
 						if (UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 								&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore())) {
-							UtilServerGame.startHalf(this, game.getHalf() + 1);
+							stateMechanic.startHalf(this, game.getHalf() + 1);
 							kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), true));
 							fRemoveUsedSecretWeapons = true;
 						} else {
 							fEndGame = true;
 						}
 					} else {
-						UtilServerGame.startHalf(this, game.getHalf() + 1);
+						stateMechanic.startHalf(this, game.getHalf() + 1);
 						kickoffGenerator.pushSequence(new Kickoff.SequenceParams(getGameState(), false));
 						fRemoveUsedSecretWeapons = true;
 					}

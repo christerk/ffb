@@ -1,10 +1,10 @@
-package com.fumbbl.ffb.server.mechanic.mixed;
+package com.fumbbl.ffb.server.mechanic.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.bb2020.SeriousInjury;
+import com.fumbbl.ffb.bb2025.SeriousInjury;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -16,14 +16,11 @@ import com.fumbbl.ffb.server.DiceRoller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
@@ -40,7 +37,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		add(SeriousInjury.HEAD_INJURY);
 		add(SeriousInjury.SMASHED_KNEE);
 		add(SeriousInjury.BROKEN_ARM);
-		add(SeriousInjury.NECK_INJURY);
+		add(SeriousInjury.DISLOCATED_HIP);
 		add(SeriousInjury.DISLOCATED_SHOULDER);
 	}};
 
@@ -138,11 +135,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			return mapSIRoll(game, injuryContext, siRoll);
 		}
 
-		if (casRoll >= 10 && casRoll <= 12) {
+		if (casRoll >= 11 && casRoll <= 12) {
 			return SeriousInjury.SERIOUS_INJURY;
 		}
 
-		if (casRoll >= 7 && casRoll <= 9) {
+		if (casRoll >= 9 && casRoll <= 10) {
 			return SeriousInjury.SERIOUSLY_HURT;
 		}
 
@@ -151,23 +148,16 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private SeriousInjury mapSIRoll(Game game, InjuryContext injuryContext, int roll) {
 		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
-		List<SeriousInjury> injuriesWithReduceableStats = orderedInjuries.stream().filter(
-			injury -> {
-				InjuryAttribute attribute = injury.getInjuryAttribute();
-				return canBeReduced(attribute, currentValue(attribute, defender));
-			}).collect(Collectors.toList());
-
 		SeriousInjury originalInjury = mapSIRoll(roll);
+		InjuryAttribute attribute = originalInjury.getInjuryAttribute();
 
-		if (injuriesWithReduceableStats.isEmpty() || injuriesWithReduceableStats.contains(originalInjury)) {
+		if (canBeReduced(attribute, currentValue(attribute, defender))) {
 			return originalInjury;
 		}
 
 		injuryContext.setOriginalSeriousInjury(originalInjury);
 
-		Collections.shuffle(injuriesWithReduceableStats);
-
-		return injuriesWithReduceableStats.get(0);
+		return  SeriousInjury.SERIOUSLY_HURT;
 	}
 
 	/**
@@ -202,7 +192,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (roll >= 15) {
 			return PlayerState.RIP;
 		}
-		if (roll >= 7) {
+		if (roll >= 9) {
 			return PlayerState.SERIOUS_INJURY;
 		}
 

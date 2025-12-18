@@ -1,8 +1,10 @@
-package com.fumbbl.ffb.server.injury.modification;
+package com.fumbbl.ffb.server.injury.modification.bb2020;
 
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.server.injury.modification.AvOrInjModification;
+import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
 public class SlayerModification extends AvOrInjModification {
 

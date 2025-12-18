@@ -244,6 +244,7 @@ public class InjuryResult implements IJsonSerializable {
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isAlreadyReported() {
 		return alreadyReported;
 	}

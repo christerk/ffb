@@ -16,6 +16,6 @@ public interface Mechanic extends INamedObject {
 		AGILITY, GAME, INJURY, JUMP, ON_THE_BALL, PASS, SKILL, STAT, TTM,
 
 		// Server
-		ROLL, SETUP
+		ROLL, SETUP, STATE
 	}
 }

@@ -71,4 +71,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean allowMovementInEndZone();
 
 	public abstract Set<Usage> explicitlySelectedInducements();
+
+	public abstract boolean playersForGoActivations();
 }

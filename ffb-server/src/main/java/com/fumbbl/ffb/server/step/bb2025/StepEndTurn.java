@@ -2,7 +2,6 @@ package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.HeatExhaustion;
@@ -23,18 +22,18 @@ import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
-import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Prayer;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.kickoff.bb2025.KickoffResult;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.InducementSet;
@@ -68,10 +67,10 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.PrayerState;
 import com.fumbbl.ffb.server.ServerMode;
-import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -82,10 +81,9 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndGame;
-import com.fumbbl.ffb.server.step.generator.Sequence;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
-import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
@@ -103,8 +101,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 /**
  * Step in any sequence to end a turn.
@@ -237,6 +233,7 @@ public class StepEndTurn extends AbstractStep {
 		getGameState().getPassState().reset();
 		if (game.getTurnMode() == TurnMode.REGULAR) {
 			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+			getGameState().resetStalling();
 		}
 
 		boolean isHomeTurnEnding = game.isHomePlaying();
@@ -249,6 +246,8 @@ public class StepEndTurn extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
 		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
+		MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
 
 		Player<?> touchdownPlayer = null;
 
@@ -283,10 +282,6 @@ public class StepEndTurn extends AbstractStep {
 				}
 			} else {
 				useStarOfTheShow = false;
-			}
-
-			if (handleStallers()) {
-				return;
 			}
 
 			markPlayedAndSecretWeapons();
@@ -385,7 +380,7 @@ public class StepEndTurn extends AbstractStep {
 					getResult().setSound(SoundId.WHISTLE);
 					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-					UtilServerGame.resetSpecialSkillAtEndOfDrive(game);
+					stateMechanic.resetSpecialSkillAtEndOfDrive(game);
 
 					if (mechanic.touchdownEndsGame(game)) {
 						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -485,7 +480,6 @@ public class StepEndTurn extends AbstractStep {
 			deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_OPPONENTS_TURN, isHomeTurnEnding);
 
 			if (fNewHalf || fTouchdown) {
-				UtilServerGame.updatePlayerStateDependentProperties(this);
 				deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_DRIVE, isHomeTurnEnding);
 				Arrays.stream(game.getPlayers()).forEach(player -> player.removeEnhancements(KickoffResult.DODGY_SNACK));
 				removeReRollsLastingForDrive(true);
@@ -494,12 +488,15 @@ public class StepEndTurn extends AbstractStep {
 			}
 
 			if (fNewHalf) {
+				if (game.getHalf() <= 1) {
+					UtilServerGame.updatePlayerStateDependentProperties(this);
+				}
 				deactivateEffectsAndPrayers(InducementDuration.UNTIL_END_OF_HALF, isHomeTurnEnding);
 				GameResult gameResult = game.getGameResult();
 				boolean drawWithOvertime = UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 					&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore());
 				if (game.getHalf() == 1 || (game.getHalf() == 2 && drawWithOvertime)) {
-					UtilServerGame.startHalf(this, game.getHalf() + 1);
+					stateMechanic.startHalf(this, game.getHalf() + 1);
 				}
 			}
 
@@ -511,7 +508,6 @@ public class StepEndTurn extends AbstractStep {
 			}
 
 			game.startTurn();
-			UtilServerGame.updatePlayerStateDependentProperties(this);
 
 			if (fEndGame) {
 				endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -616,33 +612,6 @@ public class StepEndTurn extends AbstractStep {
 		return faintingCount;
 	}
 
-
-	private boolean handleStallers() {
-		PrayerState prayerState = getGameState().getPrayerState();
-		if (!fTouchdown) {
-			Game game = getGameState().getGame();
-			FieldModel fieldModel = game.getFieldModel();
-
-			Optional<? extends Player<?>> staller = prayerState.getStallerIds().stream().map(game::getPlayerById)
-				.filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING).findFirst();
-
-			if (staller.isPresent()) {
-				prayerState.removeStaller(staller.get());
-				getGameState().pushCurrentStepOnStack();
-				Sequence sequence = new Sequence(getGameState());
-				sequence.add(StepId.STALLING_PLAYER, from(StepParameterKey.PLAYER_ID, staller.get().getId()));
-				sequence.add(StepId.PLACE_BALL);
-				sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
-				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-				getGameState().getStepStack().push(sequence.getSequence());
-				getResult().setNextAction(StepAction.NEXT_STEP);
-				fTouchdown = null; // reset this in case the bouncing ball is caught in the end zone, this forces the touchdown check to happen again
-				return true;
-			}
-		}
-		prayerState.clearStallers();
-		return false;
-	}
 
 	private void removeReRollsLastingForDrive(boolean homeTeam) {
 		String teamId;
