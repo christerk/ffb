@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.pass.state;
+package com.fumbbl.ffb.server.step.mixed.pass.state;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;

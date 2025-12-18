@@ -98,7 +98,6 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 			boolean throwScatter;
-			boolean deviate = false; // deviate: always false in BB2025
 
 			switch (passResult) {
 				case FUMBLE:
@@ -116,7 +115,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 					thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-					throwScatter, deviate, !oldPlayerState.hasTacklezones(), isKickedPlayer));
+					throwScatter, false, !oldPlayerState.hasTacklezones(), isKickedPlayer));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
