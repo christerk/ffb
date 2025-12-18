@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
@@ -19,7 +19,6 @@ import java.util.List;
 
 @ReportMessageType(ReportId.APOTHECARY_ROLL)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class ApothecaryRollMessage extends ReportMessageBase<ReportApothecaryRoll> {
 
 	@Override
