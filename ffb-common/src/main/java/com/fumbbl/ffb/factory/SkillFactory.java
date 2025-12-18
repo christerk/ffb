@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PlayerStatKey;
 import com.fumbbl.ffb.util.Scanner;
@@ -53,6 +54,13 @@ public class SkillFactory implements INamedObjectFactory<Skill> {
 
 	public Skill forClass(Class<? extends Skill> c) {
 		return skillMap.get(c);
+	}
+
+	public Skill forProperty(ISkillProperty property) {
+		return skills.values().stream()
+			.filter(skill -> skill.hasSkillProperty(property))
+			.findFirst()
+			.orElse(null);
 	}
 
 	@Override
