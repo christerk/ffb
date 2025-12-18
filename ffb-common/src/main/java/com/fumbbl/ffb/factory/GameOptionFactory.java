@@ -160,6 +160,10 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Rerolls can be purchased for $1 gps each.");
 			case INDUCEMENT_EXTRA_TRAINING_MAX:
 				return new GameOptionInt(pOptionId).setDefault(4).setMessage("Coaches may purchase up to $1 reroll(s).");
+			case INDUCEMENT_MASCOT_COST:
+				return new GameOptionInt(pOptionId).setDefault(25000).setMessage("Team Mascots can be purchased for $1 gps each.");
+			case INDUCEMENT_MASCOT_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Team Mascot(s).");
 			case INDUCEMENT_STAFF_MAX:
 				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 infamous coaching staff member(s).");
 			case INDUCEMENT_STARS_MAX:

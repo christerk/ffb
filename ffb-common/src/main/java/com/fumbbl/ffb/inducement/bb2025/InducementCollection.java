@@ -17,7 +17,8 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCollection {
 	private final Set<InducementType> types = new HashSet<InducementType>() {{
-		// TODO mascot
+		add(new InducementType("teamMascot", "Team Mascot", "Team Mascot", "Team Mascot", GameOptionId.INDUCEMENT_MASCOT_MAX,
+				GameOptionId.INDUCEMENT_MASCOT_COST, GameOptionId.INDUCEMENT_MASCOT_COST, true, IIconProperty.RESOURCE_RE_ROLL, Usage.CONDITIONAL_REROLL));
 
 		add(new InducementType("prayers", "Prayers", "Prayer", "Prayers", GameOptionId.INDUCEMENT_PRAYERS_MAX, GameOptionId.INDUCEMENT_PRAYERS_COST,
 			GameOptionId.INDUCEMENT_PRAYERS_COST, false, IIconProperty.RESOURCE_PRAYER, Usage.GAME_MODIFICATION));
