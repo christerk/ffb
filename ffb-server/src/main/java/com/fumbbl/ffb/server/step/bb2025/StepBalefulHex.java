@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBalefulHex extends AbstractStepWithReRoll {
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.BALEFUL_HEX;
@@ -177,7 +176,7 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 					actingPlayer.markSkillUsed(skill);
 					Player<?> targetPlayer = game.getPlayerById(playerId);
 					FieldModel fieldModel = game.getFieldModel();
-					fieldModel.setPlayerState(targetPlayer, fieldModel.getPlayerState(targetPlayer).changeHypnotized(true).changeActive(false));
+					fieldModel.setPlayerState(targetPlayer, fieldModel.getPlayerState(targetPlayer).changeConfused(true).changeActive(false));
 					fieldModel.addSkillEnhancements(targetPlayer, skill);
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 					ServerUtilBlock.updateDiceDecorations(getGameState());
