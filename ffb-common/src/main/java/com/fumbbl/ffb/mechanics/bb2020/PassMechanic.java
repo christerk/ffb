@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.mixed;
+package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.ReRolledAction;
@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 
 	@Override

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.pass;
+package com.fumbbl.ffb.server.step.bb2020.pass;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -16,11 +16,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepResolvePass extends AbstractStep {
 	public StepResolvePass(GameState pGameState) {
 		super(pGameState, StepAction.NEXT_STEP);

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.pass;
+package com.fumbbl.ffb.server.step.bb2025.pass;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -16,12 +16,10 @@ import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DirectionFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.mixed.ReportEvent;
@@ -33,7 +31,7 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -51,7 +49,6 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepMissedPass extends AbstractStep {
 
@@ -118,79 +115,64 @@ public class StepMissedPass extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
-		if (state.getResult().equals(PassResult.WILDLY_INACCURATE)) {
-			coordinateStart = throwerCoordinate;
-			int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
-			int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, directionRoll);
-			coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, distanceRoll);
-			lastValidCoordinate = coordinateEnd;
-			int validDistance = distanceRoll;
-			while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
-				validDistance--;
-				lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, validDistance);
-			}
-			getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, false));
-		} else {
-			if (coordinateStart == null) {
-				doRoll = true;
-				coordinateStart = game.getPassCoordinate();
-			}
-			while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
-				if (doRoll) {
-					roll = getGameState().getDiceRoller().rollScatterDirection();
-					direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
-					coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
-					lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
-				}
 
-				if (reRolling) {
-					game.getFieldModel().clearMoveSquares();
-					game.getFieldModel().setBallCoordinate(coordinateEnd);
-					game.getFieldModel().setBallMoving(true);
-				}
-
-				boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
-				boolean hasUnusedBlastIt = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
-
-				if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
-					&& ((hasUnusedBlastIt && state.getUsingBlastIt() == null) || (hasBlastIt && toPrimitive(state.getUsingBlastIt())))
-					&& !reRolling) {
-
-					reportDirectionRoll();
-
-					UtilServerDialog.showDialog(getGameState(),
-						new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter),
-							0, state.getUsingBlastIt() == null), false);
-
-					reRolling = true;
-					game.getFieldModel().clearMoveSquares();
-					game.getFieldModel().add(new MoveSquare(coordinateEnd, 0, 0));
-					return;
-				}
-
-				if (reRolling && doRoll) {
-					reportDirectionRoll();
-				}
-
-				rollList.add(roll);
-				directionList.add(direction);
-
-				doRoll = true;
-				reRolling = false;
-
-				coordinateStart = coordinateEnd;
-			}
-			int[] rolls = new int[rollList.size()];
-			for (int i = 0; i < rolls.length; i++) {
-				rolls[i] = rollList.get(i);
-			}
-
-			Direction[] directions = directionList.toArray(new Direction[0]);
-			getResult().addReport(new ReportScatterBall(directions, rolls, false));
-
+		if (coordinateStart == null) {
+			doRoll = true;
+			coordinateStart = game.getPassCoordinate();
 		}
+		while (FieldCoordinateBounds.FIELD.isInBounds(coordinateStart) && (rollList.size() < 3)) {
+			if (doRoll) {
+				roll = getGameState().getDiceRoller().rollScatterDirection();
+				direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
+				coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(coordinateStart, direction, 1);
+				lastValidCoordinate = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd) ? coordinateEnd : coordinateStart;
+			}
+
+			if (reRolling) {
+				game.getFieldModel().clearMoveSquares();
+				game.getFieldModel().setBallCoordinate(coordinateEnd);
+				game.getFieldModel().setBallMoving(true);
+			}
+
+			boolean hasBlastIt = UtilCards.hasSkillWithProperty(game.getActingPlayer().getPlayer(), NamedProperties.canReRollHmpScatter);
+			boolean hasUnusedBlastIt = UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canReRollHmpScatter);
+
+			if (game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS
+				&& ((hasUnusedBlastIt && state.getUsingBlastIt() == null) || (hasBlastIt && toPrimitive(state.getUsingBlastIt())))
+				&& !reRolling) {
+
+				reportDirectionRoll();
+
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.canReRollHmpScatter),
+						0, state.getUsingBlastIt() == null), false);
+
+				reRolling = true;
+				game.getFieldModel().clearMoveSquares();
+				game.getFieldModel().add(new MoveSquare(coordinateEnd, 0, 0));
+				return;
+			}
+
+			if (reRolling && doRoll) {
+				reportDirectionRoll();
+			}
+
+			rollList.add(roll);
+			directionList.add(direction);
+
+			doRoll = true;
+			reRolling = false;
+
+			coordinateStart = coordinateEnd;
+		}
+		int[] rolls = new int[rollList.size()];
+		for (int i = 0; i < rolls.length; i++) {
+			rolls[i] = rollList.get(i);
+		}
+
+		Direction[] directions = directionList.toArray(new Direction[0]);
+		getResult().addReport(new ReportScatterBall(directions, rolls, false));
+
 		game.setPassCoordinate(lastValidCoordinate);
 		game.getFieldModel().setOutOfBounds(lastValidCoordinate != coordinateEnd);
 		RangeRuler rangeRuler = new RangeRuler(game.getThrowerId(), lastValidCoordinate, -1, false);

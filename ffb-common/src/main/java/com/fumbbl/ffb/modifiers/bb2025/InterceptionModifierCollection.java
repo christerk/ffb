@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.modifiers.mixed;
+package com.fumbbl.ffb.modifiers.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.PassResult;
@@ -8,7 +8,6 @@ import com.fumbbl.ffb.modifiers.InterceptionContext;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class InterceptionModifierCollection extends com.fumbbl.ffb.modifiers.InterceptionModifierCollection {
 
@@ -24,12 +23,6 @@ public class InterceptionModifierCollection extends com.fumbbl.ffb.modifiers.Int
 			@Override
 			public boolean appliesToContext(Skill skill, InterceptionContext context) {
 				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.INACCURATE;
-			}
-		});
-		add(new InterceptionModifier("Wildly Inaccurate Pass", 1, ModifierType.REGULAR) {
-			@Override
-			public boolean appliesToContext(Skill skill, InterceptionContext context) {
-				return super.appliesToContext(skill, context) && context.getPassResult() == PassResult.WILDLY_INACCURATE;
 			}
 		});
 		add(new InterceptionModifier("1 Tacklezone", "1 for being marked", 1, 1, ModifierType.TACKLEZONE));

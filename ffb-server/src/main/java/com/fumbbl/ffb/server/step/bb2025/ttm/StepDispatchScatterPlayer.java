@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.ttm;
+package com.fumbbl.ffb.server.step.bb2025.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,7 +25,6 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepDispatchScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
@@ -98,23 +97,16 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 				&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
-			boolean throwScatter, deviate;
+			boolean throwScatter;
 
 			switch (passResult) {
 				case FUMBLE:
 					throwScatter = false;
-					deviate = false;
-					scattersSingleDirection = false;
-					break;
-				case WILDLY_INACCURATE:
-					throwScatter = false;
-					deviate = true;
 					scattersSingleDirection = false;
 					break;
 				case INACCURATE:
 				case ACCURATE:
 					throwScatter = true;
-					deviate = false;
 					break;
 				default:
 					throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
@@ -123,7 +115,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 					thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
-					throwScatter, deviate, !oldPlayerState.hasTacklezones(), isKickedPlayer));
+					throwScatter, false, !oldPlayerState.hasTacklezones(), isKickedPlayer));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FactoryType;
@@ -28,12 +28,13 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.mixed.ReportModifiedPassResult;
 import com.fumbbl.ffb.report.mixed.ReportPassRoll;
 import com.fumbbl.ffb.server.model.StepModifier;
+import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractPassBehaviour;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.mixed.pass.StepHailMaryPass;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.common.Pass;
@@ -46,7 +47,6 @@ import java.util.Set;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 	@Override
 	protected ReRollSource getReRollSource() {

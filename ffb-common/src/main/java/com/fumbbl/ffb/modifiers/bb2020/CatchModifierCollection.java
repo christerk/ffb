@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.modifiers.mixed;
+package com.fumbbl.ffb.modifiers.bb2020;
 
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.RulesCollection;
@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class CatchModifierCollection extends com.fumbbl.ffb.modifiers.CatchModifierCollection {
 
 	public CatchModifierCollection() {
