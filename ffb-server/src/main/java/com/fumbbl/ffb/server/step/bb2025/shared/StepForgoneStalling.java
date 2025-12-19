@@ -33,8 +33,10 @@ public class StepForgoneStalling extends AbstractStep {
 		Arrays.stream(game.getActingTeam().getPlayers()).filter(pl -> UtilPlayer.hasBall(game, pl) &&
 				game.getFieldModel().getPlayerState(pl).isActive()).findFirst().ifPresent(
 				player -> {
-					getResult().addReport(new ReportPlayerEvent(player.getId(), "is stalling"));
-					stallingExtension.handleStaller(this, player);
+					if (stallingExtension.isConsideredStalling(game, player)) {
+						getResult().addReport(new ReportPlayerEvent(player.getId(), "is stalling"));
+						stallingExtension.handleStaller(this, player);
+					}
 				}
 		);
 	}
