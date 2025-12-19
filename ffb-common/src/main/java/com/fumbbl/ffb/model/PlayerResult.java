@@ -344,8 +344,11 @@ public class PlayerResult implements IJsonSerializable {
     public int totalEarnedSpps() {
 
         GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+        boolean brawlin = getPlayer().getTeam().getSpecialRules().contains(SpecialRule.BRAWLIN_BRUTES);
+        int tdSpp = brawlin ? 2 : 3;
+        int casSpp = brawlin ? 3 : 2;
 
-        return (getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
+        return (getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * tdSpp) + (getCasualties() * casSpp) + (getInterceptions() * 2)
                 + getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp() + getCatchesWithAdditionalSpp();
     }
 
