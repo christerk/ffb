@@ -11,6 +11,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.util.StringTool;
@@ -342,15 +343,21 @@ public class PlayerResult implements IJsonSerializable {
     }
 
     public int totalEarnedSpps() {
+        GameMechanic gameMechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+        SppMechanic spp = (SppMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+        Team team = getPlayer().getTeam();
 
-        GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-        boolean brawlin = getPlayer().getTeam().getSpecialRules().contains(SpecialRule.BRAWLIN_BRUTES);
-        int tdSpp = brawlin ? 2 : 3;
-        int casSpp = brawlin ? 3 : 2;
-
-        return (getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * tdSpp) + (getCasualties() * casSpp) + (getInterceptions() * 2)
-                + getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp() + getCatchesWithAdditionalSpp();
+        return (getPlayerAwards() * gameMechanic.mvpSpp())
+            + (getTouchdowns() * spp.touchdownSpp(team))
+            + (getCasualties() * spp.casualtySpp(team))
+            + (getInterceptions() * spp.interceptionSpp(team))
+            + (getCompletions() * spp.completionSpp(team))
+            + (getDeflections() * spp.deflectionSpp(team))
+            + (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp(team))
+            + (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp(team))
+            + (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp(team));
     }
+
 
     public Game getGame() {
         return getTeamResult().getGame();

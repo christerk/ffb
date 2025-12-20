@@ -16,6 +16,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
@@ -184,7 +185,8 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 					if (game.getThrower() != null) {
-						getGameState().getPrayerState().addCompletion(teamResult.getPlayerResult(game.getThrower()));
+						SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+						spp.addCompletion(getGameState().getPrayerState().getAdditionalCompletionSppTeams(),teamResult.getPlayerResult(game.getThrower()));
 					}
 				}
 				if (fThrownPlayerHasBall) {
