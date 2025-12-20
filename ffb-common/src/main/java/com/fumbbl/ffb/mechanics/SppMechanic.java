@@ -7,7 +7,7 @@ import com.fumbbl.ffb.model.Team;
 
 public abstract class SppMechanic implements Mechanic {
 
-	@Override
+  @Override
   public Type getType() {
     return Type.SPP;
   }

@@ -10,8 +10,8 @@ import com.fumbbl.ffb.model.Team;
 public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 
   public int mvpSpp() {
-		return 5;
-	}
+    return 5;
+  }
 
   @Override
   public int touchdownSpp(Team team) {
@@ -56,19 +56,19 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
   @Override
   public int additionalCatchSpp(Team team) {
     return 0;
-	}
+  }
 
   @Override
-	public void addCompletion(Set<String> additionalCompletionSppTeams, PlayerResult pr) {
-		pr.setCompletions(pr.getCompletions() + 1);
-	}
+  public void addCompletion(Set<String> additionalCompletionSppTeams, PlayerResult pr) {
+    pr.setCompletions(pr.getCompletions() + 1);
+  }
 
   @Override
-	public void addCasualty(Set<String> additionalCasualtySppTeams, PlayerResult pr) {
-		pr.setCasualties(pr.getCasualties() + 1);
-	}
+  public void addCasualty(Set<String> additionalCasualtySppTeams, PlayerResult pr) {
+    pr.setCasualties(pr.getCasualties() + 1);
+  }
 
   @Override
-	public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {}
+  public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {}
   
 }
