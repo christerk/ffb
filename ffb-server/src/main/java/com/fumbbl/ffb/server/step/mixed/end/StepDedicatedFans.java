@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.end;
+package com.fumbbl.ffb.server.step.mixed.end;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
@@ -11,6 +11,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepDedicatedFans extends AbstractStep {
 	public StepDedicatedFans(GameState pGameState) {
 		super(pGameState);

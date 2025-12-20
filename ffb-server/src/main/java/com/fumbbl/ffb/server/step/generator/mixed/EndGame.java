@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.bb2020;
+package com.fumbbl.ffb.server.step.generator.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -11,6 +11,7 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class EndGame extends com.fumbbl.ffb.server.step.generator.EndGame {
 
 	@Override
