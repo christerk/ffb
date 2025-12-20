@@ -45,40 +45,30 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 
   @Override
   public int additionalCompletionSpp(Team team) {
-    return 1;
+    return 0;
   }
 
   @Override
   public int additionalCasualtySpp(Team team) {
-    return 1;
+    return 0;
   }
 
   @Override
   public int additionalCatchSpp(Team team) {
-    return 1;
+    return 0;
 	}
 
   @Override
 	public void addCompletion(Set<String> additionalCompletionSppTeams, PlayerResult pr) {
 		pr.setCompletions(pr.getCompletions() + 1);
-		if (additionalCompletionSppTeams.contains(pr.getPlayer().getTeam().getId())) {
-			pr.setCompletionsWithAdditionalSpp(pr.getCompletionsWithAdditionalSpp() + 1);
-		}
 	}
 
   @Override
 	public void addCasualty(Set<String> additionalCasualtySppTeams, PlayerResult pr) {
 		pr.setCasualties(pr.getCasualties() + 1);
-		if (additionalCasualtySppTeams.contains(pr.getPlayer().getTeam().getId())) {
-			pr.setCasualtiesWithAdditionalSpp(pr.getCasualtiesWithAdditionalSpp() + 1);
-		}
 	}
 
   @Override
-	public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {
-		if (additionalCatchSppTeams.contains(pr.getPlayer().getTeam().getId())) {
-			pr.setCatchesWithAdditionalSpp(pr.getCatchesWithAdditionalSpp() + 1);
-		}
-	}
+	public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {}
   
 }

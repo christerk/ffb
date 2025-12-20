@@ -76,10 +76,6 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 	}
 
   @Override
-	public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {
-		if (additionalCatchSppTeams.contains(pr.getPlayer().getTeam().getId())) {
-			pr.setCatchesWithAdditionalSpp(pr.getCatchesWithAdditionalSpp() + 1);
-		}
-	}
+	public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {}
   
 }
