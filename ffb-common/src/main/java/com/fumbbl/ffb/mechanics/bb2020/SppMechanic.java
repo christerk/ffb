@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.mixed;
+package com.fumbbl.ffb.mechanics.bb2020;
 
 import java.util.Set;
 
@@ -6,9 +6,13 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
+
+  @Override
+  public int mvpSpp() {
+    return 4;
+  }
 
   @Override
   public int touchdownSpp(Team team) {

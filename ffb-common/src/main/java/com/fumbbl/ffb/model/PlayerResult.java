@@ -9,7 +9,6 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
@@ -343,11 +342,10 @@ public class PlayerResult implements IJsonSerializable {
     }
 
     public int totalEarnedSpps() {
-        GameMechanic gameMechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
         SppMechanic spp = (SppMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
         Team team = getPlayer().getTeam();
 
-        return (getPlayerAwards() * gameMechanic.mvpSpp())
+        return (getPlayerAwards() * spp.mvpSpp())
             + (getTouchdowns() * spp.touchdownSpp(team))
             + (getCasualties() * spp.casualtySpp(team))
             + (getInterceptions() * spp.interceptionSpp(team))

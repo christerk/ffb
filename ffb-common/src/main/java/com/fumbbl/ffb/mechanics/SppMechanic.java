@@ -12,6 +12,8 @@ public abstract class SppMechanic implements Mechanic {
     return Type.SPP;
   }
 
+  public abstract int mvpSpp();
+
   public abstract int touchdownSpp(Team team);
 
   public abstract int casualtySpp(Team team);
