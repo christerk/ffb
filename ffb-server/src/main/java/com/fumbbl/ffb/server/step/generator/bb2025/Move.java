@@ -61,6 +61,7 @@ public class Move extends com.fumbbl.ffb.server.step.generator.Move {
 		sequence.add(StepId.DROP_DIVING_TACKLER, IStepLabel.FALL_DOWN);
 		sequence.add(StepId.SHADOWING); // falling player can be shadowed
 		sequence.add(StepId.FALL_DOWN);
+		sequence.add(StepId.PLACE_BALL);
 
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
