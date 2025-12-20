@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.end;
+package com.fumbbl.ffb.server.step.mixed.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepAssignTouchdowns extends AbstractStep {
 
 	private int touchdowns;
