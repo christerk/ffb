@@ -22,6 +22,8 @@ public class StepStallingPlayer extends AbstractStep {
 	private static final Set<PlayerAction> PREVENT_STALLING_ACTION = new HashSet<PlayerAction>() {{
 		add(PlayerAction.PASS_MOVE);
 		add(PlayerAction.HAND_OVER_MOVE);
+		add(PlayerAction.PASS);
+		add(PlayerAction.HAND_OVER);
 	}};
 
 	private final StallingExtension stallingExtension = new StallingExtension();

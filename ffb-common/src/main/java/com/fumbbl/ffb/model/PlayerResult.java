@@ -9,8 +9,8 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.util.StringTool;
@@ -342,12 +342,20 @@ public class PlayerResult implements IJsonSerializable {
     }
 
     public int totalEarnedSpps() {
+        SppMechanic spp = (SppMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+        Team team = getPlayer().getTeam();
 
-        GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-
-        return (getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-                + getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp() + getCatchesWithAdditionalSpp();
+        return (getPlayerAwards() * spp.mvpSpp())
+            + (getTouchdowns() * spp.touchdownSpp(team))
+            + (getCasualties() * spp.casualtySpp(team))
+            + (getInterceptions() * spp.interceptionSpp(team))
+            + (getCompletions() * spp.completionSpp(team))
+            + (getDeflections() * spp.deflectionSpp(team))
+            + (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp(team))
+            + (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp(team))
+            + (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp(team));
     }
+
 
     public Game getGame() {
         return getTeamResult().getGame();

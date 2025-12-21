@@ -128,10 +128,7 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
 	public Wording interceptionWording(boolean easyIntercept) {
-		if (easyIntercept) {
-			return new Wording("Interception", "intercept", "intercepts", "interceptor");
-		}
-		return new Wording("Interference", "deflect", "deflects", "interfering player");
+		return new Wording("Interception", "intercept", "intercepts", "interceptor");
 	}
 
 	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {

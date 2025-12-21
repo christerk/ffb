@@ -11,9 +11,9 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.admin.GameStateService;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 import org.eclipse.jetty.websocket.api.Session;
 

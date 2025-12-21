@@ -72,11 +72,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public int mvpSpp() {
-		return 4;
-	}
-
-	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {
 		String[] messages;
 		if (legalConcession) {

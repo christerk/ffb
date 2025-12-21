@@ -17,6 +17,8 @@ import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
@@ -151,7 +153,9 @@ public class InjuryResult implements IJsonSerializable {
 					&& injuryContext.getInjuryType().isWorthSpps()
 					&& (attacker.getTeam() != defender.getTeam())) {
 					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
-					pStep.getGameState().getPrayerState().addCasualty(attackerResult);
+					SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+					spp.addCasualty(pStep.getGameState().getPrayerState().getAdditionalCasSppTeams(), attackerResult);
+
 				}
 			}
 			game.getFieldModel().add(new BloodSpot(injuryContext.getDefenderPosition(), injuryContext.getSufferedInjury()));

@@ -28,7 +28,7 @@ import com.fumbbl.ffb.server.step.StepException;
 import com.fumbbl.ffb.server.step.StepFactory;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.step.StepStack;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
