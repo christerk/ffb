@@ -277,6 +277,7 @@ public interface IJsonOption {
 	JsonStringOption MARKING = new JsonStringOption("marking");
 	JsonStringMapOption MARKINGS = new JsonStringMapOption("markings");
 	JsonIntArrayOption MARKING_AFFECTING_COMMANDS = new JsonIntArrayOption("markingIntervalIndexes");
+	JsonBooleanOption MASCOT_OPTION = new JsonBooleanOption("mascotOption");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");

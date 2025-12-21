@@ -23,6 +23,8 @@ public class DialogParameterFactory {
                 return new DialogReceiveChoiceParameter();
             case RE_ROLL:
                 return new DialogReRollParameter();
+            case RE_ROLL_PROPERTIES:
+                return new DialogReRollPropertiesParameter();
             case RE_ROLL_FOR_TARGETS:
                 return new DialogReRollForTargetsParameter();
             case SKILL_USE:

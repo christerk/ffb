@@ -33,6 +33,8 @@ public class ReRollSources {
 	public static final ReRollSource BOUNDING_LEAP = new ReRollSource("Bounding Leap");
 	public static final ReRollSource UNSTOPPABLE_MOMENTUM = new ReRollSource("Unstoppable Momentum");
 	public static final ReRollSource SAVAGE_BLOW = new ReRollSource("Savage Blow");
+	public static final ReRollSource MASCOT = new ReRollSource("Mascot");
+	public static final ReRollSource MASCOT_TRR = new ReRollSource("Mascot TRR");
 
 	private final Map<String, ReRollSource> values;
 

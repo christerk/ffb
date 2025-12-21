@@ -42,6 +42,9 @@ public class DialogManager {
 					case RE_ROLL:
 						setDialogHandler(new DialogReRollHandler(getClient()));
 						break;
+					case RE_ROLL_PROPERTIES:
+						setDialogHandler(new DialogReRollPropertiesHandler(getClient()));
+						break;
 					case SKILL_USE:
 						setDialogHandler(new DialogSkillUseHandler(getClient()));
 						break;
