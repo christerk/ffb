@@ -8,7 +8,8 @@ public enum SpecialRule {
 	FAVOURED_OF_NURGLE("Favoured of Nurgle"),
 	LOW_COST_LINEMEN("Low Cost Linemen"),
 	SWARMING("Swarming"),
-	MASTERS_OF_UNDEATH("Masters of Undeath");
+	MASTERS_OF_UNDEATH("Masters of Undeath"),
+	BRAWLIN_BRUTES("Brawlin' Brutes");
 
 	private final String ruleName;
 

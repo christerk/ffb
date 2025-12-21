@@ -6,7 +6,6 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
 
 import java.util.Arrays;
@@ -57,24 +56,16 @@ public class PrayerState implements IJsonSerializable {
         return friendsWithRef.contains(team.getId());
     }
 
-    public void addCompletion(PlayerResult playerResult) {
-        playerResult.setCompletions(playerResult.getCompletions() + 1);
-        if (getAdditionalCompletionSpp.contains(playerResult.getPlayer().getTeam().getId())) {
-            playerResult.setCompletionsWithAdditionalSpp(playerResult.getCompletionsWithAdditionalSpp() + 1);
-        }
+    public Set<String> getAdditionalCompletionSppTeams() { 
+        return getAdditionalCompletionSpp; 
     }
 
-    public void addCasualty(PlayerResult playerResult) {
-        playerResult.setCasualties(playerResult.getCasualties() + 1);
-        if (getAdditionalCasSpp.contains(playerResult.getPlayer().getTeam().getId())) {
-            playerResult.setCasualtiesWithAdditionalSpp(playerResult.getCasualtiesWithAdditionalSpp() + 1);
-        }
+    public Set<String> getAdditionalCasSppTeams() { 
+        return getAdditionalCasSpp; 
     }
 
-    public void addCatch(PlayerResult playerResult) {
-        if (getAdditionalCatchesSpp.contains(playerResult.getPlayer().getTeam().getId())) {
-            playerResult.setCatchesWithAdditionalSpp(playerResult.getCatchesWithAdditionalSpp() + 1);
-        }
+    public Set<String> getAdditionalCatchesSppTeams() { 
+        return getAdditionalCatchesSpp; 
     }
 
     public void addUnderScrutiny(Team team) {
