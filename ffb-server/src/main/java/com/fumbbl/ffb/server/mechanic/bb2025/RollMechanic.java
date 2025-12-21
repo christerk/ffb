@@ -1,25 +1,21 @@
 package com.fumbbl.ffb.server.mechanic.bb2025;
 
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.InjuryAttribute;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
-import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.ZappedPlayer;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.mixed.CasualtyModifierFactory;
+import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
@@ -213,4 +209,49 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return 3;
 	}
 
+	@Override
+	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
+	                                              Skill reRollSkill,
+	                                              CommonProperty menuProperty, String defaultValueKey,
+	                                              List<String> messages) {
+		boolean dialogShown = false;
+		Game game = gameState.getGame();
+		if (minimumRoll >= 0) {
+			boolean mascotOption = isMascotAvailable(game);
+			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
+			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
+			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
+			if (reRollSkill == null) {
+				Optional<Skill> reRollOnce =
+						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
+				if (reRollOnce.isPresent()) {
+					reRollSkill = reRollOnce.get();
+				}
+			}
+
+			dialogShown =
+					(mascotOption || teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null ||
+							modificationSkill != null);
+			if (dialogShown) {
+				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+				String playerId = player.getId();
+				UtilServerDialog.showDialog(gameState,
+						new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption,
+								fumble, mascotOption, reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null,
+								modificationSkill, menuProperty, defaultValueKey, messages),
+						!actingTeam.hasPlayer(player));
+			}
+		}
+		return dialogShown;
+	}
+
+	private boolean isMascotAvailable(Game game) {
+		InducementSet inducementSet = game.isHomePlaying() ?
+				game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+
+		return Arrays.stream(inducementSet.getInducements())
+				.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0);
+
+	}
 }

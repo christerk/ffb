@@ -1,17 +1,24 @@
 package com.fumbbl.ffb.server.mechanic.bb2016;
 
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.bb2016.SeriousInjury;
+import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
@@ -196,6 +203,37 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	@Override
 	public int minimumProRoll() {
 		return 4;
+	}
+
+	@Override
+	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+	                                       int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill,
+	                                       CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
+		boolean dialogShown = false;
+		Game game = gameState.getGame();
+		if (minimumRoll >= 0) {
+			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
+			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
+			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
+			if (reRollSkill == null) {
+				Optional<Skill> reRollOnce = UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
+				if (reRollOnce.isPresent()) {
+					reRollSkill = reRollOnce.get();
+				}
+			}
+
+			dialogShown = (teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null || modificationSkill != null);
+			if (dialogShown) {
+				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+				String playerId = player.getId();
+				UtilServerDialog.showDialog(gameState,
+						new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble,
+								reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null, modificationSkill, menuProperty,
+								defaultValueKey, messages),
+						!actingTeam.hasPlayer(player));
+			}
+		}
+		return dialogShown;
 	}
 
 }
