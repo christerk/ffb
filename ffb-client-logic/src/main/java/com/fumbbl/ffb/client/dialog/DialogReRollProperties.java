@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.ReRollProperty;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
@@ -73,7 +76,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		StringBuilder message = new StringBuilder();
 
-		String action = dialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
+		String action = dialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getSkillFactory());
 
 		if (dialogParameter.getMinimumRoll() > 0) {
 			message.append("Do you want to re-roll the failed ").append(action);
@@ -109,13 +112,15 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		if (dialogParameter.getMinimumRoll() > 0) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + dialogParameter.getMinimumRoll() + "+ to succeed."));
+			messagePanel.add(new JLabel(dimensionProvider(),
+				"You will need a roll of " + dialogParameter.getMinimumRoll() + "+ to succeed."));
 		}
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
 		infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, dimensionProvider());
+		BufferedImage icon = getClient().getUserInterface().getIconCache()
+			.getIconByProperty(IIconProperty.GAME_DICE_SMALL, dimensionProvider());
 		infoPanel.add(new JLabel(dimensionProvider(), new ImageIcon(icon)));
 		infoPanel.add(Box.createHorizontalStrut(5));
 		infoPanel.add(messagePanel);
@@ -267,7 +272,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 	private void determinTeamReRollSource() {
 		if (willUseMascot) {
-			if (fallbackToTrr.isSelected())	{
+			if (fallbackToTrr.isSelected()) {
 				fReRollSource = ReRollSources.MASCOT_TRR;
 			} else {
 				fReRollSource = ReRollSources.MASCOT;
