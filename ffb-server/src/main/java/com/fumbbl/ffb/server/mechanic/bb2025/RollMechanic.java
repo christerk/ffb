@@ -201,10 +201,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	@Override
 	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-		int minimumRoll, boolean fumble, Skill modificationSkill,
-		Skill reRollSkill,
-		CommonProperty menuProperty, String defaultValueKey,
-		List<String> messages) {
+		int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill, CommonProperty menuProperty,
+		String defaultValueKey, List<String> messages) {
 		boolean dialogShown = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {

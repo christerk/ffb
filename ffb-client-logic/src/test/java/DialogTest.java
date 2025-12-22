@@ -1,3 +1,5 @@
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.ClientLayout;
@@ -6,26 +8,42 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.DialogReRollProperties;
+import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.skill.mixed.special.StrongPassingGame;
+import com.fumbbl.ffb.skill.mixed.special.ThinkingMansTroll;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class DialogTest {
-	public static void main(String[] args) {
+	public static void main(String[] args)
+		throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 		FantasyFootballClient client = mock(FantasyFootballClient.class, RETURNS_DEEP_STUBS);
 		UserInterface userInterface = mock(UserInterface.class, RETURNS_DEEP_STUBS);
+		GameMenuBar menuBar = mock(GameMenuBar.class);
+		Map<String, String> entries = new HashMap<String, String>() {{
+			put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, "Value1");
+		}};
+		when(menuBar.menuEntries(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(entries);
+		when(userInterface.getGameMenuBar()).thenReturn(menuBar);
+
+
 		when(client.getUserInterface()).thenReturn(userInterface);
 		when(userInterface.getPitchDimensionProvider()).thenReturn(new PitchDimensionProvider(new LayoutSettings(
 			ClientLayout.LANDSCAPE, 1.0)));
@@ -37,14 +55,16 @@ class DialogTest {
 		when(inducementType.hasUsage(Usage.CONDITIONAL_REROLL)).thenReturn(true);
 		when(inducementType.getDescription()).thenReturn("Team Mascot");
 
+
 		List<ReRollProperty> properties = new ArrayList<>();
 		properties.add(ReRollProperty.TRR);
 		properties.add(ReRollProperty.MASCOT);
-	//	properties.add(ReRollProperty.BRILLIANT_COACHING);
+//		properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		DialogReRollPropertiesParameter param =
-			new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, null, null, null,
-				null, null);
+			new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
+				CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, Arrays.asList("You need a:", "  • 6 to knock your opponent down",
+				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));
 
 
 		JPanel panelContent = new JPanel();

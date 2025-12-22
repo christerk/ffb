@@ -16,7 +16,6 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -50,20 +49,20 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
-		fButtonTeamReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+		fButtonTeamReRoll.setAlignmentY(Box.TOP_ALIGNMENT);
 
 		fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
 		fButtonProReRoll.addActionListener(this);
 		fButtonProReRoll.addKeyListener(this);
 		fButtonProReRoll.setMnemonic((int) 'P');
-		fButtonProReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+		fButtonProReRoll.setAlignmentY(Box.TOP_ALIGNMENT);
 
 		if (pDialogParameter.getReRollSkill() != null) {
 			buttonSkillReRoll = new JButton(dimensionProvider(), pDialogParameter.getReRollSkill().getName());
 			buttonSkillReRoll.addActionListener(this);
 			buttonSkillReRoll.addKeyListener(this);
 			buttonSkillReRoll.setMnemonic((int) 'S');
-			buttonSkillReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+			buttonSkillReRoll.setAlignmentY(Box.TOP_ALIGNMENT);
 		}
 
 		if (pDialogParameter.getModifyingSkill() != null) {
@@ -71,14 +70,14 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			buttonModifyingSkill.addActionListener(this);
 			buttonModifyingSkill.addKeyListener(this);
 			buttonModifyingSkill.setMnemonic((int) 'M');
-			buttonModifyingSkill.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+			buttonModifyingSkill.setAlignmentY(Box.TOP_ALIGNMENT);
 		}
 
 		fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
 		fButtonNoReRoll.setMnemonic((int) 'N');
-		fButtonNoReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+		fButtonNoReRoll.setAlignmentY(Box.TOP_ALIGNMENT);
 
 		StringBuilder message = new StringBuilder();
 
@@ -133,47 +132,42 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		infoPanel.add(Box.createHorizontalGlue());
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBackground(Color.RED);
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.setAlignmentY(Box.BOTTOM_ALIGNMENT);
+		buttonPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 		if (willUseMascot) {
 			JPanel mascotPanel = new JPanel();
 			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
 			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 			buttonPanel.add(mascotPanel);
-		//	buttonPanel.add(Box.createHorizontalStrut(5));
+			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.add(fButtonTeamReRoll);
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 				mascotPanel.add(Box.createVerticalStrut(5));
-				fallbackToTrr = new JCheckBox(dimensionProvider(), "Fallback to team re-roll");
+				fallbackToTrr = new JCheckBox(dimensionProvider(), "TRR fallback");
 				fallbackToTrr.setMnemonic('F');
 				fallbackToTrr.addKeyListener(this);
+				fallbackToTrr.setAlignmentX(CENTER_ALIGNMENT);
 				mascotPanel.add(fallbackToTrr);
 			}
+			buttonPanel.add(Box.createHorizontalStrut(5));
 		} else if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			buttonPanel.add(fButtonTeamReRoll);
+			buttonPanel.add(wrapperPanel(fButtonTeamReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
-			buttonPanel.add(fButtonProReRoll);
+			buttonPanel.add(wrapperPanel(fButtonProReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonSkillReRoll != null) {
-			buttonPanel.add(buttonSkillReRoll);
+			buttonPanel.add(wrapperPanel(buttonSkillReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonModifyingSkill != null) {
-			buttonPanel.add(buttonModifyingSkill);
+			buttonPanel.add(wrapperPanel(buttonModifyingSkill));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
-		JPanel noPanel = new JPanel();
-		noPanel.setLayout(new BoxLayout(noPanel, BoxLayout.Y_AXIS));
-		noPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-		noPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-		noPanel.add(fButtonNoReRoll);
-
-		buttonPanel.add(noPanel);
+		buttonPanel.add(wrapperPanel(fButtonNoReRoll));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -184,6 +178,15 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		pack();
 		setLocationToCenter();
 
+	}
+
+	private JPanel wrapperPanel(JButton button) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(Box.CENTER_ALIGNMENT);
+		panel.setAlignmentY(Box.TOP_ALIGNMENT);
+		panel.add(button);
+		return panel;
 	}
 
 	public DialogId getId() {
