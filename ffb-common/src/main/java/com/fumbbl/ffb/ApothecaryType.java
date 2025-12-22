@@ -17,9 +17,7 @@ public enum ApothecaryType {
 	}
 
 	public static List<ApothecaryType> forPlayer(Game game, Player<?> defender, PlayerState playerState) {
-		ApothecaryMechanic apothecaryMechanic = (ApothecaryMechanic) game.getRules()
-			.getFactory(FactoryType.Factory.MECHANIC)
-			.forName(Mechanic.Type.APOTHECARY.name());
+		ApothecaryMechanic apothecaryMechanic = (ApothecaryMechanic) game.getMechanic(Mechanic.Type.APOTHECARY);
 
 		return apothecaryMechanic.apothecaryTypes(game, defender, playerState);
 	}
