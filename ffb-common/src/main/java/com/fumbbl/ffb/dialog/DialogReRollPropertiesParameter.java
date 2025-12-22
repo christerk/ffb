@@ -2,30 +2,27 @@ package com.fumbbl.ffb.dialog;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.IDialogParameter;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * @author Kalimar
- */
 public class DialogReRollPropertiesParameter implements IDialogParameter {
 
-	private String fPlayerId, defaultValueKey;
-	private ReRolledAction fReRolledAction;
-	private int fMinimumRoll;
-	private boolean fTeamReRollOption, fProReRollOption, fFumble, mascotOption;
-	private ReRollSource singleUseReRollSource;
+	private String playerId, defaultValueKey;
+	private ReRolledAction reRolledAction;
+	private int minimumRoll;
+	private boolean fumble;
 	private Skill reRollSkill, modifyingSkill;
-	private List<String> messages;
+	private final List<String> messages = new ArrayList<>();
+	private final List<ReRollProperty> reRollProperties = new ArrayList<>();
 
 	private CommonProperty menuProperty;
 
@@ -33,24 +30,24 @@ public class DialogReRollPropertiesParameter implements IDialogParameter {
 		super();
 	}
 
-	public DialogReRollPropertiesParameter(String pPlayerId, ReRolledAction pReRolledAction, int pMinimumRoll,
-	                                       boolean pTeamReRollOption, boolean pProReRollOption, boolean pFumble,
-	                                       boolean mascotOption,
-	                                       Skill reRollSkill, ReRollSource singleUseReRollSource, Skill modifyingSkill,
-	                                       CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
-		fPlayerId = pPlayerId;
-		fReRolledAction = pReRolledAction;
-		fMinimumRoll = pMinimumRoll;
-		fTeamReRollOption = pTeamReRollOption;
-		fProReRollOption = pProReRollOption;
-		fFumble = pFumble;
-		this.mascotOption = mascotOption;
+	public DialogReRollPropertiesParameter(String playerId, ReRolledAction reRolledAction, int minimumRoll,
+		List<ReRollProperty> reRollProperties, boolean fumble, Skill reRollSkill, Skill modifyingSkill,
+		CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
+
+		this.playerId = playerId;
+		this.reRolledAction = reRolledAction;
+		this.minimumRoll = minimumRoll;
+		this.fumble = fumble;
 		this.reRollSkill = reRollSkill;
-		this.singleUseReRollSource = singleUseReRollSource;
 		this.modifyingSkill = modifyingSkill;
 		this.menuProperty = menuProperty;
 		this.defaultValueKey = defaultValueKey;
-		this.messages = messages;
+		if (messages != null) {
+			this.messages.addAll(messages);
+		}
+		if (reRollProperties != null) {
+			this.reRollProperties.addAll(reRollProperties);
+		}
 	}
 
 	public DialogId getId() {
@@ -58,35 +55,23 @@ public class DialogReRollPropertiesParameter implements IDialogParameter {
 	}
 
 	public String getPlayerId() {
-		return fPlayerId;
+		return playerId;
 	}
 
 	public ReRolledAction getReRolledAction() {
-		return fReRolledAction;
+		return reRolledAction;
 	}
 
 	public int getMinimumRoll() {
-		return fMinimumRoll;
-	}
-
-	public boolean isTeamReRollOption() {
-		return fTeamReRollOption;
-	}
-
-	public boolean isProReRollOption() {
-		return fProReRollOption;
+		return minimumRoll;
 	}
 
 	public boolean isFumble() {
-		return fFumble;
+		return fumble;
 	}
 
 	public Skill getReRollSkill() {
 		return reRollSkill;
-	}
-
-	public ReRollSource getSingleUseReRollSource() {
-		return singleUseReRollSource;
 	}
 
 	public Skill getModifyingSkill() {
@@ -105,15 +90,14 @@ public class DialogReRollPropertiesParameter implements IDialogParameter {
 		return messages;
 	}
 
-	public boolean isMascotOption() {
-		return mascotOption;
+	public boolean hasProperty(ReRollProperty property) {
+		return reRollProperties.contains(property);
 	}
 // transformation
 
 	public IDialogParameter transform() {
-		return new DialogReRollPropertiesParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(), isTeamReRollOption(),
-				isProReRollOption(), isFumble(), mascotOption, reRollSkill, singleUseReRollSource, modifyingSkill,
-				menuProperty, defaultValueKey, messages);
+		return new DialogReRollPropertiesParameter(getPlayerId(), getReRolledAction(), getMinimumRoll(),
+			reRollProperties, isFumble(), reRollSkill, modifyingSkill, menuProperty, defaultValueKey, messages);
 	}
 
 	// JSON serialization
@@ -121,48 +105,40 @@ public class DialogReRollPropertiesParameter implements IDialogParameter {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
-		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
-		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, fReRolledAction);
-		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
-		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
-		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
-		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
-		IJsonOption.FUMBLE.addTo(jsonObject, fFumble);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, reRolledAction);
+		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, minimumRoll);
+		List<String> properties = reRollProperties.stream().map(ReRollProperty::getName).collect(Collectors.toList());
+		IJsonOption.RE_ROLL_PROPERTIES.addTo(jsonObject, properties);
+		IJsonOption.FUMBLE.addTo(jsonObject, fumble);
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		IJsonOption.MODIFYING_SKILL.addTo(jsonObject, modifyingSkill);
 		IJsonOption.DEFAULT_VALUE_KEY.addTo(jsonObject, defaultValueKey);
 		if (menuProperty != null) {
 			IJsonOption.MENU_PROPERTY.addTo(jsonObject, menuProperty.getKey());
 		}
-		if (messages != null) {
-			IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
-		}
-		IJsonOption.MASCOT_OPTION.addTo(jsonObject, mascotOption);
+		IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
 		return jsonObject;
 	}
 
 	public DialogReRollPropertiesParameter initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
-		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
-		fReRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
-		fMinimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
-		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
-		fFumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		minimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
+		fumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		modifyingSkill = (Skill) IJsonOption.MODIFYING_SKILL.getFrom(source, jsonObject);
-		if (IJsonOption.MENU_PROPERTY.isDefinedIn(jsonObject)) {
-			menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
-		}
+		menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
 		defaultValueKey = IJsonOption.DEFAULT_VALUE_KEY.getFrom(source, jsonObject);
-		if (IJsonOption.MESSAGE_ARRAY.isDefinedIn(jsonObject)) {
-			messages = Arrays.asList(IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject));
-		}
-		if (IJsonOption.MASCOT_OPTION.isDefinedIn(jsonObject)) {
-			mascotOption = IJsonOption.MASCOT_OPTION.getFrom(source, jsonObject);
-		}
+		messages.addAll(Arrays.asList(IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject)));
+
+		ReRollPropertyFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_PROPERTY);
+
+		reRollProperties.addAll(
+			Arrays.stream(IJsonOption.RE_ROLL_PROPERTIES.getFrom(source, jsonObject)).map(factory::forName).collect(
+				Collectors.toList()));
 		return this;
 	}
 

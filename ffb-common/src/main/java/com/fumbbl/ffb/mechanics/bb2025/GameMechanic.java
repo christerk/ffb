@@ -4,8 +4,6 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
@@ -17,7 +15,6 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 
@@ -35,30 +32,6 @@ import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
-
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
-		turnData.setReRolls(turnData.getReRolls() - 1);
-		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			return ReRollSources.BRILLIANT_COACHING_RE_ROLL;
-		}
-		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
-			return ReRollSources.PUMP_UP_THE_CROWD;
-		}
-		if (turnData.getReRollShowStarOneDrive() > 0) {
-			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
-			return ReRollSources.SHOW_STAR;
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return true;
-	}
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {

@@ -2,12 +2,8 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IDialogParameter;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogParameterFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.INamedObjectFactory;
@@ -23,11 +19,7 @@ import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
@@ -209,6 +201,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public Team getActingTeam() {
 		return fHomePlaying ? fTeamHome : fTeamAway;
+	}
+
+	public TurnData getActingTurnData() {
+		return fHomePlaying ? fTurnDataHome : fTurnDataAway;
 	}
 
 	public FieldModel getFieldModel() {

@@ -7,7 +7,7 @@ import java.util.Map;
 public class ReRollSources {
 
 	public static final ReRollSource TEAM_RE_ROLL = new ReRollSource("Team ReRoll");
-	public static final ReRollSource BRILLIANT_COACHING_RE_ROLL = new ReRollSource("Brilliant Coaching ReRoll");
+	public static final ReRollSource BRILLIANT_COACHING = new ReRollSource("Brilliant Coaching ReRoll");
 	public static final ReRollSource DODGE = new ReRollSource("Dodge");
 	public static final ReRollSource PRO = new ReRollSource("Pro");
 	public static final ReRollSource SURE_FEET = new ReRollSource("Sure Feet");

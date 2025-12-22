@@ -10,9 +10,15 @@ import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
+import com.fumbbl.ffb.report.ReportReRoll;
+import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
+import com.fumbbl.ffb.server.step.IStep;
+import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.*;
@@ -56,7 +62,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				// We expect an injury being available in the injury context
 				playerState = pInjuryContext.getInjury();
 			} else {
-				boolean isStunty = Arrays.stream(pInjuryContext.getInjuryModifiers()).anyMatch(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily));
+				boolean isStunty = Arrays.stream(pInjuryContext.getInjuryModifiers())
+					.anyMatch(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.isHurtMoreEasily));
 				int total = injuryRoll[0] + injuryRoll[1] + pInjuryContext.getInjuryModifierTotal(game);
 				boolean hasThickSkull = defender != null && defender.hasSkillProperty(NamedProperties.convertKOToStunOn8);
 
@@ -88,7 +95,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player, boolean useDecayRoll) {
+	public PlayerState interpretCasualtyRollAndAddModifiers(Game game, InjuryContext injuryContext, Player<?> player,
+		boolean useDecayRoll) {
 		if (player instanceof ZappedPlayer) {
 			return new PlayerState(PlayerState.BADLY_HURT);
 		}
@@ -108,7 +116,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	@Override
 	public SeriousInjury interpretSeriousInjuryRoll(Game game, InjuryContext injuryContext) {
 		int casModifier = injuryContext.casualtyModifiers.stream().mapToInt(CasualtyModifier::getModifier).sum();
-		return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRoll()[0] + casModifier, injuryContext.getCasualtyRoll()[1]);
+		return interpretSeriousInjuryRoll(game, injuryContext, injuryContext.getCasualtyRoll()[0] + casModifier,
+			injuryContext.getCasualtyRoll()[1]);
 	}
 
 	@Override
@@ -153,7 +162,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 		injuryContext.setOriginalSeriousInjury(originalInjury);
 
-		return  SeriousInjury.SERIOUSLY_HURT;
+		return SeriousInjury.SERIOUSLY_HURT;
 	}
 
 	/**
@@ -176,6 +185,175 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
+	private boolean isSI(int roll) {
+		return roll == 13 || roll == 14;
+	}
+
+	@Override
+	public int minimumLonerRoll(Player<?> player) {
+		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
+	}
+
+	@Override
+	public int minimumProRoll() {
+		return 3;
+	}
+
+	@Override
+	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
+		int minimumRoll, boolean fumble, Skill modificationSkill,
+		Skill reRollSkill,
+		CommonProperty menuProperty, String defaultValueKey,
+		List<String> messages) {
+		boolean dialogShown = false;
+		Game game = gameState.getGame();
+		if (minimumRoll >= 0) {
+			List<ReRollProperty> properties = new ArrayList<>();
+			if (isMascotAvailable(game)) {
+				properties.add(ReRollProperty.MASCOT);
+			}
+			if (isTeamReRollAvailable(gameState, player)) {
+				properties.add(ReRollProperty.TRR);
+			}
+			if (isProReRollAvailable(player, game, gameState.getPassState())) {
+				properties.add(ReRollProperty.PRO);
+			}
+			findAdditionalReRollProperty(game.getActingTurnData()).ifPresent(properties::add);
+
+			if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+				properties.add(ReRollProperty.LONER);
+			}
+
+			if (reRollSkill == null) {
+				Optional<Skill> reRollOnce =
+					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
+				if (reRollOnce.isPresent()) {
+					reRollSkill = reRollOnce.get();
+				}
+			}
+
+			dialogShown =
+				(properties.stream().anyMatch(ReRollProperty::isActualReRoll) || reRollSkill != null ||
+					modificationSkill != null);
+			if (dialogShown) {
+				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+				String playerId = player.getId();
+				UtilServerDialog.showDialog(gameState,
+					new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, properties, fumble, reRollSkill,
+						modificationSkill, menuProperty, defaultValueKey, messages), !actingTeam.hasPlayer(player));
+			}
+		}
+		return dialogShown;
+	}
+
+	public boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer) {
+		if (pPlayer == null) {
+			throw new IllegalArgumentException("Parameter player must not be null.");
+		}
+		boolean successful = false;
+		GameState gameState = pStep.getGameState();
+		Game game = gameState.getGame();
+		StepResult stepResult = pStep.getResult();
+		if (pReRollSource != null) {
+			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
+			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof HasIdForSingleUseReRoll;
+			Skill reRollSourceSkill = pReRollSource.getSkill(game);
+			if (teamReRoll || lordOfChaos) {
+				TurnData turnData = game.getTurnData();
+				ReRollSource usedAdditionalReRollSource = null;
+
+				if (teamReRoll) {
+					usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
+				}
+
+				if (teamReRoll && usedAdditionalReRollSource != null) {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
+				} else if (teamReRoll && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
+					turnData.setLeaderState(LeaderState.USED);
+				} else {
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
+					if (lordOfChaos) {
+						game.getPlayerById(((HasIdForSingleUseReRoll) pStep).idForSingleUseReRoll())
+							.markUsed(reRollSourceSkill, game);
+						UtilServerGame.updateSingleUseReRolls(turnData, pPlayer.getTeam(), game.getFieldModel());
+					}
+				}
+
+				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+					int roll = gameState.getDiceRoller().rollSkill();
+					int minimumRoll = minimumLonerRoll(pPlayer);
+					successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
+				} else {
+					successful = true;
+				}
+
+			}
+			if (!teamReRoll && !lordOfChaos && reRollSourceSkill != null) {
+				if (ReRollSources.PRO == pReRollSource) {
+					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
+					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
+						&& !playerState.hasUsedPro());
+					if (successful) {
+						game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
+						int roll = gameState.getDiceRoller().rollSkill();
+						successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumProRoll());
+						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
+					}
+				} else {
+					if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+						successful = !pPlayer.isUsed(reRollSourceSkill);
+					} else {
+						successful = UtilCards.hasSkill(pPlayer, reRollSourceSkill);
+					}
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
+				}
+				ActingPlayer actingPlayer = game.getActingPlayer();
+				if (actingPlayer.getPlayer() == pPlayer) {
+					actingPlayer.markSkillUsed(reRollSourceSkill);
+				} else if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+					pPlayer.markUsed(reRollSourceSkill, game);
+				}
+			}
+		}
+		return successful;
+	}
+
+	@Override
+	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
+		turnData.setReRolls(turnData.getReRolls() - 1);
+		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+			return ReRollSources.BRILLIANT_COACHING;
+		}
+		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+			return ReRollSources.PUMP_UP_THE_CROWD;
+		}
+		if (turnData.getReRollShowStarOneDrive() > 0) {
+			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+			return ReRollSources.SHOW_STAR;
+		}
+
+		return null;
+	}
+
+	@Override
+	public boolean allowsTeamReRoll(TurnMode turnMode) {
+		return true;
+	}
+
+
+	private boolean isMascotAvailable(Game game) {
+		InducementSet inducementSet = game.isHomePlaying() ?
+			game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+
+		return Arrays.stream(inducementSet.getInducements())
+			.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0);
+
+	}
+
 	private boolean canBeReduced(InjuryAttribute attribute, int currentValue) {
 		return currentValue > 0 && reductionThresholds.get(attribute) != currentValue;
 	}
@@ -195,63 +373,16 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return PlayerState.BADLY_HURT;
 	}
 
-	private boolean isSI(int roll) {
-		return roll == 13 || roll == 14;
-	}
-
-	@Override
-	public int minimumLonerRoll(Player<?> player) {
-		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
-	}
-
-	@Override
-	public int minimumProRoll() {
-		return 3;
-	}
-
-	@Override
-	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
-	                                              Skill reRollSkill,
-	                                              CommonProperty menuProperty, String defaultValueKey,
-	                                              List<String> messages) {
-		boolean dialogShown = false;
-		Game game = gameState.getGame();
-		if (minimumRoll >= 0) {
-			boolean mascotOption = isMascotAvailable(game);
-			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
-			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
-			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
-			if (reRollSkill == null) {
-				Optional<Skill> reRollOnce =
-						UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
-				if (reRollOnce.isPresent()) {
-					reRollSkill = reRollOnce.get();
-				}
-			}
-
-			dialogShown =
-					(mascotOption || teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null ||
-							modificationSkill != null);
-			if (dialogShown) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				String playerId = player.getId();
-				UtilServerDialog.showDialog(gameState,
-						new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption,
-								fumble, mascotOption, reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null,
-								modificationSkill, menuProperty, defaultValueKey, messages),
-						!actingTeam.hasPlayer(player));
-			}
+	private Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
+		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+			return Optional.of(ReRollProperty.BRILLIANT_COACHING);
 		}
-		return dialogShown;
-	}
-
-	private boolean isMascotAvailable(Game game) {
-		InducementSet inducementSet = game.isHomePlaying() ?
-				game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
-
-		return Arrays.stream(inducementSet.getInducements())
-				.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0);
-
+		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+			return Optional.of(ReRollProperty.PUMP_UP_THE_CROWD);
+		}
+		if (turnData.getReRollShowStarOneDrive() > 0) {
+			return Optional.of(ReRollProperty.SHOW_STAR);
+		}
+		return Optional.empty();
 	}
 }

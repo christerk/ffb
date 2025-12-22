@@ -277,7 +277,6 @@ public interface IJsonOption {
 	JsonStringOption MARKING = new JsonStringOption("marking");
 	JsonStringMapOption MARKINGS = new JsonStringMapOption("markings");
 	JsonIntArrayOption MARKING_AFFECTING_COMMANDS = new JsonIntArrayOption("markingIntervalIndexes");
-	JsonBooleanOption MASCOT_OPTION = new JsonBooleanOption("mascotOption");
 	JsonIntArrayOption MASTER_CHEF_ROLL = new JsonIntArrayOption("masterChefRoll");
 	JsonIntOption MAX_BIG_GUYS = new JsonIntOption("maxBigGuys");
 	JsonIntOption MAX_NR_OF_BRIBES = new JsonIntOption("maxNrOfBribes");
@@ -424,6 +423,7 @@ public interface IJsonOption {
 	JsonStringArrayOption RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("reRollAvailableFor");
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
+	JsonStringArrayOption RE_ROLL_PROPERTIES = new JsonStringArrayOption("reRollProperties");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
 	JsonEnumWithNameOption RE_ROLL_SOURCE_SINGLE_USE = new JsonEnumWithNameOption("reRollSourceSingleUse", Factory.RE_ROLL_SOURCE);
 	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");

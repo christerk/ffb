@@ -1,19 +1,15 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
-import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.*;
@@ -22,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -31,33 +28,24 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 	private final JButton fButtonTeamReRoll;
 	private final JButton fButtonProReRoll;
 	private final JButton fButtonNoReRoll;
-	private JButton buttonSkillReRoll, buttonSingleUseReRoll, buttonModifyingSkill;
+	private JButton buttonSkillReRoll, buttonModifyingSkill;
 	private JCheckBox fallbackToTrr;
-	private final ReRollSource singleUseReRollSource;
-	private final DialogReRollPropertiesParameter fDialogParameter;
+	private final DialogReRollPropertiesParameter dialogParameter;
 	private ReRollSource fReRollSource;
 	private boolean useSkill;
 	private Skill usedSkill;
+	private boolean willUseMascot;
 
 	public DialogReRollProperties(FantasyFootballClient pClient, DialogReRollPropertiesParameter pDialogParameter) {
 
 		super(pClient, "Use a Re-roll", false);
 
-		fDialogParameter = pDialogParameter;
+		dialogParameter = pDialogParameter;
 
-		singleUseReRollSource = pDialogParameter.getSingleUseReRollSource();
-
-		fButtonTeamReRoll = new JButton(dimensionProvider(), fDialogParameter.isMascotOption() ? "Team Mascot" : "Team Re-Roll");
+		fButtonTeamReRoll = new JButton(dimensionProvider(), teamReRollText());
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
-
-		if (singleUseReRollSource != null) {
-			buttonSingleUseReRoll = new JButton(dimensionProvider(), singleUseReRollSource.getName(pClient.getGame()));
-			buttonSingleUseReRoll.addActionListener(this);
-			buttonSingleUseReRoll.addKeyListener(this);
-			buttonSingleUseReRoll.setMnemonic('L');
-		}
 
 		fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
 		fButtonProReRoll.addActionListener(this);
@@ -85,9 +73,9 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		StringBuilder message = new StringBuilder();
 
-		String action = fDialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
+		String action = dialogParameter.getReRolledAction().getName(pClient.getGame().getRules().getFactory(Factory.SKILL));
 
-		if (fDialogParameter.getMinimumRoll() > 0) {
+		if (dialogParameter.getMinimumRoll() > 0) {
 			message.append("Do you want to re-roll the failed ").append(action);
 		} else {
 			message.append("Do you want to re-roll the ").append(action);
@@ -113,17 +101,15 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 				messagePanel.add(new JLabel(dimensionProvider(), additionalMessage));
 			}
 		}
-		Game game = getClient().getGame();
-		Player<?> reRollingPlayer = game.getPlayerById(pDialogParameter.getPlayerId());
-		if ((reRollingPlayer != null)
-			&& reRollingPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+
+		if (dialogParameter.hasProperty(ReRollProperty.LONER)) {
 			messagePanel.add(Box.createVerticalStrut(5));
 			messagePanel.add(new JLabel(dimensionProvider(), "Player is a LONER - the Re-Roll is not guaranteed to help."));
 		}
 
-		if (fDialogParameter.getMinimumRoll() > 0) {
+		if (dialogParameter.getMinimumRoll() > 0) {
 			messagePanel.add(Box.createVerticalStrut(5));
-			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + fDialogParameter.getMinimumRoll() + "+ to succeed."));
+			messagePanel.add(new JLabel(dimensionProvider(), "You will need a roll of " + dialogParameter.getMinimumRoll() + "+ to succeed."));
 		}
 
 		JPanel infoPanel = new JPanel();
@@ -138,29 +124,25 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-		if (fDialogParameter.isMascotOption()) {
+		if (willUseMascot) {
 			JPanel mascotPanel = new JPanel();
 			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
 			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
 			buttonPanel.add(mascotPanel);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 			mascotPanel.add(fButtonTeamReRoll);
-			if (fDialogParameter.isTeamReRollOption()) {
+			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 				mascotPanel.add(Box.createVerticalStrut(5));
 				fallbackToTrr = new JCheckBox(dimensionProvider(), "Fallback to team re-roll");
 				fallbackToTrr.setMnemonic('F');
 				fallbackToTrr.addKeyListener(this);
 				mascotPanel.add(fallbackToTrr);
 			}
-		} else if (fDialogParameter.isTeamReRollOption()) {
+		} else if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 			buttonPanel.add(fButtonTeamReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
-		if (buttonSingleUseReRoll != null) {
-			buttonPanel.add(buttonSingleUseReRoll);
-			buttonPanel.add(Box.createHorizontalStrut(5));
-		}
-		if (fDialogParameter.isProReRollOption()) {
+		if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
 			buttonPanel.add(fButtonProReRoll);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
@@ -191,24 +173,15 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if (pActionEvent.getSource() == fButtonTeamReRoll) {
-			if (fDialogParameter.isMascotOption()) {
-				if (fallbackToTrr.isSelected())	{
-					fReRollSource = ReRollSources.MASCOT_TRR;
-				} else {
-					fReRollSource = ReRollSources.MASCOT;
-				}
-			} else {
-				fReRollSource = ReRollSources.TEAM_RE_ROLL;
-			}
+			determinTeamReRollSource();
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
-			fReRollSource = ReRollSources.PRO;
+			if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				fReRollSource = ReRollSources.PRO;
+			}
 		}
 		if (pActionEvent.getSource() == fButtonNoReRoll) {
 			fReRollSource = null;
-		}
-		if (pActionEvent.getSource() == buttonSingleUseReRoll) {
-			fReRollSource = singleUseReRollSource;
 		}
 		if (pActionEvent.getSource() == buttonSkillReRoll) {
 			useSkill = true;
@@ -228,11 +201,11 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 	}
 
 	public ReRolledAction getReRolledAction() {
-		return fDialogParameter.getReRolledAction();
+		return dialogParameter.getReRolledAction();
 	}
 
 	public DialogReRollPropertiesParameter getDialogParameter() {
-		return fDialogParameter;
+		return dialogParameter;
 	}
 
 	public Skill getUsedSkill() {
@@ -250,24 +223,11 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		boolean keyHandled = true;
 		switch (pKeyEvent.getKeyCode()) {
 			case KeyEvent.VK_T:
-				if (fDialogParameter.isMascotOption()) {
-					if (fallbackToTrr.isSelected())	{
-						fReRollSource = ReRollSources.MASCOT_TRR;
-					} else {
-						fReRollSource = ReRollSources.MASCOT;
-					}
-				} else {
-					fReRollSource = ReRollSources.TEAM_RE_ROLL;
-				}
+				determinTeamReRollSource();
 				break;
 			case KeyEvent.VK_P:
-				if (getDialogParameter().isProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					fReRollSource = ReRollSources.PRO;
-				}
-				break;
-			case KeyEvent.VK_L:
-				if (singleUseReRollSource != null) {
-					fReRollSource = singleUseReRollSource;
 				}
 				break;
 			case KeyEvent.VK_S:
@@ -305,7 +265,46 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		}
 	}
 
+	private void determinTeamReRollSource() {
+		if (willUseMascot) {
+			if (fallbackToTrr.isSelected())	{
+				fReRollSource = ReRollSources.MASCOT_TRR;
+			} else {
+				fReRollSource = ReRollSources.MASCOT;
+			}
+		} else {
+			fReRollSource = ReRollSources.TEAM_RE_ROLL;
+		}
+	}
+
 	public void keyTyped(KeyEvent pKeyEvent) {
 	}
 
+	private String teamReRollText() {
+		if (dialogParameter.hasProperty(ReRollProperty.BRILLIANT_COACHING)) {
+			return ReRollSources.BRILLIANT_COACHING.getName();
+		}
+
+		if (dialogParameter.hasProperty(ReRollProperty.PUMP_UP_THE_CROWD)) {
+			return ReRollSources.PUMP_UP_THE_CROWD.getName();
+		}
+
+		if (dialogParameter.hasProperty(ReRollProperty.SHOW_STAR)) {
+			return ReRollSources.SHOW_STAR.getName();
+		}
+
+		if (dialogParameter.hasProperty(ReRollProperty.MASCOT)) {
+			Optional<InducementType> mascot =
+				getClient().getGame().getActingTurnData().getInducementSet().getInducementTypes().stream()
+					.filter(ind -> ind.hasUsage(
+						Usage.CONDITIONAL_REROLL)).findFirst();
+			if (mascot.isPresent()) {
+				willUseMascot = true;
+				return mascot.get().getDescription();
+			}
+		}
+
+		return ReRollSources.TEAM_RE_ROLL.getName();
+
+	}
 }
