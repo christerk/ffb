@@ -8,7 +8,7 @@ import com.fumbbl.ffb.model.Game;
 
 import java.util.Arrays;
 
-@FactoryType(FactoryType.Factory.RE_ROLL_SOURCE)
+@FactoryType(FactoryType.Factory.RE_ROLL_PROPERTY)
 @RulesCollection(Rules.BB2025)
 public class ReRollPropertyFactory implements INamedObjectFactory<ReRollProperty> {
 
