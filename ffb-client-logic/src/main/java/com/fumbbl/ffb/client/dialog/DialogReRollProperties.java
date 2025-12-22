@@ -16,6 +16,7 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -49,17 +50,20 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
+		fButtonTeamReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 
 		fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
 		fButtonProReRoll.addActionListener(this);
 		fButtonProReRoll.addKeyListener(this);
 		fButtonProReRoll.setMnemonic((int) 'P');
+		fButtonProReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 
 		if (pDialogParameter.getReRollSkill() != null) {
 			buttonSkillReRoll = new JButton(dimensionProvider(), pDialogParameter.getReRollSkill().getName());
 			buttonSkillReRoll.addActionListener(this);
 			buttonSkillReRoll.addKeyListener(this);
 			buttonSkillReRoll.setMnemonic((int) 'S');
+			buttonSkillReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 		}
 
 		if (pDialogParameter.getModifyingSkill() != null) {
@@ -67,12 +71,14 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			buttonModifyingSkill.addActionListener(this);
 			buttonModifyingSkill.addKeyListener(this);
 			buttonModifyingSkill.setMnemonic((int) 'M');
+			buttonModifyingSkill.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 		}
 
 		fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(this);
 		fButtonNoReRoll.addKeyListener(this);
 		fButtonNoReRoll.setMnemonic((int) 'N');
+		fButtonNoReRoll.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 
 		StringBuilder message = new StringBuilder();
 
@@ -127,14 +133,16 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		infoPanel.add(Box.createHorizontalGlue());
 
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBackground(Color.RED);
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+		buttonPanel.setAlignmentY(Box.BOTTOM_ALIGNMENT);
 		if (willUseMascot) {
 			JPanel mascotPanel = new JPanel();
 			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
 			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+			mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 			buttonPanel.add(mascotPanel);
-			buttonPanel.add(Box.createHorizontalStrut(5));
+		//	buttonPanel.add(Box.createHorizontalStrut(5));
 			mascotPanel.add(fButtonTeamReRoll);
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 				mascotPanel.add(Box.createVerticalStrut(5));
@@ -159,7 +167,13 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			buttonPanel.add(buttonModifyingSkill);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
-		buttonPanel.add(fButtonNoReRoll);
+		JPanel noPanel = new JPanel();
+		noPanel.setLayout(new BoxLayout(noPanel, BoxLayout.Y_AXIS));
+		noPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+		noPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+		noPanel.add(fButtonNoReRoll);
+
+		buttonPanel.add(noPanel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
