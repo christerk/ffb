@@ -283,7 +283,7 @@ public interface IJsonOption {
 	JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
 	JsonIntOption MAX_SELECTS = new JsonIntOption("maxSelects");
 	JsonStringOption MENU_PROPERTY = new JsonStringOption("menuProperty");
-	JsonStringArrayOption MERCENARY_POSTION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
+	JsonStringArrayOption MERCENARY_POSITION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
 	JsonStringArrayOption MERCENARY_SKILLS = new JsonStringArrayOption("mercenarySkills");
 	JsonStringOption MESSAGE = new JsonStringOption("message");
 	JsonStringArrayOption MESSAGE_ARRAY = new JsonStringArrayOption("messageArray");
