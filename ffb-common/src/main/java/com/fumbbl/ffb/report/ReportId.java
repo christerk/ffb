@@ -67,7 +67,7 @@ public enum ReportId implements INamedObject {
 	LOOK_INTO_MY_EYES_ROLL("lookIntoMyEyesRoll"), BALEFUL_HEX("balefulHex"), ALL_YOU_CAN_EAT("allYouCanEat"),
 	CATCH_OF_THE_DAY("catchOfTheDay"), BREATHE_FIRE("breatheFire"), THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
 	PRAYERS_AND_INDUCEMENTS_BOUGHT("prayersAndInducementsBought"), THROW_AT_PLAYER("throwAtPlayer"), STEADY_FOOTING_ROLL("steadyFootingRoll"),
-	MASCOT_USED("mascotUsed")
+	MASCOT_USED("mascotUsed"), TEAM_EVENT("teamEvent")
 	;
 
 	// obsolete: 50 (spiralling expenses)
