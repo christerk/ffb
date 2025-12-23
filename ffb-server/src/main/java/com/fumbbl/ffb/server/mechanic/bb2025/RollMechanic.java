@@ -1,27 +1,50 @@
 package com.fumbbl.ffb.server.mechanic.bb2025;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.LeaderState;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollProperty;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.mixed.CasualtyModifierFactory;
+import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.ZappedPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportReRoll;
+import com.fumbbl.ffb.report.bb2025.ReportMascotUsed;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
@@ -244,7 +267,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return dialogShown;
 	}
 
-	public boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer) {
+	public boolean useReRoll(IStep pStep, ReRollSource reRollSource, Player<?> pPlayer) {
 		if (pPlayer == null) {
 			throw new IllegalArgumentException("Parameter player must not be null.");
 		}
@@ -252,44 +275,52 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		StepResult stepResult = pStep.getResult();
-		if (pReRollSource != null) {
-			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == pReRollSource;
-			boolean lordOfChaos = ReRollSources.LORD_OF_CHAOS == pReRollSource && pStep instanceof HasIdForSingleUseReRoll;
-			Skill reRollSourceSkill = pReRollSource.getSkill(game);
-			if (teamReRoll || lordOfChaos) {
-				TurnData turnData = game.getTurnData();
-				ReRollSource usedAdditionalReRollSource = null;
+		TurnData turnData = game.getTurnData();
+		if (reRollSource != null) {
+			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == reRollSource;
+			boolean mascot = Arrays.asList(ReRollSources.MASCOT, ReRollSources.MASCOT_TRR).contains(reRollSource);
+			InducementType mascotType = turnData.getInducementSet().forUsage(Usage.CONDITIONAL_REROLL);
+			if (mascot && mascotType != null) {
+				mascot = turnData.getInducementSet().hasUsesLeft(mascotType);
+			}
+			if (mascot) {
+				int roll = gameState.getDiceRoller().rollDice(6);
+				int minimumRoll = 4;
+				successful = roll >= minimumRoll;
+				boolean fallback = !successful && reRollSource == ReRollSources.MASCOT_TRR && turnData.getReRolls() > 0;
 
-				if (teamReRoll) {
-					usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
+				stepResult.addReport(
+					new ReportMascotUsed(game.getActingTeam().getId(), minimumRoll, roll, successful, fallback));
+
+				UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
+
+				if (successful) {
+					return checkForLoner(pPlayer, gameState, stepResult);
+				} else if (!fallback) {
+					return false;
+				} else {
+					teamReRoll = true;
 				}
+			}
 
-				if (teamReRoll && usedAdditionalReRollSource != null) {
+			Skill reRollSourceSkill = reRollSource.getSkill(game);
+			if (teamReRoll) {
+
+				ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
+
+				if (usedAdditionalReRollSource != null) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
-				} else if (teamReRoll && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+				} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
 					turnData.setLeaderState(LeaderState.USED);
 				} else {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
-					if (lordOfChaos) {
-						game.getPlayerById(((HasIdForSingleUseReRoll) pStep).idForSingleUseReRoll())
-							.markUsed(reRollSourceSkill, game);
-						UtilServerGame.updateSingleUseReRolls(turnData, pPlayer.getTeam(), game.getFieldModel());
-					}
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
 				}
 
-				if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
-					int roll = gameState.getDiceRoller().rollSkill();
-					int minimumRoll = minimumLonerRoll(pPlayer);
-					successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
-				} else {
-					successful = true;
-				}
+				successful = checkForLoner(pPlayer, gameState, stepResult);
 
-			}
-			if (!teamReRoll && !lordOfChaos && reRollSourceSkill != null) {
-				if (ReRollSources.PRO == pReRollSource) {
+			} else if (reRollSourceSkill != null) {
+				if (ReRollSources.PRO == reRollSource) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
 						&& !playerState.hasUsedPro());
@@ -305,7 +336,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 					} else {
 						successful = UtilCards.hasSkill(pPlayer, reRollSourceSkill);
 					}
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), pReRollSource, successful, 0));
+					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				if (actingPlayer.getPlayer() == pPlayer) {
@@ -316,6 +347,18 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			}
 		}
 		return successful;
+	}
+
+	private boolean checkForLoner(Player<?> pPlayer, GameState gameState, StepResult stepResult) {
+		if (pPlayer.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+			int roll = gameState.getDiceRoller().rollSkill();
+			int minimumRoll = minimumLonerRoll(pPlayer);
+			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+			stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LONER, successful, roll));
+			return successful;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
