@@ -75,7 +75,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState;
 	private FieldCoordinate thrownPlayerCoordinate;
-	private boolean thrownPlayerHasBall, throwScatter, deviate, isKickedPlayer, crashLanding;
+	private boolean thrownPlayerHasBall, throwScatter, deviate, isKickedPlayer;
 	private Direction swoopDirection;
 
 	public StepInitScatterPlayer(GameState pGameState) {
@@ -117,12 +117,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 						break;
 					case IS_KICKED_PLAYER:
 						isKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-						break;
-					case PASS_DEVIATES:
-						deviate = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-						break;
-					case CRASH_LANDING:
-						crashLanding = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 						break;
 					case DIRECTION:
 						swoopDirection = (Direction) parameter.getValue();
@@ -237,20 +231,11 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 				getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
 				publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResultHitPlayer, commands)));
-				        // crash landing only happens in empty squares
-				crashLanding = false;
 
 				// continue loop in end step
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
-				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
 				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 
-			} else if (crashLanding) {
-				crashLanding = false;
-				publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
-				publishParameter(new StepParameter(StepParameterKey.CRASH_LANDING, crashLanding));
-				publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
 			} else {
 				// put thrown player in target coordinate (ball will be handled in right stuff
 				// step), end loop
@@ -321,7 +306,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROW_SCATTER.addTo(jsonObject, throwScatter);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
 		IServerJsonOption.PASS_DEVIATES.addTo(jsonObject, deviate);
-		IServerJsonOption.CRASH_LANDING.addTo(jsonObject, crashLanding);
 		IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, swoopDirection);
 		return jsonObject;
 	}
@@ -337,7 +321,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(source, jsonObject);
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		deviate = IServerJsonOption.PASS_DEVIATES.getFrom(source, jsonObject);
-		crashLanding = IServerJsonOption.CRASH_LANDING.getFrom(source, jsonObject);
 		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		return this;
 	}

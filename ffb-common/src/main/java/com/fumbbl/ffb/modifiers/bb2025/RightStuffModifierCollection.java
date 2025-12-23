@@ -11,7 +11,7 @@ import com.fumbbl.ffb.modifiers.RightStuffModifier;
 public class RightStuffModifierCollection extends com.fumbbl.ffb.modifiers.RightStuffModifierCollection {
 	public RightStuffModifierCollection() {
 
-		add(new RightStuffModifier("Successful Throw", 1, ModifierType.REGULAR) {
+		add(new RightStuffModifier("Subpar Throw", 1, ModifierType.REGULAR) {
 			@Override
 			public boolean appliesToContext(Skill skill, RightStuffContext context) {
 				return context.getPassResult() == PassResult.INACCURATE;
