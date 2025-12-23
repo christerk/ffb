@@ -785,8 +785,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return getRules().getFactory(factory);
 	}
 
-	public Mechanic getMechanic(Mechanic.Type type) {
-		return (Mechanic) getRules().getFactory(FactoryType.Factory.MECHANIC).forName(type.name());
+	@SuppressWarnings("unchecked")
+	public <T extends Mechanic> T getMechanic(Mechanic.Type type) {
+		return (T) getRules().getFactory(FactoryType.Factory.MECHANIC).forName(type.name());
 	}
 
 	private enum TeamState {
