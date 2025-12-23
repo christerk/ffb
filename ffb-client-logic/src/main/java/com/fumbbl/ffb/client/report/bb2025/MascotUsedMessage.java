@@ -13,7 +13,7 @@ public class MascotUsedMessage extends ReportMessageBase<ReportMascotUsed> {
 	@Override
 	protected void render(ReportMascotUsed report) {
 		println(getIndent(), TextStyle.ROLL, "Mascot Roll [ " + report.getRoll() + " ]");
-		printTeamName(game, false, report.getTeamId());
+		printTeamName(false, report.getTeamId());
 		StringBuilder builder = new StringBuilder(" used their Team Mascot");
 		if (report.isSuccessful()) {
 			builder.append(" successfully.");

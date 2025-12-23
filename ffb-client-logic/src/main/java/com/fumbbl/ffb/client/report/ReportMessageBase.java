@@ -63,8 +63,8 @@ public abstract class ReportMessageBase<T extends IReport> implements IKeyedItem
 		statusReport.print(pIndent, pBold, pPlayer);
 	}
 
-	protected void printTeamName(Game pGame, @SuppressWarnings("SameParameterValue") boolean pBold, String pTeamId) {
-		statusReport.printTeamName(pGame, pBold, pTeamId);
+	protected void printTeamName(@SuppressWarnings("SameParameterValue") boolean pBold, String pTeamId) {
+		statusReport.printTeamName(game, pBold, pTeamId);
 	}
 
 	protected Direction mapToLocal(Direction direction) {
