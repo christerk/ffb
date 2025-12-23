@@ -562,6 +562,7 @@ public interface IJsonOption {
 	JsonStringOption TEAM_HOME_NAME = new JsonStringOption("teamHomeName");
 	JsonStringOption TEAM_ID = new JsonStringOption("teamId");
 	JsonStringArrayOption TEAM_IDS_ADDITIONAL_ASSIST = new JsonStringArrayOption("teamIdsAdditionalAssist");
+	JsonStringArrayOption TEAM_IDS_RE_ROLLED_CHEERING_FANS = new JsonStringArrayOption("teamIdsReRolledCheeringFangs");
 	JsonObjectOption TEAM_LIST = new JsonObjectOption("teamList");
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");

@@ -31,6 +31,10 @@ public class CheeringFansMessage extends ReportMessageBase<ReportCheeringFans> {
 		}
 		status.append(" = ").append(totalHome).append(".");
 		println(getIndent() + 1, status.toString());
+		if (report.getRerolled().contains(game.getTeamHome().getId())) {
+			printTeamName(false, game.getTeamHome().getId());
+			println(getIndent() + 1 , " rerolled a natural 1 using their Team Mascot");
+		}
 		status = new StringBuilder();
 		status.append("Cheering Fans Roll Away Team [ ").append(report.getRollAway()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
@@ -44,6 +48,10 @@ public class CheeringFansMessage extends ReportMessageBase<ReportCheeringFans> {
 		}
 		status.append(" = ").append(totalAway).append(".");
 		println(getIndent() + 1, status.toString());
+		if (report.getRerolled().contains(game.getTeamAway().getId())) {
+			printTeamName(false, game.getTeamAway().getId());
+			println(getIndent() + 1 , " rerolled a natural 1 using their Team Mascot");
+		}
 
 		for (String teamId: report.getTeamIds()) {
 

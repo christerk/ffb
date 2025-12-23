@@ -21,6 +21,7 @@ public class ReportCheeringFans extends NoDiceReport {
 	int rollHome, rollAway;
 	private Set<String> teamIds, rerolled;
 
+	@SuppressWarnings("unused")
 	public ReportCheeringFans() {
 		super();
 	}
