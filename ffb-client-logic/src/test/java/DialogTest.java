@@ -13,18 +13,22 @@ import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.skill.mixed.special.StrongPassingGame;
 import com.fumbbl.ffb.skill.mixed.special.ThinkingMansTroll;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +58,7 @@ class DialogTest {
 			inducementType));
 		when(inducementType.hasUsage(Usage.CONDITIONAL_REROLL)).thenReturn(true);
 		when(inducementType.getDescription()).thenReturn("Team Mascot");
-
+		when(userInterface.getIconCache().getIconByProperty(any(), any())).thenReturn(new BufferedImage(30, 30, 1));
 
 		List<ReRollProperty> properties = new ArrayList<>();
 		properties.add(ReRollProperty.TRR);
@@ -62,9 +66,11 @@ class DialogTest {
 //		properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		DialogReRollPropertiesParameter param =
-			new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
+		/*	new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
 				CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, Arrays.asList("You need a:", "  • 6 to knock your opponent down",
-				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));
+				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));*/
+		new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, null, new ThinkingMansTroll(),
+			null, null,null);
 
 
 		JPanel panelContent = new JPanel();

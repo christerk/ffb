@@ -15,7 +15,11 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -143,7 +147,6 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.add(fButtonTeamReRoll);
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-				mascotPanel.add(Box.createVerticalStrut(5));
 				fallbackToTrr = new JCheckBox(dimensionProvider(), "TRR fallback");
 				fallbackToTrr.setMnemonic('F');
 				fallbackToTrr.addKeyListener(this);
