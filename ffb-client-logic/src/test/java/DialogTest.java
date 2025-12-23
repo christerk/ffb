@@ -13,7 +13,6 @@ import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.skill.mixed.special.ThinkingMansTroll;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -63,13 +62,15 @@ class DialogTest {
 		List<ReRollProperty> properties = new ArrayList<>();
 		properties.add(ReRollProperty.TRR);
 		properties.add(ReRollProperty.MASCOT);
+		properties.add(ReRollProperty.PRO);
+		properties.add(ReRollProperty.LONER);
 //		properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		DialogReRollPropertiesParameter param =
 		/*	new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
 				CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, Arrays.asList("You need a:", "  • 6 to knock your opponent down",
 				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));*/
-		new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, null, new ThinkingMansTroll(),
+		new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, null, null,
 			null, null,null);
 
 

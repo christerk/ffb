@@ -35,6 +35,9 @@ public class ReRollSources {
 	public static final ReRollSource SAVAGE_BLOW = new ReRollSource("Savage Blow");
 	public static final ReRollSource MASCOT = new ReRollSource("Mascot");
 	public static final ReRollSource MASCOT_TRR = new ReRollSource("Mascot TRR");
+	public static final ReRollSource PRO_MASCOT = new ReRollSource("Pro Mascot", PRO);
+	public static final ReRollSource PRO_MASCOT_TRR = new ReRollSource("Pro Mascot TRR", PRO);
+	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
 
 	private final Map<String, ReRollSource> values;
 

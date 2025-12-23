@@ -49,6 +49,7 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
+	public static final int MASCOT_MINIMUM_ROLL = 4;
 	private final Map<InjuryAttribute, Integer> reductionThresholds = new HashMap<InjuryAttribute, Integer>() {{
 		put(InjuryAttribute.MA, 1);
 		put(InjuryAttribute.ST, 1);
@@ -277,20 +278,21 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		StepResult stepResult = pStep.getResult();
 		TurnData turnData = game.getTurnData();
 		if (reRollSource != null) {
+
 			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == reRollSource;
-			boolean mascot = Arrays.asList(ReRollSources.MASCOT, ReRollSources.MASCOT_TRR).contains(reRollSource);
 			InducementType mascotType = turnData.getInducementSet().forUsage(Usage.CONDITIONAL_REROLL);
-			if (mascot && mascotType != null) {
-				mascot = turnData.getInducementSet().hasUsesLeft(mascotType);
-			}
+			boolean mascotAvailable = mascotType != null && turnData.getInducementSet().hasUsesLeft(mascotType);
+
+			boolean mascot =
+				Arrays.asList(ReRollSources.MASCOT, ReRollSources.MASCOT_TRR).contains(reRollSource) && mascotAvailable;
+
 			if (mascot) {
-				int roll = gameState.getDiceRoller().rollDice(6);
-				int minimumRoll = 4;
-				successful = roll >= minimumRoll;
+				int mascotRoll = gameState.getDiceRoller().rollDice(6);
+				successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
 				boolean fallback = !successful && reRollSource == ReRollSources.MASCOT_TRR && turnData.getReRolls() > 0;
 
 				stepResult.addReport(
-					new ReportMascotUsed(game.getActingTeam().getId(), minimumRoll, roll, successful, fallback));
+					new ReportMascotUsed(game.getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful, fallback));
 
 				UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
 
@@ -306,29 +308,61 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			Skill reRollSourceSkill = reRollSource.getSkill(game);
 			if (teamReRoll) {
 
-				ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
-
-				if (usedAdditionalReRollSource != null) {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
-				} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
-					turnData.setLeaderState(LeaderState.USED);
-				} else {
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
-				}
-
-				successful = checkForLoner(pPlayer, gameState, stepResult);
+				successful = useTeamReRoll(reRollSource, pPlayer, turnData, stepResult, successful, gameState);
 
 			} else if (reRollSourceSkill != null) {
-				if (ReRollSources.PRO == reRollSource) {
+				if (reRollSourceSkill.hasSkillProperty(NamedProperties.canRerollOncePerTurn)) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
 					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
 						&& !playerState.hasUsedPro());
 					if (successful) {
 						game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
-						int roll = gameState.getDiceRoller().rollSkill();
-						successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumProRoll());
-						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, roll));
+						int proRoll = gameState.getDiceRoller().rollSkill();
+						successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
+						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
+						if (!successful &&
+							Arrays.asList(ReRollSources.PRO_MASCOT, ReRollSources.PRO_TRR, ReRollSources.PRO_MASCOT_TRR)
+								.contains(reRollSource)) {
+							boolean proMascot =
+								Arrays.asList(ReRollSources.PRO_MASCOT, ReRollSources.PRO_MASCOT_TRR).contains(reRollSource) &&
+									mascotAvailable;
+							if (proMascot) {
+								int mascotRoll = gameState.getDiceRoller().rollDice(6);
+								successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
+								boolean fallback =
+									!successful && reRollSource == ReRollSources.PRO_MASCOT_TRR && turnData.getReRolls() > 0;
+
+								stepResult.addReport(
+									new ReportMascotUsed(game.getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
+										fallback));
+
+								UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
+
+								if (successful) {
+									if (checkForLoner(pPlayer, gameState, stepResult)) {
+										proRoll = gameState.getDiceRoller().rollSkill();
+										successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
+										stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
+										return successful;
+									} else {
+										return false;
+									}
+								} else if (!fallback) {
+									return false;
+								}
+							}
+
+							if (Arrays.asList(ReRollSources.PRO_TRR, ReRollSources.PRO_MASCOT_TRR).contains(reRollSource)) {
+								if (useTeamReRoll(reRollSource, pPlayer, turnData, stepResult, successful, gameState)) {
+									proRoll = gameState.getDiceRoller().rollSkill();
+									successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
+									stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
+									return successful;
+								} else {
+									return false;
+								}
+							}
+						}
 					}
 				} else {
 					if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
@@ -346,6 +380,23 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				}
 			}
 		}
+		return successful;
+	}
+
+	private boolean useTeamReRoll(ReRollSource reRollSource, Player<?> pPlayer, TurnData turnData, StepResult stepResult,
+		boolean successful, GameState gameState) {
+		ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
+
+		if (usedAdditionalReRollSource != null) {
+			stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
+		} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
+			turnData.setLeaderState(LeaderState.USED);
+		} else {
+			stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
+		}
+
+		successful = checkForLoner(pPlayer, gameState, stepResult);
 		return successful;
 	}
 
