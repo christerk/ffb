@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
@@ -14,6 +15,7 @@ import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.change.ModelChangeObservable;
@@ -781,6 +783,11 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public <T extends INamedObjectFactory<?>> T getFactory(Factory factory) {
 		return getRules().getFactory(factory);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Mechanic> T getMechanic(Mechanic.Type type) {
+		return (T) getRules().getFactory(FactoryType.Factory.MECHANIC).forName(type.name());
 	}
 
 	private enum TeamState {
