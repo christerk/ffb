@@ -29,7 +29,8 @@ public enum DialogId implements INamedObject {
 	CONFIRM_END_ACTION("confirmEndAction"), CHANGE_LIST("changeList"), SELECT_WEATHER("selectWeather"),
 	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal"), KICK_OFF_RESULT("kickOffResult"),
 	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice"), 
-	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements");
+	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements"),
+	BLOCK_ROLL_PROPERTIES("blockRollProperties");
 
 	private final String fName;
 

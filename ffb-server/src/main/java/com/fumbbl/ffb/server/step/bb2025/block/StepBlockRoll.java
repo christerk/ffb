@@ -10,7 +10,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.dialog.DialogBlockRollPartialReRollParameter;
+import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -349,7 +349,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			teamReRollOption = false;
 			proReRollOption = false;
 			brawlerOption = false;
-			singleUseReRollOption = false;
 			consummateOption = false;
 			singleBlockDieOption = false;
 			anyBlockDiceOption = false;
@@ -364,9 +363,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			skills.add(anyBlockDiceRrSkill);
 		}
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogBlockRollPartialReRollParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption,
-				brawlerOption, consummateOption, reRolledDiceIndexes, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null,
-				skills),
+			new DialogBlockRollPropertiesParameter(teamId, fNrOfDice, fBlockRoll, teamReRollOption, proReRollOption,
+				brawlerOption, consummateOption, reRolledDiceIndexes, skills),
 			(fNrOfDice < 0));
 	}
 

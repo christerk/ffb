@@ -35,6 +35,8 @@ public class DialogParameterFactory {
                 return new DialogBlockRollParameter();
             case BLOCK_ROLL_PARTIAL_RE_ROLL:
                 return new DialogBlockRollPartialReRollParameter();
+            case BLOCK_ROLL_PROPERTIES:
+                return new DialogBlockRollPropertiesParameter();
             case PLAYER_CHOICE:
                 return new DialogPlayerChoiceParameter();
             case INTERCEPTION:
