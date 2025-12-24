@@ -1,3 +1,5 @@
+package com.fumbbl.ffb.client.dialog;
+
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.ReRollProperty;
@@ -7,19 +9,15 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
-import com.fumbbl.ffb.client.dialog.DialogReRollProperties;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
+import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +30,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class DialogTest {
+class DialogBlockRollPropertiesTest {
 	public static void main(String[] args)
 		throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -66,12 +64,11 @@ class DialogTest {
 		properties.add(ReRollProperty.LONER);
 //		properties.add(ReRollProperty.BRILLIANT_COACHING);
 
-		DialogReRollPropertiesParameter param =
+		DialogBlockRollPropertiesParameter param =
 		/*	new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
 				CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, Arrays.asList("You need a:", "  • 6 to knock your opponent down",
 				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));*/
-		new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, null, null,
-			null, null,null);
+		new DialogBlockRollPropertiesParameter();
 
 
 		JPanel panelContent = new JPanel();
@@ -86,7 +83,7 @@ class DialogTest {
 		frame.setVisible(true);
 
 
-		DialogReRollProperties comp = new DialogReRollProperties(client, param);
+		DialogBlockRollProperties comp = new DialogBlockRollProperties(client, param);
 		frame.getContentPane().add(comp);
 		comp.setVisible(true);
 
