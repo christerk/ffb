@@ -388,7 +388,7 @@ public abstract class LogicModule {
 
 		boolean rightStuffAdjacent = ArrayTool.isProvided(mechanic.findThrowableTeamMates(game, player));
 
-		return (!game.getTurnData().isPassUsed()
+		return (mechanic.isTtmAvailable(game.getTurnData())
 				&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 				&& mechanic.canThrow(player) && rightStuffAvailable
 				&& (playerState.isAbleToMove() || rightStuffAdjacent));
