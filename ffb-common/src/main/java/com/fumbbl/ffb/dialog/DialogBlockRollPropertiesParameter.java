@@ -22,7 +22,6 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 	private String choosingTeamId;
 	private int nrOfDice;
 	private int[] blockRoll;
-	private int[] reRolledDiceIndexes;
 	private final List<ReRollProperty> reRollProperties = new ArrayList<>();
 	private final Map<String, String> rrActionToSource = new HashMap<>();
 
@@ -31,12 +30,10 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 		super();
 	}
 
-	public DialogBlockRollPropertiesParameter(String choosingTeamId, int nrOfDice, int[] blockRoll, int[] reRolledDiceIndexes,
-		List<ReRollProperty> reRollProperties, Map<String, String> rrActionToSource) {
+	public DialogBlockRollPropertiesParameter(String choosingTeamId, int nrOfDice, int[] blockRoll, List<ReRollProperty> reRollProperties, Map<String, String> rrActionToSource) {
 		this.choosingTeamId = choosingTeamId;
 		this.nrOfDice = nrOfDice;
 		this.blockRoll = blockRoll;
-		this.reRolledDiceIndexes = reRolledDiceIndexes;
 		if (reRollProperties != null) {
 			this.reRollProperties.addAll(reRollProperties);
 		}
@@ -61,10 +58,6 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 		return blockRoll;
 	}
 
-	public int[] getReRolledDiceIndexes() {
-		return reRolledDiceIndexes;
-	}
-
 	public boolean hasProperty(ReRollProperty property) {
 		return reRollProperties.contains(property);
 	}
@@ -80,8 +73,8 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 // transformation
 
 	public IDialogParameter transform() {
-		return new DialogBlockRollPropertiesParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(),
-			reRolledDiceIndexes, reRollProperties, rrActionToSource);
+		return new DialogBlockRollPropertiesParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(), reRollProperties,
+			rrActionToSource);
 	}
 
 	// JSON serialization
@@ -92,7 +85,6 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 		IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, choosingTeamId);
 		IJsonOption.NR_OF_DICE.addTo(jsonObject, nrOfDice);
 		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
-		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
 		List<String> properties = reRollProperties.stream().map(ReRollProperty::getName).collect(Collectors.toList());
 		IJsonOption.RE_ROLL_PROPERTIES.addTo(jsonObject, properties);
 		IJsonOption.RE_ROLL_ACTION_TO_SOURCE_MAP.addTo(jsonObject, rrActionToSource);
@@ -105,7 +97,6 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 		choosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
 		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
 		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
-		reRolledDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
 
 		ReRollPropertyFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_PROPERTY);
 

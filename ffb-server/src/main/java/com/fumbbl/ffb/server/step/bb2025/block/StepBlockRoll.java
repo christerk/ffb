@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
 	private int fNrOfDice, fDiceIndex, proIndex, brawlerIndex = -1, dieIndex = -1;
-	private int[] fBlockRoll, reRolledDiceIndexes = new int[0], diceIndexes;
+	private int[] fBlockRoll, diceIndexes;
 	private BlockResult fBlockResult;
 	private boolean successfulDauntless, doubleTargetStrength;
 
@@ -180,15 +180,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		if (fBlockResult == null) {
 			boolean doRoll = true;
 			if (ReRolledActions.BLOCK == getReRolledAction()) {
-				if ((getReRollSource() == null) || (
-					getReRollSource() != ReRollSources.BRAWLER
-						&& getReRollSource() != ReRollSources.UNSTOPPABLE_MOMENTUM
-						&& getReRollSource() != ReRollSources.SAVAGE_BLOW
-						&& !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
+				if ((getReRollSource() == null) ||
+					!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					doRoll = false;
-					if (getReRollSource() == ReRollSources.PRO) {
-						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
-					}
 					showBlockRollDialog(getReRollSource() == null);
 				}
 			}
@@ -227,7 +221,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 							new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
 						fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 						fBlockRoll[proIndex] = reRolledWithPro[0];
-						reRolledDiceIndexes = add(reRolledDiceIndexes, proIndex);
 					} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM) {
 						if (dieIndex >= 0) {
 							int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
@@ -236,7 +229,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 							actingPlayer.markSkillUsed(NamedProperties.canRerollSingleBlockDieDuringBlitz);
 							fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 							fBlockRoll[dieIndex] = rerolledDie;
-							this.reRolledDiceIndexes = add(reRolledDiceIndexes, dieIndex);
 						}
 					} else if (getReRollSource() == ReRollSources.SAVAGE_BLOW) {
 						if (diceIndexes != null) {
@@ -247,7 +239,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 							for (int indexPos = 0; indexPos < diceIndexes.length; indexPos++) {
 								int indexInRoll = diceIndexes[indexPos];
 								fBlockRoll[indexInRoll] = rerolledDice[indexPos];
-								this.reRolledDiceIndexes = add(reRolledDiceIndexes, indexInRoll);
 							}
 						}
 					} else {
@@ -266,20 +257,12 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
-	private int[] add(int[] original, int newElement) {
-		int[] updated = Arrays.copyOf(original, original.length + 1);
-		updated[original.length] = newElement;
-		return updated;
-	}
-
 	private void handleBrawler(ActingPlayer player) {
 		int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 		getResult().addReport(new ReportBlockReRoll(new int[]{rerolledDie}, player.getPlayerId(), getReRollSource()));
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < fBlockRoll.length; i++) {
-			int finalI = i;
-			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN &&
-				Arrays.stream(this.reRolledDiceIndexes).noneMatch(index -> index == finalI)) {
+			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN) {
 				brawlerIndex = i;
 				break;
 			}
@@ -287,7 +270,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		if (brawlerIndex >= 0) {
 			fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 			fBlockRoll[brawlerIndex] = rerolledDie;
-			this.reRolledDiceIndexes = add(reRolledDiceIndexes, brawlerIndex);
 		}
 	}
 
@@ -295,79 +277,51 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		ActingPlayer actingPlayer = game.getActingPlayer();
-
-		Map<ReRolledAction, ReRollSource> actionToSource = new HashMap<>();
-		if (actingPlayer.getPlayerAction().isBlitzing()) {
-			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game);
-		}
-		addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);
-		addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
-
-		ReRollSource singleBlockDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_BLOCK_DIE);
-		ReRollSource singleDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE);
-		ReRollSource anyBlockDiceReRollSource = actionToSource.get(ReRolledActions.MULTI_BLOCK_DICE);
-
 		List<ReRollProperty> properties = new ArrayList<>();
+		Map<ReRolledAction, ReRollSource> actionToSource = new HashMap<>();
 
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
-			properties.add(ReRollProperty.LONER);
-		}
+		if (getReRollSource() == null) {
 
-		boolean singleBlockDieRrUsed =
-			getReRollSource() == singleBlockDieReRollSource && singleBlockDieReRollSource != null;
-		boolean anyBlockDiceRrUsed = getReRollSource() == anyBlockDiceReRollSource && anyBlockDiceReRollSource != null;
-		boolean singleDieRrUsed = getReRollSource() == singleDieReRollSource && singleDieReRollSource != null;
+			if (actingPlayer.getPlayerAction().isBlitzing()) {
+				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game);
+			}
+			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);
+			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
 
-		if (getReRollSource() == null && UtilServerReRoll.isTeamReRollAvailable(getGameState(),
-			actingPlayer.getPlayer())) {
-			properties.add(ReRollProperty.TRR);
-		}
+			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(),
+				actingPlayer.getPlayer())) {
+				properties.add(ReRollProperty.TRR);
+			}
 
-		if ((getReRollSource() == null ||
-			((getReRollSource() == ReRollSources.BRAWLER || singleDieRrUsed || singleBlockDieRrUsed || anyBlockDiceRrUsed)
-				&& fBlockRoll.length > reRolledDiceIndexes.length))
-			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn)) {
-			properties.add(ReRollProperty.PRO);
-		}
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn)) {
+				properties.add(ReRollProperty.PRO);
+			}
 
-		if ((getReRollSource() == null ||
-			((getReRollSource() == ReRollSources.BRAWLER || getReRollSource() == ReRollSources.PRO || singleBlockDieRrUsed ||
-				anyBlockDiceRrUsed)
-				&& fBlockRoll.length > reRolledDiceIndexes.length))
-			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod)) {
-			properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
-		}
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod)) {
+				properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
+			}
 
-		Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollBothDowns);
-		boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
-			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer()) && brawlerIndex < 0
-			&& (getReRollSource() == null ||
-			((getReRollSource() == ReRollSources.PRO || singleDieRrUsed || singleBlockDieRrUsed || anyBlockDiceRrUsed)
-				&& fBlockRoll.length > reRolledDiceIndexes.length));
+			Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollBothDowns);
+			boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
+				&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
 
-		if (brawlerOption) {
-			for (int i = 0; i < fBlockRoll.length; i++) {
-				int finalI = i;
-				if (Arrays.stream(reRolledDiceIndexes).noneMatch(index -> index == finalI) &&
-					factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN) {
-					properties.add(ReRollProperty.BRAWLER);
-					break;
+			if (brawlerOption) {
+				for (int roll : fBlockRoll) {
+					if (factory.forRoll(roll) == BlockResult.BOTH_DOWN) {
+						properties.add(ReRollProperty.BRAWLER);
+						break;
+					}
 				}
 			}
-		}
 
-		boolean someDiceCanBeReRolled = (getReRollSource() == null || getReRollSource() != ReRollSources.TEAM_RE_ROLL)
-			&& fBlockRoll.length > reRolledDiceIndexes.length;
+			if (actingPlayer.getPlayerAction().isBlitzing()
+				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)) {
+				properties.add(ReRollProperty.UNSTOPPABLE_MOMENTUM);
+			}
 
-		if (actingPlayer.getPlayerAction().isBlitzing()
-			&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz) &&
-			someDiceCanBeReRolled) {
-			properties.add(ReRollProperty.UNSTOPPABLE_MOMENTUM);
-		}
-
-		if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice) &&
-			someDiceCanBeReRolled) {
-			properties.add(ReRollProperty.SAVAGE_BLOW);
+			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice)) {
+				properties.add(ReRollProperty.SAVAGE_BLOW);
+			}
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
@@ -378,7 +332,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
 
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogBlockRollPropertiesParameter(teamId, fNrOfDice, fBlockRoll, reRolledDiceIndexes, properties,
+			new DialogBlockRollPropertiesParameter(teamId, fNrOfDice, fBlockRoll, properties,
 				convertActionsMap(actionToSource)), (fNrOfDice < 0));
 	}
 
@@ -406,7 +360,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
-		IServerJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
 		IServerJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		IServerJsonOption.BRAWLER_INDEX.addTo(jsonObject, brawlerIndex);
 		IServerJsonOption.BLOCK_DIE_INDEX.addTo(jsonObject, dieIndex);
@@ -422,7 +375,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
-		reRolledDiceIndexes = IServerJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
 		proIndex = IServerJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		brawlerIndex = IServerJsonOption.BRAWLER_INDEX.getFrom(source, jsonObject);
 		if (IServerJsonOption.BLOCK_DIE_INDEX.isDefinedIn(jsonObject)) {

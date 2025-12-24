@@ -14,13 +14,11 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -86,13 +84,6 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			fBlockDice[i].setFocusPainted(false);
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
 			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i], dimensionProvider())));
-			int finalI = i;
-			if ((getDialogParameter().hasProperty(ReRollProperty.PRO) ||
-				getDialogParameter().hasProperty(ReRollProperty.BRAWLER))
-				&& Arrays.stream(
-				dialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
-				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
-			}
 			if (anyBlockDiceReRollSource == null || blockRoll.length == 1) {
 				blockRollPanel.add(fBlockDice[i]);
 			} else {
@@ -119,8 +110,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				diceBoxes[i] = new JCheckBox(dimensionProvider(), "( " + mnemonicString + " )");
 				diceBoxes[i].setMnemonic(mnemonic);
 				diceBoxes[i].setOpaque(false);
-				diceBoxes[i].setEnabled(
-					Arrays.stream(pDialogParameter.getReRolledDiceIndexes()).noneMatch(value -> value == finalI));
+				diceBoxes[i].setEnabled(true);
 				diceBoxes[i].addItemListener(
 					e -> anyDiceButton.setEnabled(Arrays.stream(diceBoxes).anyMatch(AbstractButton::isSelected)));
 				checkboxPanel.add(diceBoxes[i]);
@@ -275,26 +265,21 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= diceCount; i++) {
-			int finalI = i;
-			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-				JButton button = singleDieButton(i, mnemonics.get(i - 1));
-				switch (i) {
-					case 1:
-						singleDieButton1 = button;
-						break;
-					case 2:
-						singleDieButton2 = button;
-						break;
-					default:
-						singleDieButton3 = button;
-						break;
-				}
-				buttonPanel.add(button);
+			JButton button = singleDieButton(i, mnemonics.remove(0));
+			switch (i) {
+				case 1:
+					singleDieButton1 = button;
+					break;
+				case 2:
+					singleDieButton2 = button;
+					break;
+				default:
+					singleDieButton3 = button;
+					break;
 			}
-
-			panel.add(buttonPanel);
+			buttonPanel.add(button);
 		}
-		mnemonics.remove(0);
+		panel.add(buttonPanel);
 
 		return panel;
 	}
@@ -314,26 +299,22 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		proButtonPanel.setLayout(new BoxLayout(proButtonPanel, BoxLayout.X_AXIS));
 		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= diceCount; i++) {
-			int finalI = i;
-			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-				JButton button = singleDieButton(i, proMnemonics.get(i - 1));
-				switch (i) {
-					case 1:
-						proButton1 = button;
-						break;
-					case 2:
-						proButton2 = button;
-						break;
-					default:
-						proButton3 = button;
-						break;
-				}
-				proButtonPanel.add(button);
+			JButton button = singleDieButton(i, proMnemonics.remove(0));
+			switch (i) {
+				case 1:
+					proButton1 = button;
+					break;
+				case 2:
+					proButton2 = button;
+					break;
+				default:
+					proButton3 = button;
+					break;
 			}
+			proButtonPanel.add(button);
 
-			proPanel.add(proButtonPanel);
 		}
-		proMnemonics.remove(0);
+		proPanel.add(proButtonPanel);
 
 		return proPanel;
 	}
@@ -353,26 +334,22 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		consummateButtonPanel.setLayout(new BoxLayout(consummateButtonPanel, BoxLayout.X_AXIS));
 		consummateButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int i = 1; i <= diceCount; i++) {
-			int finalI = i;
-			if (Arrays.stream(getDialogParameter().getReRolledDiceIndexes()).noneMatch(index -> index == finalI - 1)) {
-				JButton button = singleDieButton(i, consummateMnemonics.get(i - 1));
-				switch (i) {
-					case 1:
-						anySingleDieButton1 = button;
-						break;
-					case 2:
-						anySingleDieButton2 = button;
-						break;
-					default:
-						anySingleDieButton3 = button;
-						break;
-				}
-				consummateButtonPanel.add(button);
+			JButton button = singleDieButton(i, consummateMnemonics.remove(0));
+			switch (i) {
+				case 1:
+					anySingleDieButton1 = button;
+					break;
+				case 2:
+					anySingleDieButton2 = button;
+					break;
+				default:
+					anySingleDieButton3 = button;
+					break;
 			}
+			consummateButtonPanel.add(button);
 
-			consummatePanel.add(consummateButtonPanel);
 		}
-		consummateMnemonics.remove(0);
+		consummatePanel.add(consummateButtonPanel);
 
 		return consummatePanel;
 	}
