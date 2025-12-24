@@ -26,7 +26,7 @@ public class AnimalSavageryCancelActionCommand extends DeferredCommand {
 				break;
 			case PASS:
 			case PASS_MOVE:
-			game.getTurnData().setPassUsed(true);
+				game.getTurnData().setPassUsed(true);
 				break;
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
