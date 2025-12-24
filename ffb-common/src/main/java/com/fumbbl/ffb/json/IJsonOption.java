@@ -592,6 +592,7 @@ public interface IJsonOption {
 	JsonArrayOption TRAP_DOORS = new JsonArrayOption("trapDoors");
 	JsonIntOption TREASURY = new JsonIntOption("treasury");
 	JsonIntOption TREASURY_USED_ON_INDUCEMENTS = new JsonIntOption("treasuryUsedOnInducements");
+	JsonBooleanOption TTM_USED = new JsonBooleanOption("ttmUsed");
 	JsonObjectOption TURN_DATA_AWAY = new JsonObjectOption("turnDataAway");
 	JsonObjectOption TURN_DATA_HOME = new JsonObjectOption("turnDataHome");
 	JsonEnumWithNameOption TURN_MODE = new JsonEnumWithNameOption("turnMode", Factory.TURN_MODE);

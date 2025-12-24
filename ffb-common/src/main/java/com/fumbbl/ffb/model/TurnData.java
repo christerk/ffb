@@ -35,6 +35,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean fHandOverUsed;
 	private boolean fPassUsed;
 	private boolean fCoachBanned;
+	private boolean ttmUsed;
 	private boolean ktmUsed;
 	private boolean bombUsed;
 	private boolean secureTheBallUsed;
@@ -223,6 +224,18 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_PASS_USED, fPassUsed);
 	}
 
+	public boolean isTtmUsed() {
+		return ttmUsed;
+	}
+
+	public void setTtmUsed(boolean ttmUsed) {
+		if (ttmUsed == this.ttmUsed) {
+			return;
+		}
+		this.ttmUsed = ttmUsed;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_TTM_USED, ttmUsed);
+	}
+
 	public boolean isKtmUsed() {
 		return ktmUsed;
 	}
@@ -348,6 +361,7 @@ public class TurnData implements IJsonSerializable {
 		setKtmUsed(false);
 		setBombUsed(false);
 		setSecureTheBallUsed(false);
+		setTtmUsed(false);
 	}
 
 	public void init(TurnData pTurnData) {
@@ -369,6 +383,7 @@ public class TurnData implements IJsonSerializable {
 			ktmUsed = pTurnData.isKtmUsed();
 			bombUsed = pTurnData.isBombUsed();
 			secureTheBallUsed = pTurnData.isSecureTheBallUsed();
+			ttmUsed = pTurnData.isTtmUsed();
 		}
 	}
 
@@ -410,6 +425,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.WANDERING_APOTHECARIES.addTo(jsonObject, wanderingApothecaries);
 		IJsonOption.RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE.addTo(jsonObject, reRollsPumpUpTheCrowdOneDrive);
 		IJsonOption.PLAGUE_DOCTORS.addTo(jsonObject, plagueDoctors);
+		IJsonOption.TTM_USED.addTo(jsonObject, ttmUsed);
 		return jsonObject;
 	}
 
@@ -437,6 +453,8 @@ public class TurnData implements IJsonSerializable {
 		fCoachBanned = (coachBanned != null) ? coachBanned : false;
 		Boolean secureTheBallValue = IJsonOption.SECURE_THE_BALL_USED.getFrom(source, jsonObject);
 		secureTheBallUsed = secureTheBallValue != null && secureTheBallValue;
+		Boolean ttmValue = IJsonOption.TTM_USED.getFrom(source, jsonObject);
+		ttmUsed = ttmValue != null && ttmValue;
 
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet(this);

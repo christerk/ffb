@@ -1,9 +1,9 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.generator.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
@@ -11,43 +11,39 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.mixed.ReportCatchOfTheDayRoll;
 import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
-import com.fumbbl.ffb.server.model.DropPlayerContext;
-import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
+import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class StepTreacherous extends AbstractStep {
+public class StepCatchOfTheDay extends AbstractStepWithReRoll {
 
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnFailure;
 
-	public StepTreacherous(GameState pGameState) {
+	public StepCatchOfTheDay(GameState pGameState) {
 		super(pGameState);
 	}
 
 	@Override
 	public StepId getId() {
-		return StepId.TREACHEROUS;
+		return StepId.CATCH_OF_THE_DAY;
 	}
 
 	@Override
@@ -81,6 +77,17 @@ public class StepTreacherous extends AbstractStep {
 	}
 
 	@Override
+	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		StepCommandStatus stepCommandStatus = super.handleCommand(pReceivedCommand);
+
+		if (stepCommandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+		}
+
+		return stepCommandStatus;
+	}
+
+	@Override
 	public void start() {
 		super.start();
 		executeStep();
@@ -92,35 +99,63 @@ public class StepTreacherous extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canStabTeamMateForBall);
-		if (skill != null) {
-
-			markActionUsed(game, actingPlayer);
+		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canGetBallOnGround);
+		if (skill != null || getReRolledAction() == ReRolledActions.CATCH_OF_THE_DAY) {
 
 			if (endTurn || endPlayerAction) {
 				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnFailure);
-				actingPlayer.markSkillUsed(skill);
+				markUsages(game, actingPlayer, skill);
 				return;
 			}
 
-			treacherousTarget(game, actingPlayer).ifPresent(player -> {
-				FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				game.getFieldModel().setBallCoordinate(playerCoordinate);
-				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.TREACHEROUS));
+			if (getReRolledAction() == ReRolledActions.CATCH_OF_THE_DAY) {
+				if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					getResult().setSound(SoundId.BOUNCE);
+					return;
+				}
+			} else {
+				markUsages(game, actingPlayer, skill);
+			}
 
-				getResult().setSound(SoundId.STAB);
-				FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-				InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true, true),
-					actingPlayer.getPlayer(), player, defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 
-				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
-					new DropPlayerContext(injuryResultDefender, false, false, null,
-						player.getId(), ApothecaryMode.DEFENDER, false)));
-			});
+			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.GET_BALL_ON_GROUND));
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+			FieldCoordinate ballCoordinate = game.getFieldModel().getBallCoordinate();
 
-			actingPlayer.markSkillUsed(skill);
+			if (game.getFieldModel().isBallMoving() && playerCoordinate.distanceInSteps(ballCoordinate) <= 3) {
+
+				int roll = getGameState().getDiceRoller().rollDice(6);
+				boolean success = roll >=3;
+
+				if (success) {
+					game.getFieldModel().setBallCoordinate(playerCoordinate);
+					game.getFieldModel().setBallMoving(false);
+					getResult().setSound(SoundId.YOINK);
+				} else {
+					if (getReRolledAction() != ReRolledActions.CATCH_OF_THE_DAY && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.CATCH_OF_THE_DAY, 3, false)) {
+						setReRolledAction(ReRolledActions.CATCH_OF_THE_DAY);
+						getResult().setNextAction(StepAction.CONTINUE);
+					} else {
+						getResult().setSound(SoundId.BOUNCE);
+					}
+				}
+
+				getResult().addReport(new ReportCatchOfTheDayRoll(actingPlayer.getPlayerId(), success, roll, 3, getReRolledAction() == ReRolledActions.CATCH_OF_THE_DAY));
+
+			} else {
+				getResult().addReport(new ReportSkillWasted(actingPlayer.getPlayerId(), skill));
+			}
+
+
+
+
 		}
+	}
+
+	private void markUsages(Game game, ActingPlayer actingPlayer, Skill skill) {
+		markActionUsed(game, actingPlayer);
+		actingPlayer.markSkillUsed(skill);
 	}
 
 	private void markActionUsed(Game game, ActingPlayer actingPlayer) {
@@ -136,9 +171,11 @@ public class StepTreacherous extends AbstractStep {
 				break;
 			case PASS:
 			case PASS_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
-				game.getTurnData().setPassUsed(true);
+				game.getTurnData().setTtmUsed(true);
 				break;
 			case HAND_OVER:
 			case HAND_OVER_MOVE:
@@ -155,14 +192,6 @@ public class StepTreacherous extends AbstractStep {
 		}
 	}
 
-	private Optional<Player<?>> treacherousTarget(Game game, ActingPlayer actingPlayer) {
-		if (!actingPlayer.hasActedIgnoringNegativeTraits() || actingPlayer.justStoodUp()) {
-			return Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, game.getActingTeam(), game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer())))
-				.filter(adjacentPlayer -> UtilPlayer.hasBall(game, adjacentPlayer)).findFirst();
-		}
-		return Optional.empty();
-	}
-
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -173,7 +202,7 @@ public class StepTreacherous extends AbstractStep {
 	}
 
 	@Override
-	public AbstractStep initFrom(IFactorySource source, JsonValue jsonValue) {
+	public AbstractStepWithReRoll initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);

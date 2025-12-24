@@ -523,7 +523,7 @@ public class UtilPlayer {
 	public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
 		TtmMechanic mechanic =
 				(TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
-		return ((pThrower != null) && (!pCheckPassUsed || !pGame.getTurnData().isPassUsed())
+		return ((pThrower != null) && (!pCheckPassUsed || mechanic.isTtmAvailable(pGame.getTurnData()))
 				&& mechanic.canThrow(pThrower)
 				&& (mechanic.findThrowableTeamMates(pGame, pThrower).length > 0));
 	}

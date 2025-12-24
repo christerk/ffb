@@ -525,6 +525,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_PASS_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setPassUsed((Boolean) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_TTM_USED:
+				getTurnData(pGame, isHomeData(pModelChange)).setTtmUsed((Boolean) pModelChange.getValue());
+				return true;
 			case TURN_DATA_SET_KTM_USED:
 				getTurnData(pGame, isHomeData(pModelChange)).setKtmUsed((Boolean) pModelChange.getValue());
 				return true;

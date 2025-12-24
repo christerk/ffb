@@ -1,15 +1,14 @@
 package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
-import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -20,27 +19,29 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.common.StepBoneHead;
-import com.fumbbl.ffb.server.step.action.common.StepBoneHead.StepState;
+import com.fumbbl.ffb.server.step.mixed.StepUnchannelledFury;
+import com.fumbbl.ffb.server.step.mixed.StepUnchannelledFury.StepState;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2025.BoneHead;
+import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2025)
-public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
-	public BoneHeadBehaviour() {
+public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> {
+	public UnchannelledFuryBehaviour() {
 		super();
 
-		registerModifier(new StepModifier<StepBoneHead, StepState>() {
+		registerModifier(new StepModifier<StepUnchannelledFury, StepState>() {
 
 			@Override
-			public StepCommandStatus handleCommandHook(StepBoneHead step, StepState state,
+			public StepCommandStatus handleCommandHook(StepUnchannelledFury step, StepState state,
 					ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
 			@Override
-			public boolean handleExecuteStepHook(StepBoneHead step, StepState state) {
+			public boolean handleExecuteStepHook(StepUnchannelledFury step, StepState state) {
+
 				ActionStatus status = ActionStatus.SUCCESS;
 				Game game = step.getGameState().getGame();
 				if (!game.getTurnMode().checkNegatraits()) {
@@ -48,15 +49,34 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					return false;
 				}
 				ActingPlayer actingPlayer = game.getActingPlayer();
+
+				if (state.status == ActionStatus.SKILL_CHOICE_YES) {
+					actingPlayer.markSkillUsed(NamedProperties.canPerformTwoBlocksAfterFailedFury);
+					step.publishParameter(StepParameter.from(StepParameterKey.ALLOW_SECOND_BLOCK_ACTION, true));
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+					return false;
+				} else if (state.status == ActionStatus.SKILL_CHOICE_NO) {
+					cancelPlayerAction(step);
+					failed(step, state);
+					return false;
+				}
+
 				if (UtilCards.hasSkill(actingPlayer, skill)) {
 					boolean doRoll = true;
 					ReRolledAction reRolledAction = new ReRolledActionFactory().forSkill(game, skill);
+					PlayerAction playerAction = actingPlayer.getPlayerAction();
 					if ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())) {
 						if ((step.getReRollSource() == null)
-								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
+							|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), actingPlayer.getPlayer())) {
 							doRoll = false;
-							status = ActionStatus.FAILURE;
-							cancelPlayerAction(step);
+							Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
+							if (furySkill != null && playerAction == PlayerAction.BLOCK) {
+								UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
+								return false;
+							} else {
+								status = ActionStatus.FAILURE;
+								cancelPlayerAction(step);
+							}
 						}
 					} else {
 						doRoll = UtilCards.hasUnusedSkill(actingPlayer, skill);
@@ -64,7 +84,13 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					if (doRoll) {
 						step.commitTargetSelection();
 						int roll = step.getGameState().getDiceRoller().rollSkill();
-						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(true);
+						boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
+							|| (playerAction != null && playerAction.isKickingDowned())
+							|| (playerAction == PlayerAction.BLITZ)
+							|| (playerAction != null && playerAction.isBlockAction())
+							|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
+							|| (playerAction == PlayerAction.STAND_UP_BLITZ));
+						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 						actingPlayer.markSkillUsed(skill);
 						if (!successful) {
@@ -74,7 +100,13 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 								reRolledAction, minimumRoll, false)) {
 								status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
-								cancelPlayerAction(step);
+								Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
+								if (furySkill != null && playerAction != null && playerAction.isBlockAction()) {
+									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
+									status = ActionStatus.WAITING_FOR_SKILL_USE;
+								} else {
+									cancelPlayerAction(step);
+								}
 							}
 						}
 						boolean reRolled = ((reRolledAction != null) && (reRolledAction == step.getReRolledAction())
@@ -87,22 +119,21 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				} else {
 					if (status == ActionStatus.FAILURE) {
-						TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
-						if (targetSelectionState != null) {
-							targetSelectionState.failed();
-						}
-						step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+						failed(step, state);
 					}
 				}
+
 				return false;
 			}
-		});
 
+			private void failed(StepUnchannelledFury step, StepState state) {
+				step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+				step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+			}
+		});
 	}
 
-	// TODO: see what needs to be done about TAKE_ROOT (change nextStateId)
-	private void cancelPlayerAction(StepBoneHead step) {
+	private void cancelPlayerAction(StepUnchannelledFury step) {
 		Game game = step.getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		switch (actingPlayer.getPlayerAction()) {
@@ -142,12 +173,17 @@ public class BoneHeadBehaviour extends SkillBehaviour<BoneHead> {
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if (actingPlayer.isStandingUp()) {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-					playerState.changeBase(PlayerState.PRONE).changeActive(false));
+				playerState.changeBase(PlayerState.PRONE).changeActive(false));
 		} else {
 			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(),
-					playerState.changeConfused(true).changeActive(false));
+				playerState.changeBase(PlayerState.STANDING).changeActive(false));
 		}
 		game.setPassCoordinate(null);
-		step.getResult().setSound(SoundId.DUH);
+		step.getResult().setSound(SoundId.ROAR);
+		TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+		if (targetSelectionState != null) {
+			targetSelectionState.failed();
+		}
 	}
+
 }
