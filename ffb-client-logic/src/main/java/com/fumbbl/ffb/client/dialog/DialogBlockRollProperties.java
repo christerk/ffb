@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
@@ -10,8 +12,6 @@ import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -29,7 +29,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 public class DialogBlockRollProperties extends AbstractDialogBlock implements ActionListener, KeyListener {
 
@@ -46,31 +46,28 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 	private int fDiceIndex;
 	private final List<Integer> reRollIndexes = new ArrayList<>();
-	private ReRollSource fReRollSource, singleDieReRollSource, singleBlockDieReRollSource, anyBlockDiceReRollSource;
+	private ReRollSource fReRollSource;
+	private final ReRollSource singleDieReRollSource;
+	private final ReRollSource singleBlockDieReRollSource;
+	private final ReRollSource anyBlockDiceReRollSource;
 
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
-	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter pDialogParameter) {
+	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter pDialogParameter, Map<ReRolledAction, ReRollSource> actionToSource) {
 
 		super(pClient, "Block Roll", false);
 
 		fDiceIndex = -1;
 		dialogParameter = pDialogParameter;
 
-		Skill anySingleDieReRollSkill = getClient().getGame().getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-		if (anySingleDieReRollSkill != null) {
-			singleDieReRollSource = anySingleDieReRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
-		}
-
-		Optional<Skill> anyBlockDiceReRollSkill = getDialogParameter().getReRollExplicitDieSkills().stream().filter(skill -> skill.hasSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice)).findFirst();
-		anyBlockDiceReRollSkill.ifPresent(skill -> anyBlockDiceReRollSource = skill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE));
-
-		Optional<Skill> singleBlockDieReRollSkill = getDialogParameter().getReRollExplicitDieSkills().stream().filter(skill -> skill.hasSkillProperty(NamedProperties.canRerollSingleBlockDieDuringBlitz)).findFirst();
-		singleBlockDieReRollSkill.ifPresent(skill -> singleBlockDieReRollSource = skill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
+		singleDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE);
+		anyBlockDiceReRollSource = actionToSource.get(ReRolledActions.MULTI_BLOCK_DICE);
+		singleBlockDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_BLOCK_DIE);
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
-		JPanel centerPanel = new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOpponentChoice : colorOwnChoice);
+		JPanel centerPanel =
+			new BackgroundPanel((getDialogParameter().getNrOfDice() < 0) ? colorOpponentChoice : colorOwnChoice);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
 		JPanel blockRollPanel = blockRollPanel();
@@ -81,10 +78,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			diceBoxes = new JCheckBox[blockRoll.length];
 		}
 
-		boolean ownChoice = ((dialogParameter.getNrOfDice() > 0)
-			|| (!dialogParameter.hasTeamReRollOption() && !dialogParameter.hasProReRollOption()
-			&& !dialogParameter.hasBrawlerOption() && !dialogParameter.hasConsummateOption()
-			&& dialogParameter.getReRollExplicitDieSkills().isEmpty()));
+		boolean ownChoice = (dialogParameter.getNrOfDice() > 0 || !dialogParameter.hasActualReRoll());
 		for (int i = 0; i < fBlockDice.length; i++) {
 			fBlockDice[i] = new JButton(dimensionProvider());
 			fBlockDice[i].setOpaque(false);
@@ -93,7 +87,9 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			fBlockDice[i].setMargin(new Insets(5, 5, 5, 5));
 			fBlockDice[i].setIcon(new ImageIcon(iconCache.getDiceIcon(blockRoll[i], dimensionProvider())));
 			int finalI = i;
-			if ((getDialogParameter().hasProReRollOption() || getDialogParameter().hasBrawlerOption()) && Arrays.stream(
+			if ((getDialogParameter().hasProperty(ReRollProperty.PRO) ||
+				getDialogParameter().hasProperty(ReRollProperty.BRAWLER))
+				&& Arrays.stream(
 				dialogParameter.getReRolledDiceIndexes()).anyMatch(index -> index == finalI)) {
 				fBlockDice[i].setBorder(BorderFactory.createLineBorder(Color.red, 3, true));
 			}
@@ -123,8 +119,10 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				diceBoxes[i] = new JCheckBox(dimensionProvider(), "( " + mnemonicString + " )");
 				diceBoxes[i].setMnemonic(mnemonic);
 				diceBoxes[i].setOpaque(false);
-				diceBoxes[i].setEnabled(Arrays.stream(pDialogParameter.getReRolledDiceIndexes()).noneMatch(value -> value == finalI));
-				diceBoxes[i].addItemListener(e -> anyDiceButton.setEnabled(Arrays.stream(diceBoxes).anyMatch(AbstractButton::isSelected)));
+				diceBoxes[i].setEnabled(
+					Arrays.stream(pDialogParameter.getReRolledDiceIndexes()).noneMatch(value -> value == finalI));
+				diceBoxes[i].addItemListener(
+					e -> anyDiceButton.setEnabled(Arrays.stream(diceBoxes).anyMatch(AbstractButton::isSelected)));
 				checkboxPanel.add(diceBoxes[i]);
 				blockRollPanel.add(checkboxPanel);
 			}
@@ -149,8 +147,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			centerPanel.add(opponentChoicePanel());
 		}
 
-		if (getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption() || getDialogParameter().hasConsummateOption()
-			|| pDialogParameter.hasBrawlerOption() || singleBlockDieReRollSource != null || anyBlockDiceReRollSource != null) {
+		if (getDialogParameter().hasActualReRoll()) {
 
 			JPanel reRollPanel = new JPanel();
 			reRollPanel.setOpaque(false);
@@ -170,12 +167,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			verticalGlue1.setOpaque(false);
 			reRollPanel.add(verticalGlue1);
 
-			if (getDialogParameter().hasTeamReRollOption()) {
+			if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
 				reRollPanel.add(fButtonTeamReRoll);
 			}
 
 			if (getDialogParameter().getNrOfDice() == 1) {
-				if (getDialogParameter().hasProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", KeyEvent.VK_P);
 					fButtonProReRoll.addActionListener(this);
 					fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
@@ -183,8 +180,9 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 					reRollPanel.add(fButtonProReRoll);
 				}
 
-				if (getDialogParameter().hasConsummateOption() && singleDieReRollSource != null) {
-					anySingleDieButton = new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
+				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
+					anySingleDieButton =
+						new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
 					anySingleDieButton.addActionListener(this);
 					anySingleDieButton.setMnemonic(KeyEvent.VK_C);
 					anySingleDieButton.addKeyListener(this);
@@ -192,7 +190,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				}
 
 				if (singleBlockDieReRollSource != null) {
-					singleDieButton = new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
+					singleDieButton =
+						new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
 					singleDieButton.addActionListener(this);
 					singleDieButton.setMnemonic(KeyEvent.VK_U);
 					singleDieButton.addKeyListener(this);
@@ -202,7 +201,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			}
 
 			if (anyBlockDiceReRollSource != null) {
-				anyDiceButton = new JButton(dimensionProvider(), anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
+				anyDiceButton =
+					new JButton(dimensionProvider(), anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
 				anyDiceButton.addActionListener(this);
 				anyDiceButton.setMnemonic(KeyEvent.VK_V);
 				anyDiceButton.addKeyListener(this);
@@ -210,7 +210,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				reRollPanel.add(anyDiceButton);
 			}
 
-			if (getDialogParameter().hasBrawlerOption()) {
+			if (getDialogParameter().hasProperty(ReRollProperty.BRAWLER)) {
 				brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll", KeyEvent.VK_B);
 				brawlerButton.addActionListener(this);
 				brawlerButton.setMnemonic(KeyEvent.VK_B);
@@ -230,12 +230,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			centerPanel.add(reRollPanel);
 
 			if (Math.abs(getDialogParameter().getNrOfDice()) > 1) {
-				if (getDialogParameter().hasProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					centerPanel.add(proPanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
-				if (pDialogParameter.hasConsummateOption() && singleDieReRollSource != null) {
+				if (pDialogParameter.hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
 					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
@@ -534,48 +534,48 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				}
 				break;
 			case KeyEvent.VK_T:
-				if (getDialogParameter().hasTeamReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.TEAM_RE_ROLL;
 				}
 				break;
 			case KeyEvent.VK_P:
-				if (getDialogParameter().hasProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
 					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_R:
-				if (getDialogParameter().hasProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
 					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_E:
-				if (getDialogParameter().hasProReRollOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
 					fReRollSource = ReRollSources.PRO;
 					reRollIndexes.add(2);
 				}
 				break;
 			case KeyEvent.VK_C:
-				if (getDialogParameter().hasConsummateOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_O:
-				if (getDialogParameter().hasConsummateOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_M:
-				if (getDialogParameter().hasConsummateOption()) {
+				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(2);
@@ -603,7 +603,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				}
 				break;
 			case KeyEvent.VK_N:
-				keyHandled = ((getDialogParameter().hasTeamReRollOption() || getDialogParameter().hasProReRollOption())
+				keyHandled = ((getDialogParameter().hasProperty(ReRollProperty.TRR) ||
+					getDialogParameter().hasProperty(ReRollProperty.PRO))
 					&& (getDialogParameter().getNrOfDice() < 0));
 				break;
 			case KeyEvent.VK_B:

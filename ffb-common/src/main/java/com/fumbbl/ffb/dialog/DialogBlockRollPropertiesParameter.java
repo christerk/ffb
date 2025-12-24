@@ -1,45 +1,48 @@
 package com.fumbbl.ffb.dialog;
 
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.SkillFactory;
+import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 
-	private String fChoosingTeamId;
-	private int fNrOfDice;
-	private int[] fBlockRoll, reRolledDiceIndexes;
-	// consummateOption is now only used for ThinkingMansTroll and HalflingLuck, but we reuse it here
-	private boolean fTeamReRollOption, fProReRollOption, brawlerOption, consummateOption;
-	private List<Skill> reRollExplicitDieSkills;
+	private String choosingTeamId;
+	private int nrOfDice;
+	private int[] blockRoll;
+	private int[] reRolledDiceIndexes;
+	private final List<ReRollProperty> reRollProperties = new ArrayList<>();
+	private final Map<String, String> rrActionToSource = new HashMap<>();
 
 	@SuppressWarnings("unused")
 	public DialogBlockRollPropertiesParameter() {
 		super();
 	}
 
-	public DialogBlockRollPropertiesParameter(String pChoosingTeamId, int pNrOfDice, int[] pBlockRoll,
-		boolean pTeamReRollOption, boolean pProReRollOption, boolean brawlerOption, boolean consummateOption,
-		int[] reRolledDiceIndexes, List<Skill> reRollExplicitDieSkills) {
-		fChoosingTeamId = pChoosingTeamId;
-		fNrOfDice = pNrOfDice;
-		fBlockRoll = pBlockRoll;
-		fTeamReRollOption = pTeamReRollOption;
-		fProReRollOption = pProReRollOption;
-		this.brawlerOption = brawlerOption;
-		this.consummateOption = consummateOption;
+	public DialogBlockRollPropertiesParameter(String choosingTeamId, int nrOfDice, int[] blockRoll, int[] reRolledDiceIndexes,
+		List<ReRollProperty> reRollProperties, Map<String, String> rrActionToSource) {
+		this.choosingTeamId = choosingTeamId;
+		this.nrOfDice = nrOfDice;
+		this.blockRoll = blockRoll;
 		this.reRolledDiceIndexes = reRolledDiceIndexes;
-		this.reRollExplicitDieSkills = reRollExplicitDieSkills;
+		if (reRollProperties != null) {
+			this.reRollProperties.addAll(reRollProperties);
+		}
+		if (rrActionToSource != null) {
+			this.rrActionToSource.putAll(rrActionToSource);
+		}
 	}
 
 	public DialogId getId() {
@@ -47,47 +50,38 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 	}
 
 	public String getChoosingTeamId() {
-		return fChoosingTeamId;
+		return choosingTeamId;
 	}
 
 	public int getNrOfDice() {
-		return fNrOfDice;
+		return nrOfDice;
 	}
 
 	public int[] getBlockRoll() {
-		return fBlockRoll;
-	}
-
-	public boolean hasTeamReRollOption() {
-		return fTeamReRollOption;
-	}
-
-	public boolean hasProReRollOption() {
-		return fProReRollOption;
-	}
-
-	public boolean hasBrawlerOption() {
-		return brawlerOption;
+		return blockRoll;
 	}
 
 	public int[] getReRolledDiceIndexes() {
 		return reRolledDiceIndexes;
 	}
 
-
-	public boolean hasConsummateOption() {
-		return consummateOption;
+	public boolean hasProperty(ReRollProperty property) {
+		return reRollProperties.contains(property);
 	}
 
-	public List<Skill> getReRollExplicitDieSkills() {
-		return reRollExplicitDieSkills;
+	public boolean hasActualReRoll() {
+		return reRollProperties.stream().anyMatch(ReRollProperty::isActualReRoll);
 	}
+
+	public Map<String, String> getRrActionToSource() {
+		return rrActionToSource;
+	}
+
 // transformation
 
 	public IDialogParameter transform() {
 		return new DialogBlockRollPropertiesParameter(getChoosingTeamId(), getNrOfDice(), getBlockRoll(),
-			hasTeamReRollOption(),
-			hasProReRollOption(), brawlerOption, consummateOption, reRolledDiceIndexes, reRollExplicitDieSkills);
+			reRolledDiceIndexes, reRollProperties, rrActionToSource);
 	}
 
 	// JSON serialization
@@ -95,41 +89,31 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.DIALOG_ID.addTo(jsonObject, getId());
-		IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, fChoosingTeamId);
-		IJsonOption.NR_OF_DICE.addTo(jsonObject, fNrOfDice);
-		IJsonOption.BLOCK_ROLL.addTo(jsonObject, fBlockRoll);
+		IJsonOption.CHOOSING_TEAM_ID.addTo(jsonObject, choosingTeamId);
+		IJsonOption.NR_OF_DICE.addTo(jsonObject, nrOfDice);
+		IJsonOption.BLOCK_ROLL.addTo(jsonObject, blockRoll);
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRolledDiceIndexes);
-		IJsonOption.TEAM_RE_ROLL_OPTION.addTo(jsonObject, fTeamReRollOption);
-		IJsonOption.PRO_RE_ROLL_OPTION.addTo(jsonObject, fProReRollOption);
-		IJsonOption.BRAWLER_OPTION.addTo(jsonObject, brawlerOption);
-		IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateOption);
-		JsonArray skillArray = new JsonArray();
-		for (Skill skill : reRollExplicitDieSkills) {
-			skillArray.add(UtilJson.toJsonValue(skill));
-		}
-		IJsonOption.SKILL_ARRAY.addTo(jsonObject, skillArray);
+		List<String> properties = reRollProperties.stream().map(ReRollProperty::getName).collect(Collectors.toList());
+		IJsonOption.RE_ROLL_PROPERTIES.addTo(jsonObject, properties);
+		IJsonOption.RE_ROLL_ACTION_TO_SOURCE_MAP.addTo(jsonObject, rrActionToSource);
 		return jsonObject;
 	}
 
 	public DialogBlockRollPropertiesParameter initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
-		fChoosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
-		fNrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
-		fBlockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
+		choosingTeamId = IJsonOption.CHOOSING_TEAM_ID.getFrom(source, jsonObject);
+		nrOfDice = IJsonOption.NR_OF_DICE.getFrom(source, jsonObject);
+		blockRoll = IJsonOption.BLOCK_ROLL.getFrom(source, jsonObject);
 		reRolledDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
-		fTeamReRollOption = IJsonOption.TEAM_RE_ROLL_OPTION.getFrom(source, jsonObject);
-		fProReRollOption = IJsonOption.PRO_RE_ROLL_OPTION.getFrom(source, jsonObject);
-		brawlerOption = IJsonOption.BRAWLER_OPTION.getFrom(source, jsonObject);
-		if (IJsonOption.CONSUMMATE_OPTION.isDefinedIn(jsonObject)) {
-			consummateOption = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
-		}
-		reRollExplicitDieSkills = new ArrayList<>();
-		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);
-		for (int i = 0; i < skillArray.size(); i++) {
-			SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
-			reRollExplicitDieSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
-		}
+
+		ReRollPropertyFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_PROPERTY);
+
+		reRollProperties.addAll(
+			Arrays.stream(IJsonOption.RE_ROLL_PROPERTIES.getFrom(source, jsonObject)).map(factory::forName).collect(
+				Collectors.toList()));
+
+		rrActionToSource.putAll(IJsonOption.RE_ROLL_ACTION_TO_SOURCE_MAP.getFrom(source, jsonObject));
 		return this;
 	}
 

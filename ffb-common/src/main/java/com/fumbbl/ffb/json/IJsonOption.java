@@ -419,6 +419,7 @@ public interface IJsonOption {
 	JsonBooleanOption RESTRICT_PLACEMENT = new JsonBooleanOption("restrictPlacement");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
+	JsonStringMapOption RE_ROLL_ACTION_TO_SOURCE_MAP = new JsonStringMapOption("reRollActionToSourceMap");
 	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");
 	JsonStringArrayOption RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("reRollAvailableFor");
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");

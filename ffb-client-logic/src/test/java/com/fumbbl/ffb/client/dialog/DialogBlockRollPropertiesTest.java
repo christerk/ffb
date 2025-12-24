@@ -85,7 +85,7 @@ class DialogBlockRollPropertiesTest {
 		frame.setVisible(true);
 
 
-		DialogBlockRollProperties comp = new DialogBlockRollProperties(client, param);
+		DialogBlockRollProperties comp = new DialogBlockRollProperties(client, param, Collections.emptyMap());
 		frame.getContentPane().add(comp);
 		comp.setVisible(true);
 

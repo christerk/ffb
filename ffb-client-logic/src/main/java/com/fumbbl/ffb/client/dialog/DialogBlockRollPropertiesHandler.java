@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.StatusType;
@@ -11,10 +14,14 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.factory.ReRollSourceFactory;
+import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Game;
 
 import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DialogBlockRollPropertiesHandler extends DialogHandler {
 
@@ -38,7 +45,12 @@ public class DialogBlockRollPropertiesHandler extends DialogHandler {
 				&& game.getTeamHome().getId().equals(dialogParameter.getChoosingTeamId())) {
 
 				clientData.clearBlockDiceResult();
-				setDialog(new DialogBlockRollProperties(getClient(), dialogParameter));
+
+				ReRolledActionFactory actionFactory = game.getFactory(FactoryType.Factory.RE_ROLLED_ACTION);
+				ReRollSourceFactory sourceFactory = game.getFactory(FactoryType.Factory.RE_ROLL_SOURCE);
+
+				setDialog(new DialogBlockRollProperties(getClient(), dialogParameter, convertToActionMap(dialogParameter.getRrActionToSource(), actionFactory, sourceFactory)));
+
 				getDialog().showDialog(this);
 				if (!game.isHomePlaying()) {
 					playSound(SoundId.QUESTION);
@@ -60,6 +72,10 @@ public class DialogBlockRollPropertiesHandler extends DialogHandler {
 
 		}
 
+	}
+
+	private Map<ReRolledAction, ReRollSource> convertToActionMap(Map<String, String> input, ReRolledActionFactory actionFactory, ReRollSourceFactory sourceFactory) {
+		return input.entrySet().stream().collect(Collectors.toMap(entry -> actionFactory.forName(entry.getKey()), entry -> sourceFactory.forName(entry.getValue())));
 	}
 
 	public void dialogClosed(IDialog pDialog) {
