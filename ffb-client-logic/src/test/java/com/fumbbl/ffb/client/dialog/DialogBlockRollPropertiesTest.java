@@ -3,6 +3,10 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.CommonPropertyValue;
 import com.fumbbl.ffb.ReRollProperty;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
@@ -28,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,15 +42,18 @@ class DialogBlockRollPropertiesTest {
 		throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
+		String teamId = "teamId";
+
 		FantasyFootballClient client = mock(FantasyFootballClient.class, RETURNS_DEEP_STUBS);
 		UserInterface userInterface = mock(UserInterface.class, RETURNS_DEEP_STUBS);
 		GameMenuBar menuBar = mock(GameMenuBar.class);
+
 		Map<String, String> entries = new HashMap<String, String>() {{
 			put(CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, "Value1");
 		}};
 		when(menuBar.menuEntries(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN)).thenReturn(entries);
 		when(userInterface.getGameMenuBar()).thenReturn(menuBar);
-
+		when(client.getGame().getTeamHome().getId()).thenReturn(teamId);
 
 		when(client.getUserInterface()).thenReturn(userInterface);
 		when(userInterface.getPitchDimensionProvider()).thenReturn(new PitchDimensionProvider(new LayoutSettings(
@@ -58,20 +66,23 @@ class DialogBlockRollPropertiesTest {
 		when(inducementType.hasUsage(Usage.CONDITIONAL_REROLL)).thenReturn(true);
 		when(inducementType.getDescription()).thenReturn("Team Mascot");
 		when(userInterface.getIconCache().getIconByProperty(any(), any())).thenReturn(new BufferedImage(30, 30, 1));
+		when(userInterface.getIconCache().getDiceIcon(anyInt(), any())).thenReturn(new BufferedImage(35, 35, 1));
 
 		List<ReRollProperty> properties = new ArrayList<>();
 		properties.add(ReRollProperty.TRR);
 		properties.add(ReRollProperty.MASCOT);
 		properties.add(ReRollProperty.PRO);
-		properties.add(ReRollProperty.LONER);
-//		properties.add(ReRollProperty.BRILLIANT_COACHING);
+		properties.add(ReRollProperty.BRAWLER);
+		properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
+		properties.add(ReRollProperty.BRILLIANT_COACHING);
+		properties.add(ReRollProperty.SAVAGE_BLOW);
 
-		DialogBlockRollPropertiesParameter param =
-		/*	new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),
-				CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, CommonPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS, Arrays.asList("You need a:", "  • 6 to knock your opponent down",
-				"  • " + 45 + "+ to place your opponent prone", "  • " + 67 + "+ to avoid a turnover"));*/
-		new DialogBlockRollPropertiesParameter();
+		Map<ReRolledAction, ReRollSource> actionMap = new HashMap<>();
+		actionMap.put(ReRolledActions.SINGLE_DIE, ReRollSources.THINKING_MANS_TROLL);
+		actionMap.put(ReRolledActions.SINGLE_BLOCK_DIE, ReRollSources.UNSTOPPABLE_MOMENTUM);
+		actionMap.put(ReRolledActions.MULTI_BLOCK_DICE, ReRollSources.SAVAGE_BLOW);
 
+		DialogBlockRollPropertiesParameter param = new DialogBlockRollPropertiesParameter(teamId, 3, new int[]{1, 2, 3}, properties, Collections.emptyMap());
 
 		JPanel panelContent = new JPanel();
 
@@ -85,7 +96,7 @@ class DialogBlockRollPropertiesTest {
 		frame.setVisible(true);
 
 
-		DialogBlockRollProperties comp = new DialogBlockRollProperties(client, param, Collections.emptyMap());
+		DialogBlockRollProperties comp = new DialogBlockRollProperties(client, param, actionMap);
 		frame.getContentPane().add(comp);
 		comp.setVisible(true);
 
