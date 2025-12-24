@@ -16,10 +16,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
-import com.fumbbl.ffb.report.ReportPassDeviate;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.report.mixed.ReportSwoopPlayer;
-import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -75,7 +73,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState;
 	private FieldCoordinate thrownPlayerCoordinate;
-	private boolean thrownPlayerHasBall, throwScatter, deviate, isKickedPlayer;
+	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer;
 	private Direction swoopDirection;
 
 	public StepInitScatterPlayer(GameState pGameState) {
@@ -183,10 +181,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			return;
 		}
 		FieldCoordinate startCoordinate = thrownPlayerCoordinate;
-		if (deviate) {
-			game.getFieldModel().setRangeRuler(null);
-			game.getFieldModel().clearMoveSquares();
-		} else if (throwScatter) {
+		if (throwScatter) {
 			game.getFieldModel().setRangeRuler(null);
 			game.getFieldModel().clearMoveSquares();
 			startCoordinate = game.getPassCoordinate();
@@ -194,8 +189,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		UtilThrowTeamMateSequence.ScatterResult scatterResult;
 		if (isKickedPlayer && throwScatter) {
 			scatterResult = UtilThrowTeamMateSequence.kickPlayer(this, thrownPlayerCoordinate, startCoordinate);
-		} else if (deviate) {
-			scatterResult = deviate(game, thrownPlayerCoordinate);
 		} else if (swoopDirection != null) {
 			scatterResult = swoop(startCoordinate, swoopDirection);
 		} else {
@@ -257,24 +250,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private UtilThrowTeamMateSequence.ScatterResult deviate(Game game, FieldCoordinate throwerCoordinate) {
-		int directionRoll = getGameState().getDiceRoller().rollScatterDirection();
-		int distanceRoll = getGameState().getDiceRoller().rollScatterDistance();
-		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, directionRoll);
-		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
-		FieldCoordinate lastValidCoordinate = coordinateEnd;
-		int validDistance = distanceRoll;
-		while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
-			validDistance--;
-			lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
-		}
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, lastValidCoordinate));
-
-		getResult().addReport(new ReportPassDeviate(coordinateEnd, direction, directionRoll, distanceRoll, true));
-
-		return new UtilThrowTeamMateSequence.ScatterResult(lastValidCoordinate, FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd));
-	}
-
 	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction) {
 		GameOptionInt distance = (GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
 
@@ -305,7 +280,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, thrownPlayerCoordinate);
 		IServerJsonOption.THROW_SCATTER.addTo(jsonObject, throwScatter);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
-		IServerJsonOption.PASS_DEVIATES.addTo(jsonObject, deviate);
 		IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, swoopDirection);
 		return jsonObject;
 	}
@@ -320,7 +294,6 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		thrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		throwScatter = IServerJsonOption.THROW_SCATTER.getFrom(source, jsonObject);
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
-		deviate = IServerJsonOption.PASS_DEVIATES.getFrom(source, jsonObject);
 		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		return this;
 	}

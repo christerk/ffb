@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.ttm;
+package com.fumbbl.ffb.server.step.bb2020.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
+import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
@@ -61,7 +62,6 @@ import com.fumbbl.ffb.server.util.UtilServerInjury;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepInitScatterPlayer extends AbstractStep {
 
 	private String thrownPlayerId;
