@@ -116,6 +116,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				diceBoxes[i].setMnemonic(mnemonic);
 				diceBoxes[i].setOpaque(false);
 				diceBoxes[i].setEnabled(true);
+				diceBoxes[i].setFocusPainted(false);
 				diceBoxes[i].addItemListener(
 					e -> anyDiceButton.setEnabled(Arrays.stream(diceBoxes).anyMatch(AbstractButton::isSelected)));
 				checkboxPanel.add(diceBoxes[i]);
@@ -204,7 +205,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				mascotPanel.add(fButtonTeamReRoll);
 				mascotPanel.setOpaque(false);
 				if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-					fallbackToTrr = checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE);
+					fallbackToTrr = mascotExtension.checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE, dimensionProvider(),
+						this, this);
 					mascotPanel.add(fallbackToTrr);
 				}
 				reRollPanel.add(mascotPanel);
@@ -271,11 +273,13 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 		proPanel.add(fButtonProReRoll);
 		if (willUseMascot) {
-			proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor);
+			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, checkboxColor, dimensionProvider(), this,
+				this);
 			proPanel.add(proFallbackMascot);
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor);
+			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
+				checkboxColor, dimensionProvider(), this, this);
 			proFallbackTrr.setEnabled(!willUseMascot);
 			proPanel.add(proFallbackTrr);
 		}
@@ -295,11 +299,13 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 		mascotPanel.setOpaque(false);
 		if (willUseMascot) {
-			proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor.remove(0));
+			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, checkboxColor.remove(0),
+				dimensionProvider(), this, this);
 			mascotPanel.add(proFallbackMascot);
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor.remove(0));
+			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
+				checkboxColor.remove(0), dimensionProvider(), this, this);
 			proFallbackTrr.setEnabled(!willUseMascot);
 			mascotPanel.add(proFallbackTrr);
 		}
@@ -358,17 +364,6 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		button.addKeyListener(this);
 		button.setOpaque(false);
 		return button;
-	}
-
-	private JCheckBox checkBox(String text, int mnemonic, Color color) {
-		JCheckBox checkbox = new JCheckBox(dimensionProvider(), text);
-		checkbox.setMnemonic(mnemonic);
-		checkbox.addKeyListener(this);
-		checkbox.addActionListener(this);
-		checkbox.setAlignmentX(CENTER_ALIGNMENT);
-		checkbox.setForeground(color);
-		checkbox.setOpaque(false);
-		return checkbox;
 	}
 
 	private JPanel proPanel(int diceCount) {

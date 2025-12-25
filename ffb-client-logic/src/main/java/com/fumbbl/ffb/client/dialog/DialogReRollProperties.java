@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -148,10 +149,8 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.add(fButtonTeamReRoll);
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-				fallbackToTrr = new JCheckBox(dimensionProvider(), "TRR fallback");
-				fallbackToTrr.setMnemonic('F');
-				fallbackToTrr.addKeyListener(this);
-				fallbackToTrr.setAlignmentX(CENTER_ALIGNMENT);
+				fallbackToTrr = mascotExtension.checkBox( "TRR fallback", KeyEvent.VK_F, Color.BLACK, dimensionProvider(),
+					this, this);
 				mascotPanel.add(fallbackToTrr);
 			}
 			buttonPanel.add(mascotPanel);
@@ -171,19 +170,13 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 				fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 				proPanel.add(fButtonProReRoll);
 				if (willUseMascot) {
-					proFallbackMascot = new JCheckBox(dimensionProvider(), "Mascot");
-					proFallbackMascot.setMnemonic('A');
-					proFallbackMascot.addKeyListener(this);
-					proFallbackMascot.addActionListener(this);
-					proFallbackMascot.setAlignmentX(CENTER_ALIGNMENT);
+					proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, Color.BLACK, dimensionProvider(),
+						this, this);
 					proPanel.add(proFallbackMascot);
 				}
 				if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-					proFallbackTrr =
-						new JCheckBox(dimensionProvider(), willUseMascot ? "TRR fallback" : "ReRoll");
-					proFallbackTrr.setMnemonic('R');
-					proFallbackTrr.addKeyListener(this);
-					proFallbackTrr.setAlignmentX(CENTER_ALIGNMENT);
+					proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
+						Color.BLACK, dimensionProvider(), this, this);
 					proFallbackTrr.setEnabled(!willUseMascot);
 					proPanel.add(proFallbackTrr);
 				}
@@ -240,10 +233,12 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		}
 		if (pActionEvent.getSource() == proFallbackMascot) {
 			if (proFallbackTrr != null) {
+				proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
 				if (!proFallbackMascot.isSelected()) {
 					proFallbackTrr.setSelected(false);
+				} else {
+					proFallbackTrr.setMnemonic(KeyEvent.VK_R);
 				}
-				proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
 			}
 			return;
 		}
