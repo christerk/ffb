@@ -273,12 +273,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 		proPanel.add(fButtonProReRoll);
 		if (willUseMascot) {
-			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, checkboxColor, dimensionProvider(), this,
+			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_L, checkboxColor, dimensionProvider(), this,
 				this);
 			proPanel.add(proFallbackMascot);
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
+			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_X,
 				checkboxColor, dimensionProvider(), this, this);
 			proFallbackTrr.setEnabled(!willUseMascot);
 			proPanel.add(proFallbackTrr);
@@ -299,12 +299,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 		mascotPanel.setOpaque(false);
 		if (willUseMascot) {
-			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, checkboxColor.remove(0),
+			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_L, checkboxColor.remove(0),
 				dimensionProvider(), this, this);
 			mascotPanel.add(proFallbackMascot);
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
+			proFallbackTrr = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_X,
 				checkboxColor.remove(0), dimensionProvider(), this, this);
 			proFallbackTrr.setEnabled(!willUseMascot);
 			mascotPanel.add(proFallbackTrr);
@@ -523,6 +523,16 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			fDiceIndex = 2;
 		}
 
+		if (pActionEvent.getSource() == proFallbackMascot) {
+			if (proFallbackTrr != null) {
+				if (!proFallbackMascot.isSelected()) {
+					proFallbackTrr.setSelected(false);
+				}
+				proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
+			}
+			return;
+		}
+
 		if ((fReRollSource != null) || (fDiceIndex >= 0) || (pActionEvent.getSource() == fButtonNoReRoll)) {
 			if (getCloseListener() != null) {
 				getCloseListener().dialogClosed(this);
@@ -680,6 +690,17 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				if (anyDiceButton != null && anyDiceButton.isEnabled()) {
 					keyHandled = true;
 					evaluateCheckboxes();
+				}
+				break;
+			case KeyEvent.VK_L:
+				if (proFallbackMascot != null) {
+					proFallbackMascot.setSelected(!proFallbackMascot.isSelected());
+					if (proFallbackTrr != null) {
+						if (!proFallbackMascot.isSelected()) {
+							proFallbackTrr.setSelected(false);
+						}
+						proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
+					}
 				}
 				break;
 			default:

@@ -233,12 +233,10 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		}
 		if (pActionEvent.getSource() == proFallbackMascot) {
 			if (proFallbackTrr != null) {
-				proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
 				if (!proFallbackMascot.isSelected()) {
 					proFallbackTrr.setSelected(false);
-				} else {
-					proFallbackTrr.setMnemonic(KeyEvent.VK_R);
 				}
+				proFallbackTrr.setEnabled(proFallbackMascot.isSelected());
 			}
 			return;
 		}

@@ -52,7 +52,7 @@ public class DialogExtensionMascot {
 
 	public JCheckBox checkBox(String text, int mnemonic, Color color, DimensionProvider dimensionProvider,
 		ActionListener actionListener, KeyListener keyListener) {
-		JCheckBox checkbox = new JCheckBox(dimensionProvider, text);
+		JCheckBox checkbox = new JCheckBox(dimensionProvider, text + " ( " + (char) mnemonic + " )");
 		checkbox.setMnemonic(mnemonic);
 		checkbox.addKeyListener(keyListener);
 		checkbox.addActionListener(actionListener);
