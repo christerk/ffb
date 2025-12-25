@@ -457,7 +457,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		Game game = getClient().getGame();
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
 		if (pActionEvent.getSource() == fButtonTeamReRoll) {
-			fReRollSource = ReRollSources.TEAM_RE_ROLL;
+			determineTeamReRollSource();
 		}
 		if (pActionEvent.getSource() == anyDiceButton) {
 			evaluateCheckboxes();
@@ -495,19 +495,19 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			reRollIndexes.add(2);
 		}
 		if (pActionEvent.getSource() == fButtonProReRoll) {
-			fReRollSource = ReRollSources.PRO;
+			determineProReRollSource();
 			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == proButton1) {
-			fReRollSource = ReRollSources.PRO;
+			determineProReRollSource();
 			reRollIndexes.add(0);
 		}
 		if (pActionEvent.getSource() == proButton2) {
-			fReRollSource = ReRollSources.PRO;
+			determineProReRollSource();
 			reRollIndexes.add(1);
 		}
 		if (pActionEvent.getSource() == proButton3) {
-			fReRollSource = ReRollSources.PRO;
+			determineProReRollSource();
 			reRollIndexes.add(2);
 		}
 		if (pActionEvent.getSource() == brawlerButton) {
@@ -609,27 +609,27 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			case KeyEvent.VK_T:
 				if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.TEAM_RE_ROLL;
+					determineTeamReRollSource();
 				}
 				break;
 			case KeyEvent.VK_P:
 				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.PRO;
+					determineProReRollSource();
 					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_R:
 				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.PRO;
+					determineProReRollSource();
 					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_E:
 				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 					keyHandled = true;
-					fReRollSource = ReRollSources.PRO;
+					determineProReRollSource();
 					reRollIndexes.add(2);
 				}
 				break;
@@ -715,5 +715,32 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 	public ReRollSource getAnyBlockDiceReRollSource() {
 		return anyBlockDiceReRollSource;
+	}
+
+	private void determineTeamReRollSource() {
+		if (willUseMascot) {
+			if (fallbackToTrr.isSelected()) {
+				fReRollSource = ReRollSources.MASCOT_TRR;
+			} else {
+				fReRollSource = ReRollSources.MASCOT;
+			}
+		} else {
+			fReRollSource = ReRollSources.TEAM_RE_ROLL;
+		}
+	}
+
+	private void determineProReRollSource() {
+		boolean mascot = proFallbackMascot != null && proFallbackMascot.isSelected();
+		boolean reRoll = proFallbackTrr != null && proFallbackTrr.isSelected();
+
+		if (mascot && reRoll) {
+			fReRollSource = ReRollSources.PRO_MASCOT_TRR;
+		} else if (mascot) {
+			fReRollSource = ReRollSources.PRO_MASCOT;
+		} else if (reRoll) {
+			fReRollSource = ReRollSources.PRO_TRR;
+		} else {
+			fReRollSource = ReRollSources.PRO;
+		}
 	}
 }

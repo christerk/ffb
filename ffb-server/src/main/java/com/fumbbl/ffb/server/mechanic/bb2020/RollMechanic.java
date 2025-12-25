@@ -369,4 +369,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
 		return Optional.empty();
 	}
+
+	@Override
+	public boolean isMascotAvailable(Game game) {
+		return false;
+	}
 }

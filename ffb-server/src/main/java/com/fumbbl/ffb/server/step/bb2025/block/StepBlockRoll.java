@@ -323,6 +323,10 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
 			mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
+
+			if (mechanic.isMascotAvailable(game)) {
+				properties.add(ReRollProperty.MASCOT);
+			}
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();

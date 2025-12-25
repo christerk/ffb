@@ -437,7 +437,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 
-	private boolean isMascotAvailable(Game game) {
+	@Override
+	public boolean isMascotAvailable(Game game) {
 		InducementSet inducementSet = game.isHomePlaying() ?
 			game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 

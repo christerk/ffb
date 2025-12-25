@@ -1,6 +1,13 @@
 package com.fumbbl.ffb.server.mechanic;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollProperty;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.SeriousInjury;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SkillMechanic;
@@ -59,6 +66,8 @@ public abstract class RollMechanic implements Mechanic {
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
 
 	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);
+
+	public abstract boolean isMascotAvailable(Game game);
 
 	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
 		String originalBomberId = null;
