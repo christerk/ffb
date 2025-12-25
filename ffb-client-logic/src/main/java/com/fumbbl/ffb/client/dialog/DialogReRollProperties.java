@@ -11,8 +11,6 @@ import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
-import com.fumbbl.ffb.inducement.InducementType;
-import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
@@ -25,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.util.Optional;
 
 /**
  * @author Kalimar
@@ -41,7 +38,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 	private ReRollSource fReRollSource;
 	private boolean useSkill;
 	private Skill usedSkill;
-	private boolean willUseMascot;
+	private final boolean willUseMascot;
 
 	public DialogReRollProperties(FantasyFootballClient pClient, DialogReRollPropertiesParameter pDialogParameter) {
 
@@ -49,7 +46,12 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		dialogParameter = pDialogParameter;
 
-		fButtonTeamReRoll = new JButton(dimensionProvider(), teamReRollText());
+		DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
+		ReRollSource trrSource = mascotExtension.teamReRollText(pDialogParameter);
+
+		willUseMascot = trrSource == ReRollSources.MASCOT;
+
+		fButtonTeamReRoll = new JButton(dimensionProvider(), trrSource.getName(getClient().getGame()));
 		fButtonTeamReRoll.addActionListener(this);
 		fButtonTeamReRoll.addKeyListener(this);
 		fButtonTeamReRoll.setMnemonic((int) 'T');
@@ -143,7 +145,6 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
 			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-			buttonPanel.add(mascotPanel);
 			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
 			mascotPanel.add(fButtonTeamReRoll);
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
@@ -153,9 +154,10 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 				fallbackToTrr.setAlignmentX(CENTER_ALIGNMENT);
 				mascotPanel.add(fallbackToTrr);
 			}
+			buttonPanel.add(mascotPanel);
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		} else if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-			buttonPanel.add(wrapperPanel(fButtonTeamReRoll));
+			buttonPanel.add(mascotExtension.wrapperPanel(fButtonTeamReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
@@ -187,19 +189,19 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 				}
 				buttonPanel.add(Box.createHorizontalStrut(5));
 			} else {
-				buttonPanel.add(wrapperPanel(fButtonProReRoll));
+				buttonPanel.add(mascotExtension.wrapperPanel(fButtonProReRoll));
 				buttonPanel.add(Box.createHorizontalStrut(5));
 			}
 		}
 		if (buttonSkillReRoll != null) {
-			buttonPanel.add(wrapperPanel(buttonSkillReRoll));
+			buttonPanel.add(mascotExtension.wrapperPanel(buttonSkillReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonModifyingSkill != null) {
-			buttonPanel.add(wrapperPanel(buttonModifyingSkill));
+			buttonPanel.add(mascotExtension.wrapperPanel(buttonModifyingSkill));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
-		buttonPanel.add(wrapperPanel(fButtonNoReRoll));
+		buttonPanel.add(mascotExtension.wrapperPanel(fButtonNoReRoll));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -210,15 +212,6 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		pack();
 		setLocationToCenter();
 
-	}
-
-	private JPanel wrapperPanel(JButton button) {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setAlignmentX(Box.CENTER_ALIGNMENT);
-		panel.setAlignmentY(Box.TOP_ALIGNMENT);
-		panel.add(button);
-		return panel;
 	}
 
 	public DialogId getId() {
@@ -371,33 +364,5 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 	}
 
 	public void keyTyped(KeyEvent pKeyEvent) {
-	}
-
-	private String teamReRollText() {
-		if (dialogParameter.hasProperty(ReRollProperty.BRILLIANT_COACHING)) {
-			return ReRollSources.BRILLIANT_COACHING.getName();
-		}
-
-		if (dialogParameter.hasProperty(ReRollProperty.PUMP_UP_THE_CROWD)) {
-			return ReRollSources.PUMP_UP_THE_CROWD.getName();
-		}
-
-		if (dialogParameter.hasProperty(ReRollProperty.SHOW_STAR)) {
-			return ReRollSources.SHOW_STAR.getName();
-		}
-
-		if (dialogParameter.hasProperty(ReRollProperty.MASCOT)) {
-			Optional<InducementType> mascot =
-				getClient().getGame().getActingTurnData().getInducementSet().getInducementTypes().stream()
-					.filter(ind -> ind.hasUsage(
-						Usage.CONDITIONAL_REROLL)).findFirst();
-			if (mascot.isPresent()) {
-				willUseMascot = true;
-				return mascot.get().getDescription();
-			}
-		}
-
-		return ReRollSources.TEAM_RE_ROLL.getName();
-
 	}
 }

@@ -16,6 +16,7 @@ import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class RollMechanic implements Mechanic {
 	@Override
@@ -56,6 +57,8 @@ public abstract class RollMechanic implements Mechanic {
 	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
 
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
+
+	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);
 
 	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
 		String originalBomberId = null;

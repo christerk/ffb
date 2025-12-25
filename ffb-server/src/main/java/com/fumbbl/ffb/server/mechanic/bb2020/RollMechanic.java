@@ -365,4 +365,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return !modesProhibitingReRolls.contains(turnMode);
 	}
 
+	@Override
+	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
+		return Optional.empty();
+	}
 }

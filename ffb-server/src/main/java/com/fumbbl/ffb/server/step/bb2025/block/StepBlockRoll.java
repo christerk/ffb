@@ -17,6 +17,7 @@ import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.TargetSelectionState;
@@ -32,6 +33,7 @@ import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.mixed.ReportBlockReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -297,10 +299,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				properties.add(ReRollProperty.PRO);
 			}
 
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod)) {
-				properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
-			}
-
 			Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollBothDowns);
 			boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
 				&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
@@ -322,6 +320,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice)) {
 				properties.add(ReRollProperty.SAVAGE_BLOW);
 			}
+
+			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
+			mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();

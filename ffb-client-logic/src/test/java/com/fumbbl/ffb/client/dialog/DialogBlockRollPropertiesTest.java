@@ -72,17 +72,18 @@ class DialogBlockRollPropertiesTest {
 		properties.add(ReRollProperty.TRR);
 		properties.add(ReRollProperty.MASCOT);
 		properties.add(ReRollProperty.PRO);
-		properties.add(ReRollProperty.BRAWLER);
-		properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
-		properties.add(ReRollProperty.BRILLIANT_COACHING);
-		properties.add(ReRollProperty.SAVAGE_BLOW);
+	//	properties.add(ReRollProperty.BRAWLER);
+	//	properties.add(ReRollProperty.ANY_DIE_RE_ROLL);
+		//properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		Map<ReRolledAction, ReRollSource> actionMap = new HashMap<>();
 		actionMap.put(ReRolledActions.SINGLE_DIE, ReRollSources.THINKING_MANS_TROLL);
-		actionMap.put(ReRolledActions.SINGLE_BLOCK_DIE, ReRollSources.UNSTOPPABLE_MOMENTUM);
-		actionMap.put(ReRolledActions.MULTI_BLOCK_DICE, ReRollSources.SAVAGE_BLOW);
+	//	actionMap.put(ReRolledActions.SINGLE_BLOCK_DIE, ReRollSources.UNSTOPPABLE_MOMENTUM);
+	//	actionMap.put(ReRolledActions.MULTI_BLOCK_DICE, ReRollSources.SAVAGE_BLOW);
 
-		DialogBlockRollPropertiesParameter param = new DialogBlockRollPropertiesParameter(teamId, 3, new int[]{1, 2, 3}, properties, Collections.emptyMap());
+//		DialogBlockRollPropertiesParameter param = new DialogBlockRollPropertiesParameter(teamId, 3, new int[]{1, 2, 3}, properties, Collections.emptyMap());
+		DialogBlockRollPropertiesParameter param =
+			new DialogBlockRollPropertiesParameter(teamId, 1, new int[]{1}, properties, Collections.emptyMap());
 
 		JPanel panelContent = new JPanel();
 

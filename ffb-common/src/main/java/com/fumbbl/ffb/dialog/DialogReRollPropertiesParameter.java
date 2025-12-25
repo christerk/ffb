@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DialogReRollPropertiesParameter implements IDialogParameter {
+public class DialogReRollPropertiesParameter implements IDialogParameter, IDialogParameterMascot {
 
 	private String playerId, defaultValueKey;
 	private ReRolledAction reRolledAction;
@@ -90,6 +90,7 @@ public class DialogReRollPropertiesParameter implements IDialogParameter {
 		return messages;
 	}
 
+	@Override
 	public boolean hasProperty(ReRollProperty property) {
 		return reRollProperties.contains(property);
 	}

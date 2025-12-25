@@ -465,7 +465,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return PlayerState.BADLY_HURT;
 	}
 
-	private Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
+	@Override
+	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
 			return Optional.of(ReRollProperty.BRILLIANT_COACHING);
 		}
@@ -477,4 +478,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 		return Optional.empty();
 	}
+
+
 }

@@ -19,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +41,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		anySingleDieButton, anySingleDieButton1, anySingleDieButton2, anySingleDieButton3,
 		singleDieButton, singleDieButton1, singleDieButton2, singleDieButton3, anyDiceButton;
 
+	private JCheckBox fallbackToTrr, proFallbackMascot, proFallbackTrr;
 	private JCheckBox[] diceBoxes;
 
 	private int fDiceIndex;
@@ -48,6 +50,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource singleDieReRollSource;
 	private final ReRollSource singleBlockDieReRollSource;
 	private final ReRollSource anyBlockDiceReRollSource;
+	private boolean willUseMascot;
+	private final DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
 
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
@@ -139,82 +143,11 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 		if (getDialogParameter().hasActualReRoll()) {
 
-			JPanel reRollPanel = new JPanel();
-			reRollPanel.setOpaque(false);
-			reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
+			ReRollSource trrSource = mascotExtension.teamReRollText(pDialogParameter);
 
-			fButtonTeamReRoll = new JButton(dimensionProvider(), "Team Re-Roll", KeyEvent.VK_T);
-			fButtonTeamReRoll.addActionListener(this);
-			fButtonTeamReRoll.setMnemonic(KeyEvent.VK_T);
-			fButtonTeamReRoll.addKeyListener(this);
+			willUseMascot = trrSource == ReRollSources.MASCOT;
 
-			fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll", KeyEvent.VK_N);
-			fButtonNoReRoll.addActionListener(this);
-			fButtonNoReRoll.setMnemonic(KeyEvent.VK_N);
-			fButtonNoReRoll.addKeyListener(this);
-
-			Box.Filler verticalGlue1 = (Box.Filler) Box.createVerticalGlue();
-			verticalGlue1.setOpaque(false);
-			reRollPanel.add(verticalGlue1);
-
-			if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
-				reRollPanel.add(fButtonTeamReRoll);
-			}
-
-			if (getDialogParameter().getNrOfDice() == 1) {
-				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
-					fButtonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll", KeyEvent.VK_P);
-					fButtonProReRoll.addActionListener(this);
-					fButtonProReRoll.setMnemonic(KeyEvent.VK_P);
-					fButtonProReRoll.addKeyListener(this);
-					reRollPanel.add(fButtonProReRoll);
-				}
-
-				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
-					anySingleDieButton =
-						new JButton(dimensionProvider(), singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
-					anySingleDieButton.addActionListener(this);
-					anySingleDieButton.setMnemonic(KeyEvent.VK_C);
-					anySingleDieButton.addKeyListener(this);
-					reRollPanel.add(anySingleDieButton);
-				}
-
-				if (singleBlockDieReRollSource != null) {
-					singleDieButton =
-						new JButton(dimensionProvider(), singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
-					singleDieButton.addActionListener(this);
-					singleDieButton.setMnemonic(KeyEvent.VK_U);
-					singleDieButton.addKeyListener(this);
-					reRollPanel.add(singleDieButton);
-				}
-
-			}
-
-			if (anyBlockDiceReRollSource != null) {
-				anyDiceButton =
-					new JButton(dimensionProvider(), anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
-				anyDiceButton.addActionListener(this);
-				anyDiceButton.setMnemonic(KeyEvent.VK_V);
-				anyDiceButton.addKeyListener(this);
-				anyDiceButton.setEnabled(blockRoll.length == 1);
-				reRollPanel.add(anyDiceButton);
-			}
-
-			if (getDialogParameter().hasProperty(ReRollProperty.BRAWLER)) {
-				brawlerButton = new JButton(dimensionProvider(), "Brawler Re-Roll", KeyEvent.VK_B);
-				brawlerButton.addActionListener(this);
-				brawlerButton.setMnemonic(KeyEvent.VK_B);
-				brawlerButton.addKeyListener(this);
-				reRollPanel.add(brawlerButton);
-			}
-
-			if (getDialogParameter().getNrOfDice() < 0) {
-				reRollPanel.add(fButtonNoReRoll);
-			}
-
-			Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
-			verticalGlue2.setOpaque(false);
-			reRollPanel.add(verticalGlue2);
+			JPanel reRollPanel = reRollPanel(trrSource, blockRoll, actionToSource);
 
 			centerPanel.add(Box.createVerticalStrut(10));
 			centerPanel.add(reRollPanel);
@@ -225,7 +158,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
-				if (pDialogParameter.hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
+				if (singleDieReRollSource != null) {
 					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
@@ -244,6 +177,102 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		pack();
 		setLocationToCenter();
 
+	}
+
+	private JPanel reRollPanel(ReRollSource trrSource, int[] blockRoll, Map<ReRolledAction, ReRollSource> actionToSource) {
+		JPanel reRollPanel = new JPanel();
+		reRollPanel.setOpaque(false);
+		reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
+
+		fButtonTeamReRoll = button(trrSource.getName(getClient().getGame()), KeyEvent.VK_T);
+		fButtonNoReRoll = button("No Re-Roll", KeyEvent.VK_N);
+
+		Box.Filler verticalGlue1 = (Box.Filler) Box.createVerticalGlue();
+		verticalGlue1.setOpaque(false);
+		reRollPanel.add(verticalGlue1);
+		reRollPanel.setOpaque(false);
+
+		if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
+			if (willUseMascot) {
+				JPanel mascotPanel = new JPanel();
+				mascotPanel.setBackground(null);
+				mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
+				mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+				mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+				fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
+				mascotPanel.add(fButtonTeamReRoll);
+				mascotPanel.setOpaque(false);
+				if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+					fallbackToTrr = checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE);
+					mascotPanel.add(fallbackToTrr);
+				}
+				reRollPanel.add(mascotPanel);
+			} else {
+				reRollPanel.add(mascotExtension.wrapperPanel(fButtonTeamReRoll));
+			}
+		}
+
+		if (getDialogParameter().getNrOfDice() == 1) {
+			if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				fButtonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
+				if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
+					Color checkboxColor =
+						!dialogParameter.hasProperty(ReRollProperty.TRR) || rerollButtons(actionToSource) > 2 ||
+							dialogParameter.getNrOfDice() < 0 ?
+							Color.WHITE : Color.BLACK;
+
+					JPanel proPanel = new JPanel();
+					proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
+					proPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+					proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+					proPanel.setOpaque(false);
+					reRollPanel.add(proPanel);
+					fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
+					proPanel.add(fButtonProReRoll);
+					if (willUseMascot) {
+						proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor);
+						proPanel.add(proFallbackMascot);
+					}
+					if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+						proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor);
+						proPanel.add(proFallbackTrr);
+					}
+				} else {
+					reRollPanel.add(mascotExtension.wrapperPanel(fButtonProReRoll));
+				}
+			}
+
+			if (singleDieReRollSource != null) {
+				anySingleDieButton = button(singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
+				reRollPanel.add(mascotExtension.wrapperPanel(anySingleDieButton));
+			}
+
+			if (singleBlockDieReRollSource != null) {
+				singleDieButton = button(singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
+				reRollPanel.add(mascotExtension.wrapperPanel(singleDieButton));
+			}
+
+		}
+
+		if (anyBlockDiceReRollSource != null) {
+			anyDiceButton = button(anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
+			anyDiceButton.setEnabled(blockRoll.length == 1);
+			reRollPanel.add(mascotExtension.wrapperPanel(anyDiceButton));
+		}
+
+		if (getDialogParameter().hasProperty(ReRollProperty.BRAWLER)) {
+			brawlerButton = button("Brawler Re-Roll", KeyEvent.VK_B);
+			reRollPanel.add(mascotExtension.wrapperPanel(brawlerButton));
+		}
+
+		if (getDialogParameter().getNrOfDice() < 0) {
+			reRollPanel.add(mascotExtension.wrapperPanel(fButtonNoReRoll));
+		}
+
+		Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
+		verticalGlue2.setOpaque(false);
+		reRollPanel.add(verticalGlue2);
+		return reRollPanel;
 	}
 
 	public DialogId getId() {
@@ -282,6 +311,32 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		panel.add(buttonPanel);
 
 		return panel;
+	}
+
+	private long rerollButtons(Map<ReRolledAction, ReRollSource> actionToSource) {
+		return dialogParameter.getReRollProperties().stream()
+			.filter(prop -> prop.isActualReRoll() && prop != ReRollProperty.MASCOT).count() +
+			actionToSource.size();
+	}
+
+	private JButton button(String text, int mnemonic) {
+		JButton button = new JButton(dimensionProvider(), text, mnemonic);
+		button.addActionListener(this);
+		button.setMnemonic(mnemonic);
+		button.addKeyListener(this);
+		button.setOpaque(false);
+		return button;
+	}
+
+	private JCheckBox checkBox(String text, int mnemonic, Color color) {
+		JCheckBox checkbox = new JCheckBox(dimensionProvider(), text);
+		checkbox.setMnemonic(mnemonic);
+		checkbox.addKeyListener(this);
+		checkbox.addActionListener(this);
+		checkbox.setAlignmentX(CENTER_ALIGNMENT);
+		checkbox.setForeground(color);
+		checkbox.setOpaque(false);
+		return checkbox;
 	}
 
 	private JPanel proPanel(int diceCount) {
@@ -360,6 +415,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		singleDieButton.addActionListener(this);
 		singleDieButton.setMnemonic(keyEvent);
 		singleDieButton.addKeyListener(this);
+		singleDieButton.setOpaque(false);
 		return singleDieButton;
 	}
 
@@ -538,21 +594,21 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				}
 				break;
 			case KeyEvent.VK_C:
-				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
+				if (singleDieReRollSource != null) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_O:
-				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
+				if (singleDieReRollSource != null) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_M:
-				if (getDialogParameter().hasProperty(ReRollProperty.ANY_DIE_RE_ROLL)) {
+				if (singleDieReRollSource != null) {
 					keyHandled = true;
 					fReRollSource = singleDieReRollSource;
 					reRollIndexes.add(2);
