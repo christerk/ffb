@@ -52,15 +52,16 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource anyBlockDiceReRollSource;
 	private boolean willUseMascot;
 	private final DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
-
+	private final Map<ReRolledAction, ReRollSource> actionToSource;
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
-	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter pDialogParameter, Map<ReRolledAction, ReRollSource> actionToSource) {
+	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter dialogParameter, Map<ReRolledAction, ReRollSource> actionToSource) {
 
 		super(pClient, "Block Roll", false);
 
 		fDiceIndex = -1;
-		dialogParameter = pDialogParameter;
+		this.dialogParameter = dialogParameter;
+		this.actionToSource = actionToSource;
 
 		singleDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE);
 		anyBlockDiceReRollSource = actionToSource.get(ReRolledActions.MULTI_BLOCK_DICE);
@@ -80,7 +81,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			diceBoxes = new JCheckBox[blockRoll.length];
 		}
 
-		boolean ownChoice = (dialogParameter.getNrOfDice() > 0 || !dialogParameter.hasActualReRoll());
+		boolean ownChoice = (this.dialogParameter.getNrOfDice() > 0 || !this.dialogParameter.hasActualReRoll());
 		for (int i = 0; i < fBlockDice.length; i++) {
 			fBlockDice[i] = new JButton(dimensionProvider());
 			fBlockDice[i].setOpaque(false);
@@ -143,28 +144,28 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 		if (getDialogParameter().hasActualReRoll()) {
 
-			ReRollSource trrSource = mascotExtension.teamReRollText(pDialogParameter);
+			ReRollSource trrSource = mascotExtension.teamReRollText(dialogParameter);
 
 			willUseMascot = trrSource == ReRollSources.MASCOT;
 
-			JPanel reRollPanel = reRollPanel(trrSource, blockRoll, actionToSource);
+			JPanel reRollPanel = reRollPanel(trrSource, blockRoll);
 
 			centerPanel.add(Box.createVerticalStrut(10));
 			centerPanel.add(reRollPanel);
 
 			if (Math.abs(getDialogParameter().getNrOfDice()) > 1) {
 				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
-					centerPanel.add(proPanel(Math.abs(pDialogParameter.getNrOfDice())));
+					centerPanel.add(proPanel(Math.abs(dialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
 				if (singleDieReRollSource != null) {
-					centerPanel.add(consummatePanel(Math.abs(pDialogParameter.getNrOfDice())));
+					centerPanel.add(singleDieReRollPanel(Math.abs(dialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
 
 				if (singleBlockDieReRollSource != null) {
-					centerPanel.add(singleBlockDiePanel(Math.abs(pDialogParameter.getNrOfDice())));
+					centerPanel.add(singleBlockDiePanel(Math.abs(dialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 
 				}
@@ -179,7 +180,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 	}
 
-	private JPanel reRollPanel(ReRollSource trrSource, int[] blockRoll, Map<ReRolledAction, ReRollSource> actionToSource) {
+	private JPanel reRollPanel(ReRollSource trrSource, int[] blockRoll) {
 		JPanel reRollPanel = new JPanel();
 		reRollPanel.setOpaque(false);
 		reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
@@ -216,27 +217,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
 				fButtonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
 				if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
-					Color checkboxColor =
-						!dialogParameter.hasProperty(ReRollProperty.TRR) || rerollButtons(actionToSource) > 2 ||
-							dialogParameter.getNrOfDice() < 0 ?
-							Color.WHITE : Color.BLACK;
-
-					JPanel proPanel = new JPanel();
-					proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
-					proPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-					proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-					proPanel.setOpaque(false);
+					JPanel proPanel = proMascotPanelSingle();
 					reRollPanel.add(proPanel);
-					fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
-					proPanel.add(fButtonProReRoll);
-					if (willUseMascot) {
-						proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor);
-						proPanel.add(proFallbackMascot);
-					}
-					if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-						proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor);
-						proPanel.add(proFallbackTrr);
-					}
 				} else {
 					reRollPanel.add(mascotExtension.wrapperPanel(fButtonProReRoll));
 				}
@@ -275,6 +257,55 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		return reRollPanel;
 	}
 
+	private JPanel proMascotPanelSingle() {
+		JPanel proPanel = new JPanel();
+		Color checkboxColor =
+			!dialogParameter.hasProperty(ReRollProperty.TRR) || rerollButtons() > 2 ||
+				dialogParameter.getNrOfDice() < 0 ?
+				Color.WHITE : Color.BLACK;
+
+		proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
+		proPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+		proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+		proPanel.setOpaque(false);
+		fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
+		proPanel.add(fButtonProReRoll);
+		if (willUseMascot) {
+			proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor);
+			proPanel.add(proFallbackMascot);
+		}
+		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+			proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor);
+			proFallbackTrr.setEnabled(!willUseMascot);
+			proPanel.add(proFallbackTrr);
+		}
+		return proPanel;
+	}
+
+
+	private JPanel proMascotPanelMultiple() {
+		JPanel mascotPanel = new JPanel();
+		List<Color> checkboxColor = new ArrayList<Color>() {{
+			add(Color.WHITE);
+			add(Color.BLACK);
+		}};
+
+		mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.X_AXIS));
+		mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+		mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+		mascotPanel.setOpaque(false);
+		if (willUseMascot) {
+			proFallbackMascot = checkBox("Mascot", KeyEvent.VK_A, checkboxColor.remove(0));
+			mascotPanel.add(proFallbackMascot);
+		}
+		if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+			proFallbackTrr = checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R, checkboxColor.remove(0));
+			proFallbackTrr.setEnabled(!willUseMascot);
+			mascotPanel.add(proFallbackTrr);
+		}
+		return mascotPanel;
+	}
+
 	public DialogId getId() {
 		return DialogId.BLOCK_ROLL_PROPERTIES;
 	}
@@ -293,6 +324,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		buttonPanel.setOpaque(false);
 		for (int i = 1; i <= diceCount; i++) {
 			JButton button = singleDieButton(i, mnemonics.remove(0));
 			switch (i) {
@@ -313,7 +345,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		return panel;
 	}
 
-	private long rerollButtons(Map<ReRolledAction, ReRollSource> actionToSource) {
+	private long rerollButtons() {
 		return dialogParameter.getReRollProperties().stream()
 			.filter(prop -> prop.isActualReRoll() && prop != ReRollProperty.MASCOT).count() +
 			actionToSource.size();
@@ -344,15 +376,16 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		proMnemonics.add(KeyEvent.VK_P);
 		proMnemonics.add(KeyEvent.VK_R);
 		proMnemonics.add(KeyEvent.VK_E);
-		JPanel proPanel = new JPanel();
-		proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
-		proPanel.setAlignmentX(CENTER_ALIGNMENT);
-		proPanel.add(proTextPanel());
-		proPanel.setOpaque(false);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(proTextPanel());
+		panel.setOpaque(false);
 
-		JPanel proButtonPanel = new JPanel();
-		proButtonPanel.setLayout(new BoxLayout(proButtonPanel, BoxLayout.X_AXIS));
-		proButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		buttonPanel.setOpaque(false);
 		for (int i = 1; i <= diceCount; i++) {
 			JButton button = singleDieButton(i, proMnemonics.remove(0));
 			switch (i) {
@@ -366,30 +399,32 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 					proButton3 = button;
 					break;
 			}
-			proButtonPanel.add(button);
+			buttonPanel.add(button);
 
 		}
-		proPanel.add(proButtonPanel);
+		panel.add(buttonPanel);
 
-		return proPanel;
+		panel.add(proMascotPanelMultiple());
+		return panel;
 	}
 
-	private JPanel consummatePanel(int diceCount) {
-		List<Integer> consummateMnemonics = new ArrayList<>();
-		consummateMnemonics.add(KeyEvent.VK_C);
-		consummateMnemonics.add(KeyEvent.VK_O);
-		consummateMnemonics.add(KeyEvent.VK_M);
-		JPanel consummatePanel = new JPanel();
-		consummatePanel.setLayout(new BoxLayout(consummatePanel, BoxLayout.Y_AXIS));
-		consummatePanel.setAlignmentX(CENTER_ALIGNMENT);
-		consummatePanel.add(textPanel(singleDieReRollSource.getName(getClient().getGame())));
-		consummatePanel.setOpaque(false);
+	private JPanel singleDieReRollPanel(int diceCount) {
+		List<Integer> memonics = new ArrayList<>();
+		memonics.add(KeyEvent.VK_C);
+		memonics.add(KeyEvent.VK_O);
+		memonics.add(KeyEvent.VK_M);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(textPanel(singleDieReRollSource.getName(getClient().getGame())));
+		panel.setOpaque(false);
 
-		JPanel consummateButtonPanel = new JPanel();
-		consummateButtonPanel.setLayout(new BoxLayout(consummateButtonPanel, BoxLayout.X_AXIS));
-		consummateButtonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		buttonPanel.setOpaque(false);
 		for (int i = 1; i <= diceCount; i++) {
-			JButton button = singleDieButton(i, consummateMnemonics.remove(0));
+			JButton button = singleDieButton(i, memonics.remove(0));
 			switch (i) {
 				case 1:
 					anySingleDieButton1 = button;
@@ -401,12 +436,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 					anySingleDieButton3 = button;
 					break;
 			}
-			consummateButtonPanel.add(button);
+			buttonPanel.add(button);
 
 		}
-		consummatePanel.add(consummateButtonPanel);
+		panel.add(buttonPanel);
 
-		return consummatePanel;
+		return panel;
 	}
 
 
