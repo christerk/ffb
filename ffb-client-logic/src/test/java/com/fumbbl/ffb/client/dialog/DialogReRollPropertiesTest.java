@@ -54,7 +54,7 @@ class DialogReRollPropertiesTest {
 		when(client.getGame().getRules().getSkillFactory()).thenReturn(mock(SkillFactory.class));
 		InducementType inducementType = mock(
 			InducementType.class);
-		when(client.getGame().getActingTurnData().getInducementSet().getInducementTypes()).thenReturn(Collections.singleton(
+		when(client.getGame().getTurnData().getInducementSet().getInducementTypes()).thenReturn(Collections.singleton(
 			inducementType));
 		when(inducementType.hasUsage(Usage.CONDITIONAL_REROLL)).thenReturn(true);
 		when(inducementType.getDescription()).thenReturn("Team Mascot");

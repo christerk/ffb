@@ -209,10 +209,6 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return fHomePlaying ? fTeamHome : fTeamAway;
 	}
 
-	public TurnData getActingTurnData() {
-		return fHomePlaying ? fTurnDataHome : fTurnDataAway;
-	}
-
 	public FieldModel getFieldModel() {
 		return fFieldModel;
 	}

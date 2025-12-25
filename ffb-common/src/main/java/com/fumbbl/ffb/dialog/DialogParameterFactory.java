@@ -135,6 +135,10 @@ public class DialogParameterFactory {
                 return new DialogPenaltyShootoutParameter();
             case BUY_PRAYERS_AND_INDUCEMENTS:
                 return new DialogBuyPrayersAndInducementsParameter();
+            case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
+                return new DialogReRollBlockForTargetsPropertiesParameter();
+            case OPPONENT_BLOCK_SELECTION_PROPERTIES:
+                return new DialogOpponentBlockSelectionPropertiesParameter();
             default:
                 return null;
         }

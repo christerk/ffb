@@ -226,6 +226,12 @@ public class DialogManager {
 					case BUY_PRAYERS_AND_INDUCEMENTS:
 						setDialogHandler(new DialogBuyPrayersAndInducementsHandler(getClient()));
 						break;
+					case OPPONENT_BLOCK_SELECTION_PROPERTIES:
+						setDialogHandler(new DialogOpponentBlockSelectionPropertiesHandler(getClient()));
+						break;
+					case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
+						setDialogHandler(new DialogReRollBlockForTargetsPropertiesHandler(getClient()));
+						break;
 					default:
 						break;
 				}

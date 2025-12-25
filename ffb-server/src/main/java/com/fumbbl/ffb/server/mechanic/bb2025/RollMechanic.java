@@ -240,7 +240,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			if (isProReRollAvailable(player, game, gameState.getPassState())) {
 				properties.add(ReRollProperty.PRO);
 			}
-			findAdditionalReRollProperty(game.getActingTurnData()).ifPresent(properties::add);
+			findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
 
 			if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 				properties.add(ReRollProperty.LONER);
