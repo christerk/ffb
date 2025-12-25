@@ -43,7 +43,7 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 		getClient().getClientData().clearBlockDiceResult();
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES)) {
-			DialogReRollBlockForTargets reRollDialog = (DialogReRollBlockForTargets) pDialog;
+			DialogReRollBlockForTargetsProperties reRollDialog = (DialogReRollBlockForTargetsProperties) pDialog;
 			if (reRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
 				getClient().getCommunication().sendUseBrawler(reRollDialog.getSelectedTarget());
 			} else {

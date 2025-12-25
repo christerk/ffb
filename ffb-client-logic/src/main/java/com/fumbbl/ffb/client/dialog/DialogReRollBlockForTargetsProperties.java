@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
@@ -8,8 +9,7 @@ import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.model.BlockPropertiesRoll;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,10 +24,11 @@ import java.util.function.ObjIntConsumer;
 public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBlockProperties {
 
 	private final DialogReRollBlockForTargetsPropertiesParameter dialogParameter;
-	private ReRollSource reRollSource, singleDieReRollSource;
+	private ReRollSource reRollSource;
+	private final ReRollSource singleDieReRollSource;
 	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'N', 'B', 'S',
+		add(new Mnemonics('T', 'N', 'B',
 			new ArrayList<Character>() {{
 				add('P');
 				add('o');
@@ -38,7 +39,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('u');
 				add('m');
 			}}));
-		add(new Mnemonics('e', 'l', 'r', 'i',
+		add(new Mnemonics('e', 'l', 'r',
 			new ArrayList<Character>() {{
 				add('r');
 				add('y');
@@ -63,11 +64,8 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		Skill reRollSkill = pClient.getGame().getPlayerById(parameter.getPlayerId()).getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-
-		if (reRollSkill != null) {
-			singleDieReRollSource = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
-		}
+		singleDieReRollSource = UtilCards.getUnusedRerollSource(pClient.getGame().getActingPlayer(),
+			ReRolledActions.SINGLE_DIE);
 
 		for (BlockPropertiesRoll blockRoll : parameter.getBlockRolls()) {
 
@@ -87,26 +85,26 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				buttonPanel.add(Box.createHorizontalGlue());
 				buttonPanel.setOpaque(false);
 
-				if (blockRoll.has(ReRollSources.TEAM_RE_ROLL)) {
-					buttonPanel.add(createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
+				if (blockRoll.has(ReRollProperty.TRR)) {
+					buttonPanel.add(
+						createReRollButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, currentMnemonics.team));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (blockRoll.getNrOfDice() == 1) {
-					if (blockRoll.has(ReRollSources.PRO)) {
+					if (blockRoll.has(ReRollProperty.PRO)) {
 						buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO, currentMnemonics.pro.get(0)));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
-					if (singleDieReRollSource != null && blockRoll.has(singleDieReRollSource)) {
-						buttonPanel.add(createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource, currentMnemonics.consummate.get(0)));
+					if (blockRoll.has(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
+						buttonPanel.add(
+							createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource,
+								currentMnemonics.consummate.get(0)));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 				}
-				if (blockRoll.has(ReRollSources.BRAWLER)) {
-					buttonPanel.add(createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (blockRoll.has(ReRollSources.LORD_OF_CHAOS)) {
-					buttonPanel.add(createReRollButton(target, ReRollSources.LORD_OF_CHAOS.getName(pClient.getGame()), ReRollSources.LORD_OF_CHAOS, currentMnemonics.single));
+				if (blockRoll.has(ReRollProperty.BRAWLER)) {
+					buttonPanel.add(
+						createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
@@ -117,13 +115,15 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				targetPanel.add(buttonPanel);
 
 				if (Math.abs(blockRoll.getNrOfDice()) > 1) {
-					if (blockRoll.has(ReRollSources.PRO)) {
+					if (blockRoll.has(ReRollProperty.PRO)) {
 						targetPanel.add(createSingleDieReRollPanel(proTextPanel(),
-							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.pro, this::proAction));
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(),
+							currentMnemonics.pro, this::proAction));
 					}
-					if (singleDieReRollSource != null && blockRoll.has(singleDieReRollSource)) {
+					if (blockRoll.has(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
-							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(), currentMnemonics.consummate, this::consummateAction));
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(),
+							currentMnemonics.consummate, this::consummateAction));
 					}
 				}
 
@@ -220,7 +220,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}
 
 	public DialogId getId() {
-		return DialogId.RE_ROLL_BLOCK_FOR_TARGETS;
+		return DialogId.RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES;
 	}
 
 	public String getSelectedTarget() {
@@ -244,15 +244,14 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}
 
 	private static class Mnemonics {
-		private final char team, brawler, none, single;
+		private final char team, brawler, none;
 		private final List<Character> pro, consummate;
 
-		public Mnemonics(char team, char none, char brawler, char single, List<Character> pro, List<Character> consummate) {
+		public Mnemonics(char team, char none, char brawler, List<Character> pro, List<Character> consummate) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
 			this.pro = pro;
-			this.single = single;
 			this.consummate = consummate;
 		}
 	}

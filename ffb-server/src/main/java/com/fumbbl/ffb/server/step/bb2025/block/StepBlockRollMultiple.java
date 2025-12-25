@@ -232,7 +232,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(roll::add);
 
 				if (singleDieReRollSource != null) {
-					roll.add(singleDieReRollSource);
+					roll.add(ReRollProperty.ANY_DIE_RE_ROLL);
 				}
 				if (savageBlowAvailable) {
 					roll.add(ReRollSources.SAVAGE_BLOW);
