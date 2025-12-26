@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.bb2020;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -31,7 +31,7 @@ import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepCatchOfTheDay extends AbstractStepWithReRoll {
 
 	private boolean endPlayerAction, endTurn;
@@ -171,9 +171,11 @@ public class StepCatchOfTheDay extends AbstractStepWithReRoll {
 				break;
 			case PASS:
 			case PASS_MOVE:
+				game.getTurnData().setPassUsed(true);
+				break;
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
-				game.getTurnData().setPassUsed(true);
+				game.getTurnData().setTtmUsed(true);
 				break;
 			case HAND_OVER:
 			case HAND_OVER_MOVE:
