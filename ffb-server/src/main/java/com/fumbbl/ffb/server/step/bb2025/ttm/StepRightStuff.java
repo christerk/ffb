@@ -158,7 +158,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(thrownPlayer));
 		}
 		boolean fumbledKtm = PassResult.FUMBLE == passResult && kickedPlayer;
-		boolean doRoll = !fDropThrownPlayer && !fumbledKtm;
+		boolean autoFailLanding = oldPlayerState != null && (oldPlayerState.isProneOrStunned() || oldPlayerState.isDistracted());
+
+		boolean doRoll = !fDropThrownPlayer && !fumbledKtm && !autoFailLanding;
 		if (doRoll && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
 			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
 				doRoll = false;

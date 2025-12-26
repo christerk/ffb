@@ -310,7 +310,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			case THROW_TEAM_MATE:
 			case THROW_TEAM_MATE_MOVE:
 				if (playerRemoved && hitTargetTeamMate) {
-					turnData.setPassUsed(true);
+					turnData.setTtmUsed(true);
 					game.setPassCoordinate(null);
 					fieldModel.setRangeRuler(null);
 					return PlayerAction.THROW_TEAM_MATE_MOVE;

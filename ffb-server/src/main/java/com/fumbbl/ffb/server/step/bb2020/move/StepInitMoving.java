@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -71,7 +71,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepInitMoving extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
