@@ -104,7 +104,6 @@ public class StepTrickster extends AbstractStep {
 				ClientCommandPickUpChoice pickUpChoice = (ClientCommandPickUpChoice) pReceivedCommand.getCommand();
 				attemptPickUp = pickUpChoice.isChoicePickUp();
 				UtilServerDialog.hideDialog(getGameState());
-				System.out.println("DEBUG Trickster choice: " + pickUpChoice.isChoicePickUp());
 			}
 			commandStatus = StepCommandStatus.EXECUTE_STEP;
 
