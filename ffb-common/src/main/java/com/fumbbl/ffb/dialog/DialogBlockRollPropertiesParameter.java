@@ -4,7 +4,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IDialogParameter;
-import com.fumbbl.ffb.IDialogParameterMascot;
+import com.fumbbl.ffb.HasReRollProperties;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.ReRollPropertyFactory;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DialogBlockRollPropertiesParameter implements IDialogParameter, IDialogParameterMascot {
+public class DialogBlockRollPropertiesParameter implements IDialogParameter, HasReRollProperties {
 
 	private String choosingTeamId;
 	private int nrOfDice;

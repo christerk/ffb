@@ -5,7 +5,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
-import com.fumbbl.ffb.model.BlockPropertiesRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -55,7 +55,7 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 		}
 	}
 
-	private BlockRoll map(BlockPropertiesRoll input) {
+	private BlockRoll map(BlockRollProperties input) {
 		BlockRoll output = new BlockRoll();
 		output.setBlockRoll(input.getBlockRoll());
 		output.setSelectedIndex(input.getSelectedIndex());

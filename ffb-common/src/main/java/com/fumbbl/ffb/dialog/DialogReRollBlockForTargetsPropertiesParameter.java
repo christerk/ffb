@@ -7,7 +7,7 @@ import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlockPropertiesRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 public class DialogReRollBlockForTargetsPropertiesParameter implements IDialogParameter {
 
 	private String playerId;
-	private List<BlockPropertiesRoll> blockRolls;
+	private List<BlockRollProperties> blockRolls;
 
 	public DialogReRollBlockForTargetsPropertiesParameter() {
 		super();
 	}
 
-	public DialogReRollBlockForTargetsPropertiesParameter(String playerId, List<BlockPropertiesRoll> blockRolls) {
+	public DialogReRollBlockForTargetsPropertiesParameter(String playerId, List<BlockRollProperties> blockRolls) {
 		this.playerId = playerId;
 		this.blockRolls = blockRolls;
 	}
@@ -30,7 +30,7 @@ public class DialogReRollBlockForTargetsPropertiesParameter implements IDialogPa
 		return DialogId.RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES;
 	}
 
-	public List<BlockPropertiesRoll> getBlockRolls() {
+	public List<BlockRollProperties> getBlockRolls() {
 		return blockRolls;
 	}
 
@@ -60,7 +60,7 @@ public class DialogReRollBlockForTargetsPropertiesParameter implements IDialogPa
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
 		JsonArray array =  IJsonOption.BLOCK_ROLLS.getFrom(source, jsonObject);
-		blockRolls = array.values().stream().map(roll -> new BlockPropertiesRoll().initFrom(source, roll)).collect(Collectors.toList());
+		blockRolls = array.values().stream().map(roll -> new BlockRollProperties().initFrom(source, roll)).collect(Collectors.toList());
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}

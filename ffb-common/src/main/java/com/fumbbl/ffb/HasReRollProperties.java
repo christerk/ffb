@@ -1,5 +1,5 @@
 package com.fumbbl.ffb;
 
-public interface IDialogParameterMascot {
+public interface HasReRollProperties {
 	boolean hasProperty(ReRollProperty property);
 }

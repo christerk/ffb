@@ -5,7 +5,7 @@ import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
-import com.fumbbl.ffb.model.BlockPropertiesRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.AbstractButton;
@@ -56,8 +56,7 @@ public abstract class AbstractDialogMultiBlockProperties extends AbstractDialogB
 	protected Map<String, JButton> anyDiceButtons = new HashMap<>();
 	protected Map<String, List<JCheckBox>> anyDiceCheckBoxes = new HashMap<>();
 
-	private DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
-
+	protected DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
 
 	public AbstractDialogMultiBlockProperties(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
 		super(pClient, pTitle, pCloseable);
@@ -75,7 +74,7 @@ public abstract class AbstractDialogMultiBlockProperties extends AbstractDialogB
 		return button;
 	}
 
-	protected JPanel dicePanel(BlockPropertiesRoll blockRoll, boolean activeButtons, List<Integer> events,
+	protected JPanel dicePanel(BlockRollProperties blockRoll, boolean activeButtons, List<Integer> events,
 		boolean addCheckboxes) {
 		JPanel panel = blockRollPanel();
 

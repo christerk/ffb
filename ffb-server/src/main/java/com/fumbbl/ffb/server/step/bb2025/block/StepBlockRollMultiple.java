@@ -22,7 +22,7 @@ import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.BlockPropertiesRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
@@ -102,7 +102,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 					case BLOCK_TARGETS:
 						List<BlockTarget> targets = (List<BlockTarget>) parameter.getValue();
 						state.blockRolls.addAll(targets.stream().map(target ->
-							new BlockPropertiesRoll(target.getPlayerId(), target.getOriginalPlayerState(), targets.indexOf(target))
+							new BlockRollProperties(target.getPlayerId(), target.getOriginalPlayerState(), targets.indexOf(target))
 						).collect(Collectors.toList()));
 						break;
 					case CONSUME_PARAMETER:
@@ -271,7 +271,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void handleBrawler(Player<?> player, BlockPropertiesRoll blockRoll) {
+	private void handleBrawler(Player<?> player, BlockRollProperties blockRoll) {
 		int reRolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 		getResult().addReport(new ReportBlockReRoll(new int[]{reRolledDie}, player.getId(), ReRollSources.BRAWLER));
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
@@ -286,8 +286,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	}
 
 	private void decideNextStep(Game game) {
-		List<BlockPropertiesRoll> unselected =
-			state.blockRolls.stream().filter(BlockPropertiesRoll::needsSelection).collect(Collectors.toList());
+		List<BlockRollProperties> unselected =
+			state.blockRolls.stream().filter(BlockRollProperties::needsSelection).collect(Collectors.toList());
 
 		if (unselected.isEmpty()) {
 			nextStep();
@@ -339,10 +339,10 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			}
 		});
 
-		boolean anyReRollLeft = state.blockRolls.stream().anyMatch(BlockPropertiesRoll::hasReRollsLeft);
+		boolean anyReRollLeft = state.blockRolls.stream().anyMatch(BlockRollProperties::hasReRollsLeft);
 
 		if (state.attackerTeamSelects) {
-			if (unselected.stream().anyMatch(BlockPropertiesRoll::isOwnChoice) || anyReRollLeft) {
+			if (unselected.stream().anyMatch(BlockRollProperties::isOwnChoice) || anyReRollLeft) {
 				UtilServerDialog.showDialog(getGameState(),
 					createAttackerDialogParameter(actingPlayer.getPlayer(), state.blockRolls), false);
 			} else {
@@ -350,7 +350,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			}
 		}
 		if (!state.attackerTeamSelects) {
-			List<BlockPropertiesRoll> defender =
+			List<BlockRollProperties> defender =
 				state.blockRolls.stream().filter(roll -> !roll.isOwnChoice()).collect(Collectors.toList());
 			if (unselected.stream().anyMatch(roll -> !roll.isOwnChoice())) {
 				Team otherTeam = game.getOtherTeam(game.getActingTeam());
@@ -361,7 +361,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void roll(BlockPropertiesRoll roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {
+	private void roll(BlockRollProperties roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {
 		if (reRolling) {
 			if (state.reRollSource == ReRollSources.PRO) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollOncePerTurn,
@@ -381,7 +381,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void adjustRollForIndexedReRoll(BlockPropertiesRoll roll, ActingPlayer actingPlayer, ISkillProperty propertyToMark,
+	private void adjustRollForIndexedReRoll(BlockRollProperties roll, ActingPlayer actingPlayer, ISkillProperty propertyToMark,
 		int[] indexesToReRoll) {
 		actingPlayer.markSkillUsed(propertyToMark);
 		int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(indexesToReRoll.length);
@@ -393,11 +393,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private DialogOpponentBlockSelectionPropertiesParameter createDefenderDialogParameter(Team team, List<BlockPropertiesRoll> blockRolls) {
+	private DialogOpponentBlockSelectionPropertiesParameter createDefenderDialogParameter(Team team, List<BlockRollProperties> blockRolls) {
 		return new DialogOpponentBlockSelectionPropertiesParameter(team.getId(), blockRolls);
 	}
 
-	private DialogReRollBlockForTargetsPropertiesParameter createAttackerDialogParameter(Player<?> player, List<BlockPropertiesRoll> blockRolls) {
+	private DialogReRollBlockForTargetsPropertiesParameter createAttackerDialogParameter(Player<?> player, List<BlockRollProperties> blockRolls) {
 		return new DialogReRollBlockForTargetsPropertiesParameter(player.getId(), blockRolls);
 	}
 
@@ -409,7 +409,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	}
 
 
-	private void generateBlockEvaluationSequence(BlockPropertiesRoll blockRoll) {
+	private void generateBlockEvaluationSequence(BlockRollProperties blockRoll) {
 		Sequence sequence = new Sequence(getGameState());
 		sequence.add(StepId.SET_DEFENDER, new StepParameter(StepParameterKey.BLOCK_DEFENDER_ID, blockRoll.getTargetId()));
 
@@ -470,7 +470,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 	}
 
 	private static class State implements IJsonSerializable, SingleReRollUseState {
-		private List<BlockPropertiesRoll> blockRolls = new ArrayList<>();
+		private List<BlockRollProperties> blockRolls = new ArrayList<>();
 		private boolean firstRun = true, attackerTeamSelects = true;
 		private ReRollSource reRollSource;
 		private String selectedTarget, playerIdForSingleUseReRoll;
@@ -479,7 +479,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		public JsonObject toJsonValue() {
 			JsonObject jsonObject = new JsonObject();
 			JsonArray jsonArray = new JsonArray();
-			blockRolls.stream().map(BlockPropertiesRoll::toJsonValue).forEach(jsonArray::add);
+			blockRolls.stream().map(BlockRollProperties::toJsonValue).forEach(jsonArray::add);
 			IJsonOption.BLOCK_ROLLS.addTo(jsonObject, jsonArray);
 			IJsonOption.PLAYER_ID.addTo(jsonObject, selectedTarget);
 			IJsonOption.FIRST_RUN.addTo(jsonObject, firstRun);
@@ -494,7 +494,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 			JsonArray jsonArray = IJsonOption.BLOCK_ROLLS.getFrom(source, jsonObject);
 			blockRolls =
-				jsonArray.values().stream().map(value -> new BlockPropertiesRoll().initFrom(source, value)).collect(Collectors.toList());
+				jsonArray.values().stream().map(value -> new BlockRollProperties().initFrom(source, value)).collect(Collectors.toList());
 			selectedTarget = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 			firstRun = IJsonOption.FIRST_RUN.getFrom(source, jsonObject);
 			reRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);

@@ -3,7 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogOpponentBlockSelectionPropertiesParameter;
-import com.fumbbl.ffb.model.BlockPropertiesRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,7 +25,7 @@ public class DialogOpponentBlockSelectionProperties extends AbstractDialogMultiB
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		for (BlockPropertiesRoll blockRoll : parameter.getBlockRolls()) {
+		for (BlockRollProperties blockRoll : parameter.getBlockRolls()) {
 
 			String target = blockRoll.getTargetId();
 			JPanel targetPanel = new BackgroundPanel(colorOpponentChoice);

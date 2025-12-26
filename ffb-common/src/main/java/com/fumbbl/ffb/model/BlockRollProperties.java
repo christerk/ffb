@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.HasReRollProperties;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
@@ -21,7 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BlockPropertiesRoll implements IJsonSerializable {
+public class BlockRollProperties implements IJsonSerializable, HasReRollProperties {
 	private String targetId;
 	private PlayerState oldPlayerState;
 	private boolean successFulDauntless, ownChoice, doubleTargetStrength;
@@ -31,10 +32,10 @@ public class BlockPropertiesRoll implements IJsonSerializable {
 	private final Set<ReRollSource> reRollSources = new HashSet<>();
 	private final Set<ReRollProperty> reRollProperties = new HashSet<>();
 
-	public BlockPropertiesRoll() {
+	public BlockRollProperties() {
 	}
 
-	public BlockPropertiesRoll(String targetId, PlayerState oldPlayerState, int id) {
+	public BlockRollProperties(String targetId, PlayerState oldPlayerState, int id) {
 		this.targetId = targetId;
 		this.oldPlayerState = oldPlayerState;
 		this.id = id;
@@ -145,12 +146,20 @@ public class BlockPropertiesRoll implements IJsonSerializable {
 		this.reRollProperties.add(reRollProperty);
 	}
 
-	public boolean has(ReRollProperty reRollProperty) {
+	public boolean hasProperty(ReRollProperty reRollProperty) {
 		return this.reRollProperties.contains(reRollProperty);
 	}
 
 	public void remove(ReRollProperty reRollProperty) {
 		reRollProperties.remove(reRollProperty);
+	}
+
+	public Set<ReRollSource> getReRollSources() {
+		return reRollSources;
+	}
+
+	public Set<ReRollProperty> getReRollProperties() {
+		return reRollProperties;
 	}
 
 	@Override
@@ -161,7 +170,7 @@ public class BlockPropertiesRoll implements IJsonSerializable {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		BlockPropertiesRoll blockRoll1 = (BlockPropertiesRoll) o;
+		BlockRollProperties blockRoll1 = (BlockRollProperties) o;
 		return successFulDauntless == blockRoll1.successFulDauntless && ownChoice == blockRoll1.ownChoice &&
 			nrOfDice == blockRoll1.nrOfDice && id == blockRoll1.id && proIndex == blockRoll1.proIndex &&
 			selectedIndex == blockRoll1.selectedIndex && Objects.equals(targetId, blockRoll1.targetId) &&
@@ -181,7 +190,7 @@ public class BlockPropertiesRoll implements IJsonSerializable {
 	}
 
 	@Override
-	public BlockPropertiesRoll initFrom(IFactorySource source, JsonValue jsonValue) {
+	public BlockRollProperties initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		targetId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		successFulDauntless = IJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);

@@ -1,6 +1,6 @@
 package com.fumbbl.ffb.client.dialog;
 
-import com.fumbbl.ffb.IDialogParameterMascot;
+import com.fumbbl.ffb.HasReRollProperties;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
@@ -19,7 +19,7 @@ import static java.awt.Component.CENTER_ALIGNMENT;
 
 public class DialogExtensionMascot {
 
-	public ReRollSource teamReRollText(IDialogParameterMascot dialogParameter) {
+	public ReRollSource teamReRollText(HasReRollProperties dialogParameter) {
 		if (dialogParameter.hasProperty(ReRollProperty.BRILLIANT_COACHING)) {
 			return ReRollSources.BRILLIANT_COACHING;
 		}
