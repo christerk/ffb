@@ -204,10 +204,6 @@ public class StepTrickster extends AbstractStep {
 					fieldModel.setBallCoordinate(toCoordinate);
 				}
 				UtilServerGame.syncGameModel(this);
-				System.out.println("DEBUG Trickster publish: attempt=" + attemptPickUp
-					+ " withBall=" + withBall
-					+ " to=" + toCoordinate
-					+ " ball=" + fieldModel.getBallCoordinate());
 				if (!withBall && toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
 					if (attemptPickUp == null) {
 						UtilServerDialog.showDialog(getGameState(), new DialogPickUpChoiceParameter(), true);
