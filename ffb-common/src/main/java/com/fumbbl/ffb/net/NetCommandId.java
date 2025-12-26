@@ -319,7 +319,7 @@ public enum NetCommandId implements INamedObject {
 			case SERVER_SET_PREVENT_SKETCHING:
 				return new ServerCommandSetPreventSketching();
 			case CLIENT_PICK_UP_CHOICE:
-    		return new ClientCommandPickUpChoice();
+				return new ClientCommandPickUpChoice();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
