@@ -6,6 +6,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
+import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.model.BlockPropertiesRoll;
@@ -26,6 +27,8 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	private final DialogReRollBlockForTargetsPropertiesParameter dialogParameter;
 	private ReRollSource reRollSource;
 	private final ReRollSource singleDieReRollSource;
+	private final List<Integer> anyDiceIndexes = new ArrayList<>();
+
 	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
 		add(new Mnemonics('T', 'N', 'B',
@@ -38,7 +41,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('C');
 				add('u');
 				add('m');
-			}}));
+			}}, 'S'));
 		add(new Mnemonics('e', 'l', 'r',
 			new ArrayList<Character>() {{
 				add('r');
@@ -49,7 +52,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('a');
 				add('f');
 				add('v');
-			}}));
+			}}, 'b'));
 	}};
 	private int proIndex;
 
@@ -75,7 +78,9 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 			JPanel targetPanel = new BackgroundPanel(background);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), keyEvents.remove(0));
+			boolean hasSavageBlow = blockRoll.has(ReRollProperty.SAVAGE_BLOW);
+			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), blockDieMnemonics.remove(0),
+				hasSavageBlow && blockRoll.getNrOfDice() > 1);
 			targetPanel.add(dicePanel);
 			if (blockRoll.hasReRollsLeft()) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);
@@ -98,13 +103,21 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					if (blockRoll.has(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
 						buttonPanel.add(
 							createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource,
-								currentMnemonics.consummate.get(0)));
+								currentMnemonics.anyDie.get(0)));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 				}
 				if (blockRoll.has(ReRollProperty.BRAWLER)) {
 					buttonPanel.add(
 						createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+				if (blockRoll.has(ReRollProperty.SAVAGE_BLOW)) {
+					JButton anyDiceButton = createReRollButton(target, "Savage Blow", ReRollSources.SAVAGE_BLOW,
+						currentMnemonics.anyBlockDice);
+					anyDiceButton.setEnabled(blockRoll.getNrOfDice() == 1);
+					anyDiceButtons.put(target, anyDiceButton);
+					buttonPanel.add(anyDiceButton);
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
@@ -123,7 +136,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					if (blockRoll.has(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), blockRoll.getReRollDiceIndexes(),
-							currentMnemonics.consummate, this::consummateAction));
+							currentMnemonics.anyDie, this::anyDieAction));
 					}
 				}
 
@@ -186,7 +199,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		close();
 	}
 
-	private void consummateAction(String target, int index) {
+	private void anyDieAction(String target, int index) {
 		reRollSource = singleDieReRollSource;
 		this.proIndex = index;
 		this.selectedTarget = target;
@@ -209,6 +222,18 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	private void handleReRollUse(String target, ReRollSource reRollSource) {
 		this.reRollSource = reRollSource;
 		selectedTarget = target;
+		if (reRollSource == ReRollSources.SAVAGE_BLOW) {
+			List<JCheckBox> boxes = anyDiceCheckBoxes.get(target);
+			if (boxes == null) {
+				anyDiceIndexes.add(0);
+			} else {
+				for (int i = 0; i < boxes.size(); i++) {
+					if (boxes.get(i).isSelected()) {
+						anyDiceIndexes.add(i);
+					}
+				}
+			}
+		}
 		close();
 	}
 
@@ -239,20 +264,25 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		return proIndex;
 	}
 
+	public List<Integer> getAnyDiceIndexes() {
+		return anyDiceIndexes;
+	}
+
 	public DialogReRollBlockForTargetsPropertiesParameter getDialogParameter() {
 		return dialogParameter;
 	}
 
 	private static class Mnemonics {
-		private final char team, brawler, none;
-		private final List<Character> pro, consummate;
+		private final char team, brawler, none, anyBlockDice;
+		private final List<Character> pro, anyDie;
 
-		public Mnemonics(char team, char none, char brawler, List<Character> pro, List<Character> consummate) {
+		public Mnemonics(char team, char none, char brawler, List<Character> pro, List<Character> anyDie, char anyBlockDice) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
 			this.pro = pro;
-			this.consummate = consummate;
+			this.anyDie = anyDie;
+			this.anyBlockDice = anyBlockDice;
 		}
 	}
 }

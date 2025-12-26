@@ -462,6 +462,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, proIndex, reRollSource));
 	}
 
+	public void sendBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource, int proIndex, int[] anyDiceIndexes) {
+		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, proIndex, reRollSource, anyDiceIndexes));
+	}
+
 	public void sendPileDriver(String playerId) {
 		send(new ClientCommandPileDriver(playerId));
 	}

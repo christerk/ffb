@@ -32,7 +32,7 @@ public class DialogOpponentBlockSelectionProperties extends AbstractDialogMultiB
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 			mainPanel.add(targetPanel);
-			JPanel dicePanel = dicePanel(blockRoll, blockRoll.needsSelection(), keyEvents.remove(0));
+			JPanel dicePanel = dicePanel(blockRoll, blockRoll.needsSelection(), blockDieMnemonics.remove(0), false);
 			targetPanel.add(dicePanel);
 
 			targetPanel.add(namePanel(target));

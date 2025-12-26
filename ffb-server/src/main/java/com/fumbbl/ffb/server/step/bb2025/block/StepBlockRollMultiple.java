@@ -30,7 +30,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.report.ReportBlock;
@@ -62,7 +61,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -158,6 +156,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 						.findFirst().ifPresent(roll -> {
 							roll.setSelectedIndex(command.getSelectedIndex());
 							roll.setProIndex(command.getProIndex());
+							roll.setReRollDiceIndexes(command.getAnyDiceIndexes());
 						});
 
 					break;
@@ -235,7 +234,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 					roll.add(ReRollProperty.ANY_DIE_RE_ROLL);
 				}
 				if (savageBlowAvailable) {
-					roll.add(ReRollSources.SAVAGE_BLOW);
+					roll.add(ReRollProperty.SAVAGE_BLOW);
 				}
 
 				getResult().setSound(SoundId.BLOCK);
@@ -299,12 +298,10 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		final boolean teamReRollAvailable =
 			UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-		final Optional<Skill> singleDieReRollSkill =
-			UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canRerollSingleDieOncePerPeriod);
 		final boolean singleDieReRollAvailable =
-			singleDieReRollSkill.isPresent() && !actingPlayer.isSkillUsed(singleDieReRollSkill.get());
+			UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canRerollSingleDieOncePerPeriod);
 		final boolean savageBlowAvailable =
-			actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice);
+			actingPlayer.getPlayer().hasUnusedSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice);
 		InducementSet inducementSet = game.getTurnData().getInducementSet();
 		final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
 
@@ -317,7 +314,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			if (!proReRollAvailable) {
 				roll.remove(ReRollProperty.PRO);
 			}
-			if (!singleDieReRollAvailable && singleDieReRollSkill.isPresent()) {
+			if (!singleDieReRollAvailable) {
 				roll.remove(ReRollProperty.ANY_DIE_RE_ROLL);
 			}
 
@@ -325,7 +322,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				roll.remove(ReRollProperty.MASCOT);
 			}
 			if (!savageBlowAvailable) {
-				roll.remove(ReRollSources.SAVAGE_BLOW);
+				roll.remove(ReRollProperty.SAVAGE_BLOW);
 			}
 
 			boolean bothDownPresent = false;
@@ -375,9 +372,10 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			} else if (state.reRollSource == ReRollSources.SAVAGE_BLOW) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice,
 					roll.getReRollDiceIndexes());
+			} else {
+				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			}
 			roll.clearReRolls();
-			roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 		} else {
 			roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 		}

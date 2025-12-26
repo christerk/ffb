@@ -49,7 +49,8 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 			} else {
 				getClient().getCommunication()
 					.sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(),
-						reRollDialog.getReRollSource(), reRollDialog.getProIndex());
+						reRollDialog.getReRollSource(), reRollDialog.getProIndex(),
+						reRollDialog.getAnyDiceIndexes().stream().mapToInt(i -> i).toArray());
 			}
 		}
 	}
