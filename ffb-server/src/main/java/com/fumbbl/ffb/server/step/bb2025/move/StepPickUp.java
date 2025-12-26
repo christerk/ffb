@@ -102,7 +102,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 					ignore = !toPrimitive((Boolean) parameter.getValue());
 					return true;
 				case PICK_UP_OPTIONAL:
-					optionalPickUp = toPrimitive((Boolean) parameter.getValue());
+					optionalPickUp = (Boolean) parameter.getValue();
 					ignore = false;
 					return true;
 				case PLAYER_ON_BALL_ID:
