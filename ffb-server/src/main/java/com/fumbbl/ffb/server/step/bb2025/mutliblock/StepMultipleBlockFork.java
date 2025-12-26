@@ -98,6 +98,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 			blockGroup.forEach(target -> {
 				sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
 				sequence.add(StepId.TRICKSTER);
+				sequence.add(StepId.PICK_UP, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 			});
 			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup),
@@ -113,6 +114,7 @@ public class StepMultipleBlockFork extends AbstractStep {
 					Sequence sequence = new Sequence(getGameState());
 					sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
 					sequence.add(StepId.TRICKSTER);
+					sequence.add(StepId.PICK_UP, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 					sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
 					sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
