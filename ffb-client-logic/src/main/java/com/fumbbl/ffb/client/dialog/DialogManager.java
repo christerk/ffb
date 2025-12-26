@@ -220,6 +220,9 @@ public class DialogManager {
 					case BUY_PRAYERS_AND_INDUCEMENTS:
 						setDialogHandler(new DialogBuyPrayersAndInducementsHandler(getClient()));
 						break;
+					case PICK_UP_CHOICE:
+						setDialogHandler(new DialogPickUpChoiceHandler(getClient()));
+						break;
 					default:
 						break;
 				}

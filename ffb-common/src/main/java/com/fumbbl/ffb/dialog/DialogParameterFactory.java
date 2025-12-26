@@ -131,6 +131,8 @@ public class DialogParameterFactory {
                 return new DialogPenaltyShootoutParameter();
             case BUY_PRAYERS_AND_INDUCEMENTS:
                 return new DialogBuyPrayersAndInducementsParameter();
+            case PICK_UP_CHOICE:
+                return new DialogPickUpChoiceParameter();
             default:
                 return null;
         }

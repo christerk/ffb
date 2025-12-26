@@ -11,6 +11,7 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogPickUpChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PickupModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -21,6 +22,8 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandPickUpChoice;
 import com.fumbbl.ffb.report.bb2025.ReportPickupRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -35,6 +38,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -57,7 +61,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure, thrownPlayerId;
 
-	private boolean ignore, secureTheBall;
+	private boolean ignore, secureTheBall, optionalPickUp;
+	private Boolean attemptPickUp;
+	private String overridePlayerId;
 
 	public StepPickUp(GameState pGameState) {
 		super(pGameState);
@@ -91,9 +97,23 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			if (parameter.getKey() == StepParameterKey.FOLLOWUP_CHOICE) {
-				ignore = !toPrimitive((Boolean) parameter.getValue());
-				return true;
+			switch (parameter.getKey()) {
+				case FOLLOWUP_CHOICE:
+					ignore = !toPrimitive((Boolean) parameter.getValue());
+					return true;
+				case PICK_UP_OPTIONAL:
+					optionalPickUp = toPrimitive((Boolean) parameter.getValue());
+					ignore = false;
+					return true;
+				case PLAYER_ON_BALL_ID:
+					overridePlayerId = (String) parameter.getValue();
+					return true;
+				case ATTEMPT_PICK_UP:
+					attemptPickUp = (Boolean) parameter.getValue();
+					ignore = false;
+					return true;
+				default:
+					break;
 			}
 			return false;
 		}
@@ -109,6 +129,11 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_PICK_UP_CHOICE) {
+			ClientCommandPickUpChoice command = (ClientCommandPickUpChoice) pReceivedCommand.getCommand();
+			attemptPickUp = command.isChoicePickUp();
+			commandStatus = StepCommandStatus.EXECUTE_STEP;
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -117,9 +142,26 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player<?> player = StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer();
+		Player<?> player = StringTool.isProvided(overridePlayerId)
+			? game.getPlayerById(overridePlayerId)
+			: (StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
 		secureTheBall = game.getActingPlayer().getPlayerAction() == PlayerAction.SECURE_THE_BALL;
 		boolean doPickUp = true;
+		if (optionalPickUp && attemptPickUp == null && player != null && isPickUp(player)) {
+			UtilServerDialog.showDialog(getGameState(), new DialogPickUpChoiceParameter(), true);
+			getResult().setNextAction(StepAction.CONTINUE);
+			return;
+		}
+		if (Boolean.FALSE.equals(attemptPickUp)) {
+			if (optionalPickUp) {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else {
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+			}
+			return;
+		}
+
 		if (player != null && isPickUp(player)) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.hasTacklezones()) {
@@ -128,10 +170,14 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
 						doPickUp = false;
 						publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+						if (game.getActingTeam().hasPlayer(player)) {
+							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+						} else {
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						} 
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-						getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 					}
 				}
 				if (doPickUp) {
@@ -143,12 +189,14 @@ public class StepPickUp extends AbstractStepWithReRoll {
 							break;
 						case FAILURE:
 							publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-							if (!player.hasSkillProperty(NamedProperties.preventPickup)) {
+							if (game.getActingTeam().hasPlayer(player) && !player.hasSkillProperty(NamedProperties.preventPickup)) {
 								publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+								getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+							} else {
+								getResult().setNextAction(StepAction.NEXT_STEP);
 							}
 							publishParameter(
 								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 							break;
 						default:
 							break;
@@ -234,6 +282,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
 		IServerJsonOption.IGNORE.addTo(jsonObject, ignore);
 		IServerJsonOption.SECURE_THE_BALL_USED.addTo(jsonObject, secureTheBall);
+		IServerJsonOption.PICK_UP_OPTIONAL.addTo(jsonObject, optionalPickUp);
+		IServerJsonOption.ATTEMPT_PICK_UP.addTo(jsonObject, attemptPickUp);
+		IServerJsonOption.PLAYER_ON_BALL_ID.addTo(jsonObject, overridePlayerId);
 		return jsonObject;
 	}
 
@@ -245,6 +296,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
 		ignore = toPrimitive(IServerJsonOption.IGNORE.getFrom(source, jsonObject));
 		secureTheBall = toPrimitive(IServerJsonOption.SECURE_THE_BALL_USED.getFrom(source, jsonObject));
+		optionalPickUp = toPrimitive(IServerJsonOption.PICK_UP_OPTIONAL.getFrom(source, jsonObject));
+		attemptPickUp = IServerJsonOption.ATTEMPT_PICK_UP.getFrom(source, jsonObject);
+		overridePlayerId = IServerJsonOption.PLAYER_ON_BALL_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -31,6 +31,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
     JsonBooleanOption ASK_FOR_BLOCK_KIND = new JsonBooleanOption("askForBlockKind");
+    JsonBooleanOption ATTEMPT_PICK_UP = new JsonBooleanOption("attemptPickup");
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
     JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
@@ -146,6 +147,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonObjectOption PASS_STATE = new JsonObjectOption("passState");
     JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
+    JsonBooleanOption PICK_UP_OPTIONAL = new JsonBooleanOption("pickUpOptional");
+    JsonStringOption PLAYER_ON_BALL_ID = new JsonStringOption("playerOnBallId");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
     JsonStringOption PUSHBACK_PUSHER_ID = new JsonStringOption("pushbackPusherId");
