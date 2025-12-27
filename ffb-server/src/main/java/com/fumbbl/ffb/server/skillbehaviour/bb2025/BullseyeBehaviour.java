@@ -28,8 +28,7 @@ public class BullseyeBehaviour extends SkillBehaviour<Bullseye> {
 				}
 				step.getResult().addReport(new ReportSkillUse(useSkillCommand.getPlayerId(), useSkillCommand.getSkill(),
           state.usingBullseye, SkillUse.BULLSEYE));
-				step.publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE,
-          state.usingBullseye != null && state.usingBullseye));
+				step.publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE, state.usingBullseye));
 				step.publishParameter(StepParameter.from(StepParameterKey.PASS_RESULT, state.passResult));
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
 				return StepCommandStatus.EXECUTE_STEP;
