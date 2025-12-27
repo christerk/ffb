@@ -11,7 +11,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
-import com.fumbbl.ffb.dialog.DialogPickUpChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PickupModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -38,7 +37,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -147,18 +145,10 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			: (StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
 		secureTheBall = game.getActingPlayer().getPlayerAction() == PlayerAction.SECURE_THE_BALL;
 		boolean doPickUp = true;
-		if (optionalPickUp && attemptPickUp == null && player != null && isPickUp(player)) {
-			UtilServerDialog.showDialog(getGameState(), new DialogPickUpChoiceParameter(), true);
-			getResult().setNextAction(StepAction.CONTINUE);
-			return;
-		}
-		if (Boolean.FALSE.equals(attemptPickUp)) {
-			if (optionalPickUp) {
-				getResult().setNextAction(StepAction.NEXT_STEP);
-			} else {
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
-				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
-			}
+		
+		// Trickster optional path: coach declined; scatter already handled upstream
+		if (optionalPickUp && Boolean.FALSE.equals(attemptPickUp)) {
+			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 
@@ -170,7 +160,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
 						doPickUp = false;
 						publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-						if (game.getActingTeam().hasPlayer(player)) {
+						if (!optionalPickUp) {
 							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 						} else {
@@ -189,7 +179,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 							break;
 						case FAILURE:
 							publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
-							if (game.getActingTeam().hasPlayer(player) && !player.hasSkillProperty(NamedProperties.preventPickup)) {
+							if (!optionalPickUp && !player.hasSkillProperty(NamedProperties.preventPickup)) {
 								publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 								getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 							} else {
