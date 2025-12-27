@@ -59,8 +59,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnFailure, thrownPlayerId;
 
-	private boolean ignore, secureTheBall, optionalPickUp;
-	private Boolean attemptPickUp;
+	private boolean ignore, secureTheBall, optionalPickUp, attemptPickUp;
 	private String overridePlayerId;
 
 	public StepPickUp(GameState pGameState) {
@@ -100,7 +99,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 					ignore = !toPrimitive((Boolean) parameter.getValue());
 					return true;
 				case PICK_UP_OPTIONAL:
-					optionalPickUp = (Boolean) parameter.getValue();
+					optionalPickUp = toPrimitive((Boolean) parameter.getValue());
 					ignore = false;
 					return true;
 				case PLAYER_ON_BALL_ID:
