@@ -147,7 +147,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		boolean doPickUp = true;
 		
 		// Trickster optional path: coach declined; scatter already handled upstream
-		if (optionalPickUp && Boolean.FALSE.equals(attemptPickUp)) {
+		if (optionalPickUp && !attemptPickUp) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
