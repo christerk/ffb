@@ -76,11 +76,11 @@ public class DialogAbout extends Dialog {
 
 		int y = 130;
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Headcoach: BattleLore", dimensionProvider);
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for providing ideas, encouragement and the occasional kick in the butt.", dimensionProvider);
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += 0), "Positional Coach: Garcangel", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for taking care of the chores and bringing fresh perspectives and ideas.", dimensionProvider);
 
-		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Assistant Coaches: WhatBall, Garion and Lakrillo", dimensionProvider);
-		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for helping to to pull the cart along.", dimensionProvider);
+		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "HoF: BattleLore, WhatBall, Garion and Lakrillo", dimensionProvider);
+		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for helping laying out the foundation.", dimensionProvider);
 
 		drawBold(g2d, dimensionProvider.scale(10), dimensionProvider.scale(y += offsetBoldLine), "Sports Director: Christer", dimensionProvider);
 		drawText(g2d, dimensionProvider.scale(offsetLine), dimensionProvider.scale(y += offsetLine), "thank you for the patience and energy to tackle the long road with me.", dimensionProvider);
