@@ -209,9 +209,9 @@ public class StepTrickster extends AbstractStep {
 						getResult().setNextAction(StepAction.CONTINUE);
 						return;
 					} else if (attemptPickUp) {
-    				publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, true));
+						publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, true));
 					} else {
-    				publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, false));
+						publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, false));
 						publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 					}
 					publishParameter(new StepParameter(StepParameterKey.PLAYER_ON_BALL_ID, defender.getId()));
