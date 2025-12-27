@@ -5,22 +5,20 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2025.ReportMascotUsed;
+import com.fumbbl.ffb.report.bb2025.ReportTeamCaptain;
 
-@ReportMessageType(ReportId.MASCOT_USED)
+@ReportMessageType(ReportId.TEAM_CAPTAIN)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class MascotUsedMessage extends ReportMessageBase<ReportMascotUsed> {
+public class TeamCaptainMessage extends ReportMessageBase<ReportTeamCaptain> {
 	@Override
-	protected void render(ReportMascotUsed report) {
-		println(getIndent(), TextStyle.ROLL, "Mascot Roll [ " + report.getRoll() + " ]");
+	protected void render(ReportTeamCaptain report) {
+		println(getIndent(), TextStyle.ROLL, "Team Captain Roll [ " + report.getRoll() + " ]");
 		printTeamName(false, report.getTeamId());
-		StringBuilder builder = new StringBuilder(" used their Team Mascot");
+		StringBuilder builder = new StringBuilder(" look to their Team Captain for guidance");
 		if (report.isSuccessful()) {
-			builder.append(" successfully.");
-		} else if (report.isFallback()) {
-			builder.append(" but it failed so they used a regular re-roll instead.");
+			builder.append(" and save the re-roll.");
 		} else {
-			builder.append(" but it failed.");
+			builder.append(" but nothing happens.");
 		}
 		println(getIndent(), builder.toString());
 

@@ -341,8 +341,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return successful;
 	}
 
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
+	private ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
 			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);

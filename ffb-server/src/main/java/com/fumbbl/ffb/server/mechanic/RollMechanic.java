@@ -61,8 +61,6 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer);
 
-	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
-
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
 
 	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);

@@ -29,6 +29,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.report.bb2025.ReportMascotUsed;
+import com.fumbbl.ffb.report.bb2025.ReportTeamCaptain;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
@@ -49,7 +50,8 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
-	public static final int MASCOT_MINIMUM_ROLL = 4;
+	private static final int MASCOT_MINIMUM_ROLL = 4;
+	private static final int TEAM_CAPTAIN_MINIMUM_ROLL = 6;
 	private final Map<InjuryAttribute, Integer> reductionThresholds = new HashMap<InjuryAttribute, Integer>() {{
 		put(InjuryAttribute.MA, 1);
 		put(InjuryAttribute.ST, 1);
@@ -291,10 +293,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
 				boolean fallback = !successful && reRollSource == ReRollSources.MASCOT_TRR && turnData.getReRolls() > 0;
 
-				stepResult.addReport(
-					new ReportMascotUsed(game.getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful, fallback));
-
-				UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
+				useMascot(stepResult, gameState, mascotRoll, successful, fallback, mascotType, turnData);
 
 				if (successful) {
 					return checkForLoner(pPlayer, gameState, stepResult);
@@ -332,11 +331,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 								boolean fallback =
 									!successful && reRollSource == ReRollSources.PRO_MASCOT_TRR && turnData.getReRolls() > 0;
 
-								stepResult.addReport(
-									new ReportMascotUsed(game.getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
-										fallback));
-
-								UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
+								useMascot(stepResult, gameState, mascotRoll, successful, fallback, mascotType, turnData);
 
 								if (successful) {
 									if (checkForLoner(pPlayer, gameState, stepResult)) {
@@ -353,7 +348,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 							}
 
 							if (Arrays.asList(ReRollSources.PRO_TRR, ReRollSources.PRO_MASCOT_TRR).contains(reRollSource)) {
-								if (useTeamReRoll(reRollSource, pPlayer, turnData, stepResult, successful, gameState)) {
+								if (useTeamReRoll(ReRollSources.TEAM_RE_ROLL, pPlayer, turnData, stepResult, successful, gameState)) {
 									proRoll = gameState.getDiceRoller().rollSkill();
 									successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
 									stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
@@ -383,9 +378,37 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return successful;
 	}
 
+	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
+		boolean fallback,
+		InducementType mascotType, TurnData turnData) {
+		stepResult.addReport(
+			new ReportMascotUsed(gameState.getGame().getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
+				fallback));
+
+		if (!successful || !checkTeamCaptain(stepResult, gameState)) {
+			UtilServerInducementUse.useInducement(mascotType, 1, turnData.getInducementSet());
+		}
+	}
+
+	private boolean checkTeamCaptain(StepResult stepResult, GameState gameState) {
+
+		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers()).noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls))) {
+			return false;
+		}
+
+		int roll = gameState.getDiceRoller().rollDice(6);
+		boolean rrSaved = roll >= TEAM_CAPTAIN_MINIMUM_ROLL;
+		stepResult.addReport(
+			new ReportTeamCaptain(gameState.getGame().getActingTeam().getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
+		return rrSaved;
+	}
+
 	private boolean useTeamReRoll(ReRollSource reRollSource, Player<?> pPlayer, TurnData turnData, StepResult stepResult,
 		boolean successful, GameState gameState) {
-		ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData);
+
+		boolean rrSaved = checkTeamCaptain(stepResult, gameState);
+
+		ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData, !rrSaved);
 
 		if (usedAdditionalReRollSource != null) {
 			stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
@@ -412,19 +435,26 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
-		turnData.setReRolls(turnData.getReRolls() - 1);
+	private ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData, boolean rrActuallyUsed) {
+		if (rrActuallyUsed) {
+			turnData.setReRolls(turnData.getReRolls() - 1);
+		}
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+			if (rrActuallyUsed) {
+				turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+			}
 			return ReRollSources.BRILLIANT_COACHING;
 		}
 		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+			if (rrActuallyUsed) {
+				turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+			}
 			return ReRollSources.PUMP_UP_THE_CROWD;
 		}
 		if (turnData.getReRollShowStarOneDrive() > 0) {
-			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+			if (rrActuallyUsed) {
+				turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+			}
 			return ReRollSources.SHOW_STAR;
 		}
 

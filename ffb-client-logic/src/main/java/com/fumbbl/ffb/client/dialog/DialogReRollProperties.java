@@ -240,6 +240,9 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			}
 			return;
 		}
+		if (pActionEvent.getSource() == fallbackToTrr || pActionEvent.getSource() == proFallbackTrr) {
+			return;
+		}
 		if (getCloseListener() != null) {
 			getCloseListener().dialogClosed(this);
 		}

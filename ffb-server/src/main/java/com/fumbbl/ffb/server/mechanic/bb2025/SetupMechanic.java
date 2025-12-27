@@ -41,6 +41,7 @@ public class SetupMechanic extends com.fumbbl.ffb.server.mechanic.SetupMechanic 
 		Game game = pGameState.getGame();
 		List<String> messageList = new ArrayList<>();
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
+		boolean mustFieldCaptain = false;
 		for (Player<?> player : team.getPlayers()) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			// Keen Players are available but have to be removed from the count to not trigger setup checks as they do not have to be fielded
@@ -67,6 +68,10 @@ public class SetupMechanic extends com.fumbbl.ffb.server.mechanic.SetupMechanic 
 			if ((pHomeTeam && FieldCoordinateBounds.LOS_HOME.isInBounds(playerCoordinate))
 					|| (!pHomeTeam && FieldCoordinateBounds.LOS_AWAY.isInBounds(playerCoordinate))) {
 				playersOnLos++;
+			}
+
+			if (player.hasSkillProperty(NamedProperties.needsToBeSetUp) && game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE) {
+				mustFieldCaptain = true;
 			}
 		}
 		int maxPlayersOnField = UtilGameOption.getIntOption(game, GameOptionId.MAX_PLAYERS_ON_FIELD);
@@ -107,6 +112,11 @@ public class SetupMechanic extends com.fumbbl.ffb.server.mechanic.SetupMechanic 
 						+ " Players on the Line of Scrimmage. You have to put all your Players there.");
 			}
 		}
+
+		if (mustFieldCaptain) {
+			messageList.add("Your Team Captain is in reserves.");
+		}
+
 		if (!messageList.isEmpty()) {
 			UtilServerDialog.showDialog(pGameState,
 					new DialogSetupErrorParameter(team.getId(), messageList.toArray(new String[0])), false);
