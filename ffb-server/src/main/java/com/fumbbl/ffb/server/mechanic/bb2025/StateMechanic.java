@@ -2,7 +2,15 @@ package com.fumbbl.ffb.server.mechanic.bb2025;
 
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.inducement.Inducement;
+import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -85,6 +93,26 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 
 		resetLeaderState(game);
 		resetSpecialSkillsAtHalfTime(game);
+		resetInducements(game);
+	}
+
+	private void resetInducements(Game game) {
+		if (game.getHalf() <= 2) {
+			resetInducements(game.getTurnDataHome().getInducementSet());
+			resetInducements(game.getTurnDataAway().getInducementSet());
+		}
+	}
+
+	private void resetInducements(InducementSet inducementSet) {
+		resetInducement(inducementSet, inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
+	}
+
+	private void resetInducement(InducementSet inducementSet, InducementType inducementType) {
+		Inducement inducement = inducementSet.get(inducementType);
+		if (inducement != null) {
+			inducement.setUses(0);
+			inducementSet.addInducement(inducement);
+		}
 	}
 
 	private void resetSpecialSkillsAtHalfTime(Game game) {

@@ -8,7 +8,7 @@ import com.fumbbl.ffb.INamedObject;
 public enum DialogId implements INamedObject {
 
 	INFORMATION("information"), YES_OR_NO_QUESTION("yesOrNoQuestion"), GAME_COACH_PASSWORD("gameCoachPassword"),
-	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"),
+	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"), RE_ROLL_PROPERTIES("reRollProperties"),
 	RE_ROLL_FOR_TARGETS("reRollForTargets"), RE_ROLL_BLOCK_FOR_TARGETS("reRollBlockForTargets"), SKILL_USE("skillUse"),
 	PROGRESS_BAR("progressBar"), TEAM_SETUP("teamSetup"), USE_APOTHECARY("useApothecary"),
 	USE_APOTHECARIES("useApothecaries"), USE_IGORS("useIgors"), USE_MORTUARY_ASSISTANTS("useMortuaryAssistants"),
@@ -29,7 +29,9 @@ public enum DialogId implements INamedObject {
 	CONFIRM_END_ACTION("confirmEndAction"), CHANGE_LIST("changeList"), SELECT_WEATHER("selectWeather"),
 	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal"), KICK_OFF_RESULT("kickOffResult"),
 	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice"), 
-	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements");
+	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements"),
+	BLOCK_ROLL_PROPERTIES("blockRollProperties"), RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES("reRollBlockForTargetsProperties"),
+	OPPONENT_BLOCK_SELECTION_PROPERTIES("opponentBlockSelectionProperties");
 
 	private final String fName;
 

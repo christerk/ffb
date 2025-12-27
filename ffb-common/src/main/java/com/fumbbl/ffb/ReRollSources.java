@@ -7,7 +7,7 @@ import java.util.Map;
 public class ReRollSources {
 
 	public static final ReRollSource TEAM_RE_ROLL = new ReRollSource("Team ReRoll");
-	public static final ReRollSource BRILLIANT_COACHING_RE_ROLL = new ReRollSource("Brilliant Coaching ReRoll");
+	public static final ReRollSource BRILLIANT_COACHING = new ReRollSource("Brilliant Coaching ReRoll");
 	public static final ReRollSource DODGE = new ReRollSource("Dodge");
 	public static final ReRollSource PRO = new ReRollSource("Pro");
 	public static final ReRollSource SURE_FEET = new ReRollSource("Sure Feet");
@@ -33,6 +33,11 @@ public class ReRollSources {
 	public static final ReRollSource BOUNDING_LEAP = new ReRollSource("Bounding Leap");
 	public static final ReRollSource UNSTOPPABLE_MOMENTUM = new ReRollSource("Unstoppable Momentum");
 	public static final ReRollSource SAVAGE_BLOW = new ReRollSource("Savage Blow");
+	public static final ReRollSource MASCOT = new ReRollSource("Team Mascot");
+	public static final ReRollSource MASCOT_TRR = new ReRollSource("Mascot TRR");
+	public static final ReRollSource PRO_MASCOT = new ReRollSource("Pro Mascot", PRO);
+	public static final ReRollSource PRO_MASCOT_TRR = new ReRollSource("Pro Mascot TRR", PRO);
+	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
 
 	private final Map<String, ReRollSource> values;
 

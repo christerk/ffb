@@ -1,18 +1,11 @@
 package com.fumbbl.ffb.mechanics;
 
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.PlayerStats;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.*;
 
 import java.util.Set;
 
@@ -21,10 +14,6 @@ public abstract class GameMechanic implements Mechanic {
 	public Type getType() {
 		return Type.GAME;
 	}
-
-	public abstract ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData);
-
-	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
 
 	public abstract String[] concessionDialogMessages(boolean legalConcession);
 

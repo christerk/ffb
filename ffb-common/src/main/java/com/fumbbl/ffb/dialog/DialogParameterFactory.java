@@ -23,6 +23,8 @@ public class DialogParameterFactory {
                 return new DialogReceiveChoiceParameter();
             case RE_ROLL:
                 return new DialogReRollParameter();
+            case RE_ROLL_PROPERTIES:
+                return new DialogReRollPropertiesParameter();
             case RE_ROLL_FOR_TARGETS:
                 return new DialogReRollForTargetsParameter();
             case SKILL_USE:
@@ -33,6 +35,8 @@ public class DialogParameterFactory {
                 return new DialogBlockRollParameter();
             case BLOCK_ROLL_PARTIAL_RE_ROLL:
                 return new DialogBlockRollPartialReRollParameter();
+            case BLOCK_ROLL_PROPERTIES:
+                return new DialogBlockRollPropertiesParameter();
             case PLAYER_CHOICE:
                 return new DialogPlayerChoiceParameter();
             case INTERCEPTION:
@@ -131,6 +135,10 @@ public class DialogParameterFactory {
                 return new DialogPenaltyShootoutParameter();
             case BUY_PRAYERS_AND_INDUCEMENTS:
                 return new DialogBuyPrayersAndInducementsParameter();
+            case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
+                return new DialogReRollBlockForTargetsPropertiesParameter();
+            case OPPONENT_BLOCK_SELECTION_PROPERTIES:
+                return new DialogOpponentBlockSelectionPropertiesParameter();
             default:
                 return null;
         }

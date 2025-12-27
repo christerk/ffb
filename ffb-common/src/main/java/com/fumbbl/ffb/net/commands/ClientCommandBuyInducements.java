@@ -75,10 +75,6 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		return fStarPlayerPositionIds.toArray(new String[0]);
 	}
 
-	public int getNrOfStarPlayerPositions() {
-		return fStarPlayerPositionIds.size();
-	}
-
 	public void addStarPlayerPositionId(String pStarPlayerPositionId) {
 		fStarPlayerPositionIds.add(pStarPlayerPositionId);
 	}
@@ -86,10 +82,6 @@ public class ClientCommandBuyInducements extends ClientCommand {
 	public void addMercenaryPosition(String pMercenaryPositionId, Skill pMercenarySkill) {
 		fMercenaryPositionIds.add(pMercenaryPositionId);
 		fMercenarySkills.add(pMercenarySkill);
-	}
-
-	public int getNrOfMercenaryPositions() {
-		return fMercenaryPositionIds.size();
 	}
 
 	public String[] getMercenaryPositionIds() {
@@ -117,7 +109,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		}
 		IJsonOption.STAR_PLAYER_POSITION_IDS.addTo(jsonObject, fStarPlayerPositionIds);
 		IJsonOption.AVAILABLE_GOLD.addTo(jsonObject, fAvailableGold);
-		IJsonOption.MERCENARY_POSTION_IDS.addTo(jsonObject, fMercenaryPositionIds);
+		IJsonOption.MERCENARY_POSITION_IDS.addTo(jsonObject, fMercenaryPositionIds);
 		String[] mercenarySkillNames = new String[fMercenarySkills.size()];
 		for (int i = 0; i < mercenarySkillNames.length; i++) {
 			Skill skill = fMercenarySkills.get(i);
@@ -147,7 +139,7 @@ public class ClientCommandBuyInducements extends ClientCommand {
 		}
 
 		fAvailableGold = IJsonOption.AVAILABLE_GOLD.getFrom(source, jsonObject);
-		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSTION_IDS.getFrom(source, jsonObject);
+		String[] mercenaryPositionIds = IJsonOption.MERCENARY_POSITION_IDS.getFrom(source, jsonObject);
 		String[] mercenarySkillNames = IJsonOption.MERCENARY_SKILLS.getFrom(source, jsonObject);
 		if (StringTool.isProvided(mercenaryPositionIds) && StringTool.isProvided(mercenarySkillNames)) {
 			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
