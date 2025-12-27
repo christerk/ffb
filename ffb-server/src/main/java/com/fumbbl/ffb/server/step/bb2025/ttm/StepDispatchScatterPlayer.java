@@ -29,7 +29,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 public class StepDispatchScatterPlayer extends AbstractStep {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState, oldPlayerState;
-	private boolean thrownPlayerHasBall = false, isKickedPlayer;
+	private boolean thrownPlayerHasBall = false, isKickedPlayer, usingBullseye;
 	private PassResult passResult = PassResult.FUMBLE;
 
 	public StepDispatchScatterPlayer(GameState pGameState) {
@@ -75,6 +75,9 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 				case OLD_DEFENDER_STATE:
 					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
+				case USING_BULLSEYE:
+					usingBullseye = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				return true;
 				default:
 					break;
 			}
@@ -112,10 +115,17 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
 			}
 
+			if (passResult == PassResult.ACCURATE && usingBullseye) {
+				throwScatter = false;
+				scattersSingleDirection = false;
+			}
+
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
 					thrownPlayerState, thrownPlayerHasBall, throwerCoordinate, scattersSingleDirection,
 					throwScatter, false, false));
+
+			publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE, usingBullseye));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -129,6 +139,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, passResult);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
+		IServerJsonOption.USING_BULLSEYE.addTo(jsonObject, usingBullseye);
 		return jsonObject;
 	}
 
@@ -142,6 +153,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 		passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
 		return this;
 	}
 }
