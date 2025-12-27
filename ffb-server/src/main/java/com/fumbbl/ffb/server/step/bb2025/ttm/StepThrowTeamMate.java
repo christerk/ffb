@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.ttm;
+package com.fumbbl.ffb.server.step.bb2025.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -34,7 +34,6 @@ import java.util.Arrays;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 
@@ -44,6 +43,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		public boolean thrownPlayerHasBall;
 		public PassResult passResult;
 		public boolean kicked;
+		public Boolean usingBullseye;
 	}
 
 	private final StepState state;
@@ -122,6 +122,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		IServerJsonOption.THROWN_PLAYER_HAS_BALL.addTo(jsonObject, state.thrownPlayerHasBall);
 		IServerJsonOption.PASS_RESULT.addTo(jsonObject, state.passResult);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, state.kicked);
+		IServerJsonOption.USING_BULLSEYE.addTo(jsonObject, state.usingBullseye);
 		return jsonObject;
 	}
 
@@ -134,6 +135,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 		state.thrownPlayerHasBall = IServerJsonOption.THROWN_PLAYER_HAS_BALL.getFrom(source, jsonObject);
 		state.passResult = (PassResult) IServerJsonOption.PASS_RESULT.getFrom(source, jsonObject);
 		state.kicked = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
+		state.usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
 		return this;
 	}
 }

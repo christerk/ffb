@@ -7,6 +7,7 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
@@ -15,6 +16,7 @@ import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassContext;
 import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
@@ -25,8 +27,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate;
-import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate.StepState;
+import com.fumbbl.ffb.server.step.bb2025.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.bb2025.ttm.StepThrowTeamMate.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
@@ -85,9 +87,19 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					boolean reRolled = ((step.getReRolledAction() == rerolledAction)
 						&& (step.getReRollSource() != null));
 					boolean successful = state.passResult == PassResult.ACCURATE || state.passResult == PassResult.INACCURATE;
-
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
 						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult, state.kicked));
+
+					if (state.passResult == PassResult.ACCURATE && !state.kicked
+						&& thrower.hasSkillProperty(NamedProperties.canSkipTtmScatterOnSuperbThrow)
+						&& state.usingBullseye == null) {
+						UtilServerDialog.showDialog(step.getGameState(),
+							new DialogSkillUseParameter(thrower.getId(), thrower.getSkillWithProperty(NamedProperties.canSkipTtmScatterOnSuperbThrow),
+								0),	false);
+						step.getResult().setNextAction(StepAction.CONTINUE);
+						return true;
+					}
+
 					if (successful) {
 						handlePassResult(state.passResult, step);
 					} else {

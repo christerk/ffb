@@ -9,7 +9,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractPassBehaviour;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.mixed.ttm.StepThrowTeamMate;
+import com.fumbbl.ffb.server.step.bb2025.ttm.StepThrowTeamMate;
 import com.fumbbl.ffb.server.step.mixed.pass.StepHailMaryPass;
 import com.fumbbl.ffb.skill.mixed.special.TheBallista;
 

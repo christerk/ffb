@@ -65,7 +65,8 @@ public enum SkillUse implements INamedObject {
 	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones"),
 	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up"),
 	EYE_GOUGED("eyeGouged", "to prevent the pushed player from assisting blocks"),
-	DISTRACT_OPPONENT("distractOpponent", "to distract %g opponent");
+	DISTRACT_OPPONENT("distractOpponent", "to distract %g opponent"),
+	BULLSEYE("bullseye", "to land the thrown player in the target square");
 
 	private final String fName;
 	private final String fDescription;

@@ -153,6 +153,7 @@ public enum StepParameterKey {
 	USE_ALTERNATE_LABEL, // Boolean
 	USING_BREAK_TACKLE, // Boolean
 	USING_BREATHE_FIRE, // Boolean
+	USING_BULLSEYE, // Boolean
 	USING_CHAINSAW, // Boolean
 	USING_DIVING_TACKLE, // Boolean
 	USING_MODIFYING_SKILL, // Boolean
