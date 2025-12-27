@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -22,6 +23,8 @@ public class DialogPickUpChoiceHandler extends DialogHandler {
 		if (getClient().getMode() == ClientMode.PLAYER && game.getTeamHome().hasPlayer(target)) {
 			setDialog(new DialogPickUpChoice(getClient()));
 			getDialog().showDialog(this);
+		} else {
+			showStatus("Pick Up Choice", "Waiting for opponent's pick-up choice.", StatusType.WAITING);
 		}
 	}
 
