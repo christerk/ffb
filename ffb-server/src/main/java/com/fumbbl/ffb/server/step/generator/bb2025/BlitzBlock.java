@@ -40,6 +40,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.TRICKSTER);
+		sequence.add(StepId.PICK_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.STAB, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED));
 		sequence.add(StepId.BLOCK_CHAINSAW, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DEFENDER_DROPPED),

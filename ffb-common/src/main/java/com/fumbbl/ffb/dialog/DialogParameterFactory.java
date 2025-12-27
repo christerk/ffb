@@ -139,6 +139,8 @@ public class DialogParameterFactory {
                 return new DialogReRollBlockForTargetsPropertiesParameter();
             case OPPONENT_BLOCK_SELECTION_PROPERTIES:
                 return new DialogOpponentBlockSelectionPropertiesParameter();
+            case PICK_UP_CHOICE:
+                return new DialogPickUpChoiceParameter();
             default:
                 return null;
         }

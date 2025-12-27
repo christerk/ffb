@@ -109,6 +109,7 @@ public interface IJsonOption {
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");
 	JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
+	JsonBooleanOption CHOICE_PICK_UP = new JsonBooleanOption("choicePickUp");
 	JsonBooleanOption CHOICE_RECEIVE = new JsonBooleanOption("choiceReceive");
 	JsonStringOption CHOOSING_TEAM_ID = new JsonStringOption("choosingTeamId");
 	JsonEnumWithNameOption CLIENT_MODE = new JsonEnumWithNameOption("clientMode", Factory.CLIENT_MODE);

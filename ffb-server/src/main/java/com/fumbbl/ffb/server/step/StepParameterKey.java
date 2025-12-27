@@ -17,6 +17,7 @@ public enum StepParameterKey {
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	ASK_FOR_BLOCK_KIND, // Boolean
 	ATTACKER_ALREADY_DOWN, // Boolean
+	ATTEMPT_PICK_UP, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
 	BALL_KNOCKED_LOSE, // Boolean
@@ -107,11 +108,13 @@ public enum StepParameterKey {
 	PASS_FUMBLE, // Boolean
 	PASS_RESULT, // PassResult
 	PASSING_DISTANCE, // PassingDistance
+	PICK_UP_OPTIONAL, // Boolean
 	PLAYER_ENTERING_SQUARE, // String
 	PLAYER_ID, // String
 	PLAYER_IDS, // List<String>
 	PLAYER_ID_TO_REMOVE, // String
 	PLAYER_ID_DAUNTLESS_SUCCESS, // String
+	PLAYER_ON_BALL_ID, // string
 	PLAYER_WAS_PUSHED, // Boolean
 	PRAYERS_BOUGHT_AWAY, // Integer
 	PRAYERS_BOUGHT_HOME, // Integer

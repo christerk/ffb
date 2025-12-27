@@ -232,6 +232,9 @@ public class DialogManager {
 					case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
 						setDialogHandler(new DialogReRollBlockForTargetsPropertiesHandler(getClient()));
 						break;
+					case PICK_UP_CHOICE:
+						setDialogHandler(new DialogPickUpChoiceHandler(getClient()));
+						break;
 					default:
 						break;
 				}

@@ -553,6 +553,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	public void sendPreventFromSketching(String coach, boolean prevent) {
 		send(new ClientCommandSetPreventSketching(coach, prevent));
 	}
+	
+	public void sendPickUpChoice(boolean attemptPickUp) {
+		send(new ClientCommandPickUpChoice(attemptPickUp));
+	}
 
 	public FantasyFootballClient getClient() {
 		return fClient;

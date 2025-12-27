@@ -8,7 +8,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 @RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
- class Trickster extends Skill {
+public class Trickster extends Skill {
 
 	public Trickster() {
 		super("Trickster", SkillCategory.TRAIT);

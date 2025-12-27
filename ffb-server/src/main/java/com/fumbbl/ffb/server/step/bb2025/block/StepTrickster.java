@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.block;
+package com.fumbbl.ffb.server.step.bb2025.block;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.dialog.DialogPickUpChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -19,7 +20,9 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
+import com.fumbbl.ffb.net.commands.ClientCommandPickUpChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
@@ -43,7 +46,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepTrickster extends AbstractStep {
 
@@ -53,6 +55,7 @@ public class StepTrickster extends AbstractStep {
 	private Boolean usingTrickster;
 	private FieldCoordinate toCoordinate;
 	private ActionStatus actionStatus = ActionStatus.WAITING_FOR_SKILL_USE;
+	private Boolean attemptPickUp;
 
 	public StepTrickster(GameState pGameState) {
 		super(pGameState);
@@ -93,8 +96,15 @@ public class StepTrickster extends AbstractStep {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		
 		StepCommandStatus commandStatus;
 		if (ActionStatus.SKILL_CHOICE_YES == actionStatus) {
+
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_PICK_UP_CHOICE) {
+				ClientCommandPickUpChoice pickUpChoice = (ClientCommandPickUpChoice) pReceivedCommand.getCommand();
+				attemptPickUp = pickUpChoice.isChoicePickUp();
+				UtilServerDialog.hideDialog(getGameState());
+			}
 			commandStatus = StepCommandStatus.EXECUTE_STEP;
 
 		} else {
@@ -194,7 +204,18 @@ public class StepTrickster extends AbstractStep {
 				}
 				UtilServerGame.syncGameModel(this);
 				if (!withBall && toCoordinate.equals(fieldModel.getBallCoordinate()) && fieldModel.isBallMoving()) {
-					publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+					if (attemptPickUp == null) {
+						UtilServerDialog.showDialog(getGameState(), new DialogPickUpChoiceParameter(), true);
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					} else if (attemptPickUp) {
+						publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, true));
+					} else {
+						publishParameter(new StepParameter(StepParameterKey.ATTEMPT_PICK_UP, false));
+						publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+					}
+					publishParameter(new StepParameter(StepParameterKey.PLAYER_ON_BALL_ID, defender.getId()));
+					publishParameter(new StepParameter(StepParameterKey.PICK_UP_OPTIONAL, true));
 				}
 				leave();
 			}
@@ -230,6 +251,7 @@ public class StepTrickster extends AbstractStep {
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, toCoordinate);
 		IServerJsonOption.STATUS.addTo(jsonObject, actionStatus.name());
 		IServerJsonOption.WITH_BALL.addTo(jsonObject, withBall);
+		IServerJsonOption.ATTEMPT_PICK_UP.addTo(jsonObject, attemptPickUp);
 		return jsonObject;
 	}
 
@@ -255,6 +277,7 @@ public class StepTrickster extends AbstractStep {
 		actionStatus = ActionStatus.valueOf(IServerJsonOption.STATUS.getFrom(source, jsonObject));
 		withBall = IServerJsonOption.WITH_BALL.getFrom(source, jsonObject);
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
+		attemptPickUp = IServerJsonOption.ATTEMPT_PICK_UP.getFrom(source, jsonObject);
 		return this;
 	}
 
