@@ -19,16 +19,18 @@ import java.util.Set;
 public class ReportCheeringFans extends NoDiceReport {
 
 	int rollHome, rollAway;
-	private Set<String> teamIds;
+	private Set<String> teamIds, rerolled;
 
+	@SuppressWarnings("unused")
 	public ReportCheeringFans() {
 		super();
 	}
 
-	public ReportCheeringFans(Set<String> teamIds, int rollHome, int rollAway) {
+	public ReportCheeringFans(Set<String> teamIds, int rollHome, int rollAway, Set<String> rerolled) {
 		this.teamIds = teamIds;
 		this.rollHome = rollHome;
 		this.rollAway = rollAway;
+		this.rerolled = rerolled;
 	}
 
 	public ReportId getId() {
@@ -47,10 +49,14 @@ public class ReportCheeringFans extends NoDiceReport {
 		return teamIds;
 	}
 
+	public Set<String> getRerolled() {
+		return rerolled;
+	}
+
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportCheeringFans(teamIds, rollAway, rollHome);
+		return new ReportCheeringFans(teamIds, rollAway, rollHome, rerolled);
 	}
 
 	// JSON serialization
@@ -61,6 +67,7 @@ public class ReportCheeringFans extends NoDiceReport {
 		IJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.addTo(jsonObject, teamIds);
 		IJsonOption.ROLL_HOME.addTo(jsonObject, rollHome);
 		IJsonOption.ROLL_AWAY.addTo(jsonObject, rollAway);
+		IJsonOption.TEAM_IDS_RE_ROLLED_CHEERING_FANS.addTo(jsonObject, rerolled);
 		return jsonObject;
 	}
 
@@ -70,6 +77,7 @@ public class ReportCheeringFans extends NoDiceReport {
 		teamIds = new HashSet<>(Arrays.asList(IJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.getFrom(source, jsonObject)));
 		rollAway = IJsonOption.ROLL_AWAY.getFrom(source, jsonObject);
 		rollHome = IJsonOption.ROLL_HOME.getFrom(source, jsonObject);
+		rerolled = new HashSet<>(Arrays.asList(IJsonOption.TEAM_IDS_RE_ROLLED_CHEERING_FANS.getFrom(source, jsonObject)));
 		return this;
 	}
 

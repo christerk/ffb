@@ -4,8 +4,6 @@ import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
@@ -17,7 +15,6 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -38,38 +35,6 @@ import static com.fumbbl.ffb.inducement.Usage.STAR;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
-	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
-		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
-		add(TurnMode.DUMP_OFF);
-		add(TurnMode.BLITZ);
-		add(TurnMode.QUICK_SNAP);
-		add(TurnMode.BETWEEN_TURNS);
-	}};
-
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
-		turnData.setReRolls(turnData.getReRolls() - 1);
-		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			return ReRollSources.BRILLIANT_COACHING_RE_ROLL;
-		}
-		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
-			return ReRollSources.PUMP_UP_THE_CROWD;
-		}
-		if (turnData.getReRollShowStarOneDrive() > 0) {
-			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
-			return ReRollSources.SHOW_STAR;
-		}
-
-		return null;
-	}
-
-	@Override
-	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return !modesProhibitingReRolls.contains(turnMode);
-	}
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {

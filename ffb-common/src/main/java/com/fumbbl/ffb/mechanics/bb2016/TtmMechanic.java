@@ -79,4 +79,9 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	public boolean canThrow(Player<?> player) {
 		return player.hasSkillProperty(NamedProperties.canThrowTeamMates);
 	}
+
+	@Override
+	public boolean isTtmAvailable(TurnData turnData) {
+		return !turnData.isPassUsed();
+	}
 }

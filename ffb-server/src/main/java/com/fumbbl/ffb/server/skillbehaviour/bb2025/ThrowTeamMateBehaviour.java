@@ -58,7 +58,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					game.getTurnData().setKtmUsed(true);
 					rerolledAction = ReRolledActions.KICK_TEAM_MATE;
 				} else {
-					game.getTurnData().setPassUsed(true);
+					game.getTurnData().setTtmUsed(true);
 					rerolledAction = ReRolledActions.THROW_TEAM_MATE;
 				}
 				UtilServerDialog.hideDialog(step.getGameState());

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -27,7 +27,6 @@ import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> {
 	public UnchannelledFuryBehaviour() {
 		super();

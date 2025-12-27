@@ -1,50 +1,22 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.PlayerStats;
-import com.fumbbl.ffb.model.Roster;
-import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.fumbbl.ffb.inducement.Usage.GAME_MODIFICATION;
-import static com.fumbbl.ffb.inducement.Usage.LONER;
-import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
-import static com.fumbbl.ffb.inducement.Usage.STAFF;
-import static com.fumbbl.ffb.inducement.Usage.STAR;
+import static com.fumbbl.ffb.inducement.Usage.*;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
-	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
-		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
-		add(TurnMode.DUMP_OFF);
-	}};
-
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
-		turnData.setReRollUsed(true);
-		turnData.setReRolls(turnData.getReRolls() - 1);
-		return null;
-	}
-
-	@Override
-	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return !modesProhibitingReRolls.contains(turnMode);
-	}
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {

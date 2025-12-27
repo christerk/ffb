@@ -8,14 +8,24 @@ public class ReRollSource implements INamedObject {
 
 	private final String name;
 	private final int priority;
+	private final ReRollSource superior;
 
-	ReRollSource(String pName) {
-		this(pName, 1);
+	ReRollSource(String name, ReRollSource superior) {
+		this(name, 1, superior);
 	}
 
-	ReRollSource(String pName, int priority) {
+	ReRollSource(String name, int priority) {
+		this(name, priority, null);
+	}
+
+	ReRollSource(String pName) {
+		this(pName, 1, null);
+	}
+
+	ReRollSource(String pName, int priority, ReRollSource superior) {
 		name = pName;
 		this.priority = priority;
+		this.superior = superior;
 	}
 
 	public int getPriority() {
@@ -28,7 +38,11 @@ public class ReRollSource implements INamedObject {
 
 	public Skill getSkill(Game game) {
 		SkillFactory skillFactory = game.getRules().getSkillFactory();
-		return skillFactory.forName(name);
+		Skill skill = skillFactory.forName(name);
+		if (skill == null && superior != null) {
+			return superior.getSkill(game);
+		}
+		return skill;
 	}
 
 	public String getName(Game game) {

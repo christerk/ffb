@@ -42,6 +42,9 @@ public class DialogManager {
 					case RE_ROLL:
 						setDialogHandler(new DialogReRollHandler(getClient()));
 						break;
+					case RE_ROLL_PROPERTIES:
+						setDialogHandler(new DialogReRollPropertiesHandler(getClient()));
+						break;
 					case SKILL_USE:
 						setDialogHandler(new DialogSkillUseHandler(getClient()));
 						break;
@@ -83,6 +86,9 @@ public class DialogManager {
 						break;
 					case BLOCK_ROLL_PARTIAL_RE_ROLL:
 						setDialogHandler(new DialogBlockRollPartialReRollHandler(getClient()));
+						break;
+					case BLOCK_ROLL_PROPERTIES:
+						setDialogHandler(new DialogBlockRollPropertiesHandler(getClient()));
 						break;
 					case PLAYER_CHOICE:
 						setDialogHandler(new DialogPlayerChoiceHandler(getClient()));
@@ -219,6 +225,12 @@ public class DialogManager {
 						break;
 					case BUY_PRAYERS_AND_INDUCEMENTS:
 						setDialogHandler(new DialogBuyPrayersAndInducementsHandler(getClient()));
+						break;
+					case OPPONENT_BLOCK_SELECTION_PROPERTIES:
+						setDialogHandler(new DialogOpponentBlockSelectionPropertiesHandler(getClient()));
+						break;
+					case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
+						setDialogHandler(new DialogReRollBlockForTargetsPropertiesHandler(getClient()));
 						break;
 					case PICK_UP_CHOICE:
 						setDialogHandler(new DialogPickUpChoiceHandler(getClient()));

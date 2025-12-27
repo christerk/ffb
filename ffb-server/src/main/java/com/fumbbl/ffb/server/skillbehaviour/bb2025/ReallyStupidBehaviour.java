@@ -134,9 +134,11 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
                 break;
             case PASS:
             case PASS_MOVE:
+                game.getTurnData().setPassUsed(true);
+                break;
             case THROW_TEAM_MATE:
             case THROW_TEAM_MATE_MOVE:
-                game.getTurnData().setPassUsed(true);
+                game.getTurnData().setTtmUsed(true);
                 break;
             case HAND_OVER:
             case HAND_OVER_MOVE:

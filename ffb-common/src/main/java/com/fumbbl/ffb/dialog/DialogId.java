@@ -8,7 +8,7 @@ import com.fumbbl.ffb.INamedObject;
 public enum DialogId implements INamedObject {
 
 	INFORMATION("information"), YES_OR_NO_QUESTION("yesOrNoQuestion"), GAME_COACH_PASSWORD("gameCoachPassword"),
-	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"),
+	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"), RE_ROLL_PROPERTIES("reRollProperties"),
 	RE_ROLL_FOR_TARGETS("reRollForTargets"), RE_ROLL_BLOCK_FOR_TARGETS("reRollBlockForTargets"), SKILL_USE("skillUse"),
 	PROGRESS_BAR("progressBar"), TEAM_SETUP("teamSetup"), USE_APOTHECARY("useApothecary"),
 	USE_APOTHECARIES("useApothecaries"), USE_IGORS("useIgors"), USE_MORTUARY_ASSISTANTS("useMortuaryAssistants"),
@@ -30,7 +30,8 @@ public enum DialogId implements INamedObject {
 	INFORMATION_OKAY("informationOkay"), STORE_PROPERTIES_LOCAL("storePropertiesLocal"), KICK_OFF_RESULT("kickOffResult"),
 	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice"), 
 	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements"),
-	PICK_UP_CHOICE("pickUpChoice");
+	BLOCK_ROLL_PROPERTIES("blockRollProperties"), RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES("reRollBlockForTargetsProperties"),
+	OPPONENT_BLOCK_SELECTION_PROPERTIES("opponentBlockSelectionProperties"), PICK_UP_CHOICE("pickUpChoice");
 
 	private final String fName;
 

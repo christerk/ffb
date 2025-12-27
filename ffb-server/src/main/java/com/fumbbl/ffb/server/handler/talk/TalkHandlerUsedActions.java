@@ -23,6 +23,7 @@ public abstract class TalkHandlerUsedActions extends TalkHandler {
 		add(PlayerAction.HAND_OVER);
 		add(PlayerAction.THROW_BOMB);
 		add(PlayerAction.KICK_TEAM_MATE);
+		add(PlayerAction.THROW_TEAM_MATE);
 	}};
 
 	public TalkHandlerUsedActions(CommandAdapter commandAdapter, TalkRequirements.Client requiredClient, TalkRequirements.Environment requiredEnv, TalkRequirements.Privilege... requiresOnePrivilegeOf) {
@@ -58,6 +59,9 @@ public abstract class TalkHandlerUsedActions extends TalkHandler {
 					break;
 				case KICK_TEAM_MATE:
 					turnData.setKtmUsed(used);
+					break;
+				case THROW_TEAM_MATE:
+					turnData.setTtmUsed(used);
 					break;
 				default:
 					found = false;

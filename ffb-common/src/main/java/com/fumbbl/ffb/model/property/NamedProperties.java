@@ -121,6 +121,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
+	public static final ISkillProperty canSaveReRolls = new NamedProperty("Can Save Re-Rolls");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
 		"Can Sneak Extra Players Onto Pitch");
 	public static final ISkillProperty canStabAndMoveAfterwards = new NamedProperty("Can Stab And Move Afterwards");
@@ -196,6 +197,7 @@ public class NamedProperties {
 	public static final ISkillProperty mightEatPlayerToThrow = new NamedProperty("Might Eat Player To Throw");
 	public static final ISkillProperty movesRandomly = new NamedProperty("Moves Randomly");
 	public static final ISkillProperty needsNoDiceDecorations = new NamedProperty("Needs No Dice Decorations");
+	public static final ISkillProperty needsToBeSetUp = new NamedProperty("Needs To Be Set Up");
 	public static final ISkillProperty needsToRollForActionButKeepsTacklezone = new NamedProperty("Needs To Roll For Action But Keeps Tacklezone");
 	public static final ISkillProperty needsToRollForActionBlockingIsEasier = new NamedProperty("Needs To Roll For Action Blocking Is Easier");
 	public static final ISkillProperty needsToRollHighToAvoidConfusion = new NamedProperty("Need To Roll High To Avoid Confusion");

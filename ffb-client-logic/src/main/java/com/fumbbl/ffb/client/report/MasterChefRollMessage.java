@@ -18,7 +18,7 @@ public class MasterChefRollMessage extends ReportMessageBase<ReportMasterChefRol
   			.append(" ]");
   		println(getIndent(), TextStyle.ROLL, status.toString());
   		status = new StringBuilder();
-  		printTeamName(game, false, report.getTeamId());
+  		printTeamName(false, report.getTeamId());
   		status.append(" steal ");
   		if (report.getReRollsStolen() == 0) {
   			status.append(" no re-rolls from ");
@@ -29,9 +29,9 @@ public class MasterChefRollMessage extends ReportMessageBase<ReportMasterChefRol
   		}
   		print(getIndent() + 1, status.toString());
   		if (game.getTeamHome().getId().equals(report.getTeamId())) {
-  			printTeamName(game, false, game.getTeamAway().getId());
+  			printTeamName(false, game.getTeamAway().getId());
   		} else {
-  			printTeamName(game, false, game.getTeamHome().getId());
+  			printTeamName(false, game.getTeamHome().getId());
   		}
   		println(getIndent() + 1, ".");
     }

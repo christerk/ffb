@@ -284,7 +284,7 @@ public interface IJsonOption {
 	JsonIntOption MAX_RE_ROLLS = new JsonIntOption("maxReRolls");
 	JsonIntOption MAX_SELECTS = new JsonIntOption("maxSelects");
 	JsonStringOption MENU_PROPERTY = new JsonStringOption("menuProperty");
-	JsonStringArrayOption MERCENARY_POSTION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
+	JsonStringArrayOption MERCENARY_POSITION_IDS = new JsonStringArrayOption("mercenaryPositionIds");
 	JsonStringArrayOption MERCENARY_SKILLS = new JsonStringArrayOption("mercenarySkills");
 	JsonStringOption MESSAGE = new JsonStringOption("message");
 	JsonStringArrayOption MESSAGE_ARRAY = new JsonStringArrayOption("messageArray");
@@ -420,10 +420,12 @@ public interface IJsonOption {
 	JsonBooleanOption RESTRICT_PLACEMENT = new JsonBooleanOption("restrictPlacement");
 	JsonBooleanOption RE_ROLLED = new JsonBooleanOption("reRolled");
 	JsonEnumWithNameOption RE_ROLLED_ACTION = new JsonEnumWithNameOption("reRolledAction", Factory.RE_ROLLED_ACTION);
+	JsonStringMapOption RE_ROLL_ACTION_TO_SOURCE_MAP = new JsonStringMapOption("reRollActionToSourceMap");
 	JsonIntArrayOption RE_ROLLED_DICE_INDEXES = new JsonIntArrayOption("reRolledDice");
 	JsonStringArrayOption RE_ROLL_AVAILABLE_AGAINST = new JsonStringArrayOption("reRollAvailableFor");
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
+	JsonStringArrayOption RE_ROLL_PROPERTIES = new JsonStringArrayOption("reRollProperties");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
 	JsonEnumWithNameOption RE_ROLL_SOURCE_SINGLE_USE = new JsonEnumWithNameOption("reRollSourceSingleUse", Factory.RE_ROLL_SOURCE);
 	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");
@@ -562,6 +564,7 @@ public interface IJsonOption {
 	JsonStringOption TEAM_HOME_NAME = new JsonStringOption("teamHomeName");
 	JsonStringOption TEAM_ID = new JsonStringOption("teamId");
 	JsonStringArrayOption TEAM_IDS_ADDITIONAL_ASSIST = new JsonStringArrayOption("teamIdsAdditionalAssist");
+	JsonStringArrayOption TEAM_IDS_RE_ROLLED_CHEERING_FANS = new JsonStringArrayOption("teamIdsReRolledCheeringFangs");
 	JsonObjectOption TEAM_LIST = new JsonObjectOption("teamList");
 	JsonArrayOption TEAM_LIST_ENTRIES = new JsonArrayOption("teamListEntries");
 	JsonStringOption TEAM_NAME = new JsonStringOption("teamName");
@@ -593,6 +596,7 @@ public interface IJsonOption {
 	JsonArrayOption TRAP_DOORS = new JsonArrayOption("trapDoors");
 	JsonIntOption TREASURY = new JsonIntOption("treasury");
 	JsonIntOption TREASURY_USED_ON_INDUCEMENTS = new JsonIntOption("treasuryUsedOnInducements");
+	JsonBooleanOption TTM_USED = new JsonBooleanOption("ttmUsed");
 	JsonObjectOption TURN_DATA_AWAY = new JsonObjectOption("turnDataAway");
 	JsonObjectOption TURN_DATA_HOME = new JsonObjectOption("turnDataHome");
 	JsonEnumWithNameOption TURN_MODE = new JsonEnumWithNameOption("turnMode", Factory.TURN_MODE);

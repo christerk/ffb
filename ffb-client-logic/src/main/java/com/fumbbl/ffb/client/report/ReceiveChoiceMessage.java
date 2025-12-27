@@ -12,7 +12,7 @@ public class ReceiveChoiceMessage extends ReportMessageBase<ReportReceiveChoice>
     @Override
     protected void render(ReportReceiveChoice report) {
   		print(getIndent() + 1, "Team ");
-  		printTeamName(game, false, report.getTeamId());
+  		printTeamName(false, report.getTeamId());
   		println(getIndent() + 1, " is " + (report.isReceiveChoice() ? "receiving." : "kicking."));
     }
 }
