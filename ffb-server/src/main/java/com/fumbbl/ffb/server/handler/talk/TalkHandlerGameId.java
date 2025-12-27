@@ -14,6 +14,10 @@ public class TalkHandlerGameId extends TalkHandler {
 	@Override
 	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		Game game = gameState.getGame();
-		server.getCommunication().sendPlayerTalk(gameState, null, "Game Id: " + game.getId() + ".");
+		String base = server.isInTestMode()
+			? "https://fumbbl.com/ffbtest.jnlp?spectate="
+			: "https://fumbbl.com/ffblive.jnlp?spectate=";
+		String message = "Game Id: " + game.getId() + "\nSpectate: " + base + game.getId();
+		server.getCommunication().sendPlayerTalk(gameState, null, message);
 	}
 }
