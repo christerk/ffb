@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.bb2020;
+package com.fumbbl.ffb.client.report.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -13,6 +13,7 @@ import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.INDUCEMENT)
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class InducementMessage extends ReportMessageBase<ReportInducement> {
 
 	@Override
