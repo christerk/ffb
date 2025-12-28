@@ -38,16 +38,19 @@ public class LethalFlight extends Skill {
 		registerModifier(new StaticArmourModifier("Lethal Flight", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
-				return UtilCards.hasSkill(context.getAttacker(), registeredTo);
+				return context.getAttacker() != null
+					&& UtilCards.hasSkill(context.getAttacker(), registeredTo)
+					&& context.getAttacker().getTeam() != context.getDefender().getTeam();
 			}
 		});
 		registerModifier(new StaticInjuryModifierAttacker("Lethal Flight", 1, false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)
+					&& context.getAttacker() != null
+					&& context.getAttacker().getTeam() != context.getDefender().getTeam()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
-						.noneMatch(modifier ->
-							modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnTtm));
+						.noneMatch(mod -> mod.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnTtm));
 			}
 		});
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnTtm);
