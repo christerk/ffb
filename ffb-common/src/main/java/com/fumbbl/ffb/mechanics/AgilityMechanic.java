@@ -44,6 +44,8 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract int minimumRollSafeThrow(Player<?> pPlayer);
 
+	public abstract int minimumRoll(int baseValue, Set<? extends RollModifier<?>> modifiers);
+
 	public abstract String formatDodgeResult(ReportSkillRoll report, Player<?> player);
 
 	public abstract String formatJumpResult(ReportSkillRoll report, Player<?> player);

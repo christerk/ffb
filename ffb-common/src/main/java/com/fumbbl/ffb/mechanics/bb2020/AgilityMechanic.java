@@ -137,7 +137,8 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
-	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
+	@Override
+	public int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
 		return minimumRoll(agility, modifiers, 0);
 	}
 

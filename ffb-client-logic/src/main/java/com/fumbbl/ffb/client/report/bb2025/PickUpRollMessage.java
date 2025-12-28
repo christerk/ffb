@@ -39,7 +39,7 @@ public class PickUpRollMessage extends ReportMessageBase<ReportPickupRoll> {
   				neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to succeed");
   			}
   		}
-  		if (neededRoll != null && !report.isSecureTheBallUsed()) {
+  		if (neededRoll != null) {
   			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
   			neededRoll.append(mechanic.formatPickupResult(report, player));
   			println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());

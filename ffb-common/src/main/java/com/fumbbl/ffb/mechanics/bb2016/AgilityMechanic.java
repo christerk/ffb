@@ -12,8 +12,10 @@ import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -107,6 +109,11 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	@Override
 	public int minimumRollSafeThrow(Player<?> pPlayer) {
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()));
+	}
+
+	@Override
+	public int minimumRoll(int baseValue, Set<? extends RollModifier<?>> modifiers) {
+		throw new NotImplementedException();
 	}
 
 	private boolean usedStrength(ReportSkillRoll report) {

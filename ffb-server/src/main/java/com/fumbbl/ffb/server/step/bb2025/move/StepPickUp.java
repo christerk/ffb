@@ -41,7 +41,6 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -175,6 +174,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 							game.getFieldModel().setBallMoving(false);
 							getResult().setSound(SoundId.PICKUP);
 							getResult().setNextAction(StepAction.NEXT_STEP);
+							if (secureTheBall) {
+								publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+							}
 							break;
 						case FAILURE:
 							publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
@@ -222,21 +224,20 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
-			Set<PickupModifier> pickupModifiers;
+			Set<PickupModifier> pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
+
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll;
 			if (secureTheBall) {
-				minimumRoll = 2;
-				pickupModifiers = Collections.emptySet();
+				minimumRoll = mechanic.minimumRoll(2, pickupModifiers);
 			} else {
-				pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
 				minimumRoll = mechanic.minimumRollPickup(player, pickupModifiers);
 			}
 			int roll = getGameState().getDiceRoller().rollSkill();
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
 			getResult().addReport(new ReportPickupRoll(player.getId(), successful, roll,
-				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0]), secureTheBall));
+				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0])));
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {
