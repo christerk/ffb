@@ -267,8 +267,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 				playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 			List<DeferredCommand> commands = new ArrayList<>();
 			GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
-			if (alwaysTurnOver.isEnabled() || ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
-				|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
+			if (alwaysTurnOver.isEnabled()) {
 				commands.add(new HitPlayerTurnOverCommand());
 			}
 			commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
