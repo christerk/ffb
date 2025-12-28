@@ -31,7 +31,7 @@ public class BullseyeBehaviour extends SkillBehaviour<Bullseye> {
 				step.publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE, state.usingBullseye));
 				step.publishParameter(StepParameter.from(StepParameterKey.PASS_RESULT, state.passResult));
 				step.getResult().setNextAction(StepAction.NEXT_STEP);
-				return StepCommandStatus.EXECUTE_STEP;
+				return StepCommandStatus.SKIP_STEP;
 			}
 
 			@Override
