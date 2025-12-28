@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
@@ -259,7 +260,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 		if (playerLandedUpon != null) {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-			InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
+			Player<?> attackerForHit = (!isKickedPlayer && thrownPlayer.hasSkillProperty(NamedProperties.affectsEitherArmourOrInjuryOnTtm))
+				? thrownPlayer
+				: null; // keep attacker null for no SPPs.
+			InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), attackerForHit,
 				playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 			List<DeferredCommand> commands = new ArrayList<>();
 			GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
