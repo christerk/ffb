@@ -76,6 +76,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private FieldCoordinate thrownPlayerCoordinate;
 	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye;
 	private Direction swoopDirection;
+	private boolean usingSwoop;
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -120,6 +121,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 					case DIRECTION:
 						swoopDirection = (Direction) parameter.getValue();
 						break;
+					case USING_SWOOP:
+					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					break;
 					default:
 						break;
 				}
@@ -148,6 +152,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 					return true;
 				case USING_BULLSEYE:
 					usingBullseye = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				case USING_SWOOP:
+					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				default:
 					break;
@@ -202,7 +209,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			startCoordinate = game.getPassCoordinate();
 		}
 		UtilThrowTeamMateSequence.ScatterResult scatterResult;
-		if (swoopDirection != null) {
+		if (swoopDirection != null && usingSwoop) {
 			scatterResult = swoop(startCoordinate, swoopDirection);
 		} else {
 			scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, throwScatter);
@@ -231,7 +238,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction) {
 		GameOptionInt distance = (GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
 
-		int distanceRoll = distance.getValue() == 0 ?getGameState().getDiceRoller().rollDice(3) : distance.getValue();
+		int distanceRoll = distance.getValue() == 0 ?getGameState().getDiceRoller().rollDice(6) : distance.getValue();
 		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
 		FieldCoordinate lastValidCoordinate = coordinateEnd;
 		int validDistance = distanceRoll;
@@ -312,6 +319,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, isKickedPlayer);
 		IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, swoopDirection);
 		IServerJsonOption.USING_BULLSEYE.addTo(jsonObject, usingBullseye);
+		IServerJsonOption.USING_SWOOP.addTo(jsonObject, usingSwoop);
 		return jsonObject;
 	}
 
@@ -327,6 +335,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
+		usingSwoop = (Boolean) IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
 		return this;
 	}
 

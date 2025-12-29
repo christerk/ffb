@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
@@ -210,8 +211,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			} else {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
+					Skill swoop = thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
 					doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
-						minimumRoll, false);
+						minimumRoll, false, null, swoop);
 				} else {
 					doRoll = false;
 				}

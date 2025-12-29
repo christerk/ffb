@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.bb2020;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.RulesCollection;
@@ -16,11 +16,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.mixed.ttm.StepSwoop;
-import com.fumbbl.ffb.server.step.mixed.ttm.StepSwoop.StepState;
-import com.fumbbl.ffb.skill.bb2020.Swoop;
+import com.fumbbl.ffb.server.step.bb2025.ttm.StepSwoop;
+import com.fumbbl.ffb.server.step.bb2025.ttm.StepSwoop.StepState;
+import com.fumbbl.ffb.skill.bb2025.Swoop;
 
-@RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 	public SwoopBehaviour() {
 		super();
@@ -41,7 +41,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				Player<?> swoopingPlayer = actingPlayer.getPlayer();
 
-				if (swoopingPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
+				if (state.usingSwoop && swoopingPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
 
 					state.coordinateFrom = game.getFieldModel().getPlayerCoordinate(swoopingPlayer);
 
@@ -57,6 +57,7 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 						scatterDirection = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
 					}
 					step.publishParameter(StepParameter.from(StepParameterKey.DIRECTION, scatterDirection));
+					step.publishParameter(StepParameter.from(StepParameterKey.USING_SWOOP, true));
 					step.getResult().setNextAction(StepAction.NEXT_STEP);
 				}
 

@@ -159,6 +159,7 @@ public enum StepParameterKey {
 	USING_MODIFYING_SKILL, // Boolean
 	USING_PILING_ON, // Boolean,
 	USING_STAB, // Boolean
+	USING_SWOOP, // Boolean
 	USING_VOMIT // Boolean
 
 }
