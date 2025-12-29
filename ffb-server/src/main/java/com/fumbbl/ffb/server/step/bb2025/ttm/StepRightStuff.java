@@ -7,6 +7,7 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -25,6 +26,8 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
+import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -69,7 +72,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 
 	private Boolean fThrownPlayerHasBall;
 	private String fThrownPlayerId;
-	private boolean fDropThrownPlayer, kickedPlayer;
+	private boolean fDropThrownPlayer, kickedPlayer, usingSwoop;
 	private PassResult passResult;
 	private String goToOnSuccess;
 	private PlayerState oldPlayerState;
@@ -120,6 +123,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				case OLD_DEFENDER_STATE:
 					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
+				case USING_SWOOP:
+					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;	
 				default:
 					break;
 			}
@@ -136,6 +142,18 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
+
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+				ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+				if (useSkill.isSkillUsed() && useSkill.getSkill().hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
+					setReRolledAction(ReRolledActions.RIGHT_STUFF);
+					setReRollSource(ReRollSources.SWOOP);
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				}
+			}
+		}
+
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -211,7 +229,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			} else {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
-					Skill swoop = thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection);
+					Skill swoop = usingSwoop ? thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection) : null;
 					doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
 						minimumRoll, false, null, swoop);
 				} else {
@@ -240,6 +258,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.GOTO_LABEL_ON_SUCCESS.addTo(jsonObject, goToOnSuccess);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, kickedPlayer);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
+		IServerJsonOption.USING_SWOOP.addTo(jsonObject, usingSwoop);
 		return jsonObject;
 	}
 
@@ -254,6 +273,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		usingSwoop = (Boolean) IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
 		return this;
 	}
 

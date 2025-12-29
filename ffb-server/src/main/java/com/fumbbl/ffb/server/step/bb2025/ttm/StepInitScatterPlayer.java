@@ -302,6 +302,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
 		publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, isKickedPlayer));
+		publishParameter(new StepParameter(StepParameterKey.USING_SWOOP, usingSwoop));
 		game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

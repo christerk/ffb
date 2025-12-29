@@ -7,6 +7,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 /**
  * When this player is thrown by a Throw Team-mate Action, they may choose not 
@@ -24,6 +25,11 @@ public class Swoop extends Skill {
 	public Swoop() {
 		super("Swoop", SkillCategory.TRAIT);
 	}
+
+	@Override
+	public SkillUsageType getSkillUsageType() {
+		return SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE;
+	}	
 
 	@Override
 	public void postConstruct() {
