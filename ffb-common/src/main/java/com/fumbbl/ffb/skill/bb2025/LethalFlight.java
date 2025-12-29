@@ -54,6 +54,7 @@ public class LethalFlight extends Skill {
 			}
 		});
 		registerProperty(NamedProperties.affectsEitherArmourOrInjuryOnTtm);
+		registerProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm);
 	}
 
 	@Override

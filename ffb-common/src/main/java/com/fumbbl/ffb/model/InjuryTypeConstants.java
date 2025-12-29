@@ -32,6 +32,7 @@ import com.fumbbl.ffb.injury.ProjectileVomit;
 import com.fumbbl.ffb.injury.QuickBite;
 import com.fumbbl.ffb.injury.Stab;
 import com.fumbbl.ffb.injury.TTMHitPlayer;
+import com.fumbbl.ffb.injury.TTMHitPlayerForSpp;
 import com.fumbbl.ffb.injury.TTMLanding;
 import com.fumbbl.ffb.injury.ThenIStartedBlastin;
 import com.fumbbl.ffb.injury.ThrowARock;
@@ -74,5 +75,6 @@ public class InjuryTypeConstants {
 	public static final InjuryType TRAP_DOOR_FALL = new TrapDoorFall();
 	public static final InjuryType TRAP_DOOR_FALL_FOR_SPP = new TrapDoorFallForSpp();
 	public static final InjuryType TTM_HIT_PLAYER = new TTMHitPlayer();
+	public static final InjuryType TTM_HIT_PLAYER_FOR_SPP = new TTMHitPlayerForSpp();
 	public static final InjuryType TTM_LANDING = new TTMLanding();
 }
