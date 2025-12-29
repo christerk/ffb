@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
@@ -22,8 +23,8 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeKTMCrowd;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayerForSpp;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -201,9 +202,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			startCoordinate = game.getPassCoordinate();
 		}
 		UtilThrowTeamMateSequence.ScatterResult scatterResult;
-		if (isKickedPlayer && throwScatter) {
-			scatterResult = UtilThrowTeamMateSequence.kickPlayer(this, thrownPlayerCoordinate, startCoordinate);
-		} else if (swoopDirection != null) {
+		if (swoopDirection != null) {
 			scatterResult = swoop(startCoordinate, swoopDirection);
 		} else {
 			scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, throwScatter);
@@ -219,8 +218,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		if (scatterResult.isInBounds()) {
 			handleLanding(thrownPlayer, endCoordinate);
 		} else {
-			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate,
-				thrownPlayerHasBall, isKickedPlayer ? new InjuryTypeKTMCrowd() : new InjuryTypeCrowdPush());
+			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate,	thrownPlayerHasBall, new InjuryTypeCrowdPush());
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
@@ -259,12 +257,20 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 		if (playerLandedUpon != null) {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
-			InjuryResult injuryResultHitPlayer = UtilServerInjury.handleInjury(this, new InjuryTypeTTMHitPlayer(), null,
-				playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+			InjuryResult injuryResultHitPlayer;
+			if (!isKickedPlayer && thrownPlayer.getTeam() != playerLandedUpon.getTeam()
+					&& thrownPlayer.hasSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm)) {
+				injuryResultHitPlayer = UtilServerInjury.handleInjury(
+					this, new InjuryTypeTTMHitPlayerForSpp(), thrownPlayer,
+					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+			} else {
+				injuryResultHitPlayer = UtilServerInjury.handleInjury(
+					this, new InjuryTypeTTMHitPlayer(), null,
+					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+			}
 			List<DeferredCommand> commands = new ArrayList<>();
 			GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
-			if (alwaysTurnOver.isEnabled() || ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
-				|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
+			if (alwaysTurnOver.isEnabled()) {
 				commands.add(new HitPlayerTurnOverCommand());
 			}
 			commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));

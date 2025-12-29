@@ -126,6 +126,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					throwScatter, false, false));
 
 			publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE, usingBullseye));
+			publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, isKickedPlayer));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

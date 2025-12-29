@@ -13,6 +13,7 @@ public class NamedProperties {
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnDodge = new NamedProperty("Affects Either Armour Or Injury On Dodge");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnFoul = new NamedProperty("Affects Either Armour Or Injury On Foul");
 	public static final ISkillProperty affectsEitherArmourOrInjuryOnJump = new NamedProperty("Affects Either Armour Or Injury On Jump");
+	public static final ISkillProperty affectsEitherArmourOrInjuryOnTtm = new NamedProperty("Affects Either Armour Or Injury On TTM");
 	public static final ISkillProperty allowsAdditionalFoul = new NamedProperty("Allows Additional Foul");
 	public static final ISkillProperty allowsRaisingLineman = new NamedProperty("Allows Raising Lineman");
 	public static final ISkillProperty allowStandUpAssists = new NamedProperty("Allow Stand Up Assists");
@@ -158,6 +159,7 @@ public class NamedProperties {
 	public static final ISkillProperty goForItAfterBlock = new NamedProperty("Go For It After Block");
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
 	public static final ISkillProperty grantsCatchBonusToReceiver = new NamedProperty("Grants Catch Bonus To Receiver");
+	public static final ISkillProperty grantsSppWhenHittingOpponentOnTtm = new NamedProperty("Grants Spp When Hitting Opponent On Ttm");
 	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
 	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
 		"Grants Team Re-Roll When On Pitch");
