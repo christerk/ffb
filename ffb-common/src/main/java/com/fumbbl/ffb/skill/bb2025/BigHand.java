@@ -22,7 +22,7 @@ public class BigHand extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.ignoreTacklezonesWhenPickingUp);
 		registerProperty(NamedProperties.ignoreWeatherWhenPickingUp);
-		registerModifier(new PickupModifier("Big Hand", "0 ignoring all tackle zones due to Big Hand", 0, ModifierType.REGULAR) {
+		registerModifier(new PickupModifier("Big Hand", "0 ignoring all negative modifiers due to Big Hand", 0, ModifierType.REGULAR) {
 			@Override
 			public boolean isModifierIncluded() {
 				return true;
