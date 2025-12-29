@@ -12,6 +12,7 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -123,7 +124,12 @@ public class StepSwarming extends AbstractStep {
 			if (!state.handleReceivingTeam) {
 				getGameState().setKickingSwarmers(0);
 			}
-			state.teamId = swarmingTeam(game).getId();
+			Team team = swarmingTeam(game);
+			if (!team.getSpecialRules().contains(SpecialRule.SWARMING)) {
+				getResult().setNextAction(StepAction.NEXT_STEP);
+				return;
+			}
+			state.teamId = team.getId();
 			Set<Player<?>> playersOnPitch = new HashSet<>();
 			Set<Player<?>> playersReserveNoSwarming = new HashSet<>();
 			for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
