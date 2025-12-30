@@ -1,23 +1,22 @@
 package com.fumbbl.ffb.model;
 
-import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.HasReRollProperties;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
-import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.ReRollPropertyFactory;
-import com.fumbbl.ffb.factory.ReRollSourceFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 	private int nrOfDice, id, proIndex;
 	private int[] blockRoll, reRollDiceIndexes = new int[0];
 	private int selectedIndex = -1;
-	private final Set<ReRollSource> reRollSources = new HashSet<>();
+	private final Map<String, String> rrActionToSource = new HashMap<>();
 	private final Set<ReRollProperty> reRollProperties = new HashSet<>();
 
 	public BlockRollProperties() {
@@ -105,25 +104,20 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 		return oldPlayerState;
 	}
 
-	public void add(ReRollSource reRollSource) {
-		reRollSources.add(reRollSource);
-	}
-
-	public void remove(ReRollSource reRollSource) {
-		reRollSources.remove(reRollSource);
+	public void setReRollSources(Map<String, String> rrActionToSource) {
+		if (rrActionToSource != null) {
+			this.rrActionToSource.clear();
+			this.rrActionToSource.putAll(rrActionToSource);
+		}
 	}
 
 	public void clearReRolls() {
-		reRollSources.clear();
+		rrActionToSource.clear();
 		reRollProperties.clear();
 	}
 
-	public boolean has(ReRollSource reRollSource) {
-		return reRollSources.contains(reRollSource);
-	}
-
 	public boolean hasReRollsLeft() {
-		return !reRollSources.isEmpty() || reRollProperties.stream().anyMatch(ReRollProperty::isActualReRoll);
+		return !rrActionToSource.isEmpty() || reRollProperties.stream().anyMatch(ReRollProperty::isActualReRoll);
 	}
 
 	public void setReRollDiceIndexes(int[] reRollDiceIndexes) {
@@ -154,8 +148,8 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 		reRollProperties.remove(reRollProperty);
 	}
 
-	public Set<ReRollSource> getReRollSources() {
-		return reRollSources;
+	public Map<String, String> getRrActionToSource() {
+		return rrActionToSource;
 	}
 
 	public Set<ReRollProperty> getReRollProperties() {
@@ -176,14 +170,14 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 			selectedIndex == blockRoll1.selectedIndex && Objects.equals(targetId, blockRoll1.targetId) &&
 			Objects.equals(oldPlayerState, blockRoll1.oldPlayerState) && Arrays.equals(blockRoll, blockRoll1.blockRoll) &&
 			Arrays.equals(reRollDiceIndexes, blockRoll1.reRollDiceIndexes) &&
-			Objects.equals(reRollSources, blockRoll1.reRollSources) &&
+			Objects.equals(rrActionToSource, blockRoll1.rrActionToSource) &&
 			Objects.equals(reRollProperties, blockRoll1.reRollProperties);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = Objects.hash(targetId, oldPlayerState, successFulDauntless, ownChoice, nrOfDice, id, proIndex,
-			selectedIndex, reRollSources, reRollProperties);
+			selectedIndex, rrActionToSource, reRollProperties);
 		result = 31 * result + Arrays.hashCode(blockRoll);
 		result = 31 * result + Arrays.hashCode(reRollDiceIndexes);
 		return result;
@@ -200,13 +194,9 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 		ownChoice = IJsonOption.IS_OWN_CHOICE.getFrom(source, jsonObject);
 		oldPlayerState = IJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		id = IJsonOption.BLOCK_ROLL_ID.getFrom(source, jsonObject);
-		JsonArray sourcesArray = IJsonOption.RE_ROLL_SOURCES.getFrom(source, jsonObject);
-		if (sourcesArray != null) {
-			ReRollSourceFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_SOURCE);
-			sourcesArray.values().stream()
-				.map(value -> (ReRollSource) UtilJson.toEnumWithName(factory, value))
-				.forEach(reRollSources::add);
-		}
+
+		rrActionToSource.putAll(IJsonOption.RE_ROLL_ACTION_TO_SOURCE_MAP.getFrom(source, jsonObject));
+
 		reRollDiceIndexes = IJsonOption.RE_ROLLED_DICE_INDEXES.getFrom(source, jsonObject);
 		proIndex = IJsonOption.PRO_INDEX.getFrom(source, jsonObject);
 		doubleTargetStrength = toPrimitive(IJsonOption.DOUBLE_TARGET_STRENGTH.getFrom(source, jsonObject));
@@ -229,9 +219,7 @@ public class BlockRollProperties implements IJsonSerializable, HasReRollProperti
 		IJsonOption.IS_OWN_CHOICE.addTo(jsonObject, ownChoice);
 		IJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, oldPlayerState);
 		IJsonOption.BLOCK_ROLL_ID.addTo(jsonObject, id);
-		JsonArray sourcesArray = new JsonArray();
-		reRollSources.stream().map(UtilJson::toJsonValue).forEach(sourcesArray::add);
-		IJsonOption.RE_ROLL_SOURCES.addTo(jsonObject, sourcesArray);
+		IJsonOption.RE_ROLL_ACTION_TO_SOURCE_MAP.addTo(jsonObject, rrActionToSource);
 		IJsonOption.RE_ROLLED_DICE_INDEXES.addTo(jsonObject, reRollDiceIndexes);
 		IJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
 		IJsonOption.DOUBLE_TARGET_STRENGTH.addTo(jsonObject, doubleTargetStrength);

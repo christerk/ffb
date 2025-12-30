@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
@@ -16,6 +17,7 @@ import com.fumbbl.ffb.dialog.DialogOpponentBlockSelectionPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -59,8 +61,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -199,43 +203,20 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 			final boolean teamReRollAvailable =
 				UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
-			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
-			final boolean savageBlowAvailable =
-				actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice);
 			InducementSet inducementSet = game.getTurnData().getInducementSet();
 			final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
 
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
 
 			state.blockRolls.forEach(roll -> {
-
 				Player<?> defender = game.getPlayerById(roll.getTargetId());
 				int nrOfDice = ServerUtilBlock.findNrOfBlockDice(getGameState(), actingPlayer.getPlayer(), defender, true,
 					roll.isSuccessFulDauntless(), roll.isDoubleTargetStrength(), false).getLeft();
 				roll.setNrOfDice(Math.abs(nrOfDice));
 				roll.setOwnChoice(nrOfDice > 0);
 				roll(roll, false, actingPlayer, singleDieReRollSource);
-				if (teamReRollAvailable) {
-					roll.add(ReRollProperty.TRR);
-				}
-				if (proReRollAvailable) {
-					roll.add(ReRollProperty.PRO);
-				}
-				if (brawlerAvailable) {
-					roll.add(ReRollProperty.BRAWLER);
-				}
-				if (mascotAvailable) {
-					roll.add(ReRollProperty.MASCOT);
-				}
-				mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(roll::add);
 
-				if (singleDieReRollSource != null) {
-					roll.add(ReRollProperty.ANY_DIE_RE_ROLL);
-				}
-				if (savageBlowAvailable) {
-					roll.add(ReRollProperty.SAVAGE_BLOW);
-				}
+				addReRollData(game, teamReRollAvailable, mascotAvailable, mechanic, roll);
 
 				getResult().setSound(SoundId.BLOCK);
 				getGameState().removeAdditionalAssist(game.getActingTeam().getId());
@@ -266,6 +247,19 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 						roll.clearReRolls();
 					});
 
+				final boolean teamReRollAvailable =
+					UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
+				InducementSet inducementSet = game.getTurnData().getInducementSet();
+				final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
+
+				RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
+
+				state.blockRolls.stream().filter(BlockRollProperties::hasReRollsLeft).forEach(roll -> {
+					roll.clearReRolls();
+
+					addReRollData(game, teamReRollAvailable, mascotAvailable, mechanic, roll);
+				});
+
 			}
 			decideNextStep(game);
 		}
@@ -295,49 +289,6 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		final boolean teamReRollAvailable =
-			UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
-		final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-		final boolean singleDieReRollAvailable =
-			UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canRerollSingleDieOncePerPeriod);
-		final boolean savageBlowAvailable =
-			actingPlayer.getPlayer().hasUnusedSkillProperty(NamedProperties.canReRollAnyNumberOfBlockDice);
-		InducementSet inducementSet = game.getTurnData().getInducementSet();
-		final boolean mascotAvailable = inducementSet.hasUsesLeft(inducementSet.forUsage(Usage.CONDITIONAL_REROLL));
-
-		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
-
-		state.blockRolls.forEach(roll -> {
-			if (!teamReRollAvailable) {
-				roll.remove(ReRollProperty.TRR);
-			}
-			if (!proReRollAvailable) {
-				roll.remove(ReRollProperty.PRO);
-			}
-			if (!singleDieReRollAvailable) {
-				roll.remove(ReRollProperty.ANY_DIE_RE_ROLL);
-			}
-
-			if (!mascotAvailable) {
-				roll.remove(ReRollProperty.MASCOT);
-			}
-			if (!savageBlowAvailable) {
-				roll.remove(ReRollProperty.SAVAGE_BLOW);
-			}
-
-			boolean bothDownPresent = false;
-
-			for (int i = 0; i < roll.getBlockRoll().length; i++) {
-				if (factory.forRoll(roll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN) {
-					bothDownPresent = true;
-					break;
-				}
-			}
-
-			if (!bothDownPresent) {
-				roll.remove(ReRollProperty.BRAWLER);
-			}
-		});
 
 		boolean anyReRollLeft = state.blockRolls.stream().anyMatch(BlockRollProperties::hasReRollsLeft);
 
@@ -359,6 +310,25 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				nextStep();
 			}
 		}
+	}
+
+	private void addReRollData(Game game, boolean teamReRollAvailable, boolean mascotAvailable, RollMechanic mechanic, BlockRollProperties roll) {
+		Map<ReRolledAction, ReRollSource> actionReRollSourceMap = new HashMap<>();
+
+		if (teamReRollAvailable) {
+			roll.add(ReRollProperty.TRR);
+		}
+		if (mascotAvailable) {
+			roll.add(ReRollProperty.MASCOT);
+		}
+		mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(roll::add);
+
+		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
+		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BOTH_DOWN, game);
+		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
+		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
+
+		roll.setReRollSources(convertActionsMap(actionReRollSourceMap));
 	}
 
 	private void roll(BlockRollProperties roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {
@@ -446,6 +416,21 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, blockRoll.getSelectedIndex()));
 		publishParameter(new StepParameter(StepParameterKey.BLOCK_RESULT,
 			factory.forRoll(blockRoll.getBlockRoll()[blockRoll.getSelectedIndex()])));
+	}
+
+	private void addReRollSourceMapping(Map<ReRolledAction, ReRollSource> actionToSource, ReRolledAction reRolledAction, Game game) {
+		ReRollSource unusedRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(),
+			reRolledAction);
+		if (unusedRerollSource != null) {
+			actionToSource.put(reRolledAction, unusedRerollSource);
+		}
+	}
+
+	private Map<String, String> convertActionsMap(Map<ReRolledAction, ReRollSource> input) {
+		Game game = getGameState().getGame();
+		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
+		return input.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().getName(factory),
+			entry -> entry.getValue().getName(game)));
 	}
 
 	@Override

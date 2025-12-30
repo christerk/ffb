@@ -30,7 +30,7 @@ import com.fumbbl.ffb.skill.common.DisturbingPresence;
 import com.fumbbl.ffb.skill.common.Fend;
 import com.fumbbl.ffb.skill.common.Kick;
 import com.fumbbl.ffb.skill.common.Pass;
-import com.fumbbl.ffb.skill.common.Pro;
+import com.fumbbl.ffb.skill.mixed.Pro;
 import com.fumbbl.ffb.skill.common.SureHands;
 import com.fumbbl.ffb.skill.bb2016.Accurate;
 import com.fumbbl.ffb.skill.bb2016.Bombardier;

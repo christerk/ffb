@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.common;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -16,7 +16,8 @@ import com.fumbbl.ffb.model.skill.Skill;
  * result stands and may not be re-rolled with a skill or team re-roll; however
  * you can re-roll the Pro roll with a Team re-roll.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
+@RulesCollection(Rules.BB2020)
 public class Pro extends Skill {
 
 	public Pro() {

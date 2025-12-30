@@ -50,6 +50,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource singleDieReRollSource;
 	private final ReRollSource singleBlockDieReRollSource;
 	private final ReRollSource anyBlockDiceReRollSource;
+	private final ReRollSource singleDiePerActivationReRollSource;
+	private final ReRollSource bothDownReRollSource;
 	private boolean willUseMascot;
 	private final DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
 	private final Map<ReRolledAction, ReRollSource> actionToSource;
@@ -66,6 +68,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		singleDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE);
 		anyBlockDiceReRollSource = actionToSource.get(ReRolledActions.MULTI_BLOCK_DICE);
 		singleBlockDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_BLOCK_DIE);
+		singleDiePerActivationReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE_PER_ACTIVATION);
+		bothDownReRollSource = actionToSource.get(ReRolledActions.SINGLE_BOTH_DOWN);
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -155,7 +159,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			centerPanel.add(reRollPanel);
 
 			if (Math.abs(getDialogParameter().getNrOfDice()) > 1) {
-				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				if (singleDiePerActivationReRollSource != null) {
 					centerPanel.add(proPanel(Math.abs(dialogParameter.getNrOfDice())));
 					centerPanel.add(Box.createVerticalStrut(3));
 				}
@@ -216,7 +220,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		}
 
 		if (getDialogParameter().getNrOfDice() == 1) {
-			if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+			if (singleDiePerActivationReRollSource != null) {
 				fButtonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
 				if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
 					JPanel proPanel = proMascotPanelSingle();
@@ -244,7 +248,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			reRollPanel.add(mascotExtension.wrapperPanel(anyDiceButton));
 		}
 
-		if (getDialogParameter().hasProperty(ReRollProperty.BRAWLER)) {
+		if (bothDownReRollSource != null) {
 			brawlerButton = button("Brawler Re-Roll", KeyEvent.VK_B);
 			reRollPanel.add(mascotExtension.wrapperPanel(brawlerButton));
 		}
@@ -613,21 +617,21 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				}
 				break;
 			case KeyEvent.VK_P:
-				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				if (singleDiePerActivationReRollSource != null) {
 					keyHandled = true;
 					determineProReRollSource();
 					reRollIndexes.add(0);
 				}
 				break;
 			case KeyEvent.VK_R:
-				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				if (singleDiePerActivationReRollSource != null) {
 					keyHandled = true;
 					determineProReRollSource();
 					reRollIndexes.add(1);
 				}
 				break;
 			case KeyEvent.VK_E:
-				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
+				if (singleDiePerActivationReRollSource != null) {
 					keyHandled = true;
 					determineProReRollSource();
 					reRollIndexes.add(2);
@@ -677,7 +681,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				break;
 			case KeyEvent.VK_N:
 				keyHandled = ((getDialogParameter().hasProperty(ReRollProperty.TRR) ||
-					getDialogParameter().hasProperty(ReRollProperty.PRO))
+					singleDiePerActivationReRollSource != null)
 					&& (getDialogParameter().getNrOfDice() < 0));
 				break;
 			case KeyEvent.VK_B:

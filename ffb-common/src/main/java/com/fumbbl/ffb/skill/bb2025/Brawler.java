@@ -1,11 +1,12 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class Brawler extends Skill {
 	public Brawler() {
@@ -15,5 +16,6 @@ public class Brawler extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollBothDowns);
+		registerRerollSource(ReRolledActions.SINGLE_BOTH_DOWN, ReRollSources.BRAWLER);
 	}
 }

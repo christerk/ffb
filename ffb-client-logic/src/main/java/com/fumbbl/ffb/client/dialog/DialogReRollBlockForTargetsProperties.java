@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
@@ -10,7 +11,7 @@ import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.model.BlockRollProperties;
-import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.model.Game;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -28,8 +29,8 @@ import java.util.function.ObjIntConsumer;
 public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBlockProperties {
 
 	private final DialogReRollBlockForTargetsPropertiesParameter dialogParameter;
+	private final Map<String, Map<ReRolledAction, ReRollSource>> actionToSourceMaps;
 	private ReRollSource reRollSource;
-	private final ReRollSource singleDieReRollSource;
 	private final List<Integer> anyDiceIndexes = new ArrayList<>();
 	private final Set<String> blockWillUseMascot = new HashSet<>();
 	private final Map<String, FallbackCheckBoxes> fallbackCheckBoxes = new HashMap<>();
@@ -61,34 +62,44 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}};
 	private int proIndex;
 
-	public DialogReRollBlockForTargetsProperties(FantasyFootballClient pClient, DialogReRollBlockForTargetsPropertiesParameter parameter) {
+	public DialogReRollBlockForTargetsProperties(FantasyFootballClient pClient,
+		DialogReRollBlockForTargetsPropertiesParameter parameter,
+		Map<String, Map<ReRolledAction, ReRollSource>> actionToSourceMaps) {
 
 		super(pClient, "Block Roll", false);
 
 		dialogParameter = parameter;
+		this.actionToSourceMaps = actionToSourceMaps;
+
+		Game game = getClient().getGame();
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
 
-		singleDieReRollSource = UtilCards.getUnusedRerollSource(pClient.getGame().getActingPlayer(),
-			ReRolledActions.SINGLE_DIE);
-
 		for (BlockRollProperties blockRoll : parameter.getBlockRolls()) {
-
+			Map<ReRolledAction, ReRollSource> actionReRollSourceMap = actionToSourceMaps.get(blockRoll.getTargetId());
 			String target = blockRoll.getTargetId();
 			boolean ownChoice = blockRoll.isOwnChoice();
 			Color background = ownChoice ? colorOwnChoice : colorOpponentChoice;
 			JPanel targetPanel = new BackgroundPanel(background);
 			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
 			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-			boolean hasSavageBlow = blockRoll.hasProperty(ReRollProperty.SAVAGE_BLOW);
+			ReRollSource anyBlockDiceReRollSource = actionReRollSourceMap.get(ReRolledActions.MULTI_BLOCK_DICE);
 			JPanel dicePanel = dicePanel(blockRoll, ownChoice && blockRoll.needsSelection(), blockDieMnemonics.remove(0),
-				hasSavageBlow && blockRoll.getNrOfDice() > 1);
+				anyBlockDiceReRollSource != null && blockRoll.getNrOfDice() > 1);
+
 			targetPanel.add(dicePanel);
 			if (blockRoll.hasReRollsLeft()) {
 				Mnemonics currentMnemonics = mnemonics.remove(0);
+
+				ReRollSource singleDiePerActicationReRollSource =
+					actionReRollSourceMap.get(ReRolledActions.SINGLE_DIE_PER_ACTIVATION);
+				ReRollSource singleDieReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_DIE);
+				ReRollSource bothDownReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_BOTH_DOWN);
+				ReRollSource anyDiceReRollSource = actionReRollSourceMap.get(ReRolledActions.MULTI_BLOCK_DICE);
+
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 				buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
@@ -132,8 +143,9 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (blockRoll.getNrOfDice() == 1) {
-					if (blockRoll.hasProperty(ReRollProperty.PRO)) {
-						JButton proButton = createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
+					if (singleDiePerActicationReRollSource != null) {
+						JButton proButton = createReRollButton(target, singleDiePerActicationReRollSource.getName(game),
+							singleDiePerActicationReRollSource,
 							currentMnemonics.pro.get(0));
 						if (willUseMascot || blockRoll.hasProperty(ReRollProperty.TRR)) {
 							buttonPanel.add(proMascotPanelSingle(blockRoll, proButton, currentMnemonics));
@@ -142,19 +154,19 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 						}
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
-					if (blockRoll.hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
+					if (singleDieReRollSource != null) {
 						buttonPanel.add(mascotExtension.wrapperPanel(
 							createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource,
 								currentMnemonics.anyDie.get(0))));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 				}
-				if (blockRoll.hasProperty(ReRollProperty.BRAWLER)) {
+				if (bothDownReRollSource != null) {
 					buttonPanel.add(mascotExtension.wrapperPanel(
 						createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
-				if (blockRoll.hasProperty(ReRollProperty.SAVAGE_BLOW)) {
+				if (anyDiceReRollSource != null) {
 					JButton anyDiceButton = createReRollButton(target, "Savage Blow", ReRollSources.SAVAGE_BLOW,
 						currentMnemonics.anyBlockDice);
 					anyDiceButton.setEnabled(blockRoll.getNrOfDice() == 1);
@@ -163,20 +175,21 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
-					buttonPanel.add(createReRollButton(target, "No Re-Roll", null, currentMnemonics.none));
+					buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "No Re-Roll", null,
+						currentMnemonics.none)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
 				if (Math.abs(blockRoll.getNrOfDice()) > 1) {
-					if (blockRoll.hasProperty(ReRollProperty.PRO)) {
+					if (singleDiePerActicationReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(proTextPanel(),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), currentMnemonics.pro, this::proAction));
 
 						targetPanel.add(proMascotPanelMultiple(blockRoll, currentMnemonics));
 					}
-					if (blockRoll.hasProperty(ReRollProperty.ANY_DIE_RE_ROLL) && singleDieReRollSource != null) {
+					if (singleDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), currentMnemonics.anyDie, this::anyDieAction));
 					}
@@ -234,7 +247,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	private long rerollButtons(BlockRollProperties blockRoll) {
 		return blockRoll.getReRollProperties().stream()
 			.filter(prop -> prop.isActualReRoll() && prop != ReRollProperty.MASCOT).count() +
-			blockRoll.getReRollSources().size();
+			blockRoll.getRrActionToSource().size();
 	}
 
 	private JPanel proMascotPanelMultiple(BlockRollProperties blockRoll, Mnemonics mnemonics) {
@@ -316,7 +329,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}
 
 	private void anyDieAction(String target, int index) {
-		reRollSource = singleDieReRollSource;
+		reRollSource = actionToSourceMaps.get(target).get(ReRolledActions.SINGLE_DIE);
 		this.proIndex = index;
 		this.selectedTarget = target;
 		close();

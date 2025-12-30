@@ -1,15 +1,21 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
-import com.fumbbl.ffb.model.BlockRollProperties;
+import com.fumbbl.ffb.factory.ReRollSourceFactory;
+import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.model.BlockRoll;
+import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler {
@@ -29,7 +35,15 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 			Player<?> player = game.getPlayerById(dialogParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
-				setDialog(new DialogReRollBlockForTargetsProperties(getClient(), dialogParameter));
+
+				ReRolledActionFactory actionFactory = game.getFactory(FactoryType.Factory.RE_ROLLED_ACTION);
+				ReRollSourceFactory sourceFactory = game.getFactory(FactoryType.Factory.RE_ROLL_SOURCE);
+
+				Map<String, Map<ReRolledAction, ReRollSource>> actionToSourceMaps = dialogParameter.getBlockRolls().stream()
+					.collect(Collectors.toMap(BlockRollProperties::getTargetId,
+						roll -> convertToActionMap(roll.getRrActionToSource(), actionFactory, sourceFactory)));
+
+				setDialog(new DialogReRollBlockForTargetsProperties(getClient(), dialogParameter, actionToSourceMaps));
 				getDialog().showDialog(this);
 
 			} else {
@@ -53,6 +67,12 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 						reRollDialog.getAnyDiceIndexes().stream().mapToInt(i -> i).toArray());
 			}
 		}
+	}
+
+
+	private Map<ReRolledAction, ReRollSource> convertToActionMap(Map<String, String> input, ReRolledActionFactory actionFactory, ReRollSourceFactory sourceFactory) {
+		return input.entrySet().stream().collect(Collectors.toMap(entry -> actionFactory.forName(entry.getKey()),
+			entry -> sourceFactory.forName(entry.getValue())));
 	}
 
 	private BlockRoll map(BlockRollProperties input) {

@@ -289,14 +289,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
+			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 
 			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(),
 				actingPlayer.getPlayer())) {
 				properties.add(ReRollProperty.TRR);
-			}
-
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollOncePerTurn)) {
-				properties.add(ReRollProperty.PRO);
 			}
 
 			Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollBothDowns);
@@ -306,19 +303,10 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			if (brawlerOption) {
 				for (int roll : fBlockRoll) {
 					if (factory.forRoll(roll) == BlockResult.BOTH_DOWN) {
-						properties.add(ReRollProperty.BRAWLER);
+						addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BOTH_DOWN, game);
 						break;
 					}
 				}
-			}
-
-			if (actingPlayer.getPlayerAction().isBlitzing()
-				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)) {
-				properties.add(ReRollProperty.UNSTOPPABLE_MOMENTUM);
-			}
-
-			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice)) {
-				properties.add(ReRollProperty.SAVAGE_BLOW);
 			}
 
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);

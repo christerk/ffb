@@ -70,6 +70,8 @@ public class ReRolledActions {
 	public static final ReRolledAction THEN_I_STARTED_BLASTIN = new ReRolledAction(ThenIStartedBlastin.class);
 	public static final ReRolledAction MULTI_BLOCK_DICE = new ReRolledAction("Multi Block Dice");
 	public static final ReRolledAction STEADY_FOOTING = new ReRolledAction("Steady Footing");
+	public static final ReRolledAction SINGLE_BOTH_DOWN = new ReRolledAction("Single BothDown");
+	public static final ReRolledAction SINGLE_DIE_PER_ACTIVATION = new ReRolledAction("Single Die Per Activation");
 
 	private final Map<String, ReRolledAction> values;
 

@@ -65,7 +65,7 @@ public class DialogBlockRollPropertiesParameter implements IDialogParameter, Has
 	}
 
 	public boolean hasActualReRoll() {
-		return reRollProperties.stream().anyMatch(ReRollProperty::isActualReRoll);
+		return reRollProperties.stream().anyMatch(ReRollProperty::isActualReRoll) || !rrActionToSource.isEmpty();
 	}
 
 	public List<ReRollProperty> getReRollProperties() {
