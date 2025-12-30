@@ -38,6 +38,7 @@ public class ReRollSources {
 	public static final ReRollSource PRO_MASCOT = new ReRollSource("Pro Mascot", PRO);
 	public static final ReRollSource PRO_MASCOT_TRR = new ReRollSource("Pro Mascot TRR", PRO);
 	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
+	public static final ReRollSource SWOOP = new ReRollSource("Swoop");
 
 	private final Map<String, ReRollSource> values;
 

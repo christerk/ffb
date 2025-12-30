@@ -119,6 +119,9 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 				throwScatter = false;
 				scattersSingleDirection = false;
 			}
+			if (isKickedPlayer) { 
+				scattersSingleDirection = false; 
+			}
 
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 				.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), thrownPlayerId,
