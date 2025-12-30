@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.server.step.bb2025.shared;
 
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -13,18 +12,8 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepStallingPlayer extends AbstractStep {
-
-	private static final Set<PlayerAction> PREVENT_STALLING_ACTION = new HashSet<PlayerAction>() {{
-		add(PlayerAction.PASS_MOVE);
-		add(PlayerAction.HAND_OVER_MOVE);
-		add(PlayerAction.PASS);
-		add(PlayerAction.HAND_OVER);
-	}};
 
 	private final StallingExtension stallingExtension = new StallingExtension();
 
@@ -44,8 +33,7 @@ public class StepStallingPlayer extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
-		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		boolean gotRid = gotRidOfBall(playerAction, game);
+		boolean gotRid = !UtilPlayer.hasBall(game, game.getActingPlayer().getPlayer());
 		boolean scored = UtilServerSteps.checkTouchdown(getGameState());
 		boolean noStalling = !getGameState().isStalling() || gotRid || scored;
 
@@ -61,10 +49,5 @@ public class StepStallingPlayer extends AbstractStep {
 
 		stallingExtension.handleStaller(this, player);
 
-	}
-
-	private boolean gotRidOfBall(PlayerAction playerAction, Game game) {
-		return PREVENT_STALLING_ACTION.contains(playerAction) &&
-			!UtilPlayer.hasBall(game, game.getActingPlayer().getPlayer());
 	}
 }
