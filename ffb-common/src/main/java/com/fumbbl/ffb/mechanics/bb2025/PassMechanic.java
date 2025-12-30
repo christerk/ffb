@@ -78,10 +78,10 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 			} else {
 				return PassResult.FUMBLE;
 			}
-		}else if (resultAfterModifiers <= 1) {
-			return PassResult.FUMBLE;
 		} else if (roll == 6 || resultAfterModifiers >= thrower.getPassingWithModifiers()) {
 			return PassResult.ACCURATE;
+		} else if (resultAfterModifiers <= 1) {
+			return PassResult.FUMBLE;
 		} else {
 			return PassResult.INACCURATE;
 		}
