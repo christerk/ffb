@@ -297,7 +297,7 @@ public class PlayerIconFactory {
 				decorationProperty1 = IIconProperty.DECORATION_CONFUSED;
 			} else if (playerState.isHypnotized()) {
 				decorationProperty1 = IIconProperty.DECORATION_HYPNOTIZED;
-			} else if (playerState.isEyeGouged()) {
+			} else if (playerState.isEyeGouged() && !playerState.isCarried()) {
 				decorationProperty1 = IIconProperty.DECORATION_EYE_GOUGED;
 			}
 		}
