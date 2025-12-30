@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.mechanics.mixed;
+package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
 	private static final Set<TurnMode> modesAllowingPro = new HashSet<TurnMode>() {{
