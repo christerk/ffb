@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -27,7 +27,6 @@ import com.fumbbl.ffb.skill.common.DumpOff;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 	public DumpOffBehaviour() {
 		super();
