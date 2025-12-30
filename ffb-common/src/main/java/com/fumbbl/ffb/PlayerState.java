@@ -248,6 +248,10 @@ public class PlayerState {
 		return isConfused() || isHypnotized();
 	}
 
+	public boolean isCarried() {
+		return ((PICKED_UP == getBase()) || (IN_THE_AIR == getBase()));
+	}
+
 	private PlayerState changeBit(int pMask, boolean pBit) {
 		if (pBit) {
 			return new PlayerState(getId() | pMask);
