@@ -207,6 +207,11 @@ public class ZappedPosition implements Position {
 		return Collections.emptyList();
 	}
 
+	@Override
+	public List<String> getRawKeywords() {
+		return Collections.emptyList();
+	}
+
 	public void addToXml(TransformerHandler pHandler) {
 
 		AttributesImpl attributes = new AttributesImpl();

@@ -68,5 +68,7 @@ public interface Position extends IXmlSerializable, IJsonSerializable {
 
 	List<Keyword> getKeywords();
 
+	List<String> getRawKeywords();
+
 	boolean isDwarf();
 }

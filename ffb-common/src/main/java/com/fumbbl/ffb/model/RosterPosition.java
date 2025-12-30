@@ -24,6 +24,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.sax.TransformerHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -103,6 +105,7 @@ public class RosterPosition implements Position {
 	private String nameGenerator;
 	private String replacesPosition;
 	private final List<Keyword> keywords;
+	private final List<String> rawKeywords;
 
 	private final Map<Skill, String> fSkillValues;
 	private final Map<Skill, String> displayValues;
@@ -127,6 +130,7 @@ public class RosterPosition implements Position {
 		displayValues = new LinkedHashMap<>();
 		fCurrentIconSetIndex = -1;
 		keywords = new ArrayList<>();
+		rawKeywords = new ArrayList<>();
 	}
 
 	@Override
@@ -203,6 +207,11 @@ public class RosterPosition implements Position {
 	@Override
 	public List<Keyword> getKeywords() {
 		return keywords;
+	}
+
+	@Override
+	public List<String> getRawKeywords() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -458,8 +467,10 @@ public class RosterPosition implements Position {
 
 		UtilXml.startElement(pHandler, _XML_TAG_KEYWORDS);
 
-		for (Keyword keyword : keywords) {
-			UtilXml.addValueElement(pHandler, _XML_TAG_KEYWORD, keyword.getName());
+		Set<String> allKeyWords = new HashSet<>(rawKeywords);
+		allKeyWords.addAll(keywords.stream().map(Keyword::getName).collect(Collectors.toList()));
+		for (String keyword : allKeyWords) {
+			UtilXml.addValueElement(pHandler, _XML_TAG_KEYWORD, keyword);
 		}
 
 		UtilXml.endElement(pHandler, _XML_TAG_KEYWORDS);
@@ -605,6 +616,7 @@ public class RosterPosition implements Position {
 			}
 			if (_XML_TAG_KEYWORD.equalsIgnoreCase(pTag)) {
 				keywords.add(Keyword.forName(pValue));
+				rawKeywords.add(pValue);
 			}
 		}
 		return complete;
@@ -671,6 +683,7 @@ public class RosterPosition implements Position {
 		}
 
 		IJsonOption.KEYWORDS.addTo(jsonObject, keywords.stream().map(Keyword::getName).collect(Collectors.toList()));
+		IJsonOption.RAW_KEYWORDS.addTo(jsonObject, rawKeywords);
 
 		return jsonObject;
 
@@ -741,6 +754,10 @@ public class RosterPosition implements Position {
 			for (String name : IJsonOption.KEYWORDS.getFrom(source, jsonObject)) {
 				keywords.add(Keyword.forName(name));
 			}
+		}
+
+		if (IJsonOption.RAW_KEYWORDS.isDefinedIn(jsonObject)) {
+			rawKeywords.addAll(Arrays.asList(IJsonOption.RAW_KEYWORDS.getFrom(source, jsonObject)));
 		}
 
 		return this;
