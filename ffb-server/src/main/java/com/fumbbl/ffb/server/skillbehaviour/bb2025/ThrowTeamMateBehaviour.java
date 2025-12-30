@@ -135,6 +135,8 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					return PassResult.FUMBLE;
 				} else if (roll == 6 || resultAfterModifiers >= passValue) {
 					return PassResult.ACCURATE;
+				} else if (resultAfterModifiers <= 1) {
+					return PassResult.FUMBLE;
 				} else {
 					return PassResult.INACCURATE;
 				}
