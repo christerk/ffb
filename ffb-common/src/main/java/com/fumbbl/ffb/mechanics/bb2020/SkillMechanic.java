@@ -2,6 +2,7 @@ package com.fumbbl.ffb.mechanics.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
@@ -9,12 +10,17 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
@@ -86,4 +92,24 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 			&& assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 
+	@Override
+	public boolean animosityExists(Player<?> thrower, Player<?> catcher) {
+		if (thrower == null || catcher == null) {
+			return false;
+		}
+		Skill animosity = thrower.getSkillWithProperty(NamedProperties.hasToRollToPassBallOn);
+		if (animosity == null || !thrower.getTeam().getId().equals(catcher.getTeam().getId()) ||
+			catcher.getPlayerType() == PlayerType.MERCENARY || catcher.getPlayerType() == PlayerType.STAR) {
+			return false;
+		}
+
+		Set<String> pattern = new HashSet<String>() {{
+			add(ANIMOSITY_TO_ALL);
+			add(catcher.getPositionId());
+			add(catcher.getRace());
+		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
+
+		return animosity.evaluator().values(animosity, thrower).stream().map(String::toLowerCase)
+			.anyMatch(pattern::contains);
+	}
 }
