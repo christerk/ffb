@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -18,10 +18,9 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.mixed.Animosity;
+import com.fumbbl.ffb.skill.bb2020.Animosity;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 	public AnimosityBehaviour() {
 		super();
