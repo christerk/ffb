@@ -333,6 +333,14 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		).anyMatch(prop -> prop.equals(property));
 	}
 
+	public boolean hasUsableSkillProperty(ISkillProperty property, PlayerState state) {
+		return hasSkillProperty(property)	&& state.isStanding() && !state.isDistracted();
+	}
+
+	public boolean hasUsableSkillProperty(ISkillProperty property, Game game) {
+		return hasUsableSkillProperty(property, game.getFieldModel().getPlayerState(this));
+	}
+
 	public boolean hasSkill(ISkillProperty property) {
 		return Stream.concat(
 				getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream()),

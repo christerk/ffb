@@ -72,11 +72,10 @@ import java.util.List;
 public final class StepInitScatterPlayer extends AbstractStep {
 
 	private String thrownPlayerId;
-	private PlayerState thrownPlayerState;
+	private PlayerState thrownPlayerState, oldPlayerState;
 	private FieldCoordinate thrownPlayerCoordinate;
-	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye;
+	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye, usingSwoop;
 	private Direction swoopDirection;
-	private boolean usingSwoop;
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -155,6 +154,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 					return true;
 				case USING_SWOOP:
 					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				case OLD_DEFENDER_STATE:
+					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -266,7 +268,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 			InjuryResult injuryResultHitPlayer;
 			if (!isKickedPlayer && thrownPlayer.getTeam() != playerLandedUpon.getTeam()
-					&& thrownPlayer.hasSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm)) {
+					&& thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState)) {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
 					this, new InjuryTypeTTMHitPlayerForSpp(), thrownPlayer,
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
@@ -303,6 +305,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
 		publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, isKickedPlayer));
 		publishParameter(new StepParameter(StepParameterKey.USING_SWOOP, usingSwoop));
+		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
 		game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -321,6 +324,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, swoopDirection);
 		IServerJsonOption.USING_BULLSEYE.addTo(jsonObject, usingBullseye);
 		IServerJsonOption.USING_SWOOP.addTo(jsonObject, usingSwoop);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -337,6 +341,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
 		usingSwoop = (Boolean) IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 

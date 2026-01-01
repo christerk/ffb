@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.ttm;
+package com.fumbbl.ffb.server.step.bb2025.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -36,13 +36,12 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndScatterPlayer extends AbstractStep {
 
 	private String fThrownPlayerId;
 	private boolean fThrownPlayerHasBall;
-	private PlayerState fThrownPlayerState;
+	private PlayerState fThrownPlayerState, oldPlayerState;
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private boolean fIsKickedPlayer, crashLanding;
 
@@ -83,6 +82,9 @@ public final class StepEndScatterPlayer extends AbstractStep {
 				case CRASH_LANDING:
 					crashLanding = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
+				case OLD_DEFENDER_STATE:
+					oldPlayerState = (PlayerState) parameter.getValue();
+					return true;
 				default:
 					break;
 			}
@@ -116,6 +118,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 			if (fIsKickedPlayer) {
 				publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			}
+			publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -131,6 +134,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, fIsKickedPlayer);
 		IServerJsonOption.CRASH_LANDING.addTo(jsonObject, crashLanding);
+		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		return jsonObject;
 	}
 
@@ -144,6 +148,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		fIsKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		crashLanding = IServerJsonOption.CRASH_LANDING.getFrom(source, jsonObject);
+		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
 
