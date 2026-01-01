@@ -7,6 +7,7 @@ import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.AnimosityValueEvaluator;
@@ -100,7 +101,8 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
 		Set<String> pattern = new HashSet<String>() {{
 			add(evaluator.allValue());
-			addAll(catcher.getPosition().getRawKeywords());
+			addAll(catcher.getPosition().getKeywords().stream().map(Keyword::getName).map(String::toLowerCase)
+				.collect(Collectors.toList()));
 		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
 
 		return evaluator.values(animosity, thrower).stream().map(String::toLowerCase)

@@ -45,6 +45,7 @@ public enum Keyword {
 	ZOMBIE("Zombie"),
 
 	// fallback
+	ALL("all"),
 	UNKNOWN("Unknown");
 
 	private final String name;

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.skill.bb2025;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Position;
 import com.fumbbl.ffb.model.Roster;
@@ -83,26 +84,24 @@ public class Animosity extends Skill {
 		}
 
 		private String format(String value, Roster roster) {
-			return "Animosity (" + map(value, roster) + ")";
+			return "Animosity" + map(value, roster);
 		}
 
 		private String map(String key, Roster roster) {
 			if (key.equalsIgnoreCase(allValue())) {
-				return "all team-mates";
+				return "";
 			}
 
 			Optional<? extends Position> position = Arrays.stream(roster.getPositions())
 				.filter(pos -> pos.getId().equalsIgnoreCase(key)).findFirst();
-			if (position.isPresent()) {
-				return StringTool.isProvided(position.get().getDisplayName()) ? position.get().getDisplayName() :
-					position.get().getName();
-			}
+			return position.map(value -> " (" + (StringTool.isProvided(value.getDisplayName()) ? value.getDisplayName() :
+				value.getName()) + ")").orElseGet(() -> " (" + key + ")");
 
-			return key;
 		}
 
 		private Set<String> split(String... values) {
-			return Arrays.stream(values).flatMap(value -> Arrays.stream(value.split(";"))).collect(Collectors.toSet());
+			return Arrays.stream(values).flatMap(value -> Arrays.stream(value.split(";")))
+				.map(value -> Keyword.forName(value).getName()).collect(Collectors.toSet());
 		}
 
 		@Override
