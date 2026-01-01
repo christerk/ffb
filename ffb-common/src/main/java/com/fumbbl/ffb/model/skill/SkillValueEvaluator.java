@@ -40,7 +40,7 @@ public interface SkillValueEvaluator {
 		}
 	};
 
-	SkillValueEvaluator MODIFIER = new IntegerEvaluator() {
+	IntegerEvaluator MODIFIER = new IntegerEvaluator() {
 		@Override
 		protected Optional<Integer> getRelevantValue(Set<Integer> values) {
 			return values.stream().max(Integer::compareTo);
@@ -52,7 +52,7 @@ public interface SkillValueEvaluator {
 		}
 	};
 
-	SkillValueEvaluator ROLL = new IntegerEvaluator() {
+	IntegerEvaluator ROLL = new IntegerEvaluator() {
 		@Override
 		protected Optional<Integer> getRelevantValue(Set<Integer> values) {
 			return values.stream().min(Integer::compareTo);

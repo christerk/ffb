@@ -446,7 +446,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		UtilXml.endElement(pHandler, _XML_TAG_ICON_SET);
 
 		UtilXml.startElement(pHandler, _XML_TAG_SKILL_LIST);
-		if (fSkills.size() > 0) {
+		if (!fSkills.isEmpty()) {
 			for (Skill skill : fSkills) {
 				attributes = new AttributesImpl();
 				if (StringTool.isProvided(getSkillValueExcludingTemporaryOnes(skill))) {
@@ -463,7 +463,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		UtilXml.endElement(pHandler, _XML_TAG_SKILL_LIST);
 
 		UtilXml.startElement(pHandler, _XML_TAG_INJURY_LIST);
-		if (fLastingInjuries.size() > 0) {
+		if (!fLastingInjuries.isEmpty()) {
 			for (SeriousInjury lastingInjury : fLastingInjuries) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_INJURY, lastingInjury.getName());
 			}
@@ -590,7 +590,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 					setAgility(Integer.parseInt(pValue));
 				}
 				if (_XML_TAG_PASSING.equals(pXmlTag)) {
-					setPassing(pValue != null && pValue.length() > 0 ? Integer.parseInt(pValue) : 0);
+					setPassing(pValue != null && !pValue.isEmpty() ? Integer.parseInt(pValue) : 0);
 				}
 				if (_XML_TAG_ARMOUR.equals(pXmlTag)) {
 					setArmour(Integer.parseInt(pValue));

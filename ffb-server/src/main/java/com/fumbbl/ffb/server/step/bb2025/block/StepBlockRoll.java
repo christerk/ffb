@@ -296,7 +296,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				properties.add(ReRollProperty.TRR);
 			}
 
-			Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollBothDowns);
+			Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBothDown);
 			boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
 				&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
 
