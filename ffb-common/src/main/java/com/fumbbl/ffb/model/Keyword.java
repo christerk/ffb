@@ -10,10 +10,10 @@ public enum Keyword {
 	// player level
 	ANIMAL("Animal"),
 	BEASTMAN("Beastman"),
-	BIG_GUY("Big Guy"),
-	BLITZER("Blitzer"),
-	BLOCKER("Blocker"),
-	CATCHER("Catcher"),
+	BIG_GUY("Big Guy", false),
+	BLITZER("Blitzer", false),
+	BLOCKER("Blocker", false),
+	CATCHER("Catcher", false),
 	CONSTRUCT("Construct"),
 	DWARF("Dwarf"),
 	ELF("Elf"),
@@ -23,19 +23,19 @@ public enum Keyword {
 	GOBLIN("Goblin"),
 	HALFLING("Halfling"),
 	HUMAN("Human"),
-	LINEMAN("Lineman"),
+	LINEMAN("Lineman", false),
 	LIZARDMAN("Lizardman"),
 	MINOTAUR("Minotaur"),
 	OGRE("Ogre"),
 	ORC("Orc"),
-	RUNNER("Runner"),
+	RUNNER("Runner", false),
 	SKAVEN("Skaven"),
 	SKELETON("Skeleton"),
 	SNOTLING("Snotling"),
 	SPAWN("Spawn"),
-	SPECIAL("Special"),
+	SPECIAL("Special", false),
 	THRALL("Thrall"),
-	THROWER("Thrower"),
+	THROWER("Thrower", false),
 	TREEMAN("Treeman"),
 	TROLL("Troll"),
 	UNDEAD("Undead"),
@@ -49,9 +49,19 @@ public enum Keyword {
 	UNKNOWN("Unknown");
 
 	private final String name;
+	private final boolean canGetEvenWith;
 
 	Keyword(String name) {
+		this(name, true);
+	}
+
+	Keyword(String name, boolean canGetEvenWith) {
 		this.name = name;
+		this.canGetEvenWith = canGetEvenWith;
+	}
+
+	public boolean isCanGetEvenWith() {
+		return canGetEvenWith;
 	}
 
 	public static Keyword forName(String name) {
