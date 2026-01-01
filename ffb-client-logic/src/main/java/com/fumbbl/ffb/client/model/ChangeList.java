@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("3.0.2")
+			.addBugfix("Lethal Flight is only applied when the thrown player is standing and not distracted")
+			.addBugfix("Swoop is only applied when the thrown player is standing and not distracted")
+		);
+
 		versions.add(new VersionChangeList("3.0.1")
 			.addBugfix("Fixed crash when using Pile Driver foul")
 		);
