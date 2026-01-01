@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.foul;
+package com.fumbbl.ffb.server.step.bb2020.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -37,7 +37,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEndFouling extends AbstractStep {
 
 	private boolean fEndTurn;

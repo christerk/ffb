@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.block;
+package com.fumbbl.ffb.server.step.mixed.block;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepHitAndRun extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;

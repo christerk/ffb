@@ -33,7 +33,13 @@ public class StepStallingPlayer extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
-		boolean gotRid = !UtilPlayer.hasBall(game, game.getActingPlayer().getPlayer());
+
+		if (player == null) {
+			// This is part of EndPlayerAction which is also triggered when ending your turn
+			return;
+		}
+
+		boolean gotRid = getGameState().isStalling() && !UtilPlayer.hasBall(game, player);
 		boolean scored = UtilServerSteps.checkTouchdown(getGameState());
 		boolean noStalling = !getGameState().isStalling() || gotRid || scored;
 

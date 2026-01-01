@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.bb2020;
+package com.fumbbl.ffb.server.step.generator.mixed;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.RulesCollection;
@@ -12,6 +12,7 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class PileDriver extends com.fumbbl.ffb.server.step.generator.PileDriver {
 
 	@Override
