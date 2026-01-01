@@ -490,6 +490,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandSkillSelection(playerId, skill));
 	}
 
+	public void sendKeywordSelection(String playerId, List<Keyword> keywords) {
+		send(new ClientCommandKeywordSelection(playerId, keywords));
+	}
+
 	public void sendThrowKeg(Player<?> player) {
 		send(new ClientCommandThrowKeg(player.getId()));
 	}

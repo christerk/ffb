@@ -259,6 +259,7 @@ public interface IJsonOption {
 	JsonBooleanOption IS_SCATTER = new JsonBooleanOption("isScatter");
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption JUMPS_WITHOUT_MODIFIERS = new JsonBooleanOption("jumpsWithoutModifiers");
+	JsonStringOption KEYWORD_CHOICE_MODE = new JsonStringOption("keywordChoiceMode");
 	JsonStringArrayOption KEYWORDS = new JsonStringArrayOption("keywords");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");
