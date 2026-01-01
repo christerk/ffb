@@ -31,7 +31,7 @@ public class ClientStateSetup extends AbstractClientStateSetup<SetupLogicModule>
 				logicModule.requestSetups();
 				return true;
 			default:
-				return super.actionKeyPressed(pActionKey);
+				return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 

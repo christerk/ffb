@@ -164,7 +164,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL);
 					break;
 				default:
-					actionHandled = super.actionKeyPressed(pActionKey);
+					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;
 			}
 		} else {
@@ -203,7 +203,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
 					break;
 				default:
-					actionHandled = super.actionKeyPressed(pActionKey);
+					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;
 			}
 		}

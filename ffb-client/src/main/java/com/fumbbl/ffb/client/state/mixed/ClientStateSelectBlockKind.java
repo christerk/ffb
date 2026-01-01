@@ -111,7 +111,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 				menuItemSelected(actingPlayer.getPlayer(), IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
 				break;
 			default:
-				return super.actionKeyPressed(pActionKey);
+				super.actionKeyPressed(pActionKey, menuIndex);
 		}
 		return true;
 	}

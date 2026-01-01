@@ -36,7 +36,7 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
-		return extension.actionKeyPressed(this, pActionKey) || super.actionKeyPressed(pActionKey);
+		return extension.actionKeyPressed(this, pActionKey) || super.actionKeyPressed(pActionKey, menuIndex);
 	}
 
 	@Override

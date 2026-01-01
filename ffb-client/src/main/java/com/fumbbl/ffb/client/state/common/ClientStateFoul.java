@@ -78,7 +78,7 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
           break;
       }
     } else {
-      actionHandled = super.actionKeyPressed(pActionKey);
+      actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
     }
 
     return actionHandled;

@@ -48,7 +48,7 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 					return false;
 			}
 		} else {
-			return super.actionKeyPressed(pActionKey);
+			return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 
