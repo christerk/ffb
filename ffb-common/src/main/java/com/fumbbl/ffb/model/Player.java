@@ -2,7 +2,12 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.PlayerGender;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
@@ -24,11 +29,17 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
 
 /**
  * @author Kalimar
@@ -364,10 +375,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		addEnhancement(card.getName(), card.deactivationEnhancement(mechanic), factory);
 	}
 
-	public void addEnhancement(INamedObject namedObject, TemporaryEnhancements enhancements, SkillFactory factory) {
-		addEnhancement(namedObject.getName(), enhancements, factory);
-	}
-
 	public void addEnhancement(String name, TemporaryEnhancements enhancements, SkillFactory factory) {
 		if (!hasActiveEnhancement(name)) {
 			addTemporaryModifiers(name, enhancements.getModifiers());
@@ -395,21 +402,6 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getTemporarySkills().values().stream().flatMap(Collection::stream)
 				.filter(swv -> swv.getSkill() == skill)
 				.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toSet());
-	}
-
-	public boolean hasAnimosityTowards(Player<?> player) {
-		Skill animosity = getSkillWithProperty(NamedProperties.hasToRollToPassBallOn);
-		if (animosity == null || !getTeam().getId().equals(player.getTeam().getId()) || player.getPlayerType() == PlayerType.MERCENARY || player.getPlayerType() == PlayerType.STAR) {
-			return false;
-		}
-
-		Set<String> pattern = new HashSet<String>() {{
-			add(ANIMOSITY_TO_ALL);
-			add(player.getPositionId());
-			add(player.getRace());
-		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
-
-		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
 	}
 
 	public boolean canBeThrown() {

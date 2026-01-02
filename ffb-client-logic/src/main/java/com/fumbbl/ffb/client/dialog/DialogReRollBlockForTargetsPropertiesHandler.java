@@ -60,6 +60,8 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 			DialogReRollBlockForTargetsProperties reRollDialog = (DialogReRollBlockForTargetsProperties) pDialog;
 			if (reRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
 				getClient().getCommunication().sendUseBrawler(reRollDialog.getSelectedTarget());
+			} else if (reRollDialog.getReRollSource() == ReRollSources.HATRED) {
+				getClient().getCommunication().sendUseHatred(reRollDialog.getSelectedTarget());
 			} else {
 				getClient().getCommunication()
 					.sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(),
@@ -70,7 +72,8 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 	}
 
 
-	private Map<ReRolledAction, ReRollSource> convertToActionMap(Map<String, String> input, ReRolledActionFactory actionFactory, ReRollSourceFactory sourceFactory) {
+	private Map<ReRolledAction, ReRollSource> convertToActionMap(Map<String, String> input,
+		ReRolledActionFactory actionFactory, ReRollSourceFactory sourceFactory) {
 		return input.entrySet().stream().collect(Collectors.toMap(entry -> actionFactory.forName(entry.getKey()),
 			entry -> sourceFactory.forName(entry.getValue())));
 	}

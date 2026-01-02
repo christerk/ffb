@@ -32,10 +32,13 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -183,6 +186,7 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isBlockedForTrickster(FieldCoordinate coordinate) {
 		return blockedForTricksterCoordinates.contains(coordinate);
 	}
@@ -423,6 +427,17 @@ public class FieldModel implements IJsonSerializable {
 		player.addEnhancement(skill.getName(), skill.getEnhancements(), factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_SKILL_ENHANCEMENTS, player.getId(), skill.getName());
 	}
+
+	public void addHatred(Player<?> player, Keyword keyword) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		Skill skill = factory.forProperty(NamedProperties.canBeGainedByGettingEven);
+
+		player.addEnhancement("Getting Even " + keyword.getName(), new TemporaryEnhancements().withSkills(
+			Collections.singleton(new SkillClassWithValue(skill.getClass(), keyword.getName()))), factory);
+
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_HATRED, player.getId(), keyword.getName());
+	}
+
 
 	public void removeSkillEnhancements(Player<?> player, Skill skill) {
 		removeSkillEnhancements(player, skill.getName());

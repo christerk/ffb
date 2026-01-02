@@ -37,7 +37,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 	@SuppressWarnings("FieldCanBeLocal")
 	private final List<Mnemonics> mnemonics = new ArrayList<Mnemonics>() {{
-		add(new Mnemonics('T', 'N', 'B',
+		add(new Mnemonics('T', 'N', 'B', 'H',
 			new ArrayList<Character>() {{
 				add('P');
 				add('o');
@@ -48,7 +48,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('u');
 				add('m');
 			}}, 'S', 'f', 'p', 'n'));
-		add(new Mnemonics('e', 'l', 'r',
+		add(new Mnemonics('e', 'l', 'r', 'h',
 			new ArrayList<Character>() {{
 				add('r');
 				add('y');
@@ -98,6 +98,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					actionReRollSourceMap.get(ReRolledActions.SINGLE_DIE_PER_ACTIVATION);
 				ReRollSource singleDieReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_DIE);
 				ReRollSource bothDownReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_BOTH_DOWN);
+				ReRollSource skullReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_SKULL);
 				ReRollSource anyDiceReRollSource = actionReRollSourceMap.get(ReRolledActions.MULTI_BLOCK_DICE);
 
 				JPanel buttonPanel = new JPanel();
@@ -163,11 +164,16 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				}
 				if (bothDownReRollSource != null) {
 					buttonPanel.add(mascotExtension.wrapperPanel(
-						createReRollButton(target, "Brawler Re-Roll", ReRollSources.BRAWLER, currentMnemonics.brawler)));
+						createReRollButton(target, "Brawler Re-Roll", bothDownReRollSource, currentMnemonics.brawler)));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+				if (skullReRollSource != null) {
+					buttonPanel.add(mascotExtension.wrapperPanel(
+						createReRollButton(target, "Hatred Re-Roll", skullReRollSource, currentMnemonics.hatred)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (anyDiceReRollSource != null) {
-					JButton anyDiceButton = createReRollButton(target, "Savage Blow", ReRollSources.SAVAGE_BLOW,
+					JButton anyDiceButton = createReRollButton(target, "Savage Blow", anyDiceReRollSource,
 						currentMnemonics.anyBlockDice);
 					anyDiceButton.setEnabled(blockRoll.getNrOfDice() == 1);
 					anyDiceButtons.put(target, anyDiceButton);
@@ -440,13 +446,14 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}
 
 	private static class Mnemonics {
-		private final char team, brawler, none, anyBlockDice, trrFallback, proFallback, proTrrFallback;
+		private final char team, brawler, hatred, none, anyBlockDice, trrFallback, proFallback, proTrrFallback;
 		private final List<Character> pro, anyDie;
 
-		public Mnemonics(char team, char none, char brawler, List<Character> pro, List<Character> anyDie, char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback) {
+		public Mnemonics(char team, char none, char brawler, char hatred, List<Character> pro, List<Character> anyDie, char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
+			this.hatred = hatred;
 			this.pro = pro;
 			this.anyDie = anyDie;
 			this.anyBlockDice = anyBlockDice;

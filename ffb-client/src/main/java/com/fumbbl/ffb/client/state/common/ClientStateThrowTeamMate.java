@@ -191,7 +191,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_RANGE_GRID);
 			return true;
 		} else {
-			return super.actionKeyPressed(pActionKey);
+			return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 

@@ -29,7 +29,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.report.bb2025.ReportMascotUsed;
-import com.fumbbl.ffb.report.bb2025.ReportTeamCaptain;
+import com.fumbbl.ffb.report.bb2025.ReportTeamCaptainRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
@@ -239,15 +239,15 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			if (isTeamReRollAvailable(gameState, player)) {
 				properties.add(ReRollProperty.TRR);
 			}
-			if (isProReRollAvailable(player, game, gameState.getPassState())) {
-				properties.add(ReRollProperty.PRO);
-			}
 			findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
 
 			if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 				properties.add(ReRollProperty.LONER);
 			}
 
+			if (isProReRollAvailable(player, game, gameState.getPassState())) {
+				properties.add(ReRollProperty.PRO);
+			}
 			if (reRollSkill == null) {
 				Optional<Skill> reRollOnce =
 					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
@@ -367,11 +367,13 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 					}
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
 				}
-				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (actingPlayer.getPlayer() == pPlayer) {
-					actingPlayer.markSkillUsed(reRollSourceSkill);
-				} else if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
-					pPlayer.markUsed(reRollSourceSkill, game);
+				if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+					ActingPlayer actingPlayer = game.getActingPlayer();
+					if (actingPlayer.getPlayer() == pPlayer) {
+						actingPlayer.markSkillUsed(reRollSourceSkill);
+					} else {
+						pPlayer.markUsed(reRollSourceSkill, game);
+					}
 				}
 			}
 		}
@@ -399,7 +401,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		int roll = gameState.getDiceRoller().rollDice(6);
 		boolean rrSaved = roll >= TEAM_CAPTAIN_MINIMUM_ROLL;
 		stepResult.addReport(
-			new ReportTeamCaptain(gameState.getGame().getActingTeam().getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
+			new ReportTeamCaptainRoll(gameState.getGame().getActingTeam().getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
 		return rrSaved;
 	}
 

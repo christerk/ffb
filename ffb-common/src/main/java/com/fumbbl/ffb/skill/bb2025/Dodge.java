@@ -1,12 +1,13 @@
-package com.fumbbl.ffb.skill.common;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 /**
  * A player with the Dodge skill is adept at slipping away from opponents, and
@@ -16,11 +17,11 @@ import com.fumbbl.ffb.model.skill.Skill;
  * rolled on the Block dice, as explained in the Blocking rules in the Blood
  * Bowl book.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2025)
 public class Dodge extends Skill {
 
 	public Dodge() {
-		super("Dodge", SkillCategory.AGILITY);
+		super("Dodge", SkillCategory.AGILITY, SkillUsageType.ONCE_PER_TURN);
 	}
 
 	@Override

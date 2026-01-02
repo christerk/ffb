@@ -111,6 +111,7 @@
             <skill>Right Stuff</skill>
             <skill>Stunty</skill>
             <skill>Thick Skull</skill>
+            <skill value="all">Animosity</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -120,6 +121,9 @@
         </skillCategoryList>
         <keywords>
             <keyword>Dwarf</keyword>
+            <keyword>goblin</keyword>
+            <keyword>Undead</keyword>
+            <keyword>human</keyword>
         </keywords>
     </position>
 
@@ -197,6 +201,7 @@
             <skill>Leap</skill>
             <skill>Stunty</skill>
             <skill>Very Long Legs</skill>
+            <skill value="goblin">Animosity</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -223,6 +228,7 @@
             <skill>Chainsaw</skill>
             <skill>Secret Weapon</skill>
             <skill>Stunty</skill>
+            <skill>Animosity</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>

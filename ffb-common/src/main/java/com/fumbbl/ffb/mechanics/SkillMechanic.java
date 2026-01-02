@@ -27,4 +27,5 @@ public abstract class SkillMechanic implements Mechanic {
 
 	public abstract boolean canAlwaysAssistFoul(Game game, Player<?> assistant);
 
+	public abstract boolean animosityExists(Player<?> thrower, Player<?> catcher);
 }

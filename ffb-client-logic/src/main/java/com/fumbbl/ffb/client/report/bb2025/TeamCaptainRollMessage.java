@@ -5,13 +5,13 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2025.ReportTeamCaptain;
+import com.fumbbl.ffb.report.bb2025.ReportTeamCaptainRoll;
 
-@ReportMessageType(ReportId.TEAM_CAPTAIN)
+@ReportMessageType(ReportId.TEAM_CAPTAIN_ROLL)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class TeamCaptainMessage extends ReportMessageBase<ReportTeamCaptain> {
+public class TeamCaptainRollMessage extends ReportMessageBase<ReportTeamCaptainRoll> {
 	@Override
-	protected void render(ReportTeamCaptain report) {
+	protected void render(ReportTeamCaptainRoll report) {
 		println(getIndent(), TextStyle.ROLL, "Team Captain Roll [ " + report.getRoll() + " ]");
 		printTeamName(false, report.getTeamId());
 		StringBuilder builder = new StringBuilder(" look to their Team Captain for guidance");

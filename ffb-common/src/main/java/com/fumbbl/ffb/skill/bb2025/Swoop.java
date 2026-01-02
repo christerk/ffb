@@ -23,13 +23,8 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 public class Swoop extends Skill {
 
 	public Swoop() {
-		super("Swoop", SkillCategory.TRAIT);
+		super("Swoop", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE);
 	}
-
-	@Override
-	public SkillUsageType getSkillUsageType() {
-		return SkillUsageType.ONCE_PER_TURN_BY_TEAM_MATE;
-	}	
 
 	@Override
 	public void postConstruct() {

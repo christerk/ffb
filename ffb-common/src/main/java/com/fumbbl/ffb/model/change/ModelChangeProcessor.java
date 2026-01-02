@@ -29,6 +29,8 @@ import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Keyword;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.TeamResult;
@@ -142,6 +144,12 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_ADD_ENHANCEMENTS:
 				pGame.getFieldModel()
 					.addEnhancements(pGame.getPlayerById(pModelChange.getKey()), (String) pModelChange.getValue());
+				return true;
+			case FIELD_MODEL_ADD_HATRED:
+				Player<?> hatredPlayer = pGame.getPlayerById(pModelChange.getKey());
+				Keyword hatredKeyword = Keyword.forName((String) pModelChange.getValue());
+				pGame.getGameResult().getPlayerResult(hatredPlayer).addGainedHatred(hatredKeyword);
+				pGame.getFieldModel().addHatred(hatredPlayer, hatredKeyword);
 				return true;
 			case FIELD_MODEL_ADD_INTENSIVE_TRAINING:
 				pGame.getFieldModel().addIntensiveTrainingSkill(pModelChange.getKey(), (Skill) pModelChange.getValue());

@@ -478,6 +478,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseBrawler(targetId));
 	}
 
+	public void sendUseHatred(String targetId) {
+		send(new ClientCommandUseHatred(targetId));
+	}
+
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {
 		send(new ClientCommandFieldCoordinate(fieldCoordinate));
 	}
@@ -488,6 +492,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendSkillSelection(String playerId, Skill skill) {
 		send(new ClientCommandSkillSelection(playerId, skill));
+	}
+
+	public void sendKeywordSelection(String playerId, List<Keyword> keywords) {
+		send(new ClientCommandKeywordSelection(playerId, keywords));
 	}
 
 	public void sendThrowKeg(Player<?> player) {

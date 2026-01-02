@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025.block;
+package com.fumbbl.ffb.server.step.bb2025.mutliblock;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -28,12 +28,15 @@ import com.fumbbl.ffb.model.BlockRollProperties;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
+import com.fumbbl.ffb.net.commands.ClientCommandUseHatred;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.mixed.ReportBlockReRoll;
@@ -47,7 +50,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2020.multiblock.AbstractStepMultiple;
+import com.fumbbl.ffb.server.step.mixed.multiblock.AbstractStepMultiple;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.mixed.SingleReRollUseState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -171,6 +174,12 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 					state.selectedTarget = brawlerCommand.getTargetId();
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
+				case CLIENT_USE_HATRED:
+					ClientCommandUseHatred hatredCommand = (ClientCommandUseHatred) pReceivedCommand.getCommand();
+					state.reRollSource = ReRollSources.HATRED;
+					state.selectedTarget = hatredCommand.getTargetId();
+					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
 				default:
 					break;
 			}
@@ -237,7 +246,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 							getResult().setSound(SoundId.BLOCK);
 
 							if (state.reRollSource == ReRollSources.BRAWLER) {
-								handleBrawler(actingPlayer.getPlayer(), roll);
+								handleImplicitReRollIndex(actingPlayer.getPlayer(), roll, BlockResult.BOTH_DOWN);
+							} else if (state.reRollSource == ReRollSources.HATRED) {
+								handleImplicitReRollIndex(actingPlayer.getPlayer(), roll, BlockResult.SKULL);
 							} else if (UtilServerReRoll.useReRoll(this, state.reRollSource, actingPlayer.getPlayer())) {
 								roll(roll, true, actingPlayer, singleDieReRollSource);
 							}
@@ -265,12 +276,12 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		}
 	}
 
-	private void handleBrawler(Player<?> player, BlockRollProperties blockRoll) {
+	private void handleImplicitReRollIndex(Player<?> player, BlockRollProperties blockRoll, BlockResult resultToReplace) {
 		int reRolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
-		getResult().addReport(new ReportBlockReRoll(new int[]{reRolledDie}, player.getId(), ReRollSources.BRAWLER));
+		getResult().addReport(new ReportBlockReRoll(new int[]{reRolledDie}, player.getId(), state.reRollSource));
 		BlockResultFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.BLOCK_RESULT);
 		for (int i = 0; i < blockRoll.getNrOfDice(); i++) {
-			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == BlockResult.BOTH_DOWN) {
+			if (factory.forRoll(blockRoll.getBlockRoll()[i]) == resultToReplace) {
 				int[] oldRoll = blockRoll.getBlockRoll();
 				blockRoll.setBlockRoll(Arrays.copyOf(oldRoll, oldRoll.length));
 				blockRoll.getBlockRoll()[i] = reRolledDie;
@@ -324,11 +335,52 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(roll::add);
 
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
-		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BOTH_DOWN, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
 
+		evaluateBrawlerAvailability(game, actionReRollSourceMap, roll);
+		evaluateHatredAvailability(game, actionReRollSourceMap, roll);
+
 		roll.setReRollSources(convertActionsMap(actionReRollSourceMap));
+	}
+
+	private void evaluateBrawlerAvailability(Game game, Map<ReRolledAction, ReRollSource> actionToSource, BlockRollProperties blockRoll) {
+		BlockResultFactory factory = game.getFactory(FactoryType.Factory.BLOCK_RESULT);
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBothDown);
+		boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
+			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
+
+		if (brawlerOption) {
+			for (int roll : blockRoll.getBlockRoll()) {
+				if (factory.forRoll(roll) == BlockResult.BOTH_DOWN) {
+					addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BOTH_DOWN, game);
+					break;
+				}
+			}
+		}
+	}
+
+	private void evaluateHatredAvailability(Game game, Map<ReRolledAction, ReRollSource> actionToSource, BlockRollProperties blockRoll) {
+		BlockResultFactory factory = game.getFactory(FactoryType.Factory.BLOCK_RESULT);
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		Skill hatred = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleSkull);
+		if (hatred == null) {
+			return;
+		}
+		List<Keyword> defenderKeywords = game.getDefender().getPosition().getKeywords();
+		List<Keyword> attackerKeywords = hatred.evaluator().values(hatred, actingPlayer.getPlayer()).stream().map(Keyword::forName)
+			.collect(Collectors.toList());
+		boolean hatredPresent = !Collections.disjoint(defenderKeywords, attackerKeywords);
+
+		if (hatredPresent) {
+			for (int roll : blockRoll.getBlockRoll()) {
+				if (factory.forRoll(roll) == BlockResult.SKULL) {
+					addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_SKULL, game);
+					break;
+				}
+			}
+		}
 	}
 
 	private void roll(BlockRollProperties roll, boolean reRolling, ActingPlayer actingPlayer, ReRollSource singleDieReRollSource) {

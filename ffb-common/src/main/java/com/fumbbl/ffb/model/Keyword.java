@@ -3,18 +3,65 @@ package com.fumbbl.ffb.model;
 import java.util.Arrays;
 
 public enum Keyword {
-	VAMPIRE_LORD("Vampire Lord"),
-	THRALL("Thrall"),
-	DWARF("Dwarf"),
+	// team level
 	MASTER_CHEF("Master Chef"),
-	LINEMAN("Lineman"),
-	BIG_GUY("Big Guy"),
-	UNKNOWN("unknown");
+	VAMPIRE_LORD("Vampire Lord"),
+
+	// player level
+	ANIMAL("Animal"),
+	BEASTMAN("Beastman"),
+	BIG_GUY("Big Guy", false),
+	BLITZER("Blitzer", false),
+	BLOCKER("Blocker", false),
+	CATCHER("Catcher", false),
+	CONSTRUCT("Construct"),
+	DWARF("Dwarf"),
+	ELF("Elf"),
+	GHOUL("Ghoul"),
+	GNOBLAR("Gnoblar"),
+	GNOME("Gnome"),
+	GOBLIN("Goblin"),
+	HALFLING("Halfling"),
+	HUMAN("Human"),
+	LINEMAN("Lineman", false),
+	LIZARDMAN("Lizardman"),
+	MINOTAUR("Minotaur"),
+	OGRE("Ogre"),
+	ORC("Orc"),
+	RUNNER("Runner", false),
+	SKAVEN("Skaven"),
+	SKELETON("Skeleton"),
+	SNOTLING("Snotling"),
+	SPAWN("Spawn"),
+	SPECIAL("Special", false),
+	THRALL("Thrall"),
+	THROWER("Thrower", false),
+	TREEMAN("Treeman"),
+	TROLL("Troll"),
+	UNDEAD("Undead"),
+	VAMPIRE("Vampire"),
+	WEREWOLF("Werewolf"),
+	WRAITH("Wraith"),
+	ZOMBIE("Zombie"),
+
+	// fallback
+	ALL("all"),
+	UNKNOWN("Unknown");
 
 	private final String name;
+	private final boolean canGetEvenWith;
 
 	Keyword(String name) {
+		this(name, true);
+	}
+
+	Keyword(String name, boolean canGetEvenWith) {
 		this.name = name;
+		this.canGetEvenWith = canGetEvenWith;
+	}
+
+	public boolean isCanGetEvenWith() {
+		return canGetEvenWith;
 	}
 
 	public static Keyword forName(String name) {

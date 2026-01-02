@@ -606,6 +606,11 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return getFieldModel().getMultiBlockTargets();
 	}
 
+	public void addHatred(Player<?> player, Keyword keyword) {
+		getGameResult().getPlayerResult(player).addGainedHatred(keyword);
+		getFieldModel().addHatred(player, keyword);
+	}
+
 	// transformation
 
 	public Game transform() {

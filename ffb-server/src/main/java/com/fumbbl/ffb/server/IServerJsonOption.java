@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.JsonIntOption;
 import com.fumbbl.ffb.json.JsonObjectOption;
 import com.fumbbl.ffb.json.JsonPlayerStateOption;
 import com.fumbbl.ffb.json.JsonStringArrayOption;
+import com.fumbbl.ffb.json.JsonStringListMapOption;
 import com.fumbbl.ffb.json.JsonStringOption;
 
 /**
@@ -33,6 +34,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ASK_FOR_BLOCK_KIND = new JsonBooleanOption("askForBlockKind");
     JsonBooleanOption ATTEMPT_PICK_UP = new JsonBooleanOption("attemptPickup");
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
+    JsonStringListMapOption AVAILABLE_KEYWORDS_MAP = new JsonStringListMapOption("availableKeywordsMap");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
     JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
     JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
@@ -114,6 +116,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption INDUCEMENTS_SELECTED_PARALLEL = new JsonBooleanOption("inducementsSelectedParallel");
     JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
     JsonArrayOption INJURY_RESULTS = new JsonArrayOption("injuryResults");
+    JsonArrayOption INJURY_RESULTS_GETTING_EVEN = new JsonArrayOption("injuryResultsGettingEven");
     JsonArrayOption INJURY_RESULTS_REGENERATION_FAILED = new JsonArrayOption("injuryResultsRegenerationFailed");
     JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
     JsonBooleanOption INTERCEPTION_SUCCESSFUL = new JsonBooleanOption("interceptionSuccessfull");

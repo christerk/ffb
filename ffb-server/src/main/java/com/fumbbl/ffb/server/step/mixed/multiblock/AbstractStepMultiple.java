@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020.multiblock;
+package com.fumbbl.ffb.server.step.mixed.multiblock;
 
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRollSource;

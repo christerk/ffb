@@ -225,7 +225,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 			menuItemSelected(null, IPlayerPopupMenuKeys.KEY_HAIL_MARY_PASS);
 			return true;
 		} else {
-			return super.actionKeyPressed(pActionKey);
+			return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 
