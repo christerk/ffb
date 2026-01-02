@@ -478,6 +478,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseBrawler(targetId));
 	}
 
+	public void sendUseHatred(String targetId) {
+		send(new ClientCommandUseHatred(targetId));
+	}
+
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {
 		send(new ClientCommandFieldCoordinate(fieldCoordinate));
 	}
