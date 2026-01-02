@@ -67,7 +67,7 @@ import java.util.stream.Collectors;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlockRoll extends AbstractStepWithReRoll {
 
-	private int fNrOfDice, fDiceIndex, proIndex, brawlerIndex = -1, dieIndex = -1;
+	private int fNrOfDice, fDiceIndex, dieIndex = -1;
 	private int[] fBlockRoll, diceIndexes;
 	private BlockResult fBlockResult;
 	private boolean successfulDauntless, doubleTargetStrength;
@@ -108,7 +108,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseProReRollForBlock command = (ClientCommandUseProReRollForBlock) pReceivedCommand.getCommand();
 					setReRolledAction(ReRolledActions.BLOCK);
 					setReRollSource(ReRollSources.PRO);
-					proIndex = command.getProIndex();
+					dieIndex = command.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_CONSUMMATE_RE_ROLL_FOR_BLOCK:
@@ -120,7 +120,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					if (skill != null) {
 						setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
 					}
-					proIndex = consummateCommand.getProIndex();
+					dieIndex = consummateCommand.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
@@ -222,7 +222,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						getResult().addReport(
 							new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
 						fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
-						fBlockRoll[proIndex] = reRolledWithPro[0];
+						fBlockRoll[dieIndex] = reRolledWithPro[0];
 					} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM) {
 						if (dieIndex >= 0) {
 							int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
@@ -265,13 +265,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		BlockResultFactory factory = getGameState().getGame().getFactory(Factory.BLOCK_RESULT);
 		for (int i = 0; i < fBlockRoll.length; i++) {
 			if (factory.forRoll(fBlockRoll[i]) == BlockResult.BOTH_DOWN) {
-				brawlerIndex = i;
+				dieIndex = i;
 				break;
 			}
 		}
-		if (brawlerIndex >= 0) {
+		if (dieIndex >= 0) {
 			fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
-			fBlockRoll[brawlerIndex] = rerolledDie;
+			fBlockRoll[dieIndex] = rerolledDie;
 		}
 	}
 
@@ -353,8 +353,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		IServerJsonOption.DICE_INDEX.addTo(jsonObject, fDiceIndex);
 		IServerJsonOption.BLOCK_RESULT.addTo(jsonObject, fBlockResult);
 		IServerJsonOption.SUCCESSFUL_DAUNTLESS.addTo(jsonObject, successfulDauntless);
-		IServerJsonOption.PRO_INDEX.addTo(jsonObject, proIndex);
-		IServerJsonOption.BRAWLER_INDEX.addTo(jsonObject, brawlerIndex);
 		IServerJsonOption.BLOCK_DIE_INDEX.addTo(jsonObject, dieIndex);
 		return jsonObject;
 	}
@@ -368,8 +366,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		fDiceIndex = IServerJsonOption.DICE_INDEX.getFrom(source, jsonObject);
 		fBlockResult = (BlockResult) IServerJsonOption.BLOCK_RESULT.getFrom(source, jsonObject);
 		successfulDauntless = IServerJsonOption.SUCCESSFUL_DAUNTLESS.getFrom(source, jsonObject);
-		proIndex = IServerJsonOption.PRO_INDEX.getFrom(source, jsonObject);
-		brawlerIndex = IServerJsonOption.BRAWLER_INDEX.getFrom(source, jsonObject);
 		if (IServerJsonOption.BLOCK_DIE_INDEX.isDefinedIn(jsonObject)) {
 			dieIndex = IServerJsonOption.BLOCK_DIE_INDEX.getFrom(source, jsonObject);
 		}
