@@ -19,7 +19,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2020.multiblock.AbstractStepMultiple;
 
 import java.util.List;
 import java.util.stream.Collectors;

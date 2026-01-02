@@ -48,6 +48,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
@@ -154,15 +155,16 @@ public class StepApothecary extends AbstractStep {
 					}
 					break;
 				case CLIENT_KEYWORD_SELECTION:
-					ClientCommandKeywordSelection commandKeywordSelection =
-						(ClientCommandKeywordSelection) pReceivedCommand.getCommand();
-					List<Keyword> keywords = commandKeywordSelection.getKeywords();
-					Collections.reverse(keywords);
-					keywords.forEach(keyword -> {
-
-					});
-					getResult().setNextAction(StepAction.NEXT_STEP);
-					commandStatus = StepCommandStatus.SKIP_STEP;
+					if (fInjuryResult != null && fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_GETTING_EVEN) {
+						UtilServerDialog.hideDialog(getGameState());
+						ClientCommandKeywordSelection commandKeywordSelection =
+							(ClientCommandKeywordSelection) pReceivedCommand.getCommand();
+						List<Keyword> keywords = commandKeywordSelection.getKeywords();
+						Collections.reverse(keywords);
+						keywords.forEach(keyword -> pushGettingEven(commandKeywordSelection.getPlayerId(), keyword));
+						getResult().setNextAction(StepAction.NEXT_STEP);
+						commandStatus = StepCommandStatus.SKIP_STEP;
+					}
 					break;
 				default:
 					break;
@@ -307,27 +309,39 @@ public class StepApothecary extends AbstractStep {
 					Player<?> defender = game.getPlayerById(defenderId);
 					Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
 					Set<Keyword> availableKeywords =
-						defender.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith).collect(Collectors.toSet());
+						attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith).collect(Collectors.toSet());
 
-					UtilCards.getSkillWithProperty(attacker, NamedProperties.canRerollSingleSkull).ifPresent(
-						skill -> skill.evaluator().values(skill, attacker).stream().map(Keyword::forName)
+					UtilCards.getSkillWithProperty(defender, NamedProperties.canRerollSingleSkull).ifPresent(
+						skill -> skill.evaluator().values(skill, defender).stream().map(Keyword::forName)
 							.forEach(availableKeywords::remove)
 					);
 
 					if (!availableKeywords.isEmpty()) {
-						UtilServerDialog.showDialog(getGameState(), new DialogSelectKeywordParameter(defenderId,
-								availableKeywords.stream().sorted().collect(Collectors.toList()), KeywordChoiceMode.GETTING_EVEN),
-							!game.getActingTeam().hasPlayer(defender));
+						List<Keyword> keywords = availableKeywords.stream().sorted().collect(Collectors.toList());
+						if (availableKeywords.size() == 1) {
+							pushGettingEven(defenderId, keywords.get(0));
+						} else {
+							UtilServerDialog.showDialog(getGameState(),
+								new DialogSelectKeywordParameter(defenderId, keywords, KeywordChoiceMode.GETTING_EVEN, 1, 1),
+								!game.getActingTeam().hasPlayer(defender));
 
-						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_GETTING_EVEN);
-						getResult().setNextAction(StepAction.CONTINUE);
-						return;
+							fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_GETTING_EVEN);
+							getResult().setNextAction(StepAction.CONTINUE);
+							return;
+						}
 					}
 				}
 
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}
+	}
+
+	private void pushGettingEven(String defenderId, Keyword keyword) {
+		Sequence sequence = new Sequence(getGameState());
+		sequence.add(StepId.GETTING_EVEN, StepParameter.from(StepParameterKey.PLAYER_ID, defenderId),
+			StepParameter.from(StepParameterKey.KEYWORD, keyword));
+		getGameState().getStepStack().push(sequence.getSequence());
 	}
 
 	private void useApo(TurnData turnData, ApothecaryType apothecaryType) {

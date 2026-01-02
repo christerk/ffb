@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025.block;
+package com.fumbbl.ffb.server.step.bb2025.mutliblock;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -47,7 +47,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2020.multiblock.AbstractStepMultiple;
+import com.fumbbl.ffb.server.step.mixed.multiblock.AbstractStepMultiple;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.mixed.SingleReRollUseState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;

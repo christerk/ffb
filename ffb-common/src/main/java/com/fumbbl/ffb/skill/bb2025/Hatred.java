@@ -29,6 +29,7 @@ public class Hatred extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollSingleSkull);
+		registerProperty(NamedProperties.canBeGainedByGettingEven);
 	}
 
 	@Override

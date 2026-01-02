@@ -34,7 +34,7 @@ public class DialogSelectKeywordHandler extends DialogHandler {
 				List<Keyword> keywords = dialogParameter.getKeywords();
 
 				setDialog(new DialogSelectKeyword(getClient(), dialogHeader, keywords,
-					1, 1, false));
+					dialogParameter.getMinSelect(), dialogParameter.getMaxSelect(), false));
 				getDialog().showDialog(this);
 
 			} else {

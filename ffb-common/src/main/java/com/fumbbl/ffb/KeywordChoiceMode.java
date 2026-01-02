@@ -2,7 +2,7 @@ package com.fumbbl.ffb;
 
 public enum KeywordChoiceMode implements INamedObject {
 
-	GETTING_EVEN("gettingEven", "Select player type to get even with", "Getting Even", "Waiting for coach to choose player type.");
+	GETTING_EVEN("gettingEven", "Select player type to get even with for", "Getting Even", "Waiting for coach to choose player type.");
 
 	private final String name, header, title, message;
 

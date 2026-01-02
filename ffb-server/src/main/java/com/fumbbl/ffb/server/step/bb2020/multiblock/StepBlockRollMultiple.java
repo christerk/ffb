@@ -25,6 +25,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.mixed.SingleReRollUseState;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+import com.fumbbl.ffb.server.step.mixed.multiblock.AbstractStepMultiple;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;

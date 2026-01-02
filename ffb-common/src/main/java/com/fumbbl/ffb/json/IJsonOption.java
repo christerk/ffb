@@ -209,6 +209,7 @@ public interface IJsonOption {
 	JsonObjectOption GAME_OPTIONS = new JsonObjectOption("gameOptions");
 	JsonObjectOption GAME_RESULT = new JsonObjectOption("gameResult");
 	JsonLongOption GAME_TIME = new JsonLongOption("gameTime");
+	JsonStringArrayOption GAINED_HATRED = new JsonStringArrayOption("gainedHatred");
 	JsonBooleanOption GOING_FOR_IT = new JsonBooleanOption("goingForIt");
 	JsonIntOption GOLD = new JsonIntOption("gold");
 	JsonBooleanOption GUST_OF_WIND = new JsonBooleanOption("gustOfWind");
@@ -260,6 +261,7 @@ public interface IJsonOption {
 	JsonBooleanOption JUMPING = new JsonBooleanOption("leaping");
 	JsonBooleanOption JUMPS_WITHOUT_MODIFIERS = new JsonBooleanOption("jumpsWithoutModifiers");
 	JsonStringOption KEYWORD_CHOICE_MODE = new JsonStringOption("keywordChoiceMode");
+	JsonStringOption KEYWORD = new JsonStringOption("keyword");
 	JsonStringArrayOption KEYWORDS = new JsonStringArrayOption("keywords");
 	JsonBooleanOption KICKED = new JsonBooleanOption("kicked");
 	JsonStringOption KICKED_PLAYER_ID = new JsonStringOption("kickedPlayerId");

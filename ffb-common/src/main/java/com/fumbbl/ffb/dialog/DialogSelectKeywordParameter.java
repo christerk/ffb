@@ -18,12 +18,16 @@ public class DialogSelectKeywordParameter implements IDialogParameter {
 	private final List<Keyword> keywords = new ArrayList<>();
 	private String playerId;
 	private KeywordChoiceMode keywordChoiceMode;
+	private int minSelect, maxSelect;
 
 	public DialogSelectKeywordParameter() {
 	}
 
-	public DialogSelectKeywordParameter(String playerId, List<Keyword> keywords, KeywordChoiceMode keywordChoiceMode) {
+	public DialogSelectKeywordParameter(String playerId, List<Keyword> keywords, KeywordChoiceMode keywordChoiceMode,
+		int minSelect, int maxSelect) {
 		this.playerId = playerId;
+		this.minSelect = minSelect;
+		this.maxSelect = maxSelect;
 		this.keywords.addAll(keywords);
 		this.keywordChoiceMode = keywordChoiceMode;
 	}
@@ -45,9 +49,17 @@ public class DialogSelectKeywordParameter implements IDialogParameter {
 		return keywordChoiceMode;
 	}
 
+	public int getMinSelect() {
+		return minSelect;
+	}
+
+	public int getMaxSelect() {
+		return maxSelect;
+	}
+
 	@Override
 	public IDialogParameter transform() {
-		return new DialogSelectKeywordParameter(playerId, keywords, keywordChoiceMode);
+		return new DialogSelectKeywordParameter(playerId, keywords, keywordChoiceMode, 1, 1);
 	}
 
 	@Override
@@ -61,6 +73,8 @@ public class DialogSelectKeywordParameter implements IDialogParameter {
 		}
 
 		keywordChoiceMode = KeywordChoiceMode.valueOf(IJsonOption.KEYWORD_CHOICE_MODE.getFrom(source, jsonObject));
+		minSelect = IJsonOption.MIN_SELECTS.getFrom(source, jsonObject);
+		maxSelect = IJsonOption.MAX_SELECTS.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -71,6 +85,8 @@ public class DialogSelectKeywordParameter implements IDialogParameter {
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.KEYWORDS.addTo(jsonObject, keywords.stream().map(Keyword::getName).collect(Collectors.toList()));
 		IJsonOption.KEYWORD_CHOICE_MODE.addTo(jsonObject, keywordChoiceMode.name());
+		IJsonOption.MIN_SELECTS.addTo(jsonObject, minSelect);
+		IJsonOption.MAX_SELECTS.addTo(jsonObject, maxSelect);
 		return jsonObject;
 	}
 }
