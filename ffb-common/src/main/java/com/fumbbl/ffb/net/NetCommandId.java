@@ -324,6 +324,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandPickUpChoice();
 			case CLIENT_KEYWORD_SELECTION:
 				return new ClientCommandKeywordSelection();
+			case CLIENT_USE_HATRED:
+				return new ClientCommandUseHatred();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}
