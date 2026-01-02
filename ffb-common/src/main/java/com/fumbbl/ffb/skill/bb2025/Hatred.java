@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.skill.bb2025;
 
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.Keyword;
@@ -30,6 +32,7 @@ public class Hatred extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollSingleSkull);
 		registerProperty(NamedProperties.canBeGainedByGettingEven);
+		registerRerollSource(ReRolledActions.SINGLE_SKULL, ReRollSources.HATRED);
 	}
 
 	@Override

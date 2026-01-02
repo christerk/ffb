@@ -73,6 +73,7 @@ public class ReRolledActions {
 	public static final ReRolledAction SINGLE_BOTH_DOWN = new ReRolledAction("Single BothDown");
 	public static final ReRolledAction SINGLE_DIE_PER_ACTIVATION = new ReRolledAction("Single Die Per Activation");
 	public static final ReRolledAction GETTING_EVEN = new ReRolledAction("Getting Even");
+	public static final ReRolledAction SINGLE_SKULL = new ReRolledAction("Single Skull");
 
 	private final Map<String, ReRolledAction> values;
 
