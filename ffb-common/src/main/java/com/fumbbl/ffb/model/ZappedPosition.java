@@ -14,7 +14,6 @@ import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.skill.common.Dodge;
 import com.fumbbl.ffb.xml.IXmlReadable;
 import com.fumbbl.ffb.xml.UtilXml;
 import org.xml.sax.Attributes;
@@ -38,7 +37,7 @@ public class ZappedPosition implements Position {
 	public ZappedPosition(RosterPosition originalPosition, IFactorySource game) {
 		this.originalPosition = originalPosition;
 		SkillFactory factory = game.getFactory(FactoryType.Factory.SKILL);
-		skills.add(factory.forClass(Dodge.class));
+		skills.add(factory.forName("Dodge"));
 		skills.add(factory.forProperty(NamedProperties.preventHoldBall)); // No Hands or No Ball, per ruleset
 		skills.add(factory.forName("Titchy"));
 		skills.add(factory.forName("Stunty"));

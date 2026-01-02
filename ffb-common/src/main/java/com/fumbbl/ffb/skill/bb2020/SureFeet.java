@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
@@ -12,7 +12,6 @@ import com.fumbbl.ffb.model.skill.Skill;
  * A player may only use the Sure Feet skill once per turn.
  */
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class SureFeet extends Skill {
 
 	public SureFeet() {

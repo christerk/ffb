@@ -367,11 +367,13 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 					}
 					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
 				}
-				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (actingPlayer.getPlayer() == pPlayer) {
-					actingPlayer.markSkillUsed(reRollSourceSkill);
-				} else if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
-					pPlayer.markUsed(reRollSourceSkill, game);
+				if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+					ActingPlayer actingPlayer = game.getActingPlayer();
+					if (actingPlayer.getPlayer() == pPlayer) {
+						actingPlayer.markSkillUsed(reRollSourceSkill);
+					} else {
+						pPlayer.markUsed(reRollSourceSkill, game);
+					}
 				}
 			}
 		}

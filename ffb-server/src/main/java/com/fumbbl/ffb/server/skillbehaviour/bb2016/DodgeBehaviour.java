@@ -18,7 +18,7 @@ import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge;
 import com.fumbbl.ffb.server.step.bb2016.block.StepBlockDodge.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
-import com.fumbbl.ffb.skill.common.Dodge;
+import com.fumbbl.ffb.skill.mixed.Dodge;
 import com.fumbbl.ffb.util.ArrayTool;
 
 @RulesCollection(Rules.BB2016)

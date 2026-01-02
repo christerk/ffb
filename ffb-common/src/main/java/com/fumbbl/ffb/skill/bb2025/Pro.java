@@ -7,6 +7,7 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 /**
  * A player with this skill is a hardened veteran. Such players are called
@@ -22,7 +23,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 public class Pro extends Skill {
 
 	public Pro() {
-		super("Pro", SkillCategory.GENERAL);
+		super("Pro", SkillCategory.GENERAL, SkillUsageType.ONCE_PER_TURN);
 	}
 
 	public void postConstruct() {
