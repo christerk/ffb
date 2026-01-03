@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerGender;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -342,6 +343,14 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 				getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill)).flatMap(skill -> skill.getSkillProperties().stream()),
 				getTemporaryProperties().values().stream().flatMap(Collection::stream)
 		).anyMatch(prop -> prop.equals(property));
+	}
+
+	public boolean hasUsableSkillProperty(ISkillProperty property, PlayerState state) {
+		return hasSkillProperty(property)	&& state.isStanding() && !state.isDistracted();
+	}
+
+	public boolean hasUsableSkillProperty(ISkillProperty property, Game game) {
+		return hasUsableSkillProperty(property, game.getFieldModel().getPlayerState(this));
 	}
 
 	public boolean hasSkill(ISkillProperty property) {

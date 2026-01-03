@@ -97,7 +97,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
 			Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
 			boolean scattersSingleDirection = thrownPlayer != null
-				&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection);
+				&& thrownPlayer.hasUsableSkillProperty(NamedProperties.ttmScattersInSingleDirection, oldPlayerState);
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
 			boolean throwScatter;
@@ -130,6 +130,7 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 
 			publishParameter(StepParameter.from(StepParameterKey.USING_BULLSEYE, usingBullseye));
 			publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, isKickedPlayer));
+			publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}

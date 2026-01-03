@@ -16,6 +16,8 @@ public class ChangeList {
 			.addFeature("Hatred")
 			.addFeature("Getting Even")
 			.addBugfix("Brawler not working on both frenzy or multi block rolls")
+			.addBugfix("Lethal Flight is only applied when the thrown player is standing and not distracted")
+			.addBugfix("Swoop is only applied when the thrown player is standing and not distracted")
 		);
 
 
