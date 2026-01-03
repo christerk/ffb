@@ -1,15 +1,18 @@
-package com.fumbbl.ffb.client.state;
+package com.fumbbl.ffb.client.state.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
-import com.fumbbl.ffb.client.state.common.ClientStateBlockExtension;
-import com.fumbbl.ffb.client.state.logic.AbstractBlockLogicModule;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
+import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.Influences;
+import com.fumbbl.ffb.client.state.logic.bb2025.SynchronousMultiBlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -19,23 +22,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * @author Kalimar
- */
-public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModule> extends ClientStateAwt<T> {
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class ClientStateSynchronousMultiBlock extends ClientStateAwt<SynchronousMultiBlockLogicModule> {
 
-	protected final ClientStateBlockExtension extension = new ClientStateBlockExtension();
-
-	protected AbstractClientStateBlock(FantasyFootballClientAwt pClient, T logicModule) {
-		super(pClient, logicModule);
+	public ClientStateSynchronousMultiBlock(FantasyFootballClientAwt pClient) {
+		super(pClient, new SynchronousMultiBlockLogicModule(pClient));
 	}
 
-	public void clickOnPlayer(Player<?> pPlayer) {
-		InteractionResult result = logicModule.playerInteraction(pPlayer);
-		evaluateClickOnPlayer(result, pPlayer);
-	}
-
-	protected void evaluateClickOnPlayer(InteractionResult result, Player<?> player) {
+	public void clickOnPlayer(Player<?> player) {
+		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case SELECT_ACTION:
 				createAndShowPopupMenuForPlayer(player, result.getActionContext());
@@ -45,9 +40,9 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 		}
 	}
 
-	public boolean mouseOverPlayer(Player<?> player) {
-		super.mouseOverPlayer(player);
-		InteractionResult result = logicModule.playerPeek(player);
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
+		super.mouseOverPlayer(pPlayer);
+		InteractionResult result = logicModule.playerPeek(pPlayer);
 		determineCursor(result);
 		return true;
 	}
@@ -67,8 +62,8 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
-		boolean actionHandled = true;
-		if (logicModule.isSufferingBloodLust(actingPlayer)) {
+		if (actingPlayer.isSufferingBloodLust()) {
+			boolean actionHandled = true;
 			switch (pActionKey) {
 				case PLAYER_SELECT:
 					clickOnPlayer(player);
@@ -79,31 +74,73 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 				case PLAYER_ACTION_END_MOVE:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 					break;
-				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
-					break;
 				default:
 					actionHandled = handleResize(pActionKey);
 					break;
 			}
 			return actionHandled;
 		} else {
-			return extension.actionKeyPressed(this, pActionKey);
+			switch (pActionKey) {
+				case PLAYER_ACTION_TREACHEROUS:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_TREACHEROUS);
+					break;
+				case PLAYER_ACTION_WISDOM:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_WISDOM);
+					break;
+				case PLAYER_ACTION_BLOCK:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLOCK);
+					break;
+				case PLAYER_ACTION_RAIDING_PARTY:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY);
+					break;
+				case PLAYER_ACTION_LOOK_INTO_MY_EYES:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES);
+					break;
+				case PLAYER_ACTION_BALEFUL_HEX:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX);
+					return true;
+				case PLAYER_ACTION_BLACK_INK:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
+					return true;
+				case PLAYER_ACTION_CATCH_OF_THE_DAY:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
+					return true;
+				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+					return true;
+				default:
+					if (handleResize(pActionKey)) {
+						return true;
+					}
+					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(player);
+					FieldCoordinate moveCoordinate = UtilClientActionKeys.findMoveCoordinate(playerPosition,
+						pActionKey);
+					Player<?> defender = game.getFieldModel().getPlayer(moveCoordinate);
+					if (defender != null) {
+						clickOnPlayer(defender);
+					}
+					return true;
+			}
+			return true;
 		}
 	}
 
 	@Override
 	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
-			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
 			put(IPlayerPopupMenuKeys.KEY_MOVE, ClientAction.MOVE);
-			putAll(genericBlockMapping());
-		}};
-	}
+			put(IPlayerPopupMenuKeys.KEY_END_MOVE, ClientAction.END_MOVE);
+			put(IPlayerPopupMenuKeys.KEY_BLOCK, ClientAction.BLOCK);
+			put(IPlayerPopupMenuKeys.KEY_TREACHEROUS, ClientAction.TREACHEROUS);
+			put(IPlayerPopupMenuKeys.KEY_WISDOM, ClientAction.WISDOM);
+			put(IPlayerPopupMenuKeys.KEY_RAIDING_PARTY, ClientAction.RAIDING_PARTY);
+			put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
+			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
+			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
+			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
+			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 
-	@Override
-	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
-		return extension.influencedItemConfigs();
+		}};
 	}
 
 	@Override
@@ -112,6 +149,7 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 
 		itemConfigs.put(ClientAction.MOVE, new MenuItemConfig("Move", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
 		itemConfigs.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
+		itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
 		itemConfigs.put(ClientAction.TREACHEROUS, new MenuItemConfig("Treacherous", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_TREACHEROUS));
 		itemConfigs.put(ClientAction.WISDOM, new MenuItemConfig("Wisdom of the White Dwarf", IIconProperty.ACTION_WISDOM, IPlayerPopupMenuKeys.KEY_WISDOM));
 		itemConfigs.put(ClientAction.RAIDING_PARTY, new MenuItemConfig("Raiding Party", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_RAIDING_PARTY));
@@ -121,8 +159,6 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
 		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 
-		itemConfigs.putAll(extension.itemConfigs());
 		return itemConfigs;
-
 	}
 }
