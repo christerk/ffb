@@ -14,7 +14,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BLOCK = KeyEvent.VK_B;
 	int KEY_BOMB = KeyEvent.VK_O;
 	int KEY_MULTIPLE_BLOCK = KeyEvent.VK_U;
-	int KEY_STAB = KeyEvent.VK_S;
+	int KEY_STAB = KeyEvent.VK_D;
 	int KEY_CHAINSAW = KeyEvent.VK_C;
 	int KEY_MOVE = KeyEvent.VK_M;
 	int KEY_STAND_UP = KeyEvent.VK_S;
@@ -51,7 +51,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BLACK_INK = KeyEvent.VK_L;
 	int KEY_CATCH_OF_THE_DAY = KeyEvent.VK_D;
 	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
-	int KEY_BREATHE_FIRE = KeyEvent.VK_T;
+	int KEY_BREATHE_FIRE = KeyEvent.VK_I;
 	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;
 	int KEY_THE_FLASHING_BLADE = KeyEvent.VK_D;
 	int KEY_VICIOUS_VINES = KeyEvent.VK_PLUS;
