@@ -37,7 +37,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private JButton fButtonTeamReRoll;
 	private JButton fButtonProReRoll;
 	private JButton fButtonNoReRoll;
-	private JButton brawlerButton, proButton1, proButton2, proButton3,
+	private JButton brawlerButton, hatredButton, proButton1, proButton2, proButton3,
 		anySingleDieButton, anySingleDieButton1, anySingleDieButton2, anySingleDieButton3,
 		singleDieButton, singleDieButton1, singleDieButton2, singleDieButton3, anyDiceButton;
 
@@ -52,6 +52,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource anyBlockDiceReRollSource;
 	private final ReRollSource singleDiePerActivationReRollSource;
 	private final ReRollSource bothDownReRollSource;
+	private final ReRollSource skullReRollSource;
 	private boolean willUseMascot;
 	private final DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
 	private final Map<ReRolledAction, ReRollSource> actionToSource;
@@ -70,6 +71,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		singleBlockDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_BLOCK_DIE);
 		singleDiePerActivationReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE_PER_ACTIVATION);
 		bothDownReRollSource = actionToSource.get(ReRolledActions.SINGLE_BOTH_DOWN);
+		skullReRollSource = actionToSource.get(ReRolledActions.SINGLE_SKULL);
 
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
@@ -251,6 +253,11 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		if (bothDownReRollSource != null) {
 			brawlerButton = button("Brawler Re-Roll", KeyEvent.VK_B);
 			reRollPanel.add(mascotExtension.wrapperPanel(brawlerButton));
+		}
+
+		if (skullReRollSource != null) {
+			hatredButton = button("Hatred Re-Roll", KeyEvent.VK_H);
+			reRollPanel.add(mascotExtension.wrapperPanel(hatredButton));
 		}
 
 		if (getDialogParameter().getNrOfDice() < 0) {
@@ -457,6 +464,10 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		fReRollSource = ReRollSources.BRAWLER;
 	}
 
+	private void setHatred() {
+		fReRollSource = ReRollSources.HATRED;
+	}
+
 	public void actionPerformed(ActionEvent pActionEvent) {
 		Game game = getClient().getGame();
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
@@ -516,6 +527,9 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		}
 		if (pActionEvent.getSource() == brawlerButton) {
 			setBrawler();
+		}
+		if (pActionEvent.getSource() == hatredButton) {
+			setHatred();
 		}
 		if (homeChoice && (fBlockDice.length >= 1) && (pActionEvent.getSource() == fBlockDice[0])) {
 			fDiceIndex = 0;
@@ -688,6 +702,12 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 				if (brawlerButton != null) {
 					keyHandled = true;
 					setBrawler();
+				}
+				break;
+			case KeyEvent.VK_H:
+				if (hatredButton != null) {
+					keyHandled = true;
+					setHatred();
 				}
 				break;
 			case KeyEvent.VK_V:

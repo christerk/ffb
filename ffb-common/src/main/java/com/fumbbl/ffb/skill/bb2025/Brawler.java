@@ -15,7 +15,7 @@ public class Brawler extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.canRerollBothDowns);
+		registerProperty(NamedProperties.canRerollSingleBothDown);
 		registerRerollSource(ReRolledActions.SINGLE_BOTH_DOWN, ReRollSources.BRAWLER);
 	}
 }

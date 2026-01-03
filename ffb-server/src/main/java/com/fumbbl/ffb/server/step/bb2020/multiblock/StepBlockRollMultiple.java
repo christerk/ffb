@@ -25,6 +25,7 @@ import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.mixed.SingleReRollUseState;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.Sequence;
+import com.fumbbl.ffb.server.step.mixed.multiblock.AbstractStepMultiple;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -174,7 +175,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			final boolean teamReRollAvailable = UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer());
 			final boolean singleUseReRollAvailable = UtilServerReRoll.isSingleUseReRollAvailable(getGameState(), actingPlayer.getPlayer());
 			final boolean proReRollAvailable = UtilServerReRoll.isProReRollAvailable(actingPlayer.getPlayer(), game, null);
-			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollBothDowns);
+			final boolean brawlerAvailable = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canRerollSingleBothDown);
 
 			state.blockRolls.forEach(roll -> {
 

@@ -1,8 +1,10 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -16,10 +18,9 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity;
 import com.fumbbl.ffb.server.step.action.pass.StepAnimosity.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.mixed.Animosity;
+import com.fumbbl.ffb.skill.bb2020.Animosity;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 	public AnimosityBehaviour() {
 		super();
@@ -47,9 +48,8 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 						state.doRoll = true;
 					}
 				} else {
-					if (catcher != null && thrower != null) {
-						state.doRoll = thrower.hasAnimosityTowards(catcher);
-					}
+					SkillMechanic mechanic = game.getMechanic(Mechanic.Type.SKILL);
+					state.doRoll = mechanic.animosityExists(thrower, catcher);
 				}
 				if (state.doRoll) {
 					int roll = step.getGameState().getDiceRoller().rollSkill();

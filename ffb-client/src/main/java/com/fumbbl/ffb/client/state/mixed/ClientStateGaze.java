@@ -37,7 +37,7 @@ public class ClientStateGaze extends AbstractClientStateMove<GazeLogicModule> {
 					return false;
 			}
 		} else {
-			actionHandled = super.actionKeyPressed(pActionKey);
+			actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 		}
 		return actionHandled;
 	}

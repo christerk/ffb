@@ -215,7 +215,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
 			default:
-				return super.actionKeyPressed(pActionKey);
+				return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 

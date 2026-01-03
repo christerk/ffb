@@ -113,7 +113,7 @@ public class ClientStateThenIStartedBlastin extends ClientStateAwt<ThenIStartedB
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_END_MOVE);
 				return true;
 			default:
-				return super.actionKeyPressed(pActionKey);
+				return super.actionKeyPressed(pActionKey, menuIndex);
 		}
 	}
 

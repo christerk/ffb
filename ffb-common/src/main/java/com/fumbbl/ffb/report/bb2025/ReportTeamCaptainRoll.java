@@ -12,17 +12,17 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class ReportTeamCaptain extends NoDiceReport {
+public class ReportTeamCaptainRoll extends NoDiceReport {
 
 	private String teamId;
 	private int roll, minimumRoll;
 	private boolean successful;
 
 	@SuppressWarnings("unused")
-	public ReportTeamCaptain() {
+	public ReportTeamCaptainRoll() {
 	}
 
-	public ReportTeamCaptain(String teamId, int minimumRoll, int roll, boolean successful) {
+	public ReportTeamCaptainRoll(String teamId, int minimumRoll, int roll, boolean successful) {
 		this.teamId = teamId;
 		this.roll = roll;
 		this.minimumRoll = minimumRoll;
@@ -30,7 +30,7 @@ public class ReportTeamCaptain extends NoDiceReport {
 	}
 
 	public ReportId getId() {
-		return ReportId.TEAM_CAPTAIN;
+		return ReportId.TEAM_CAPTAIN_ROLL;
 	}
 
 	public String getTeamId() {
@@ -52,7 +52,7 @@ public class ReportTeamCaptain extends NoDiceReport {
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportTeamCaptain(teamId, minimumRoll, roll, successful);
+		return new ReportTeamCaptainRoll(teamId, minimumRoll, roll, successful);
 	}
 
 	// JSON serialization
@@ -67,7 +67,7 @@ public class ReportTeamCaptain extends NoDiceReport {
 		return jsonObject;
 	}
 
-	public ReportTeamCaptain initFrom(IFactorySource source, JsonValue jsonValue) {
+	public ReportTeamCaptainRoll initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		teamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);

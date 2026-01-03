@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.multiblock;
+package com.fumbbl.ffb.server.step.bb2020.multiblock;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -63,7 +63,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepApothecaryMultiple extends AbstractStep {
 
 	private static final Set<ApothecaryStatus> ignoreForIgorCheck = new HashSet<ApothecaryStatus>() {{

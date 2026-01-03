@@ -85,6 +85,7 @@
             <skill>Dodge</skill>
             <skill>Right Stuff</skill>
             <skill>Stunty</skill>
+            <skill value="goblin;troll">Hatred</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -126,7 +127,7 @@
         <strength>4</strength>
         <agility>3</agility>
         <armour>8</armour>
-        <portrait></portrait>
+        <portrait/>
         <iconSet size="1">iconsets/WillowRosebark.png</iconSet>
         <skillList>
             <skill>Loner</skill>
@@ -192,7 +193,7 @@
         <strength>5</strength>
         <agility>2</agility>
         <armour>9</armour>
-        <portrait></portrait>
+        <portrait/>
         <iconSet size="1">iconsets/BerthaBigfist.png</iconSet>
         <skillList>
             <skill>Loner</skill>

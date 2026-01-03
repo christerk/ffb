@@ -25,6 +25,7 @@ import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Position;
@@ -119,7 +120,8 @@ public class PlayerDetailComponent extends JPanel {
 			if (homeSide) {
 				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_RED, dimensionProvider);
 			} else {
-				background = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE, dimensionProvider);
+				background =
+					iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_DETAIL_BLUE, dimensionProvider);
 			}
 			g2d.drawImage(background, 0, 0, size.width, size.height, null);
 		} else {
@@ -187,10 +189,13 @@ public class PlayerDetailComponent extends JPanel {
 				positionName.append(" #").append(getPlayer().getNr());
 			}
 			String positionNameString = positionName.toString();
+			String keywords = "(" + getPlayer().getPosition().getKeywords().stream()
+				.map(Keyword::getName).sorted().collect(Collectors.joining(", ")) + ")";
 			g2d.setFont(positionFont);
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
-			BufferedImage portraitBackground = iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
+			BufferedImage portraitBackground =
+				iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
 			if (playerPortrait != null) {
 				drawPortrait(x, y, g2d, playerPortrait);
 			} else {
@@ -199,9 +204,13 @@ public class PlayerDetailComponent extends JPanel {
 			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
-			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + metrics.getAscent() + x);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + x);
+			g2d.drawString(keywords, -(y + portraitDimension.height - 4),
+				portraitDimension.width + metrics.getHeight() + x);
 			g2d.setColor(Color.WHITE);
-			g2d.drawString(positionNameString, -(y + portraitDimension.height - 5), portraitDimension.width + metrics.getAscent() + x - 1);
+			g2d.drawString(positionNameString, -(y + portraitDimension.height - 5), portraitDimension.width + x - 1);
+			g2d.drawString(keywords, -(y + portraitDimension.height - 5),
+				portraitDimension.width + metrics.getHeight() + x - 1);
 			g2d.dispose();
 		}
 	}
@@ -278,19 +287,23 @@ public class PlayerDetailComponent extends JPanel {
 			drawStatBox(g2d, x, y, moveLeft, moveIsRed, StatsDrawingModifier.positiveImproves(movementModifier));
 
 			int strengthModifier = strength - position.getStrength();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0]) + statBoxWidth, y, strength, false, StatsDrawingModifier.positiveImproves(strengthModifier));
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[0]) + statBoxWidth, y, strength, false,
+				StatsDrawingModifier.positiveImproves(strengthModifier));
 
 			int agilityModifier = agility - position.getAgility();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false, mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[1]) + (statBoxWidth * 2), y, agility, false,
+				mechanic.agilityModifier(agilityModifier), mechanic.statSuffix());
 
 			if (mechanic.drawPassing()) {
 				int passing = getPlayer().getPassingWithModifiers(game);
 				int passingModifier = passing - position.getPassing();
-				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false, StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
+				drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[2]) + (statBoxWidth * 3), y, passing, false,
+					StatsDrawingModifier.positiveImpairs(passingModifier), mechanic.statSuffix());
 			}
 
 			int armourModifier = armour - position.getArmour();
-			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3]) + (statBoxWidth * 4), y, armour, false, StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
+			drawStatBox(g2d, x + dimensionProvider.scale(statSpacings[3]) + (statBoxWidth * 4), y, armour, false,
+				StatsDrawingModifier.positiveImproves(armourModifier), mechanic.statSuffix());
 
 			g2d.dispose();
 
@@ -341,7 +354,8 @@ public class PlayerDetailComponent extends JPanel {
 		if (ArrayTool.isProvided(game.getFieldModel().getCards(getPlayer()))) {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
-			BufferedImage overlayCard = iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider);
+			BufferedImage overlayCard =
+				iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider);
 			g2d.drawImage(overlayCard, 76, 36, null);
 			g2d.dispose();
 		}
@@ -409,7 +423,8 @@ public class PlayerDetailComponent extends JPanel {
 				}
 				Skill unusedProSkill = getPlayer().getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
 				if (((getPlayer() == actingPlayer.getPlayer()) && actingPlayer.isSkillUsed(skillInfo.getSkill()))
-					|| ((skillInfo.getSkill() == unusedProSkill) && playerState.hasUsedPro()) || getPlayer().isUsed(skillInfo.getSkill())) {
+					|| ((skillInfo.getSkill() == unusedProSkill) && playerState.hasUsedPro()) ||
+					getPlayer().isUsed(skillInfo.getSkill())) {
 					usedSkills.add(skillInfo.getInfo());
 				}
 			}
@@ -419,7 +434,8 @@ public class PlayerDetailComponent extends JPanel {
 			for (CardEffect cardEffect : game.getFieldModel().getCardEffects(getPlayer())) {
 				modifications.add(cardEffect.getName());
 			}
-			modifications.addAll(getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
+			modifications.addAll(
+				getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
 
 			acquiredSkills.removeAll(modifications);
 			rosterSkills.removeAll(modifications);

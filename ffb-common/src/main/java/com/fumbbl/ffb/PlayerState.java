@@ -205,6 +205,10 @@ public class PlayerState {
 		return (RIP == getBase());
 	}
 
+	public boolean isSi() {
+		return SERIOUS_INJURY == getBase();
+	}
+
 	public boolean canBeSetUpNextDrive() {
 		return ((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase()) || (STUNNED == getBase())
 			|| (RESERVE == getBase()) || (FALLING == getBase()) || (HIT_ON_GROUND == getBase()) || (BLOCKED == getBase()));

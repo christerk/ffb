@@ -31,7 +31,7 @@ public enum DialogId implements INamedObject {
 	BLOODLUST_ACTION("bloodlustAction"), PENALTY_SHOOTOUT("penaltyShootout"), REPLAY_MODE_CHOICE("replayModeChoice"), 
 	CREDITS("credits"), CREDITS_LICENSE("creditsLicense"), BUY_PRAYERS_AND_INDUCEMENTS("buyPrayersAndInducements"),
 	BLOCK_ROLL_PROPERTIES("blockRollProperties"), RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES("reRollBlockForTargetsProperties"),
-	OPPONENT_BLOCK_SELECTION_PROPERTIES("opponentBlockSelectionProperties"), PICK_UP_CHOICE("pickUpChoice");
+	OPPONENT_BLOCK_SELECTION_PROPERTIES("opponentBlockSelectionProperties"), PICK_UP_CHOICE("pickUpChoice"), SELECT_KEYWORD("selectKeyword");
 
 	private final String fName;
 

@@ -274,7 +274,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 					return true;
 				default:
-					actionHandled = super.actionKeyPressed(pActionKey);
+					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;
 			}
 		}

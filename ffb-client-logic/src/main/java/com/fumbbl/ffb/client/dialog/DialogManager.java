@@ -235,6 +235,9 @@ public class DialogManager {
 					case PICK_UP_CHOICE:
 						setDialogHandler(new DialogPickUpChoiceHandler(getClient()));
 						break;
+					case SELECT_KEYWORD:
+						setDialogHandler(new DialogSelectKeywordHandler(getClient()));
+						break;
 					default:
 						break;
 				}

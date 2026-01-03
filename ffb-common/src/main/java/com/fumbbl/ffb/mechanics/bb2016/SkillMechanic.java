@@ -67,4 +67,9 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 			&& assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
 	}
 
+	@Override
+	public boolean animosityExists(Player<?> thrower, Player<?> catcher) {
+		return false;
+	}
+
 }

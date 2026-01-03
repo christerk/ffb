@@ -96,6 +96,8 @@ public class DialogBlockRollPropertiesHandler extends DialogHandler {
 				if (blockRoll.needsSelection()) {
 					if (blockRollDialog.getReRollSource() == ReRollSources.BRAWLER) {
 						communication.sendUseBrawler(null);
+					} else if (blockRollDialog.getReRollSource() == ReRollSources.HATRED) {
+						communication.sendUseHatred(null);
 					} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
 						communication.sendUseProReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
 					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleDieReRollSource()) {

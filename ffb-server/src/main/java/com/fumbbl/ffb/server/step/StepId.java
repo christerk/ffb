@@ -81,6 +81,7 @@ public enum StepId implements INamedObject {
 	FOUL_APPEARANCE_MULTIPLE("foulAppearanceMultiple"), // action.multiBlock 2020
 	FOUL_CHAINSAW("foulChainsaw"), // action.foul
 	FUMBLE_TTM_PASS("fumbleTtmPass"), // action.ttm
+	GETTING_EVEN("gettingEven"), // action.common
 	GO_FOR_IT("goForIt"), // action.common
 	GOTO_LABEL("gotoLabel"), //
 	HAIL_MARY_PASS("hailMaryPass"), // action.pass

@@ -7,11 +7,13 @@ import com.fumbbl.ffb.ApothecaryStatus;
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.KeywordChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSelectKeywordParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
 import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -21,11 +23,13 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandKeywordSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
@@ -44,13 +48,18 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Step in any sequence to handle the apothecary. Offers different modes
@@ -115,7 +124,8 @@ public class StepApothecary extends AbstractStep {
 						.getCommand();
 					if ((fInjuryResult != null) && StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(),
 						fInjuryResult.injuryContext().getDefenderId())) {
-						handleApothecaryChoice(apothecaryChoiceCommand.getPlayerState(), apothecaryChoiceCommand.getSeriousInjury());
+						handleApothecaryChoice(apothecaryChoiceCommand.getPlayerState(),
+							apothecaryChoiceCommand.getSeriousInjury());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -142,6 +152,18 @@ public class StepApothecary extends AbstractStep {
 							}
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
+					}
+					break;
+				case CLIENT_KEYWORD_SELECTION:
+					if (fInjuryResult != null && fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_GETTING_EVEN) {
+						UtilServerDialog.hideDialog(getGameState());
+						ClientCommandKeywordSelection commandKeywordSelection =
+							(ClientCommandKeywordSelection) pReceivedCommand.getCommand();
+						List<Keyword> keywords = commandKeywordSelection.getKeywords();
+						Collections.reverse(keywords);
+						keywords.forEach(keyword -> pushGettingEven(commandKeywordSelection.getPlayerId(), keyword));
+						getResult().setNextAction(StepAction.NEXT_STEP);
+						commandStatus = StepCommandStatus.SKIP_STEP;
 					}
 					break;
 				default:
@@ -199,7 +221,8 @@ public class StepApothecary extends AbstractStep {
 						if (fShowReport) {
 							fInjuryResult.report(this);
 						}
-						List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId), fInjuryResult.injuryContext().getPlayerState());
+						List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId),
+							fInjuryResult.injuryContext().getPlayerState());
 						UtilServerDialog.showDialog(getGameState(),
 							new DialogUseApothecaryParameter(defenderId,
 								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
@@ -218,7 +241,8 @@ public class StepApothecary extends AbstractStep {
 						break;
 					case DO_NOT_USE_APOTHECARY:
 						getResult()
-							.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null, fInjuryResult.injuryContext().casualtyModifiers));
+							.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null,
+								fInjuryResult.injuryContext().casualtyModifiers));
 						break;
 					case NO_APOTHECARY:
 						if (fShowReport) {
@@ -238,7 +262,8 @@ public class StepApothecary extends AbstractStep {
 						Team team = game.getTeamHome().hasPlayer(player) ? game.getTeamHome() : game.getTeamAway();
 						TurnData turnData = game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome() : game.getTurnDataAway();
 						InducementSet inducementSetIgor = turnData.getInducementSet();
-						inducementSetIgor.getInducementMapping().keySet().stream().filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSetIgor.hasUsesLeft(type))
+						inducementSetIgor.getInducementMapping().keySet().stream()
+							.filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSetIgor.hasUsesLeft(type))
 							.min(Comparator.comparingInt(InducementType::getPriority)).ifPresent(type -> {
 								UtilServerInducementUse.useInducement(getGameState(), team, type, 1);
 								getResult().addReport(new ReportInducement(team.getId(), type, 0));
@@ -261,9 +286,11 @@ public class StepApothecary extends AbstractStep {
 								InducementSet inducementSet = game.getTeamHome().hasPlayer(player)
 									? game.getTurnDataHome().getInducementSet()
 									: game.getTurnDataAway().getInducementSet();
-								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream().anyMatch(type -> type.hasUsage(Usage.REGENERATION)
-									&& inducementSet.hasUsesLeft(type));
-								if (hasInducement && player.getPlayerType() != PlayerType.STAR && player.getPlayerType() != PlayerType.MERCENARY) {
+								boolean hasInducement = inducementSet.getInducementMapping().keySet().stream()
+									.anyMatch(type -> type.hasUsage(Usage.REGENERATION)
+										&& inducementSet.hasUsesLeft(type));
+								if (hasInducement && player.getPlayerType() != PlayerType.STAR &&
+									player.getPlayerType() != PlayerType.MERCENARY) {
 									game.setDialogParameter(new DialogUseMortuaryAssistantParameter(player.getId()));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_IGOR_USE);
 									doNextStep = false;
@@ -277,17 +304,55 @@ public class StepApothecary extends AbstractStep {
 			}
 			if (doNextStep) {
 				UtilServerInjury.handleInjurySideEffects(this, fInjuryResult);
+
+				if (fInjuryResult.injuryContext().getPlayerState().isSi()) {
+					Player<?> defender = game.getPlayerById(defenderId);
+					Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
+					Set<Keyword> availableKeywords =
+						attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith).collect(Collectors.toSet());
+
+					UtilCards.getSkillWithProperty(defender, NamedProperties.canRerollSingleSkull).ifPresent(
+						skill -> skill.evaluator().values(skill, defender).stream().map(Keyword::forName)
+							.forEach(availableKeywords::remove)
+					);
+
+					if (!availableKeywords.isEmpty()) {
+						List<Keyword> keywords = availableKeywords.stream().sorted().collect(Collectors.toList());
+						if (availableKeywords.size() == 1) {
+							pushGettingEven(defenderId, keywords.get(0));
+						} else {
+							UtilServerDialog.showDialog(getGameState(),
+								new DialogSelectKeywordParameter(defenderId, keywords, KeywordChoiceMode.GETTING_EVEN, 1, 1),
+								!game.getActingTeam().hasPlayer(defender));
+
+							fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_GETTING_EVEN);
+							getResult().setNextAction(StepAction.CONTINUE);
+							return;
+						}
+					}
+				}
+
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}
+	}
+
+	private void pushGettingEven(String defenderId, Keyword keyword) {
+		Sequence sequence = new Sequence(getGameState());
+		sequence.add(StepId.GETTING_EVEN, StepParameter.from(StepParameterKey.PLAYER_ID, defenderId),
+			StepParameter.from(StepParameterKey.KEYWORD, keyword));
+		getGameState().getStepStack().push(sequence.getSequence());
 	}
 
 	private void useApo(TurnData turnData, ApothecaryType apothecaryType) {
 		turnData.useApothecary(apothecaryType);
 		if (apothecaryType == ApothecaryType.PLAGUE) {
 			turnData.getInducementSet().getInducementTypes().stream()
-				.filter(inducementType -> inducementType.hasUsage(Usage.REGENERATION) && inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN) && turnData.getInducementSet().hasUsesLeft(inducementType))
-				.findFirst().ifPresent(inducementType -> UtilServerInducementUse.useInducement(inducementType, 1, turnData.getInducementSet()));
+				.filter(inducementType -> inducementType.hasUsage(Usage.REGENERATION) &&
+					inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN) &&
+					turnData.getInducementSet().hasUsesLeft(inducementType))
+				.findFirst().ifPresent(
+					inducementType -> UtilServerInducementUse.useInducement(inducementType, 1, turnData.getInducementSet()));
 		}
 	}
 
@@ -305,18 +370,21 @@ public class StepApothecary extends AbstractStep {
 		boolean apothecaryChoice = ((fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT)
 			&& (fInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.KNOCKED_OUT));
 		if (apothecaryChoice) {
-			RollMechanic rollMechanic = ((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
+			RollMechanic rollMechanic =
+				((RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 			InjuryResult newInjuryResult = new InjuryResult();
 			newInjuryResult.injuryContext().setDefenderId(fInjuryResult.injuryContext().getDefenderId());
 			newInjuryResult.injuryContext().setCasualtyRoll(rollMechanic.rollCasualty(getGameState().getDiceRoller()));
 			newInjuryResult.injuryContext().setInjury(
-				rollMechanic.interpretCasualtyRollAndAddModifiers(game, newInjuryResult.injuryContext(), game.getPlayerById(fInjuryResult.injuryContext().getDefenderId()), false));
+				rollMechanic.interpretCasualtyRollAndAddModifiers(game, newInjuryResult.injuryContext(),
+					game.getPlayerById(fInjuryResult.injuryContext().getDefenderId()), false));
 			newInjuryResult.injuryContext().setSeriousInjury(
 				rollMechanic.interpretSeriousInjuryRoll(game, newInjuryResult.injuryContext()));
 			apothecaryChoice = (newInjuryResult.injuryContext().getPlayerState().getBase() != PlayerState.BADLY_HURT);
 			getResult()
 				.addReport(new ReportApothecaryRoll(defender.getId(), newInjuryResult.injuryContext().getCasualtyRoll(),
-					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(), newInjuryResult.injuryContext().getOriginalSeriousInjury(), fInjuryResult.injuryContext().casualtyModifiers));
+					newInjuryResult.injuryContext().getPlayerState(), newInjuryResult.injuryContext().getSeriousInjury(),
+					newInjuryResult.injuryContext().getOriginalSeriousInjury(), fInjuryResult.injuryContext().casualtyModifiers));
 			if (apothecaryChoice) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogApothecaryChoiceParameter(defender.getId(), fInjuryResult.injuryContext().getPlayerState(),

@@ -84,12 +84,16 @@ public class DialogBlockRollPartialReRollHandler extends DialogHandler {
 						communication.sendUseBrawler(null);
 					} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
 						communication.sendUseProReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
-					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleDieReRollSource()) {
+					} else if (blockRollDialog.getReRollSource() != null &&
+						blockRollDialog.getReRollSource() == blockRollDialog.getSingleDieReRollSource()) {
 						communication.sendUseConsummateReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
-					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleBlockDieReRollSource()) {
+					} else if (blockRollDialog.getReRollSource() != null &&
+						blockRollDialog.getReRollSource() == blockRollDialog.getSingleBlockDieReRollSource()) {
 						communication.sendUseSingleBlockDieReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
-					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getAnyBlockDiceReRollSource()) {
-						communication.sendUseMultiBlockDiceReRoll(blockRollDialog.getReRollIndexes().stream().mapToInt(i -> i).toArray());
+					} else if (blockRollDialog.getReRollSource() != null &&
+						blockRollDialog.getReRollSource() == blockRollDialog.getAnyBlockDiceReRollSource()) {
+						communication.sendUseMultiBlockDiceReRoll(
+							blockRollDialog.getReRollIndexes().stream().mapToInt(i -> i).toArray());
 					} else {
 						communication.sendUseReRoll(ReRolledActions.BLOCK, blockRollDialog.getReRollSource());
 					}
