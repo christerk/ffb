@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.INamedObject;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerGender;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
