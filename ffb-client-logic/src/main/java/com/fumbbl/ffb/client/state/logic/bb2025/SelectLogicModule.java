@@ -55,6 +55,10 @@ public class SelectLogicModule extends LogicModule {
 	@Override
 	public Set<ClientAction> availableActions() {
 		return new HashSet<ClientAction>() {{
+			add(ClientAction.STAB);
+			add(ClientAction.CHAINSAW);
+			add(ClientAction.PROJECTILE_VOMIT);
+			add(ClientAction.BREATHE_FIRE);
 			add(ClientAction.BLOCK);
 			add(ClientAction.BLITZ);
 			add(ClientAction.FRENZIED_RUSH);
@@ -95,6 +99,18 @@ public class SelectLogicModule extends LogicModule {
 			ClientCommunication communication = client.getCommunication();
 			switch (action) {
 				case BLOCK:
+					communication.sendActingPlayer(player, PlayerAction.BLOCK, false);
+					break;
+				case BREATHE_FIRE:
+					communication.sendActingPlayer(player, PlayerAction.BREATHE_FIRE, false);
+					break;
+				case CHAINSAW:
+					communication.sendActingPlayer(player, PlayerAction.CHAINSAW, false);
+					break;
+				case PROJECTILE_VOMIT:
+					communication.sendActingPlayer(player, PlayerAction.PROJECTILE_VOMIT, false);
+					break;
+				case STAB:
 					communication.sendActingPlayer(player, PlayerAction.BLOCK, false);
 					break;
 				case BLITZ:
@@ -235,6 +251,25 @@ public class SelectLogicModule extends LogicModule {
 			findAlternateBlockActions(player).forEach(context::add);
 			context.add(ClientAction.BLOCK);
 		}
+
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+
+		if (player.canDeclareSkillAction(NamedProperties.providesStabBlockAlternative, playerState)) {
+			context.add(ClientAction.STAB);
+		}
+		if (player.canDeclareSkillAction(NamedProperties.providesChainsawBlockAlternative, playerState)) {
+			context.add(ClientAction.CHAINSAW);
+		}
+		if (player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail, playerState)) {
+			if (player.hasUnusedSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
+				context.add(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION);
+			}
+			context.add(ClientAction.PROJECTILE_VOMIT);
+		}
+		if (player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover, playerState)) {
+			context.add(ClientAction.BREATHE_FIRE);
+		}
+
 		if (isMultiBlockActionAvailable(player)) {
 			context.add(ClientAction.MULTIPLE_BLOCK);
 		}

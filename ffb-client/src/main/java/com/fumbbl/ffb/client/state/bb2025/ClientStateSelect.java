@@ -18,17 +18,11 @@ import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.UtilClientActionKeys;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.skill.Skill;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-/**
- * @author Kalimar
- */
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 
@@ -74,6 +68,10 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_BOMB, ClientAction.BOMB);
 				put(IPlayerPopupMenuKeys.KEY_GAZE, ClientAction.GAZE);
 				put(IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL, ClientAction.SECURE_THE_BALL);
+				put(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, ClientAction.BREATHE_FIRE);
+				put(IPlayerPopupMenuKeys.KEY_CHAINSAW, ClientAction.CHAINSAW);
+				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
+				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 			} else {
 				put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
 				put(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, ClientAction.GAZE_ZOAT);
@@ -133,8 +131,20 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		}
 		if (menuIndex == 0) {
 			switch (pActionKey) {
+				case PLAYER_ACTION_BREATHE_FIRE:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
+					break;
 				case PLAYER_ACTION_BLOCK:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_BLOCK);
+					break;
+				case PLAYER_ACTION_CHAINSAW:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_CHAINSAW);
+					break;
+				case PLAYER_ACTION_PROJECTILE_VOMIT:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT);
+					break;
+				case PLAYER_ACTION_STAB:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_STAB);
 					break;
 				case PLAYER_ACTION_MOVE:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_MOVE);
@@ -216,21 +226,21 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		sideBarHome.refresh();
 	}
 
-	private String blockActionLabel(List<Skill> blockActions) {
-		List<String> actions = new ArrayList<>();
-		actions.add("Block Action");
-		blockActions.stream().map(Skill::getName).forEach(actions::add);
-		return String.join("/", actions);
-	}
-
 	@Override
 	protected LinkedHashMap<ClientAction, MenuItemConfig> itemConfigs(ActionContext actionContext) {
 
 		LinkedHashMap<ClientAction, MenuItemConfig> configs = new LinkedHashMap<>();
 
+		configs.put(ClientAction.BREATHE_FIRE,
+			new MenuItemConfig("Breath Fire Action", IIconProperty.ACTION_BREATHE_FIRE, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
 		configs.put(ClientAction.BLOCK,
-			new MenuItemConfig(blockActionLabel(actionContext.getBlockAlternatives()), IIconProperty.ACTION_BLOCK,
-				IPlayerPopupMenuKeys.KEY_BLOCK));
+			new MenuItemConfig("Block Action", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
+		configs.put(ClientAction.CHAINSAW,
+			new MenuItemConfig("Chainsaw Action", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
+		configs.put(ClientAction.PROJECTILE_VOMIT,
+			new MenuItemConfig("Projectile Vomit Action", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+		configs.put(ClientAction.STAB,
+			new MenuItemConfig("Stab Action", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_STAB));
 		configs.put(ClientAction.MULTIPLE_BLOCK, new MenuItemConfig("Multiple Block", IIconProperty.ACTION_MUTIPLE_BLOCK,
 			IPlayerPopupMenuKeys.KEY_MULTIPLE_BLOCK));
 		configs.put(ClientAction.BOMB,

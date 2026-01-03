@@ -27,7 +27,9 @@ public enum PlayerAction implements INamedObject {
 	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
 	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
-	SECURE_THE_BALL("secureTheBall", 48, "secures the ball");
+	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"), BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
+	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
+	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action");
 
 	private final String fName;
 	private final int fType;
@@ -113,7 +115,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean isBlockAction() {
-		return this == BLOCK || this == VICIOUS_VINES;
+		return this == BLOCK || this == VICIOUS_VINES || this == BREATHE_FIRE || this == CHAINSAW || this == STAB || this == PROJECTILE_VOMIT;
 	}
 
 	public boolean forceDispatch() {

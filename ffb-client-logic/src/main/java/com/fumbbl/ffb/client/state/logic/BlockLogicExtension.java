@@ -106,7 +106,7 @@ public class BlockLogicExtension extends LogicModule {
 		return actionContext;
 	}
 
-	protected void performAvailableAction(Player<?> player, ClientAction action) {
+	public void performAvailableAction(Player<?> player, ClientAction action) {
 		ClientCommunication communication = client.getCommunication();
 		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
 		switch (action) {

@@ -117,8 +117,12 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case BLITZ_MOVE:
 									clientStateId = ClientStateId.BLITZ;
 									break;
+								case BREATHE_FIRE:
 								case BLITZ:
 								case BLOCK:
+								case CHAINSAW:
+								case PROJECTILE_VOMIT:
+								case STAB:
 								case VICIOUS_VINES:
 									clientStateId = ClientStateId.BLOCK;
 									break;
