@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -10,17 +12,18 @@ import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -111,7 +114,7 @@ public class SelectLogicModule extends LogicModule {
 					communication.sendActingPlayer(player, PlayerAction.PROJECTILE_VOMIT, false);
 					break;
 				case STAB:
-					communication.sendActingPlayer(player, PlayerAction.BLOCK, false);
+					communication.sendActingPlayer(player, PlayerAction.STAB, false);
 					break;
 				case BLITZ:
 					communication.sendActingPlayer(player, PlayerAction.BLITZ_MOVE, false);
@@ -248,25 +251,30 @@ public class SelectLogicModule extends LogicModule {
 		}
 
 		if (isBlockActionAvailable(player)) {
-			findAlternateBlockActions(player).forEach(context::add);
 			context.add(ClientAction.BLOCK);
 		}
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		boolean specialBlocksAvailable = isSpecialBlockActionAvailable(player, playerState);
 
-		if (player.canDeclareSkillAction(NamedProperties.providesStabBlockAlternative, playerState)) {
+		if (specialBlocksAvailable &&
+			player.canDeclareSkillAction(NamedProperties.providesStabBlockAlternative, playerState)) {
 			context.add(ClientAction.STAB);
 		}
-		if (player.canDeclareSkillAction(NamedProperties.providesChainsawBlockAlternative, playerState)) {
+		if (specialBlocksAvailable &&
+			player.canDeclareSkillAction(NamedProperties.providesChainsawBlockAlternative, playerState)) {
 			context.add(ClientAction.CHAINSAW);
 		}
-		if (player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail, playerState)) {
+		if (specialBlocksAvailable &&
+			player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFail, playerState)) {
 			if (player.hasUnusedSkillProperty(NamedProperties.canUseVomitAfterBlock)) {
 				context.add(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION);
 			}
 			context.add(ClientAction.PROJECTILE_VOMIT);
 		}
-		if (player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover, playerState)) {
+		if (specialBlocksAvailable &&
+			player.canDeclareSkillAction(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover,
+				playerState)) {
 			context.add(ClientAction.BREATHE_FIRE);
 		}
 
@@ -333,7 +341,8 @@ public class SelectLogicModule extends LogicModule {
 		if (isFuriousOutburstAvailable(player)) {
 			context.add(ClientAction.FURIOUS_OUTBURST);
 		}
-		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player) || isRecoverFromEyeGougeActionAvailable(player)) {
+		if (isRecoverFromConfusionActionAvailable(player) || isRecoverFromGazeActionAvailable(player) ||
+			isRecoverFromEyeGougeActionAvailable(player)) {
 			context.add(ClientAction.RECOVER);
 		}
 		if (isStandUpActionAvailable(player)
@@ -350,16 +359,26 @@ public class SelectLogicModule extends LogicModule {
 		return context;
 	}
 
+	public boolean isSpecialBlockActionAvailable(Player<?> player, PlayerState playerState) {
+		Game game = client.getGame();
+		GameMechanic mechanic =
+			(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		if ((playerState != null) && !player.hasSkillProperty(NamedProperties.preventRegularBlockAction)
+			&& mechanic.isBlockActionAllowed(game.getTurnMode())
+			&& (playerState.getBase() != PlayerState.PRONE)
+		) {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+			int blockablePlayers =
+				UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
+			return (blockablePlayers > 0);
+		}
+		return false;
+	}
+
 	@Override
 	public void endTurn() {
 		client.getCommunication().sendEndTurn(client.getGame().getTurnMode());
 		client.getClientData().setEndTurnButtonHidden(true);
-	}
-
-	private List<Skill> findAlternateBlockActions(Player<?> player) {
-		return player.getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> skill.hasSkillProperty(NamedProperties.providesBlockAlternative))
-			.collect(Collectors.toList());
 	}
 
 	public boolean isMoveActionAvailable(Player<?> player) {

@@ -238,7 +238,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		configs.put(ClientAction.CHAINSAW,
 			new MenuItemConfig("Chainsaw Action", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
 		configs.put(ClientAction.PROJECTILE_VOMIT,
-			new MenuItemConfig("Projectile Vomit Action", IIconProperty.ACTION_RAIDING_PARTY, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+			new MenuItemConfig("Projectile Vomit Action", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
 		configs.put(ClientAction.STAB,
 			new MenuItemConfig("Stab Action", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_STAB));
 		configs.put(ClientAction.MULTIPLE_BLOCK, new MenuItemConfig("Multiple Block", IIconProperty.ACTION_MUTIPLE_BLOCK,
