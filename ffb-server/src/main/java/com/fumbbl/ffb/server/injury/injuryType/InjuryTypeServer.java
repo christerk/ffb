@@ -20,9 +20,9 @@ import com.fumbbl.ffb.server.step.IStep;
 public abstract class InjuryTypeServer<T extends InjuryType> implements INamedObject {
 
 	T injuryType;
-	InjuryContext injuryContext;
+	protected InjuryContext injuryContext;
 
-	InjuryTypeServer(T injuryType) {
+	protected InjuryTypeServer(T injuryType) {
 		this.injuryType = injuryType;
 		this.injuryContext = new InjuryContext();
 	}
@@ -77,7 +77,7 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 	                                  FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode);
 
-	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
+	protected void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 

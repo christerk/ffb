@@ -1,21 +1,15 @@
-package com.fumbbl.ffb.server.injury.injuryType;
+package com.fumbbl.ffb.server.injury.injuryType.bb2025;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.factory.InjuryModifierFactory;
-import com.fumbbl.ffb.injury.KTMFumbleInjury;
+import com.fumbbl.ffb.injury.bb2025.KTMFumbleInjury;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.IStep;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 
@@ -29,13 +23,7 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 	                         ApothecaryMode pApothecaryMode) {
 
 		injuryContext.setArmorBroken(true);
-
-		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
-
-		Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiers(game, injuryContext, pAttacker,
-			pDefender, isStab(), isFoul(), isVomitLike()).stream().filter(injuryModifier -> injuryModifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock)).collect(Collectors.toSet());
-		injuryContext.addInjuryModifiers(injuryModifiers);
 
 		setInjury(pDefender, gameState, diceRoller);
 

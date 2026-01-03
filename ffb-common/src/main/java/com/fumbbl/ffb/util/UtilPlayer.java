@@ -504,22 +504,6 @@ public class UtilPlayer {
 				pGame.getFieldModel().getBallCoordinate().equals(pGame.getFieldModel().getPlayerCoordinate(pPlayer)));
 	}
 
-	public static Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
-		List<Player<?>> kickablePlayers = new ArrayList<>();
-		FieldModel fieldModel = pGame.getFieldModel();
-		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
-		TtmMechanic mechanic =
-				(TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
-		Player<?>[] adjacentPlayers =
-				findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
-		for (Player<?> adjacentPlayer : adjacentPlayers) {
-			if (mechanic.canBeKicked(pGame, adjacentPlayer)) {
-				kickablePlayers.add(adjacentPlayer);
-			}
-		}
-		return kickablePlayers.toArray(new Player[0]);
-	}
-
 	public static boolean canThrowTeamMate(Game pGame, Player<?> pThrower, boolean pCheckPassUsed) {
 		TtmMechanic mechanic =
 				(TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
@@ -529,9 +513,11 @@ public class UtilPlayer {
 	}
 
 	public static boolean canKickTeamMate(Game pGame, Player<?> pKicker, boolean pCheckBlitzUsed) {
+		TtmMechanic mechanic =
+				(TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		return ((pKicker != null) && (!pCheckBlitzUsed || !pGame.getTurnData().isBlitzUsed())
 				&& pKicker.hasSkillProperty(NamedProperties.canKickTeamMates)
-				&& (UtilPlayer.findKickableTeamMates(pGame, pKicker).length > 0));
+				&& (mechanic.findKickableTeamMates(pGame, pKicker).length > 0));
 	}
 
 	public static boolean isFoulable(Game pGame, Player<?> pPlayer) {
