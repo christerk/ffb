@@ -9,7 +9,7 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		
+
 		versions.add(new VersionChangeList("3.0.0").setDescription("First version of 2025 rules, a.k.a. 3rd Season")
 			.addBugfix("Fixed crash when using Pile Driver foul")
 			.addFeature("Animosity")
