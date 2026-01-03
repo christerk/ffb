@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Brawler not working on both frenzy or multi block rolls")
 			.addBugfix("Lethal Flight is only applied when the thrown player is standing and not distracted")
 			.addBugfix("Swoop is only applied when the thrown player is standing and not distracted")
+			.addFeature("KTM: can target prone/no-tackle-zone teammates; no Mighty Blow on fumble, Stun becomes KO")
 		);
 
 
