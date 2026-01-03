@@ -7,7 +7,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.BlockKind;
 import com.fumbbl.ffb.model.BlockTarget;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -21,12 +20,9 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepMultipleBlockFork extends AbstractStep {
@@ -39,7 +35,6 @@ public class StepMultipleBlockFork extends AbstractStep {
 		add(StepParameterKey.STARTING_PUSHBACK_SQUARE);
 		add(StepParameterKey.DEFENDER_PUSHED);
 		add(StepParameterKey.FOLLOWUP_CHOICE);
-		add(StepParameterKey.USING_STAB);
 		add(StepParameterKey.OLD_DEFENDER_STATE);
 	}};
 
@@ -88,45 +83,20 @@ public class StepMultipleBlockFork extends AbstractStep {
 	}
 
 	private void executeStep() {
-		Map<BlockKind, List<BlockTarget>> groupedTargets = targets.stream().collect(Collectors.groupingBy(BlockTarget::getKind));
 
-		List<BlockTarget> blockGroup = groupedTargets.get(BlockKind.BLOCK);
-		if (blockGroup != null && !blockGroup.isEmpty()) {
-			Sequence sequence = new Sequence(getGameState());
-			sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup));
-			sequence.add(StepId.DOUBLE_STRENGTH);
-			blockGroup.forEach(target -> {
-				sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
-				sequence.add(StepId.TRICKSTER);
-				sequence.add(StepId.PICK_UP, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
-				sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-			});
-			sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, blockGroup),
-				StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
-			getGameState().getStepStack().push(sequence.getSequence());
-		}
-
-		List<BlockTarget> stabGroup = groupedTargets.get(BlockKind.STAB);
-		if (stabGroup != null && !stabGroup.isEmpty()) {
-			Collections.reverse(stabGroup);
-			stabGroup.forEach(
-				target -> {
-					Sequence sequence = new Sequence(getGameState());
-					sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
-					sequence.add(StepId.TRICKSTER);
-					sequence.add(StepId.PICK_UP, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
-					sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-					sequence.add(StepId.STAB, StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.NEXT));
-					sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
-					sequence.add(StepId.CONSUME_PARAMETER, StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
-					getGameState().getStepStack().push(sequence.getSequence());
-					publishParameter(StepParameter.from(StepParameterKey.OLD_DEFENDER_STATE, target.getOriginalPlayerState()));
-					publishParameter(StepParameter.from(StepParameterKey.USING_STAB, true));
-
-				}
-			);
-		}
-
+		Sequence sequence = new Sequence(getGameState());
+		sequence.add(StepId.DAUNTLESS_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, targets));
+		sequence.add(StepId.DOUBLE_STRENGTH);
+		targets.forEach(target -> {
+			sequence.add(StepId.SET_DEFENDER, StepParameter.from(StepParameterKey.BLOCK_DEFENDER_ID, target.getPlayerId()));
+			sequence.add(StepId.TRICKSTER);
+			sequence.add(StepId.PICK_UP,
+				StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
+			sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		});
+		sequence.add(StepId.BLOCK_ROLL_MULTIPLE, StepParameter.from(StepParameterKey.BLOCK_TARGETS, targets),
+			StepParameter.from(StepParameterKey.CONSUME_PARAMETER, parameterToConsume));
+		getGameState().getStepStack().push(sequence.getSequence());
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
