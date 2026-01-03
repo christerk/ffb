@@ -362,6 +362,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
 					.setMessageFalse("Tacklezone overlays are disabled.");
+			case MB_STACKS_AGAINST_CHAINSAW:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Mighty Blow can be used against Chainsaw players")
+					.setMessageFalse("Mighty Blow can not be used against Chainsaw players");
 			default:
 				return null;
 		}

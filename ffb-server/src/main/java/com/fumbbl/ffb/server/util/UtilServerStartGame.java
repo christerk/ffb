@@ -292,6 +292,9 @@ public class UtilServerStartGame {
 			GameOptionInt reducedMaxChefs = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_CHEFS_REDUCED_MAX);
 			reducedMaxChefs.setValue(5);
 			game.getOptions().addOption(reducedMaxChefs);
+			GameOptionBoolean stackChainsaw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.MB_STACKS_AGAINST_CHAINSAW);
+			stackChainsaw.setValue(true);
+			game.getOptions().addOption(stackChainsaw);
 		}
 	}
 

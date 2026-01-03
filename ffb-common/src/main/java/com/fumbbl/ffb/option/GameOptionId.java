@@ -77,6 +77,7 @@ public enum GameOptionId implements INamedObject {
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),
 	ALLOW_SPECIAL_BLOCKS_WITH_BALL_AND_CHAIN("allowSpecialBlocksWithBallAndChain"),
+	MB_STACKS_AGAINST_CHAINSAW("mbStacksAgainstChainsaw"),
 	CHAINSAW_TURNOVER_ON_AV_BREAK("chainsawTurnoverOnAvBreak"), // legacy, keep around to make sure old replays or running games do not break after update
 	CHAINSAW_TURNOVER("chainsawTurnover"), BOMBER_PLACED_PRONE_IGNORES_TURNOVER("bomberPlacedProneIgnoresTurnover"),
 	SNEAKY_GIT_CAN_MOVE_AFTER_FOUL("sneakyGitCanMoveAfterFoul"), BOMB_USES_MB("bombUsesMb"), CATCH_WORKS_FOR_BOMBS("catchWorksForBombs"),

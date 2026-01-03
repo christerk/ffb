@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -21,7 +21,6 @@ import java.util.Arrays;
  * cannot be used with the Stab or Chainsaw skills.
  */
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class MightyBlow extends Skill {
 
 	public MightyBlow() {
