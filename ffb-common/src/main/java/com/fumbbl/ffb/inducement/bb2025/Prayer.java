@@ -11,7 +11,7 @@ import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.skill.mixed.Pro;
 import com.fumbbl.ffb.skill.mixed.Loner;
 import com.fumbbl.ffb.skill.mixed.MightyBlow;
-import com.fumbbl.ffb.skill.mixed.Stab;
+import com.fumbbl.ffb.skill.bb2025.Stab;
 
 import java.util.HashSet;
 

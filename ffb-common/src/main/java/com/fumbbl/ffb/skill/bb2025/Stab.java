@@ -1,9 +1,10 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.DeclareCondition;
 import com.fumbbl.ffb.model.skill.Skill;
 
 /**
@@ -17,21 +18,18 @@ import com.fumbbl.ffb.model.skill.Skill;
  * of a Blitz Action, the player cannot continue moving after using it.
  * Casualties caused by a stabbing attack do not count for Star Player points.
  */
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class Stab extends Skill {
 
 	public Stab() {
 		super("Stab", SkillCategory.TRAIT);
+		setDeclareCondition(DeclareCondition.STANDING);
 	}
 
 	@Override
 	public void postConstruct() {
-		// TODO when this is split into separate BB2020 and BB2025 versions, you also need to adjust the stiletto prayer
-		//  in both versions to use correct class
 		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlock);
 		registerProperty(NamedProperties.providesBlockAlternative);
-		registerProperty(NamedProperties.providesMultipleBlockAlternative);
 		registerProperty(NamedProperties.providesStabBlockAlternative);
 	}
 
