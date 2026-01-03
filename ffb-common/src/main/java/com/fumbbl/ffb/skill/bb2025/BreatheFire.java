@@ -1,0 +1,21 @@
+package com.fumbbl.ffb.skill.bb2025;
+
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillCategory;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.DeclareCondition;
+import com.fumbbl.ffb.model.skill.Skill;
+
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class BreatheFire extends Skill {
+	public BreatheFire() {
+		super("Breathe Fire", SkillCategory.TRAIT);
+		setDeclareCondition(DeclareCondition.STANDING);
+	}
+
+	@Override
+	public void postConstruct() {
+		registerProperty(NamedProperties.canPerformArmourRollInsteadOfBlockThatMightFailWithTurnover);
+		registerProperty(NamedProperties.providesBlockAlternative);
+	}
+}

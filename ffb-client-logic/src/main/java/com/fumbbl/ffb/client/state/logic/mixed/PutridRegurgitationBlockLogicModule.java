@@ -4,7 +4,6 @@ import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.net.ClientCommunication;
-import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;

@@ -60,6 +60,7 @@ public abstract class Skill implements INamedObject, Comparable<Skill> {
 	private final boolean negativeTrait;
 	private TemporaryEnhancements enhancements;
 	private StatBasedRollModifierFactory statBasedRollModifierFactory;
+	private DeclareCondition declareCondition = DeclareCondition.NONE;
 
 	public Skill(String name, SkillCategory category) {
 		this(name, category, 0);
@@ -358,4 +359,14 @@ public abstract class Skill implements INamedObject, Comparable<Skill> {
 	public int compareTo(Skill o) {
 		return this.name.compareTo(o.name);
 	}
+
+	public DeclareCondition getDeclareCondition() {
+		return declareCondition;
+	}
+
+	public void setDeclareCondition(DeclareCondition declareCondition) {
+		this.declareCondition = declareCondition;
+	}
+
+
 }
