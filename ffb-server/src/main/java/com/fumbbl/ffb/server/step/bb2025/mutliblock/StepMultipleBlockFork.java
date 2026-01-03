@@ -38,10 +38,12 @@ public class StepMultipleBlockFork extends AbstractStep {
 		add(StepParameterKey.OLD_DEFENDER_STATE);
 	}};
 
+	@SuppressWarnings("unused")
 	public StepMultipleBlockFork(GameState pGameState) {
 		super(pGameState);
 	}
 
+	@SuppressWarnings("unused")
 	public StepMultipleBlockFork(GameState pGameState, StepAction defaultStepResult) {
 		super(pGameState, defaultStepResult);
 	}
