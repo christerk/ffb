@@ -14,7 +14,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BLOCK = KeyEvent.VK_B;
 	int KEY_BOMB = KeyEvent.VK_O;
 	int KEY_MULTIPLE_BLOCK = KeyEvent.VK_U;
-	int KEY_STAB = KeyEvent.VK_D;
+	int KEY_STAB = KeyEvent.VK_J;
 	int KEY_CHAINSAW = KeyEvent.VK_C;
 	int KEY_MOVE = KeyEvent.VK_M;
 	int KEY_STAND_UP = KeyEvent.VK_S;
