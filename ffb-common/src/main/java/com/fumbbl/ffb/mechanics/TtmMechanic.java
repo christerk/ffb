@@ -34,4 +34,6 @@ public abstract class TtmMechanic implements Mechanic {
 	public abstract boolean canThrow(Player<?> player);
 
 	public abstract boolean isTtmAvailable(TurnData turnData);
+
+	public abstract Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker);
 }

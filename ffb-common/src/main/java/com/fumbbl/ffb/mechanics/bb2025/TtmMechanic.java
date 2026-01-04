@@ -44,7 +44,6 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	public boolean canBeKicked(Game game, Player<?> player) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return player.canBeThrown()
-			&& playerState.getBase() == PlayerState.STANDING
 			&& !playerState.isRooted()
 			&& game.getActingTeam() == player.getTeam();
 	}
@@ -90,5 +89,17 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	@Override
 	public boolean isTtmAvailable(TurnData turnData) {
 		return !turnData.isTtmUsed();
+	}
+
+	@Override
+	public Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+
+		return Arrays.stream(fieldModel.findAdjacentCoordinates(kickerCoordinate, FieldCoordinateBounds.FIELD, 1, false))
+			.map(fieldModel::getPlayer)
+			.filter(Objects::nonNull)
+			.filter(player -> canBeKicked(pGame, player))
+			.toArray(Player[]::new);
 	}
 }
