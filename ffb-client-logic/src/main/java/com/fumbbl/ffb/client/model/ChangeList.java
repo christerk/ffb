@@ -22,6 +22,7 @@ public class ChangeList {
 			.addFeature("No more stab on multi block")
 			.addFeature("MB and Claw work on both down and skull (requires game option to be added)")
 			.addFeature("MB can be used against Chainsaw players")
+			.addFeature("Kick Team-Mate")
 		);
 
 
