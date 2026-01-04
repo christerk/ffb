@@ -34,8 +34,8 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFumbledKtm;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMLanding;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFumbledKtmApoKo;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -238,7 +238,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			}
 		}
 		if (!doRoll) {
-			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, fumbledKtm ? new InjuryTypeFumbledKtm() : new InjuryTypeTTMLanding(),
+			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, fumbledKtm ? new InjuryTypeFumbledKtmApoKo() : new InjuryTypeTTMLanding(),
 				game.getActingPlayer().getPlayer(), thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
 			RightStuffCommand command = new RightStuffCommand(thrownPlayer.getId(), fThrownPlayerHasBall);
 			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResultThrownPlayer, Collections.singletonList(command))));

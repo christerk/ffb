@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Brawler not working on both frenzy or multi block rolls")
 			.addBugfix("Lethal Flight is only applied when the thrown player is standing and not distracted")
 			.addBugfix("Swoop is only applied when the thrown player is standing and not distracted")
+			.addFeature("KTM: can target prone/distracted teammates; no Mighty Blow on fumble, Stun becomes KO")
 			.addFeature("Special block actions are now top level actions, can still be used on blitz as before")
 			.addFeature("No more stab on multi block")
 			.addFeature("MB and Claw work on both down and skull (requires game option to be added)")
