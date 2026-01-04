@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.injury.injuryType.bb2020;
+package com.fumbbl.ffb.server.injury.injuryType;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
@@ -12,7 +12,6 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.IStep;
 
 import java.util.Set;

@@ -1,20 +1,19 @@
-package com.fumbbl.ffb.server.injury.injuryType.bb2025;
+package com.fumbbl.ffb.server.injury.injuryType;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.injury.bb2025.KTMFumbleInjury;
+import com.fumbbl.ffb.injury.KTMFumbleApoKoInjury;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.IStep;
 
-public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
+public class InjuryTypeFumbledKtmApoKo extends InjuryTypeServer<KTMFumbleApoKoInjury> {
 
-	public InjuryTypeFumbledKtm() {
-		super(new KTMFumbleInjury());
+	public InjuryTypeFumbledKtmApoKo() {
+		super(new KTMFumbleApoKoInjury());
 	}
 
 	@Override
