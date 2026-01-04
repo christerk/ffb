@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.skill.bb2025;
 
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
@@ -32,7 +33,9 @@ public class MightyBlow extends Skill {
 		registerModifier(new VariableArmourModifier("Mighty Blow", false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
+				PlayerState playerState = context.getGame().getFieldModel().getPlayerState(context.getAttacker());
 				return super.appliesToContext(context)
+					&& playerState != null && !playerState.isDistracted()
 					&& !context.isStab()
 					&& !context.isFoul();
 			}
@@ -40,10 +43,13 @@ public class MightyBlow extends Skill {
 		registerModifier(new VariableInjuryModifierAttacker("Mighty Blow", false) {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
+				PlayerState playerState = context.getGame().getFieldModel().getPlayerState(context.getAttacker());
+
 				return super.appliesToContext(context)
 					&& !context.isFoul()
 					&& !context.isStab()
 					&& !context.isVomitLike()
+					&& playerState != null && !playerState.isDistracted()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
 					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock));
 			}
