@@ -4,6 +4,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.DeclareCondition;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.StaticArmourModifier;
@@ -32,6 +33,7 @@ public class Chainsaw extends Skill {
 
 	public Chainsaw() {
 		super("Chainsaw", SkillCategory.TRAIT);
+		setDeclareCondition(DeclareCondition.STANDING);
 	}
 
 	@Override

@@ -1,8 +1,11 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.mixed;
 
-import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.AbstractBlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -12,18 +15,13 @@ import com.fumbbl.ffb.model.Player;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlockLogicModule extends LogicModule {
+public class BlockLogicModule extends AbstractBlockLogicModule {
 
 	protected final BlockLogicExtension extension;
 
 	public BlockLogicModule(FantasyFootballClient client) {
 		super(client);
 		extension = new BlockLogicExtension(client);
-	}
-
-	@Override
-	public ClientStateId getId() {
-		return ClientStateId.BLOCK;
 	}
 
 	@Override
@@ -103,17 +101,4 @@ public class BlockLogicModule extends LogicModule {
 				break;
 		}
 	}
-
-	@Override
-	public void endTurn() {
-		Game game = client.getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		perform(actingPlayer.getPlayer(), ClientAction.END_MOVE);
-		client.getCommunication().sendEndTurn(game.getTurnMode());
-	}
-
-	public boolean isSufferingBloodLust(ActingPlayer actingPlayer) {
-		return actingPlayer.isSufferingBloodLust();
-	}
-
 }

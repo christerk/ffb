@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -21,11 +21,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.block.StepStab;
 import com.fumbbl.ffb.server.step.action.block.StepStab.StepState;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
-import com.fumbbl.ffb.skill.mixed.Stab;
+import com.fumbbl.ffb.skill.bb2020.Stab;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class StabBehaviour extends SkillBehaviour<Stab> {
 	public StabBehaviour() {
 		super();

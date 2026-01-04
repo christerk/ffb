@@ -20,11 +20,17 @@ public class EnhancementRegistry {
 		StatsMechanic statsMechanic = (StatsMechanic) mechanicsFactory.forName(Mechanic.Type.STAT.name());
 
 		PrayerFactory prayerFactory = game.getFactory(FactoryType.Factory.PRAYER);
-		prayerFactory.allPrayerRolls().stream().map(prayerFactory::forRoll)
-			.forEach(prayer -> mapping.put(prayer.getName(), prayer.enhancements(statsMechanic)));
+		if (prayerFactory != null) {
+			prayerFactory.allPrayerRolls().stream().map(prayerFactory::forRoll)
+				.forEach(prayer -> mapping.put(prayer.getName(), prayer.enhancements(statsMechanic)));
+
+		}
 
 		KickoffResultFactory kickoffResultFactory = game.getFactory(FactoryType.Factory.KICKOFF_RESULT);
-		kickoffResultFactory.allResults().forEach(result -> mapping.put(result.getName(), result.enhancements(statsMechanic)));
+		if (kickoffResultFactory != null) {
+			kickoffResultFactory.allResults()
+				.forEach(result -> mapping.put(result.getName(), result.enhancements(statsMechanic)));
+		}
 	}
 
 	public Optional<TemporaryEnhancements> forName(String name) {

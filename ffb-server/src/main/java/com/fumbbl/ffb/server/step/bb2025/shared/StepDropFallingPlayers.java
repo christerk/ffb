@@ -116,10 +116,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		}
 		if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null))) {
 
-			InjuryTypeBlock.Mode mode = (attackerState != null && attackerState.getBase() == PlayerState.FALLING) ?
-				InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
-
-			InjuryTypeServer<?> injuryType = new InjuryTypeBlock(mode, false);
+			InjuryTypeServer<?> injuryType = new InjuryTypeBlock(InjuryTypeBlock.Mode.REGULAR, false);
 
 			if (state.oldDefenderState != null) {
 				if (state.oldDefenderState.isStunned()) {
@@ -160,7 +157,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 			} else {
 				deferredCommands.add(new DropPlayerCommand(actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true));
 				injuryResultAttacker =
-					UtilServerInjury.handleInjury(this, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
+					UtilServerInjury.handleInjury(this, new InjuryTypeBlock(),
 						game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			}
 			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,

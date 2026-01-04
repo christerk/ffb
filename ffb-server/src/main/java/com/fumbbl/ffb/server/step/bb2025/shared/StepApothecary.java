@@ -305,7 +305,8 @@ public class StepApothecary extends AbstractStep {
 			if (doNextStep) {
 				UtilServerInjury.handleInjurySideEffects(this, fInjuryResult);
 
-				if (fInjuryResult.injuryContext().getPlayerState().isSi()) {
+				PlayerState playerState = fInjuryResult.injuryContext().getPlayerState();
+				if (playerState != null && playerState.isSi()) {
 					Player<?> defender = game.getPlayerById(defenderId);
 					Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
 					Set<Keyword> availableKeywords =
