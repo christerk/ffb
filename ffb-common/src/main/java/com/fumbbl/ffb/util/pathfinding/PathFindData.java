@@ -28,7 +28,7 @@ class PathFindData {
 	}
 
 	public void setNode(FieldCoordinate coord, PathFindNode node) {
-		nodes.get(node.state)[coord.getX()][coord.getY()] = node;
+		nodes.get(node.getState())[coord.getX()][coord.getY()] = node;
 	}
 
 	public PathFindNode getNeighbour(PathFindState state, FieldCoordinate neighbour) {

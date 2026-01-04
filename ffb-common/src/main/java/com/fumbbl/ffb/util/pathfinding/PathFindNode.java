@@ -6,29 +6,28 @@ import java.util.Set;
 
 class PathFindNode implements Comparable<PathFindNode> {
 	// State of the current PathFindNode
-	public PathFindState state;
+	private PathFindState state;
 
 	// Shortest distance found so far to the square
-	public int distance;
+	private int distance;
 
 	// Estimated distance to go
 	private int estimate;
 
 	// Does this square have a tz?
-	public boolean tz;
+	private final boolean tz;
 
 	// Coordinate of the square
-	public FieldCoordinate coord;
+	private final FieldCoordinate coord;
 
 	// Target of the square
-	public Set<FieldCoordinate> target;
+	private final Set<FieldCoordinate> target;
 
 	// The previous node in the shortest path
-	public PathFindNode parent;
+	private PathFindNode parent;
 
 	public PathFindNode(PathFindState state, FieldCoordinate coord, int distance,
-		boolean tz,
-		Set<FieldCoordinate> target, PathFindNode parent) {
+		boolean tz, Set<FieldCoordinate> target, PathFindNode parent) {
 		this.state = state;
 		this.coord = coord;
 		this.parent = parent;
@@ -109,5 +108,25 @@ class PathFindNode implements Comparable<PathFindNode> {
 		distance = source.distance + length;
 		parent = source;
 		state = newState;
+	}
+
+	public FieldCoordinate getCoord() {
+		return coord;
+	}
+
+	public PathFindState getState() {
+		return state;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public boolean isTz() {
+		return tz;
+	}
+
+	public PathFindNode getParent() {
+		return parent;
 	}
 }
