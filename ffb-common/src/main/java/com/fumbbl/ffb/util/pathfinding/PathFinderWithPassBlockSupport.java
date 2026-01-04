@@ -1,5 +1,8 @@
-package com.fumbbl.ffb;
+package com.fumbbl.ffb.util.pathfinding;
 
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -10,7 +13,6 @@ import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -21,16 +23,6 @@ import java.util.stream.Collectors;
  * @author Christer
  */
 public class PathFinderWithPassBlockSupport {
-
-	private static class PathFindContext {
-		public boolean blockTacklezones = true;
-		public boolean allowJump = false;
-		public boolean allowExitEndzoneWithBall = false;
-	}
-
-	private static final PathFindState globalState;
-	private static final PathFindState normalState;
-	private static final PathFindState jumpState;
 
 	private static final PathFindContext normalMoveContext;
 	private static final PathFindContext passBlockContext;
@@ -45,113 +37,6 @@ public class PathFinderWithPassBlockSupport {
 		normalMoveContext.blockTacklezones = true;
 		normalMoveContext.allowJump = false;
 		normalMoveContext.allowExitEndzoneWithBall = false;
-
-		globalState = new PathFindState();
-		normalState = new PathFindState();
-		jumpState = new PathFindState();
-	}
-
-	private static class PathFindNode implements Comparable<PathFindNode> {
-		// State of the current PathFindNode
-		public PathFindState state;
-
-		// Shortest distance found so far to the square
-		public int distance;
-
-		// Estimated distance to go
-		private int estimate;
-
-		// Does this square have a tz?
-		public boolean tz;
-
-		// Coordinate of the square
-		public FieldCoordinate coord;
-
-		// Target of the square
-		public Set<FieldCoordinate> target;
-
-		// The previous node in the shortest path
-		public PathFindNode parent;
-
-		public PathFindNode(PathFindState state, FieldCoordinate coord, int distance, boolean tz,
-				Set<FieldCoordinate> target, PathFindNode parent) {
-			this.state = state;
-			this.coord = coord;
-			this.parent = parent;
-			this.target = target;
-			this.tz = tz;
-			this.distance = distance;
-			this.estimate = 1000;
-
-			if (target != null) {
-				for (FieldCoordinate t : target)
-					estimate = Math.min(estimate, coord.distanceInSteps(t));
-			}
-		}
-
-		public int getWeight() {
-			return distance + estimate;
-		}
-
-		private int getNonDiagonalWeight() {
-			int bestWeight = 10000;
-			if (target != null) {
-				for (FieldCoordinate t : target) {
-					int weight = Math.abs(coord.getX() - t.getX()) + Math.abs(coord.getY() - t.getY());
-					if (weight < bestWeight)
-						bestWeight = weight;
-				}
-			}
-
-			return distance + bestWeight;
-		}
-
-		// Order nodes by shortest distance + estimate first.
-		public int compareTo(PathFindNode other) {
-			int thisWeight = getWeight();
-			int otherWeight = other.getWeight();
-
-			// If the distance is the same, pick the one that seems more logical
-			// by taking diagonals first.
-			if (thisWeight == otherWeight) {
-				thisWeight = getNonDiagonalWeight();
-				otherWeight = other.getNonDiagonalWeight();
-			}
-
-			return thisWeight - otherWeight;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-
-			PathFindNode that = (PathFindNode) o;
-
-			if (getWeight() != that.getWeight()) return false;
-			return getNonDiagonalWeight() == that.getNonDiagonalWeight();
-		}
-
-		@Override
-		public int hashCode() {
-			int result = getWeight();
-			result = 31 * result + getNonDiagonalWeight();
-			return result;
-		}
-
-		public void setSource(PathFindNode source, int length) {
-			setSource(source, length, state);
-		}
-
-		public void setSource(PathFindNode source, int length, PathFindState newState) {
-			distance = source.distance + length;
-			parent = source;
-			state = newState;
-		}
-	}
-
-	private static class PathFindState {
-		// This is simply a marker class. No data available.
 	}
 
 	/**
@@ -196,7 +81,7 @@ public class PathFinderWithPassBlockSupport {
 		PathFindNode neighbour;
 
 		// Initialise the open set with the start squares
-		PathFindNode current = new PathFindNode(normalState, start, 0, false, pEndCoords, null);
+		PathFindNode current = new PathFindNode(PathFindState.NORMAL, start, 0, false, pEndCoords, null);
 		data.setNode(start, current);
 		openSet.add(current);
 
@@ -204,12 +89,12 @@ public class PathFinderWithPassBlockSupport {
 		// This allows the player to move into the ball, but not through it.
 		FieldCoordinate ballCoord = fieldModel.getBallCoordinate();
 		if (isOnField(pGame, ballCoord) && context.blockTacklezones && fieldModel.isBallInPlay()) {
-			data.setNode(ballCoord, new PathFindNode(normalState, ballCoord, 1000, true, pEndCoords, null));
+			data.setNode(ballCoord, new PathFindNode(PathFindState.NORMAL, ballCoord, 1000, true, pEndCoords, null));
 		}
 
 		// Treat trapdoor fields as tackle zones to avoid paths crossing them
 		fieldModel.getOnPitchEnhancements().stream().map(OnPitchEnhancement::getCoordinate)
-				.forEach(coord -> data.setNode(coord, new PathFindNode(normalState, coord, 1000, true, pEndCoords, null)));
+				.forEach(coord -> data.setNode(coord, new PathFindNode(PathFindState.NORMAL, coord, 1000, true, pEndCoords, null)));
 
 		boolean hasBall = start.equals(ballCoord);
 
@@ -237,18 +122,18 @@ public class PathFinderWithPassBlockSupport {
 
 					FieldCoordinate[] tz = fieldModel.findAdjacentCoordinates(pCoord, FieldCoordinateBounds.FIELD, 1, false);
 					for (FieldCoordinate tzCoord : tz) {
-						if (data.isProcessed(normalState, tzCoord.getX(), tzCoord.getY())) {
+						if (data.isProcessed(PathFindState.NORMAL, tzCoord.getX(), tzCoord.getY())) {
 							continue;
 						}
 
 						// mark the node as a tacklezone
-						data.setNode(tzCoord, new PathFindNode(normalState, tzCoord, 1000, true, pEndCoords, null));
+						data.setNode(tzCoord, new PathFindNode(PathFindState.NORMAL, tzCoord, 1000, true, pEndCoords, null));
 					}
 				}
 			}
 		}
 
-		while (openSet.size() > 0) {
+		while (!openSet.isEmpty()) {
 			// Get the node with the shortest distance that hasn't been
 			// processed
 			current = openSet.poll();
@@ -269,7 +154,7 @@ public class PathFinderWithPassBlockSupport {
 			boolean isInEndzone = endzoneBounds.isInBounds(current.coord);
 
 			// For each neighbour of the square we're processing...
-			int searchDistance = canJump && current.state != jumpState && context.allowJump
+			int searchDistance = canJump && current.state != PathFindState.JUMP && context.allowJump
 					&& maxDistance - current.distance > 1 ? 2 : 1;
 			FieldCoordinate[] neighbours = fieldModel.findAdjacentCoordinates(current.coord, FieldCoordinateBounds.FIELD,
 					searchDistance, false);
@@ -279,12 +164,12 @@ public class PathFinderWithPassBlockSupport {
 
 				// Don't allow a jump if the context explicitly disallows it, if the path
 				// already has jumped before or if the player can't jump
-				if (distance > 1 && (maxDistance - current.distance - distance < 0 || current.state == jumpState
+				if (distance > 1 && (maxDistance - current.distance - distance < 0 || current.state == PathFindState.JUMP
 						|| !context.allowJump || !canJump))
 					continue;
 
 				// Get the state of the next coordinate.
-				PathFindState neighbourState = distance == 1 ? current.state : jumpState;
+				PathFindState neighbourState = distance == 1 ? current.state : PathFindState.JUMP;
 
 				// Get the neighbour node from the cache if it exists
 				neighbour = data.getNeighbour(neighbourState, neighbourCoord);
@@ -405,37 +290,6 @@ public class PathFinderWithPassBlockSupport {
 		FieldCoordinate start = pGame.getFieldModel().getPlayerCoordinate(player);
 
 		return getShortestPath(pGame, start, pEndCoords, maxDistance, movingTeam, normalMoveContext, false);
-	}
-
-	private static class PathFindData {
-		private final Hashtable<PathFindState, PathFindNode[][]> nodes;
-
-		public PathFindData() {
-			nodes = new Hashtable<>();
-			nodes.put(normalState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
-			nodes.put(jumpState, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
-		}
-
-		public PathFindNode blockNode(FieldCoordinate coordinate) {
-			PathFindNode blockedNode = new PathFindNode(globalState, coordinate, 1000, false, null, null);
-
-			for (PathFindState state : nodes.keySet())
-				nodes.get(state)[coordinate.getX()][coordinate.getY()] = blockedNode;
-
-			return blockedNode;
-		}
-
-		public boolean isProcessed(PathFindState state, int x, int y) {
-			return nodes.get(state)[x][y] != null;
-		}
-
-		public void setNode(FieldCoordinate coord, PathFindNode node) {
-			nodes.get(node.state)[coord.getX()][coord.getY()] = node;
-		}
-
-		public PathFindNode getNeighbour(PathFindState state, FieldCoordinate neighbour) {
-			return nodes.get(state)[neighbour.getX()][neighbour.getY()];
-		}
 	}
 
 	private static boolean isOnField(Game pGame, FieldCoordinate pCoordinate) {

@@ -15,6 +15,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 
 import java.util.HashSet;
 import java.util.Optional;

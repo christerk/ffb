@@ -2,7 +2,7 @@ package com.fumbbl.ffb.mechanics.bb2016;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
+import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
