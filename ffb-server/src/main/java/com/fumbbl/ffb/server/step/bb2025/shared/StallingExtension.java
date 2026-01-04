@@ -55,7 +55,7 @@ public class StallingExtension {
 		Set<FieldCoordinate> endZoneCoordinates =
 				Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
 
-		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.getShortestPath(game, endZoneCoordinates, player, 0));
+		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, endZoneCoordinates, player, 0));
 	}
 
 	public void handleStaller(IStep step, Player<?> player) {

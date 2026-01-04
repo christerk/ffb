@@ -24,13 +24,10 @@ import java.util.stream.Collectors;
  */
 public class PathFinderWithPassBlockSupport {
 
-	private static final PathFindContext normalMoveContext;
-	private static final PathFindContext passBlockContext;
+	private final PathFindContext normalMoveContext = new PathFindContext(false, false, true);
+	private final PathFindContext passBlockContext = new PathFindContext(true, true, false);
 
-	static {
-		passBlockContext = new PathFindContext(true, true, false);
-		normalMoveContext = new PathFindContext(false, false, true);
-	}
+	public final static PathFinderWithPassBlockSupport INSTANCE = new PathFinderWithPassBlockSupport();
 
 	/**
 	 * Gets the shortest path from the player in the start square to the end square.
@@ -42,7 +39,7 @@ public class PathFinderWithPassBlockSupport {
 	 * @param pEndCoords List of target squares.
 	 * @return Shortest path to target squares.
 	 */
-	private static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate start, Set<FieldCoordinate> pEndCoords,
+	private FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate start, Set<FieldCoordinate> pEndCoords,
 			int maxDistance, Team movingTeam, PathFindContext context, boolean canJump) {
 
 		// Sanity check
@@ -197,7 +194,7 @@ public class PathFinderWithPassBlockSupport {
 	}
 
 	// Constructs a path from the PathFindNode structure
-	private static FieldCoordinate[] reconstructPath(PathFindNode end) {
+	private FieldCoordinate[] reconstructPath(PathFindNode end) {
 		LinkedList<FieldCoordinate> list = new LinkedList<>();
 		FieldCoordinate[] result = new FieldCoordinate[end.getDistance()];
 
@@ -219,7 +216,7 @@ public class PathFinderWithPassBlockSupport {
 	 * @param pEndCoord Target square.
 	 * @return Shortest path to target square
 	 */
-	public static FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate pEndCoord) {
+	public FieldCoordinate[] getShortestPath(Game pGame, FieldCoordinate pEndCoord) {
 		Set<FieldCoordinate> pEndCoords = new HashSet<>(1);
 		pEndCoords.add(pEndCoord);
 
@@ -241,7 +238,7 @@ public class PathFinderWithPassBlockSupport {
 	 * @param targetPlayer Target player.
 	 * @return Shortest path to target square
 	 */
-	public static FieldCoordinate[] getShortestPathToPlayer(Game pGame, Player<?> targetPlayer) {
+	public FieldCoordinate[] getShortestPathToPlayer(Game pGame, Player<?> targetPlayer) {
 		FieldModel fieldModel = pGame.getFieldModel();
 		FieldCoordinate[] adjacentSquares = fieldModel.findAdjacentCoordinates(
 			fieldModel.getPlayerCoordinate(targetPlayer), FieldCoordinateBounds.FIELD, 1, false);
@@ -271,7 +268,7 @@ public class PathFinderWithPassBlockSupport {
 	 * @param pEndCoords Target squares.
 	 * @return Shortest path to a target square
 	 */
-	public static FieldCoordinate[] getShortestPath(Game pGame, Set<FieldCoordinate> pEndCoords, Player<?> player,
+	public FieldCoordinate[] getShortestPath(Game pGame, Set<FieldCoordinate> pEndCoords, Player<?> player,
 			int currentMove) {
 		if (pGame == null || player == null) {
 			return null;
@@ -285,12 +282,12 @@ public class PathFinderWithPassBlockSupport {
 		return getShortestPath(pGame, start, pEndCoords, maxDistance, movingTeam, normalMoveContext, false);
 	}
 
-	private static boolean isOnField(Game pGame, FieldCoordinate pCoordinate) {
+	private boolean isOnField(Game pGame, FieldCoordinate pCoordinate) {
 		return (pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) ? FieldCoordinateBounds.HALF_HOME.isInBounds(pCoordinate)
 				: FieldCoordinateBounds.FIELD.isInBounds(pCoordinate);
 	}
 
-	private static boolean isOnField(Game pGame, Set<FieldCoordinate> pCoordinates) {
+	private boolean isOnField(Game pGame, Set<FieldCoordinate> pCoordinates) {
 		boolean result = true;
 		for (FieldCoordinate coord : pCoordinates) {
 			result = result && isOnField(pGame, coord);
@@ -298,7 +295,7 @@ public class PathFinderWithPassBlockSupport {
 		return result;
 	}
 
-	public static FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition,
+	public FieldCoordinate[] allowPassBlockMove(Game pGame, Player<?> passBlocker, FieldCoordinate startPosition,
 			int distance, boolean canJump, Set<FieldCoordinate> validEndCoordinates) {
 		// Skip if the player doesn't have pass block
 

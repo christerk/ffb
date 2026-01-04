@@ -95,7 +95,7 @@ public class StepCheckStalling extends AbstractStep {
 
 		Set<FieldCoordinate> endZoneCoordinates = Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
 
-		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.getShortestPath(game, endZoneCoordinates, player, 0));
+		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, endZoneCoordinates, player, 0));
 	}
 
 	private Player<?> findStallingSuspect() {

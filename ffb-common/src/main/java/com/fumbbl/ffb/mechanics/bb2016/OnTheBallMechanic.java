@@ -32,7 +32,7 @@ public class OnTheBallMechanic extends com.fumbbl.ffb.mechanics.OnTheBallMechani
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				FieldCoordinate startPosition = game.getFieldModel().getPlayerCoordinate(player);
 				if (!pCheckCanReach || (playerState.hasTacklezones()
-					&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(game, player, startPosition), validPassBlockEndCoordinates)))) {
+					&& ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.allowPassBlockMove(game, player, startPosition, 3, mechanic.canJump(game, player, startPosition), validPassBlockEndCoordinates)))) {
 					passBlockers.add(player);
 				}
 			}
@@ -44,7 +44,7 @@ public class OnTheBallMechanic extends com.fumbbl.ffb.mechanics.OnTheBallMechani
 	public boolean validPassBlockMove(Game game, ActingPlayer actingPlayer, FieldCoordinate fromCoordinate, FieldCoordinate toCoordinate,
 	                                  Set<FieldCoordinate> validPassBlockCoordinates, boolean canStillJump, int distance) {
 		return (validPassBlockCoordinates.contains(toCoordinate)
-			|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.allowPassBlockMove(game,
+			|| ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.allowPassBlockMove(game,
 			actingPlayer.getPlayer(), toCoordinate, 3 - distance - actingPlayer.getCurrentMove(),
 			canStillJump, validPassBlockCoordinates)));
 	}

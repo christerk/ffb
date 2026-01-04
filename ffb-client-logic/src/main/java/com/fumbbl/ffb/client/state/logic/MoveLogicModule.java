@@ -275,7 +275,7 @@ public class MoveLogicModule extends LogicModule {
 			&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
 			&& (game.getTurnMode() != TurnMode.SWARMING)
 			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
-			return PathFinderWithPassBlockSupport.getShortestPath(game, coordinate);
+			return PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, coordinate);
 		}
 		return new FieldCoordinate[0];
 	}
@@ -302,9 +302,9 @@ public class MoveLogicModule extends LogicModule {
 			}
 
 			if (playerInTarget != null && playerInTarget.getTeam() != actingPlayer.getPlayer().getTeam()) {
-				return PathFinderWithPassBlockSupport.getShortestPathToPlayer(game, playerInTarget);
+				return PathFinderWithPassBlockSupport.INSTANCE.getShortestPathToPlayer(game, playerInTarget);
 			} else {
-				return PathFinderWithPassBlockSupport.getShortestPath(game, coordinate);
+				return PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, coordinate);
 			}
 		}
 		return new FieldCoordinate[0];
