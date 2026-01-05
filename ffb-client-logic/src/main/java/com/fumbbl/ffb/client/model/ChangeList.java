@@ -13,6 +13,9 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Blitz targets need to be in theoretical range")
 			.addBugfix("Remove blitz and gaze from actions to change to move in case of bloodlust failure")
+			.addBugfix("Getting Even on Multi Block did not give selection for both player types")
+			.addBugfix(
+				"Various multi block fixes for double attacker down where only the first result was apoed/regenerated and resulted in player going to reserve despite a remaining injury")
 		);
 
 		versions.add(new VersionChangeList("3.0.0").setDescription("First version of 2025 rules, a.k.a. 3rd Season")

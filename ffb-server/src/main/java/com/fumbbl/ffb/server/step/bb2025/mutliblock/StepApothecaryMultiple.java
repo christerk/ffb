@@ -235,7 +235,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		} else {
 			InjuryResult injuryResult = gettingEvenResults.get(0);
 			String defenderId = injuryResult.injuryContext().fDefenderId;
-			List<Keyword> keywords = availableKeyWordsMap.get(defenderId).stream().sorted().collect(
+			List<Keyword> keywords = availableKeyWordsMap.get(String.valueOf(injuryResult.hashCode())).stream().sorted().collect(
 				Collectors.toList());
 			showGettingEvenDialog(game.getPlayerById(defenderId), keywords, game);
 			getResult().setNextAction(StepAction.CONTINUE);
@@ -459,7 +459,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 						pushGettingEven(defender.getId(), keywords.get(0));
 					} else {
 						gettingEvenResults.add(injuryResult);
-						availableKeyWordsMap.put(defender.getId(), availableKeywords);
+						availableKeyWordsMap.put(String.valueOf(injuryResult.hashCode()), availableKeywords);
 					}
 				}
 			}

@@ -122,8 +122,6 @@
         <keywords>
             <keyword>Dwarf</keyword>
             <keyword>goblin</keyword>
-            <keyword>Undead</keyword>
-            <keyword>human</keyword>
         </keywords>
     </position>
 
@@ -154,6 +152,10 @@
             <double>Agility</double>
             <double>Passing</double>
         </skillCategoryList>
+        <keywords>
+            <keyword>Undead</keyword>
+            <keyword>human</keyword>
+        </keywords>
     </position>
 
     <position id="goblin.bombardier">
