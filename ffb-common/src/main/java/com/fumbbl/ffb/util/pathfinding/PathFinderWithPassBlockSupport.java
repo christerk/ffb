@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  */
 public class PathFinderWithPassBlockSupport {
 
-	private final PathFindContext normalMoveContext = new PathFindContext(false, false, true);
-	private final PathFindContext passBlockContext = new PathFindContext(true, true, false);
+	private final PathFindContext normalMoveContext = new PathFindContext.Builder().blockTacklezones().build();
+	private final PathFindContext passBlockContext = new PathFindContext.Builder().allowExitEndzoneWithBall().allowJump().build();
 
 	public final static PathFinderWithPassBlockSupport INSTANCE = new PathFinderWithPassBlockSupport();
 
