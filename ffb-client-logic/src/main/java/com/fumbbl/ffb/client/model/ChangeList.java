@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("3.0.0").setDescription("First version of 2025 rules, a.k.a. 3rd Season")
+			.addFeature("Blitz targets need to be in theoretical range")
 			.addBugfix("Fixed crash when using Pile Driver foul")
 			.addFeature("Animosity")
 			.addFeature("Hatred")
