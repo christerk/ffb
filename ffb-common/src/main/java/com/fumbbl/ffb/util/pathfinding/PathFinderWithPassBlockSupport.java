@@ -144,7 +144,7 @@ public class PathFinderWithPassBlockSupport {
 			boolean isInEndzone = endzoneBounds.isInBounds(current.getCoord());
 
 			// For each neighbour of the square we're processing...
-			int searchDistance = canJump && current.getState() != PathFindState.JUMP && context.isAllowJump()
+			int searchDistance = canJump && current.getState() != PathFindState.HAS_JUMPED && context.isAllowJump()
 					&& maxDistance - current.getDistance() > 1 ? 2 : 1;
 			FieldCoordinate[] neighbours = fieldModel.findAdjacentCoordinates(current.getCoord(), FieldCoordinateBounds.FIELD,
 					searchDistance, false);
@@ -154,12 +154,12 @@ public class PathFinderWithPassBlockSupport {
 
 				// Don't allow a jump if the context explicitly disallows it, if the path
 				// already has jumped before or if the player can't jump
-				if (distance > 1 && (maxDistance - current.getDistance() - distance < 0 || current.getState() == PathFindState.JUMP
+				if (distance > 1 && (maxDistance - current.getDistance() - distance < 0 || current.getState() == PathFindState.HAS_JUMPED
 						|| !context.isAllowJump() || !canJump))
 					continue;
 
 				// Get the state of the next coordinate.
-				PathFindState neighbourState = distance == 1 ? current.getState() : PathFindState.JUMP;
+				PathFindState neighbourState = distance == 1 ? current.getState() : PathFindState.HAS_JUMPED;
 
 				// Get the neighbour node from the cache if it exists
 				neighbour = data.getNeighbour(neighbourState, neighbourCoord);

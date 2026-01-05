@@ -10,7 +10,7 @@ class PathFindData {
 	public PathFindData() {
 		nodes = new Hashtable<>();
 		nodes.put(PathFindState.NORMAL, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
-		nodes.put(PathFindState.JUMP, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
+		nodes.put(PathFindState.HAS_JUMPED, new PathFindNode[FieldCoordinate.FIELD_WIDTH][FieldCoordinate.FIELD_HEIGHT]);
 	}
 
 	public PathFindNode blockNode(FieldCoordinate coordinate) {
