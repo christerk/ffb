@@ -3,6 +3,7 @@ package com.fumbbl.ffb.net.commands;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryType;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
@@ -17,15 +18,18 @@ public class ClientCommandUseApothecary extends ClientCommand {
 	private String fPlayerId;
 	private boolean fApothecaryUsed;
 	private ApothecaryType apothecaryType;
+	private SeriousInjury seriousInjury;
 
 	public ClientCommandUseApothecary() {
 		super();
 	}
 
-	public ClientCommandUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType) {
+	public ClientCommandUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType,
+		SeriousInjury seriousInjury) {
 		fPlayerId = pPlayerId;
 		fApothecaryUsed = pApothecaryUsed;
 		this.apothecaryType = apothecaryType;
+		this.seriousInjury = seriousInjury;
 	}
 
 	public NetCommandId getId() {
@@ -43,7 +47,12 @@ public class ClientCommandUseApothecary extends ClientCommand {
 	public ApothecaryType getApothecaryType() {
 		return apothecaryType;
 	}
-// JSON serialization
+
+	public SeriousInjury getSeriousInjury() {
+		return seriousInjury;
+	}
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -51,6 +60,9 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		IJsonOption.APOTHECARY_USED.addTo(jsonObject, fApothecaryUsed);
 		if (apothecaryType != null) {
 			IJsonOption.APOTHECARY_TYPE.addTo(jsonObject, apothecaryType.name());
+		}
+		if (seriousInjury !=null ) {
+			IJsonOption.SERIOUS_INJURY.addTo(jsonObject, seriousInjury);
 		}
 		return jsonObject;
 	}
@@ -62,6 +74,9 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		fApothecaryUsed = IJsonOption.APOTHECARY_USED.getFrom(source, jsonObject);
 		if (IJsonOption.APOTHECARY_TYPE.isDefinedIn(jsonObject)) {
 			apothecaryType = ApothecaryType.valueOf(IJsonOption.APOTHECARY_TYPE.getFrom(source, jsonObject));
+		}
+		if (IJsonOption.SERIOUS_INJURY.isDefinedIn(jsonObject)) {
+			seriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
 		}
 		return this;
 	}

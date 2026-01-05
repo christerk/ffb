@@ -148,7 +148,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 							ApothecaryStatus.WAIT_FOR_APOTHECARY_USE)
 						.forEach(injuryResult -> {
 							ApothecaryStatus newStatus;
-							if (injuryResult.injuryContext().getDefenderId().equalsIgnoreCase(useApothecaryCommand.getPlayerId())) {
+							if (injuryResult.injuryContext().getDefenderId().equalsIgnoreCase(useApothecaryCommand.getPlayerId())
+								&& (useApothecaryCommand.getSeriousInjury() == null
+								|| useApothecaryCommand.getSeriousInjury() == injuryResult.injuryContext().getSeriousInjury())
+							) {
 
 								if (useApothecaryCommand.isApothecaryUsed()) {
 									int remainingApos = remainingApos();
@@ -204,7 +207,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 					UtilServerDialog.hideDialog(getGameState());
 					ClientCommandKeywordSelection commandKeywordSelection =
 						(ClientCommandKeywordSelection) pReceivedCommand.getCommand();
-					if (!gettingEvenResults.isEmpty() && gettingEvenResults.get(0).injuryContext().getDefenderId().equals(commandKeywordSelection.getPlayerId())) {
+					if (!gettingEvenResults.isEmpty() &&
+						gettingEvenResults.get(0).injuryContext().getDefenderId().equals(commandKeywordSelection.getPlayerId())) {
 						List<Keyword> selectedKeywords = commandKeywordSelection.getKeywords();
 						Collections.reverse(selectedKeywords);
 						selectedKeywords.forEach(keyword -> pushGettingEven(commandKeywordSelection.getPlayerId(), keyword));
@@ -358,7 +362,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 		}
 
+		boolean doubleAttackerDown = injuryResults.size() == 2
+			&& injuryResults.get(0).injuryContext().getDefenderId().equals(
+			injuryResults.get(1).injuryContext().getDefenderId());
+
 		injuryResults.stream()
+			.filter(injuryResult -> !(doubleAttackerDown && injuryResult.injuryContext().isReserve()))
 			.filter(injuryResult -> !ignoreForIgorCheck.contains(injuryResult.injuryContext().getApothecaryStatus()))
 			.forEach(injuryResult -> {
 					injuryResult.applyTo(this);
@@ -402,26 +411,31 @@ public class StepApothecaryMultiple extends AbstractStep {
 		}
 
 		// this only happens in case of a double attacker down
-		if (injuryResults.size() == 2
-			&& injuryResults.get(0).injuryContext().getDefenderId().equals(
-			injuryResults.get(1).injuryContext().getDefenderId())
-			&& !regenerationFailedResults.isEmpty()
-		) {
-			// reset the player states again to make sure we have defined base state to reapply the injuries
-			Player<?> player = game.getPlayerById(injuryResults.get(0).injuryContext().getDefenderId());
-			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
-			GameResult gameResult = game.getGameResult();
-			PlayerResult playerResult = gameResult.getPlayerResult(player);
-			playerResult.setSeriousInjury(null);
-			playerResult.setSeriousInjuryDecay(null);
+		if (doubleAttackerDown) {
+			if (!regenerationFailedResults.isEmpty()) {
+				// reset the player states again to make sure we have defined base state to reapply the injuries
+				Player<?> player = game.getPlayerById(injuryResults.get(0).injuryContext().getDefenderId());
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE));
+				GameResult gameResult = game.getGameResult();
+				PlayerResult playerResult = gameResult.getPlayerResult(player);
+				playerResult.setSeriousInjury(null);
+				playerResult.setSeriousInjuryDecay(null);
 
-			injuryResults.stream().filter(regenerationFailedResults::contains)
-				.forEach(injuryResult -> {
-					injuryResult.applyTo(this, false);
-					UtilServerGame.syncGameModel(this);
-				});
+				injuryResults.stream().filter(regenerationFailedResults::contains)
+					.forEach(injuryResult -> {
+						injuryResult.applyTo(this, false);
+						UtilServerGame.syncGameModel(this);
+					});
+			}
+
+			if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
+				injuryResults.get(0).applyTo(this, false);
+				UtilServerGame.syncGameModel(this);
+			}
 		}
+
+
 
 		for (InjuryResult injuryResult : injuryResults) {
 			if (UtilServerInjury.handleInjurySideEffects(this, injuryResult)) {

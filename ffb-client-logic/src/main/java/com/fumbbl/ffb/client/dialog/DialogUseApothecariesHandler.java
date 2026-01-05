@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -56,6 +57,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 		String playerId = null;
 		ApothecaryType apothecaryType = null;
+		SeriousInjury seriousInjury = null;
 
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
@@ -72,9 +74,10 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 			DialogUseApothecaries useApothecaries = (DialogUseApothecaries) pDialog;
 			playerId = useApothecaries.getSelectedPlayer();
 			apothecaryType = useApothecaries.getApothecaryType();
+			seriousInjury = useApothecaries.getSeriousInjury();
 		}
 		if (StringTool.isProvided(playerId)) {
-			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType);
+			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType, seriousInjury);
 		} else {
 			getClient().getCommunication().sendUseApothecaries(Collections.emptyList());
 		}

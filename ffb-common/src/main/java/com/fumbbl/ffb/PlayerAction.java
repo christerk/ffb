@@ -13,7 +13,7 @@ public enum PlayerAction implements INamedObject {
 	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, "starts a Throw Team-mate action"),
 	REMOVE_CONFUSION("removeConfusion", 14, null),
 	GAZE("gaze", 15, null), GAZE_SELECT("gazeSelect", 15, null), GAZE_MOVE("gazeMove", 15, "starts a Gaze action"),
-	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
+	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Multi-Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
 	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null),

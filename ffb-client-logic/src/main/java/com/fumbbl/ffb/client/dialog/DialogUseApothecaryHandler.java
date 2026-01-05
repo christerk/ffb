@@ -60,7 +60,7 @@ public class DialogUseApothecaryHandler extends DialogHandler {
 				used = true;
 			}
 
-			getClient().getCommunication().sendUseApothecary(apothecaryDialog.getPlayerId(), used, apothecaryType);
+			getClient().getCommunication().sendUseApothecary(apothecaryDialog.getPlayerId(), used, apothecaryType, null);
 		}
 	}
 

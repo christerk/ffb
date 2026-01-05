@@ -375,8 +375,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 			pTeamSetup.getCoordinates()));
 	}
 
-	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType) {
-		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType));
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType, SeriousInjury seriousInjury) {
+		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury));
 	}
 
 	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
