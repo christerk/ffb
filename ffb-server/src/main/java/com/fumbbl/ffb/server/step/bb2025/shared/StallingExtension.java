@@ -3,7 +3,7 @@ package com.fumbbl.ffb.server.step.bb2025.shared;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PathFinderWithPassBlockSupport;
+import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
@@ -55,7 +55,7 @@ public class StallingExtension {
 		Set<FieldCoordinate> endZoneCoordinates =
 				Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
 
-		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.getShortestPath(game, endZoneCoordinates, player, 0));
+		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, endZoneCoordinates, player, 0));
 	}
 
 	public void handleStaller(IStep step, Player<?> player) {

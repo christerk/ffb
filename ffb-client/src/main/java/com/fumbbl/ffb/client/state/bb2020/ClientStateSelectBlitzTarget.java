@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.mixed;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<SelectBlitzTargetLogicModule> {
 
 	public ClientStateSelectBlitzTarget(FantasyFootballClientAwt pClient) {
