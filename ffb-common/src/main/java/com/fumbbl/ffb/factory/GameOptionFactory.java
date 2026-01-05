@@ -366,6 +366,8 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Mighty Blow can be used against Chainsaw players")
 					.setMessageFalse("Mighty Blow can not be used against Chainsaw players");
+			case INDUCEMENT_DUMMY:
+				return new GameOptionInt(pOptionId).setDefault(0);
 			default:
 				return null;
 		}
