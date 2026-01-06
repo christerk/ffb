@@ -253,27 +253,27 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private void failDodge() {
 
-	Game game = getGameState().getGame();
-	if (!ArrayTool.isProvided(armBarPlayers)) {
-		armBarPlayers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
-			NamedProperties.affectsEitherArmourOrInjuryOnDodge, true);
-		armBarPlayers = UtilPlayer.filterThrower(game, armBarPlayers);
-	}
-
-	Player<?> armBarPlayer = null;
-	if (StringTool.isProvided(armBarPlayerId)) {
-		armBarPlayer = game.getPlayerById(armBarPlayerId);
-	} else if (!armBarChoice && ArrayTool.isProvided(armBarPlayers)) {
-		if (armBarPlayers.length == 1) {
-			armBarPlayer = armBarPlayers[0];
-		} else {
-			String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-			UtilServerDialog.showDialog(getGameState(),
-				new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
-			getResult().setNextAction(StepAction.CONTINUE);
-			return;
+		Game game = getGameState().getGame();
+		if (!ArrayTool.isProvided(armBarPlayers)) {
+			armBarPlayers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
+				NamedProperties.affectsEitherArmourOrInjuryOnDodge, true);
+			armBarPlayers = UtilPlayer.filterThrower(game, armBarPlayers);
 		}
-	}
+
+		Player<?> armBarPlayer = null;
+		if (StringTool.isProvided(armBarPlayerId)) {
+			armBarPlayer = game.getPlayerById(armBarPlayerId);
+		} else if (!armBarChoice && ArrayTool.isProvided(armBarPlayers)) {
+			if (armBarPlayers.length == 1) {
+				armBarPlayer = armBarPlayers[0];
+			} else {
+				String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
+				getResult().setNextAction(StepAction.CONTINUE);
+				return;
+			}
+		}
 		
 		InjuryTypeServer<?> injuryType = (armBarPlayer != null)
 			? new InjuryTypeDropDodgeForSpp(armBarPlayer)
