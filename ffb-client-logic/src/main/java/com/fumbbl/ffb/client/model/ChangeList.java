@@ -32,6 +32,7 @@ public class ChangeList {
 			.addFeature("MB and Claw work on both down and skull (requires game option to be added)")
 			.addFeature("MB can be used against Chainsaw players")
 			.addFeature("Kick Team-Mate")
+			.addFeature("Arm Bar. Selection Dialog for multiple AB players and spp.")
 		);
 
 
