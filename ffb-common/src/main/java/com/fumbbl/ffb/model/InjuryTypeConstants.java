@@ -11,6 +11,7 @@ import com.fumbbl.ffb.injury.Chainsaw;
 import com.fumbbl.ffb.injury.CrowdPush;
 import com.fumbbl.ffb.injury.CrowdPushForSpp;
 import com.fumbbl.ffb.injury.DropDodge;
+import com.fumbbl.ffb.injury.DropDodgeForSpp;
 import com.fumbbl.ffb.injury.DropGFI;
 import com.fumbbl.ffb.injury.DropJump;
 import com.fumbbl.ffb.injury.EatPlayer;
@@ -52,6 +53,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType CROWD_PUSH = new CrowdPush();
 	public static final InjuryType CROWD_PUSH_FOR_SPP = new CrowdPushForSpp();
 	public static final InjuryType DROP_DODGE = new DropDodge();
+	public static final InjuryType DROP_DODGE_FOR_SPP = new DropDodgeForSpp();
 	public static final InjuryType DROP_GFI = new DropGFI();
 	public static final InjuryType DROP_JUMP = new DropJump();
 	public static final InjuryType EAT_PLAYER = new EatPlayer();

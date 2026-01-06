@@ -5,10 +5,12 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -27,6 +29,7 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
@@ -38,6 +41,8 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropDodge;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropDodgeForSpp;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -50,6 +55,8 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -91,6 +98,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	private Boolean usingModifyingSkill;
 	private Boolean usingModifierIgnoringSkill;
 	private Set<DodgeModifier> dodgeModifiers = new HashSet<>();
+	private Player<?>[] armBarPlayers;
+	private String armBarPlayerId;
+	private boolean armBarChoice;
 
 	public StepMoveDodge(GameState pGameState) {
 		super(pGameState);
@@ -179,6 +189,15 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
 			}
 		}
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
+			pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
+			ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+			if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.ARM_BAR) {
+				armBarPlayerId = playerChoiceCommand.getPlayerId();
+				armBarChoice = true;
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			}
+		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
@@ -233,9 +252,36 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	}
 
 	private void failDodge() {
-		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-			new SteadyFootingContext(new InjuryTypeDropDodge(getGameState().getGame().getDefender()))));
+
+	Game game = getGameState().getGame();
+	if (!ArrayTool.isProvided(armBarPlayers)) {
+		armBarPlayers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
+			NamedProperties.affectsEitherArmourOrInjuryOnDodge, true);
+		armBarPlayers = UtilPlayer.filterThrower(game, armBarPlayers);
+	}
+
+	Player<?> armBarPlayer = null;
+	if (StringTool.isProvided(armBarPlayerId)) {
+		armBarPlayer = game.getPlayerById(armBarPlayerId);
+	} else if (!armBarChoice && ArrayTool.isProvided(armBarPlayers)) {
+		if (armBarPlayers.length == 1) {
+			armBarPlayer = armBarPlayers[0];
+		} else {
+			String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+			UtilServerDialog.showDialog(getGameState(),
+				new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
+			getResult().setNextAction(StepAction.CONTINUE);
+			return;
+		}
+	}
+		
+		InjuryTypeServer<?> injuryType = (armBarPlayer != null)
+			? new InjuryTypeDropDodgeForSpp(armBarPlayer)
+			: new InjuryTypeDropDodge(false);
+
+		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,	new SteadyFootingContext(injuryType)));
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
+
 	}
 
 	private ActionStatus dodge(boolean pDoRoll) {
@@ -485,6 +531,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		JsonArray modifierArray = new JsonArray();
 		dodgeModifiers.stream().map(UtilJson::toJsonValue).forEach(modifierArray::add);
 		IServerJsonOption.ROLL_MODIFIERS.addTo(jsonObject, modifierArray);
+		IServerJsonOption.ARM_BAR_PLAYER_ID.addTo(jsonObject, armBarPlayerId);
+		IServerJsonOption.ARM_BAR_CHOICE.addTo(jsonObject, armBarChoice);
 		return jsonObject;
 	}
 
@@ -510,6 +558,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				}
 			}
 		}
+		armBarPlayerId = IServerJsonOption.ARM_BAR_PLAYER_ID.getFrom(source, jsonObject);
+		armBarChoice = IServerJsonOption.ARM_BAR_CHOICE.getFrom(source, jsonObject);
 		return this;
 	}
 
