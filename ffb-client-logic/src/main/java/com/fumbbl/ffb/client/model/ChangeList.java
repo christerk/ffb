@@ -12,6 +12,8 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Nerves Of Steel")
+			.addFeature("Masters of Undeath -> Also for multi block")
+			.addFeature("Plague Ridden -> Also for multi block")
 		);
 
 		versions.add(new VersionChangeList("2026-01-05")
