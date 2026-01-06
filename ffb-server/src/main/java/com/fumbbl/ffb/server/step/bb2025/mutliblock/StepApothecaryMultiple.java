@@ -493,8 +493,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 					raisingTeam == game.getTeamHome() ? game.getGameResult().getTeamResultHome() : game.getGameResult()
 						.getTeamResultAway();
 				Player<?> attacker = game.getPlayerById(injuryResult.injuryContext().getAttackerId());
-				if (!raisingTeams.contains(raisingTeam) && injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
-					injuryMechanic.canRaiseInfectedPlayers(raisingTeam, raisingTeamResult, attacker, defender)) {
+				if (!raisingTeams.contains(raisingTeam) && (injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
+					injuryMechanic.canRaiseInfectedPlayers(raisingTeam, raisingTeamResult, attacker, defender))) {
 					deadResults.add(injuryResult);
 					raisingTeams.add(raisingTeam);
 				}

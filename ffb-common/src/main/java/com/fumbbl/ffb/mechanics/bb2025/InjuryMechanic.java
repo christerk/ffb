@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.util.RaiseType;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,9 +35,12 @@ public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 
 	@Override
 	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult, Player<?> attacker, Player<?> deadPlayer) {
-		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE) && teamResult.getRaisedDead() == 0 &&
-			(attacker != null) && attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman) &&
-			(deadPlayer.getStrength() <= 4) && !deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead) && !deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll);
+		return teamResult.getRaisedDead() == 0 &&
+			attacker != null &&
+			attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman) &&
+			!deadPlayer.getPosition().getKeywords().contains(Keyword.BIG_GUY) &&
+			!deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead) &&
+			!UtilCards.hasSkillToCancelProperty(deadPlayer, NamedProperties.allowsRaisingLineman);
 	}
 
 	@Override
