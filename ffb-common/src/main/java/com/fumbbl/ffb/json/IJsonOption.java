@@ -390,6 +390,7 @@ public interface IJsonOption {
 	JsonFieldCoordinateMapOption PLAYERS_AT_COORDINATES = new JsonFieldCoordinateMapOption("playersAtCoordinates");
 	JsonArrayOption POSITION_ARRAY = new JsonArrayOption("positionArray");
 	JsonObjectOption ROSTER_POSITION = new JsonObjectOption("rosterPosition");
+	JsonStringOption POSITION_CHOICE_MODE = new JsonStringOption("positionChoiceMode");
 	JsonIntOption POSITION_ICON_INDEX = new JsonIntOption("positionIconIndex");
 	JsonStringOption POSITION_ID = new JsonStringOption("positionId");
 	JsonStringArrayOption POSITION_IDS = new JsonStringArrayOption("positionIds");

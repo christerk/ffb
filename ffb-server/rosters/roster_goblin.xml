@@ -112,6 +112,7 @@
             <skill>Stunty</skill>
             <skill>Thick Skull</skill>
             <skill value="all">Animosity</skill>
+            <skill>Plague Ridden</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -122,6 +123,7 @@
         <keywords>
             <keyword>Dwarf</keyword>
             <keyword>goblin</keyword>
+            <keyword>Lineman</keyword>
         </keywords>
     </position>
 
@@ -155,6 +157,7 @@
         <keywords>
             <keyword>Undead</keyword>
             <keyword>human</keyword>
+            <keyword>Lineman</keyword>
         </keywords>
     </position>
 

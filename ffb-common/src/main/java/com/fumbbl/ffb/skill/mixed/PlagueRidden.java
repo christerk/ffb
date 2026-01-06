@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.bb2020;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * value of the Nurgle team.
  */
 @RulesCollection(Rules.BB2020)
+@RulesCollection(Rules.BB2025)
 public class PlagueRidden extends Skill {
 
 	public PlagueRidden() {
