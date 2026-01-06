@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Nerves Of Steel")
+			.addFeature("Arm Bar. Selection Dialog for multiple Arm Bar players and spp.")
 		);
 
 		versions.add(new VersionChangeList("2026-01-05")
@@ -36,7 +37,6 @@ public class ChangeList {
 			.addFeature("MB and Claw work on both down and skull (requires game option to be added)")
 			.addFeature("MB can be used against Chainsaw players")
 			.addFeature("Kick Team-Mate")
-			.addFeature("Arm Bar. Selection Dialog for multiple AB players and spp.")
 		);
 
 
