@@ -10,26 +10,33 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.KeywordChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.PositionChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectKeywordParameter;
+import com.fumbbl.ffb.dialog.DialogSelectPositionParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecaryParameter;
 import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandKeywordSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandPositionSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
@@ -50,8 +57,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -155,7 +164,8 @@ public class StepApothecary extends AbstractStep {
 					}
 					break;
 				case CLIENT_KEYWORD_SELECTION:
-					if (fInjuryResult != null && fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_GETTING_EVEN) {
+					if (fInjuryResult != null &&
+						fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_GETTING_EVEN) {
 						UtilServerDialog.hideDialog(getGameState());
 						ClientCommandKeywordSelection commandKeywordSelection =
 							(ClientCommandKeywordSelection) pReceivedCommand.getCommand();
@@ -165,6 +175,19 @@ public class StepApothecary extends AbstractStep {
 						getResult().setNextAction(StepAction.NEXT_STEP);
 						commandStatus = StepCommandStatus.SKIP_STEP;
 					}
+					break;
+				case CLIENT_POSITION_SELECTION:
+					UtilServerDialog.hideDialog(getGameState());
+					ClientCommandPositionSelection commandPositionSelection =
+						(ClientCommandPositionSelection) pReceivedCommand.getCommand();
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					Game game = getGameState().getGame();
+					Team teamById = game.getTeamById(commandPositionSelection.getTeamId());
+					RosterPosition position = teamById.getRoster().getPositionById(commandPositionSelection.getPosition()[0]);
+					TeamResult teamResult = teamById == game.getTeamHome() ? game.getGameResult().getTeamResultHome()
+						: game.getGameResult().getTeamResultAway();
+					raisePlayer(game, teamById, teamResult, position);
+					getResult().setNextAction(StepAction.NEXT_STEP);
 					break;
 				default:
 					break;
@@ -303,32 +326,62 @@ public class StepApothecary extends AbstractStep {
 				}
 			}
 			if (doNextStep) {
-				UtilServerInjury.handleInjurySideEffects(this, fInjuryResult);
+				if (UtilServerInjury.handlePumpUp(this, fInjuryResult)) {
+					UtilServerGame.syncGameModel(this);
+				}
 
 				PlayerState playerState = fInjuryResult.injuryContext().getPlayerState();
-				if (playerState != null && playerState.isSi()) {
+				if (playerState != null) {
 					Player<?> defender = game.getPlayerById(defenderId);
 					Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
-					Set<Keyword> availableKeywords =
-						attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith).collect(Collectors.toSet());
+					if (playerState.isSi()) {
+						Set<Keyword> availableKeywords =
+							attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith)
+								.collect(Collectors.toSet());
 
-					UtilCards.getSkillWithProperty(defender, NamedProperties.canRerollSingleSkull).ifPresent(
-						skill -> skill.evaluator().values(skill, defender).stream().map(Keyword::forName)
-							.forEach(availableKeywords::remove)
-					);
+						UtilCards.getSkillWithProperty(defender, NamedProperties.canRerollSingleSkull).ifPresent(
+							skill -> skill.evaluator().values(skill, defender).stream().map(Keyword::forName)
+								.forEach(availableKeywords::remove)
+						);
 
-					if (!availableKeywords.isEmpty()) {
-						List<Keyword> keywords = availableKeywords.stream().sorted().collect(Collectors.toList());
-						if (availableKeywords.size() == 1) {
-							pushGettingEven(defenderId, keywords.get(0));
-						} else {
-							UtilServerDialog.showDialog(getGameState(),
-								new DialogSelectKeywordParameter(defenderId, keywords, KeywordChoiceMode.GETTING_EVEN, 1, 1),
-								!game.getActingTeam().hasPlayer(defender));
+						if (!availableKeywords.isEmpty()) {
+							List<Keyword> keywords = availableKeywords.stream().sorted().collect(Collectors.toList());
+							if (availableKeywords.size() == 1) {
+								pushGettingEven(defenderId, keywords.get(0));
+							} else {
+								UtilServerDialog.showDialog(getGameState(),
+									new DialogSelectKeywordParameter(defenderId, keywords, KeywordChoiceMode.GETTING_EVEN, 1, 1),
+									!game.getActingTeam().hasPlayer(defender));
 
-							fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_GETTING_EVEN);
-							getResult().setNextAction(StepAction.CONTINUE);
-							return;
+								fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_GETTING_EVEN);
+								getResult().setNextAction(StepAction.CONTINUE);
+								return;
+							}
+						}
+					} else if (playerState.getBase() == PlayerState.RIP) {
+						InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
+						Team raisingTeam = game.getOtherTeam(game.getPlayerById(fInjuryResult.injuryContext().getDefenderId())
+							.getTeam());
+						TeamResult raisingTeamResult =
+							raisingTeam == game.getTeamHome() ? game.getGameResult().getTeamResultHome() : game.getGameResult()
+								.getTeamResultAway();
+						if ((injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
+							injuryMechanic.canRaiseInfectedPlayers(raisingTeam, raisingTeamResult, attacker, defender))) {
+							List<RosterPosition> raisePositions = injuryMechanic.raisePositions(raisingTeam);
+							if (raisePositions.size() == 1) {
+								raisePlayer(game, raisingTeam, raisingTeamResult, raisePositions.get(0));
+							} else if (raisePositions.size() > 1) {
+								List<String> raisePositionIds =
+									injuryMechanic.raisePositions(raisingTeam).stream().map(RosterPosition::getId)
+										.collect(Collectors.toList());
+
+								UtilServerDialog.showDialog(getGameState(),
+									new DialogSelectPositionParameter(raisePositionIds, PositionChoiceMode.RAISE_DEAD, 1, 1, raisingTeam.getId()),
+									true);
+
+								getResult().setNextAction(StepAction.CONTINUE);
+								return;
+							}
 						}
 					}
 				}
@@ -336,6 +389,15 @@ public class StepApothecary extends AbstractStep {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		}
+	}
+
+	private void raisePlayer(Game game, Team raisingTeam, TeamResult raisingTeamResult, RosterPosition raisePosition) {
+		InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
+		Player<?> defender = game.getPlayerById(fInjuryResult.injuryContext().getDefenderId());
+		RaiseType raiseType = injuryMechanic.raiseType(raisingTeam);
+		RosterPlayer raisedPlayer = UtilServerInjury.raisePlayer(game, raisingTeam, raisingTeamResult, defender.getName(),
+			raiseType, defender.getId(), raisePosition);
+		UtilServerInjury.sendRaisedPlayer(this, getGameState(), raisingTeam, raisedPlayer, raiseType == RaiseType.ROTTER);
 	}
 
 	private void pushGettingEven(String defenderId, Keyword keyword) {
