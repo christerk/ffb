@@ -267,7 +267,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			if (armBarPlayers.length == 1) {
 				armBarPlayer = armBarPlayers[0];
 			} else {
-				String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+				String teamId = game.getOtherTeam(game.getActingTeam()).getId();
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
 				getResult().setNextAction(StepAction.CONTINUE);
