@@ -11,6 +11,10 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("Future")
+			.addFeature("Nerves Of Steel")
+		);
+
+		versions.add(new VersionChangeList("2026-01-05")
 			.addFeature("Blitz targets need to be in theoretical range")
 			.addBugfix("Remove blitz and gaze from actions to change to move in case of bloodlust failure")
 			.addBugfix("Getting Even on Multi Block did not give selection for both player types")
