@@ -6,6 +6,7 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.util.StringTool;
 
 /**
  * @author Kalimar
@@ -13,15 +14,17 @@ import com.fumbbl.ffb.json.UtilJson;
 @RulesCollection(RulesCollection.Rules.COMMON)
 public class ReportRaiseDead extends NoDiceReport {
 
-	private String fPlayerId;
+	private String fPlayerId, position;
 	private boolean fNurglesRot;
 
+	@SuppressWarnings("unused")
 	public ReportRaiseDead() {
 		super();
 	}
 
-	public ReportRaiseDead(String pPlayerId, boolean pNurglesRot) {
+	public ReportRaiseDead(String pPlayerId, String position, boolean pNurglesRot) {
 		fPlayerId = pPlayerId;
+		this.position = position;
 		fNurglesRot = pNurglesRot;
 	}
 
@@ -37,10 +40,14 @@ public class ReportRaiseDead extends NoDiceReport {
 		return fNurglesRot;
 	}
 
+	public String getPosition() {
+		return position;
+	}
+
 	// transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportRaiseDead(getPlayerId(), isNurglesRot());
+		return new ReportRaiseDead(getPlayerId(), position, isNurglesRot());
 	}
 
 	// JSON serialization
@@ -50,6 +57,9 @@ public class ReportRaiseDead extends NoDiceReport {
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.PLAYER_ID.addTo(jsonObject, fPlayerId);
 		IJsonOption.NURGLES_ROT.addTo(jsonObject, fNurglesRot);
+		if (StringTool.isProvided(position)) {
+			IJsonOption.POSITION_NAME.addTo(jsonObject, position);
+		}
 		return jsonObject;
 	}
 
@@ -58,6 +68,9 @@ public class ReportRaiseDead extends NoDiceReport {
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fPlayerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fNurglesRot = IJsonOption.NURGLES_ROT.getFrom(source, jsonObject);
+		if (IJsonOption.POSITION_NAME.isDefinedIn(jsonObject)) {
+			position = IJsonOption.POSITION_NAME.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

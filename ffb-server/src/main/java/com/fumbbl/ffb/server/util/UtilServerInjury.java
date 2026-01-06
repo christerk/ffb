@@ -274,7 +274,7 @@ public class UtilServerInjury {
 		gameState.getServer().getCommunication()
 			.sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer),
 				game.getGameResult().getPlayerResult(raisedPlayer));
-		pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), nurglesRot));
+		pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), raisedPlayer.getPosition().getName(), nurglesRot));
 		pStep.getResult().setSound(SoundId.ORGAN);
 	}
 
