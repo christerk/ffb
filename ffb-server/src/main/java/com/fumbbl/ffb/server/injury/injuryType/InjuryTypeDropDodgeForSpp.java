@@ -5,7 +5,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
-import com.fumbbl.ffb.injury.DropDodge;
+import com.fumbbl.ffb.injury.DropDodgeForSpp;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -16,34 +16,16 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
-
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
-	private final Player<?> divingTackler;
-	private final boolean useArmBarModifiers;
 
-	public InjuryTypeDropDodge() {
-		this(null, true);
-	}
+public class InjuryTypeDropDodgeForSpp extends InjuryTypeServer<DropDodgeForSpp> {
 
-	public InjuryTypeDropDodge(Player<?> divingTackler) {
-		this(divingTackler, true);
-	}
+	private final Player<?> armBarPlayer;
 
-	public InjuryTypeDropDodge(boolean useArmBarModifiers) {
-		this(null, useArmBarModifiers);
-	}
-
-	private InjuryTypeDropDodge(Player<?> divingTackler, boolean useArmBarModifiers) {
-		super(new DropDodge());
-		this.divingTackler = divingTackler;
-		this.useArmBarModifiers = useArmBarModifiers;
+	public InjuryTypeDropDodgeForSpp(Player<?> armBarPlayer) {
+		super(new DropDodgeForSpp());
+		this.armBarPlayer = armBarPlayer;
 	}
 
 	@Override
@@ -52,6 +34,7 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 	                         FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                         ApothecaryMode pApothecaryMode) {
 
+		injuryContext.setAttackerId(armBarPlayer.getId());
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		if (!injuryContext.isArmorBroken()) {
@@ -66,29 +49,8 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 		}
 
 		Skill avOrInjModifierSkill = null;
-
-		if (useArmBarModifiers && fromCoordinate != null) {
-			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate, false))
-				.collect(Collectors.toSet());
-
-			Player<?> shadowingOrDtPlayer = game.getFieldModel().getPlayer(fromCoordinate);
-
-			if (shadowingOrDtPlayer != null) {
-				players.add(shadowingOrDtPlayer);
-			}
-
-			if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
-				avOrInjModifierSkill = players.stream().filter(player -> game.getFieldModel().getPlayerState(player).hasTacklezones())
-					.map(player -> player.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge))
-					.filter(Objects::nonNull).findFirst().orElseGet(() -> {
-
-						if (divingTackler != null && game.getFieldModel().getPlayerCoordinate(divingTackler).equals(fromCoordinate)) {
-							return divingTackler.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
-						}
-
-						return null;
-					});
-			}
+		if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
+			avOrInjModifierSkill = armBarPlayer.getSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnDodge);
 		}
 
 		if (!injuryContext.isArmorBroken() && avOrInjModifierSkill != null) {

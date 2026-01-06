@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Nerves Of Steel")
+			.addFeature("Arm Bar. Selection Dialog for multiple Arm Bar players and spp.")
 		);
 
 		versions.add(new VersionChangeList("2026-01-05")

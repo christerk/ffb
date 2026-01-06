@@ -31,6 +31,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ALREADY_DROPPED = new JsonBooleanOption("alreadyDropped");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
+    JsonBooleanOption ARM_BAR_CHOICE = new JsonBooleanOption("armBarChoice");
+    JsonStringOption ARM_BAR_PLAYER_ID = new JsonStringOption("armBarPlayerId");
     JsonBooleanOption ASK_FOR_BLOCK_KIND = new JsonBooleanOption("askForBlockKind");
     JsonBooleanOption ATTEMPT_PICK_UP = new JsonBooleanOption("attemptPickup");
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
