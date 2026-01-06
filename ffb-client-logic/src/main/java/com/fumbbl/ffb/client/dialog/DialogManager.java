@@ -238,6 +238,9 @@ public class DialogManager {
 					case SELECT_KEYWORD:
 						setDialogHandler(new DialogSelectKeywordHandler(getClient()));
 						break;
+					case SELECT_POSITION:
+						setDialogHandler(new DialogSelectPositionHandler(getClient()));
+						break;
 					default:
 						break;
 				}

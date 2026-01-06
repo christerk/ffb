@@ -10,11 +10,13 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.KeywordChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.PositionChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectKeywordParameter;
+import com.fumbbl.ffb.dialog.DialogSelectPositionParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
 import com.fumbbl.ffb.dialog.DialogUseMortuaryAssistantsParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -39,6 +41,7 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandKeywordSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandPositionSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseIgors;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
@@ -222,6 +225,19 @@ public class StepApothecaryMultiple extends AbstractStep {
 						checkGettingEven();
 						commandStatus = StepCommandStatus.SKIP_STEP;
 					}
+					break;
+				case CLIENT_POSITION_SELECTION:
+					UtilServerDialog.hideDialog(getGameState());
+					ClientCommandPositionSelection commandPositionSelection =
+						(ClientCommandPositionSelection) pReceivedCommand.getCommand();
+					commandStatus = StepCommandStatus.SKIP_STEP;
+					Team teamById = game.getTeamById(commandPositionSelection.getTeamId());
+					InjuryResult deadResult = deadResults.remove(0);
+					RosterPosition position = teamById.getRoster().getPositionById(commandPositionSelection.getPosition()[0]);
+					TeamResult teamResult = teamById == game.getTeamHome() ? game.getGameResult().getTeamResultHome()
+						: game.getGameResult().getTeamResultAway();
+					raisePlayer(deadResult, game, teamById, teamResult, position);
+					checkRaiseDead();
 					break;
 				default:
 					break;
@@ -466,6 +482,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 		}
 
+		Set<Team> raisingTeams = new HashSet<>();
 		for (InjuryResult injuryResult : injuryResults) {
 			if (injuryResult.injuryContext().getPlayerState().getBase() == PlayerState.RIP) {
 				gettingEvenResults.removeIf(result -> result.injuryContext().getDefenderId()
@@ -476,9 +493,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 					raisingTeam == game.getTeamHome() ? game.getGameResult().getTeamResultHome() : game.getGameResult()
 						.getTeamResultAway();
 				Player<?> attacker = game.getPlayerById(injuryResult.injuryContext().getAttackerId());
-				if (injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
+				if (!raisingTeams.contains(raisingTeam) && injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
 					injuryMechanic.canRaiseInfectedPlayers(raisingTeam, raisingTeamResult, attacker, defender)) {
 					deadResults.add(injuryResult);
+					raisingTeams.add(raisingTeam);
 				}
 			}
 		}
@@ -489,11 +507,6 @@ public class StepApothecaryMultiple extends AbstractStep {
 				pushGettingEven(gettingEven.injuryContext().getDefenderId(), keywords.get(0));
 				gettingEvenResults.remove(gettingEven);
 			}
-		}
-
-		if (deadResults.size() == 2 &&
-			deadResults.get(0).injuryContext().getDefenderId().equals(deadResults.get(1).injuryContext().getDefenderId())) {
-			deadResults.remove(0);
 		}
 
 		if (deadResults.isEmpty()) {
@@ -509,7 +522,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 				if (raisePositions.size() < 2) {
 					deadResults.remove(deadResult);
 					if (raisePositions.size() == 1) {
-						raisePlayer(deadResult, game, raisingTeam, raisingTeamResult, injuryMechanic, raisePositions);
+						raisePlayer(deadResult, game, raisingTeam, raisingTeamResult, raisePositions.get(0));
 					}
 				}
 			}
@@ -526,18 +539,24 @@ public class StepApothecaryMultiple extends AbstractStep {
 			Team raisingTeam = getGameState().getGame().getOtherTeam(defender.getTeam());
 
 			InjuryMechanic injuryMechanic = getGameState().getGame().getMechanic(Mechanic.Type.INJURY);
-			List<RosterPosition> raisePositions = injuryMechanic.raisePositions(raisingTeam);
+			List<String> raisePositions =
+				injuryMechanic.raisePositions(raisingTeam).stream().map(RosterPosition::getId)
+					.collect(Collectors.toList());
 
-			UtilServerDialog.showDialog(getGameState(), , true);
+			UtilServerDialog.showDialog(getGameState(),
+				new DialogSelectPositionParameter(raisePositions, PositionChoiceMode.RAISE_DEAD, 1, 1, raisingTeam.getId()),
+				true);
+
+			getResult().setNextAction(StepAction.CONTINUE);
 		}
 	}
 
-	private void raisePlayer(InjuryResult deadResult, Game game, Team raisingTeam, TeamResult raisingTeamResult,
-		InjuryMechanic injuryMechanic, List<RosterPosition> raisePositions) {
+	private void raisePlayer(InjuryResult deadResult, Game game, Team raisingTeam, TeamResult raisingTeamResult, RosterPosition raisePosition) {
+		InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
 		Player<?> defender = game.getPlayerById(deadResult.injuryContext().getDefenderId());
 		RaiseType raiseType = injuryMechanic.raiseType(raisingTeam);
 		RosterPlayer raisedPlayer = UtilServerInjury.raisePlayer(game, raisingTeam, raisingTeamResult, defender.getName(),
-			raiseType, defender.getId(), raisePositions.get(0));
+			raiseType, defender.getId(), raisePosition);
 		UtilServerInjury.sendRaisedPlayer(this, getGameState(), raisingTeam, raisedPlayer, raiseType == RaiseType.ROTTER);
 	}
 

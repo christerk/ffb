@@ -566,6 +566,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPickUpChoice(attemptPickUp));
 	}
 
+	public void sendPositionSelection(String[] position, String teamId) {
+		send(new ClientCommandPositionSelection(position, teamId));
+	}
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}

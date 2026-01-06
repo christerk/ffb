@@ -93,6 +93,9 @@
             <double>Strength</double>
             <double>Passing</double>
         </skillCategoryList>
+        <keywords>
+            <keyword>Lineman</keyword>
+        </keywords>
     </position>
 
     <position id="halfling.Puggy">
