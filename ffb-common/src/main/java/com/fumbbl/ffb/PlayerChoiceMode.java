@@ -126,6 +126,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case CHARGE:
 				header.append("Select players to perform actions");
 				break;
+			case ARM_BAR:
+				header.append("Select a player to use Arm Bar");
+				break;
 			default:
 				break;
 		}
@@ -212,6 +215,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case CHARGE:
 				title.append("Charge!");
+				break;
+			case ARM_BAR:
+				title.append("Arm Bar");
 				break;
 			default:
 				break;
@@ -300,6 +306,8 @@ public enum PlayerChoiceMode implements INamedObject {
 			case CHARGE:
 				message.append("Waiting for coach to select players to perform actions");
 				break;
+			case ARM_BAR:
+				message.append("Waiting for coach to choose a player to use Arm Bar.");
 			default:
 				break;
 		}
