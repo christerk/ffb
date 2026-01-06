@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Nerves Of Steel")
+			.addFeature("Arm Bar. Selection Dialog for multiple Arm Bar players and spp.")
 			.addFeature("Masters of Undeath -> Also for multi block")
 			.addFeature("Plague Ridden -> Also for multi block")
 		);
