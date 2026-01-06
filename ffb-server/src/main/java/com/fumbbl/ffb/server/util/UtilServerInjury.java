@@ -37,6 +37,7 @@ import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -47,9 +48,9 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class UtilServerInjury {
 
 	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player<?> pAttacker,
-																					Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
-																					FieldCoordinate fromCoordinate, InjuryResult pOldInjuryResult,
-																					ApothecaryMode pApothecaryMode) {
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
+		FieldCoordinate fromCoordinate, InjuryResult pOldInjuryResult,
+		ApothecaryMode pApothecaryMode) {
 
 		if (pDefender == null) {
 			throw new IllegalArgumentException("Parameter defender must not be null.");
@@ -102,7 +103,7 @@ public class UtilServerInjury {
 	}
 
 	private static void evaluateInjuryContext(InjuryTypeServer<?> pInjuryType, Player<?> pDefender,
-																						InjuryContext injuryContext, Game game) {
+		InjuryContext injuryContext, Game game) {
 
 		if (injuryContext.isSeriousInjury()) {
 			RollMechanic rollMechanic =
@@ -203,7 +204,7 @@ public class UtilServerInjury {
 		return handlePumpUp(pStep, pInjuryResult);
 	}
 
-	private static boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
+	public static boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 
@@ -235,21 +236,15 @@ public class UtilServerInjury {
 		Team necroTeam = UtilPlayer.findOtherTeam(game, deadPlayer);
 		TeamResult necroTeamResult = (game.getTeamHome() == necroTeam) ? game.getGameResult().getTeamResultHome() :
 			game.getGameResult().getTeamResultAway();
-		boolean deadPlayerPreventsRaisedFromDead = deadPlayer.hasSkillProperty(NamedProperties.preventRaiseFromDead);
 
 		if (pInjuryResult.injuryContext().getPlayerState() != null &&
 			PlayerState.RIP == pInjuryResult.injuryContext().getPlayerState().getBase()) {
-			if ((mechanic.canRaiseDead(necroTeam) || necroTeam.getRoster().hasVampireLord()) &&
-				(necroTeamResult.getRaisedDead() == 0) && (deadPlayer.getStrength() <= 4) &&
-				!deadPlayerPreventsRaisedFromDead) {
+			if (mechanic.canRaiseDead(necroTeam, necroTeamResult, deadPlayer)) {
 				raisedPlayer = raisePlayer(game, necroTeam, necroTeamResult, deadPlayer.getName(),
 					necroTeam.getRoster().hasVampireLord() ? RaiseType.THRALL : RaiseType.ZOMBIE, deadPlayer.getId());
 			} else {
 				Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-				if (mechanic.canRaiseInfectedPlayers(necroTeam, necroTeamResult) && (attacker != null) &&
-					attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman) && (deadPlayer.getStrength() <= 4) &&
-					!deadPlayerPreventsRaisedFromDead &&
-					!deadPlayer.hasSkillProperty(NamedProperties.requiresSecondCasualtyRoll)) {
+				if (mechanic.canRaiseInfectedPlayers(necroTeam, necroTeamResult, attacker, deadPlayer)) {
 					RosterPosition zombiePosition = necroTeam.getRoster().getRaisedRosterPosition();
 					if (zombiePosition != null) {
 						nurglesRot = true;
@@ -263,12 +258,7 @@ public class UtilServerInjury {
 
 		if (raisedPlayer != null) {
 
-			// communicate raised player to clients
-			gameState.getServer().getCommunication()
-				.sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer),
-					game.getGameResult().getPlayerResult(raisedPlayer));
-			pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), nurglesRot));
-			pStep.getResult().setSound(SoundId.ORGAN);
+			sendRaisedPlayer(pStep, gameState, necroTeam, raisedPlayer, nurglesRot);
 
 			return true;
 
@@ -278,10 +268,26 @@ public class UtilServerInjury {
 
 	}
 
+	public static void sendRaisedPlayer(IStep pStep, GameState gameState, Team necroTeam, RosterPlayer raisedPlayer, boolean nurglesRot) {
+		// communicate raised player to clients
+		Game game = gameState.getGame();
+		gameState.getServer().getCommunication()
+			.sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer),
+				game.getGameResult().getPlayerResult(raisedPlayer));
+		pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), nurglesRot));
+		pStep.getResult().setSound(SoundId.ORGAN);
+	}
+
 	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName,
-																					RaiseType raiseType, String killedId) {
-		RosterPlayer raisedPlayer = null;
+		RaiseType raiseType, String killedId) {
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
+		return raisePlayer(pGame, pNecroTeam, pNecroTeamResult, pPlayerName, raiseType, killedId, zombiePosition);
+	}
+
+	public static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult,
+		String pPlayerName, RaiseType raiseType, String killedId, RosterPosition zombiePosition) {
+		RosterPlayer raisedPlayer = null;
+
 		if (zombiePosition != null) {
 			InjuryMechanic mechanic =
 				(InjuryMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.INJURY.name());
@@ -324,7 +330,7 @@ public class UtilServerInjury {
 	}
 
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
-																						boolean eligibleForSafePairOfHands) {
+		boolean eligibleForSafePairOfHands) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
@@ -332,7 +338,7 @@ public class UtilServerInjury {
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
 	// sets StepParameterKey.INJURY_RESULT if player has skill Ball&Chain
 	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-																						 ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
+		ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
@@ -394,10 +400,6 @@ public class UtilServerInjury {
 		}
 		UtilServerPlayerMove.updateMoveSquares(gameState, false);
 		return stepParameters;
-	}
-
-	private enum RaiseType {
-		ZOMBIE, ROTTER, THRALL
 	}
 
 }

@@ -23,6 +23,7 @@ import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.JsonArrayOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
@@ -30,7 +31,10 @@ import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
+import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
@@ -57,6 +61,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
@@ -80,9 +85,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 	private ApothecaryMode apothecaryMode;
 	private List<InjuryResult> injuryResults = new ArrayList<>(), regenerationFailedResults = new ArrayList<>(),
-		gettingEvenResults = new ArrayList<>();
+		gettingEvenResults = new ArrayList<>(), deadResults = new ArrayList<>();
 	private String teamId;
-	private Map<String, Set<Keyword>> availableKeyWordsMap = new HashMap<>();
+	private Map<String, List<Keyword>> availableKeyWordsMap = new HashMap<>();
 
 	public StepApothecaryMultiple(GameState pGameState) {
 		super(pGameState);
@@ -235,9 +240,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 		} else {
 			InjuryResult injuryResult = gettingEvenResults.get(0);
 			String defenderId = injuryResult.injuryContext().fDefenderId;
-			List<Keyword> keywords = availableKeyWordsMap.get(String.valueOf(injuryResult.hashCode())).stream().sorted().collect(
-				Collectors.toList());
-			showGettingEvenDialog(game.getPlayerById(defenderId), keywords, game);
+			showGettingEvenDialog(game.getPlayerById(defenderId),
+				availableKeyWordsMap.get(String.valueOf(injuryResults.indexOf(injuryResult))), game);
 			getResult().setNextAction(StepAction.CONTINUE);
 		}
 	}
@@ -435,10 +439,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 		}
 
+		InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
 
 
 		for (InjuryResult injuryResult : injuryResults) {
-			if (UtilServerInjury.handleInjurySideEffects(this, injuryResult)) {
+			if (UtilServerInjury.handlePumpUp(this, injuryResult)) {
 				UtilServerGame.syncGameModel(this);
 			}
 
@@ -454,18 +459,86 @@ public class StepApothecaryMultiple extends AbstractStep {
 				);
 
 				if (!availableKeywords.isEmpty()) {
+					gettingEvenResults.add(injuryResult);
 					List<Keyword> keywords = availableKeywords.stream().sorted().collect(Collectors.toList());
-					if (availableKeywords.size() == 1) {
-						pushGettingEven(defender.getId(), keywords.get(0));
-					} else {
-						gettingEvenResults.add(injuryResult);
-						availableKeyWordsMap.put(String.valueOf(injuryResult.hashCode()), availableKeywords);
-					}
+					availableKeyWordsMap.put(String.valueOf(injuryResults.indexOf(injuryResult)), keywords);
 				}
 			}
 		}
 
-		checkGettingEven();
+		for (InjuryResult injuryResult : injuryResults) {
+			if (injuryResult.injuryContext().getPlayerState().getBase() == PlayerState.RIP) {
+				gettingEvenResults.removeIf(result -> result.injuryContext().getDefenderId()
+					.equalsIgnoreCase(injuryResult.injuryContext().getDefenderId()));
+				Player<?> defender = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
+				Team raisingTeam = game.getOtherTeam(defender.getTeam());
+				TeamResult raisingTeamResult =
+					raisingTeam == game.getTeamHome() ? game.getGameResult().getTeamResultHome() : game.getGameResult()
+						.getTeamResultAway();
+				Player<?> attacker = game.getPlayerById(injuryResult.injuryContext().getAttackerId());
+				if (injuryMechanic.canRaiseDead(raisingTeam, raisingTeamResult, defender) ||
+					injuryMechanic.canRaiseInfectedPlayers(raisingTeam, raisingTeamResult, attacker, defender)) {
+					deadResults.add(injuryResult);
+				}
+			}
+		}
+
+		for (InjuryResult gettingEven : gettingEvenResults.toArray(new InjuryResult[0])) {
+			List<Keyword> keywords = availableKeyWordsMap.get(String.valueOf(injuryResults.indexOf(gettingEven)));
+			if (keywords.size() == 1) {
+				pushGettingEven(gettingEven.injuryContext().getDefenderId(), keywords.get(0));
+				gettingEvenResults.remove(gettingEven);
+			}
+		}
+
+		if (deadResults.size() == 2 &&
+			deadResults.get(0).injuryContext().getDefenderId().equals(deadResults.get(1).injuryContext().getDefenderId())) {
+			deadResults.remove(0);
+		}
+
+		if (deadResults.isEmpty()) {
+			checkGettingEven();
+		} else {
+			for (InjuryResult deadResult : deadResults.toArray(new InjuryResult[0])) {
+				Team raisingTeam = game.getOtherTeam(game.getPlayerById(deadResult.injuryContext().getDefenderId())
+					.getTeam());
+				TeamResult raisingTeamResult =
+					raisingTeam == game.getTeamHome() ? game.getGameResult().getTeamResultHome() : game.getGameResult()
+						.getTeamResultAway();
+				List<RosterPosition> raisePositions = injuryMechanic.raisePositions(raisingTeam);
+				if (raisePositions.size() < 2) {
+					deadResults.remove(deadResult);
+					if (raisePositions.size() == 1) {
+						raisePlayer(deadResult, game, raisingTeam, raisingTeamResult, injuryMechanic, raisePositions);
+					}
+				}
+			}
+			checkRaiseDead();
+		}
+	}
+
+	private void checkRaiseDead() {
+		if (deadResults.isEmpty()) {
+			checkGettingEven();
+		} else {
+			InjuryResult deadResult = deadResults.get(0);
+			Player<?> defender = getGameState().getGame().getPlayerById(deadResult.injuryContext().getDefenderId());
+			Team raisingTeam = getGameState().getGame().getOtherTeam(defender.getTeam());
+
+			InjuryMechanic injuryMechanic = getGameState().getGame().getMechanic(Mechanic.Type.INJURY);
+			List<RosterPosition> raisePositions = injuryMechanic.raisePositions(raisingTeam);
+
+			UtilServerDialog.showDialog(getGameState(), , true);
+		}
+	}
+
+	private void raisePlayer(InjuryResult deadResult, Game game, Team raisingTeam, TeamResult raisingTeamResult,
+		InjuryMechanic injuryMechanic, List<RosterPosition> raisePositions) {
+		Player<?> defender = game.getPlayerById(deadResult.injuryContext().getDefenderId());
+		RaiseType raiseType = injuryMechanic.raiseType(raisingTeam);
+		RosterPlayer raisedPlayer = UtilServerInjury.raisePlayer(game, raisingTeam, raisingTeamResult, defender.getName(),
+			raiseType, defender.getId(), raisePositions.get(0));
+		UtilServerInjury.sendRaisedPlayer(this, getGameState(), raisingTeam, raisedPlayer, raiseType == RaiseType.ROTTER);
 	}
 
 	private void pushGettingEven(String defenderId, Keyword keyword) {
@@ -568,6 +641,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		IServerJsonOption.APOTHECARY_MODE.addTo(jsonObject, apothecaryMode);
 		addInjuriesToJson(regenerationFailedResults, IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, jsonObject);
 		addInjuriesToJson(injuryResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
+		addInjuriesToJson(deadResults, IServerJsonOption.INJURY_RESULTS_DEAD, jsonObject);
 		addInjuriesToJson(gettingEvenResults, IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, jsonObject);
 
 		IServerJsonOption.AVAILABLE_KEYWORDS_MAP.addTo(jsonObject, availableKeyWordsMap.entrySet().stream().collect(
@@ -590,12 +664,13 @@ public class StepApothecaryMultiple extends AbstractStep {
 		apothecaryMode = (ApothecaryMode) IServerJsonOption.APOTHECARY_MODE.getFrom(source, jsonObject);
 		regenerationFailedResults = initInjuries(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, source, jsonObject);
 		injuryResults = initInjuries(IServerJsonOption.INJURY_RESULTS, source, jsonObject);
+		deadResults = initInjuries(IServerJsonOption.INJURY_RESULTS_DEAD, source, jsonObject);
 		gettingEvenResults = initInjuries(IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, source, jsonObject);
 
 		availableKeyWordsMap = IServerJsonOption.AVAILABLE_KEYWORDS_MAP.getFrom(source, jsonObject).entrySet().stream()
 			.collect(
 				Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(Keyword::forName).collect(
-					Collectors.toSet())));
+					Collectors.toList())));
 		return this;
 	}
 
