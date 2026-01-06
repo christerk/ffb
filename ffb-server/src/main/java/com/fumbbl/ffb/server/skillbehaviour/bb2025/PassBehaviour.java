@@ -28,7 +28,6 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.mixed.ReportModifiedPassResult;
 import com.fumbbl.ffb.report.mixed.ReportPassRoll;
 import com.fumbbl.ffb.server.model.StepModifier;
-import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractPassBehaviour;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
