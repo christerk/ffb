@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -24,10 +24,10 @@ import com.fumbbl.ffb.server.step.mixed.multiblock.StepFoulAppearanceMultiple;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.common.FoulAppearance;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractStepModifierMultipleBlock;
 
 import java.util.ArrayList;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 	public FoulAppearanceBehaviour() {
@@ -112,7 +112,8 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 					}
 				}
 
-				if (playerAction == PlayerAction.GAZE || (playerAction != null && playerAction.isBlockAction())) {
+				if (playerAction == PlayerAction.GAZE 
+					|| (playerAction != null && (playerAction.isBlockAction() || playerAction.isBlitzing()))) {
 					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 				game.setDefenderId(null);
