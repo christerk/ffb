@@ -183,18 +183,15 @@ public class StepPass extends AbstractStepWithReRoll {
 		if (ReRolledActions.PASS == getReRolledAction()) {
 			if (usingModifyingSkill == null || !usingModifyingSkill) {
 				if (getReRollSource() == null) {
-					handleFailedPass(throwerCoordinate);
+					handleFailedPass(throwerCoordinate, isBomb);
 					return;
 				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), game.getThrower())) {
-					
 					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, passingDistance, passModifiers, isBomb)) {
-						handleFailedPass(throwerCoordinate);
+						handleFailedPass(throwerCoordinate, isBomb);
 					}
-					setReRolledAction(null);
-					setReRollSource(null);
 					return;
 				} else {
-					setReRolledAction(null);
+					roll = 0; // force a fresh roll on the reroll
 					setReRollSource(null);
 				}
 			}
@@ -216,12 +213,14 @@ public class StepPass extends AbstractStepWithReRoll {
 			state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb, statBasedRollModifier));
 			game.getActingPlayer().markSkillUsed(modifyingSkill);
 		} else {
-			state.setThrowerCoordinate(throwerCoordinate);
-			publishParameter(from(StepParameterKey.PASSING_DISTANCE, passingDistance));
-			Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
-			minimumRoll = minimumRollO.orElse(0);
-			roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
-			state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb));
+			if (roll == 0) {
+				state.setThrowerCoordinate(throwerCoordinate);
+				publishParameter(from(StepParameterKey.PASSING_DISTANCE, passingDistance));
+				Optional<Integer> minimumRollO = mechanic.minimumRoll(game.getThrower(), passingDistance, passModifiers);
+				minimumRoll = minimumRollO.orElse(0);
+				roll = minimumRollO.isPresent() ? getGameState().getDiceRoller().rollSkill() : 0;
+				state.setResult(mechanic.evaluatePass(game.getThrower(), roll, passingDistance, passModifiers, isBomb));
+			}
 		}
 
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
@@ -236,7 +235,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			}
 		} else {
 			boolean doNextStep = true;
-			if (mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
+			if (getReRolledAction() == null && mechanic.eligibleToReRoll(getReRolledAction(), game.getThrower())) {
 				setReRolledAction(ReRolledActions.PASS);
 				Skill modificationSkill = getModifyingSkill(mechanic, passingDistance, passModifiers, isBomb);
 
@@ -259,7 +258,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			}
 
 			if (doNextStep) {
-				handleFailedPass(throwerCoordinate);
+				handleFailedPass(throwerCoordinate, isBomb);
 			}
 		}
 	}
@@ -290,7 +289,7 @@ public class StepPass extends AbstractStepWithReRoll {
 		return modifying;
 	}
 
-	private boolean handleSafePass(Game game, PassState state) {		
+	private boolean handleSafePass(Game game, PassState state, boolean isBomb) {		
 		if (state.getResult() == PassResult.SAVED_FUMBLE) {
 			if (usingSafePass == null) {
 				Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
@@ -304,6 +303,8 @@ public class StepPass extends AbstractStepWithReRoll {
 				Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
 				if (safePass != null) {
 					game.getActingPlayer().markSkillUsed(safePass);
+					SkillUse use = isBomb ? SkillUse.SAVED_FUMBLE_BOMB : SkillUse.SAVED_FUMBLE_BALL;
+					getResult().addReport(new ReportSkillUse(game.getThrowerId(), safePass, true, use));
 				}
 			}
 		}
@@ -316,10 +317,10 @@ public class StepPass extends AbstractStepWithReRoll {
 	}
 
 
-	private void handleFailedPass(FieldCoordinate throwerCoordinate) {
+	private void handleFailedPass(FieldCoordinate throwerCoordinate, boolean isBomb) {
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		if (!handleSafePass(game, state)) {
+		if (!handleSafePass(game, state, isBomb)) {
 			return;
 		}
 		publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, PassResult.FUMBLE == state.getResult()));
