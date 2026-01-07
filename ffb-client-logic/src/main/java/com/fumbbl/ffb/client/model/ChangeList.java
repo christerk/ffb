@@ -9,10 +9,15 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-
 		versions.add(new VersionChangeList("Future")
+
+		);
+
+		versions.add(new VersionChangeList("2026-01-06")
 			.addFeature("Nerves Of Steel")
 			.addFeature("Arm Bar. Selection Dialog for multiple Arm Bar players and spp.")
+			.addFeature("Masters of Undeath -> Also for multi block")
+			.addFeature("Plague Ridden -> Also for multi block")
 		);
 
 		versions.add(new VersionChangeList("2026-01-05")

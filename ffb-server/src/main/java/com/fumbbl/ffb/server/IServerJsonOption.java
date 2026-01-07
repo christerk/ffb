@@ -118,6 +118,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption INDUCEMENTS_SELECTED_PARALLEL = new JsonBooleanOption("inducementsSelectedParallel");
     JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
     JsonArrayOption INJURY_RESULTS = new JsonArrayOption("injuryResults");
+    JsonArrayOption INJURY_RESULTS_DEAD = new JsonArrayOption("injuryResultsDead");
     JsonArrayOption INJURY_RESULTS_GETTING_EVEN = new JsonArrayOption("injuryResultsGettingEven");
     JsonArrayOption INJURY_RESULTS_REGENERATION_FAILED = new JsonArrayOption("injuryResultsRegenerationFailed");
     JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");

@@ -1,9 +1,8 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -18,7 +17,6 @@ import com.fumbbl.ffb.model.skill.Skill;
  * player with this skill, even if the result doesn't affect the player in the
  * normal way.
  */
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class Regeneration extends Skill {
 
@@ -28,11 +26,7 @@ public class Regeneration extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.preventRaiseFromDead);
 		registerProperty(NamedProperties.canRollToSaveFromInjury);
-
-		registerProperty(new CancelSkillProperty(NamedProperties.allowsRaisingLineman));
-
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
@@ -17,7 +17,6 @@ import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.RAISE_DEAD)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class RaiseDeadMessage extends ReportMessageBase<ReportRaiseDead> {
 
 	@Override

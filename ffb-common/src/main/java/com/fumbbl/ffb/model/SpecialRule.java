@@ -22,7 +22,7 @@ public enum SpecialRule {
 	}
 
 	public static SpecialRule from(String name) {
-		return Arrays.stream(values()).filter(rule -> rule.ruleName.equals(name)).findFirst().orElse(null);
+		return Arrays.stream(values()).filter(rule -> rule.ruleName.equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 
 }

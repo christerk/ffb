@@ -143,6 +143,8 @@ public class DialogParameterFactory {
 				return new DialogPickUpChoiceParameter();
 			case SELECT_KEYWORD:
 				return new DialogSelectKeywordParameter();
+			case SELECT_POSITION:
+				return new DialogSelectPositionParameter();
 			default:
 				return null;
 		}
