@@ -32,7 +32,7 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.mixed.pass.StepHailMaryPass;
+import com.fumbbl.ffb.server.step.bb2025.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -58,8 +58,16 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepHailMaryPass step,
-																								 StepHailMaryPass.StepState state,
-																								 ClientCommandUseSkill useSkillCommand) {
+																								StepHailMaryPass.StepState state,
+																								ClientCommandUseSkill useSkillCommand) {
+				if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.canAddStrengthToPass)) {
+					state.usingModifyingSkill = useSkillCommand.isSkillUsed();
+					return StepCommandStatus.EXECUTE_STEP;
+				}
+				if (useSkillCommand.getSkill().hasSkillProperty(NamedProperties.dontDropFumbles)) {
+					state.usingSafePass = useSkillCommand.isSkillUsed();
+					return StepCommandStatus.EXECUTE_STEP;
+				}
 				step.setReRolledAction(ReRolledActions.PASS);
 				step.setReRollSource(useSkillCommand.isSkillUsed() ? getReRollSource() : null);
 				return StepCommandStatus.EXECUTE_STEP;
@@ -111,6 +119,9 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 								doRoll = false;
 								doNextStep = true;
 							}
+						} else {
+							doRoll = true;
+							step.setReRollSource(null);
 						}
 					}
 				}
@@ -159,23 +170,9 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 								UtilServerDialog.showDialog(step.getGameState(),
 									new DialogSkillUseParameter(game.getThrowerId(), passingReroll.getSkill(game), state.minimumRoll, modificationSkill),
 									actingTeam.hasPlayer(game.getThrower()));
-							} else if (PassResult.SAVED_FUMBLE == state.result) {
-								if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
-									game.getFieldModel().setBombCoordinate(null);
-									game.getFieldModel().setBombMoving(false);
-									step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
-									step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-									step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
-								} else {
-									game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
-									game.getFieldModel().setBallMoving(false);
-								}
-								step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
-							} else {
-								if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getActingPlayer(),
-									ReRolledActions.PASS, state.minimumRoll, false, modificationSkill)) {
-									doNextStep = false;
-								}
+							} else if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getActingPlayer(),
+								ReRolledActions.PASS, state.minimumRoll, false, modificationSkill)){
+								doNextStep = false;
 							}
 						} else if (state.usingModifyingSkill == null && showUseModifyingSkillDialog(step, state, mechanic,
 							passingDistance, modifiers, bombAction)) {
@@ -184,8 +181,23 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 					}
 				}
 				if (doNextStep) {
+
+					if (!handleSafePass(step, state, passState, bombAction)) {
+						return false;
+					}
 					step.publishParameter(new StepParameter(StepParameterKey.PASS_FUMBLE, PassResult.FUMBLE == state.result));
-					if (PassResult.FUMBLE == state.result) {
+					if (PassResult.SAVED_FUMBLE == state.result) {
+						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
+							game.getFieldModel().setBombCoordinate(null);
+							game.getFieldModel().setBombMoving(false);
+							step.publishParameter(from(StepParameterKey.CATCHER_ID, null));
+							step.publishParameter(from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+						} else {
+							game.getFieldModel().setBallCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
+							game.getFieldModel().setBallMoving(false);
+						}
+						step.getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
+					} else if (PassResult.FUMBLE == state.result) {
 						if (PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction()) {
 							game.getFieldModel().setBombCoordinate(game.getFieldModel().getPlayerCoordinate(game.getThrower()));
 						} else {
@@ -234,6 +246,32 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 				}
 				return modificationSkill;
 			}
+
+			private boolean handleSafePass(StepHailMaryPass step, StepHailMaryPass.StepState state, PassState passState, boolean isBomb) {
+				Game game = step.getGameState().getGame();
+				if (state.result == PassResult.SAVED_FUMBLE) {
+					Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
+					if (state.usingSafePass == null) {
+						UtilServerDialog.showDialog(step.getGameState(),
+							new DialogSkillUseParameter(game.getThrowerId(), safePass, 0, false),
+							game.getTeamHome().hasPlayer(game.getThrower()));
+						return false;
+					} else if (!state.usingSafePass) {
+						state.result = PassResult.FUMBLE;
+						passState.setResult(state.result);
+					} else if (safePass != null) {
+						game.getActingPlayer().markSkillUsed(safePass);
+						SkillUse use = isBomb ? SkillUse.SAVED_FUMBLE_BOMB : SkillUse.SAVED_FUMBLE_BALL;
+						step.getResult().addReport(new ReportSkillUse(game.getThrowerId(), safePass, true, use));
+						step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, true));
+					}
+				}
+				if (state.result == PassResult.FUMBLE) {
+					step.publishParameter(new StepParameter(StepParameterKey.DONT_DROP_FUMBLE, false));
+				}
+				return true;
+			}
+
 
 		});
 
