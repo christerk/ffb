@@ -797,7 +797,6 @@ public class StepEndTurn extends AbstractStep {
 						reRollArgue(pTeam, friendsWithTheRef, playerId, turnData, briberyReRoll.get());
 					} else if (coachBanned) {
 						turnData.setCoachBanned(true);
-						removeUsedSecretWeapon(game, player);
 					} else {
 						if (canBeReRolled) {
 							playerIdsNaturalOnes.add(playerId);
