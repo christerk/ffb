@@ -75,13 +75,7 @@ public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
   				neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(report.getMinimumRoll()).append("+");
   			}
   		} else {
-  			if (PassResult.SAVED_FUMBLE == result) {
-				  if (report.isBomb()) {
-					  println(getIndent() + 2, " holds on to the bomb and puts out the fuse.");
-				  } else {
-					  println(getIndent() + 2, " holds on to the ball.");
-				  }
-  			} else if (PassResult.FUMBLE == result) {
+  			if (PassResult.SAVED_FUMBLE == result || PassResult.FUMBLE == result) {
   				if (report.isBomb()) {
   					println(getIndent() + 2, " fumbles the bomb.");
   				} else {

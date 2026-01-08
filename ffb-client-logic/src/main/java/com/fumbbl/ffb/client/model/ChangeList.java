@@ -10,7 +10,13 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+		.addFeature("Bombardier: Bombs dont explode on a 4+ when caught anymore and bounce on empty square (with game option)")
 			.addFeature("Shadowing")
+		);
+
+		versions.add(new VersionChangeList("2026-01-08")
+			.addFeature("Safe Pass optional")
+			.addBugfix("Add Iron Hard Skin")
 		);
 
 		versions.add(new VersionChangeList("2026-01-07")

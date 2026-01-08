@@ -66,7 +66,9 @@ public enum SkillUse implements INamedObject {
 	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up"),
 	EYE_GOUGED("eyeGouged", "to prevent the pushed player from assisting blocks"),
 	DISTRACT_OPPONENT("distractOpponent", "to distract %g opponent"),
-	BULLSEYE("bullseye", "to land the thrown player in the target square");
+	BULLSEYE("bullseye", "to land the thrown player in the target square"),
+	SAVED_FUMBLE_BALL("savedFumbleBall", "to hold on to the ball"),
+	SAVED_FUMBLE_BOMB("savedFumbleBomb", "to hold on to the bomb and put out the fuse");
 
 	private final String fName;
 	private final String fDescription;
