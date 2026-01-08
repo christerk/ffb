@@ -87,7 +87,6 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.FOLLOWUP);
 		sequence.add(StepId.TENTACLES, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.DROP_FALLING_PLAYERS));
-		sequence.add(StepId.SHADOWING);
 
 		// on blockChoice = SKULL
 		sequence.add(StepId.DROP_FALLING_PLAYERS, IStepLabel.DROP_FALLING_PLAYERS);
