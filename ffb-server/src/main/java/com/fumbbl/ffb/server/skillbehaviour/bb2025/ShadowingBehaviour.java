@@ -48,7 +48,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				boolean doNextStep = true;
-				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN));
+				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)	);
 				if (doShadowing && (state.coordinateFrom != null) && (state.usingShadowing == null)) {
 					Player<?>[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
 					shadowers = UtilPlayer.filterThrower(game, shadowers);
@@ -57,24 +57,9 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 					}
 					if (ArrayTool.isProvided(shadowers)) {
 						String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-						String[] descriptionArray = new String[shadowers.length];
-						for (int i = 0; i < shadowers.length; i++) {
-							int attributeDiff = shadowers[i].getMovementWithModifiers() - actingPlayer.getPlayer().getMovementWithModifiers();
-							StringBuilder description = new StringBuilder();
-							if (attributeDiff > 0) {
-								description.append("(").append(attributeDiff).append(" MA advantage)");
-							}
-							if (attributeDiff == 0) {
-								description.append("(equal MA)");
-							}
-							if (attributeDiff < 0) {
-								description.append("(").append(Math.abs(attributeDiff)).append(" MA disadavantage)");
-							}
-							descriptionArray[i] = description.toString();
-						}
 						Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, descriptionArray, 1),
+								new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, null, 1),
 								!actingTeam.getId().equals(teamId));
 						doNextStep = false;
 					} else {
@@ -94,8 +79,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						}
 						if (rollShadowing) {
 							int roll = step.getGameState().getDiceRoller().rollSkill();
-							int moveDifference = game.getDefender().getMovementWithModifiers() - actingPlayer.getPlayer().getMovementWithModifiers();
-							int minimumRoll = Math.max(6 - moveDifference, 2);
+							int minimumRoll = 4;
 							boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING)
 									&& (step.getReRollSource() != null));

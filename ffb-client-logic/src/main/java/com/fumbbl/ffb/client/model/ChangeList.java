@@ -10,8 +10,9 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
-
+			.addFeature("Shadowing")
 		);
+
 		versions.add(new VersionChangeList("2026-01-07")
 			.addBugfix("Foul Appearance: Fixed bug where FA was not ending turn during a blitz")
 			.addFeature("Allow Bribe after failed AtC")
