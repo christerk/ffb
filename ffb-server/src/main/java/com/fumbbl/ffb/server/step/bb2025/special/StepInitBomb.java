@@ -3,6 +3,8 @@ package com.fumbbl.ffb.server.step.bb2025.special;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.BloodSpot;
+import com.fumbbl.ffb.CatchScatterThrowInMode;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -22,9 +24,12 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.ReportBombExplodesAfterCatch;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportBombOutOfBounds;
+import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -39,6 +44,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.SpecialEffect.SequenceParams;
+import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
@@ -177,26 +183,53 @@ public final class StepInitBomb extends AbstractStep {
             } else if (explodeSkillUsed == null) {
                 explodeSkillUsed = false;
             }
-            boolean explodes;
             if (explodeSkillUsed) {
-                explodes = true;
-            } else {
-                int roll = getGameState().getDiceRoller().rollDice(6);
-                explodes = roll >= 4;
-                getResult().addReport(new ReportBombExplodesAfterCatch(fCatcherId, explodes, roll));
-            }
-            if (explodes) {
                 fCatcherId = null;
             }
         }
 
         if (fCatcherId == null) {
             fBombCoordinate = game.getFieldModel().getBombCoordinate();
+            boolean bombOut = false;
+            boolean publishCatch = false;
+            boolean explode = true;
+
             if (fBombCoordinate == null) {
                 if (!dontDropFumble) {
-                    getResult().addReport(new ReportBombOutOfBounds());
+                    bombOut = true;
                 }
+	            explode = false;
             } else {
+                GameOptionBoolean bounceOption = 
+                    (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_BOUNCES_ON_EMPTY_SQUARES);
+
+                if (!fPassFumble && bounceOption.isEnabled() && game.getFieldModel().getPlayer(fBombCoordinate) == null) {
+                    int scatterRoll = getGameState().getDiceRoller().rollScatterDirection();
+                    Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, scatterRoll);
+                    FieldCoordinate bounceTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(fBombCoordinate, direction, 1);
+                    getResult().addReport(new ReportScatterBall(new Direction[]{direction}, new int[]{scatterRoll}, false));
+
+                    if (!FieldCoordinateBounds.FIELD.isInBounds(bounceTo)) {
+                        bombOut = true;
+                        explode = false;
+                    } else if (game.getFieldModel().getPlayer(bounceTo) != null) {
+                        game.getFieldModel().setBombCoordinate(bounceTo);
+                        game.getFieldModel().setBombMoving(true);
+                        publishCatch = true;
+                        explode = false;
+                    } else {
+                        fBombCoordinate = bounceTo;
+                    }
+                }
+            }
+
+            if (bombOut) {
+                game.getFieldModel().setBombCoordinate(null);
+                game.getFieldModel().setBombMoving(false);
+                getResult().addReport(new ReportBombOutOfBounds());
+            } else if (publishCatch) {
+                publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+            } else if (explode) {
                 game.getFieldModel().setBombCoordinate(null);
                 getResult().setAnimation(new Animation(AnimationType.BOMB_EXPLOSION, fBombCoordinate));
                 UtilServerGame.syncGameModel(this);
@@ -214,15 +247,14 @@ public final class StepInitBomb extends AbstractStep {
                     SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
                     com.fumbbl.ffb.server.step.generator.SpecialEffect generator =
                         (com.fumbbl.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
-
                     affectedPlayers.stream().map(player -> {
                         boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));
-                        return new SequenceParams(getGameState(), SpecialEffect.BOMB,
-                            player.getId(), rollForEffect);
+                        return new SequenceParams(getGameState(), SpecialEffect.BOMB, player.getId(), rollForEffect);
                     }).forEach(generator::pushSequence);
                 }
                 publishParameter(new StepParameter(StepParameterKey.BOMB_EXPLODED, true));
             }
+
             leaveStep(null);
         } else {
             leaveStep(fGotoLabelOnEnd);

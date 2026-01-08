@@ -83,7 +83,7 @@ public enum GameOptionId implements INamedObject {
 	SNEAKY_GIT_CAN_MOVE_AFTER_FOUL("sneakyGitCanMoveAfterFoul"), BOMB_USES_MB("bombUsesMb"), CATCH_WORKS_FOR_BOMBS("catchWorksForBombs"),
 	ONLY_ONE_BRIBE_PER_SEND_OFF("onlyOneBribePerSendOff"),
 	OVERTIME_GOLDEN_GOAL("overtimeGoldenGoal"), OVERTIME_KICK_OFF_RESULTS("overtimeKickOffResults"),
-	ENABLE_TACKLEZONE_OVERLAYS("enableTacklezoneOverlays"),
+	ENABLE_TACKLEZONE_OVERLAYS("enableTacklezoneOverlays"), BOMB_BOUNCES_ON_EMPTY_SQUARES("bombBouncesOnEmptySquares"),
 
 	PITCH_URL("pitchUrl");
 

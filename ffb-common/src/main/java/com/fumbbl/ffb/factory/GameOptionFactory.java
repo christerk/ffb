@@ -368,6 +368,10 @@ public class GameOptionFactory {
 					.setMessageFalse("Mighty Blow can not be used against Chainsaw players");
 			case INDUCEMENT_DUMMY:
 				return new GameOptionInt(pOptionId).setDefault(0);
+			case BOMB_BOUNCES_ON_EMPTY_SQUARES:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageTrue("Bombs bounce on empty squares")
+					.setMessageFalse("Bombs explode on empty squares");
 			default:
 				return null;
 		}
