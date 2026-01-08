@@ -10,7 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+		);
+
+		versions.add(new VersionChangeList("2026-01-08")
 			.addFeature("Safe Pass optional")
+			.addBugfix("Add Iron Hard Skin")
 		);
 		versions.add(new VersionChangeList("2026-01-07")
 			.addBugfix("Foul Appearance: Fixed bug where FA was not ending turn during a blitz")
