@@ -291,8 +291,8 @@ public class StepPass extends AbstractStepWithReRoll {
 
 	private boolean handleSafePass(Game game, PassState state, boolean isBomb) {		
 		if (state.getResult() == PassResult.SAVED_FUMBLE) {
-			if (usingSafePass == null) {
-				Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
+			Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
+			if (usingSafePass == null) {				
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogSkillUseParameter(game.getThrowerId(), safePass, 0, false),
 					game.getTeamHome().hasPlayer(game.getThrower()));
@@ -300,12 +300,9 @@ public class StepPass extends AbstractStepWithReRoll {
 			} else if (!usingSafePass) {
 				state.setResult(PassResult.FUMBLE);
 			} else {
-				Skill safePass = game.getThrower().getSkillWithProperty(NamedProperties.dontDropFumbles);
-				if (safePass != null) {
-					game.getActingPlayer().markSkillUsed(safePass);
-					SkillUse use = isBomb ? SkillUse.SAVED_FUMBLE_BOMB : SkillUse.SAVED_FUMBLE_BALL;
-					getResult().addReport(new ReportSkillUse(game.getThrowerId(), safePass, true, use));
-				}
+				game.getActingPlayer().markSkillUsed(safePass);
+				SkillUse use = isBomb ? SkillUse.SAVED_FUMBLE_BOMB : SkillUse.SAVED_FUMBLE_BALL;
+				getResult().addReport(new ReportSkillUse(game.getThrowerId(), safePass, true, use));
 			}
 		}
 		if (PassResult.FUMBLE == state.getResult()) {

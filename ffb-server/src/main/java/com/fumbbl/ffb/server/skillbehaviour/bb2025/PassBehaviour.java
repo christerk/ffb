@@ -259,7 +259,7 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 					} else if (!state.usingSafePass) {
 						state.result = PassResult.FUMBLE;
 						passState.setResult(state.result);
-					} else if (safePass != null) {
+					} else {
 						game.getActingPlayer().markSkillUsed(safePass);
 						SkillUse use = isBomb ? SkillUse.SAVED_FUMBLE_BOMB : SkillUse.SAVED_FUMBLE_BALL;
 						step.getResult().addReport(new ReportSkillUse(game.getThrowerId(), safePass, true, use));
