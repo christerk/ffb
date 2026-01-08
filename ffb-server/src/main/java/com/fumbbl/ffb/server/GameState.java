@@ -375,6 +375,18 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.setStalling(false);
 	}
 
+	public void resetShadowers() {
+		activeEffects.clearShadowers();
+	}
+
+	public void addShadower(String playerId) {
+		activeEffects.addShadower(playerId);
+	}
+
+	public int shadowingCount(String playerId) {
+		return (int) activeEffects.getShadowers().stream().filter(id -> id.equals(playerId)).count();
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {

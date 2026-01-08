@@ -236,6 +236,8 @@ public class StepEndTurn extends AbstractStep {
 			getGameState().resetStalling();
 		}
 
+		getGameState().resetShadowers();
+
 		boolean isHomeTurnEnding = game.isHomePlaying();
 		if (turnNr == 0) {
 			// work around as UtilServer#startHalf is currently called before weapons are removed, and we need these values for sendToBoxReason

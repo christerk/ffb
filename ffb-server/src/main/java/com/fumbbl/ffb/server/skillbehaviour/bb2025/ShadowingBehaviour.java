@@ -29,6 +29,8 @@ import com.fumbbl.ffb.skill.bb2025.Shadowing;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
+
 @RulesCollection(Rules.BB2025)
 public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 	public ShadowingBehaviour() {
@@ -38,7 +40,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepShadowing step, StepState state,
-					ClientCommandUseSkill useSkillCommand) {
+				ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -48,19 +50,25 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				boolean doNextStep = true;
-				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)	);
+				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN));
 				if (doShadowing && (state.coordinateFrom != null) && (state.usingShadowing == null)) {
-					Player<?>[] shadowers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
+					Player<?>[] shadowers =
+						UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);
 					shadowers = UtilPlayer.filterThrower(game, shadowers);
 					if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 						shadowers = UtilPlayer.filterAttackerAndDefender(game, shadowers);
 					}
+
+					shadowers = Arrays.stream(shadowers).filter(
+							shadower -> shadower.getMovementWithModifiers() > step.getGameState().shadowingCount(shadower.getId()))
+						.toArray(Player[]::new);
+
 					if (ArrayTool.isProvided(shadowers)) {
 						String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 						Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 						UtilServerDialog.showDialog(step.getGameState(),
-								new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, null, 1),
-								!actingTeam.getId().equals(teamId));
+							new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.SHADOWING, shadowers, null, 1),
+							!actingTeam.getId().equals(teamId));
 						doNextStep = false;
 					} else {
 						state.usingShadowing = false;
@@ -72,19 +80,20 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						boolean rollShadowing = true;
 						if (ReRolledActions.SHADOWING == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)
-									|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getDefender())) {
+								|| !UtilServerReRoll.useReRoll(step, step.getReRollSource(), game.getDefender())) {
 								rollShadowing = false;
 								state.usingShadowing = false;
 							}
 						}
 						if (rollShadowing) {
+							step.getGameState().addShadower(game.getDefenderId());
 							int roll = step.getGameState().getDiceRoller().rollSkill();
 							int minimumRoll = 4;
 							boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 							boolean reRolled = ((step.getReRolledAction() == ReRolledActions.SHADOWING)
-									&& (step.getReRollSource() != null));
+								&& (step.getReRollSource() != null));
 							step.getResult().addReport(new ReportTentaclesShadowingRoll(skill, game.getDefenderId(), roll,
-									successful, minimumRoll, reRolled));
+								successful, minimumRoll, reRolled));
 							if (!successful) {
 								if (step.getReRolledAction() != ReRolledActions.SHADOWING) {
 									if (UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), game.getDefender(),
@@ -106,7 +115,8 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 						}
 						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isJumping());
 						ServerUtilBlock.updateDiceDecorations(step.getGameState());
-						step.publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
+						step.publishParameter(
+							StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
 					}
 				}
 				if (doNextStep) {
