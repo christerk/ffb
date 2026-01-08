@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2025.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -28,7 +28,6 @@ import com.fumbbl.ffb.util.StringTool;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepShadowing extends AbstractStepWithReRoll {
 
@@ -63,6 +62,9 @@ public class StepShadowing extends AbstractStepWithReRoll {
 					return true;
 				case USING_DIVING_TACKLE:
 					state.usingDivingTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
+				case JUMPED:
+					state.usingShadowing = false;
 					return true;
 				default:
 					break;

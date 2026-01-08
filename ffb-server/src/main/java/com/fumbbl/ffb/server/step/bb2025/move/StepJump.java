@@ -224,6 +224,11 @@ public class StepJump extends AbstractStepWithReRoll {
 
 
 		boolean reRolled = ((getReRolledAction() == ReRolledActions.JUMP) && (getReRollSource() != null));
+
+		if (!reRolled) {
+			publishParameter(StepParameter.from(StepParameterKey.JUMPED, true));
+		}
+
 		FieldCoordinate to = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
 		JumpContext context = new JumpContext(game, actingPlayer.getPlayer(), moveStart, to);
