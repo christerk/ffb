@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRolledActions;
@@ -19,18 +19,17 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.mixed.move.StepShadowing;
-import com.fumbbl.ffb.server.step.mixed.move.StepShadowing.StepState;
+import com.fumbbl.ffb.server.step.bb2020.move.StepShadowing;
+import com.fumbbl.ffb.server.step.bb2020.move.StepShadowing.StepState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.mixed.Shadowing;
+import com.fumbbl.ffb.skill.bb2020.Shadowing;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 	public ShadowingBehaviour() {
 		super();

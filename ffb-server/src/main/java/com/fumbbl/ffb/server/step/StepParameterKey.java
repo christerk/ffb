@@ -87,6 +87,7 @@ public enum StepParameterKey {
 	INJURY_TYPE, // InjuryType
 	INTERCEPTOR_ID, // String
 	IS_KICKED_PLAYER, // Boolean
+	JUMPED, // Boolean
 	KEYWORD, // Keyword
 	KICKED_PLAYER_ID, // String
 	KICKED_PLAYER_STATE, // PlayerState
