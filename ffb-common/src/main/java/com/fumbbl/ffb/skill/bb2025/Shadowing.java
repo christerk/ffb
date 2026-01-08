@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -20,12 +20,11 @@ import com.fumbbl.ffb.model.skill.Skill;
  * the tackle zone of several players that have the Shadowing s kill, then only
  * one of the opposing players may attempt to shadow him.
  */
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class Shadowing extends Skill {
 
 	public Shadowing() {
-		super("Shadowing", SkillCategory.GENERAL);
+		super("Shadowing", SkillCategory.DEVIOUS);
 	}
 
 	@Override
