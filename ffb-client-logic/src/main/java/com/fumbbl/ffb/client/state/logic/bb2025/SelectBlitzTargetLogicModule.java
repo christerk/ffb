@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.net.ClientCommunication;
@@ -10,6 +11,7 @@ import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -39,14 +41,20 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
-		} else if (pPlayer.equals(actingPlayer.getPlayer()) ||
-			(!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer)
-				&& ArrayTool.isProvided(PathFinderWithMultiJump.INSTANCE.getPathToBlitzTarget(game, pPlayer))
-			)) {
+		} else if (pPlayer.equals(actingPlayer.getPlayer()) || canBeBlitzed(pPlayer, actingPlayer, game)) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
 			return InteractionResult.handled();
 		}
 		return InteractionResult.ignore();
+	}
+
+	private boolean canBeBlitzed(Player<?> pPlayer, ActingPlayer actingPlayer, Game game) {
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate targetCoordinate = fieldModel.getPlayerCoordinate(pPlayer);
+		FieldCoordinate blitzerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+		return !actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer) &&
+			(blitzerCoordinate.isAdjacent(targetCoordinate) ||
+				ArrayTool.isProvided(PathFinderWithMultiJump.INSTANCE.getPathToBlitzTarget(game, pPlayer)));
 	}
 
 	public InteractionResult playerPeek(Player<?> pPlayer) {
@@ -54,8 +62,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		FieldComponent fieldComponent = client.getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (!actingPlayer.hasBlocked() && extension.isValidBlitzTarget(game, pPlayer)
-			&& ArrayTool.isProvided(PathFinderWithMultiJump.INSTANCE.getPathToBlitzTarget(game, pPlayer))) {
+		if (canBeBlitzed(pPlayer, actingPlayer, game)) {
 			return InteractionResult.perform();
 		} else {
 			return InteractionResult.invalid();
