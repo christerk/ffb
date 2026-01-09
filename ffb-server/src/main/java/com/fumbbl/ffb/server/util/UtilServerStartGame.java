@@ -295,6 +295,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean stackChainsaw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.MB_STACKS_AGAINST_CHAINSAW);
 			stackChainsaw.setValue(true);
 			game.getOptions().addOption(stackChainsaw);
+			GameOptionBoolean lashOutEnds = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION);
+			lashOutEnds.setValue(false);
+			//game.getOptions().addOption(lashOutEnds);
 		}
 	}
 

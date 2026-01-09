@@ -22,6 +22,8 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
 import com.fumbbl.ffb.report.mixed.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
@@ -67,7 +69,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepAnimalSavagery step, StepState state,
-																								 ClientCommandUseSkill useSkillCommand) {
+				ClientCommandUseSkill useSkillCommand) {
 				return StepCommandStatus.EXECUTE_STEP;
 			}
 
@@ -203,7 +205,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 	}
 
 	private Set<Player<?>> adjacentTargets(Game game, Team team, FieldModel fieldModel,
-																				 FieldCoordinate playerCoordinate) {
+		FieldCoordinate playerCoordinate) {
 		Set<Player<?>> adjacentOpponents =
 			Arrays.stream(UtilPlayer.findAdjacentBlockablePlayers(game, team, playerCoordinate)).collect(Collectors.toSet());
 		FieldCoordinate defenderCoordinate = fieldModel.getPlayerCoordinate(game.getDefender());
@@ -241,6 +243,21 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			deferredCommands.add(new StandingUpCommand());
 			deferredCommands.add(new AnimalSavageryCancelActionCommand());
 			deferredCommands.add(new AnimalSavageryControlCommand());
+		} else if (UtilGameOption.isOptionEnabled(game, GameOptionId.ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION)) {
+			new AnimalSavageryCancelActionCommand().execute(step);
+			step.publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+			step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));
+
+			PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer())
+				.changeBase(actingPlayer.isStandingUp() ? PlayerState.PRONE : PlayerState.STANDING)
+				.changeActive(false);
+			game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState);
+
+			TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
+			if (targetSelectionState != null) {
+				targetSelectionState.failed();
+			}
+
 		} else {
 
 			TurnData turnData = game.isHomePlaying() ? game.getTurnDataHome() : game.getTurnDataAway();
@@ -273,12 +290,13 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				.label(label).playerId(game.getDefenderId()).apothecaryMode(ApothecaryMode.ANIMAL_SAVAGERY)
 				.victimStateKey(playerStateKey).additionalVictimStateKeys(additionalStateKeys).build();
 		step.publishParameter(
-			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext, deferredCommands)));
+			new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
+				new SteadyFootingContext(dropPlayerContext, deferredCommands)));
 
 	}
 
 	private PlayerAction fallbackAction(StepAnimalSavagery step, PlayerAction playerAction, InjuryContext injuryContext,
-																			TurnData turnData, Game game, String oldDefenderId, boolean hitTargetTeamMate) {
+		TurnData turnData, Game game, String oldDefenderId, boolean hitTargetTeamMate) {
 		boolean playerRemoved = injuryContext.isCasualty() || injuryContext.isKnockedOut();
 		FieldModel fieldModel = game.getFieldModel();
 		Player<?> defender = game.getDefender();

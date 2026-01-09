@@ -20,10 +20,12 @@ public class StepSetDefender extends AbstractStep {
 	private String defenderId;
 	private boolean ignoreNullValue;
 
+	@SuppressWarnings("unused")
 	public StepSetDefender(GameState pGameState) {
 		super(pGameState);
 	}
 
+	@SuppressWarnings("unused")
 	public StepSetDefender(GameState pGameState, StepAction defaultStepResult) {
 		super(pGameState, defaultStepResult);
 	}

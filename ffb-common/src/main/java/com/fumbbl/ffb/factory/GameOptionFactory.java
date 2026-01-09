@@ -372,6 +372,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Bombs bounce on empty squares")
 					.setMessageFalse("Bombs explode on empty squares");
+			case ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageTrue("Animal Savagery lash out ends activation")
+					.setMessageFalse("Animal Savagery lash out does not end activation");
 			default:
 				return null;
 		}

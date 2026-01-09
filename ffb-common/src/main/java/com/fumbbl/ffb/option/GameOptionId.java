@@ -84,6 +84,7 @@ public enum GameOptionId implements INamedObject {
 	ONLY_ONE_BRIBE_PER_SEND_OFF("onlyOneBribePerSendOff"),
 	OVERTIME_GOLDEN_GOAL("overtimeGoldenGoal"), OVERTIME_KICK_OFF_RESULTS("overtimeKickOffResults"),
 	ENABLE_TACKLEZONE_OVERLAYS("enableTacklezoneOverlays"), BOMB_BOUNCES_ON_EMPTY_SQUARES("bombBouncesOnEmptySquares"),
+	ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION("animalSavageryLashOutEndsActivation"),
 
 	PITCH_URL("pitchUrl");
 
