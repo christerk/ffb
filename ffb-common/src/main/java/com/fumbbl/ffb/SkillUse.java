@@ -68,7 +68,8 @@ public enum SkillUse implements INamedObject {
 	DISTRACT_OPPONENT("distractOpponent", "to distract %g opponent"),
 	BULLSEYE("bullseye", "to land the thrown player in the target square"),
 	SAVED_FUMBLE_BALL("savedFumbleBall", "to hold on to the ball"),
-	SAVED_FUMBLE_BOMB("savedFumbleBomb", "to hold on to the bomb and put out the fuse");
+	SAVED_FUMBLE_BOMB("savedFumbleBomb", "to hold on to the bomb and put out the fuse"),
+	GAIN_CLAWS_FOR_BLITZ("gainClaws", "to gain the Claws skill for this Blitz action");
 
 	private final String fName;
 	private final String fDescription;

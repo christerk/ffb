@@ -561,6 +561,12 @@ public abstract class LogicModule {
 				|| isThenIStartedBlastinAvailable(actingPlayer);
 	}
 
+	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
+		return isSpecialAbilityAvailable(actingPlayer) 
+				|| isFrenziedRushAvailable(actingPlayer)
+				|| isSlashingNailsAvailable(actingPlayer);
+	}
+
 	public boolean isPassAnySquareAvailable(ActingPlayer actingPlayer, Game game) {
 		return (PlayerAction.PASS_MOVE == actingPlayer.getPlayerAction())
 				&& UtilPlayer.hasBall(game, actingPlayer.getPlayer());
@@ -624,4 +630,22 @@ public abstract class LogicModule {
 		return playerState != null && playerState.isEyeGouged() && playerState.isActive() &&
 				playerState.getBase() != PlayerState.PRONE;
 	}
+
+	public boolean isFrenziedRushAvailable(ActingPlayer actingPlayer) {
+		return isFrenziedRushAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isFrenziedRushAvailable(Player<?> player) {
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz);
+	}
+
+	public boolean isSlashingNailsAvailable(ActingPlayer actingPlayer) {
+		return isSlashingNailsAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isSlashingNailsAvailable(Player<?> player) {
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainClawsForBlitz);
+	}
 }
+
+
