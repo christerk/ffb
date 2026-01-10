@@ -12,6 +12,8 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Animal Savagery, including option to toggle action loss after lashing out")
 			.addFeature("Dwarfen Scourge (Star Ivan ‘the Animal’ Deathshroud)")
+			.addFeature("Slashing Nails (Roxanna Darknail)")
+			.addFeature("Frenzied Rush (Glart Smashrip)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")
