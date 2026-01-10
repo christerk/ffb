@@ -168,6 +168,11 @@ public class UtilServerInjury {
 	}
 
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer, PlayerState givenPlayerState) {
+		return handleRegeneration(pStep, pPlayer, givenPlayerState, false);
+	}
+
+	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer, PlayerState givenPlayerState,
+		boolean rerolled) {
 		boolean successful = false;
 		if (pPlayer != null) {
 			GameState gameState = pStep.getGameState();
@@ -190,7 +195,7 @@ public class UtilServerInjury {
 					UtilBox.refreshBoxes(game);
 					UtilServerGame.updatePlayerStateDependentProperties(pStep);
 				}
-				pStep.getResult().addReport(new ReportRegenerationRoll(pPlayer.getId(), successful, roll, 4, false, null));
+				pStep.getResult().addReport(new ReportRegenerationRoll(pPlayer.getId(), successful, roll, 4, rerolled, null));
 			}
 		}
 		return successful;
@@ -268,13 +273,15 @@ public class UtilServerInjury {
 
 	}
 
-	public static void sendRaisedPlayer(IStep pStep, GameState gameState, Team necroTeam, RosterPlayer raisedPlayer, boolean nurglesRot) {
+	public static void sendRaisedPlayer(IStep pStep, GameState gameState, Team necroTeam, RosterPlayer raisedPlayer,
+		boolean nurglesRot) {
 		// communicate raised player to clients
 		Game game = gameState.getGame();
 		gameState.getServer().getCommunication()
 			.sendAddPlayer(gameState, necroTeam.getId(), raisedPlayer, game.getFieldModel().getPlayerState(raisedPlayer),
 				game.getGameResult().getPlayerResult(raisedPlayer));
-		pStep.getResult().addReport(new ReportRaiseDead(raisedPlayer.getId(), raisedPlayer.getPosition().getName(), nurglesRot));
+		pStep.getResult()
+			.addReport(new ReportRaiseDead(raisedPlayer.getId(), raisedPlayer.getPosition().getName(), nurglesRot));
 		pStep.getResult().setSound(SoundId.ORGAN);
 	}
 

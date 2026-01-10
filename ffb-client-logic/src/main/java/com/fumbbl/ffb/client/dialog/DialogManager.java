@@ -241,6 +241,9 @@ public class DialogManager {
 					case SELECT_POSITION:
 						setDialogHandler(new DialogSelectPositionHandler(getClient()));
 						break;
+					case RE_ROLL_REGENERATION_MULTIPLE:
+						setDialogHandler(new DialogReRollRegenerationMultipleHandler(getClient()));
+						break;
 					default:
 						break;
 				}

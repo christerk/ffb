@@ -66,7 +66,7 @@ public class ClientCommandUseInducement extends ClientCommand {
 	}
 
 	public String[] getPlayerIds() {
-		return fPlayerIds.toArray(new String[fPlayerIds.size()]);
+		return fPlayerIds.toArray(new String[0]);
 	}
 
 	public boolean hasPlayerId(String pPlayerId) {
