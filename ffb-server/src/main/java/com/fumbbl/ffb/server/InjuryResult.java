@@ -37,6 +37,7 @@ import java.util.List;
 public class InjuryResult implements IJsonSerializable {
 
 	private boolean alreadyReported;
+	private boolean preRegeneration = true;
 
 	private static final List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
 		add(PlayerState.PRONE);
@@ -64,6 +65,14 @@ public class InjuryResult implements IJsonSerializable {
 
 	public void setAlreadyReported(boolean alreadyReported) {
 		this.alreadyReported = alreadyReported;
+	}
+
+	public boolean isPreRegeneration() {
+		return preRegeneration;
+	}
+
+	public void passedRegeneration() {
+		this.preRegeneration = false;
 	}
 
 	public void applyTo(IStep pStep) {
@@ -210,7 +219,7 @@ public class InjuryResult implements IJsonSerializable {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
-
+		IServerJsonOption.PRE_REGENERATION.addTo(jsonObject, preRegeneration);
 		injuryContext.toJsonValue(jsonObject);
 
 		return jsonObject;
@@ -223,6 +232,10 @@ public class InjuryResult implements IJsonSerializable {
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
 
 		injuryContext.initFrom(source, jsonObject);
+
+		if (IServerJsonOption.PRE_REGENERATION.isDefinedIn(jsonObject)) {
+			preRegeneration = IServerJsonOption.PRE_REGENERATION.getFrom(source, jsonObject);
+		}
 
 		return this;
 	}

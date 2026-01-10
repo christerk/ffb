@@ -41,7 +41,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		if (!LeaderState.USED.equals(turnData.getLeaderState())) {
 			if (teamHasLeaderOnField(team, fieldModel)) {
 				if (teamHasUnusedLeaderOnField(team, fieldModel) &&
-						LeaderState.NONE.equals(turnData.getLeaderState())) {
+					LeaderState.NONE.equals(turnData.getLeaderState())) {
 					turnData.setLeaderState(LeaderState.AVAILABLE);
 					turnData.setReRolls(turnData.getReRolls() + 1);
 					step.getResult().addReport(new ReportLeader(team.getId(), turnData.getLeaderState()));
@@ -60,7 +60,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	protected boolean teamHasUnusedLeaderOnField(Team pTeam, FieldModel pFieldModel) {
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
-					&& player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
+				&& player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
 				return true;
 			}
 		}
@@ -70,7 +70,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	protected void markUsed(Team team, Game game) {
 		for (Player<?> player : team.getPlayers()) {
 			Optional<Skill> skill =
-					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.grantsTeamReRollWhenOnPitch);
+				UtilCards.getUnusedSkillWithProperty(player, NamedProperties.grantsTeamReRollWhenOnPitch);
 			skill.ifPresent(value -> player.markUsed(value, game));
 		}
 	}
@@ -136,19 +136,19 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	public void reportInjury(IStep step, InjuryResult injuryResult) {
 		InjuryContext injuryContext = injuryResult.injuryContext();
 
-		SkipInjuryParts skip = SkipInjuryParts.NONE;
+		SkipInjuryParts skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.CAS : SkipInjuryParts.NONE;
 		boolean playSound = true;
 		if (injuryContext instanceof ModifiedInjuryContext) {
 			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
 			if (modification == InjuryModification.INJURY) {
-				skip = SkipInjuryParts.ARMOUR;
+				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
 			}
 		} else if (injuryContext.getModifiedInjuryContext() != null) {
 			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
 			if (injuryResult.isAlreadyReported()) {
 				switch (modification) {
 					case ARMOUR:
-						skip = SkipInjuryParts.ARMOUR;
+						skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
 						break;
 					case INJURY:
 						skip = SkipInjuryParts.ARMOUR_AND_INJURY;
