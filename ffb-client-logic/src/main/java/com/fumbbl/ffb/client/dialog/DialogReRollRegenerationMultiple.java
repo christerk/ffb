@@ -16,13 +16,10 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class DialogReRollRegenerationMultiple extends Dialog {
 
-	public static final Color HIGHLIGHT = Color.lightGray;
 	private String selectedTarget;
 
 	public DialogReRollRegenerationMultiple(FantasyFootballClient pClient,

@@ -4,6 +4,7 @@ public enum SkipInjuryParts {
 	ARMOUR(true, false),
 	ARMOUR_AND_CAS(true, false, true),
 	ARMOUR_AND_INJURY(true, true),
+	EVERYTHING_BUT_CAS(true, true, false),
 	INJURY(false, true),
 	CAS(false, false, true),
 	NONE(false, false);

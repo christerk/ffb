@@ -136,7 +136,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	public void reportInjury(IStep step, InjuryResult injuryResult) {
 		InjuryContext injuryContext = injuryResult.injuryContext();
 
-		SkipInjuryParts skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.CAS : SkipInjuryParts.NONE;
+		SkipInjuryParts skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.CAS : SkipInjuryParts.EVERYTHING_BUT_CAS;
 		boolean playSound = true;
 		if (injuryContext instanceof ModifiedInjuryContext) {
 			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();

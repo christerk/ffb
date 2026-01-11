@@ -325,11 +325,17 @@ public class StepApothecaryMultiple extends AbstractStep {
 		Map<ApothecaryStatus, List<InjuryResult>> groupedInjuries = injuryResults.stream()
 			.collect(Collectors.groupingBy(injuryResult -> injuryResult.injuryContext().getApothecaryStatus()));
 
+		injuryResults.forEach(result -> result.report(this));
+
 		if (!regenerationHandled()) {
 			getResult().setNextAction(StepAction.CONTINUE);
 			return;
 		}
 
+		injuryResults.forEach(result -> {
+			result.setAlreadyReported(false);
+			result.report(this);
+		});
 
 /*
 		List<InjuryResult> doRequest = groupedInjuries.get(ApothecaryStatus.DO_REQUEST);
@@ -417,7 +423,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 		InjuryMechanic injuryMechanic = game.getMechanic(Mechanic.Type.INJURY);
 
-		for (InjuryResult injuryResult : injuryResults) {
+		for (InjuryResult injuryResult : regenerationFailedResults) {
 			if (UtilServerInjury.handlePumpUp(this, injuryResult)) {
 				UtilServerGame.syncGameModel(this);
 			}
@@ -616,33 +622,35 @@ public class StepApothecaryMultiple extends AbstractStep {
 	private boolean regenerationHandled() {
 		Game game = getGameState().getGame();
 
-		Map<Boolean, List<InjuryResult>> regenerationGroups =
-			injuryResults.stream().filter(InjuryResult::isPreRegeneration).collect(Collectors.groupingBy(result -> {
-				Player<?> defender = game.getPlayerById(result.injuryContext().getDefenderId());
-				return defender.hasSkillProperty(NamedProperties.canRollToSaveFromInjury) &&
-					result.injuryContext().getInjuryType().canUseApo();
-			}));
+		if (regenerationFailedResults.isEmpty()) {
+			Map<Boolean, List<InjuryResult>> regenerationGroups =
+				injuryResults.stream().filter(InjuryResult::isPreRegeneration).collect(Collectors.groupingBy(result -> {
+					Player<?> defender = game.getPlayerById(result.injuryContext().getDefenderId());
+					return defender.hasSkillProperty(NamedProperties.canRollToSaveFromInjury) &&
+						result.injuryContext().getInjuryType().canUseApo();
+				}));
 
-		regenerationGroups.getOrDefault(false, new ArrayList<>()).forEach(InjuryResult::passedRegeneration);
+			regenerationGroups.getOrDefault(false, new ArrayList<>()).forEach(InjuryResult::passedRegeneration);
 
-		regenerationGroups.getOrDefault(true, new ArrayList<>()).forEach(result -> {
-			Player<?> player = injuredPlayer(result, game);
-			PlayerState playerState = result.injuryContext().getPlayerState();
-			InducementSet inducementSet = inducementSetForTeam(player, game);
+			regenerationGroups.getOrDefault(true, new ArrayList<>()).forEach(result -> {
+				Player<?> player = injuredPlayer(result, game);
+				PlayerState playerState = result.injuryContext().getPlayerState();
+				InducementSet inducementSet = inducementSetForTeam(player, game);
 
-			List<InducementType> regenerationTypes = regenerationTypes(inducementSet);
+				List<InducementType> regenerationTypes = regenerationTypes(inducementSet);
 
-			int usesLeft = regenerationTypes.stream().mapToInt(type -> inducementSet.get(type).getUsesLeft()).sum();
+				int usesLeft = regenerationTypes.stream().mapToInt(type -> inducementSet.get(type).getUsesLeft()).sum();
 
-			if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
-				result.passedRegeneration();
-				result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-			} else if (usesLeft > 0 || UtilServerReRoll.isTeamReRollAvailable(getGameState(), player)) {
-				regenerationFailedResults.add(result);
-			} else {
-				result.passedRegeneration();
-			}
-		});
+				if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
+					result.passedRegeneration();
+					result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
+				} else if (usesLeft > 0 || UtilServerReRoll.isTeamReRollAvailable(getGameState(), player)) {
+					regenerationFailedResults.add(result);
+				} else {
+					result.passedRegeneration();
+				}
+			});
+		}
 
 		if (regenerationFailedResults.stream().noneMatch(InjuryResult::isPreRegeneration)) {
 			return true;
@@ -780,8 +788,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 	private Optional<InducementType> regenerationInducementType(Player<?> player, Game game) {
 		InducementSet inducementSet = inducementSetForTeam(player, game);
 		List<InducementType> regenerationTypes = regenerationTypes(inducementSet);
-		Optional<InducementType> inducement = regenerationTypes.stream().findFirst();
-		return inducement;
+		return regenerationTypes.stream().findFirst();
 	}
 
 	private Player<?> injuredPlayer(InjuryResult result, Game game) {
@@ -789,18 +796,16 @@ public class StepApothecaryMultiple extends AbstractStep {
 	}
 
 	private List<InducementType> regenerationTypes(InducementSet inducementSet) {
-		List<InducementType> regenerationTypes = inducementSet.getInducementMapping().keySet().stream()
+		return inducementSet.getInducementMapping().keySet().stream()
 			.filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSet.hasUsesLeft(type))
 			.sorted(Comparator.comparingInt(InducementType::getPriority)).collect(Collectors.toList());
-		return regenerationTypes;
 	}
 
 	private InducementSet inducementSetForTeam(Player<?> player, Game game) {
 		Team team = player.getTeam();
 
-		InducementSet inducementSet = team == game.getTeamHome() ? game.getTurnDataHome().getInducementSet()
+		return team == game.getTeamHome() ? game.getTurnDataHome().getInducementSet()
 			: game.getTurnDataAway().getInducementSet();
-		return inducementSet;
 	}
 
 	// JSON serialization
