@@ -43,6 +43,7 @@ import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -266,11 +267,17 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 		if (playerLandedUpon != null) {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
+			Player<?> thrower = game.getActingPlayer().getPlayer();
 			InjuryResult injuryResultHitPlayer;
 			if (!isKickedPlayer && thrownPlayer.getTeam() != playerLandedUpon.getTeam()
 					&& thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState)) {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
 					this, new InjuryTypeTTMHitPlayerForSpp(), thrownPlayer,
+					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+			} else if (isKickedPlayer && thrownPlayer.getTeam() != playerLandedUpon.getTeam()
+					&& UtilCards.hasSkillWithProperty(thrower, NamedProperties.grantsSppFromSpecialActionsCas)) {
+				injuryResultHitPlayer = UtilServerInjury.handleInjury(
+					this, new InjuryTypeTTMHitPlayerForSpp(), thrower,
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 			} else {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
