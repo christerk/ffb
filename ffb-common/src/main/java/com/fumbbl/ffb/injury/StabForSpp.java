@@ -6,7 +6,7 @@ import com.fumbbl.ffb.model.Player;
 public class StabForSpp extends InjuryType {
 
 	public StabForSpp() {
-		super("stab", true, SendToBoxReason.STABBED);
+		super("stabForSpp", true, SendToBoxReason.STABBED);
 	}
 
 	@Override
