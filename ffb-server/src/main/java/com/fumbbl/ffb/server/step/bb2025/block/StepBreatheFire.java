@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBreatheFire;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBreatheFireForSpp;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -34,6 +35,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 
@@ -135,7 +137,9 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 					minimumRoll, reRolled, game.getDefenderId(), result, strongOpponent));
 
 				if (successful) {
-					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(),
+					boolean grantsSpp = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.grantsSppFromSpecialActionsCas);
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, 
+						grantsSpp ? new InjuryTypeBreatheFireForSpp() : new InjuryTypeBreatheFire(),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					DropPlayerContext dropPlayerContext =
 						new DropPlayerContext(injuryResultDefender, false, true, fGotoLabelOnSuccess, game.getDefenderId(),
