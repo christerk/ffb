@@ -28,7 +28,7 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 	public DialogReRollRegenerationMultiple(FantasyFootballClient pClient,
 		DialogReRollRegenerationMultipleParameter parameter) {
 
-		super(pClient, "Use a Re-roll", false);
+		super(pClient, "Re-roll Regeneration", false);
 
 		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
 		fButtonNoReRoll.addActionListener(e -> close());
@@ -41,13 +41,13 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 		fButtonNoReRoll.setMnemonic((int) 'N');
 
 		StringBuilder mainMessages = new StringBuilder();
-		mainMessages.append("<html>Do you want to re-roll one of these Regeneration rolls using ");
+		mainMessages.append("<html>Do you want to re-roll one of these Regeneration rolls?<br/>Use <b>");
 		if (parameter.getInducementType() != null) {
-			mainMessages.append(parameter.getInducementType().getName());
+			mainMessages.append(parameter.getInducementType().getDescription());
 		} else {
 			mainMessages.append("a Team Re-Roll");
 		}
-		mainMessages.append("?</html>");
+		mainMessages.append("</b>?</html>");
 
 		Game game = getClient().getGame();
 
@@ -66,35 +66,14 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 		detailPanel.setAlignmentX(CENTER_ALIGNMENT);
 		for (int index = 0; index < parameter.getPlayerIds().size(); index++) {
 
-			JPanel targetPanel = new JPanel();
-			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
-			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
-
 			String target = parameter.getPlayerIds().get(index);
 			Player<?> player = game.getPlayerById(target);
 
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-			buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
-			buttonPanel.add(Box.createHorizontalGlue());
-			buttonPanel.setBackground(HIGHLIGHT);
-			buttonPanel.add(createButton(target, player.getName(), (char) index));
-
-			targetPanel.add(Box.createVerticalStrut(3));
-			targetPanel.add(buttonPanel);
-			targetPanel.add(Box.createVerticalStrut(3));
-			targetPanel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-			targetPanel.setBackground(HIGHLIGHT);
-			detailPanel.add(targetPanel);
+			detailPanel.add(createButton(target, player.getName(), (char) index));
 			detailPanel.add(Box.createVerticalStrut(5));
-
 		}
 
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
-		bottomPanel.add(fButtonNoReRoll);
-		detailPanel.add(bottomPanel);
+		detailPanel.add(fButtonNoReRoll);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -105,7 +84,7 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);
-		infoPanel.add(Box.createHorizontalStrut(5));
+		infoPanel.add(Box.createHorizontalGlue());
 		infoPanel.add(detailPanel);
 		infoPanel.add(Box.createHorizontalGlue());
 
