@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Animal Savagery, including option to toggle action loss after lashing out")
 			.addFeature("Dwarfen Scourge (Star Ivan ‘the Animal’ Deathshroud)")
+			.addFeature("Violent Innovator: Spp for Stab, Chainsaw, Breath Fire, KTM and Bombardier")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")
