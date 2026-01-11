@@ -25,7 +25,7 @@ public class ApothecaryMechanic extends com.fumbbl.ffb.mechanics.ApothecaryMecha
 
 		boolean teamHasWanderingApo = turnData.getWanderingApothecaries() > 0;
 
-		boolean teamCanUsePlagueDoctor = turnData.getPlagueDoctors() > 0 && playerState.getBase() == PlayerState.KNOCKED_OUT;
+		boolean teamCanUsePlagueDoctor = turnData.getPlagueDoctors() > 0;
 
 		if (turnData.getApothecaries() > turnData.getWanderingApothecaries()) {
 			validTypes.add(ApothecaryType.TEAM);
