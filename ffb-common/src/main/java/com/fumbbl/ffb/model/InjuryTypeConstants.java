@@ -8,6 +8,7 @@ import com.fumbbl.ffb.injury.BlockStunned;
 import com.fumbbl.ffb.injury.Bomb;
 import com.fumbbl.ffb.injury.BreatheFire;
 import com.fumbbl.ffb.injury.Chainsaw;
+import com.fumbbl.ffb.injury.ChainsawForSpp;
 import com.fumbbl.ffb.injury.CrowdPush;
 import com.fumbbl.ffb.injury.CrowdPushForSpp;
 import com.fumbbl.ffb.injury.DropDodge;
@@ -51,6 +52,7 @@ public class InjuryTypeConstants {
 	public static final InjuryType BOMB = new Bomb();
 	public static final InjuryType BREATHE_FIRE = new BreatheFire();
 	public static final InjuryType CHAINSAW = new Chainsaw();
+	public static final InjuryType CHAINSAW_FOR_SPP = new ChainsawForSpp();
 	public static final InjuryType CROWD_PUSH = new CrowdPush();
 	public static final InjuryType CROWD_PUSH_FOR_SPP = new CrowdPushForSpp();
 	public static final InjuryType DROP_DODGE = new DropDodge();
