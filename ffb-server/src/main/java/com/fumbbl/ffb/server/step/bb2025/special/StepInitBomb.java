@@ -2,24 +2,17 @@ package com.fumbbl.ffb.server.step.bb2025.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.BloodSpot;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.Direction;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.Animation;
-import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -32,7 +25,6 @@ import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
-import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -42,16 +34,11 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.SpecialEffect.SequenceParams;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Initialization step of the pass sequence. May push SpecialEffect sequences
@@ -192,13 +179,11 @@ public final class StepInitBomb extends AbstractStep {
             fBombCoordinate = game.getFieldModel().getBombCoordinate();
             boolean bombOut = false;
             boolean publishCatch = false;
-            boolean explode = true;
 
             if (fBombCoordinate == null) {
                 if (!dontDropFumble) {
                     bombOut = true;
                 }
-	            explode = false;
             } else {
                 GameOptionBoolean bounceOption = 
                     (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_BOUNCES_ON_EMPTY_SQUARES);
@@ -211,12 +196,10 @@ public final class StepInitBomb extends AbstractStep {
 
                     if (!FieldCoordinateBounds.FIELD.isInBounds(bounceTo)) {
                         bombOut = true;
-                        explode = false;
                     } else if (game.getFieldModel().getPlayer(bounceTo) != null) {
                         game.getFieldModel().setBombCoordinate(bounceTo);
                         game.getFieldModel().setBombMoving(true);
                         publishCatch = true;
-                        explode = false;
                     } else {
                         fBombCoordinate = bounceTo;
                     }
@@ -229,30 +212,6 @@ public final class StepInitBomb extends AbstractStep {
                 getResult().addReport(new ReportBombOutOfBounds());
             } else if (publishCatch) {
                 publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
-            } else if (explode) {
-                game.getFieldModel().setBombCoordinate(null);
-                getResult().setAnimation(new Animation(AnimationType.BOMB_EXPLOSION, fBombCoordinate));
-                UtilServerGame.syncGameModel(this);
-                game.getFieldModel().add(new BloodSpot(fBombCoordinate, new PlayerState(PlayerState.HIT_BY_BOMB)));
-                List<Player<?>> affectedPlayers = new ArrayList<>();
-                FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fBombCoordinate,
-                    FieldCoordinateBounds.FIELD, 1, true);
-                for (int i = targetCoordinates.length - 1; i >= 0; i--) {
-                    Player<?> player = game.getFieldModel().getPlayer(targetCoordinates[i]);
-                    if (player != null) {
-                        affectedPlayers.add(player);
-                    }
-                }
-                if (!affectedPlayers.isEmpty()) {
-                    SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-                    com.fumbbl.ffb.server.step.generator.SpecialEffect generator =
-                        (com.fumbbl.ffb.server.step.generator.SpecialEffect) factory.forName(SequenceGenerator.Type.SpecialEffect.name());
-                    affectedPlayers.stream().map(player -> {
-                        boolean rollForEffect = !fBombCoordinate.equals(game.getFieldModel().getPlayerCoordinate(player));
-                        return new SequenceParams(getGameState(), SpecialEffect.BOMB, player.getId(), rollForEffect);
-                    }).forEach(generator::pushSequence);
-                }
-                publishParameter(new StepParameter(StepParameterKey.BOMB_EXPLODED, true));
             }
 
             leaveStep(null);

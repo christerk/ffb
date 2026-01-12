@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.common;
+package com.fumbbl.ffb.server.step.generator.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -11,7 +11,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 
 	public Bomb() {
@@ -30,6 +30,7 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 			from(StepParameterKey.DONT_DROP_FUMBLE, params.dontDropFumble));
 		// may insert multiple specialEffect sequences add this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		sequence.add(StepId.RESOLVE_BOMB);
 		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());
