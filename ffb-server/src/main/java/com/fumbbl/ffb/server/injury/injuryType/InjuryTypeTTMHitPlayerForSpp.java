@@ -1,10 +1,8 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
 import com.fumbbl.ffb.ApothecaryMode;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.TTMHitPlayerForSpp;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
@@ -56,9 +54,6 @@ public class InjuryTypeTTMHitPlayerForSpp extends InjuryTypeServer<TTMHitPlayerF
 
 		if (injuryContext.isArmorBroken()) {
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			factory.findInjuryModifiers(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
 			lethalFlight.ifPresent(skill -> skill.getInjuryModifiers().stream()
 				.filter(mod -> mod.appliesToContext(new InjuryModifierContext(game, injuryContext, pAttacker, pDefender, false, false, false)))
