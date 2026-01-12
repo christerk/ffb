@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Animal Savagery, including option to toggle action loss after lashing out")
 			.addFeature("Dwarfen Scourge (Star Ivan ‘the Animal’ Deathshroud)")
+			.addBugfix("Bombardier: Bombs should now explode after a bounce lands on a player")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")
