@@ -64,7 +64,6 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.BREATHE_FIRE);
 			add(ClientAction.BLOCK);
 			add(ClientAction.BLITZ);
-			add(ClientAction.FRENZIED_RUSH);
 			add(ClientAction.FOUL);
 			add(ClientAction.MOVE);
 			add(ClientAction.STAND_UP);
@@ -118,11 +117,6 @@ public class SelectLogicModule extends LogicModule {
 					break;
 				case BLITZ:
 					communication.sendActingPlayer(player, PlayerAction.BLITZ_MOVE, false);
-					break;
-				case FRENZIED_RUSH:
-					communication.sendActingPlayer(player, PlayerAction.BLITZ_MOVE, false);
-					Skill skill = player.getSkillWithProperty(NamedProperties.canGainFrenzyForBlitz);
-					communication.sendUseSkill(skill, true, player.getId());
 					break;
 				case FOUL:
 					communication.sendActingPlayer(player, PlayerAction.FOUL_MOVE, false);
@@ -298,9 +292,6 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isBlitzActionAvailable(player)) {
 			context.add(ClientAction.BLITZ);
-			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainFrenzyForBlitz)) {
-				context.add(ClientAction.FRENZIED_RUSH);
-			}
 		}
 		if (isFoulActionAvailable(player)) {
 			context.add(ClientAction.FOUL);

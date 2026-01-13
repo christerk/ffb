@@ -10,6 +10,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.bb2025.SppMechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -43,6 +45,7 @@ import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -266,12 +269,23 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 		if (playerLandedUpon != null) {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
+			Player<?> thrower = game.getActingPlayer().getPlayer();
+			boolean vsOpponent = thrownPlayer.getTeam() != playerLandedUpon.getTeam();
+			boolean lethalSpp = thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState);
+			boolean violentSpp = isKickedPlayer	&& UtilCards.hasSkillWithProperty(thrower, NamedProperties.grantsSppFromSpecialActionsCas);
 			InjuryResult injuryResultHitPlayer;
-			if (!isKickedPlayer && thrownPlayer.getTeam() != playerLandedUpon.getTeam()
-					&& thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState)) {
+
+			if (vsOpponent && (lethalSpp || violentSpp)) {
+				Player<?> attacker = lethalSpp ? thrownPlayer : thrower;
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
-					this, new InjuryTypeTTMHitPlayerForSpp(), thrownPlayer,
+					this, new InjuryTypeTTMHitPlayerForSpp(), attacker,
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+
+				if (lethalSpp && violentSpp && injuryResultHitPlayer.injuryContext().isCasualty()) {
+					SppMechanic spp = (SppMechanic) game.getMechanic(Mechanic.Type.SPP);
+					Player<?> secondary = attacker == thrownPlayer ? thrower : thrownPlayer;
+					spp.addCasualty(getGameState().getPrayerState().getAdditionalCasSppTeams(),	game.getGameResult().getPlayerResult(secondary));
+				}
 			} else {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
 					this, new InjuryTypeTTMHitPlayer(), null,

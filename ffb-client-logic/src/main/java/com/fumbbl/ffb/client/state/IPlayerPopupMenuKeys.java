@@ -34,7 +34,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_LONG = KeyEvent.VK_L;
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 	int KEY_PROJECTILE_VOMIT = KeyEvent.VK_V;
-	int KEY_FRENZIED_RUSH = KeyEvent.VK_E;
+	int KEY_FRENZIED_RUSH = KeyEvent.VK_Q;
 	int KEY_SHOT_TO_NOTHING = KeyEvent.VK_N;
 	int KEY_SHOT_TO_NOTHING_BOMB = KeyEvent.VK_V;
 	int KEY_TREACHEROUS = KeyEvent.VK_A;
@@ -58,4 +58,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_FURIOUS_OUTBURST = KeyEvent.VK_ASTERISK;
 	int KEY_MORE_ACTION = KeyEvent.VK_TAB;
 	int KEY_SECURE_THE_BALL = KeyEvent.VK_E;
+	int KEY_SLASHING_NAILS = KeyEvent.VK_S;
 }
