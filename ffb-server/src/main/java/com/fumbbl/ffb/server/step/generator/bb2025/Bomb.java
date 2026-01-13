@@ -29,8 +29,9 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 			from(StepParameterKey.CATCHER_ID, params.catcherId), from(StepParameterKey.PASS_FUMBLE, params.passFumble),
 			from(StepParameterKey.DONT_DROP_FUMBLE, params.dontDropFumble));
 		// may insert multiple specialEffect sequences add this point
-		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN); // handles the bomb bounce
 		sequence.add(StepId.RESOLVE_BOMB);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());

@@ -178,7 +178,6 @@ public final class StepInitBomb extends AbstractStep {
         if (fCatcherId == null) {
             fBombCoordinate = game.getFieldModel().getBombCoordinate();
             boolean bombOut = false;
-            boolean publishCatch = false;
 
             if (fBombCoordinate == null) {
                 if (!dontDropFumble) {
@@ -199,9 +198,11 @@ public final class StepInitBomb extends AbstractStep {
                     } else if (game.getFieldModel().getPlayer(bounceTo) != null) {
                         game.getFieldModel().setBombCoordinate(bounceTo);
                         game.getFieldModel().setBombMoving(true);
-                        publishCatch = true;
-                    } else {
+                        publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+                    } else { // empty bounce square
                         fBombCoordinate = bounceTo;
+                        game.getFieldModel().setBombCoordinate(bounceTo);
+                        game.getFieldModel().setBombMoving(false);
                     }
                 }
             }
@@ -210,8 +211,6 @@ public final class StepInitBomb extends AbstractStep {
                 game.getFieldModel().setBombCoordinate(null);
                 game.getFieldModel().setBombMoving(false);
                 getResult().addReport(new ReportBombOutOfBounds());
-            } else if (publishCatch) {
-                publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
             }
 
             leaveStep(null);

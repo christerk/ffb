@@ -23,9 +23,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.SpecialEffect.SequenceParams;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.List;
 public class StepResolveBomb extends AbstractStep {
 
 	private FieldCoordinate fBombCoordinate;
+  private String fCatcherId;
 
 	public StepResolveBomb(GameState gameState) {
 		super(gameState, StepAction.NEXT_STEP);
@@ -43,6 +46,33 @@ public class StepResolveBomb extends AbstractStep {
 	public StepId getId() {
 		return StepId.RESOLVE_BOMB;
 	}
+
+  @Override
+  public void init(StepParameterSet parameterSet) {
+    super.init(parameterSet);
+    if (parameterSet != null) {
+      for (StepParameter parameter : parameterSet.values()) {
+        switch (parameter.getKey()) {
+          case CATCHER_ID:
+            fCatcherId = (String) parameter.getValue();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  @Override
+  public boolean setParameter(StepParameter parameter) {
+    if ((parameter != null) && !super.setParameter(parameter)) {
+      if (parameter.getKey() == StepParameterKey.CATCHER_ID) {
+        fCatcherId = (String) parameter.getValue();
+        return true;
+      }
+    }
+    return false;
+  }
 
 	@Override
 	public void start() {
@@ -57,6 +87,10 @@ public class StepResolveBomb extends AbstractStep {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
+    if (StringTool.isProvided(fCatcherId)) {
+      getResult().setNextAction(StepAction.NEXT_STEP);
+      return;
+    }
 		game.getFieldModel().setBombMoving(false);
     game.getFieldModel().setBombCoordinate(null);
     getResult().setAnimation(new Animation(AnimationType.BOMB_EXPLOSION, fBombCoordinate));
@@ -88,6 +122,7 @@ public class StepResolveBomb extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.BOMB_COORDINATE.addTo(jsonObject, fBombCoordinate);
+    IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
 		return jsonObject;
 	}
 
@@ -96,6 +131,7 @@ public class StepResolveBomb extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(source, jsonObject);
+    fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 }
