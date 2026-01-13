@@ -28,6 +28,7 @@ import java.util.Set;
  */
 public class DialogUseInducement extends Dialog implements ActionListener {
 
+	private final Set<InducementType> inducementSet;
 	private InducementType fInducement;
 	private Card fCard;
 
@@ -39,7 +40,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		super(pClient, "Use Inducement", false);
 
-		Set<InducementType> inducementSet = new HashSet<>();
+		inducementSet = new HashSet<>();
 		if (ArrayTool.isProvided(pDialogParameter.getInducementTypes())) {
 			inducementSet.addAll(Arrays.asList(pDialogParameter.getInducementTypes()));
 		}
@@ -192,7 +193,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			fInducement = getInducementByType(Usage.THROW_ROCK);
 		}
 		if (pActionEvent.getSource() == regenerationButton) {
-			fInducement = getInducementByType(Usage.REGENERATION);
+			fInducement = inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION)).findFirst().orElse(null);
 		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {

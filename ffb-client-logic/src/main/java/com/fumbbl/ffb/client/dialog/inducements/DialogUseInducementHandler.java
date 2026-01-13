@@ -9,12 +9,14 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogUseInducementParameter;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.util.StringTool;
 
 /**
- * 
  * @author Kalimar
  */
 public class DialogUseInducementHandler extends DialogHandler {
+
+	private DialogUseInducementParameter dialogParameter;
 
 	public DialogUseInducementHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -23,12 +25,12 @@ public class DialogUseInducementHandler extends DialogHandler {
 	public void showDialog() {
 
 		Game game = getClient().getGame();
-		DialogUseInducementParameter dialogParameter = (DialogUseInducementParameter) game.getDialogParameter();
+		dialogParameter = (DialogUseInducementParameter) game.getDialogParameter();
 
 		if (dialogParameter != null) {
 
 			if ((ClientMode.PLAYER == getClient().getMode())
-					&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
+				&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
 				setDialog(new DialogUseInducement(getClient(), dialogParameter));
 				getDialog().showDialog(this);
 
@@ -50,7 +52,12 @@ public class DialogUseInducementHandler extends DialogHandler {
 		if ((pDialog != null) && (pDialog.getId() == DialogId.USE_INDUCEMENT)) {
 			DialogUseInducement useInducementDialog = (DialogUseInducement) pDialog;
 			if (useInducementDialog.getInducement() != null) {
-				getClient().getCommunication().sendUseInducement(useInducementDialog.getInducement());
+				if (StringTool.isProvided(dialogParameter.getPlayerId())) {
+					getClient().getCommunication()
+						.sendUseInducement(useInducementDialog.getInducement(), new String[]{dialogParameter.getPlayerId()});
+				} else {
+					getClient().getCommunication().sendUseInducement(useInducementDialog.getInducement());
+				}
 			} else if (useInducementDialog.getCard() != null) {
 				getClient().getCommunication().sendUseInducement(useInducementDialog.getCard());
 			} else {

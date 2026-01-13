@@ -136,6 +136,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 								InducementType inducementType = clientCommandUseInducement.getInducementType();
 								if (inducementType != null) {
 									if (UtilServerInducementUse.useInducement(inducementType, 1, getTurnData().getInducementSet())) {
+										if (inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN)) {
+											TurnData turnData =
+												game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome() : game.getTurnDataAway();
+											turnData.useApothecary(ApothecaryType.PLAGUE);
+										}
+
 										getResult().addReport(new ReportInducement(player.getTeam().getId(), inducementType, 1));
 										doRoll = true;
 									}
@@ -621,16 +627,19 @@ public class StepApothecaryMultiple extends AbstractStep {
 						result.injuryContext().getInjuryType().canUseApo();
 				}));
 
-			regenerationGroups.getOrDefault(false, new ArrayList<>()).forEach(InjuryResult::passedRegeneration);
+			regenerationGroups.getOrDefault(false, new ArrayList<>()).forEach(result -> {
+				regenerationFailedResults.add(result);
+				result.passedRegeneration();
+			});
 
 			regenerationGroups.getOrDefault(true, new ArrayList<>()).forEach(result -> {
 				Player<?> player = injuredPlayer(result, game);
 				PlayerState playerState = result.injuryContext().getPlayerState();
 
-				if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
+				if (result.injuryContext().isCasualty() && UtilServerInjury.handleRegeneration(this, player, playerState)) {
 					result.passedRegeneration();
 					result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-				} else if (regenerationReRollsAvailable(player)) {
+				} else if (result.injuryContext().isCasualty() && regenerationReRollsAvailable(player)) {
 					regenerationFailedResults.add(result);
 					failsToProcess.add(result);
 				} else {
@@ -765,7 +774,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		if (inducement.isPresent()) {
 			DialogUseInducementParameter dialogParameter =
 				new DialogUseInducementParameter(teamId, new InducementType[]{
-					inducement.get()});
+					inducement.get()}, player.getId());
 			UtilServerDialog.showDialog(getGameState(), dialogParameter, game.getTeamById(teamId) != game.getActingTeam());
 			return false;
 		} else {
