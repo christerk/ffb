@@ -39,6 +39,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 
 	public void setUp() {
 		fRangeGridHandler.refreshSettings();
+		logicModule.setShowRangeRuler(true);
 	}
 
 	public void clickOnPlayer(Player<?> pPlayer) {
