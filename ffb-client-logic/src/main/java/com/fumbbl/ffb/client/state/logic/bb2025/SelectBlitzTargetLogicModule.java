@@ -39,7 +39,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 	public InteractionResult playerInteraction(Player<?> pPlayer) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (pPlayer.equals(actingPlayer.getPlayer()) && isSpecialAbilityAvailable(actingPlayer)) {
+		if (pPlayer.equals(actingPlayer.getPlayer()) && isBlitzSpecialAbilityAvailable(actingPlayer)) {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (pPlayer.equals(actingPlayer.getPlayer()) || canBeBlitzed(pPlayer, actingPlayer, game)) {
 			client.getCommunication().sendTargetSelected(pPlayer.getId());
@@ -99,6 +99,12 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN
 			);
 		}
+		if (isFrenziedRushAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.FRENZIED_RUSH);
+		}
+		if (isSlashingNailsAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.SLASHING_NAILS);
+		}
 		return actionContext;
 	}
 
@@ -157,6 +163,18 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
+				case FRENZIED_RUSH:
+					if (isFrenziedRushAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canGainFrenzyForBlitz);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
+				case SLASHING_NAILS:
+					if (isSlashingNailsAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canGainClawsForBlitz);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -175,6 +193,8 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.FRENZIED_RUSH);
+			add(ClientAction.SLASHING_NAILS);
 		}};
 	}
 }
