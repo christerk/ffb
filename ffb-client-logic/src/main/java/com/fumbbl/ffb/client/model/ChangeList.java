@@ -15,6 +15,8 @@ public class ChangeList {
 			.addFeature("Violent Innovator: Spp for Stab, Chainsaw, Breath Fire, KTM and Bombardier")
 			.addFeature("Lethal Flight: Works with KTM")
 			.addBugfix("Fixed crash when CAS had no attacker")
+			.addFeature("Slashing Nails (Roxanna Darknail)")
+			.addFeature("Frenzied Rush (Glart Smashrip)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")

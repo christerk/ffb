@@ -73,7 +73,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 			} else {
-				put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
 				put(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, ClientAction.GAZE_ZOAT);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, ClientAction.SHOT_TO_NOTHING);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, ClientAction.SHOT_TO_NOTHING_BOMB);
@@ -179,9 +178,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			}
 		} else {
 			switch (pActionKey) {
-				case PLAYER_ACTION_FRENZIED_RUSH:
-					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
-					break;
 				case PLAYER_ACTION_GAZE_ZOAT:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
 					break;
@@ -256,8 +252,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			new MenuItemConfig("Move Action", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
 		configs.put(ClientAction.BLITZ,
 			new MenuItemConfig("Blitz Action", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_BLITZ));
-		configs.put(ClientAction.FRENZIED_RUSH,
-			new MenuItemConfig("Frenzied Rush Blitz", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH));
 		configs.put(ClientAction.FOUL,
 			new MenuItemConfig("Foul Action", IIconProperty.ACTION_FOUL, IPlayerPopupMenuKeys.KEY_FOUL));
 		configs.put(ClientAction.PASS,
