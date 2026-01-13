@@ -16,6 +16,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.ZappedPlayer;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportSpecialEffectRoll;
@@ -24,6 +25,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBombWithModifier;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBombWithModifierForSpp;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFireball;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -37,6 +39,7 @@ import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerFromBombCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
@@ -168,8 +171,11 @@ public final class StepSpecialEffect extends AbstractStep {
 					}
 
 					DropPlayerFromBombCommand command = new DropPlayerFromBombCommand(player.getId(), ApothecaryMode.SPECIAL_EFFECT, true, isActive, suppressEndTurn);
+					Player<?> bombardier = game.getPlayerById(getGameState().getPassState().getOriginalBombardier());
+					boolean bombardierGetsSpp = game.findTeam(bombardier) != game.findTeam(player) && UtilCards.hasSkillWithProperty(bombardier, NamedProperties.grantsSppFromSpecialActionsCas);
 					InjuryResult injuryResult = UtilServerInjury.handleInjury(this,
-						new InjuryTypeBombWithModifier(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT);
+						bombardierGetsSpp ? new InjuryTypeBombWithModifierForSpp() : new InjuryTypeBombWithModifier(), 
+						bombardierGetsSpp ? bombardier : null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT);
 					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResult, Collections.singletonList(command))));
 				}
 

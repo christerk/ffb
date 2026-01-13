@@ -26,6 +26,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsaw;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeChainsawForSpp;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -154,7 +155,9 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 				if (successful) {
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 					PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
-					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(),
+					boolean grantsSpp = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.grantsSppFromSpecialActionsCas);
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(this, 
+						grantsSpp ? new InjuryTypeChainsawForSpp() : new InjuryTypeChainsaw(),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 					publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 						new DropPlayerContext(injuryResultDefender, GameOptionString.CHAINSAW_TURNOVER_ALL_AV_BREAKS.equalsIgnoreCase(chainsawOption),
