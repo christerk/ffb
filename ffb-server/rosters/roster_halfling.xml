@@ -59,6 +59,7 @@
             <skill>Take Root</skill>
             <skill>Thick Skull</skill>
             <skill>Throw Team-Mate</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Strength</normal>
@@ -84,8 +85,8 @@
         <skillList>
             <skill>Dodge</skill>
             <skill>Right Stuff</skill>
-            <skill>Stunty</skill>
             <skill value="goblin;troll">Hatred</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
