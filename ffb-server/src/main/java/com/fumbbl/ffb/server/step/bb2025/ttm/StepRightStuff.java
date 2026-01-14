@@ -11,7 +11,6 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -22,10 +21,8 @@ import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -49,7 +46,6 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.bb2025.command.RightStuffCommand;
-import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
@@ -163,6 +159,12 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		return commandStatus;
 	}
 
+	@Override
+	public void repeat() {
+		super.repeat();
+		executeStep();
+	}
+
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
@@ -232,12 +234,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			} else {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
-					Skill swoop = usingSwoop ? thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection) : null;
-					if (swoop != null) {
-						Team actingTeam = game.getActingTeam();
-						UtilServerDialog.showDialog(getGameState(),	new DialogSkillUseParameter(thrownPlayer.getId(), swoop, minimumRoll),
-							actingTeam.hasPlayer(thrownPlayer));
-						getResult().setNextAction(StepAction.CONTINUE);
+					if (usingSwoop) {
+						setReRollSource(ReRollSources.SWOOP);
+						getResult().setNextAction(StepAction.REPEAT);
 						return;
 					} else {
 						doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
