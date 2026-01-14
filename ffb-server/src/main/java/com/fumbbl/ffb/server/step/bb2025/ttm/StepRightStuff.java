@@ -11,6 +11,7 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -21,6 +22,7 @@ import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -47,6 +49,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.bb2025.command.RightStuffCommand;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
@@ -204,7 +207,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			}
 			if (successful) {
-				if (passResult == PassResult.ACCURATE && !kickedPlayer) {
+				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 					if (game.getThrower() != null) {
@@ -230,8 +233,16 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
 					Skill swoop = usingSwoop ? thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection) : null;
-					doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
-						minimumRoll, false, null, swoop);
+					if (swoop != null) {
+						Team actingTeam = game.getActingTeam();
+						UtilServerDialog.showDialog(getGameState(),	new DialogSkillUseParameter(thrownPlayer.getId(), swoop, minimumRoll),
+							actingTeam.hasPlayer(thrownPlayer));
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
+					} else {
+						doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
+							minimumRoll, false, null, null);
+					}
 				} else {
 					doRoll = false;
 				}
