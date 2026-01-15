@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Animal Savagery, including option to toggle action loss after lashing out")
+			.addFeature("Regeneration")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")

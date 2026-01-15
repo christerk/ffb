@@ -256,7 +256,7 @@ public class StepApothecary extends AbstractStep {
 		}
 
 		UtilServerDialog.hideDialog(getGameState());
-		boolean doNextStep = true;
+
 		Game game = getGameState().getGame();
 		String defenderId = fInjuryResult.injuryContext().getDefenderId();
 
@@ -268,7 +268,7 @@ public class StepApothecary extends AbstractStep {
 			if ((playerState != null) && playerState.isCasualty()
 				&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
 				&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
-				if (UtilServerInjury.handleRegeneration(this, player)) {
+				if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
 					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 					fInjuryResult.passedRegeneration();
 				} else {
