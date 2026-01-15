@@ -90,7 +90,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 					step.getResult().addReport(new ReportThrowTeamMateRoll(thrower.getId(), successful, roll, minimumRoll,
 						reRolled, passModifiers.toArray(new PassModifier[0]), passingDistance, state.thrownPlayerId, state.passResult, state.kicked));
 
-					if (state.passResult == PassResult.ACCURATE && !state.kicked
+					if (state.passResult == PassResult.ACCURATE
 						&& thrower.hasSkillProperty(NamedProperties.canSkipTtmScatterOnSuperbThrow)
 						&& state.usingBullseye == null) {
 						UtilServerDialog.showDialog(step.getGameState(),
