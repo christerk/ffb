@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.common;
+package com.fumbbl.ffb.server.step.generator.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -11,7 +11,8 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 
 	public Bomb() {

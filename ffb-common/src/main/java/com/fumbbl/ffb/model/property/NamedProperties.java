@@ -68,6 +68,7 @@ public class NamedProperties {
 		}
 	};
 	public static final ISkillProperty canFoulAfterBlock = new NamedProperty("Can Foul After Block");
+	public static final ISkillProperty canGainClawsForBlitz = new NamedProperty("Can Gain Claws For Blitz");
 	public static final ISkillProperty canGainFrenzyForBlitz = new NamedProperty("Can Gain Frenzy For Blitz");
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
@@ -162,6 +163,7 @@ public class NamedProperties {
 	public static final ISkillProperty grabOutsideBlock = new NamedProperty("Grab Outside Block");
 	public static final ISkillProperty grantsCatchBonusToReceiver = new NamedProperty("Grants Catch Bonus To Receiver");
 	public static final ISkillProperty grantsSppWhenHittingOpponentOnTtm = new NamedProperty("Grants Spp When Hitting Opponent On Ttm");
+	public static final ISkillProperty grantsSppFromSpecialActionsCas = new NamedProperty("Grants Spp From Special Actions Cas");
 	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
 	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
 		"Grants Team Re-Roll When On Pitch");

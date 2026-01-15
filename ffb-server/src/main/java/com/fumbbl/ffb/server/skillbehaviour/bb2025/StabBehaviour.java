@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStab;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeStabForSpp;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -43,7 +44,9 @@ public class StabBehaviour extends SkillBehaviour<Stab> {
 				if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformArmourRollInsteadOfBlock) && (state.usingStab != null) && state.usingStab) {
 					step.getResult().setSound(SoundId.STAB);
 					FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, new InjuryTypeStab(true),
+					boolean grantsSpp = UtilCards.hasSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.grantsSppFromSpecialActionsCas);
+					InjuryResult injuryResultDefender = UtilServerInjury.handleInjury(step, 
+						grantsSpp ? new InjuryTypeStabForSpp(true) : new InjuryTypeStab(true),
 						actingPlayer.getPlayer(), game.getDefender(), defenderCoordinate, null, null, ApothecaryMode.DEFENDER);
 
 					step.publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,

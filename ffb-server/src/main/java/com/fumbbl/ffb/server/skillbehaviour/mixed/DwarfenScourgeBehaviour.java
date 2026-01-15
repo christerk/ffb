@@ -6,6 +6,7 @@ import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.skill.mixed.special.DwarfenScourge;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class DwarfenScourgeBehaviour extends SkillBehaviour<DwarfenScourge> {
 
 	public DwarfenScourgeBehaviour() {

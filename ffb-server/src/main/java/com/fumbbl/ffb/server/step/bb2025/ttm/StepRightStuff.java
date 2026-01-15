@@ -23,7 +23,6 @@ import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -160,6 +159,12 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		return commandStatus;
 	}
 
+	@Override
+	public void repeat() {
+		super.repeat();
+		executeStep();
+	}
+
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
@@ -204,7 +209,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			}
 			if (successful) {
-				if (passResult == PassResult.ACCURATE && !kickedPlayer) {
+				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 					if (game.getThrower() != null) {
@@ -229,9 +234,14 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			} else {
 				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
 					setReRolledAction(ReRolledActions.RIGHT_STUFF);
-					Skill swoop = usingSwoop ? thrownPlayer.getSkillWithProperty(NamedProperties.ttmScattersInSingleDirection) : null;
-					doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
-						minimumRoll, false, null, swoop);
+					if (usingSwoop) {
+						setReRollSource(ReRollSources.SWOOP);
+						getResult().setNextAction(StepAction.REPEAT);
+						return;
+					} else {
+						doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
+							minimumRoll, false, null, null);
+					}
 				} else {
 					doRoll = false;
 				}

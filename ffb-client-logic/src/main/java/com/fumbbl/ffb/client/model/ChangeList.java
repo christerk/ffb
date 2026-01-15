@@ -11,6 +11,14 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Animal Savagery, including option to toggle action loss after lashing out")
+			.addFeature("Dwarfen Scourge (Star Ivan ‘the Animal’ Deathshroud)")
+			.addBugfix("Bombardier: Bombs should now explode after a bounce lands on a player")
+			.addFeature("Violent Innovator: Spp for Stab, Chainsaw, Breath Fire, KTM and Bombardier")
+			.addFeature("Lethal Flight: Works with KTM")
+			.addBugfix("Fixed crash when CAS had no attacker")
+			.addFeature("Slashing Nails (Roxanna Darknail)")
+			.addFeature("Frenzied Rush (Glart Smashrip)")
+			.addFeature("KTM: Spp on a superb throw. Swoop and Bullseye work on KTM")
 			.addFeature("Regeneration")
 		);
 
