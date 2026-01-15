@@ -55,7 +55,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		if (mode != Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES ||
 			(mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomitLike());
+				pDefender, isStab(), isFoul(), isVomitLike(), isChainsaw());
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 

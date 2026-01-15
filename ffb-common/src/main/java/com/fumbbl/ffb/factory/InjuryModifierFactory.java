@@ -41,17 +41,24 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 			.orElse(null);
 	}
 
-	public Set<InjuryModifier> findInjuryModifiersWithoutNiggling(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                                              Player<?> defender, boolean isStab, boolean isFoul, boolean isVomitLike) {
+	public Set<InjuryModifier> findInjuryModifiersWithoutNiggling(Game game, InjuryContext injuryContext,
+		Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul, boolean isVomitLike, boolean isChainsaw) {
 
-		InjuryModifierContext context = new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul, isVomitLike);
+		InjuryModifierContext context =
+			new InjuryModifierContext(game, injuryContext, attacker, defender, isStab, isFoul, isVomitLike, isChainsaw);
 
 		return getInjuryModifiers(context);
 	}
 
 	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
-	                                               Player<?> defender, boolean isStab, boolean isFoul, boolean isVomitLike) {
-		Set<InjuryModifier> modifiers = findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul, isVomitLike);
+		Player<?> defender, boolean isStab, boolean isFoul, boolean isVomitLike) {
+		return findInjuryModifiers(game, injuryContext, attacker, defender, isStab, isFoul, isVomitLike, false);
+	}
+
+	public Set<InjuryModifier> findInjuryModifiers(Game game, InjuryContext injuryContext, Player<?> attacker,
+		Player<?> defender, boolean isStab, boolean isFoul, boolean isVomitLike, boolean isChainsaw) {
+		Set<InjuryModifier> modifiers =
+			findInjuryModifiersWithoutNiggling(game, injuryContext, attacker, defender, isStab, isFoul, isVomitLike, isChainsaw);
 
 		getNigglingInjuryModifier(defender).ifPresent(modifiers::add);
 
@@ -60,7 +67,8 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 
 	public Optional<? extends InjuryModifier> getNigglingInjuryModifier(Player<?> pPlayer) {
 		if (pPlayer != null) {
-			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries()).filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
+			long nigglingInjuries = Arrays.stream(pPlayer.getLastingInjuries())
+				.filter(seriousInjury -> seriousInjury.getInjuryAttribute() == InjuryAttribute.NI).count();
 
 			return injuryModifiers.values().filter(modifier -> modifier.isNigglingInjuryModifier()
 				&& (modifier.getModifier(null, null) == nigglingInjuries)).findFirst();
@@ -95,9 +103,12 @@ public class InjuryModifierFactory implements INamedObjectFactory<InjuryModifier
 	@Override
 	public void initialize(Game game) {
 		this.modifierAggregator = game.getModifierAggregator();
-		injuryModifiers = new Scanner<>(InjuryModifiers.class).getInstancesImplementing(game.getOptions()).stream().findFirst().orElse(null);
+		injuryModifiers =
+			new Scanner<>(InjuryModifiers.class).getInstancesImplementing(game.getOptions()).stream().findFirst()
+				.orElse(null);
 		if (injuryModifiers != null) {
-			injuryModifiers.setUseAll(((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_USES_MB)).isEnabled());
+			injuryModifiers.setUseAll(
+				((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.BOMB_USES_MB)).isEnabled());
 		}
 	}
 

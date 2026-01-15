@@ -49,6 +49,7 @@ public class MightyBlow extends Skill {
 					&& !context.isFoul()
 					&& !context.isStab()
 					&& !context.isVomitLike()
+					&& !context.isChainsaw()
 					&& playerState != null && !playerState.isDistracted()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
 					.noneMatch(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock));

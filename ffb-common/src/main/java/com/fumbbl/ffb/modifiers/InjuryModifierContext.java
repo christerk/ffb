@@ -12,10 +12,11 @@ public class InjuryModifierContext {
 	private final boolean isStab;
 	private final boolean isFoul;
 	private final boolean isVomitLike;
+	private final boolean isChainsaw;
 	private Mode mode;
 
 	public InjuryModifierContext(Game game, InjuryContext injuryContext, Player<?> attacker, Player<?> defender,
-	                             boolean isStab, boolean isFoul, boolean isVomitLike) {
+	                             boolean isStab, boolean isFoul, boolean isVomitLike, boolean isChainsaw) {
 		this.game = game;
 		this.injuryContext = injuryContext;
 		this.attacker = attacker;
@@ -23,6 +24,7 @@ public class InjuryModifierContext {
 		this.isStab = isStab;
 		this.isFoul = isFoul;
 		this.isVomitLike = isVomitLike;
+		this.isChainsaw = isChainsaw;
 		this.mode = Mode.ATTACKER;
 	}
 
@@ -52,6 +54,10 @@ public class InjuryModifierContext {
 
 	public boolean isVomitLike() {
 		return isVomitLike;
+	}
+
+	public boolean isChainsaw() {
+		return isChainsaw;
 	}
 
 	public void setDefenderMode() {

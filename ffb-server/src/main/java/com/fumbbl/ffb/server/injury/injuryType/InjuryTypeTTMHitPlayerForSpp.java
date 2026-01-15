@@ -56,7 +56,7 @@ public class InjuryTypeTTMHitPlayerForSpp extends InjuryTypeServer<TTMHitPlayerF
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 			lethalFlight.ifPresent(skill -> skill.getInjuryModifiers().stream()
-				.filter(mod -> mod.appliesToContext(new InjuryModifierContext(game, injuryContext, pAttacker, pDefender, false, false, false)))
+				.filter(mod -> mod.appliesToContext(new InjuryModifierContext(game, injuryContext, pAttacker, pDefender, false, false, false, false)))
 				.forEach(injuryContext::addInjuryModifier));
 
 			setInjury(pDefender, gameState, diceRoller);
