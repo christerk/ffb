@@ -374,13 +374,13 @@ public class PlayerResult implements IJsonSerializable {
 		return (getPlayerAwards() * spp.mvpSpp())
 			+ (getTouchdowns() * spp.touchdownSpp(team))
 			+ (getCasualties() * spp.casualtySpp(team))
-			+ (getInterceptions() * spp.interceptionSpp(team))
-			+ (getCompletions() * spp.completionSpp(team))
-			+ (getDeflections() * spp.deflectionSpp(team))
-			+ (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp(team))
-			+ (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp(team))
-			+ (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp(team))
-			+ (getLandings() * spp.landingSpp(team));
+			+ (getInterceptions() * spp.interceptionSpp())
+			+ (getCompletions() * spp.completionSpp())
+			+ (getDeflections() * spp.deflectionSpp())
+			+ (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp())
+			+ (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp())
+			+ (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp())
+			+ (getLandings() * spp.landingSpp());
 	}
 
 

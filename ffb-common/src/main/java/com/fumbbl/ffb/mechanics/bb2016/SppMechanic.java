@@ -24,42 +24,42 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
   }
 
   @Override
-  public int completionSpp(Team team) {
+  public int completionSpp() {
     return 1;
   }
 
   @Override
-  public int interceptionSpp(Team team) {
+  public int interceptionSpp() {
     return 2;
   }
 
   @Override
-  public int deflectionSpp(Team team) {
+  public int deflectionSpp() {
     return 1;
   }
 
   @Override
-  public int catchSpp(Team team) {
+  public int catchSpp() {
     return 1;
   }
 
   @Override
-  public int landingSpp(Team team) {
+  public int landingSpp() {
     return 0;
   }
 
   @Override
-  public int additionalCompletionSpp(Team team) {
+  public int additionalCompletionSpp() {
     return 0;
   }
 
   @Override
-  public int additionalCasualtySpp(Team team) {
+  public int additionalCasualtySpp() {
     return 0;
   }
 
   @Override
-  public int additionalCatchSpp(Team team) {
+  public int additionalCatchSpp() {
     return 0;
   }
 
