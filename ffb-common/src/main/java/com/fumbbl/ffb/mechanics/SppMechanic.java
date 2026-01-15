@@ -26,6 +26,8 @@ public abstract class SppMechanic implements Mechanic {
 
   public abstract int catchSpp(Team team);
 
+  public abstract int landingSpp(Team team);
+
   public abstract int additionalCompletionSpp(Team team);
 
   public abstract int additionalCasualtySpp(Team team);
@@ -37,5 +39,7 @@ public abstract class SppMechanic implements Mechanic {
   public abstract void addCasualty(Set<String> additionalCasualtySppTeams, PlayerResult playerResult);
 
   public abstract void addCatch(Set<String> additionalCatchSppTeams, PlayerResult playerResult);
+
+  public abstract void addLanding(PlayerResult playerResult);
   
 }

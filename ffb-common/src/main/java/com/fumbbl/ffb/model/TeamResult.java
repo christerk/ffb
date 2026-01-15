@@ -316,6 +316,14 @@ public class TeamResult implements IJsonSerializable {
 		return completions;
 	}
 
+	public int totalLandings() {
+		int landings = 0;
+		for (Player<?> player : getTeam().getPlayers()) {
+			landings += getPlayerResult(player).getLandings();
+		}
+		return landings;
+	}
+
 	public int totalInterceptions() {
 		int interceptions = 0;
 		for (Player<?> player : getTeam().getPlayers()) {

@@ -45,6 +45,11 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
   }
 
   @Override
+  public int landingSpp(Team team) {
+    return 0;
+  }
+
+  @Override
   public int additionalCompletionSpp(Team team) {
     return 1;
   }
@@ -77,5 +82,8 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 
   @Override
   public void addCatch(Set<String> additionalCatchSppTeams, PlayerResult pr) {}
+
+  @Override
+  public void addLanding(PlayerResult pr) {}
   
 }

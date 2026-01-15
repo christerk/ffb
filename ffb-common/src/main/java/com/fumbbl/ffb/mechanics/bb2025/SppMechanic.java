@@ -46,6 +46,11 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 	}
 
 	@Override
+  public int landingSpp(Team team) { 
+		return 1; 
+	}
+
+	@Override
 	public int additionalCompletionSpp(Team team) {
 		return 1;
 	}
@@ -82,6 +87,11 @@ public class SppMechanic extends com.fumbbl.ffb.mechanics.SppMechanic {
 			pr.setCatchesWithAdditionalSpp(pr.getCatchesWithAdditionalSpp() + 1);
 		}
 	}
+
+	@Override
+  public void addLanding(PlayerResult pr) {
+    pr.setLandings(pr.getLandings() + 1);
+  }
 
 	private boolean hasBrawlinBrutes(Team team) {
 		return team != null && team.getSpecialRules().contains(SpecialRule.BRAWLIN_BRUTES);
