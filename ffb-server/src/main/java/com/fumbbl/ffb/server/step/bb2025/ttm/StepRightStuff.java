@@ -209,11 +209,14 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			}
 			if (successful) {
+
+				SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+				spp.addLanding(game.getGameResult().getPlayerResult(thrownPlayer));
+
 				if (passResult == PassResult.ACCURATE) {
 					GameResult gameResult = getGameState().getGame().getGameResult();
 					TeamResult teamResult = game.getActingTeam() == game.getTeamHome() ? gameResult.getTeamResultHome() : gameResult.getTeamResultAway();
 					if (game.getThrower() != null) {
-						SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
 						spp.addCompletion(getGameState().getPrayerState().getAdditionalCompletionSppTeams(), teamResult.getPlayerResult(game.getThrower()));
 
 					}

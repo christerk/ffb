@@ -29,6 +29,7 @@ public class PlayerResult implements IJsonSerializable {
 	private int fTouchdowns;
 	private int fInterceptions;
 	private int fCasualties;
+	private int landings;
 	private int fPlayerAwards;
 	private int fBlocks;
 	private int fFouls;
@@ -355,6 +356,16 @@ public class PlayerResult implements IJsonSerializable {
 		gainedHatred.add(keyword);
 	}
 
+	public int getLandings() { 
+		return landings; 
+	}
+
+  public void setLandings(int landings) {
+    if (this.landings == landings) { return; }
+    this.landings = landings;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_LANDINGS, landings);
+  }
+
 	public int totalEarnedSpps() {
 		SppMechanic spp =
 			(SppMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
@@ -363,12 +374,13 @@ public class PlayerResult implements IJsonSerializable {
 		return (getPlayerAwards() * spp.mvpSpp())
 			+ (getTouchdowns() * spp.touchdownSpp(team))
 			+ (getCasualties() * spp.casualtySpp(team))
-			+ (getInterceptions() * spp.interceptionSpp(team))
-			+ (getCompletions() * spp.completionSpp(team))
-			+ (getDeflections() * spp.deflectionSpp(team))
-			+ (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp(team))
-			+ (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp(team))
-			+ (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp(team));
+			+ (getInterceptions() * spp.interceptionSpp())
+			+ (getCompletions() * spp.completionSpp())
+			+ (getDeflections() * spp.deflectionSpp())
+			+ (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp())
+			+ (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp())
+			+ (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp())
+			+ (getLandings() * spp.landingSpp());
 	}
 
 
@@ -404,6 +416,7 @@ public class PlayerResult implements IJsonSerializable {
 			if (playerResult.getGainedHatred() != null) {
 				gainedHatred = playerResult.getGainedHatred();
 			}
+			landings = playerResult.getLandings();
 		}
 	}
 
@@ -445,6 +458,7 @@ public class PlayerResult implements IJsonSerializable {
 		IJsonOption.DEFECTING.addTo(jsonObject, fDefecting);
 		IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.addTo(jsonObject, catchesWithAdditionalSpp);
 		IJsonOption.GAINED_HATRED.addTo(jsonObject, gainedHatred.stream().map(Keyword::getName).collect(Collectors.toList()));
+		IJsonOption.LANDINGS.addTo(jsonObject, landings);
 		return jsonObject;
 	}
 
@@ -480,6 +494,7 @@ public class PlayerResult implements IJsonSerializable {
 			gainedHatred.addAll(Arrays.stream(IJsonOption.GAINED_HATRED.getFrom(source, jsonObject)).map(Keyword::forName).collect(
 				Collectors.toList()));
 		}
+		landings = IJsonOption.LANDINGS.getFrom(source, jsonObject);
 		return this;
 	}
 

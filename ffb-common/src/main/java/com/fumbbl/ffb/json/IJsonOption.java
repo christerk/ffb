@@ -269,6 +269,7 @@ public interface IJsonOption {
 	JsonIntArrayOption KICKOFF_ROLL = new JsonIntArrayOption("kickoffRoll");
 	JsonArrayOption KNOCKOUT_RECOVERY_ARRAY = new JsonArrayOption("knockoutRecoveryArray");
 	JsonBooleanOption KTM_USED = new JsonBooleanOption("ktmUsed");
+	JsonIntOption LANDINGS = new JsonIntOption("landings");
 	JsonArrayOption LASTING_INJURIES = new JsonArrayOption("lastingInjuries");
 	JsonStringOption LAST_DEFENDER_ID = new JsonStringOption("lastDefenderId");
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);

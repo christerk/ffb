@@ -119,6 +119,14 @@ public class DialogGameStatistics extends Dialog {
 				.append(gameResult.getTeamResultAway().totalCompletions()).append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("</tr>\n");
 		statistics.append("<tr>\n");
+		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Landings").append(_FONT_BOLD_CLOSE)
+				.append("</td>\n");
+		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
+				.append(gameResult.getTeamResultHome().totalLandings()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+		statistics.append("  <td align=\"right\">").append(fontBlueBoldOpen)
+				.append(gameResult.getTeamResultAway().totalLandings()).append(_FONT_BOLD_CLOSE).append("</td>\n");
+		statistics.append("</tr>\n");
+		statistics.append("<tr>\n");
 		statistics.append("  <td align=\"right\">").append(fontBoldOpen).append("Touchdowns").append(_FONT_BOLD_CLOSE)
 				.append("</td>\n");
 		statistics.append("  <td align=\"right\">").append(fontRedBoldOpen)
@@ -306,6 +314,8 @@ public class DialogGameStatistics extends Dialog {
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 			.append(fontBoldOpen).append("Cps+").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
+  		.append(fontBoldOpen).append("Land").append(_FONT_BOLD_CLOSE).append("</td>\n");
+		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 			.append(fontBoldOpen).append("TDs").append(_FONT_BOLD_CLOSE).append("</td>\n");
 		statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 			.append(fontBoldOpen).append("Def").append(_FONT_BOLD_CLOSE).append("</td>\n");
@@ -343,6 +353,8 @@ public class DialogGameStatistics extends Dialog {
 				.append(formatPlayerStat(playerResult.getCompletions())).append("</td>\n");
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 				.append(formatPlayerStat(playerResult.getCompletionsWithAdditionalSpp())).append("</td>\n");
+			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
+  			.append(formatPlayerStat(playerResult.getLandings())).append("</td>\n");
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")
 				.append(formatPlayerStat(playerResult.getTouchdowns())).append("</td>\n");
 			statistics.append("  <td align=\"right\" bgcolor=\"").append(_BACKGROUND_COLOR_SPP).append("\">")

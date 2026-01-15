@@ -417,6 +417,9 @@ public class ModelChangeProcessor {
 			case PLAYER_RESULT_SET_DEFLECTIONS:
 				getPlayerResult(pGame, pModelChange.getKey()).setDeflections((Integer) pModelChange.getValue());
 				return true;
+			case PLAYER_RESULT_SET_LANDINGS:
+				getPlayerResult(pGame, pModelChange.getKey()).setLandings((Integer) pModelChange.getValue());
+				return true;
 			case PLAYER_RESULT_SET_PASSING:
 				getPlayerResult(pGame, pModelChange.getKey()).setPassing((Integer) pModelChange.getValue());
 				return true;

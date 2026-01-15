@@ -19,6 +19,7 @@ public class ChangeList {
 			.addFeature("Slashing Nails (Roxanna Darknail)")
 			.addFeature("Frenzied Rush (Glart Smashrip)")
 			.addFeature("KTM: Spp on a superb throw. Swoop and Bullseye work on KTM")
+			.addFeature("Landing SPP")
 			.addFeature("Regeneration")
 		);
 
