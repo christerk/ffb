@@ -145,6 +145,8 @@ public class DialogParameterFactory {
 				return new DialogSelectKeywordParameter();
 			case SELECT_POSITION:
 				return new DialogSelectPositionParameter();
+			case RE_ROLL_REGENERATION_MULTIPLE:
+				return new DialogReRollRegenerationMultipleParameter();
 			default:
 				return null;
 		}

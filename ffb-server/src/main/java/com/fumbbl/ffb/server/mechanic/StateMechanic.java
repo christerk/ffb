@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.report.ReportInducement;
+import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
 
 public abstract class StateMechanic implements Mechanic {
@@ -92,4 +93,6 @@ public abstract class StateMechanic implements Mechanic {
 			player.resetUsedSkills(SkillUsageType.ONCE_PER_DRIVE, game);
 		}
 	}
+
+	public abstract void reportInjury(IStep step, InjuryResult injuryResult);
 }

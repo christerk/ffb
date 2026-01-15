@@ -204,7 +204,9 @@ public final class StepKickoffScatterRoll extends AbstractStep {
 		IServerJsonOption.KICKOFF_START_COORDINATE.addTo(jsonObject, fKickoffStartCoordinate);
 		IServerJsonOption.USE_KICK_CHOICE.addTo(jsonObject, fUseKickChoice);
 		IServerJsonOption.SCATTER_DIRECTION.addTo(jsonObject, fScatterDirection);
-		IServerJsonOption.SCATTER_DISTANCE.addTo(jsonObject, fScatterDistance);
+		if (fScatterDistance != null) {
+			IServerJsonOption.SCATTER_DISTANCE.addTo(jsonObject, fScatterDistance);
+		}
 		IServerJsonOption.KICKING_PLAYER_COORDINATE.addTo(jsonObject, fKickingPlayerCoordinate);
 		if (fKickoffBounds != null) {
 			IServerJsonOption.KICKOFF_BOUNDS.addTo(jsonObject, fKickoffBounds.toJsonValue());

@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Frenzied Rush (Glart Smashrip)")
 			.addFeature("KTM: Spp on a superb throw. Swoop and Bullseye work on KTM")
 			.addFeature("Landing SPP")
+			.addFeature("Regeneration")
 		);
 
 		versions.add(new VersionChangeList("2026-01-08 B")

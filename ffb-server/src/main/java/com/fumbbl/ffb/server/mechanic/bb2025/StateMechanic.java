@@ -1,10 +1,15 @@
 package com.fumbbl.ffb.server.mechanic.bb2025;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
@@ -14,9 +19,13 @@ import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportStartHalf;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -32,7 +41,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		if (!LeaderState.USED.equals(turnData.getLeaderState())) {
 			if (teamHasLeaderOnField(team, fieldModel)) {
 				if (teamHasUnusedLeaderOnField(team, fieldModel) &&
-						LeaderState.NONE.equals(turnData.getLeaderState())) {
+					LeaderState.NONE.equals(turnData.getLeaderState())) {
 					turnData.setLeaderState(LeaderState.AVAILABLE);
 					turnData.setReRolls(turnData.getReRolls() + 1);
 					step.getResult().addReport(new ReportLeader(team.getId(), turnData.getLeaderState()));
@@ -51,7 +60,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	protected boolean teamHasUnusedLeaderOnField(Team pTeam, FieldModel pFieldModel) {
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
-					&& player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
+				&& player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
 				return true;
 			}
 		}
@@ -61,7 +70,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 	protected void markUsed(Team team, Game game) {
 		for (Player<?> player : team.getPlayers()) {
 			Optional<Skill> skill =
-					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.grantsTeamReRollWhenOnPitch);
+				UtilCards.getUnusedSkillWithProperty(player, NamedProperties.grantsTeamReRollWhenOnPitch);
 			skill.ifPresent(value -> player.markUsed(value, game));
 		}
 	}
@@ -122,5 +131,57 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 			}
 		}
 		resetSpecialSkillAtEndOfDrive(game);
+	}
+
+	public void reportInjury(IStep step, InjuryResult injuryResult) {
+		InjuryContext injuryContext = injuryResult.injuryContext();
+
+		SkipInjuryParts skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.CAS : SkipInjuryParts.EVERYTHING_BUT_CAS;
+		boolean playSound = true;
+		if (injuryContext instanceof ModifiedInjuryContext) {
+			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
+			if (modification == InjuryModification.INJURY) {
+				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
+			}
+		} else if (injuryContext.getModifiedInjuryContext() != null) {
+			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
+			if (injuryResult.isAlreadyReported()) {
+				switch (modification) {
+					case ARMOUR:
+						skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.ARMOUR_AND_INJURY;
+						break;
+					default:
+						break;
+				}
+				injuryResult.setAlreadyReported(false);
+			} else {
+				playSound = false;
+				switch (modification) {
+					case ARMOUR:
+						skip = SkipInjuryParts.INJURY;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.CAS;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		if (injuryResult.isAlreadyReported()) {
+			return;
+		}
+
+		ReportFactory factory = step.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
+		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
+		step.getResult().addReport(reportInjury.init(injuryContext, skip));
+		if (playSound) {
+			step.getResult().setSound(injuryContext.getSound());
+		}
+		injuryResult.setAlreadyReported(true);
 	}
 }

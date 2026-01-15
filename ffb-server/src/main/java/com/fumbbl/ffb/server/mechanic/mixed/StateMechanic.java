@@ -3,13 +3,21 @@ package com.fumbbl.ffb.server.mechanic.mixed;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.ReportFactory;
+import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.injury.context.InjuryModification;
+import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportStartHalf;
+import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 
@@ -76,4 +84,57 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		}
 		resetSpecialSkillAtEndOfDrive(game);
 	}
+
+	public void reportInjury(IStep step, InjuryResult injuryResult) {
+		InjuryContext injuryContext = injuryResult.injuryContext();
+
+		SkipInjuryParts skip = SkipInjuryParts.NONE;
+		boolean playSound = true;
+		if (injuryContext instanceof ModifiedInjuryContext) {
+			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
+			if (modification == InjuryModification.INJURY) {
+				skip = SkipInjuryParts.ARMOUR;
+			}
+		} else if (injuryContext.getModifiedInjuryContext() != null) {
+			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
+			if (injuryResult.isAlreadyReported()) {
+				switch (modification) {
+					case ARMOUR:
+						skip = SkipInjuryParts.ARMOUR;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.ARMOUR_AND_INJURY;
+						break;
+					default:
+						break;
+				}
+				injuryResult.setAlreadyReported(false);
+			} else {
+				playSound = false;
+				switch (modification) {
+					case ARMOUR:
+						skip = SkipInjuryParts.INJURY;
+						break;
+					case INJURY:
+						skip = SkipInjuryParts.CAS;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		if (injuryResult.isAlreadyReported()) {
+			return;
+		}
+
+		ReportFactory factory = step.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
+		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
+		step.getResult().addReport(reportInjury.init(injuryContext, skip));
+		if (playSound) {
+			step.getResult().setSound(injuryContext.getSound());
+		}
+		injuryResult.setAlreadyReported(true);
+	}
+
 }

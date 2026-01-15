@@ -24,15 +24,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class DialogUseInducement extends Dialog implements ActionListener {
 
+	private final Set<InducementType> inducementSet;
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard, weatherMageButton, throwARockButton;
+	private JButton fButtonWizard, weatherMageButton, throwARockButton, regenerationButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -40,7 +40,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		super(pClient, "Use Inducement", false);
 
-		Set<InducementType> inducementSet = new HashSet<>();
+		inducementSet = new HashSet<>();
 		if (ArrayTool.isProvided(pDialogParameter.getInducementTypes())) {
 			inducementSet.addAll(Arrays.asList(pDialogParameter.getInducementTypes()));
 		}
@@ -137,7 +137,27 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			panelMain.add(Box.createVerticalStrut(5));
 
 		}
-		
+
+		inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION))
+			.forEach(type -> {
+
+				JPanel panel = new JPanel();
+				panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+				String buttonText = "<html>" +
+					"<b>" + type.getDescription() + "</b>" +
+					"<br>Re-Roll Regeneration" +
+					"</html>";
+				regenerationButton = new JButton(dimensionProvider(), buttonText);
+				regenerationButton.setHorizontalAlignment(SwingConstants.LEFT);
+				regenerationButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+				regenerationButton.addActionListener(this);
+				panel.add(regenerationButton);
+
+				panelMain.add(panel);
+				panelMain.add(Box.createVerticalStrut(5));
+
+			});
+
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
 		fButtonContinue = new JButton(dimensionProvider(), "Continue");
@@ -172,6 +192,9 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		if (pActionEvent.getSource() == throwARockButton) {
 			fInducement = getInducementByType(Usage.THROW_ROCK);
 		}
+		if (pActionEvent.getSource() == regenerationButton) {
+			fInducement = inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION)).findFirst().orElse(null);
+		}
 		fCard = null;
 		for (Card card : fButtonPerCard.keySet()) {
 			if (pActionEvent.getSource() == fButtonPerCard.get(card)) {
@@ -188,9 +211,9 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 		}
 	}
 
-	private InducementType getInducementByType(Usage spell) {
-		  return ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
-			.allTypes().stream().filter(type -> type.hasUsage(spell)).findFirst().orElse(null);
+	private InducementType getInducementByType(Usage inducement) {
+		return ((InducementTypeFactory) getClient().getGame().getFactory(FactoryType.Factory.INDUCEMENT_TYPE))
+			.allTypes().stream().filter(type -> type.hasUsage(inducement)).findFirst().orElse(null);
 	}
 
 	public InducementType getInducement() {
