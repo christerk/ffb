@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.bb2025;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -9,7 +9,7 @@ import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.state.AbstractClientStateMove;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.bb2025.SelectBlitzTargetLogicModule;
+import com.fumbbl.ffb.client.state.logic.bb2020.SelectGazeTargetLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -19,36 +19,35 @@ import com.fumbbl.ffb.model.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-@RulesCollection(RulesCollection.Rules.BB2025)
-public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<SelectBlitzTargetLogicModule> {
+@RulesCollection(RulesCollection.Rules.BB2020)
+public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectGazeTargetLogicModule> {
 
-	public ClientStateSelectBlitzTarget(FantasyFootballClientAwt pClient) {
-		super(pClient, new SelectBlitzTargetLogicModule(pClient));
+	public ClientStateSelectGazeTarget(FantasyFootballClientAwt pClient) {
+		super(pClient, new SelectGazeTargetLogicModule(pClient));
 	}
 
 	public boolean mouseOverPlayer(Player<?> pPlayer) {
 		super.mouseOverPlayer(pPlayer);
 		InteractionResult result = logicModule.playerPeek(pPlayer);
 		determineCursor(result);
+		Game game = getClient().getGame();
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
-
-		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+
 		showShortestPath(game.getFieldModel().getPlayerCoordinate(pPlayer), fieldComponent, actingPlayer);
 
 		return true;
 	}
 
-
 	@Override
 	protected String validCursor() {
-		return IIconProperty.CURSOR_BLOCK;
+		return IIconProperty.CURSOR_GAZE;
 	}
 
 	@Override
 	protected String invalidCursor() {
-		return IIconProperty.CURSOR_INVALID_BLOCK;
+		return IIconProperty.CURSOR_INVALID_GAZE;
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {
@@ -58,11 +57,16 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
-		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_BLOCK);
+		UtilClientCursor.setCustomCursor(getClient().getUserInterface(), IIconProperty.CURSOR_INVALID_GAZE);
 
 		showShortestPath(pCoordinate, fieldComponent, actingPlayer);
 
 		return true;
+	}
+
+	@Override
+	public void clickOnField(FieldCoordinate pCoordinate) {
+		// clicks on fields are ignored
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
@@ -101,15 +105,6 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
-			case PLAYER_ACTION_FRENZIED_RUSH:
-				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
-				return true;
-			case PLAYER_ACTION_SLASHING_NAILS:
-				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS);
-				return true;
-			case PLAYER_ACTION_AUTO_GAZE_ZOAT:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
-					return true;
 			default:
 				actionHandled = handleResize(pActionKey);
 				break;
@@ -129,14 +124,6 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
-			put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
-			put(IPlayerPopupMenuKeys.KEY_SLASHING_NAILS, ClientAction.SLASHING_NAILS);
-			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
 		}};
-	}
-
-	@Override
-	public void clickOnField(FieldCoordinate pCoordinate) {
-		// clicks on fields are ignored
 	}
 }

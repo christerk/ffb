@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.mixed;
+package com.fumbbl.ffb.client.state.bb2020;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -10,7 +10,7 @@ import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.mixed.ThrowKegLogicModule;
+import com.fumbbl.ffb.client.state.logic.bb2020.ThrowKegLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 
 	public ClientStateThrowKeg(FantasyFootballClientAwt pClient) {

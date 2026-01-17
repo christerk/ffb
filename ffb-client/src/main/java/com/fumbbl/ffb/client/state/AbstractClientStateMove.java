@@ -152,6 +152,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
 			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -192,6 +193,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 		itemConfigs.put(ClientAction.FRENZIED_RUSH,	new MenuItemConfig("Frenzied Rush", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH));
 		itemConfigs.put(ClientAction.SLASHING_NAILS,	new MenuItemConfig("Slashing Nails", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS));
+		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
 
 		return itemConfigs;
 	}
@@ -274,6 +276,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					return true;
 				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+					return true;
+				case PLAYER_ACTION_AUTO_GAZE_ZOAT:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
 					return true;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);

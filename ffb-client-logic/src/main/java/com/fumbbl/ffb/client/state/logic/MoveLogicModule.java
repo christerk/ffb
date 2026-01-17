@@ -56,6 +56,7 @@ public class MoveLogicModule extends LogicModule {
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.BOUNDING_LEAP);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -178,6 +179,12 @@ public class MoveLogicModule extends LogicModule {
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
+				case AUTO_GAZE_ZOAT:
+					if (isZoatGazeAvailable(actingPlayer)) {
+						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+						client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+					}
+				break;
 				default:
 					break;
 			}
@@ -432,6 +439,9 @@ public class MoveLogicModule extends LogicModule {
 		}
 		if (isThenIStartedBlastinAvailable(actingPlayer)) {
 			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		if (isZoatGazeAvailable(actingPlayer)) {
+			context.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
 		return context;
 	}

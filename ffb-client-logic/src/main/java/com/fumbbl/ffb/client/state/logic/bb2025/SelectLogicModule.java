@@ -76,7 +76,6 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.MULTIPLE_BLOCK);
 			add(ClientAction.BOMB);
 			add(ClientAction.GAZE);
-			add(ClientAction.GAZE_ZOAT);
 			add(ClientAction.SHOT_TO_NOTHING);
 			add(ClientAction.SHOT_TO_NOTHING_BOMB);
 			add(ClientAction.BEER_BARREL_BASH);
@@ -168,11 +167,6 @@ public class SelectLogicModule extends LogicModule {
 					break;
 				case GAZE:
 					communication.sendActingPlayer(player, PlayerAction.GAZE_MOVE, false);
-					break;
-				case GAZE_ZOAT:
-					communication.sendActingPlayer(player, PlayerAction.GAZE_MOVE, false);
-					Skill gazeSkill = player.getSkillWithProperty(NamedProperties.canGainGaze);
-					communication.sendUseSkill(gazeSkill, true, player.getId());
 					break;
 				case SHOT_TO_NOTHING:
 					communication.sendActingPlayer(player, PlayerAction.PASS_MOVE, false);
@@ -283,9 +277,6 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.inflictsConfusion)) {
 			context.add(ClientAction.GAZE);
-		}
-		if (isHypnoticGazeActionAvailable(true, player, NamedProperties.canGainGaze)) {
-			context.add(ClientAction.GAZE_ZOAT);
 		}
 		if (isMoveActionAvailable(player)) {
 			context.add(ClientAction.MOVE);
