@@ -184,7 +184,7 @@ public class MoveLogicModule extends LogicModule {
 						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
 						client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
 					}
-				break;
+					break;
 				default:
 					break;
 			}

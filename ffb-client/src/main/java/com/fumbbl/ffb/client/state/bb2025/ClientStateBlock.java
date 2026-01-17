@@ -98,8 +98,8 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
           menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
           return true;
         case PLAYER_ACTION_AUTO_GAZE_ZOAT:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
-					return true;
+          menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
+          return true;
         default:
           if (handleResize(pActionKey)) {
             return true;

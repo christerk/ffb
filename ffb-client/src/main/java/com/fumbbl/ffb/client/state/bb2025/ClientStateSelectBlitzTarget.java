@@ -108,8 +108,8 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS);
 				return true;
 			case PLAYER_ACTION_AUTO_GAZE_ZOAT:
-					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
-					return true;
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
+				return true;
 			default:
 				actionHandled = handleResize(pActionKey);
 				break;
