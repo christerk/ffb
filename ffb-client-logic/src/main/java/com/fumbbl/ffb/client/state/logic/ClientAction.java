@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.state.logic;
 
 public enum ClientAction {
 	ALL_YOU_CAN_EAT,
+	AUTO_GAZE_ZOAT,
 	BALEFUL_HEX,
 	BEER_BARREL_BASH,
 	BLACK_INK,
@@ -49,6 +50,5 @@ public enum ClientAction {
 	THROW_TEAM_MATE,
 	TREACHEROUS,
 	VICIOUS_VINES,
-	WISDOM,
-	AUTO_GAZE_ZOAT
+	WISDOM
 }
