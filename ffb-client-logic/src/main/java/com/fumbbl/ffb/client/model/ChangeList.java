@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Prevent MB to be applied when blocking an opponent using chainsaw special action")
+			.addFeature("Diving Tackle: RR needs to be decided before DT prompt")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
