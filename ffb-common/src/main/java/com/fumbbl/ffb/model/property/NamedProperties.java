@@ -125,6 +125,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
+	public static final ISkillProperty canSabotageBlockerOnKnockdown = new NamedProperty("Can Sabotage Blocker On Knockdown");
 	public static final ISkillProperty canSaveReRolls = new NamedProperty("Can Save Re-Rolls");
 	public static final ISkillProperty canSkipTtmScatterOnSuperbThrow = new NamedProperty("Can Skip TTM Scatter On Superb Throw");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(
