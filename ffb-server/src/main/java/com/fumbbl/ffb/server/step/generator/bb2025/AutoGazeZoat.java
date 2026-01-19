@@ -22,7 +22,6 @@ public class AutoGazeZoat extends com.fumbbl.ffb.server.step.generator.AutoGazeZ
 		Sequence sequence = new Sequence(gameState);
 		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END).addTo(sequence);
 
-		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END));
 		sequence.add(StepId.AUTO_GAZE_ZOAT, IStepLabel.END, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, params.getGoToLabelFailure()),
 			from(StepParameterKey.OLD_PLAYER_STATE, params.getOldPlayerState()));
 
