@@ -14,7 +14,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
 	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
-	ARM_BAR("armBar");
+	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -129,6 +129,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ARM_BAR:
 				header.append("Select a player to use Arm Bar");
 				break;
+			case AUTO_GAZE_ZOAT:
+				header.append("Select a player to Distract");
+				break;
 			default:
 				break;
 		}
@@ -219,6 +222,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ARM_BAR:
 				title.append("Arm Bar");
 				break;
+			case AUTO_GAZE_ZOAT:
+				title.append("\"Excuse Me, Are You a Zoat?\"");
+				break;
 			default:
 				break;
 		}
@@ -308,6 +314,10 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ARM_BAR:
 				message.append("Waiting for coach to choose a player to use Arm Bar.");
+				break;
+			case AUTO_GAZE_ZOAT:
+				message.append("Waiting for coach to choose a player to Distract.");
+				break;
 			default:
 				break;
 		}

@@ -120,6 +120,7 @@ public abstract class AbstractClientStateBlock<T extends AbstractBlockLogicModul
 		itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
 		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
 		itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
+		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
 
 		itemConfigs.putAll(extension.itemConfigs());
 		return itemConfigs;

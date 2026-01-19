@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.mixed;
+package com.fumbbl.ffb.client.state.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -19,7 +19,6 @@ import com.fumbbl.ffb.model.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectGazeTargetLogicModule> {
 
@@ -106,6 +105,9 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 			case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
 				return true;
+			case PLAYER_ACTION_AUTO_GAZE_ZOAT:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
+				return true;
 			default:
 				actionHandled = handleResize(pActionKey);
 				break;
@@ -125,6 +127,7 @@ public class ClientStateSelectGazeTarget extends AbstractClientStateMove<SelectG
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 }

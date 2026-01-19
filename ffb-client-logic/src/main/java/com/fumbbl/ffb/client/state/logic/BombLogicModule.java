@@ -44,6 +44,7 @@ public class BombLogicModule extends LogicModule {
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -85,6 +86,9 @@ public class BombLogicModule extends LogicModule {
 			}
 			if (isThenIStartedBlastinAvailable(actingPlayer)) {
 				actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+			}
+			if (isZoatGazeAvailable(actingPlayer)) {
+				actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 			}
 
 			return actionContext;
@@ -161,6 +165,12 @@ public class BombLogicModule extends LogicModule {
 				if (isThenIStartedBlastinAvailable(actingPlayer)) {
 					Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 					client.getCommunication().sendUseSkill(skill, true, player.getId());
+				}
+				break;
+			case AUTO_GAZE_ZOAT:
+				if (isZoatGazeAvailable(actingPlayer)) {
+					Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+					client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
 				}
 				break;
 			default:

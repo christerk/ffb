@@ -29,7 +29,7 @@ public enum PlayerAction implements INamedObject {
 	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
 	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"), BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
 	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
-	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action");
+	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"), AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\"");
 
 	private final String fName;
 	private final int fType;

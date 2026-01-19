@@ -105,6 +105,9 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		if (isSlashingNailsAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.SLASHING_NAILS);
 		}
+		if (isZoatGazeAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
+		}
 		return actionContext;
 	}
 
@@ -175,6 +178,12 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
+				case AUTO_GAZE_ZOAT:
+					if (isZoatGazeAvailable(player)) {
+						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+						communication.sendUseSkill(zoatGazeInkSkill, true, player.getId());
+					}
+					break;					
 				default:
 					break;
 			}
@@ -195,6 +204,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.FRENZIED_RUSH);
 			add(ClientAction.SLASHING_NAILS);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 }
