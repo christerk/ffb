@@ -3,6 +3,7 @@ package com.fumbbl.ffb.net.commands;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryType;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
@@ -19,6 +20,7 @@ public class ClientCommandUseApothecary extends ClientCommand {
 	private boolean fApothecaryUsed;
 	private ApothecaryType apothecaryType;
 	private SeriousInjury seriousInjury;
+	private PlayerState playerState;
 
 	public ClientCommandUseApothecary() {
 		super();
@@ -31,6 +33,13 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		this.apothecaryType = apothecaryType;
 		this.seriousInjury = seriousInjury;
 	}
+
+    public ClientCommandUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType, 
+			SeriousInjury seriousInjury, PlayerState playerState) {
+			this(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury);
+			this.playerState = playerState;
+    }	
+	
 
 	public NetCommandId getId() {
 		return NetCommandId.CLIENT_USE_APOTHECARY;
@@ -52,6 +61,10 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		return seriousInjury;
 	}
 
+	public PlayerState getPlayerState() { 
+		return playerState;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -63,6 +76,9 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		}
 		if (seriousInjury !=null ) {
 			IJsonOption.SERIOUS_INJURY.addTo(jsonObject, seriousInjury);
+		}
+		if (playerState != null) {
+			IJsonOption.PLAYER_STATE.addTo(jsonObject, playerState);
 		}
 		return jsonObject;
 	}
@@ -77,6 +93,9 @@ public class ClientCommandUseApothecary extends ClientCommand {
 		}
 		if (IJsonOption.SERIOUS_INJURY.isDefinedIn(jsonObject)) {
 			seriousInjury = (SeriousInjury) IJsonOption.SERIOUS_INJURY.getFrom(source, jsonObject);
+		}
+		if (IJsonOption.PLAYER_STATE.isDefinedIn(jsonObject)) {
+			playerState = (PlayerState) IJsonOption.PLAYER_STATE.getFrom(source, jsonObject);
 		}
 		return this;
 	}
