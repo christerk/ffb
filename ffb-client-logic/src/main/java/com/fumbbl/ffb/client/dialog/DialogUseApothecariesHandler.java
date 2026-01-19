@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
@@ -60,6 +61,7 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 		String playerId = null;
 		ApothecaryType apothecaryType = null;
 		SeriousInjury seriousInjury = null;
+		PlayerState playerState = null;
 
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
@@ -71,14 +73,16 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 				playerId = injuryDescription.getPlayerId();
 				apothecaryType = injuryDescription.getApothecaryTypes().get(1);
 			}
+			playerState = injuryDescription.getPlayerState();
 		} else if (testDialogHasId(pDialog, DialogId.USE_APOTHECARIES)) {
 			DialogUseApothecaries useApothecaries = (DialogUseApothecaries) pDialog;
 			playerId = useApothecaries.getSelectedPlayer();
 			apothecaryType = useApothecaries.getApothecaryType();
 			seriousInjury = useApothecaries.getSeriousInjury();
+			playerState = useApothecaries.getSelectedPlayerState();
 		}
 		if (StringTool.isProvided(playerId)) {
-			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType, seriousInjury);
+			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType, seriousInjury, playerState);
 		} else {
 			getClient().getCommunication().sendUseApothecaries(Collections.emptyList());
 		}

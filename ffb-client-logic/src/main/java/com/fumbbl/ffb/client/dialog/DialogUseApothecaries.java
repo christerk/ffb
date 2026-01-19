@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -26,6 +27,7 @@ public class DialogUseApothecaries extends Dialog {
 	private String selectedPlayer;
 	private ApothecaryType apothecaryType;
 	private SeriousInjury seriousInjury;
+	private PlayerState selectedPlayerState;
 
 	public DialogUseApothecaries(FantasyFootballClient pClient, DialogUseApothecariesParameter parameter) {
 
@@ -89,7 +91,7 @@ public class DialogUseApothecaries extends Dialog {
 			buttonPanel.setBackground(HIGHLIGHT);
 
 			for (ApothecaryType apothecaryType : injuryDescription.getApothecaryTypes()) {
-				buttonPanel.add(createButton(playerId, apothecaryType, apothecaryType.getName().charAt(index), injuryDescription.getSeriousInjury()));
+				buttonPanel.add(createButton(playerId, apothecaryType, apothecaryType.getName().charAt(index), injuryDescription));
 			}
 			buttonPanel.add(Box.createHorizontalGlue());
 
@@ -129,23 +131,25 @@ public class DialogUseApothecaries extends Dialog {
 
 	}
 
-	private JButton createButton(String target, ApothecaryType apothecaryType, char mnemonic, SeriousInjury seriousInjury) {
+	private JButton createButton(String target, ApothecaryType apothecaryType, char mnemonic, InjuryDescription injuryDescription) {
+		
 		JButton button = new JButton(dimensionProvider(), "Use Apothecary (" + apothecaryType.getName() + ")");
-		button.addActionListener(e -> handleUserInteraction(target, apothecaryType, seriousInjury));
+		button.addActionListener(e -> handleUserInteraction(target, apothecaryType, injuryDescription.getSeriousInjury(), injuryDescription.getPlayerState()));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
 			@Override
 			protected void handleKey() {
-				handleUserInteraction(target, apothecaryType, seriousInjury);
+				handleUserInteraction(target, apothecaryType, injuryDescription.getSeriousInjury(), injuryDescription.getPlayerState());
 			}
 		});
 		button.setMnemonic((int) mnemonic);
 		return button;
 	}
 
-	private void handleUserInteraction(String target, ApothecaryType apothecaryType, SeriousInjury seriousInjury) {
+	private void handleUserInteraction(String target, ApothecaryType apothecaryType, SeriousInjury seriousInjury, PlayerState playerState) {
 		selectedPlayer = target;
 		this.apothecaryType = apothecaryType;
 		this.seriousInjury = seriousInjury;
+		this.selectedPlayerState = playerState;
 		close();
 	}
 
@@ -173,6 +177,10 @@ public class DialogUseApothecaries extends Dialog {
 
 	public DialogUseApothecariesParameter getDialogParameter() {
 		return dialogParameter;
+	}
+
+	public PlayerState getSelectedPlayerState() { 
+		return selectedPlayerState; 
 	}
 
 }
