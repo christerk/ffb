@@ -23,7 +23,7 @@ public enum SendToBoxReason implements INamedObject {
 	OFFICIOUS_REF("officiousRef", "was banned by the officious ref"), THROWN_KEG("thrownKeg", "was hit by a beer keg"),
 	THREW_TWO_BOMBS("threwToBombs", "was spotted throwing a second bomb"), BREATHE_FIRE("breatheFire", "has been hit by breathe fire"),
 	THEN_I_STARTED_BLASTIN("startedBlastin", "was blasted"), QUICK_BITE("quickBite", "got injured by quick bite"), 
-	SABOTEUR("saboteur", "was knocked out sabotaging and opponent"), SABOTAGED("sabotaged", "was taken out by a sabotaged weapon");
+	SABOTEUR("saboteur", "was knocked out sabotaging an opponent"), SABOTAGED("sabotaged", "was taken out by a sabotaged weapon");
 
 	private final String fName;
 	private final String fReason;
