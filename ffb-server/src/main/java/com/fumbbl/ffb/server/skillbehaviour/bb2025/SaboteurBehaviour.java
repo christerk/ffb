@@ -65,8 +65,8 @@ public class SaboteurBehaviour extends SkillBehaviour<Saboteur> {
 				PlayerAction action = actingPlayer.getPlayerAction();
 
 				boolean blockAction = action == PlayerAction.BLOCK
-          || action == PlayerAction.BLITZ 
-          || action == PlayerAction.MULTIPLE_BLOCK;
+					|| action == PlayerAction.BLITZ 
+					|| action == PlayerAction.MULTIPLE_BLOCK;
 
 				boolean eligible = !state.saboteurTriggered
 					&& defender.hasSkillProperty(NamedProperties.canSabotageBlockerOnKnockdown)
