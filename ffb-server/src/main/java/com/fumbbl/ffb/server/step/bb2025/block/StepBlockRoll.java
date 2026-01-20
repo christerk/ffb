@@ -320,8 +320,10 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();
-		if ((fNrOfDice < 0) && (noReRollUsed || properties.stream().noneMatch(ReRollProperty::isActualReRoll))) {
+		if ((fNrOfDice < 0) &&
+			(noReRollUsed || (properties.stream().noneMatch(ReRollProperty::isActualReRoll) && actionToSource.isEmpty()))) {
 			properties.removeIf(ReRollProperty::isActualReRoll);
+			actionToSource.clear();
 			teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
 		}
 		getResult().addReport(new ReportBlockRoll(teamId, fBlockRoll));
@@ -331,7 +333,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				convertActionsMap(actionToSource)), (fNrOfDice < 0));
 	}
 
-	private void evaluateBrawlerAvailability(Game game, ActingPlayer actingPlayer, Map<ReRolledAction, ReRollSource> actionToSource) {
+	private void evaluateBrawlerAvailability(Game game, ActingPlayer actingPlayer,
+		Map<ReRolledAction, ReRollSource> actionToSource) {
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBothDown);
 		boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
@@ -347,15 +350,17 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void evaluateHatredAvailability(Game game, ActingPlayer actingPlayer, Map<ReRolledAction, ReRollSource> actionToSource) {
+	private void evaluateHatredAvailability(Game game, ActingPlayer actingPlayer,
+		Map<ReRolledAction, ReRollSource> actionToSource) {
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		Skill hatred = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleSkull);
 		if (hatred == null) {
 			return;
 		}
 		List<Keyword> defenderKeywords = game.getDefender().getPosition().getKeywords();
-		List<Keyword> attackerKeywords = hatred.evaluator().values(hatred, actingPlayer.getPlayer()).stream().map(Keyword::forName)
-			.collect(Collectors.toList());
+		List<Keyword> attackerKeywords =
+			hatred.evaluator().values(hatred, actingPlayer.getPlayer()).stream().map(Keyword::forName)
+				.collect(Collectors.toList());
 		boolean hatredPresent = !Collections.disjoint(defenderKeywords, attackerKeywords);
 
 		if (hatredPresent) {
@@ -368,7 +373,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		}
 	}
 
-	private void addReRollSourceMapping(Map<ReRolledAction, ReRollSource> actionToSource, ReRolledAction reRolledAction, Game game) {
+	private void addReRollSourceMapping(Map<ReRolledAction, ReRollSource> actionToSource, ReRolledAction reRolledAction,
+		Game game) {
 		ReRollSource unusedRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(),
 			reRolledAction);
 		if (unusedRerollSource != null) {
