@@ -131,7 +131,6 @@ public class SaboteurBehaviour extends SkillBehaviour<Saboteur> {
 							}
 						}
 					}
-					// continue to attacker branch after dialog if any
 					if (state.usingSaboteurDefender == null) {
 						return true;
 					}
