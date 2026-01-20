@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProne;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunned;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropGFI;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeSabotaged;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeSaboteur;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
@@ -55,8 +56,10 @@ public class StepDropFallingPlayers extends AbstractStep {
 	public static class StepState {
 		public InjuryResult injuryResultDefender;
 		public PlayerState oldDefenderState;
-		public boolean saboteurTriggered;
-		public Boolean usingSaboteur;
+		public boolean saboteurTriggeredAttacker;
+		public Boolean usingSaboteurAttacker;
+		public boolean saboteurTriggeredDefender;
+		public Boolean usingSaboteurDefender;
 	}
 
 	private final StepState state;
@@ -133,6 +136,11 @@ public class StepDropFallingPlayers extends AbstractStep {
 					injuryType = new InjuryTypeBlockProne();
 				}
 			}
+			if (state.saboteurTriggeredDefender) {
+				injuryType = new InjuryTypeSaboteur();
+			} else if (state.saboteurTriggeredAttacker) {
+				injuryType = new InjuryTypeSabotaged();
+			}
 			if (state.injuryResultDefender == null) {
 				state.injuryResultDefender =
 					UtilServerInjury.handleInjury(this, injuryType, actingPlayer.getPlayer(), game.getDefender(),
@@ -150,7 +158,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 				new DropPlayerContext(state.injuryResultDefender, droppedOwnTeam, true, null, game.getDefenderId(),
 					ApothecaryMode.DEFENDER, false);
 
-			if (state.saboteurTriggered) {
+			if (state.saboteurTriggeredDefender) {
 				// bypass Steady Footing
 				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT, dropPlayerContext));
 				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, state.injuryResultDefender));
@@ -158,14 +166,14 @@ public class StepDropFallingPlayers extends AbstractStep {
 				publishParameter(StepParameter.from(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 			}
 
-		} else if (droppedOwnTeam) {
+		} else if (droppedOwnTeam && !state.saboteurTriggeredDefender && !state.saboteurTriggeredAttacker) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 
 		List<DeferredCommand> deferredCommands = new ArrayList<>();
 
 		if ((attackerState != null) && (attackerState.getBase() == PlayerState.FALLING) && (attackerCoordinate != null)) {
-			if (!state.saboteurTriggered) {
+			if (!(state.saboteurTriggeredDefender || state.saboteurTriggeredAttacker)) {
 				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			}
 			InjuryResult injuryResultAttacker;
@@ -175,18 +183,26 @@ public class StepDropFallingPlayers extends AbstractStep {
 						attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			} else {
 				deferredCommands.add(new DropPlayerCommand(actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true));
-				if (state.saboteurTriggered) {
-					injuryResultAttacker =
-						UtilServerInjury.handleInjury(this, new InjuryTypeSabotaged(), game.getDefender(),
-							actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
-				} else {
-					injuryResultAttacker =
-						UtilServerInjury.handleInjury(this, new InjuryTypeBlock(), game.getDefender(),
-							actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
+				InjuryTypeServer<?> injuryType = new InjuryTypeBlock();
+				if (state.saboteurTriggeredAttacker) {
+					injuryType = new InjuryTypeSaboteur();
+				} else if (state.saboteurTriggeredDefender) {
+					injuryType = new InjuryTypeSabotaged();
 				}
+				injuryResultAttacker = UtilServerInjury.handleInjury(this, injuryType, game.getDefender(),
+					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			}
-			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-				new SteadyFootingContext(injuryResultAttacker, deferredCommands)));
+
+			if (state.saboteurTriggeredAttacker) {
+				DropPlayerContext dropPlayerContext =
+					new DropPlayerContext(injuryResultAttacker, false, false, null, actingPlayer.getPlayerId(),
+						ApothecaryMode.ATTACKER, false);
+				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,dropPlayerContext));
+				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
+			} else {
+				publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
+					new SteadyFootingContext(injuryResultAttacker, deferredCommands)));
+			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -200,8 +216,10 @@ public class StepDropFallingPlayers extends AbstractStep {
 			IServerJsonOption.INJURY_RESULT_DEFENDER.addTo(jsonObject, state.injuryResultDefender.toJsonValue());
 		}
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, state.oldDefenderState);
-		IServerJsonOption.SABOTEUR_TRIGGERED.addTo(jsonObject, state.saboteurTriggered);
-		IServerJsonOption.USING_SABOTEUR.addTo(jsonObject, state.usingSaboteur);
+		IServerJsonOption.SABOTEUR_TRIGGERED_DEFENDER.addTo(jsonObject, state.saboteurTriggeredDefender);
+		IServerJsonOption.USING_SABOTEUR_DEFENDER.addTo(jsonObject, state.usingSaboteurDefender);
+		IServerJsonOption.SABOTEUR_TRIGGERED_ATTACKER.addTo(jsonObject, state.saboteurTriggeredAttacker);
+		IServerJsonOption.USING_SABOTEUR_ATTACKER.addTo(jsonObject, state.usingSaboteurAttacker);
 		return jsonObject;
 	}
 
@@ -215,8 +233,10 @@ public class StepDropFallingPlayers extends AbstractStep {
 			state.injuryResultDefender = new InjuryResult().initFrom(source, injuryResultDefenderObject);
 		}
 		state.oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
-		state.saboteurTriggered = IServerJsonOption.SABOTEUR_TRIGGERED.getFrom(source, jsonObject);
-		state.usingSaboteur = IServerJsonOption.USING_SABOTEUR.getFrom(source, jsonObject);
+		state.saboteurTriggeredDefender = IServerJsonOption.SABOTEUR_TRIGGERED_DEFENDER.getFrom(source, jsonObject);
+		state.usingSaboteurDefender = IServerJsonOption.USING_SABOTEUR_DEFENDER.getFrom(source, jsonObject);
+		state.saboteurTriggeredAttacker = IServerJsonOption.SABOTEUR_TRIGGERED_ATTACKER.getFrom(source, jsonObject);
+		state.usingSaboteurAttacker = IServerJsonOption.USING_SABOTEUR_ATTACKER.getFrom(source, jsonObject);
 		return this;
 	}
 
