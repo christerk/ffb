@@ -59,4 +59,5 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_MORE_ACTION = KeyEvent.VK_TAB;
 	int KEY_SECURE_THE_BALL = KeyEvent.VK_E;
 	int KEY_SLASHING_NAILS = KeyEvent.VK_S;
+	int KEY_AUTO_GAZE_ZOAT = KeyEvent.VK_Z;
 }

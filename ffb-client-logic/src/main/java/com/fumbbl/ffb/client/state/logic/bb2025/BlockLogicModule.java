@@ -86,6 +86,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -148,6 +149,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 					communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
 				}
 				break;
+			case AUTO_GAZE_ZOAT:
+				Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+				client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
 			default:
 				break;
 		}

@@ -41,6 +41,7 @@ public class BlockLogicExtension extends LogicModule {
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.BREATHE_FIRE);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -72,6 +73,9 @@ public class BlockLogicExtension extends LogicModule {
 		}
 		if (isThenIStartedBlastinAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		if (isZoatGazeAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
 		return actionContext;
 	}
@@ -153,6 +157,10 @@ public class BlockLogicExtension extends LogicModule {
 					Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 					communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
 				}
+				break;
+			case AUTO_GAZE_ZOAT:
+				Skill zoatGazeInkSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+				communication.sendUseSkill(zoatGazeInkSkill, true, actingPlayer.getPlayerId());
 				break;
 			default:
 				break;

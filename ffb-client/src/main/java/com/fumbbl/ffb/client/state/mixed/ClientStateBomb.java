@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -27,7 +27,8 @@ import java.util.*;
 /**
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 
 	private final RangeGridHandler fRangeGridHandler;

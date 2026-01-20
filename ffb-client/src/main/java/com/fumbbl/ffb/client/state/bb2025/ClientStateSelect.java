@@ -73,7 +73,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 			} else {
-				put(IPlayerPopupMenuKeys.KEY_GAZE_ZOAT, ClientAction.GAZE_ZOAT);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, ClientAction.SHOT_TO_NOTHING);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, ClientAction.SHOT_TO_NOTHING_BOMB);
 				put(IPlayerPopupMenuKeys.KEY_BEER_BARREL_BASH, ClientAction.BEER_BARREL_BASH);
@@ -178,9 +177,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			}
 		} else {
 			switch (pActionKey) {
-				case PLAYER_ACTION_GAZE_ZOAT:
-					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT);
-					break;
 				case PLAYER_ACTION_SHOT_TO_NOTHING:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING);
 					break;
@@ -246,8 +242,6 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB));
 		configs.put(ClientAction.GAZE,
 			new MenuItemConfig("Hypnotic Gaze", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_GAZE));
-		configs.put(ClientAction.GAZE_ZOAT,
-			new MenuItemConfig("Hypnotic Gaze (Zoat)", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_GAZE_ZOAT));
 		configs.put(ClientAction.MOVE,
 			new MenuItemConfig("Move Action", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_MOVE));
 		configs.put(ClientAction.BLITZ,

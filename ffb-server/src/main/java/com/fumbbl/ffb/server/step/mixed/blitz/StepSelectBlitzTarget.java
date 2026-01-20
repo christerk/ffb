@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.AutoGazeZoat;
 import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
@@ -149,7 +150,15 @@ public class StepSelectBlitzTarget extends AbstractStep {
 								.forName(SequenceGenerator.Type.CatchOfTheDay.name());
 							generator.pushSequence(new CatchOfTheDay.SequenceParams(getGameState(), gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
-						} else {
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway)) {
+							Game game = getGameState().getGame();
+							PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
+							getGameState().pushCurrentStepOnStack();
+							AutoGazeZoat generator = (AutoGazeZoat) getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.AutoGazeZoat.name());
+							generator.pushSequence(new AutoGazeZoat.SequenceParams(getGameState(), gotoLabelOnEnd, playerState));
+							getResult().setNextAction(StepAction.NEXT_STEP);
+						}  else {
 							usedSkill = commandUseSkill.getSkill();
 						}
 					}
