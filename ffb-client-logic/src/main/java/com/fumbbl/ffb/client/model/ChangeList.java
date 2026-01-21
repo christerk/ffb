@@ -13,7 +13,7 @@ public class ChangeList {
 			.addBugfix("Prevent MB to be applied when blocking an opponent using chainsaw special action")
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
 			.addFeature("Saboteur")
-			.addFeature("Diving Tackle: RR needs to be decided before DT prompt")
+			.addFeature("Diving Tackle: RR needs to be decided before DT prompt (Dodge and Jump)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
