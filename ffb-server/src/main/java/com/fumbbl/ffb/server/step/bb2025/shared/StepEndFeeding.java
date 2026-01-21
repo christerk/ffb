@@ -97,13 +97,13 @@ public class StepEndFeeding extends AbstractStep {
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
-					.pushSequence(new EndTurn.SequenceParams(getGameState(), checkForgo));
+					.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				if (game.getTurnMode() == TurnMode.REGULAR) {
 					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OPPONENT_TURN,
-							!game.isHomePlaying()));
+							!game.isHomePlaying(), checkForgo));
 					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
 						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
 							game.isHomePlaying()));
@@ -111,7 +111,7 @@ public class StepEndFeeding extends AbstractStep {
 					sequence.add(StepId.PICK_ME_UP);
 					getGameState().getStepStack().push(sequence.getSequence());
 				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-					EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), true);
+					EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), false);
 					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);
 				}
 			}

@@ -12,7 +12,7 @@ public abstract class EndPlayerAction extends SequenceGenerator<EndPlayerAction.
 		private final boolean feedingAllowed, endPlayerAction, endTurn, checkForgo;
 
 		public SequenceParams(GameState gameState, boolean feedingAllowed, boolean endPlayerAction, boolean endTurn) {
-			this(gameState, feedingAllowed, endPlayerAction, endTurn, true);
+			this(gameState, feedingAllowed, endPlayerAction, endTurn, false);
 		}
 
 		public SequenceParams(GameState gameState, boolean feedingAllowed, boolean endPlayerAction, boolean endTurn, boolean checkForgo) {
