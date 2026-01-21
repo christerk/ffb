@@ -216,7 +216,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 						.filter(injuryResult ->
 							injuryResult.injuryContext().fApothecaryStatus == ApothecaryStatus.WAIT_FOR_APOTHECARY_USE
 								&& injuryResult.injuryContext().getDefenderId().equals(useApothecaryCommand.getPlayerId())
-								&& useApothecaryCommand.getSeriousInjury() == injuryResult.injuryContext().getSeriousInjury())
+								&& useApothecaryCommand.getSeriousInjury() == injuryResult.injuryContext().getSeriousInjury()
+								&& injuryResult.injuryContext().getPlayerState().equals(useApothecaryCommand.getPlayerState()))
 						.findFirst().ifPresent(injuryResult -> {
 							ApothecaryStatus newStatus;
 
@@ -382,7 +383,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		boolean doubleAttackerDown = injuryResults.size() == 2 && game.getTeamById(teamId) == game.getActingTeam();
 		// this only happens in case of a double attacker down
 		if (doubleAttackerDown) {
-			if (regenerationFailedResults.size() == 1) {
+			if (!regenerationFailedResults.isEmpty()) {
 				// reset the player states again to make sure we have defined base state to reapply the injuries
 				Player<?> player = game.getPlayerById(regenerationFailedResults.get(0).injuryContext().getDefenderId());
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);

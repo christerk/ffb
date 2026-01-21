@@ -25,6 +25,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.AutoGazeZoat;
 import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.BlitzBlock;
@@ -436,6 +437,12 @@ public final class StepEndSelecting extends AbstractStep {
         SequenceGenerator.SequenceParams foParams = new SequenceGenerator.SequenceParams(getGameState());
         FuriousOutburst furiousGenerator = (FuriousOutburst) factory.forName(SequenceGenerator.Type.FuriousOutburst.name());
         furiousGenerator.pushSequence(foParams);
+        break;
+      case AUTO_GAZE_ZOAT:
+        selectGenerator.pushSequence(selectParams);
+        AutoGazeZoat.SequenceParams autoGazeZoatParams = new AutoGazeZoat.SequenceParams(getGameState(), IStepLabel.END_SELECTING, playerState);
+        AutoGazeZoat autoGazeZoatGenerator = (AutoGazeZoat) factory.forName(SequenceGenerator.Type.AutoGazeZoat.name());
+        autoGazeZoatGenerator.pushSequence(autoGazeZoatParams);
         break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");

@@ -558,7 +558,8 @@ public abstract class LogicModule {
 				|| isPutridRegurgitationAvailable()
 				|| isCatchOfTheDayAvailable(actingPlayer)
 				|| isBlackInkAvailable(actingPlayer)
-				|| isThenIStartedBlastinAvailable(actingPlayer);
+				|| isThenIStartedBlastinAvailable(actingPlayer)
+				|| isZoatGazeAvailable(actingPlayer);
 	}
 
 	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
@@ -645,6 +646,20 @@ public abstract class LogicModule {
 
 	protected boolean isSlashingNailsAvailable(Player<?> player) {
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainClawsForBlitz);
+	}
+
+	protected boolean isZoatGazeAvailable(ActingPlayer actingPlayer) {
+		return !actingPlayer.hasActed() && !actingPlayer.isStandingUp() && isZoatGazeAvailable(actingPlayer.getPlayer());
+	}
+
+	protected boolean isZoatGazeAvailable(Player<?> player) {
+		Game game = client.getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		FieldCoordinate coord = fieldModel.getPlayerCoordinate(player);
+
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGazeAutomaticallyThreeSquaresAway)
+			&& ArrayTool.isProvided(UtilPlayer.findPlayersWithTackleZones(
+				game, game.getOtherTeam(game.getActingTeam()), coord, 3));
 	}
 }
 

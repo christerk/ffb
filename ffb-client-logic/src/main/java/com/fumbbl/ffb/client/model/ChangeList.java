@@ -11,6 +11,8 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Prevent MB to be applied when blocking an opponent using chainsaw special action")
+			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
+			.addFeature("Saboteur")
 			.addFeature("Diving Tackle: RR needs to be decided before DT prompt")
 		);
 

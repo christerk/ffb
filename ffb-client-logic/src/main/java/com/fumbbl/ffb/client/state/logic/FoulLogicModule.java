@@ -93,6 +93,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.CHAINSAW);
       add(ClientAction.BLACK_INK);
       add(ClientAction.THEN_I_STARTED_BLASTIN);
+      add(ClientAction.AUTO_GAZE_ZOAT);
     }};
   }
 
@@ -175,6 +176,12 @@ public class FoulLogicModule extends MoveLogicModule {
             communication.sendUseSkill(skill, true, player.getId());
           }
           break;
+        case AUTO_GAZE_ZOAT:
+          if (isZoatGazeAvailable(actingPlayer)) {
+            Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+            client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+          }
+          break;  
         default:
           break;
       }
