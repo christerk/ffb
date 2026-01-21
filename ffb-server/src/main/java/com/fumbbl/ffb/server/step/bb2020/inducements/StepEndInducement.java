@@ -91,7 +91,7 @@ public final class StepEndInducement extends AbstractStep {
         fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
         SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
         EndTurn endTurnGenerator = ((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()));
-        SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+        EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), false);
         switch (fInducementPhase) {
             case END_OF_OWN_TURN:
             case END_OF_OPPONENT_TURN:

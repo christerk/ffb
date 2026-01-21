@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.shared;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -17,12 +17,13 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
@@ -34,12 +35,10 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEndFeeding extends AbstractStep {
 
-	private boolean fEndPlayerAction;
-	private boolean fEndTurn;
+	private boolean fEndPlayerAction, fEndTurn, checkForgo;
 
 	public StepEndFeeding(GameState pGameState) {
 		super(pGameState);
@@ -47,6 +46,19 @@ public class StepEndFeeding extends AbstractStep {
 
 	public StepId getId() {
 		return StepId.END_FEEDING;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		for (StepParameter parameter : pParameterSet.values()) {
+			switch (parameter.getKey()) {
+				case CHECK_FORGO:
+					checkForgo = parameter.getValue() != null && (boolean) parameter.getValue();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	@Override
@@ -85,7 +97,7 @@ public class StepEndFeeding extends AbstractStep {
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
-					.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+					.pushSequence(new EndTurn.SequenceParams(getGameState(), checkForgo));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				if (game.getTurnMode() == TurnMode.REGULAR) {
@@ -99,7 +111,7 @@ public class StepEndFeeding extends AbstractStep {
 					sequence.add(StepId.PICK_ME_UP);
 					getGameState().getStepStack().push(sequence.getSequence());
 				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
-					SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+					EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), true);
 					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);
 				}
 			}
@@ -124,6 +136,7 @@ public class StepEndFeeding extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
 		return jsonObject;
 	}
 
@@ -133,6 +146,7 @@ public class StepEndFeeding extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
 		return this;
 	}
 

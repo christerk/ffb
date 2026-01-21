@@ -300,6 +300,7 @@ public final class StepInitSelecting extends AbstractStep {
 
 					if (!ignoreCommand && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;
+						publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
