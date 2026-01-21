@@ -401,8 +401,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 
-		boolean reRolled = pDoRoll && getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
-		if(pDoRoll || reRolled){
+		boolean reRolled = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
+		if(pDoRoll){
 			getResult().addReport(
 				new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled,
 					dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
@@ -436,7 +436,6 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 								actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
 								publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, true));
 								successWithDt = true;
-								minimumRoll = minimumWithDtBt;
 							}
 						}
 
