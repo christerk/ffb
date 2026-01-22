@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.blitz;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -50,13 +50,12 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 import java.util.Arrays;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepSelectBlitzTarget extends AbstractStep {
 
 	private String gotoLabelOnEnd;
 	private String selectedPlayerId;
-	private boolean confirmed, endPlayerAction, endTurn;
+	private boolean confirmed, endPlayerAction, endTurn, checkForgo;
 	private Skill usedSkill;
 
 	public StepSelectBlitzTarget(GameState pGameState) {
@@ -98,6 +97,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						endTurn = true;
+						checkForgo = true;
 						status = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -208,7 +208,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 			getGameState().getStepStack().clear();
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			EndPlayerAction endGenerator = (EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name());
-			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn));
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, endTurn, checkForgo));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else if (selectedPlayerId == null) {
 			if (hasStandingOpponents(game)) {
@@ -276,6 +276,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.SKILL.addTo(jsonObject, usedSkill);
 		IServerJsonOption.CONFIRMED.addTo(jsonObject, confirmed);
+		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
 		return jsonObject;
 	}
 
@@ -289,6 +290,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		usedSkill = (Skill) IServerJsonOption.SKILL.getFrom(source, jsonObject);
 		confirmed = toPrimitive(IServerJsonOption.CONFIRMED.getFrom(source, jsonObject));
+		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
 		return this;
 	}
 

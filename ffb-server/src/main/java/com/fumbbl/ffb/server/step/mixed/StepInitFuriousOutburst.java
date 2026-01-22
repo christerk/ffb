@@ -108,6 +108,7 @@ public class StepInitFuriousOutburst extends AbstractStep {
 		if (!fieldModel.getPlayerState(actingPlayer.getPlayer()).isProneOrStunned()) {
 			if (endTurn) {
 				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
 			} else if (endPlayerAction) {
 				publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 				game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());

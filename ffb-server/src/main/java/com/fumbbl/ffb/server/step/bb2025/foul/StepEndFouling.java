@@ -38,7 +38,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class StepEndFouling extends AbstractStep {
 
 	private boolean fEndTurn;
-	private boolean fEndPlayerAction;
+	private boolean fEndPlayerAction, checkForgo;
 	private PlayerAction bloodlustAction;
 
 	public StepEndFouling(GameState pGameState) {
@@ -63,6 +63,10 @@ public class StepEndFouling extends AbstractStep {
 					return true;
 				case BLOOD_LUST_ACTION:
 					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
+				case CHECK_FORGO:
+					checkForgo = parameter.getValue() != null && (boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -98,7 +102,7 @@ public class StepEndFouling extends AbstractStep {
 			actingPlayer.setStandingUp(false);
 		} else {
 			((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
-				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+				.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn, checkForgo));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -111,6 +115,7 @@ public class StepEndFouling extends AbstractStep {
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
 		return jsonObject;
 	}
 
@@ -121,6 +126,7 @@ public class StepEndFouling extends AbstractStep {
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
+		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
 		return this;
 	}
 
