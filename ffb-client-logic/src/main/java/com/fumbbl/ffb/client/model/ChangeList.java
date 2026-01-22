@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("No stalling check on turnover")
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
 			.addFeature("Saboteur")
+			.addFeature("Forgo")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")

@@ -449,6 +449,10 @@ public final class StepEndSelecting extends AbstractStep {
         AutoGazeZoat autoGazeZoatGenerator = (AutoGazeZoat) factory.forName(SequenceGenerator.Type.AutoGazeZoat.name());
         autoGazeZoatGenerator.pushSequence(autoGazeZoatParams);
         break;
+      case FORGO:
+        actingPlayer.setForgone(true);
+        endGenerator.pushSequence(endParams);
+        break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
     }

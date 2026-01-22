@@ -82,6 +82,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_THE_FLASHING_BLADE, ClientAction.THE_FLASHING_BLADE);
 				put(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, ClientAction.VICIOUS_VINES);
 				put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
+				put(IPlayerPopupMenuKeys.KEY_FORGO, ClientAction.FORGO);
 			}
 		}};
 	}
@@ -204,6 +205,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				case PLAYER_ACTION_FURIOUS_OUTBURST:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST);
 					break;
+				case PLAYER_ACTION_FORGO:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FORGO);
+					break;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;
@@ -224,13 +228,15 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		LinkedHashMap<ClientAction, MenuItemConfig> configs = new LinkedHashMap<>();
 
 		configs.put(ClientAction.BREATHE_FIRE,
-			new MenuItemConfig("Breath Fire Action", IIconProperty.ACTION_BREATHE_FIRE, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
+			new MenuItemConfig("Breath Fire Action", IIconProperty.ACTION_BREATHE_FIRE,
+				IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
 		configs.put(ClientAction.BLOCK,
 			new MenuItemConfig("Block Action", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
 		configs.put(ClientAction.CHAINSAW,
 			new MenuItemConfig("Chainsaw Action", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
 		configs.put(ClientAction.PROJECTILE_VOMIT,
-			new MenuItemConfig("Projectile Vomit Action", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+			new MenuItemConfig("Projectile Vomit Action", IIconProperty.ACTION_VOMIT,
+				IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
 		configs.put(ClientAction.STAB,
 			new MenuItemConfig("Stab Action", IIconProperty.ACTION_STAB, IPlayerPopupMenuKeys.KEY_STAB));
 		configs.put(ClientAction.MULTIPLE_BLOCK, new MenuItemConfig("Multiple Block", IIconProperty.ACTION_MUTIPLE_BLOCK,
@@ -288,8 +294,10 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		configs.put(ClientAction.STAND_UP,
 			new MenuItemConfig("Stand Up & End Move", IIconProperty.ACTION_STAND_UP, IPlayerPopupMenuKeys.KEY_STAND_UP));
 		configs.put(ClientAction.SECURE_THE_BALL,
-				new MenuItemConfig("Secure The Ball", IIconProperty.ACTION_SECURE_THE_BALL, IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL));
-
+			new MenuItemConfig("Secure The Ball", IIconProperty.ACTION_SECURE_THE_BALL,
+				IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL));
+		configs.put(ClientAction.FORGO,
+			new MenuItemConfig("Forgo Activation", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_FORGO));
 
 		return configs;
 	}
