@@ -73,6 +73,7 @@ public class NamedProperties {
 	public static final ISkillProperty canGainGaze = new NamedProperty("Can Gain Gaze");
 	public static final ISkillProperty canGainHailMary = new NamedProperty("Can Gain Hail Mary");
 	public static final ISkillProperty canGazeAutomatically = new NamedProperty("Can Gaze Automatically");
+	public static final ISkillProperty canGazeAutomaticallyThreeSquaresAway = new NamedProperty("Can Gaze Automatically Three Squares Away");
 	public static final ISkillProperty canGazeDuringMove = new NamedProperty("Can Gaze During Move");
 	public static final ISkillProperty canGetBallOnGround = new NamedProperty("Can Get Ball On Ground");
 	public static final ISkillProperty canGrantReRollAfterTouchdown = new NamedProperty("Can Grant Re-Roll After Touchdown");
@@ -125,6 +126,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");
 	public static final ISkillProperty canRollToSaveFromInjury = new NamedProperty("Can Roll To Save From Injury");
+	public static final ISkillProperty canSabotageBlockerOnKnockdown = new NamedProperty("Can Sabotage Blocker On Knockdown");
 	public static final ISkillProperty canSaveReRolls = new NamedProperty("Can Save Re-Rolls");
 	public static final ISkillProperty canSkipTtmScatterOnSuperbThrow = new NamedProperty("Can Skip TTM Scatter On Superb Throw");
 	public static final ISkillProperty canSneakExtraPlayersOntoPitch = new NamedProperty(

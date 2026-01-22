@@ -140,6 +140,7 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
 
@@ -173,6 +174,9 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 		}
 		if (isThenIStartedBlastinAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		}
+		if (isZoatGazeAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
 		return actionContext;
 	}
@@ -237,6 +241,12 @@ public class SynchronousMultiBlockLogicModule extends LogicModule {
 						communication.sendUseSkill(skill, true, player.getId());
 					}
 					break;
+				case AUTO_GAZE_ZOAT:
+					if (isZoatGazeAvailable(player)) {
+						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+						communication.sendUseSkill(zoatGazeInkSkill, true, player.getId());
+					}
+					break;	
 				default:
 					break;
 			}

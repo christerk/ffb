@@ -15,6 +15,7 @@ public enum StepId implements INamedObject {
 	APOTHECARY_MULTIPLE("apothecaryMultiple"), // action.multiBlock 2020
 	APPLY_KICKOFF_RESULT("applyKickoffResult"), // phase.kickoff
 	ASSIGN_TOUCHDOWNS("assignTouchdowns"), // game.end
+	AUTO_GAZE_ZOAT("autoGazeZoat"), // action.special
 	BALEFUL_HEX("balefulHex"), // action.special
 	BLACK_INK("blackInk"), // action.special
 	BLITZ_TURN("blitzTurn"), // phase.kickoff

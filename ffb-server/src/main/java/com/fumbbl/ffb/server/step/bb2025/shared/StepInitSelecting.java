@@ -389,7 +389,11 @@ public final class StepInitSelecting extends AbstractStep {
 							actingPlayer.setJumpsWithoutModifiers(true);
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						}
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway)) {
+							fDispatchPlayerAction = PlayerAction.AUTO_GAZE_ZOAT;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							forceGotoOnDispatch = true;
+						} 
 					}
 					break;
 				case CLIENT_USE_TEAM_MATES_WISDOM:

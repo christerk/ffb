@@ -207,6 +207,9 @@ public class PassLogicModule extends MoveLogicModule {
 		if (isFumblerooskieAvailable()) {
 			actionContext.add(ClientAction.FUMBLEROOSKIE);
 		}
+		if (isZoatGazeAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
+		}
 		actionContext.add(ClientAction.END_MOVE);
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);
