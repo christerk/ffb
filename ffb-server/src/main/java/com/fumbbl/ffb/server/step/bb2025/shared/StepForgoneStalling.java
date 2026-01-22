@@ -7,6 +7,8 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -53,7 +55,8 @@ public class StepForgoneStalling extends AbstractStep {
 	public void start() {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 		Game game = getGameState().getGame();
-		if (game.getTurnMode() == TurnMode.REGULAR && checkForgo) {
+		if (game.getTurnMode() == TurnMode.REGULAR && checkForgo &&
+			UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)) {
 			Arrays.stream(game.getActingTeam().getPlayers()).filter(pl -> UtilPlayer.hasBall(game, pl) &&
 				game.getFieldModel().getPlayerState(pl).isActive()).findFirst().ifPresent(
 				player -> {

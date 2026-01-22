@@ -4,6 +4,8 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -34,8 +36,9 @@ public class StepStallingPlayer extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
 
-		if (player == null) {
+		if (player == null || !UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)) {
 			// This is part of EndPlayerAction which is also triggered when ending your turn
+			getGameState().resetStalling();
 			return;
 		}
 
