@@ -59,5 +59,5 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract Set<Usage> explicitlySelectedInducements();
 
-	public abstract boolean playersForGoActivations();
+	public abstract boolean playersForGoActivations(Game game);
 }

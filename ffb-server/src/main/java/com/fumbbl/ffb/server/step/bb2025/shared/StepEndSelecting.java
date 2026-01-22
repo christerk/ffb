@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2025.move;
+package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -101,6 +101,7 @@ public final class StepEndSelecting extends AbstractStep {
   private List<BlockTarget> blockTargets = new ArrayList<>();
   private String targetPlayerId;
   private String ballAndChainRrSetting;
+  private boolean checkForgo;
 
   public StepEndSelecting(GameState pGameState) {
     super(pGameState);
@@ -222,6 +223,10 @@ public final class StepEndSelecting extends AbstractStep {
           ballAndChainRrSetting = (String) parameter.getValue();
           consume(parameter);
           return true;
+        case CHECK_FORGO:
+          checkForgo = parameter.getValue() != null &&  (boolean) parameter.getValue();
+          consume(parameter);
+          return true;
         default:
           break;
       }
@@ -238,7 +243,7 @@ public final class StepEndSelecting extends AbstractStep {
 
       SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
       ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
-        .pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+        .pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn, checkForgo));
     } else if (actingPlayer.isSufferingBloodLust()) {
       if (fDispatchPlayerAction != null || bloodlustAction != null) {
         if (bloodlustAction != null) {
@@ -444,6 +449,10 @@ public final class StepEndSelecting extends AbstractStep {
         AutoGazeZoat autoGazeZoatGenerator = (AutoGazeZoat) factory.forName(SequenceGenerator.Type.AutoGazeZoat.name());
         autoGazeZoatGenerator.pushSequence(autoGazeZoatParams);
         break;
+      case FORGO:
+        actingPlayer.setForgone(true);
+        endGenerator.pushSequence(endParams);
+        break;
       default:
         throw new IllegalStateException("Unhandled player action " + pPlayerAction.getName() + ".");
     }
@@ -475,6 +484,7 @@ public final class StepEndSelecting extends AbstractStep {
     IServerJsonOption.SELECTED_BLOCK_TARGETS.addTo(jsonObject, jsonArray);
     IServerJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
     IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+    IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
     return jsonObject;
   }
 
@@ -505,6 +515,7 @@ public final class StepEndSelecting extends AbstractStep {
     targetPlayerId = IServerJsonOption.TARGET_PLAYER_ID.getFrom(source, jsonObject);
     bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
+    checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
     return this;
   }
 

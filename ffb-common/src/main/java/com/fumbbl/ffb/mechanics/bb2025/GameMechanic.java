@@ -17,6 +17,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -210,7 +211,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean playersForGoActivations() {
-		return true;
+	public boolean playersForGoActivations(Game game) {
+		return UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK);
 	}
 }

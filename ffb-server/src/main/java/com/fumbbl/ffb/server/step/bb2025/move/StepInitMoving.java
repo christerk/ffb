@@ -306,6 +306,7 @@ public class StepInitMoving extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (fEndTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+			publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else if (fEndPlayerAction) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));

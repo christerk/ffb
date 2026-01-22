@@ -62,7 +62,7 @@ import java.util.Arrays;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEndMoving extends AbstractStep {
 
-	private boolean fEndTurn, fEndPlayerAction, usingChainsaw;
+	private boolean fEndTurn, fEndPlayerAction, usingChainsaw, checkForgo;
 	private Boolean fFeedingAllowed;
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
@@ -127,6 +127,10 @@ public class StepEndMoving extends AbstractStep {
 					return true;
 				case BLOOD_LUST_ACTION:
 					bloodlustAction = (PlayerAction) parameter.getValue();
+					consume(parameter);
+					return true;
+				case CHECK_FORGO:
+					checkForgo = parameter.getValue() != null && (boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -211,7 +215,7 @@ public class StepEndMoving extends AbstractStep {
 
 		if (fEndTurn || fEndPlayerAction) {
 			endGenerator.pushSequence(
-				new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+				new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn, checkForgo));
 			// block defender set by ball and chain
 		} else if (StringTool.isProvided(fBlockDefenderId)) {
 			boolean askForBlockKind = false;
@@ -266,7 +270,7 @@ public class StepEndMoving extends AbstractStep {
 				}
 			} else {
 				endGenerator.pushSequence(
-					new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn));
+					new EndPlayerAction.SequenceParams(getGameState(), fFeedingAllowed, true, fEndTurn, checkForgo));
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -346,6 +350,7 @@ public class StepEndMoving extends AbstractStep {
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
+		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
 		return jsonObject;
 	}
 
@@ -362,7 +367,7 @@ public class StepEndMoving extends AbstractStep {
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
-
+		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
 		return this;
 	}
 

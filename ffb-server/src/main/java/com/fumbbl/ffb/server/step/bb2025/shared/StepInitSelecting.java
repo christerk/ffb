@@ -300,6 +300,7 @@ public final class StepInitSelecting extends AbstractStep {
 
 					if (!ignoreCommand && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						fEndTurn = true;
+						publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -497,7 +498,9 @@ public final class StepInitSelecting extends AbstractStep {
 	private void checkForStaller() {
 		if (((GameOptionBoolean) getGameState().getGame().getOptions()
 			.getOptionWithDefault(GameOptionId.ENABLE_STALLING_CHECK)).isEnabled() && !getGameState().isStalling() && isConsideredStalling()) {
-			getResult().addReport(new ReportStallerDetected(getGameState().getGame().getActingPlayer().getPlayerId()));
+			if (getGameState().getGame().getActingPlayer().getPlayerAction() != PlayerAction.FORGO) {
+				getResult().addReport(new ReportStallerDetected(getGameState().getGame().getActingPlayer().getPlayerId()));
+			}
 			getGameState().stallingDetected();
 		}
 	}

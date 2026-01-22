@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -23,7 +23,6 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEndFuriousOutburst extends AbstractStep {
 
 	private boolean endTurn;

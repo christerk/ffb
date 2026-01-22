@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2016;
+package com.fumbbl.ffb.server.step.bb2020.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
+import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
@@ -30,10 +31,10 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step.
- * 
+ *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class StepEndFeeding extends AbstractStep {
 
 	private boolean fEndPlayerAction;
@@ -51,16 +52,16 @@ public class StepEndFeeding extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case END_PLAYER_ACTION:
-				fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			case END_TURN:
-				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-				consume(parameter);
-				return true;
-			default:
-				break;
+				case END_PLAYER_ACTION:
+					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				case END_TURN:
+					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					consume(parameter);
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -78,15 +79,28 @@ public class StepEndFeeding extends AbstractStep {
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 
+		game.setDefenderId(null);
+		markSkillsTrackedOutsideOfActivationAndRemoveEffects(game);
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
 					.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
-				((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
-					.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
-						game.isHomePlaying()));
+				if (game.getTurnMode() == TurnMode.REGULAR) {
+					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OPPONENT_TURN,
+							!game.isHomePlaying()));
+					((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))
+						.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.END_OF_OWN_TURN,
+							game.isHomePlaying()));
+					Sequence sequence = new Sequence(getGameState());
+					sequence.add(StepId.PICK_ME_UP);
+					getGameState().getStepStack().push(sequence.getSequence());
+				} else if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
+					EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), false);
+					((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name())).pushSequence(endTurnParams);
+				}
 			}
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
 			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))

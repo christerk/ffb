@@ -187,7 +187,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean playersForGoActivations() {
+	public boolean playersForGoActivations(Game game) {
 		return false;
 	}
 }

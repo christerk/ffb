@@ -11,8 +11,10 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Prevent MB to be applied when blocking an opponent using chainsaw special action")
+			.addBugfix("No stalling check on turnover")
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
 			.addFeature("Saboteur")
+			.addFeature("Forgo")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")

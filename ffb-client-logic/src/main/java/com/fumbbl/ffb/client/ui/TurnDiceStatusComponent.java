@@ -424,7 +424,8 @@ public class TurnDiceStatusComponent extends JPanel
 				if (fHomePlaying) {
 					if (fTurnMode != null && fTurnMode.isCheckForActivePlayers()
 						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
-						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient(), mechanic.playersForGoActivations());
+						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient(), mechanic.playersForGoActivations(
+							game));
 						endTurnDialog.showDialog(this);
 					} else {
 						client.getClientState().endTurn();

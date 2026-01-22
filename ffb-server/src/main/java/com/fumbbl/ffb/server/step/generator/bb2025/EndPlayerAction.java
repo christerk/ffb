@@ -35,7 +35,7 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_FEEDING);
+		sequence.add(StepId.END_FEEDING, from(StepParameterKey.CHECK_FORGO, params.isCheckForgo()));
 		// inserts select or inducement sequence at this point
 
 		gameState.getStepStack().push(sequence.getSequence());

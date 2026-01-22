@@ -67,6 +67,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_SECURE_THE_BALL = "key.player.action.secureTheBall";
 	String KEY_PLAYER_ACTION_SLASHING_NAILS = "key.player.action.slashingNails";
 	String KEY_PLAYER_ACTION_AUTO_GAZE_ZOAT = "key.player.action.autoGazeZoat";
+	String KEY_PLAYER_ACTION_FORGO = "key.player.action.forgo";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";
