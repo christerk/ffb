@@ -15,6 +15,7 @@ public class ChangeList {
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
 			.addFeature("Saboteur")
 			.addFeature("Forgo")
+			.addFeature("\"Blastin' Solves Everything\" (Star Zzharg Madeye)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
