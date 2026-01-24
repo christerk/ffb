@@ -39,6 +39,7 @@ public class PlayerState {
 	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x08000;
 	private static final int _BIT_SELECTED_GAZE_TARGET = 0x10000;
 	private static final int _BIT_EYE_GOUGED = 0x20000;
+	private static final int _BIT_CHOMPED = 0x40000;
 
 	private static final int[] _BASE_MASK = new int[]{
 		0x00000, // UNKNOWN
@@ -159,6 +160,14 @@ public class PlayerState {
 
 	public PlayerState clearEyeGouge() {
 		return changeEyeGouged(false);
+	}
+
+	public PlayerState changeChomped(boolean chomped) {
+		return changeBit(_BIT_CHOMPED, chomped);
+	}
+
+	public boolean isChomped() {
+		return hasBit(_BIT_CHOMPED);
 	}
 
 	public boolean isSelectedStabTarget() {
