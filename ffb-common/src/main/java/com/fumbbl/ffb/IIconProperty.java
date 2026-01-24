@@ -241,6 +241,7 @@ public interface IIconProperty {
 	String CURSOR_FURIOUS = "cursor.furious";
 	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
 	String CURSOR_SKETCH = "cursor.sketch";
+	String CURSOR_CHOMP = "cursor.chomp";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
