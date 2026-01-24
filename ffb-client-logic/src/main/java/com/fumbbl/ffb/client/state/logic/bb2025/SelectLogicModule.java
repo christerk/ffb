@@ -236,7 +236,7 @@ public class SelectLogicModule extends LogicModule {
 						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 						client.getCommunication().sendUseSkill(skill, true, player.getId());
 					}
-				break;
+					break;
 				default:
 					break;
 			}
