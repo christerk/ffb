@@ -82,6 +82,7 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 					break;
 				case CLIENT_END_TURN:
 					restoreTurnModes(game);
+					publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, Boolean.TRUE));
 					stepCommandStatus = StepCommandStatus.SKIP_STEP;
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				default:
@@ -114,9 +115,9 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canBlastRemotePlayer);
-		if (skill != null || getReRolledAction() == ReRolledActions.THEN_I_STARTED_BLASTIN) {
+		if (skill != null || getReRolledAction() == ReRolledActions.BLASTIN_SOLVES_EVERYTHING) {
 
-			if (getReRolledAction() == ReRolledActions.THEN_I_STARTED_BLASTIN) {
+			if (getReRolledAction() == ReRolledActions.BLASTIN_SOLVES_EVERYTHING) {
 				if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					fail();
 					return;
@@ -165,9 +166,10 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 			if (success) {
 				hitPlayer(game.getDefender());
 			} else {
-				if (getReRolledAction() != ReRolledActions.THEN_I_STARTED_BLASTIN && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.THEN_I_STARTED_BLASTIN, 3, false)) {
-					setReRolledAction(ReRolledActions.THEN_I_STARTED_BLASTIN);
+				if (getReRolledAction() != ReRolledActions.BLASTIN_SOLVES_EVERYTHING && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.BLASTIN_SOLVES_EVERYTHING, 3, false)) {
+					setReRolledAction(ReRolledActions.BLASTIN_SOLVES_EVERYTHING);
 					getResult().setNextAction(StepAction.CONTINUE);
+					return;
 				} else {
 					fail();
 				}

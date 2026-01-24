@@ -2,9 +2,12 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.factory.LogicPluginFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.plugin.BlockLogicExtensionPlugin;
+import com.fumbbl.ffb.client.state.logic.plugin.LogicPlugin;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -17,9 +20,12 @@ import java.util.Set;
 
 public class BlockLogicExtension extends LogicModule {
 
+	private final BlockLogicExtensionPlugin plugin;
 
 	public BlockLogicExtension(FantasyFootballClient client) {
 		super(client);
+		LogicPluginFactory factory = client.getGame().getFactory(FactoryType.Factory.LOGIC_PLUGIN);
+		plugin = (BlockLogicExtensionPlugin) factory.forType(LogicPlugin.Type.BLOCK);
 	}
 
 	@Override
@@ -40,8 +46,8 @@ public class BlockLogicExtension extends LogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.BREATHE_FIRE);
-			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.AUTO_GAZE_ZOAT);
+			addAll(plugin.availableActions());
 		}};
 	}
 
@@ -71,13 +77,10 @@ public class BlockLogicExtension extends LogicModule {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
-		}
 		if (isZoatGazeAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
-		return actionContext;
+		return plugin.actionContext(actingPlayer, actionContext, this);
 	}
 
 	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock) {
@@ -152,17 +155,12 @@ public class BlockLogicExtension extends LogicModule {
 			case BREATHE_FIRE:
 				block(actingPlayer.getPlayerId(), player, false, false, false, true);
 				break;
-			case THEN_I_STARTED_BLASTIN:
-				if (isThenIStartedBlastinAvailable(actingPlayer)) {
-					Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
-					communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
-				}
-				break;
 			case AUTO_GAZE_ZOAT:
 				Skill zoatGazeInkSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
 				communication.sendUseSkill(zoatGazeInkSkill, true, actingPlayer.getPlayerId());
 				break;
 			default:
+				plugin.performAvailableAction(action, actingPlayer, this, communication);
 				break;
 
 		}
