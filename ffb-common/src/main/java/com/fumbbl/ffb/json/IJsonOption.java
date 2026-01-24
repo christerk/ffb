@@ -627,6 +627,7 @@ public interface IJsonOption {
 	JsonBooleanOption USES_TREASURY = new JsonBooleanOption("usesTreasury");
 	JsonBooleanOption USING_BREATHE_FIRE = new JsonBooleanOption("usingBreatheFire");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
+	JsonBooleanOption USING_CHOMP = new JsonBooleanOption("usingChomp");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");
 	JsonBooleanOption USING_PUTRID_REGURGITATION = new JsonBooleanOption("usingPutridRegurgitation");

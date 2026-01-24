@@ -48,6 +48,7 @@ public class ReRolledActions {
 	public static final ReRolledAction JUMP_UP = new ReRolledAction(JumpUp.class);
 	public static final ReRolledAction STAND_UP = new ReRolledAction("standUp");
 	public static final ReRolledAction CHAINSAW = new ReRolledAction("Chainsaw");
+	public static final ReRolledAction CHOMP = new ReRolledAction("Chomp");
 	public static final ReRolledAction BLOOD_LUST = new ReRolledAction("Bloodlust");
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction("Hypnotic Gaze");
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
