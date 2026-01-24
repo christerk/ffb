@@ -28,6 +28,7 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 			from(StepParameterKey.USING_VOMIT, params.isUsingVomit()),
 			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()),
 			from(StepParameterKey.PUBLISH_DEFENDER, params.isPublishDefender()),
+			from(StepParameterKey.USING_CHOMP, params.isUsingChomp()),
 			from(StepParameterKey.USING_BREATHE_FIRE, params.isUsingBreatheFire()));
 		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END_BLOCKING).withOldDefender(params.getBlockDefenderId())
 			.withEventualDefender(params.getBlockDefenderId()).addTo(sequence);

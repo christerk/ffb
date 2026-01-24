@@ -63,12 +63,18 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 			params.usingBreatheFire = useBreatheFire;
 			return this;
 		}
+
+		public Builder useChomp(boolean useChomp) {
+			params.usingChomp = useChomp;
+			return this;
+		}
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private String blockDefenderId;
 		private String multiBlockDefenderId;
-		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender, usingBreatheFire;
+		private boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, publishDefender,
+			usingBreatheFire, usingChomp;
 
 		private SequenceParams(GameState gameState) {
 			super(gameState);
@@ -108,6 +114,10 @@ public abstract class Block extends SequenceGenerator<Block.SequenceParams> {
 
 		public boolean isUsingBreatheFire() {
 			return usingBreatheFire;
+		}
+
+		public boolean isUsingChomp() {
+			return usingChomp;
 		}
 	}
 }
