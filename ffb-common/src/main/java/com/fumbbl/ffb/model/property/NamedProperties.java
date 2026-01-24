@@ -90,7 +90,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMakeAnExtraGfiOnce = new NamedProperty("Can Make Extra GFI Once");
 	public static final ISkillProperty canMakeOpponentMissTurn = new NamedProperty("Can Make Opponent Miss Turn");
 	public static final ISkillProperty canIgnoreJumpModifiers = new NamedProperty("Can Ignore Jump Modifiers");
-
+	public static final ISkillProperty canPinPlayers = new NamedProperty("Can Pin Players");
 	public static final ISkillProperty canMoveAfterBlock = new NamedProperty("Can Move After Block");
 	public static final ISkillProperty canMoveAfterFoul = new NamedProperty("Can Move After Foul");
 	public static final ISkillProperty canMoveAfterQuickPass = new NamedProperty("Can Move After Quick Pass");
