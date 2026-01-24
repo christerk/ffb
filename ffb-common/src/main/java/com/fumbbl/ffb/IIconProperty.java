@@ -35,6 +35,7 @@ public interface IIconProperty {
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
 	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
+	String DECORATION_CHOMPED = "decoration.chomped";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -193,6 +194,7 @@ public interface IIconProperty {
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 	String ACTION_SECURE_THE_BALL = "action.secureTheBall";
+	String ACTION_CHOMP = "action.chomp";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";
