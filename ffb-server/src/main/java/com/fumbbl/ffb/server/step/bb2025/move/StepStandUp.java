@@ -113,7 +113,7 @@ public final class StepStandUp extends AbstractStepWithReRoll {
 					if (successful) {
 						actingPlayer.setHasMoved(true);
 						actingPlayer.setStandingUp(false);
-						if (playerState.isRooted()) {
+						if (playerState.isPinned()) {
 							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 						} else {
 							getResult().setNextAction(StepAction.NEXT_STEP);

@@ -36,7 +36,7 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	public boolean canBeThrown(Game game, Player<?> player) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return player.canBeThrown()
-			&& !playerState.isRooted()
+			&& !playerState.isPinned()
 			&& game.getActingTeam() == player.getTeam();
 	}
 
@@ -44,7 +44,7 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	public boolean canBeKicked(Game game, Player<?> player) {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return player.canBeThrown()
-			&& !playerState.isRooted()
+			&& !playerState.isPinned()
 			&& game.getActingTeam() == player.getTeam();
 	}
 

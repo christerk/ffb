@@ -241,7 +241,7 @@ public class PlayerState {
 	}
 
 	public boolean isAbleToMove() {
-		return (((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase())) && isActive() && !isRooted());
+		return (((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase())) && isActive() && !isPinned());
 	}
 
 	public boolean canBeBlocked() {
@@ -263,6 +263,10 @@ public class PlayerState {
 
 	public boolean isCarried() {
 		return ((PICKED_UP == getBase()) || (IN_THE_AIR == getBase()));
+	}
+
+	public boolean isPinned() {
+		return isChomped() || isRooted();
 	}
 
 	private PlayerState changeBit(int pMask, boolean pBit) {

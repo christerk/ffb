@@ -277,7 +277,7 @@ public final class StepEndSelecting extends AbstractStep {
 
     PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 
-    if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isRooted() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
+    if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isPinned() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
       game.getFieldModel().clearMultiBlockTargets();
       ((Select) factory.forName(SequenceGenerator.Type.Select.name()))
         .pushSequence(new Select.SequenceParams(getGameState(), false));
@@ -351,7 +351,7 @@ public final class StepEndSelecting extends AbstractStep {
         }
         break;
       case MOVE:
-        if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isRooted()) {
+        if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isPinned()) {
           endGenerator.pushSequence(endParams);
           break;
         }

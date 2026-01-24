@@ -320,7 +320,7 @@ public class StepEndBlocking extends AbstractStep {
 				}
 
 				boolean canMoveAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canMoveAfterBlock)
-					&& (regularBlock || fUsingStab) && !playerState.isRooted();
+					&& (regularBlock || fUsingStab) && !playerState.isPinned();
 
 				Set<FieldCoordinate> availableSquares = Arrays.stream(game.getFieldModel().findAdjacentCoordinates(fieldModel.getPlayerCoordinate(activePlayer), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(fieldCoordinate -> game.getFieldModel().getPlayers(fieldCoordinate) == null)
