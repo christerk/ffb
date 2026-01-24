@@ -30,7 +30,7 @@ public class MoveLogicModule extends LogicModule {
 
 	public MoveLogicModule(FantasyFootballClient client) {
 		super(client);
-		LogicPluginFactory factory = client.getFactory(FactoryType.Factory.LOGIC_PLUGIN);
+		LogicPluginFactory factory = client.getGame().getFactory(FactoryType.Factory.LOGIC_PLUGIN);
 		plugin = (MoveLogicPlugin) factory.forType(LogicPlugin.Type.MOVE);
 	}
 
