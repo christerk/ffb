@@ -182,7 +182,7 @@ public class MoveLogicModule extends LogicModule {
 				case AUTO_GAZE_ZOAT:
 					if (isZoatGazeAvailable(actingPlayer)) {
 						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
-						client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+						communication.sendUseSkill(zoatGazeInkSkill, true, player.getId());
 					}
 					break;
 				default:
