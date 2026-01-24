@@ -15,6 +15,8 @@ public class ChangeList {
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
 			.addFeature("Saboteur")
 			.addFeature("Forgo")
+			.addBugfix("Stalling did trigger after turnover -> retest other stalling scenarios as well")
+			.addBugfix("Getting Even message")
 			.addFeature("\"Blastin' Solves Everything\" (Star Zzharg Madeye)")
 		);
 
