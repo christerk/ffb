@@ -128,7 +128,6 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 				oldTurnMode = game.getLastTurnMode();
 				game.setTurnMode(TurnMode.THEN_I_STARTED_BLASTIN);
 				getResult().setNextAction(StepAction.CONTINUE);
-				getResult().addReport(new ReportThenIStartedBlastin(actingPlayer.getPlayerId(), null, 0, false, false));
 				return;
 			}
 
