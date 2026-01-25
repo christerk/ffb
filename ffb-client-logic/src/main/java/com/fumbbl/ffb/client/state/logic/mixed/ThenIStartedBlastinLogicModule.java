@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.logic.bb2020;
+package com.fumbbl.ffb.client.state.logic.mixed;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;

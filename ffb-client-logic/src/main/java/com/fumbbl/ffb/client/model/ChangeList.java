@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Forgo")
 			.addBugfix("Stalling did trigger after turnover -> retest other stalling scenarios as well")
 			.addBugfix("Getting Even message")
+			.addFeature("\"Blastin' Solves Everything\" (Star Zzharg Madeye)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
