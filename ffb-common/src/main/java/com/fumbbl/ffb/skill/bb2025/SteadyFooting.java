@@ -20,5 +20,6 @@ public class SteadyFooting extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canAvoidFallingDown);
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 }
