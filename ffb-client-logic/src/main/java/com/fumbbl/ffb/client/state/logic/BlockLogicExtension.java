@@ -118,16 +118,16 @@ public class BlockLogicExtension extends LogicModule {
 		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
 		switch (action) {
 			case BLOCK:
-				block(actingPlayer.getPlayerId(), player, false, false, false, false);
+				block(actingPlayer.getPlayerId(), player, false, false, false, false, false);
 				break;
 			case STAB:
-				block(actingPlayer.getPlayerId(), player, true, false, false, false);
+				block(actingPlayer.getPlayerId(), player, true, false, false, false, false);
 				break;
 			case CHAINSAW:
-				block(actingPlayer.getPlayerId(), player, false, true, false, false);
+				block(actingPlayer.getPlayerId(), player, false, true, false, false, false);
 				break;
 			case PROJECTILE_VOMIT:
-				block(actingPlayer.getPlayerId(), player, false, false, true, false);
+				block(actingPlayer.getPlayerId(), player, false, false, true, false, false);
 				break;
 			case TREACHEROUS:
 				Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
@@ -153,7 +153,7 @@ public class BlockLogicExtension extends LogicModule {
 				communication.sendUseSkill(blackInk, true, actingPlayer.getPlayerId());
 				break;
 			case BREATHE_FIRE:
-				block(actingPlayer.getPlayerId(), player, false, false, false, true);
+				block(actingPlayer.getPlayerId(), player, false, false, false, true, false);
 				break;
 			case AUTO_GAZE_ZOAT:
 				Skill zoatGazeInkSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
@@ -167,10 +167,8 @@ public class BlockLogicExtension extends LogicModule {
 	}
 
 	public void block(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
-										boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
-		// TODO is this needed? Was in place in old structure
-		//pClientState.getClient().getUserInterface().getFieldComponent().refresh();
-		client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire);
+										boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire, boolean usingChomp) {
+		client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp);
 	}
 
 	@Override
@@ -188,12 +186,12 @@ public class BlockLogicExtension extends LogicModule {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		// rooted players can not move but still spend movement for the blitz action
-		if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
+		if (isBlockable(game, pDefender) && (!pDoBlitz || plugin.playerCanNotMove(playerState) || UtilPlayer.isNextMovePossible(game, false))) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative) || (isGoredAvailable() && pDoBlitz)) {
 				return InteractionResult.selectAction(blockActionContext(actingPlayer, multiBlock));
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
+				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false, false);
 				return InteractionResult.handled();
 			}
 		}

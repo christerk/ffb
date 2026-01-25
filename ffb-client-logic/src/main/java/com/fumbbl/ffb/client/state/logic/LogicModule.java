@@ -1,14 +1,31 @@
 package com.fumbbl.ffb.client.state.logic;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.CardEffect;
+import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.factory.LogicPluginFactory;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.plugin.BaseLogicPlugin;
+import com.fumbbl.ffb.client.state.logic.plugin.LogicPlugin;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Keyword;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -24,9 +41,12 @@ import java.util.Set;
 
 public abstract class LogicModule {
 	protected final FantasyFootballClient client;
+	private final BaseLogicPlugin plugin;
 
 	public LogicModule(FantasyFootballClient client) {
 		this.client = client;
+		LogicPluginFactory factory = client.getGame().getFactory(FactoryType.Factory.LOGIC_PLUGIN);
+		plugin = (BaseLogicPlugin) factory.forType(LogicPlugin.Type.BASE);
 	}
 
 	public abstract ClientStateId getId();
@@ -320,7 +340,7 @@ public abstract class LogicModule {
 		return (!game.getTurnData().isBlitzUsed()
 				&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED) &&
 				(playerState != null)
-				&& playerState.isActive() && (playerState.isAbleToMove() || playerState.isRooted())
+			&& playerState.isActive() && (playerState.isAbleToMove() || plugin.playerCanNotMove(playerState))
 				&& !player.hasSkillProperty(NamedProperties.preventRegularBlitzAction));
 	}
 

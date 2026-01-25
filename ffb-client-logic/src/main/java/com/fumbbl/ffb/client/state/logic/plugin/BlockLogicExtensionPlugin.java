@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.plugin;
 
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -22,4 +23,6 @@ public abstract class BlockLogicExtensionPlugin implements LogicPlugin {
 
   public abstract ActionContext actionContext(ActingPlayer actingPlayer, ActionContext actionContext,
     BlockLogicExtension logicModule);
+
+  public abstract boolean playerCanNotMove(PlayerState playerState);
 }

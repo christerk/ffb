@@ -12,6 +12,6 @@ public interface LogicPlugin extends INamedObject {
 	}
 
 	enum Type {
-		MOVE, BLOCK
+		MOVE, BLOCK, BASE
 	}
 }
