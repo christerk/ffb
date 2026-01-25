@@ -9,6 +9,7 @@ import com.fumbbl.ffb.skill.mixed.AnimalSavagery;
 import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.skill.mixed.special.CatchOfTheDay;
 import com.fumbbl.ffb.skill.bb2020.special.ThenIStartedBlastin;
+import com.fumbbl.ffb.skill.bb2025.special.BlastinSolvesEverything;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -73,6 +74,7 @@ public class ReRolledActions {
 	public static final ReRolledAction GETTING_EVEN = new ReRolledAction("Getting Even");
 	public static final ReRolledAction SINGLE_SKULL = new ReRolledAction("Single Skull");
 	public static final ReRolledAction REGENERATION = new ReRolledAction("Regeneration");
+	public static final ReRolledAction BLASTIN_SOLVES_EVERYTHING = new ReRolledAction(BlastinSolvesEverything.class);
 
 	private final Map<String, ReRolledAction> values;
 

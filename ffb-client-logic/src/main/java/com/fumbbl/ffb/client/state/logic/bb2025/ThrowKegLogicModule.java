@@ -96,7 +96,6 @@ public class ThrowKegLogicModule extends LogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
-			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
@@ -128,9 +127,6 @@ public class ThrowKegLogicModule extends LogicModule {
 		}
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
-		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
 		if (isZoatGazeAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
@@ -185,12 +181,6 @@ public class ThrowKegLogicModule extends LogicModule {
 			case CATCH_OF_THE_DAY:
 				if (isCatchOfTheDayAvailable(player)) {
 					Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-					communication.sendUseSkill(skill, true, player.getId());
-				}
-				break;
-			case THEN_I_STARTED_BLASTIN:
-				if (isThenIStartedBlastinAvailable(player)) {
-					Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 					communication.sendUseSkill(skill, true, player.getId());
 				}
 				break;

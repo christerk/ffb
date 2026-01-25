@@ -42,7 +42,6 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
       put(IPlayerPopupMenuKeys.KEY_LOOK_INTO_MY_EYES, ClientAction.LOOK_INTO_MY_EYES);
       put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
       put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
-      put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
       put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
     }};
   }
@@ -94,9 +93,6 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
         case PLAYER_ACTION_BLACK_INK:
           menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BLACK_INK);
           return true;
-        case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
-          menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
-          return true;
         case PLAYER_ACTION_AUTO_GAZE_ZOAT:
           menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
           return true;
@@ -128,7 +124,6 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
     itemConfigs.put(ClientAction.BALEFUL_HEX, new MenuItemConfig("Baleful Hex", IIconProperty.ACTION_BALEFUL_HEX, IPlayerPopupMenuKeys.KEY_BALEFUL_HEX));
     itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
     itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
-    itemConfigs.put(ClientAction.THEN_I_STARTED_BLASTIN, new MenuItemConfig("\"Then I Started Blastin'!\"", IIconProperty.ACTION_STARTED_BLASTIN, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
     itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block Opponent", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
     itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
 

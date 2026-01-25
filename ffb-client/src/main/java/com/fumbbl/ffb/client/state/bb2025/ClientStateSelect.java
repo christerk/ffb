@@ -83,6 +83,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_VICIOUS_VINES, ClientAction.VICIOUS_VINES);
 				put(IPlayerPopupMenuKeys.KEY_FURIOUS_OUTBURST, ClientAction.FURIOUS_OUTBURST);
 				put(IPlayerPopupMenuKeys.KEY_FORGO, ClientAction.FORGO);
+				put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 			}
 		}};
 	}
@@ -208,6 +209,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				case PLAYER_ACTION_FORGO:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_FORGO);
 					break;
+				case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
+					break;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;
@@ -298,6 +302,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL));
 		configs.put(ClientAction.FORGO,
 			new MenuItemConfig("Forgo Activation", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_FORGO));
+		configs.put(ClientAction.THEN_I_STARTED_BLASTIN,
+			new MenuItemConfig("\"Blastin' Solves Everything\"", IIconProperty.ACTION_STARTED_BLASTIN,
+				IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 
 		return configs;
 	}
