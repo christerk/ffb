@@ -18,6 +18,7 @@ public class MonstrousMouth extends Skill {
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.forceOpponentToDropBallOnPushback));
 		registerProperty(NamedProperties.canPinPlayers);
+		registerProperty(NamedProperties.providesBlockAlternative);
 	}
 
 }

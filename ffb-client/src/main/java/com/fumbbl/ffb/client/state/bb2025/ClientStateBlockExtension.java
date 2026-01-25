@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -61,6 +61,9 @@ public class ClientStateBlockExtension {
       case PLAYER_ACTION_BREATHE_FIRE:
         clientState.menuItemSelected(player, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE);
         return true;
+      case PLAYER_ACTION_CHOMP:
+        clientState.menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CHOMP);
+        return true;
       default:
         if (clientState.handleResize(pActionKey)) {
           return true;
@@ -93,7 +96,7 @@ public class ClientStateBlockExtension {
     itemConfigs.put(ClientAction.BREATHE_FIRE, new MenuItemConfig("Breathe Fire", IIconProperty.ACTION_BREATHE_FIRE, IPlayerPopupMenuKeys.KEY_BREATHE_FIRE));
     itemConfigs.put(ClientAction.GORED_BY_THE_BULL, new MenuItemConfig("Gored By The Bull", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_GORED_BY_THE_BULL));
     itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block Opponent", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
-
+    itemConfigs.put(ClientAction.CHOMP, new MenuItemConfig("Chomp", IIconProperty.ACTION_CHOMP, IPlayerPopupMenuKeys.KEY_CHOMP));
     return itemConfigs;
 
   }
