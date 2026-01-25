@@ -170,7 +170,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
-			pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
+				pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 			ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 			if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAddStrengthToDodge)) {
 				usingModifyingSkill = commandUseSkill.isSkillUsed();
@@ -192,12 +192,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				setReRollSource(commandUseSkill.getSkill().getRerollSource(ReRolledActions.DODGE));
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			} else {
-				commandStatus =
-					handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(), getGameState().getPassState());
+				commandStatus = handleSkillCommand((ClientCommandUseSkill) pReceivedCommand.getCommand(),
+						getGameState().getPassState());
 			}
 		}
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
-			pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
+				pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 			ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 			if (playerChoiceCommand.getPlayerChoiceMode() == PlayerChoiceMode.ARM_BAR) {
 				armBarPlayerId = playerChoiceCommand.getPlayerId();
@@ -220,16 +220,16 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 
 		if (ReRolledActions.DODGE == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)
-			&& !(dtRerollAsked && getReRollSource() == null)) {
+				&& !(dtRerollAsked && getReRollSource() == null)) {
 			if (usingModifyingSkill == null) {
 				if (getReRollSource() == null) {
 					failDodge();
 					return;
 				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					AgilityMechanic mechanic =
-						(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+					AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC)
+							.forName(Mechanic.Type.AGILITY.name());
 					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers) ||
-						!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+							!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
 						failDodge();
 					}
 					return;
@@ -239,8 +239,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 		boolean reRolledAction = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
-		boolean doRoll = (reRolledAction || (fUsingDivingTackle == null && !dtRerollAsked)) 
-			&& !Boolean.TRUE.equals(usingModifyingSkill) &&	!Boolean.TRUE.equals(usingModifierIgnoringSkill);
+		boolean doRoll = (reRolledAction || (fUsingDivingTackle == null && !dtRerollAsked))
+				&& !Boolean.TRUE.equals(usingModifyingSkill) && !Boolean.TRUE.equals(usingModifierIgnoringSkill);
 		switch (dodge(doRoll)) {
 			case SUCCESS:
 				reRolledAction = (getReRolledAction() == ReRolledActions.DODGE) && (getReRollSource() != null);
@@ -268,7 +268,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		if (!ArrayTool.isProvided(armBarPlayers)) {
 			armBarPlayers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
-				NamedProperties.affectsEitherArmourOrInjuryOnDodge, true);
+					NamedProperties.affectsEitherArmourOrInjuryOnDodge, true);
 			armBarPlayers = UtilPlayer.filterThrower(game, armBarPlayers);
 		}
 
@@ -281,17 +281,17 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			} else {
 				String teamId = game.getOtherTeam(game.getActingTeam()).getId();
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
+						new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.ARM_BAR, armBarPlayers, null, 1), true);
 				getResult().setNextAction(StepAction.CONTINUE);
 				return;
 			}
 		}
-		
-		InjuryTypeServer<?> injuryType = (armBarPlayer != null)
-			? new InjuryTypeDropDodgeForSpp(armBarPlayer)
-			: new InjuryTypeDropDodge(false);
 
-		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,	new SteadyFootingContext(injuryType)));
+		InjuryTypeServer<?> injuryType = (armBarPlayer != null)
+				? new InjuryTypeDropDodgeForSpp(armBarPlayer)
+				: new InjuryTypeDropDodge(false);
+
+		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryType)));
 		getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 
 	}
@@ -301,59 +301,56 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		ActionStatus status;
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		AgilityMechanic mechanic =
-			(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC)
+				.forName(Mechanic.Type.AGILITY.name());
 
 		if (pDoRoll) {
 			publishParameter(new StepParameter(StepParameterKey.DODGE_ROLL, getGameState().getDiceRoller().rollSkill()));
 		}
 
 		int minimumRollWithoutModifiers = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-			Collections.emptySet());
-		boolean successWithoutModifiers =
-			DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutModifiers);
+				Collections.emptySet());
+		boolean successWithoutModifiers = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll,
+				minimumRollWithoutModifiers);
 		Optional<Skill> ignoreModifierSkill = Optional.empty();
-
 
 		if (successWithoutModifiers) {
 			ignoreModifierSkill = Optional.ofNullable(
-				UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreDodgeModifierAfterRoll));
+					UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreDodgeModifierAfterRoll));
 			if (!ignoreModifierSkill.isPresent()) {
 				successWithoutModifiers = false;
 			}
 			if (Boolean.TRUE.equals(usingModifierIgnoringSkill) && ignoreModifierSkill.isPresent()) {
 				actingPlayer.markSkillUsed(ignoreModifierSkill.get());
 				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), true,
-					SkillUse.PASS_DODGE_WITHOUT_MODIFIERS));
+						SkillUse.PASS_DODGE_WITHOUT_MODIFIERS));
 				return ActionStatus.SUCCESS;
 			}
 
 			if (Boolean.FALSE.equals(usingModifierIgnoringSkill) && getReRollSource() == null &&
-				getReRolledAction() != null) {
+					getReRolledAction() != null) {
 				return ActionStatus.FAILURE;
 			}
 		}
 
-
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		dodgeModifiers = modifierFactory.findModifiers(
-			new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
+				new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
 		if ((fUsingDivingTackle != null) && fUsingDivingTackle) {
 			dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 		}
-
 
 		StatBasedRollModifier statBasedRollModifier = null;
 
 		if (Boolean.TRUE.equals(usingModifyingSkill)) {
 			statBasedRollModifier = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
 			UtilCards.getSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge)
-				.ifPresent(modifyingSkill -> {
-					actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
-					getResult().addReport(
-						new ReportSkillUse(actingPlayer.getPlayerId(), modifyingSkill, true, SkillUse.ADD_STRENGTH_TO_ROLL));
-					publishParameter(StepParameter.from(StepParameterKey.USING_MODIFYING_SKILL, true));
-				});
+					.ifPresent(modifyingSkill -> {
+						actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
+						getResult().addReport(
+								new ReportSkillUse(actingPlayer.getPlayerId(), modifyingSkill, true, SkillUse.ADD_STRENGTH_TO_ROLL));
+						publishParameter(StepParameter.from(StepParameterKey.USING_MODIFYING_SKILL, true));
+					});
 		}
 
 		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers, statBasedRollModifier);
@@ -362,15 +359,15 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		Optional<DodgeModifier> btModifier = dodgeModifiers.stream().filter(DodgeModifier::isUseStrength).findFirst();
 
 		Optional<Skill> btSkill = actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> btModifier.isPresent() && skill.getDodgeModifiers().contains(btModifier.get())).findFirst();
+				.filter(skill -> btModifier.isPresent() && skill.getDodgeModifiers().contains(btModifier.get())).findFirst();
 
 		Skill modifyingSkill = null;
 
 		if (successful) {
 			if (btModifier.isPresent()) {
 				dodgeModifiers.remove(btModifier.get());
-				int minimumRollWithoutBreakTackle =
-					mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers, statBasedRollModifier);
+				int minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers,
+						statBasedRollModifier);
 				if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
 					dodgeModifiers.add(btModifier.get());
 				} else {
@@ -383,8 +380,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				if (btModifier.isPresent()) {
 					if (modifyingSkill != null) {
 						dodgeModifiers.remove(btModifier.get());
-						int minimumRollWithoutBreakTackle =
-							mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers,
+						int minimumRollWithoutBreakTackle = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
+								dodgeModifiers,
 								actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge));
 						if (!DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRollWithoutBreakTackle)) {
 							dodgeModifiers.add(btModifier.get());
@@ -402,17 +399,17 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 
 		boolean reRolled = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
-		if(pDoRoll){
+		if (pDoRoll) {
 			getResult().addReport(
-				new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled,
-					dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
+					new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled,
+							dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
 		}
 
 		if (successful) {
 			// success path with DT/BT/reroll decisions before DT prompt
 			if (fUsingDivingTackle == null && !dtRerollAsked) {
 				Player<?>[] dtOpponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
-					NamedProperties.canAttemptToTackleDodgingPlayer, false);
+						NamedProperties.canAttemptToTackleDodgingPlayer, false);
 				dtOpponents = UtilPlayer.filterThrower(game, dtOpponents);
 				if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 					dtOpponents = UtilPlayer.filterAttackerAndDefender(game, dtOpponents);
@@ -422,12 +419,14 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					Set<DodgeModifier> withDt = new HashSet<>(dodgeModifiers);
 					withDt.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 					int minimumWithDt = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), withDt, statBasedRollModifier);
-					boolean successWithDt = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumWithDt);
+					boolean failsWithDt = !DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumWithDt);
 
-					if (!successWithDt) {
+					if (failsWithDt) {
 						// try BT + DT before reroll
-						if (!fUsingBreakTackle) {
-							Set<DodgeModifier> withDtAndBt = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, true));
+						if (!fUsingBreakTackle && UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(),
+								NamedProperties.canAddStrengthToDodge) != null) {
+							Set<DodgeModifier> withDtAndBt = modifierFactory
+									.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, true));
 							withDtAndBt.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 							StatBasedRollModifier btStat = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
 							int minimumWithDtBt = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), withDtAndBt, btStat);
@@ -435,21 +434,23 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 								fUsingBreakTackle = true;
 								actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
 								publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, true));
-								successWithDt = true;
+								failsWithDt = false;
 							}
 						}
 
-						if (!successWithDt && !fReRollUsed) {
-							List<String> message = Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?");
+						if (failsWithDt && !fReRollUsed) {
+							List<String> message = Collections
+									.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?");
 							ReRollSource rerollSource = uncanceledDodgeRerollSource(game, actingPlayer);
 							Skill rerollSkill = rerollSource != null ? rerollSource.getSkill(game) : null;
 							if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-								ReRolledActions.DODGE, minimumWithDt, false, null, rerollSkill, null, null, message)) {
+									ReRolledActions.DODGE, minimumWithDt, false, null, rerollSkill, null, null, message)) {
 								dtRerollAsked = true;
 								return ActionStatus.WAITING_FOR_RE_ROLL;
 							}
 						}
-						// If we reach here: either DT doesnt flip the result, BT just saved it, or reroll was declined and DT will be decided next.
+						// If we reach here: either DT doesnt flip the result, BT just saved it, or
+						// reroll was declined and DT will be decided next.
 					}
 				}
 			}
@@ -458,7 +459,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			status = ActionStatus.FAILURE;
 
 			if (fUsingDivingTackle == null && !fReRollUsed && (getReRolledAction() != ReRolledActions.DODGE ||
-				(successWithoutModifiers && !Boolean.TRUE.equals(usingModifierIgnoringSkill)))) {
+					(successWithoutModifiers && !Boolean.TRUE.equals(usingModifierIgnoringSkill)))) {
 				setReRolledAction(ReRolledActions.DODGE);
 				ReRollSource skillRerollSource = uncanceledDodgeRerollSource(game, actingPlayer);
 				if (skillRerollSource != null) {
@@ -466,12 +467,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 						getResult().addReport(new ReportModifiedDodgeResultSuccessful(modifyingSkill));
 						status = ActionStatus.WAITING_FOR_RE_ROLL;
 						UtilServerDialog.showDialog(getGameState(),
-							new DialogSkillUseParameter(actingPlayer.getPlayerId(), modifyingSkill, 0), false);
+								new DialogSkillUseParameter(actingPlayer.getPlayerId(), modifyingSkill, 0), false);
 					} else if (ignoreModifierSkill.isPresent()) {
 						getResult().addReport(new ReportModifiedDodgeResultSuccessful(ignoreModifierSkill.get()));
 						status = ActionStatus.WAITING_FOR_SKILL_USE;
 						UtilServerDialog.showDialog(getGameState(),
-							new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), 0), false);
+								new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), 0), false);
 						usingModifierIgnoringSkill = null;
 					} else {
 						fReRollUsed = true;
@@ -486,7 +487,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					}
 
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-						minimumRoll, false, modifyingSkill, null)) {
+							minimumRoll, false, modifyingSkill, null)) {
 						if (modifyingSkill != null) {
 							getResult().addReport(new ReportModifiedDodgeResultSuccessful(modifyingSkill));
 							if (statusToSet == ActionStatus.WAITING_FOR_SKILL_USE) {
@@ -500,18 +501,18 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				getResult().addReport(new ReportModifiedDodgeResultSuccessful(modifyingSkill));
 				status = ActionStatus.WAITING_FOR_RE_ROLL;
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(actingPlayer.getPlayerId(), modifyingSkill, minimumRoll), false);
+						new DialogSkillUseParameter(actingPlayer.getPlayerId(), modifyingSkill, minimumRoll), false);
 			} else if (ignoreModifierSkill.isPresent()) {
 				getResult().addReport(new ReportModifiedDodgeResultSuccessful(ignoreModifierSkill.get()));
 				status = ActionStatus.WAITING_FOR_SKILL_USE;
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), 0), false);
+						new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifierSkill.get(), 0), false);
 				usingModifierIgnoringSkill = null;
 			}
 		}
 
 		if (btSkill.isPresent() && dodgeModifiers.stream().anyMatch(DodgeModifier::isUseStrength) &&
-			((status == ActionStatus.SUCCESS))) {
+				((status == ActionStatus.SUCCESS))) {
 			fUsingBreakTackle = true;
 			actingPlayer.markSkillUsed(btSkill.get());
 			publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, fUsingBreakTackle));
@@ -532,8 +533,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			Skill modifyingSkill = getModifyingSkillInCaseItHelps(mechanic, dodgeModifiers, true);
 			if (modifyingSkill != null) {
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(getGameState().getGame().getActingPlayer().getPlayerId(), modifyingSkill, 0),
-					false);
+						new DialogSkillUseParameter(getGameState().getGame().getActingPlayer().getPlayerId(), modifyingSkill, 0),
+						false);
 				return true;
 			}
 		}
@@ -541,13 +542,13 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	}
 
 	private Skill getModifyingSkillInCaseItHelps(AgilityMechanic mechanic, Set<DodgeModifier> dodgeModifiers,
-																							 boolean addReport) {
+			boolean addReport) {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill modifyingSkill = null;
 
 		int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers,
-			actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge));
+				actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge));
 		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumRoll);
 
 		if (successful) {
