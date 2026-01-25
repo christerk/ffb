@@ -100,4 +100,10 @@ public class ClientStateBlockExtension {
     return itemConfigs;
 
   }
+
+  protected Map<Integer, ClientAction> actionMapping() {
+    Map<Integer, ClientAction> actionMapping = new HashMap<>();
+    actionMapping.put(IPlayerPopupMenuKeys.KEY_CHOMP, ClientAction.CHOMP);
+    return actionMapping;
+  }
 }

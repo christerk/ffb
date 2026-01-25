@@ -48,4 +48,11 @@ public class ClientStateBlitz extends AbstractClientStateBlitz<BlitzLogicModule>
 		itemConfigs.putAll(extension.itemConfigs());
 		return itemConfigs;
 	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
+		Map<Integer, ClientAction> actionMapping = super.actionMapping(menuIndex);
+		actionMapping.putAll(extension.actionMapping());
+		return actionMapping;
+	}
 }
