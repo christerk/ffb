@@ -1,10 +1,13 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
+import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -128,14 +131,9 @@ public class HandOverLogicModule extends MoveLogicModule {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
-		}
-
 		if (isFumblerooskieAvailable()) {
 			actionContext.add(ClientAction.FUMBLEROOSKIE);
 		}
-
 		if (isZoatGazeAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}	

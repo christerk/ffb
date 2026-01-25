@@ -98,9 +98,6 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			case PLAYER_ACTION_CATCH_OF_THE_DAY:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY);
 				return true;
-			case PLAYER_ACTION_THEN_I_STARTED_BLASTIN:
-				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN);
-				return true;
 			case PLAYER_ACTION_FRENZIED_RUSH:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH);
 				return true;
@@ -128,7 +125,6 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
-			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 			put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
 			put(IPlayerPopupMenuKeys.KEY_SLASHING_NAILS, ClientAction.SLASHING_NAILS);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);

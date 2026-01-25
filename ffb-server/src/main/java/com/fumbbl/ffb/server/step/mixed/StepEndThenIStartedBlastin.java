@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.mixed;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -21,6 +21,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepEndThenIStartedBlastin extends AbstractStep {
 
 	public StepEndThenIStartedBlastin(GameState pGameState) {

@@ -89,6 +89,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.FURIOUS_OUTBURST);
 			add(ClientAction.SECURE_THE_BALL);
 			add(ClientAction.FORGO);
+			add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}};
 	}
 
@@ -229,6 +230,13 @@ public class SelectLogicModule extends LogicModule {
 				case FORGO:
 					communication.sendActingPlayer(player, PlayerAction.FORGO, false);
 					break;
+				case THEN_I_STARTED_BLASTIN:
+					if (isThenIStartedBlastinAvailable(player)) {
+						communication.sendActingPlayer(player, PlayerAction.THEN_I_STARTED_BLASTIN, false);
+						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
+						client.getCommunication().sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -346,6 +354,9 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)) {
 			context.add(ClientAction.FORGO);
+		}
+		if (isThenIStartedBlastinAvailable(player)) {
+			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
 		return context;
 	}

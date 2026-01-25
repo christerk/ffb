@@ -1,7 +1,10 @@
-package com.fumbbl.ffb.client.state.logic;
+package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
+import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -43,7 +46,6 @@ public class BombLogicModule extends LogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
-			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.AUTO_GAZE_ZOAT);
 		}};
 	}
@@ -83,9 +85,6 @@ public class BombLogicModule extends LogicModule {
 			}
 			if (isCatchOfTheDayAvailable(actingPlayer)) {
 				actionContext.add(ClientAction.CATCH_OF_THE_DAY);
-			}
-			if (isThenIStartedBlastinAvailable(actingPlayer)) {
-				actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
 			}
 			if (isZoatGazeAvailable(actingPlayer)) {
 				actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
@@ -158,12 +157,6 @@ public class BombLogicModule extends LogicModule {
 			case CATCH_OF_THE_DAY:
 				if (isCatchOfTheDayAvailable(actingPlayer)) {
 					Skill skill = player.getSkillWithProperty(NamedProperties.canGetBallOnGround);
-					client.getCommunication().sendUseSkill(skill, true, player.getId());
-				}
-				break;
-			case THEN_I_STARTED_BLASTIN:
-				if (isThenIStartedBlastinAvailable(actingPlayer)) {
-					Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
 					client.getCommunication().sendUseSkill(skill, true, player.getId());
 				}
 				break;
