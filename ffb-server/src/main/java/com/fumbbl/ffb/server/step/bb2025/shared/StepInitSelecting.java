@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.*;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -144,6 +145,7 @@ public final class StepInitSelecting extends AbstractStep {
 						boolean unusedBlitz = actingPlayer.getPlayerAction().isBlitzing() && !actingPlayer.hasBlocked();
 						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
 						boolean onlyMarkedAsStandingUp = actingPlayer.isStandingUp() && actingPlayer.getCurrentMove() == Constant.MINIMUM_MOVE_TO_STAND_UP;
+						boolean usingAvoidDodge = actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging);
 						if (targetSelectionState != null
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
@@ -168,7 +170,14 @@ public final class StepInitSelecting extends AbstractStep {
 								fEndPlayerAction = true;
 								commandStatus = StepCommandStatus.EXECUTE_STEP;
 							}
-						} else {
+						} else if (usingAvoidDodge && (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
+							Skill incorporeal = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
+							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), incorporeal);
+							actingPlayer.markSkillUnused(incorporeal);
+							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+							getGameState().resetStalling();
+							commandStatus = StepCommandStatus.SKIP_STEP;
+						}  else {
 							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -393,6 +402,11 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.AUTO_GAZE_ZOAT;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
+						}  else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
+							game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
+							actingPlayer.markSkillUsed(commandUseSkill.getSkill());
+							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
+							commandStatus = StepCommandStatus.SKIP_STEP;
 						} 
 					}
 					break;

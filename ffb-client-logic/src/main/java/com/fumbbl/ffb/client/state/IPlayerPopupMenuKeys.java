@@ -30,6 +30,7 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_RANGE_GRID = KeyEvent.VK_R;
 	int KEY_HAIL_MARY_PASS = KeyEvent.VK_H;
 	int KEY_HAIL_MARY_BOMB = KeyEvent.VK_H;
+	int KEY_INCORPOREAL = KeyEvent.VK_C;
 	int KEY_SHORT = KeyEvent.VK_S;
 	int KEY_LONG = KeyEvent.VK_L;
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;

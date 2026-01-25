@@ -330,6 +330,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getEnhancementSources().contains(name);
 	}
 
+	public boolean hasActiveEnhancement(ISkillProperty property) {
+		Skill skill = getSkillWithProperty(property);
+		return skill != null && hasActiveEnhancement(skill);
+	}
+
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 
 	public abstract void removeTemporarySkills(String source);
