@@ -116,7 +116,7 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean isBlockAction() {
-		return this == BLOCK || this == VICIOUS_VINES || this == BREATHE_FIRE || this == CHAINSAW || this == STAB || this == PROJECTILE_VOMIT;
+		return this == BLOCK || this == VICIOUS_VINES || this == BREATHE_FIRE || this == CHAINSAW || this == STAB || this == PROJECTILE_VOMIT || this == CHOMP;
 	}
 
 	public boolean forceDispatch() {
