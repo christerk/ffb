@@ -404,7 +404,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		boolean reRolled = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
 		if (pDoRoll) {
 			getResult().addReport(
-				new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, (pDoRoll ? fDodgeRoll : 0), minimumRoll, reRolled,
+				new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, fDodgeRoll, minimumRoll, reRolled,
 					dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
 		}
 
