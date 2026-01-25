@@ -19,6 +19,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -86,6 +88,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.VICIOUS_VINES);
 			add(ClientAction.FURIOUS_OUTBURST);
 			add(ClientAction.SECURE_THE_BALL);
+			add(ClientAction.FORGO);
 		}};
 	}
 
@@ -223,6 +226,9 @@ public class SelectLogicModule extends LogicModule {
 						communication.sendActingPlayer(player, PlayerAction.FURIOUS_OUTPBURST, false);
 					}
 					break;
+				case FORGO:
+					communication.sendActingPlayer(player, PlayerAction.FORGO, false);
+					break;
 				default:
 					break;
 			}
@@ -337,6 +343,9 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isSecureTheBallActionAvailable(player)) {
 			context.add(ClientAction.SECURE_THE_BALL);
+		}
+		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)) {
+			context.add(ClientAction.FORGO);
 		}
 		return context;
 	}

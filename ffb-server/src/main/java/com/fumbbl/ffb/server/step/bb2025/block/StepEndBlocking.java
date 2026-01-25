@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 public class StepEndBlocking extends AbstractStep {
 
 	private final List<String> targetsRegularMultibLock = new ArrayList<>(); // will be set for  multi blocks excl. special actions
-	private boolean fEndTurn;
+	private boolean fEndTurn, checkForgo;
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private PlayerAction bloodlustAction;
@@ -174,6 +174,10 @@ public class StepEndBlocking extends AbstractStep {
 					targetsRegularMultibLock.add((String) parameter.getValue());
 					consume(parameter);
 					break;
+				case CHECK_FORGO:
+					checkForgo = parameter.getValue() != null && (boolean) parameter.getValue();
+					consume(parameter);
+					return true;
 				default:
 					break;
 			}
@@ -222,7 +226,7 @@ public class StepEndBlocking extends AbstractStep {
 				ServerUtilBlock.removePlayerBlockStates(game, oldDefenderState);
 			}
 			game.setDefenderId(null); // clear defender for next multi block
-			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn));
+			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, fEndTurn, checkForgo));
 		} else if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
 			if (oldDefenderState != null) {
 				game.getFieldModel().setPlayerState(game.getDefender(), oldDefenderState);
@@ -462,6 +466,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
 		IServerJsonOption.PLAYER_IDS_HIT.addTo(jsonObject, targetsRegularMultibLock);
+		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
 		return jsonObject;
 	}
 
@@ -485,9 +490,8 @@ public class StepEndBlocking extends AbstractStep {
 		bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
 		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
-		if (IServerJsonOption.PLAYER_IDS_HIT.isDefinedIn(jsonObject)) {
-			targetsRegularMultibLock.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject)).collect(Collectors.toSet()));
-		}
+		targetsRegularMultibLock.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject)).collect(Collectors.toSet()));
+		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
 		return this;
 	}
 

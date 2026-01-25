@@ -55,7 +55,7 @@ public final class StepEndKickoff extends AbstractStep {
 		Game game = getGameState().getGame();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()))
-			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+			.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
 			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
 			game.isHomePlaying()));

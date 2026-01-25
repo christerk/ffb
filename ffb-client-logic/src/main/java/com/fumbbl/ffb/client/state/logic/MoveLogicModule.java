@@ -2,9 +2,12 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.factory.LogicPluginFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.plugin.LogicPlugin;
+import com.fumbbl.ffb.client.state.logic.plugin.MoveLogicPlugin;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -23,8 +26,12 @@ import java.util.Set;
 
 public class MoveLogicModule extends LogicModule {
 
+	private final MoveLogicPlugin plugin;
+
 	public MoveLogicModule(FantasyFootballClient client) {
 		super(client);
+		LogicPluginFactory factory = client.getGame().getFactory(FactoryType.Factory.LOGIC_PLUGIN);
+		plugin = (MoveLogicPlugin) factory.forType(LogicPlugin.Type.MOVE);
 	}
 
 	@Override
@@ -55,8 +62,8 @@ public class MoveLogicModule extends LogicModule {
 			add(ClientAction.BLOCK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.BOUNDING_LEAP);
-			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.AUTO_GAZE_ZOAT);
+			addAll(plugin.availableActions());
 		}};
 	}
 
@@ -173,19 +180,14 @@ public class MoveLogicModule extends LogicModule {
 					isBoundingLeapAvailable(game, actingPlayer).ifPresent(skill ->
 						communication.sendUseSkill(skill, true, actingPlayer.getPlayerId()));
 					break;
-				case THEN_I_STARTED_BLASTIN:
-					if (isThenIStartedBlastinAvailable(actingPlayer)) {
-						Skill skill = player.getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
-						communication.sendUseSkill(skill, true, player.getId());
-					}
-					break;
 				case AUTO_GAZE_ZOAT:
 					if (isZoatGazeAvailable(actingPlayer)) {
 						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
-						client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+						communication.sendUseSkill(zoatGazeInkSkill, true, player.getId());
 					}
 					break;
 				default:
+					plugin.performAvailableAction(action, actingPlayer, this, communication);
 					break;
 			}
 		}
@@ -437,13 +439,10 @@ public class MoveLogicModule extends LogicModule {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			context.add(ClientAction.CATCH_OF_THE_DAY);
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
-		}
 		if (isZoatGazeAvailable(actingPlayer)) {
 			context.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
-		return context;
+		return plugin.actionContext(actingPlayer, context, this);
 	}
 
 }

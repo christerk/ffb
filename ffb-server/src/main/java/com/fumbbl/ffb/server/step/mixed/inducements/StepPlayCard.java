@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.inducement;
+package com.fumbbl.ffb.server.step.mixed.inducements;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -44,7 +44,8 @@ import com.fumbbl.ffb.util.UtilPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public final class StepPlayCard extends AbstractStep {
 
 	private Card fCard;

@@ -18,7 +18,7 @@ public class GettingEvenRollMessage extends ReportMessageBase<ReportGettingEvenR
   		StringBuilder status = new StringBuilder();
   		StringBuilder neededRoll = null;
   		Player<?> player = game.getPlayerById(report.getPlayerId());
-  		status.append("Getting Roll [ ").append(report.getRoll()).append(" ]");
+  		status.append("Getting Even Roll [ ").append(report.getRoll()).append(" ]");
   		println(getIndent(), TextStyle.ROLL, status.toString());
   		print(getIndent() + 1, false, player);
 	    status = new StringBuilder();

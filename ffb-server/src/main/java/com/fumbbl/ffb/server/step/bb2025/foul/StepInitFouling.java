@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.foul;
+package com.fumbbl.ffb.server.step.bb2025.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -37,7 +37,6 @@ import com.fumbbl.ffb.util.StringTool;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepInitFouling extends AbstractStep {
 
@@ -130,6 +129,7 @@ public class StepInitFouling extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (fEndTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+			publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else if (fEndPlayerAction) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));

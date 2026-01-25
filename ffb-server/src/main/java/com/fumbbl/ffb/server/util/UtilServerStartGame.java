@@ -298,6 +298,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean lashOutEnds = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION);
 			lashOutEnds.setValue(false);
 			//game.getOptions().addOption(lashOutEnds);
+			GameOptionBoolean stalling = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_STALLING_CHECK);
+			stalling.setValue(false);
+			//game.getOptions().addOption(stalling);
 		}
 	}
 

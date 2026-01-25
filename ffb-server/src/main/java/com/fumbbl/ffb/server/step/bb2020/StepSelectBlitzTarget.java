@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.blitz;
+package com.fumbbl.ffb.server.step.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -52,7 +52,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import java.util.Arrays;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepSelectBlitzTarget extends AbstractStep {
 
 	private String gotoLabelOnEnd;

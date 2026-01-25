@@ -231,7 +231,7 @@ public class StepEndTurn extends AbstractStep {
 		game.getFieldModel().clearMultiBlockTargets();
 		UtilServerDialog.hideDialog(getGameState());
 		getGameState().getPassState().reset();
-		if (game.getTurnMode() == TurnMode.REGULAR) {
+		if (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ) {
 			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
 			getGameState().resetStalling();
 		}

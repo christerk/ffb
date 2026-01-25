@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.common;
+package com.fumbbl.ffb.server.step.generator.mixed;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
@@ -10,7 +10,8 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class Card extends SequenceGenerator<Card.SequenceParams> {
 
 	public Card() {

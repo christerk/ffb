@@ -16,6 +16,7 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
@@ -36,10 +37,8 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndInducement extends AbstractStep {
 
-    private boolean fEndInducementPhase;
-    private boolean fEndTurn;
+    private boolean fEndInducementPhase, fEndTurn, fHomeTeam, checkForgo;
     private InducementPhase fInducementPhase;
-    private boolean fHomeTeam;
 
     public StepEndInducement(GameState pGameState) {
         super(pGameState);
@@ -47,6 +46,19 @@ public final class StepEndInducement extends AbstractStep {
 
     public StepId getId() {
         return StepId.END_INDUCEMENT;
+    }
+
+    @Override
+    public void init(StepParameterSet pParameterSet) {
+        for (StepParameter parameter : pParameterSet.values()) {
+            switch (parameter.getKey()) {
+                case CHECK_FORGO:
+                    checkForgo = parameter.getValue() != null && (boolean) parameter.getValue();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -90,7 +102,7 @@ public final class StepEndInducement extends AbstractStep {
         fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
         SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
         EndTurn endTurnGenerator = ((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()));
-        SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+        EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), checkForgo);
         switch (fInducementPhase) {
             case END_OF_OWN_TURN:
             case END_OF_OPPONENT_TURN:
@@ -130,6 +142,7 @@ public final class StepEndInducement extends AbstractStep {
         IServerJsonOption.HOME_TEAM.addTo(jsonObject, fHomeTeam);
         IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
         IServerJsonOption.END_INDUCEMENT_PHASE.addTo(jsonObject, fEndInducementPhase);
+        IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
         return jsonObject;
     }
 
@@ -141,6 +154,7 @@ public final class StepEndInducement extends AbstractStep {
         fHomeTeam = IServerJsonOption.HOME_TEAM.getFrom(source, jsonObject);
         fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
         fEndInducementPhase = IServerJsonOption.END_INDUCEMENT_PHASE.getFrom(source, jsonObject);
+        checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
         return this;
     }
 

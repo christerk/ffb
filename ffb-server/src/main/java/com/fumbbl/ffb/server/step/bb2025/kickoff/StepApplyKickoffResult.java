@@ -246,7 +246,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				handleCharge();
 				break;
 			case DODGY_SNACK:
-				handleDodgeSnack();
+				handleDodgySnack();
 				break;
 			case PITCH_INVASION:
 				handlePitchInvasion();
@@ -720,7 +720,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 	}
 
-	private void handleDodgeSnack() {
+	private void handleDodgySnack() {
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_DODGY_SNACK));
 		UtilServerGame.syncGameModel(this);
