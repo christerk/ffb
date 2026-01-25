@@ -28,7 +28,7 @@ public class KickEmBlockLogicModule extends BlockLogicModule {
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseChainsawOnDownedOpponents)
 			&& game.getFieldModel().getPlayerState(player).isProneOrStunned()
 			&& game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer()).isAdjacent(game.getFieldModel().getPlayerCoordinate(player))) {
-			extension.block(actingPlayer.getPlayerId(), player, false, true, false, false);
+			extension.block(actingPlayer.getPlayerId(), player, false, true, false, false, false);
 		}
 		return InteractionResult.ignore();
 	}

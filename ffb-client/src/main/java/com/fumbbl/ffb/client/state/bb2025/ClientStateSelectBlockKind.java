@@ -1,17 +1,17 @@
-package com.fumbbl.ffb.client.state.mixed;
+package com.fumbbl.ffb.client.state.bb2025;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
-import com.fumbbl.ffb.client.state.common.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.IPlayerPopupMenuKeys;
 import com.fumbbl.ffb.client.state.MenuItemConfig;
+import com.fumbbl.ffb.client.state.common.ClientStateBlockExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.mixed.BlockKindLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.mixed.BlockKindLogicModule;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicModule> {
 

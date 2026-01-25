@@ -13,6 +13,7 @@ public enum ClientAction {
 	BREATHE_FIRE,
 	CATCH_OF_THE_DAY,
 	CHAINSAW,
+	CHOMP,
 	END_MOVE,
 	FRENZIED_RUSH,
 	FORGO,

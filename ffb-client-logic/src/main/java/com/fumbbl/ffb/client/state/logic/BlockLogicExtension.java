@@ -160,7 +160,7 @@ public class BlockLogicExtension extends LogicModule {
 				communication.sendUseSkill(zoatGazeInkSkill, true, actingPlayer.getPlayerId());
 				break;
 			default:
-				plugin.performAvailableAction(action, actingPlayer, this, communication);
+				plugin.performAvailableAction(action, actingPlayer, this, communication, player);
 				break;
 
 		}

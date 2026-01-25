@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.state.logic.BlockLogicExtension;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -24,7 +25,7 @@ public class BlockLogicExtensionPlugin extends com.fumbbl.ffb.client.state.logic
 
 	@Override
 	public void performAvailableAction(ClientAction action, ActingPlayer actingPlayer,
-		BlockLogicExtension logicModule, ClientCommunication communication) {
+		BlockLogicExtension logicModule, ClientCommunication communication, Player<?> defender) {
 		switch (action) {
 			case THEN_I_STARTED_BLASTIN:
 				if (logicModule.isThenIStartedBlastinAvailable(actingPlayer)) {

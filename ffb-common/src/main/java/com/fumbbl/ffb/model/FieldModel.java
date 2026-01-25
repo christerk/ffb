@@ -1007,6 +1007,11 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
+	public boolean notChomped(Player<?> chomper, Player<?> chompee) {
+		List<String> chompees = chomped.get(chomper.getId());
+		return chompees == null || !chompees.contains(chompee.getId());
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
