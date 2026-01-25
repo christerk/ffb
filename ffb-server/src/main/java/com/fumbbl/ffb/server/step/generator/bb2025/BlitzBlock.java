@@ -59,6 +59,9 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER),
 			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
+
+		sequence.add(StepId.CHOMP, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_BLOCKING));
+
 		sequence.add(StepId.BLOCK_ROLL);
 		sequence.add(StepId.BLOCK_CHOICE, from(StepParameterKey.GOTO_LABEL_ON_DODGE, IStepLabel.DODGE_BLOCK),
 			from(StepParameterKey.GOTO_LABEL_ON_JUGGERNAUT, IStepLabel.JUGGERNAUT),
