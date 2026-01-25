@@ -95,6 +95,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
     IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, state.usingChainsaw);
     IServerJsonOption.USING_VOMIT.addTo(jsonObject, state.usingVomit);
     IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, state.usingBreatheFire);
+    IServerJsonOption.USING_CHOMP.addTo(jsonObject, state.usingChomp);
     return jsonObject;
   }
 
@@ -116,6 +117,7 @@ public class StepDauntless extends AbstractStepWithReRoll {
     state.usingChainsaw = toPrimitive(IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject));
     state.usingVomit = toPrimitive(IServerJsonOption.USING_VOMIT.getFrom(source, jsonObject));
     state.usingBreatheFire = IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
+    state.usingChomp = IServerJsonOption.USING_CHOMP.getFrom(source, jsonObject);
     return this;
   }
 
@@ -125,12 +127,14 @@ public class StepDauntless extends AbstractStepWithReRoll {
     public Boolean usingChainsaw;
     public Boolean usingVomit;
     public Boolean usingBreatheFire;
+    public Boolean usingChomp;
 
     public boolean usesSpecialAction() {
-      return (usingChainsaw != null && usingChainsaw)
-        || (usingVomit != null && usingVomit)
+      return (Boolean.TRUE == usingChainsaw)
+        || (Boolean.TRUE == usingVomit)
         || (Boolean.TRUE == usingBreatheFire)
-        || (usingStab != null && usingStab);
+        || (Boolean.TRUE == usingChomp)
+        || (Boolean.TRUE == usingStab);
     }
   }
 

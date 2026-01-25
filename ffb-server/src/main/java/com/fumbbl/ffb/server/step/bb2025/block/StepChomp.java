@@ -10,7 +10,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.report.ReportChainsawRoll;
+import com.fumbbl.ffb.report.bb2025.ReportChompRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -20,12 +20,14 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepChomp extends AbstractStepWithReRoll {
 
 	private boolean usingChomp;
+	private String gotoLabelOnEnd;
 
 	public StepChomp(GameState pGameState) {
 		super(pGameState);
@@ -33,6 +35,23 @@ public class StepChomp extends AbstractStepWithReRoll {
 
 	public StepId getId() {
 		return StepId.CHOMP;
+	}
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		if (pParameterSet != null) {
+			for (StepParameter parameter : pParameterSet.values()) {
+				switch (parameter.getKey()) {
+					case GOTO_LABEL_ON_END:
+						gotoLabelOnEnd = (String) parameter.getValue();
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -61,7 +80,7 @@ public class StepChomp extends AbstractStepWithReRoll {
 	}
 
 	private void executeStep() {
-		getResult().setNextAction(StepAction.NEXT_STEP);
+		getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPinPlayers) && usingChomp &&
@@ -81,11 +100,10 @@ public class StepChomp extends AbstractStepWithReRoll {
 			int roll = getGameState().getDiceRoller().rollChainsaw();
 			int minimumRoll = 3;
 			boolean successful = (roll >= minimumRoll);
-			getResult().addReport(new ReportChainsawRoll(actingPlayer.getPlayerId(), successful, roll,
-				minimumRoll, reRolled, null));
+			getResult().addReport(new ReportChompRoll(actingPlayer.getPlayerId(), successful, roll,
+				minimumRoll, reRolled, actingPlayer.getPlayerId(), game.getDefenderId()));
 			if (successful) {
 				game.getFieldModel().addChomp(actingPlayer.getPlayer(), game.getDefender());
-				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
 				ReRolledActions.CHOMP, minimumRoll, false)) {
 				getResult().setNextAction(StepAction.CONTINUE);
@@ -99,6 +117,7 @@ public class StepChomp extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.USING_CHOMP.addTo(jsonObject, usingChomp);
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, gotoLabelOnEnd);
 		return jsonObject;
 	}
 
@@ -107,6 +126,7 @@ public class StepChomp extends AbstractStepWithReRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		usingChomp = IServerJsonOption.USING_CHOMP.getFrom(source, jsonObject);
+		gotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		return this;
 	}
 

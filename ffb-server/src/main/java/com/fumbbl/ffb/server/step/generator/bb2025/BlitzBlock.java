@@ -28,6 +28,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 			from(StepParameterKey.USING_VOMIT, params.isUsingVomit()),
 			from(StepParameterKey.ASK_FOR_BLOCK_KIND, params.isAskForBlockKind()),
 			from(StepParameterKey.PUBLISH_DEFENDER, params.isPublishDefender()),
+			from(StepParameterKey.USING_CHOMP, params.isUsingChomp()),
 			from(StepParameterKey.USING_BREATHE_FIRE, params.isUsingBreatheFire()));
 		sequence.add(StepId.GO_FOR_IT, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.STEADY_FOOTING));
 		sequence.add(StepId.STEADY_FOOTING, IStepLabel.STEADY_FOOTING,
