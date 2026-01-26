@@ -1007,6 +1007,38 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
+	public void removeChomps(Player<?> chomper) {
+		List<String> chompees = chomped.remove(chomper.getId());
+		if (chompees != null) {
+			for (String chompeeId : chompees) {
+				Player<?> chompee = getGame().getPlayerById(chompeeId);
+				if (chomped.values().stream().noneMatch(list -> list.contains(chompeeId))) {
+					PlayerState playerState = getPlayerState(chompee);
+					setPlayerState(chompee, playerState.changeChomped(false));
+				}
+				notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chompee.getId(), chompee.getId());
+			}
+		}
+	}
+
+	public void updateChomps(Player<?> chomper) {
+		FieldCoordinate chomperCoordinate = getPlayerCoordinate(chomper);
+		List<String> chompees = chomped.get(chomper.getId());
+		if (chompees != null) {
+			for (String chompeeId : chompees) {
+				Player<?> chompee = getGame().getPlayerById(chompeeId);
+				if (!chomperCoordinate.isAdjacent(getPlayerCoordinate(chompee))) {
+					chompees.remove(chompeeId);
+					if (chomped.values().stream().noneMatch(list -> list.contains(chompeeId))) {
+						PlayerState playerState = getPlayerState(chompee);
+						setPlayerState(chompee, playerState.changeChomped(false));
+					}
+					notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chompee.getId(), chompee.getId());
+				}
+			}
+		}
+	}
+
 	public boolean notChomped(Player<?> chomper, Player<?> chompee) {
 		List<String> chompees = chomped.get(chomper.getId());
 		return chompees == null || !chompees.contains(chompee.getId());
