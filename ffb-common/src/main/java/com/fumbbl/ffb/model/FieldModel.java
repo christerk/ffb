@@ -1034,18 +1034,19 @@ public class FieldModel implements IJsonSerializable {
 	public void updateChomps(Player<?> chomper) {
 		FieldCoordinate chomperCoordinate = getPlayerCoordinate(chomper);
 		List<String> chompees = chomped.get(chomper.getId());
+		List<String> remove = new ArrayList<>();
 		if (chompees != null) {
 			for (String chompeeId : chompees) {
 				Player<?> chompee = getGame().getPlayerById(chompeeId);
 				if (!chomperCoordinate.isAdjacent(getPlayerCoordinate(chompee))) {
-					chompees.remove(chompeeId);
-					if (chomped.values().stream().noneMatch(list -> list.contains(chompeeId))) {
-						PlayerState playerState = getPlayerState(chompee);
-						setPlayerState(chompee, playerState.changeChomped(false));
-					}
-					notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chompee.getId(), chompee.getId());
+					remove.add(chompeeId);
 				}
 			}
+		}
+
+		for (String chompeeId : remove) {
+			Player<?> chompee = getGame().getPlayerById(chompeeId);
+			removeChomp(chomper, chompee);
 		}
 	}
 
