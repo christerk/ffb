@@ -1002,18 +1002,18 @@ public class FieldModel implements IJsonSerializable {
 			chompees.add(chompee.getId());
 			PlayerState playerState = getPlayerState(chompee);
 			setPlayerState(chompee, playerState.changeChomped(true));
-			notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CHOMP, chompee.getId(), chompee.getId());
+			notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CHOMP, chomper.getId(), chompee.getId());
 		}
 	}
 
 	public void removeChomp(Player<?> chomper, Player<?> chompee) {
 		List<String> chompees = chomped.get(chomper.getId());
 		if (chompees != null && chompees.remove(chompee.getId())) {
-			if (chomped.values().stream().noneMatch(list -> list.contains(chomper.getId()))) {
+			if (chomped.values().stream().noneMatch(list -> list.contains(chompee.getId()))) {
 				PlayerState playerState = getPlayerState(chompee);
 				setPlayerState(chompee, playerState.changeChomped(false));
 			}
-			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chompee.getId(), chompee.getId());
+			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
 		}
 	}
 
@@ -1026,7 +1026,7 @@ public class FieldModel implements IJsonSerializable {
 					PlayerState playerState = getPlayerState(chompee);
 					setPlayerState(chompee, playerState.changeChomped(false));
 				}
-				notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chompee.getId(), chompee.getId());
+				notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
 			}
 		}
 	}
