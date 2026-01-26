@@ -80,11 +80,12 @@ public class StepChomp extends AbstractStepWithReRoll {
 	}
 
 	private void executeStep() {
-		getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
+		getResult().setNextAction(StepAction.NEXT_STEP);
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canPinPlayers) && usingChomp &&
 			!actingPlayer.isStandingUp()) {
+			getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);
 
 			if (ReRolledActions.CHOMP == getReRolledAction()) {
 				if ((getReRollSource() == null)
