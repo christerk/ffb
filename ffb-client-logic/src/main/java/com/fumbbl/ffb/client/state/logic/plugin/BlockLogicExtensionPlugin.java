@@ -26,4 +26,8 @@ public abstract class BlockLogicExtensionPlugin implements LogicPlugin {
     BlockLogicExtension logicModule);
 
   public abstract boolean playerCanNotMove(PlayerState playerState);
-}
+
+  public abstract ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock, ActionContext actionContext,
+    BlockLogicExtension logicModule);
+
+  }

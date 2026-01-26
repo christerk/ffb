@@ -54,4 +54,10 @@ public class BlockLogicExtensionPlugin extends com.fumbbl.ffb.client.state.logic
 	public boolean playerCanNotMove(PlayerState playerState) {
 		return playerState.isRooted();
 	}
+
+	@Override
+	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock, ActionContext actionContext,
+		BlockLogicExtension logicModule) {
+		return actionContext;
+	}
 }

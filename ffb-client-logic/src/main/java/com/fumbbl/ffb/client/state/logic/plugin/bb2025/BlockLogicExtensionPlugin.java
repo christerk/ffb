@@ -37,16 +37,22 @@ public class BlockLogicExtensionPlugin extends com.fumbbl.ffb.client.state.logic
 	@Override
 	public ActionContext actionContext(ActingPlayer actingPlayer, ActionContext actionContext,
 		BlockLogicExtension logicModule) {
-
-		if (logicModule.isChompAvailable(actingPlayer.getPlayer())) {
-			actionContext.add(ClientAction.CHOMP);
-		}
-
 		return actionContext;
 	}
 
 	@Override
 	public boolean playerCanNotMove(PlayerState playerState) {
 		return playerState.isPinned();
+	}
+
+	@Override
+	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock, ActionContext actionContext,
+		BlockLogicExtension logicModule) {
+
+		if (logicModule.isChompAvailable(actingPlayer.getPlayer())) {
+			actionContext.add(ClientAction.CHOMP);
+		}
+
+		return actionContext;
 	}
 }

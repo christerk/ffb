@@ -110,7 +110,7 @@ public class BlockLogicExtension extends LogicModule {
 		}
 		actionContext.add(ClientAction.BLOCK);
 
-		return plugin.actionContext(actingPlayer, actionContext, this);
+		return plugin.blockActionContext(actingPlayer, multiBlock, actionContext, this);
 	}
 
 	public void performAvailableAction(Player<?> player, ClientAction action) {
