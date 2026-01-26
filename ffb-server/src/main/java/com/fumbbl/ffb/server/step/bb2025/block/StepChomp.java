@@ -89,7 +89,7 @@ public class StepChomp extends AbstractStepWithReRoll {
 
 			if (ReRolledActions.CHOMP == getReRolledAction()) {
 				if ((getReRollSource() == null)
-					&& !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+					|| !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
 					return;
 				}
 			}
