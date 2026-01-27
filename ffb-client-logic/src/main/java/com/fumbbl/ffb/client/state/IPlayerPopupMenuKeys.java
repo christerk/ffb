@@ -53,7 +53,6 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_BOMB = KeyEvent.VK_O;
 	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
 
-	int KEY_INCORPOREAL = KeyEvent.VK_P;
 	int KEY_PASS = KeyEvent.VK_P;
 	
 	int KEY_FRENZIED_RUSH = KeyEvent.VK_Q;
@@ -68,6 +67,7 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_THROW_TEAM_MATE = KeyEvent.VK_T;
 
+	int KEY_INCORPOREAL = KeyEvent.VK_U;
 	int KEY_MULTIPLE_BLOCK = KeyEvent.VK_U;
 
 	int KEY_PROJECTILE_VOMIT = KeyEvent.VK_V;
