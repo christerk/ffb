@@ -20,6 +20,8 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -637,6 +639,23 @@ public class UtilPlayer {
 			}
 		}
 		return playersInBoxOrField.toArray(new Player[0]);
+	}
+
+	public static Player<?>[] findEligibleDivingTacklers(Game game, FieldCoordinate from, FieldCoordinate to, ISkillProperty property) {
+		Player<?>[] divingTacklers = findAdjacentOpposingPlayersWithProperty(game, from, property, false);
+		divingTacklers = filterThrower(game, divingTacklers);
+		if (game.getTurnMode() == TurnMode.DUMP_OFF) {
+			divingTacklers = filterAttackerAndDefender(game, divingTacklers);
+		}
+		if (!ArrayTool.isProvided(divingTacklers)) {
+			return divingTacklers;
+		}
+		if (UtilGameOption.isOptionEnabled(game, GameOptionId.DIVING_TACKLE_LEAVING_TZ_ONLY)){
+			divingTacklers = Arrays.stream(divingTacklers)
+				.filter(player -> !game.getFieldModel().getPlayerCoordinate(player).isAdjacent(to))
+				.toArray(Player[]::new);
+		}		
+		return divingTacklers;
 	}
 
 }

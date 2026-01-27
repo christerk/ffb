@@ -84,6 +84,10 @@ public class GameOptionFactory {
 			case CLAW_DOES_NOT_STACK:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
+			case DIVING_TACKLE_LEAVING_TZ_ONLY:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+        .setMessageTrue("Diving Tackle only when the dodger leaves the tackler's TZ")
+        .setMessageFalse("Diving Tackle allowed even if the dodger stays adjacent");
 			case EXTRA_MVP:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("An extra MVP is awarded at the end of the match");
