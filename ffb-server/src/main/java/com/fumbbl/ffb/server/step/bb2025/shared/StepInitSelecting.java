@@ -142,9 +142,6 @@ public final class StepInitSelecting extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
 					} else if (!StringTool.isProvided(actingPlayerCommand.getPlayerId()) && actingPlayer.getPlayerId() != null) {
-					System.out.println("INIT_SELECTING: null acting player, ts=" + (targetSelectionState != null)
-						+ " blitz=" + actingPlayer.getPlayerAction() + " blocked=" + actingPlayer.hasBlocked()
-						+ " move=" + actingPlayer.getCurrentMove());
 						boolean unusedBlitz = actingPlayer.getPlayerAction().isBlitzing() && !actingPlayer.hasBlocked();
 						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
 						boolean onlyMarkedAsStandingUp = actingPlayer.hasOnlyStandingUpMove();
@@ -152,9 +149,7 @@ public final class StepInitSelecting extends AbstractStep {
 						if (targetSelectionState != null
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
-								System.out.println("INIT_SELECTING: cancel target selection path");
 							if (targetSelectionState.isCommitted()) {
-								System.out.println("INIT_SELECTING: inside targetSelectionState.isCommitted()");
 								UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), actingPlayer.getPlayerAction()), false);
 								commandStatus = StepCommandStatus.SKIP_STEP;
 							} else {
@@ -188,7 +183,6 @@ public final class StepInitSelecting extends AbstractStep {
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}  else {
-							System.out.println("INIT_SELECTING: end action");
 							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
