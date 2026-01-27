@@ -184,7 +184,7 @@ public class FoulLogicModule extends MoveLogicModule {
             boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
             communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
           }
-				  break;  
+          break;  
         default:
           break;
       }
