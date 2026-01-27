@@ -664,7 +664,9 @@ public abstract class LogicModule {
 	}
 
 	public boolean isIncorporealAvailable(ActingPlayer actingPlayer) {
-		return !actingPlayer.hasActed() && isIncorporealAvailable(actingPlayer.getPlayer());
+		return (actingPlayer.getCurrentMove() == 0 || actingPlayer.hasOnlyStandingUpMove())
+			&& (isIncorporealAvailable(actingPlayer.getPlayer())
+				|| actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging));
 	}
 
 	protected boolean isIncorporealAvailable(Player<?> player) {

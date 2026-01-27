@@ -95,6 +95,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.CHAINSAW);
       add(ClientAction.BLACK_INK);
       add(ClientAction.AUTO_GAZE_ZOAT);
+      add(ClientAction.INCORPOREAL);
     }};
   }
 
@@ -176,7 +177,14 @@ public class FoulLogicModule extends MoveLogicModule {
             Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
             client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
           }
-          break;  
+          break;
+        case INCORPOREAL:
+          if (isIncorporealAvailable(actingPlayer)) {
+            Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
+            boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
+            communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
+          }
+				  break;  
         default:
           break;
       }

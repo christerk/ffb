@@ -238,9 +238,8 @@ public class ActingPlayer implements IJsonSerializable {
 
 		if (pSkill.getSkillUsageType().isTrackOutsideActivation()) {
 			getPlayer().markUnused(pSkill, getGame());
-		} else {
-			notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_USED, pSkill);
-		}
+		} 
+		notifyObservers(ModelChangeId.ACTING_PLAYER_MARK_SKILL_UNUSED, pSkill);
 	}
 
 	public void markSkillUnused(ISkillProperty property) {
@@ -483,6 +482,10 @@ public class ActingPlayer implements IJsonSerializable {
 		boolean justStoodUpForFree = isStandingUp() && hasJumpUp && fCurrentMove == 0;
 
 		return jumpUpUsedForBlock || justStoodUp || justStoodUpForFree;
+	}
+
+	public boolean hasOnlyStandingUpMove() {
+		return isStandingUp() && getCurrentMove() == Constant.MINIMUM_MOVE_TO_STAND_UP;
 	}
 
 	public void addGrantedSkill(Skill skill, Player<?> player) {

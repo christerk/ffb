@@ -142,14 +142,19 @@ public final class StepInitSelecting extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
 					} else if (!StringTool.isProvided(actingPlayerCommand.getPlayerId()) && actingPlayer.getPlayerId() != null) {
+					System.out.println("INIT_SELECTING: null acting player, ts=" + (targetSelectionState != null)
+						+ " blitz=" + actingPlayer.getPlayerAction() + " blocked=" + actingPlayer.hasBlocked()
+						+ " move=" + actingPlayer.getCurrentMove());
 						boolean unusedBlitz = actingPlayer.getPlayerAction().isBlitzing() && !actingPlayer.hasBlocked();
 						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
-						boolean onlyMarkedAsStandingUp = actingPlayer.isStandingUp() && actingPlayer.getCurrentMove() == Constant.MINIMUM_MOVE_TO_STAND_UP;
+						boolean onlyMarkedAsStandingUp = actingPlayer.hasOnlyStandingUpMove();
 						boolean usingAvoidDodge = actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging);
 						if (targetSelectionState != null
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
+								System.out.println("INIT_SELECTING: cancel target selection path");
 							if (targetSelectionState.isCommitted()) {
+								System.out.println("INIT_SELECTING: inside targetSelectionState.isCommitted()");
 								UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), actingPlayer.getPlayerAction()), false);
 								commandStatus = StepCommandStatus.SKIP_STEP;
 							} else {
@@ -163,6 +168,11 @@ public final class StepInitSelecting extends AbstractStep {
 									}
 									fieldModel.setPlayerState(actingPlayer.getPlayer(), oldState);
 								}
+								if (usingAvoidDodge) {
+									Skill incorporeal = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
+									game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), incorporeal);
+									actingPlayer.markSkillUnused(incorporeal);
+								}
 								actingPlayer.setHasMoved(false);
 								actingPlayer.setCurrentMove(0);
 								actingPlayer.setStandingUp(false);
@@ -174,10 +184,11 @@ public final class StepInitSelecting extends AbstractStep {
 							Skill incorporeal = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), incorporeal);
 							actingPlayer.markSkillUnused(incorporeal);
-							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getGameState().resetStalling();
-							commandStatus = StepCommandStatus.SKIP_STEP;
+							fEndPlayerAction = true;
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}  else {
+							System.out.println("INIT_SELECTING: end action");
 							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -402,12 +413,18 @@ public final class StepInitSelecting extends AbstractStep {
 							fDispatchPlayerAction = PlayerAction.AUTO_GAZE_ZOAT;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 							forceGotoOnDispatch = true;
-						}  else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
+						}	else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
 							game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUsed(commandUseSkill.getSkill());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 							commandStatus = StepCommandStatus.SKIP_STEP;
 						} 
+					} else {
+						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
+							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
+							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
+							commandStatus = StepCommandStatus.SKIP_STEP;
+						}
 					}
 					break;
 				case CLIENT_USE_TEAM_MATES_WISDOM:

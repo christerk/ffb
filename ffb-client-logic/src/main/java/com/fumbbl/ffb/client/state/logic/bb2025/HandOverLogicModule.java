@@ -14,6 +14,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -141,6 +142,13 @@ public class HandOverLogicModule extends MoveLogicModule {
 		actionContext.add(ClientAction.END_MOVE);
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);
+		}
+
+		if (isIncorporealAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.INCORPOREAL);
+			if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging)) {
+				actionContext.add(Influences.INCORPOREAL_ACTIVE);
+			}
 		}
 
 		return actionContext;

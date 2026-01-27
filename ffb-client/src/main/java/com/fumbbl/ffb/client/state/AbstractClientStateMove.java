@@ -159,7 +159,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 
 	@Override
 	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
-		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
+		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new LinkedHashMap<>();
 		Map<ClientAction, MenuItemConfig> jump = new HashMap<>();
 		influences.put(Influences.IS_JUMPING, jump);
 		jump.put(ClientAction.JUMP, new MenuItemConfig("Don't Jump", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_JUMP));
@@ -169,6 +169,10 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		Map<ClientAction, MenuItemConfig> putrid = new HashMap<>();
 		influences.put(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION, putrid);
 		putrid.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+		Map<ClientAction, MenuItemConfig> incorporeal = new HashMap<>();
+		influences.put(Influences.INCORPOREAL_ACTIVE, incorporeal);
+		incorporeal.put(ClientAction.INCORPOREAL, new MenuItemConfig("Cancel Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
+		incorporeal.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		return influences;
 	}
 

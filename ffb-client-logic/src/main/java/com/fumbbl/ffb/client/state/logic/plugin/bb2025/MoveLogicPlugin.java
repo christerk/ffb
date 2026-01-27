@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.state.logic.plugin.bb2025;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -33,7 +34,8 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 			case INCORPOREAL:
 				if (logicModule.isIncorporealAvailable(actingPlayer)) {
 					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
-					communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
+					boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
+					communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
 				}
 				break;
 			default:
@@ -47,6 +49,9 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 
 		if (logicModule.isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);
+			if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging)) {
+				actionContext.add(Influences.INCORPOREAL_ACTIVE);
+			}
 		}
 		return actionContext;
 	}
