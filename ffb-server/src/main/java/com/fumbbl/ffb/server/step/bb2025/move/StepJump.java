@@ -347,12 +347,8 @@ public class StepJump extends AbstractStepWithReRoll {
 			return ActionStatus.SUCCESS;
 		}
 
-		Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, context.getFrom(),
-			NamedProperties.canAttemptToTackleJumpingPlayer, true);
-		divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
-		if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-			divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
-		}
+		Player<?>[] divingTacklers = UtilPlayer.findEligibleDivingTacklers(game, context.getFrom(),
+			context.getTo(), NamedProperties.canAttemptToTackleJumpingPlayer);
 
 		if (ArrayTool.isProvided(divingTacklers)) {
 			Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
