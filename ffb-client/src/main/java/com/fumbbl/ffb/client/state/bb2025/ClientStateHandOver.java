@@ -100,6 +100,7 @@ public class ClientStateHandOver extends AbstractClientStateMove<HandOverLogicMo
 		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
 		itemConfigs.put(ClientAction.FUMBLEROOSKIE, new MenuItemConfig("Fumblerooskie", IIconProperty.ACTION_PASS, IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE));
 		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
+		itemConfigs.put(ClientAction.INCORPOREAL, new MenuItemConfig("Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
 
 		return itemConfigs;
 	}

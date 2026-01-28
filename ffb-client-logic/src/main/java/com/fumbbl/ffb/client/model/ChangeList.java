@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Diving Tackle: RR needs to be decided before DT prompt (Dodge and Jump)")
 			.addFeature("\"Blastin' Solves Everything\" (Star Zzharg Madeye)")
 			.addFeature("Ball And Chain")
+			.addFeature("Incorporeal (Gretchen Wächter)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")

@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -85,6 +86,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 			add(ClientAction.FUMBLEROOSKIE);
 			add(ClientAction.BOUNDING_LEAP);
 			add(ClientAction.GORED_BY_THE_BULL);
+			add(ClientAction.INCORPOREAL);
 			addAll(extension.availableActions());
 		}};
 	}
@@ -121,6 +123,13 @@ public class BlitzLogicModule extends MoveLogicModule {
 					if (isGoredAvailable()) {
 						UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddBlockDie).ifPresent(goredSkill ->
 							communication.sendUseSkill(goredSkill, true, actingPlayer.getPlayerId()));
+					}
+					break;
+				case INCORPOREAL:
+					if (isIncorporealAvailable(actingPlayer)) {
+						Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
+						boolean active = actingPlayer.getPlayer().hasActiveEnhancement(skill);
+						client.getCommunication().sendUseSkill(skill, !active, actingPlayer.getPlayer().getId());
 					}
 					break;
 				default:

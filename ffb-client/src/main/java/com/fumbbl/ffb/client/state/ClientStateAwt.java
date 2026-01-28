@@ -310,6 +310,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			put(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, ClientAction.BREATHE_FIRE);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+			put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
 		}};
 	}
 
