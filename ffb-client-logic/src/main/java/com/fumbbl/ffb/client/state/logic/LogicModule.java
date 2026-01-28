@@ -559,7 +559,8 @@ public abstract class LogicModule {
 				|| isCatchOfTheDayAvailable(actingPlayer)
 				|| isBlackInkAvailable(actingPlayer)
 				|| isThenIStartedBlastinAvailable(actingPlayer)
-				|| isZoatGazeAvailable(actingPlayer);
+				|| isZoatGazeAvailable(actingPlayer)
+				|| isIncorporealAvailable(actingPlayer);
 	}
 
 	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
@@ -661,6 +662,17 @@ public abstract class LogicModule {
 			&& ArrayTool.isProvided(UtilPlayer.findPlayersWithTackleZones(
 				game, game.getOtherTeam(game.getActingTeam()), coord, 3));
 	}
+
+	public boolean isIncorporealAvailable(ActingPlayer actingPlayer) {
+		return (actingPlayer.getCurrentMove() == 0 || actingPlayer.hasOnlyStandingUpMove())
+			&& (isIncorporealAvailable(actingPlayer.getPlayer())
+				|| actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging));
+	}
+
+	protected boolean isIncorporealAvailable(Player<?> player) {
+		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canAvoidDodging);
+	}
+
 }
 
 

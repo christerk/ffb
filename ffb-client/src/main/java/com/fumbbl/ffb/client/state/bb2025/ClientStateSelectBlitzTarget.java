@@ -107,6 +107,9 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			case PLAYER_ACTION_AUTO_GAZE_ZOAT:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
 				return true;
+			case PLAYER_ACTION_INCORPOREAL:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_INCORPOREAL);
+				return true;
 			default:
 				actionHandled = handleResize(pActionKey);
 				break;
@@ -128,6 +131,7 @@ public class ClientStateSelectBlitzTarget extends AbstractClientStateMove<Select
 			put(IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH, ClientAction.FRENZIED_RUSH);
 			put(IPlayerPopupMenuKeys.KEY_SLASHING_NAILS, ClientAction.SLASHING_NAILS);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+			put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
 		}};
 	}
 

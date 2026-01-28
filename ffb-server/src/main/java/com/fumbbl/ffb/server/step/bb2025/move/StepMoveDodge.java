@@ -10,7 +10,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
@@ -411,12 +410,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		if (successful) {
 			// success path with DT/BT/reroll decisions before DT prompt
 			if (fUsingDivingTackle == null && !dtRerollAsked) {
-				Player<?>[] dtOpponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, fCoordinateFrom,
-					NamedProperties.canAttemptToTackleDodgingPlayer, false);
-				dtOpponents = UtilPlayer.filterThrower(game, dtOpponents);
-				if (game.getTurnMode() == TurnMode.DUMP_OFF) {
-					dtOpponents = UtilPlayer.filterAttackerAndDefender(game, dtOpponents);
-				}
+				Player<?>[] dtOpponents = UtilPlayer.findEligibleDivingTacklers(game, fCoordinateFrom, fCoordinateTo,
+					NamedProperties.canAttemptToTackleDodgingPlayer);
 
 				if (ArrayTool.isProvided(dtOpponents)) {
 					Set<DodgeModifier> withDt = new HashSet<>(dodgeModifiers);

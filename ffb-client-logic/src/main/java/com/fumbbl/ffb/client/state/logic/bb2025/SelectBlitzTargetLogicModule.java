@@ -104,6 +104,9 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		if (isZoatGazeAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
+		if (isIncorporealAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.INCORPOREAL);
+		}		
 		return actionContext;
 	}
 
@@ -173,7 +176,13 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 						Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
 						communication.sendUseSkill(zoatGazeInkSkill, true, player.getId());
 					}
-					break;					
+					break;
+				case INCORPOREAL:
+					if (isIncorporealAvailable(player)) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canAvoidDodging);
+						client.getCommunication().sendUseSkill(skill, true, player.getId());
+					}
+					break;				
 				default:
 					break;
 			}
@@ -194,6 +203,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			add(ClientAction.FRENZIED_RUSH);
 			add(ClientAction.SLASHING_NAILS);
 			add(ClientAction.AUTO_GAZE_ZOAT);
+			add(ClientAction.INCORPOREAL);
 		}};
 	}
 }

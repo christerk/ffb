@@ -35,6 +35,7 @@ public class NamedProperties {
 		"Can Attempt To Tackle Dodging Player");
 	public static final ISkillProperty canAttemptToTackleJumpingPlayer = new NamedProperty(
 		"Can Attempt To Tackle Jumping Player");
+	public static final ISkillProperty canAvoidDodging = new NamedProperty("Can Avoid Dodging");
 	public static final ISkillProperty canAvoidFallingDown = new NamedProperty("Can Avoid Falling Down");
 	public static final ISkillProperty canBeGainedByGettingEven = new NamedProperty("Can Be Gained By Getting Even");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
