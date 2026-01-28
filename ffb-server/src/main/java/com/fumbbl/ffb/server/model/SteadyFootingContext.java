@@ -12,7 +12,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.step.DeferredCommand;
-import com.fumbbl.ffb.server.step.DeferredCommandFactory;
+import com.fumbbl.ffb.server.factory.bb2025.DeferredCommandFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
