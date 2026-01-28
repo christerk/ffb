@@ -153,12 +153,13 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+			put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
 		}};
 	}
 
 	@Override
 	protected Map<Influences, Map<ClientAction, MenuItemConfig>> influencedItemConfigs() {
-		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new HashMap<>();
+		Map<Influences, Map<ClientAction, MenuItemConfig>> influences = new LinkedHashMap<>();
 		Map<ClientAction, MenuItemConfig> jump = new HashMap<>();
 		influences.put(Influences.IS_JUMPING, jump);
 		jump.put(ClientAction.JUMP, new MenuItemConfig("Don't Jump", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_JUMP));
@@ -168,6 +169,10 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		Map<ClientAction, MenuItemConfig> putrid = new HashMap<>();
 		influences.put(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION, putrid);
 		putrid.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));
+		Map<ClientAction, MenuItemConfig> incorporeal = new HashMap<>();
+		influences.put(Influences.INCORPOREAL_ACTIVE, incorporeal);
+		incorporeal.put(ClientAction.INCORPOREAL, new MenuItemConfig("Cancel Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
+		incorporeal.put(ClientAction.END_MOVE, new MenuItemConfig("Deselect Player", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		return influences;
 	}
 
@@ -194,6 +199,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		itemConfigs.put(ClientAction.FRENZIED_RUSH,	new MenuItemConfig("Frenzied Rush", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_FRENZIED_RUSH));
 		itemConfigs.put(ClientAction.SLASHING_NAILS,	new MenuItemConfig("Slashing Nails", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS));
 		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
+		itemConfigs.put(ClientAction.INCORPOREAL, new MenuItemConfig("Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
 
 		return itemConfigs;
 	}
@@ -279,6 +285,9 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					return true;
 				case PLAYER_ACTION_AUTO_GAZE_ZOAT:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
+					return true;
+				case PLAYER_ACTION_INCORPOREAL:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_INCORPOREAL);
 					return true;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);

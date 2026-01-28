@@ -21,6 +21,7 @@ public class ChangeList {
 			.addFeature("\"Blastin' Solves Everything\" (Star Zzharg Madeye)")
 			.addFeature("Ball And Chain")
 			.addFeature("Diving Tackle: only triggers when the dodger leaves the tackler's TZ (toggleable via game option).")
+			.addFeature("Incorporeal (Gretchen Wächter)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
