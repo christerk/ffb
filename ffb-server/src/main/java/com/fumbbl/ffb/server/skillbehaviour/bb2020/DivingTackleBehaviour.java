@@ -1,10 +1,11 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -38,7 +39,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 	public DivingTackleBehaviour() {
 		super();
@@ -64,8 +64,12 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 					game.setDefenderId(null);
 					state.usingDivingTackle = false;
 					if (game.getFieldModel().getPlayer(state.coordinateFrom) == null) {
-						Player<?>[] divingTacklers = UtilPlayer.findEligibleDivingTacklers(game, state.coordinateFrom,
-							state.coordinateTo, NamedProperties.canAttemptToTackleDodgingPlayer);
+						Player<?>[] divingTacklers = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, state.coordinateFrom,
+							NamedProperties.canAttemptToTackleDodgingPlayer, false);
+						divingTacklers = UtilPlayer.filterThrower(game, divingTacklers);
+						if (game.getTurnMode() == TurnMode.DUMP_OFF) {
+							divingTacklers = UtilPlayer.filterAttackerAndDefender(game, divingTacklers);
+						}
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
 							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
