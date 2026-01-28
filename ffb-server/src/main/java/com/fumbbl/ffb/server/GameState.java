@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -16,6 +17,7 @@ import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.server.factory.ObserverFactory;
 import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -137,6 +139,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (change != null) {
 			fChangeList.add(change);
 		}
+
+		if (getGame().isInitialized() && change != null) {
+			ObserverFactory factory = getGame().getFactory(FactoryType.Factory.OBSERVERS);
+			factory.getObservers().forEach(observer -> observer.next(this, change));
+		}
 	}
 
 	public DiceRoller getDiceRoller() {
@@ -169,7 +176,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setStatus(GameStatus pStatus) {
 		fStatus = pStatus;
-		update(null);
 	}
 
 	public long getSpectatorCooldownTime(String pCoach) {

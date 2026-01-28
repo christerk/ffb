@@ -287,12 +287,6 @@ public class FieldModel implements IJsonSerializable {
 			List<String> playerList = fPlayerIdByCoordinate.computeIfAbsent(pCoordinate, k -> new ArrayList<>());
 			playerList.add(pPlayer.getId());
 			notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_COORDINATE, pPlayer.getId(), pCoordinate);
-
-			if (pCoordinate.isBoxCoordinate()) {
-				removeChomps(pPlayer);
-			} else {
-				updateChomps(pPlayer);
-			}
 		}
 	}
 
@@ -330,10 +324,6 @@ public class FieldModel implements IJsonSerializable {
 		if ((oldState == null) || ((pState != null) && (pState.getId() != oldState.getId() || force))) {
 			fStateByPlayerId.put(pPlayer.getId(), pState);
 			notifyObservers(ModelChangeId.FIELD_MODEL_SET_PLAYER_STATE, pPlayer.getId(), pState);
-
-			if (!pState.hasTacklezones()) {
-				removeChomps(pPlayer);
-			}
 		}
 	}
 
