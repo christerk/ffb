@@ -22,7 +22,7 @@ public class ChangeList {
 			.addFeature("Ball And Chain")
 			.addFeature("Diving Tackle: only triggers when the dodger leaves the tackler's TZ (toggleable via game option).")
 			.addFeature("Incorporeal (Star Gretchen Wächter)")
-			.addFeature("Lord Of Choes (Star Lord Borak the Despoiler)")
+			.addFeature("Lord Of Chaos (Star Lord Borak the Despoiler)")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")
