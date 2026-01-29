@@ -213,9 +213,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return null;
 	}
 
-	public Skill getSkillWithRerollSource(ReRollSource source, ReRolledAction action) {
+	public Skill getUnusedSkillWithRerollSource(ReRollSource source, ReRolledAction action) {
 		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
-			if (playerSkill.getRerollSource(action) == source) {
+			if (playerSkill.getRerollSource(action) == source && !isUsed(playerSkill)) {
 				return playerSkill;
 			}
 		}

@@ -231,9 +231,9 @@ public class ActingPlayer implements IJsonSerializable {
 		Skill skill = getPlayer().getSkillWithProperty(property);
 		markSkillUsed(skill);
 	}
-	
+
 	public void markSkillUsed(ReRollSource reRollSource, ReRolledAction action) {
-		Skill skill = getPlayer().getSkillWithRerollSource(reRollSource, action);
+		Skill skill = getPlayer().getUnusedSkillWithRerollSource(reRollSource, action);
 		markSkillUsed(skill);
 	}
 

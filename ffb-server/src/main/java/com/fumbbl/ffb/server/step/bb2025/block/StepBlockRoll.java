@@ -133,15 +133,18 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
-					Skill rerollSkill = UtilCards.getUnusedSkillForReRollAction(actingPlayer, ReRolledActions.SINGLE_BLOCK_DIE);
+					Skill rerollSkill = null;
+					if (actingPlayer.getPlayerAction().isBlitzing()) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
+					}
+					if (rerollSkill == null) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);
+					}
 					if (rerollSkill != null) {
-						boolean blitzOnly = rerollSkill.hasSkillProperty(NamedProperties.canRerollSingleBlockDieDuringBlitz);
-						if (!blitzOnly || actingPlayer.getPlayerAction().isBlitzing()) {
-							setReRolledAction(ReRolledActions.BLOCK);
-							setReRollSource(rerollSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
-							dieIndex = commandUseSkill.getDieIndex();
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						}
+						setReRolledAction(ReRolledActions.BLOCK);
+						setReRollSource(rerollSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
+						dieIndex = commandUseSkill.getDieIndex();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_USE_MULTI_BLOCK_DICE_RE_ROLL:
