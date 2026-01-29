@@ -130,6 +130,14 @@ public abstract class LogicModule {
 		return Optional.ofNullable(client.getGame().getFieldModel().getPlayer(coordinate));
 	}
 
+	public Set<FieldCoordinate> chompedBy(Player<?> player) {
+		return client.getGame().getFieldModel().chompedBy(player);
+	}
+
+	public Set<FieldCoordinate> chomps(Player<?> player) {
+		return client.getGame().getFieldModel().chomps(player);
+	}
+
 	public boolean isHypnoticGazeActionAvailable(boolean declareAtStart, Player<?> player, ISkillProperty property) {
 		Game game = client.getGame();
 		GameMechanic mechanic =

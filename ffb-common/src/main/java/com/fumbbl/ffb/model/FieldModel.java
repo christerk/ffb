@@ -1011,6 +1011,21 @@ public class FieldModel implements IJsonSerializable {
 		return result;
 	}
 
+	public Set<FieldCoordinate> chompedBy(Player<?> player) {
+		return chomped.entrySet().stream().filter(entry -> entry.getValue().contains(player.getId()))
+			.map(Map.Entry::getKey)
+			.map(id -> getGame().getPlayerById(id))
+			.map(this::getPlayerCoordinate)
+			.collect(Collectors.toSet());
+	}
+
+	public Set<FieldCoordinate> chomps(Player<?> player) {
+		return chomped.computeIfAbsent(player.getId(), id -> new ArrayList<>()).stream()
+			.map(id -> getGame().getPlayerById(id))
+			.map(this::getPlayerCoordinate)
+			.collect(Collectors.toSet());
+	}
+
 	public Map<String, Boolean> removeChomps(Player<?> chomper) {
 		List<String> chompees = chomped.remove(chomper.getId());
 		Map<String, Boolean> result = new HashMap<>();
