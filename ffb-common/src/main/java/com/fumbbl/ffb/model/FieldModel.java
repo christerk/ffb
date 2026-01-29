@@ -996,32 +996,41 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
-	public void removeChomp(Player<?> chomper, Player<?> chompee) {
+	public Boolean removeChomp(Player<?> chomper, Player<?> chompee) {
 		List<String> chompees = chomped.get(chomper.getId());
+		Boolean result = null;
 		if (chompees != null && chompees.remove(chompee.getId())) {
+			result = false;
 			if (chomped.values().stream().noneMatch(list -> list.contains(chompee.getId()))) {
 				PlayerState playerState = getPlayerState(chompee);
 				setPlayerState(chompee, playerState.changeChomped(false));
+				result = true;
 			}
 			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
 		}
+		return result;
 	}
 
-	public void removeChomps(Player<?> chomper) {
+	public Map<String, Boolean> removeChomps(Player<?> chomper) {
 		List<String> chompees = chomped.remove(chomper.getId());
+		Map<String, Boolean> result = new HashMap<>();
 		if (chompees != null) {
 			for (String chompeeId : chompees) {
 				Player<?> chompee = getGame().getPlayerById(chompeeId);
 				if (chomped.values().stream().noneMatch(list -> list.contains(chompeeId))) {
+					result.put(chompeeId, true);
 					PlayerState playerState = getPlayerState(chompee);
 					setPlayerState(chompee, playerState.changeChomped(false));
+				} else {
+					result.put(chompeeId, false);
 				}
 				notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
 			}
 		}
+		return result;
 	}
 
-	public void updateChomps(Player<?> chomper) {
+	public Map<String, Boolean> updateChomps(Player<?> chomper) {
 		FieldCoordinate chomperCoordinate = getPlayerCoordinate(chomper);
 		List<String> chompees = chomped.get(chomper.getId());
 		List<String> remove = new ArrayList<>();
@@ -1034,10 +1043,13 @@ public class FieldModel implements IJsonSerializable {
 			}
 		}
 
+		Map<String, Boolean> result = new HashMap<>();
 		for (String chompeeId : remove) {
 			Player<?> chompee = getGame().getPlayerById(chompeeId);
-			removeChomp(chomper, chompee);
+			result.put(chompeeId, removeChomp(chomper, chompee));
 		}
+
+		return result;
 	}
 
 	public boolean notChomped(Player<?> chomper, Player<?> chompee) {
