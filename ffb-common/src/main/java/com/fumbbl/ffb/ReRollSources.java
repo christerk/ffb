@@ -40,6 +40,7 @@ public class ReRollSources {
 	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
 	public static final ReRollSource SWOOP = new ReRollSource("Swoop");
 	public static final ReRollSource HATRED = new ReRollSource("Hatred");
+	public static final ReRollSource WORKING_IN_TANDEM = new ReRollSource("Working in Tandem");
 
 	private final Map<String, ReRollSource> values;
 
