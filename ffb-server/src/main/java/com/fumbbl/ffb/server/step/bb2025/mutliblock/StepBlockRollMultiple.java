@@ -400,7 +400,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			} else if (state.reRollSource == ReRollSources.LORD_OF_CHAOS) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod,
 					roll.getReRollDiceIndexes());
-      } else {
+			} else {
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));
 			}
 			roll.clearReRolls();
