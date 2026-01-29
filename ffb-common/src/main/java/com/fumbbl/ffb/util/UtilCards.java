@@ -170,4 +170,12 @@ public final class UtilCards {
 	public static Optional<Skill> getSkillForReRollSource(Player<?> player, ReRollSource reRollSource, ReRolledAction reRolledAction) {
 		return Arrays.stream(UtilCards.findAllSkills(player)).filter(skill -> reRollSource == skill.getRerollSource(reRolledAction)).findFirst();
 	}
+
+	public static Skill getUnusedSkillForReRollAction(ActingPlayer actingPlayer, ReRolledAction action) {
+		return Arrays.stream(findAllSkills(actingPlayer.getPlayer()))
+			.filter(skill -> !actingPlayer.isSkillUsed(skill))
+			.filter(skill -> skill.getRerollSource(action) != null)
+			.findFirst()
+			.orElse(null);
+	}
 }

@@ -8,6 +8,8 @@ import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
@@ -205,6 +207,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public Skill getSkillWithProperty(ISkillProperty property) {
 		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
 			if (playerSkill.hasSkillProperty(property)) {
+				return playerSkill;
+			}
+		}
+		return null;
+	}
+
+	public Skill getSkillWithRerollSource(ReRollSource source, ReRolledAction action) {
+		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
+			if (playerSkill.getRerollSource(action) == source) {
 				return playerSkill;
 			}
 		}
