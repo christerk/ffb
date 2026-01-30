@@ -6,6 +6,8 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -227,6 +229,11 @@ public class ActingPlayer implements IJsonSerializable {
 
 	public void markSkillUsed(ISkillProperty property) {
 		Skill skill = getPlayer().getSkillWithProperty(property);
+		markSkillUsed(skill);
+	}
+
+	public void markSkillUsed(ReRollSource reRollSource, ReRolledAction action) {
+		Skill skill = getPlayer().getUnusedSkillWithRerollSource(reRollSource, action);
 		markSkillUsed(skill);
 	}
 

@@ -47,7 +47,12 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('C');
 				add('u');
 				add('m');
-			}}, 'S', 'f', 'p', 'n'));
+			}}, 'S', 'f', 'p', 'n',
+			new ArrayList<Character>() {{
+				add('h');
+				add('i');
+				add('j');
+			}}));
 		add(new Mnemonics('e', 'l', 'r', 'h',
 			new ArrayList<Character>() {{
 				add('r');
@@ -58,7 +63,12 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				add('a');
 				add('f');
 				add('v');
-			}}, 'b', 'q', 's','u' ));
+			}}, 'b', 'q', 's','u',
+			new ArrayList<Character>() {{
+				add('k');
+				add('l');
+				add('w');
+			}}));
 	}};
 	private int proIndex;
 
@@ -100,6 +110,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				ReRollSource bothDownReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_BOTH_DOWN);
 				ReRollSource skullReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_SKULL);
 				ReRollSource anyDiceReRollSource = actionReRollSourceMap.get(ReRolledActions.MULTI_BLOCK_DICE);
+				ReRollSource singleBlockDieReRollSource = actionReRollSourceMap.get(ReRolledActions.SINGLE_BLOCK_DIE);
 
 				JPanel buttonPanel = new JPanel();
 				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
@@ -161,6 +172,12 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 								currentMnemonics.anyDie.get(0))));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
+					if (singleBlockDieReRollSource != null) {
+						buttonPanel.add(mascotExtension.wrapperPanel(
+							createReRollButton(target, singleBlockDieReRollSource.getName(game), singleBlockDieReRollSource, 
+								currentMnemonics.singleBlockDie.get(0))));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
 				}
 				if (bothDownReRollSource != null) {
 					buttonPanel.add(mascotExtension.wrapperPanel(
@@ -198,6 +215,10 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					if (singleDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
 							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), currentMnemonics.anyDie, this::anyDieAction));
+					}
+					if (singleBlockDieReRollSource != null) {
+						targetPanel.add(createSingleDieReRollPanel(textPanel(singleBlockDieReRollSource.getName(getClient().getGame())),
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()),	currentMnemonics.singleBlockDie, this::singleBlockDieAction));
 					}
 				}
 
@@ -341,6 +362,14 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		close();
 	}
 
+	private void singleBlockDieAction(String target, int index) {
+		reRollSource = actionToSourceMaps.get(target).get(ReRolledActions.SINGLE_BLOCK_DIE);
+		this.proIndex = index;
+		this.selectedTarget = target;
+		anyDiceIndexes.add(index);
+		close();
+	}
+
 	private ReRollSource determineProReRollSource(String target) {
 		FallbackCheckBoxes checkBoxes = fallbackCheckBoxes.get(target);
 		boolean mascot = checkBoxes.pro != null && checkBoxes.pro.isSelected();
@@ -390,6 +419,9 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					}
 				}
 			}
+		}
+		if (reRollSource == ReRollSources.LORD_OF_CHAOS) {
+			anyDiceIndexes.add(0);
 		}
 		close();
 	}
@@ -447,9 +479,10 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 	private static class Mnemonics {
 		private final char team, brawler, hatred, none, anyBlockDice, trrFallback, proFallback, proTrrFallback;
-		private final List<Character> pro, anyDie;
+		private final List<Character> pro, anyDie, singleBlockDie;
 
-		public Mnemonics(char team, char none, char brawler, char hatred, List<Character> pro, List<Character> anyDie, char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback) {
+		public Mnemonics(char team, char none, char brawler, char hatred, List<Character> pro, List<Character> anyDie,
+			char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback, List<Character> singleBlockDie) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
@@ -460,6 +493,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 			this.trrFallback = trrFallback;
 			this.proFallback = proFallback;
 			this.proTrrFallback = proTrrFallback;
+			this.singleBlockDie = singleBlockDie;
 		}
 	}
 
