@@ -301,6 +301,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean stalling = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_STALLING_CHECK);
 			stalling.setValue(false);
 			//game.getOptions().addOption(stalling);
+			GameOptionBoolean kick = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ASK_FOR_KICK_AFTER_ROLL);
+			kick.setValue(true);
+			//game.getOptions().addOption(kick);
 		}
 	}
 
