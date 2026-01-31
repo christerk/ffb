@@ -89,7 +89,7 @@ public final class StepEndSelecting extends AbstractStep {
   // blockSequence
   private String fBlockDefenderId;
   private Boolean fUsingStab;
-  private boolean usingChainsaw, usingVomit, usingBreatheFire;
+  private boolean usingChainsaw, usingVomit, usingBreatheFire, usingChomp;
   // foulSequence
   private String fFoulDefenderId;
   // passSequence + throwTeamMateSequence
@@ -203,6 +203,10 @@ public final class StepEndSelecting extends AbstractStep {
           usingBreatheFire = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
           consume(parameter);
           return true;
+        case USING_CHOMP:
+          usingChomp = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+          consume(parameter);
+          return true;
         case BLOCK_TARGETS:
           blockTargets = (List<BlockTarget>) parameter.getValue();
           consume(parameter);
@@ -277,7 +281,7 @@ public final class StepEndSelecting extends AbstractStep {
 
     PlayerState playerState = game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer());
 
-    if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isRooted() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
+    if (pPlayerAction == null || (pPlayerAction == PlayerAction.MOVE && playerState.isPinned() && UtilPlayer.canGaze(game, game.getActingPlayer().getPlayer()))) {
       game.getFieldModel().clearMultiBlockTargets();
       ((Select) factory.forName(SequenceGenerator.Type.Select.name()))
         .pushSequence(new Select.SequenceParams(getGameState(), false));
@@ -323,7 +327,7 @@ public final class StepEndSelecting extends AbstractStep {
         break;
       case BLITZ:
         if (pWithParameter) {
-          blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit, usingBreatheFire));
+          blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp));
         } else {
           blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
         }
@@ -331,7 +335,7 @@ public final class StepEndSelecting extends AbstractStep {
       case BLOCK:
         if (pWithParameter) {
           blockGenerator.pushSequence(new Block.Builder(getGameState()).withDefenderId(fBlockDefenderId)
-            .useStab(fUsingStab).useChainsaw(usingChainsaw).useVomit(usingVomit).useBreatheFire(usingBreatheFire).build());
+            .useStab(fUsingStab).useChainsaw(usingChainsaw).useVomit(usingVomit).useBreatheFire(usingBreatheFire).useChomp(usingChomp).build());
         } else {
           blockGenerator.pushSequence(new Block.Builder(getGameState()).build());
         }
@@ -351,7 +355,7 @@ public final class StepEndSelecting extends AbstractStep {
         }
         break;
       case MOVE:
-        if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isRooted()) {
+        if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isPinned()) {
           endGenerator.pushSequence(endParams);
           break;
         }
@@ -485,6 +489,7 @@ public final class StepEndSelecting extends AbstractStep {
     IServerJsonOption.TARGET_PLAYER_ID.addTo(jsonObject, targetPlayerId);
     IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
     IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
+    IServerJsonOption.USING_CHOMP.addTo(jsonObject, usingChomp);
     return jsonObject;
   }
 
@@ -516,6 +521,7 @@ public final class StepEndSelecting extends AbstractStep {
     bloodlustAction = (PlayerAction) IServerJsonOption.PLAYER_ACTION.getFrom(source, jsonObject);
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
     checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
+    usingChomp = toPrimitive(IServerJsonOption.USING_CHOMP.getFrom(source, jsonObject));
     return this;
   }
 

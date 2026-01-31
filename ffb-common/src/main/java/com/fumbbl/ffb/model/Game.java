@@ -75,6 +75,8 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private TeamState teamState = TeamState.FULL;
 	private EnhancementRegistry enhancementRegistry;
 
+	private transient boolean initialized;
+
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
 		factoryManager = manager;
@@ -119,6 +121,11 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		rules.initialize(this);
 		modifierAggregator.init(this);
 		enhancementRegistry = new EnhancementRegistry(this);
+		initialized = true;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 	public IFactorySource getApplicationSource() {

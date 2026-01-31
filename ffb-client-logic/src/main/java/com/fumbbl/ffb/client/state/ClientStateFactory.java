@@ -124,6 +124,7 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case PROJECTILE_VOMIT:
 								case STAB:
 								case VICIOUS_VINES:
+								case CHOMP:
 									clientStateId = ClientStateId.BLOCK;
 									break;
 								case MULTIPLE_BLOCK:

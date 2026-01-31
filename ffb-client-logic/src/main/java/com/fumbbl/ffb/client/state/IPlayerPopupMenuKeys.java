@@ -24,10 +24,10 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_FORGO = KeyEvent.VK_F;
 	int KEY_FOUL = KeyEvent.VK_F;
-	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;	
+	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
 
 	int KEY_GAZE = KeyEvent.VK_G;
-	
+
 	int KEY_HAIL_MARY_PASS = KeyEvent.VK_H;
 	int KEY_HAIL_MARY_BOMB = KeyEvent.VK_H;
 	int KEY_HAND_OVER = KeyEvent.VK_H;
@@ -35,7 +35,6 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_BREATHE_FIRE = KeyEvent.VK_I;
 	int KEY_KICK_EM_BLITZ = KeyEvent.VK_I;
-	int KEY_RAIDING_PARTY = KeyEvent.VK_I;
 
 	int KEY_JUMP = KeyEvent.VK_J;
 
@@ -48,20 +47,20 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_MOVE = KeyEvent.VK_M;
 
 	int KEY_BOUNDING_LEAP = KeyEvent.VK_N;
-	int KEY_SHOT_TO_NOTHING = KeyEvent.VK_N;	
+	int KEY_SHOT_TO_NOTHING = KeyEvent.VK_N;
 
 	int KEY_BOMB = KeyEvent.VK_O;
 	int KEY_GORED_BY_THE_BULL = KeyEvent.VK_O;
 
 	int KEY_PASS = KeyEvent.VK_P;
-	
+
 	int KEY_FRENZIED_RUSH = KeyEvent.VK_Q;
 	int KEY_STAB = KeyEvent.VK_Q;
-	
-	int KEY_RANGE_GRID = KeyEvent.VK_R;
-	int KEY_RECOVER = KeyEvent.VK_R;	
 
-	int KEY_SHORT = KeyEvent.VK_S;	
+	int KEY_RANGE_GRID = KeyEvent.VK_R;
+	int KEY_RECOVER = KeyEvent.VK_R;
+
+	int KEY_SHORT = KeyEvent.VK_S;
 	int KEY_SLASHING_NAILS = KeyEvent.VK_S;
 	int KEY_STAND_UP = KeyEvent.VK_S;
 
@@ -78,14 +77,18 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_BALEFUL_HEX = KeyEvent.VK_X;
 
-	int KEY_ALL_YOU_CAN_EAT = KeyEvent.VK_Y;	
+	int KEY_ALL_YOU_CAN_EAT = KeyEvent.VK_Y;
 	int KEY_LOOK_INTO_MY_EYES = KeyEvent.VK_Y;
 
 	int KEY_AUTO_GAZE_ZOAT = KeyEvent.VK_Z;
-	int KEY_BLITZ = KeyEvent.VK_Z;	
-		
-	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;	
+	int KEY_BLITZ = KeyEvent.VK_Z;
+
+	int KEY_THEN_I_STARTED_BLASTIN = KeyEvent.VK_EXCLAMATION_MARK;
 	int KEY_VICIOUS_VINES = KeyEvent.VK_PLUS;
 	int KEY_FURIOUS_OUTBURST = KeyEvent.VK_ASTERISK;
-	int KEY_MORE_ACTION = KeyEvent.VK_TAB;	
+	int KEY_MORE_ACTION = KeyEvent.VK_TAB;
+
+	int KEY_CHOMP = KeyEvent.VK_1;
+
+	int KEY_RAIDING_PARTY = KeyEvent.VK_2;
 }

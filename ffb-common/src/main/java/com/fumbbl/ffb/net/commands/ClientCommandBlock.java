@@ -8,26 +8,28 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.NetCommandId;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class ClientCommandBlock extends ClientCommand implements ICommandWithActingPlayer {
 
 	private String fActingPlayerId;
 	private String fDefenderId;
-	private boolean fUsingStab, usingChainsaw, usingVomit, usingBreatheFire;
+	private boolean fUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp;
 
 	public ClientCommandBlock() {
 		super();
 	}
 
-	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
+	public ClientCommandBlock(String pActingPlayerId, String pDefenderId, boolean pUsingStab, boolean usingChainsaw,
+		boolean usingVomit, boolean usingBreatheFire, boolean usingChomp) {
 		fActingPlayerId = pActingPlayerId;
 		fDefenderId = pDefenderId;
 		fUsingStab = pUsingStab;
 		this.usingChainsaw = usingChainsaw;
 		this.usingVomit = usingVomit;
 		this.usingBreatheFire = usingBreatheFire;
+		this.usingChomp = usingChomp;
 	}
 
 	public NetCommandId getId() {
@@ -57,7 +59,12 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 	public boolean isUsingBreatheFire() {
 		return usingBreatheFire;
 	}
-// JSON serialization
+
+	public boolean isUsingChomp() {
+		return usingChomp;
+	}
+
+	// JSON serialization
 
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
@@ -67,6 +74,7 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		IJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IJsonOption.USING_VOMIT.addTo(jsonObject, usingVomit);
 		IJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
+		IJsonOption.USING_CHOMP.addTo(jsonObject, usingChomp);
 		return jsonObject;
 	}
 
@@ -80,6 +88,9 @@ public class ClientCommandBlock extends ClientCommand implements ICommandWithAct
 		usingVomit = IJsonOption.USING_VOMIT.getFrom(source, jsonObject);
 		if (IJsonOption.USING_BREATHE_FIRE.isDefinedIn(jsonObject)) {
 			usingBreatheFire = IJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject);
+		}
+		if (IJsonOption.USING_CHOMP.isDefinedIn(jsonObject)) {
+			usingChomp = IJsonOption.USING_CHOMP.getFrom(source, jsonObject);
 		}
 		return this;
 	}

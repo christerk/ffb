@@ -18,7 +18,8 @@ import java.awt.image.BufferedImage;
 public class PlayerIconFactory {
 
 
-	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty, DimensionProvider dimensionProvider) {
+	public static BufferedImage decorateIcon(FantasyFootballClient client, BufferedImage icon, String iconProperty,
+		DimensionProvider dimensionProvider) {
 		IconCache iconCache = client.getUserInterface().getIconCache();
 
 		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
@@ -42,7 +43,8 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider, boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
+	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider,
+		boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
 			Color color;
@@ -82,8 +84,9 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
-	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer, boolean pMoving,
-																		boolean pWithBall, boolean pWithBomb, DimensionProvider dimensionProvider) {
+	public BufferedImage getBasicIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean pHomePlayer,
+		boolean pMoving,
+		boolean pWithBall, boolean pWithBomb, DimensionProvider dimensionProvider) {
 
 		if ((pClient == null) || (pPlayer == null)) {
 			return null;
@@ -204,17 +207,23 @@ public class PlayerIconFactory {
 
 		if (pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED, dimensionProvider), maxIconSize);
+				icon =
+					decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB_SELECTED, dimensionProvider),
+						maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB, dimensionProvider), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BOMB, dimensionProvider),
+					maxIconSize);
 			}
 		}
 
 		if (pWithBall && !pWithBomb) {
 			if (pMoving) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED, dimensionProvider), maxIconSize);
+				icon =
+					decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL_SELECTED, dimensionProvider),
+						maxIconSize);
 			} else {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL, dimensionProvider), maxIconSize);
+				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_BALL, dimensionProvider),
+					maxIconSize);
 			}
 		}
 		return icon;
@@ -225,7 +234,8 @@ public class PlayerIconFactory {
 		return getIcon(pClient, pPlayer, false, dimensionProvider);
 	}
 
-	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean ignorePlayerState, DimensionProvider dimensionProvider) {
+	public BufferedImage getIcon(FantasyFootballClient pClient, Player<?> pPlayer, boolean ignorePlayerState,
+		DimensionProvider dimensionProvider) {
 
 		BufferedImage icon = null;
 		IconCache iconCache = pClient.getUserInterface().getIconCache();
@@ -240,7 +250,8 @@ public class PlayerIconFactory {
 			&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate()));
 
 		boolean homePlayer = game.getTeamHome().hasPlayer(pPlayer);
-		if (ignorePlayerState || (playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR)) {
+		if (ignorePlayerState ||
+			(playerState.getBase() != PlayerState.PICKED_UP && playerState.getBase() != PlayerState.IN_THE_AIR)) {
 			icon = getBasicIcon(pClient, pPlayer, homePlayer, (playerState.getBase() == PlayerState.MOVING), withBall,
 				withBomb, dimensionProvider);
 		}
@@ -248,6 +259,7 @@ public class PlayerIconFactory {
 		boolean fadeIcon = false;
 		String decorationProperty1 = null;
 		String decorationProperty2 = null;
+		String decorationProperty3 = null;
 
 		if (icon != null) {
 			switch (playerState.getBase()) {
@@ -319,6 +331,10 @@ public class PlayerIconFactory {
 			decorationProperty1 = IIconProperty.DECORATION_BLOOD_LUST;
 		}
 
+		if (playerState.isChomped()) {
+			decorationProperty3 = IIconProperty.DECORATION_CHOMPED;
+		}
+
 		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
 		if (decorationProperty1 != null) {
@@ -327,11 +343,18 @@ public class PlayerIconFactory {
 		if (decorationProperty2 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty2, dimensionProvider), maxIconSize);
 		}
+		if (decorationProperty3 != null) {
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty3, dimensionProvider), maxIconSize);
+		}
+
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
-				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider), maxIconSize);
+				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
+				pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
+				icon =
+					decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider),
+						maxIconSize);
 			}
 		}
 
@@ -341,28 +364,39 @@ public class PlayerIconFactory {
 
 	}
 
-	private static void applyMarker(FantasyFootballClient client, Player<?> pPlayer, DimensionProvider dimensionProvider, BufferedImage icon, boolean homePlayer) {
+	private static void applyMarker(FantasyFootballClient client, Player<?> pPlayer, DimensionProvider dimensionProvider,
+		BufferedImage icon, boolean homePlayer) {
 		PlayerMarker playerMarker = client.getGame().getFieldModel().getPlayerMarker(pPlayer.getId());
-		TransientPlayerMarker transientPlayerMarker = client.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
+		TransientPlayerMarker transientPlayerMarker =
+			client.getGame().getFieldModel().getTransientPlayerMarker(pPlayer.getId());
 		if (playerMarker != null || transientPlayerMarker != null) {
 			if (transientPlayerMarker == null) {
-				markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+				markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(),
+					client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
 			} else if (playerMarker == null) {
-				markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+				markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(),
+					client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
 			} else {
 				switch (transientPlayerMarker.getMode()) {
 					case REPLACE:
-						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(),
+							client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
 						break;
 					case APPEND:
-						markIcon(icon, playerMarker.getHomeText() + transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						markIcon(icon, playerMarker.getHomeText() + transientPlayerMarker.getHomeText(),
+							client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer,
+							dimensionProvider, true);
 						break;
 					case PREPEND:
-						markIcon(icon, transientPlayerMarker.getHomeText() + playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						markIcon(icon, transientPlayerMarker.getHomeText() + playerMarker.getHomeText(),
+							client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer,
+							dimensionProvider, true);
 						break;
 					case ADD:
-						markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
-						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(), client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, false);
+						markIcon(icon, playerMarker.getHomeText(), client.getUserInterface().getFontCache(),
+							client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, true);
+						markIcon(icon, transientPlayerMarker.getHomeText(), client.getUserInterface().getFontCache(),
+							client.getUserInterface().getStyleProvider(), homePlayer, dimensionProvider, false);
 						break;
 					default:
 						break;

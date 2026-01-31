@@ -58,7 +58,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			PlayerAction action = actingPlayer.getPlayerAction();
 			client.getCommunication()
 				.sendBlock(actingPlayer.getPlayerId(), player, action == PlayerAction.STAB, action == PlayerAction.CHAINSAW,
-					action == PlayerAction.PROJECTILE_VOMIT, action == PlayerAction.BREATHE_FIRE);
+					action == PlayerAction.PROJECTILE_VOMIT, action == PlayerAction.BREATHE_FIRE, action == PlayerAction.CHOMP);
 		}
 		return InteractionResult.ignore();
 	}

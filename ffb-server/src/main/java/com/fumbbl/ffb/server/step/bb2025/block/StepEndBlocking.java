@@ -56,7 +56,7 @@ public class StepEndBlocking extends AbstractStep {
 	private boolean fEndPlayerAction;
 	private boolean fDefenderPushed;
 	private PlayerAction bloodlustAction;
-	private boolean fUsingStab, usingChainsaw, allowSecondBlockAction, usingVomit, addBlockDieHandled, usingBreatheFire;
+	private boolean fUsingStab, usingChainsaw, allowSecondBlockAction, usingVomit, addBlockDieHandled, usingBreatheFire, usingChomp;
 	private Boolean usePileDriver, useHitAndRun, usePutridRegurgitation;
 	private List<String> knockedDownPlayers = new ArrayList<>(); // will be set for all kinds of blocks
 	private String targetPlayerId;
@@ -170,6 +170,10 @@ public class StepEndBlocking extends AbstractStep {
 					usingBreatheFire = (boolean) parameter.getValue();
 					consume(parameter);
 					break;
+				case USING_CHOMP:
+					usingChomp = (boolean) parameter.getValue();
+					consume(parameter);
+					break;
 				case TARGET_PLAYER_ID:
 					targetsRegularMultibLock.add((String) parameter.getValue());
 					consume(parameter);
@@ -208,7 +212,7 @@ public class StepEndBlocking extends AbstractStep {
 
 		fieldModel.clearMultiBlockTargets();
 
-		boolean regularBlock = !fUsingStab && !usingChainsaw && !usingVomit && !usingBreatheFire;
+		boolean regularBlock = !fUsingStab && !usingChainsaw && !usingVomit && !usingBreatheFire && !usingChomp;
 		if (regularBlock) {
 			UtilCards.getUnusedSkillWithProperty(game.getDefender(), NamedProperties.ignoresDefenderStumblesResultForFirstBlock)
 				.ifPresent(skill -> game.getDefender().markUsed(skill, game));
@@ -320,7 +324,7 @@ public class StepEndBlocking extends AbstractStep {
 				}
 
 				boolean canMoveAfterBlock = playerState.getBase() == PlayerState.MOVING && activePlayer.hasSkillProperty(NamedProperties.canMoveAfterBlock)
-					&& (regularBlock || fUsingStab) && !playerState.isRooted();
+					&& (regularBlock || fUsingStab) && !playerState.isPinned();
 
 				Set<FieldCoordinate> availableSquares = Arrays.stream(game.getFieldModel().findAdjacentCoordinates(fieldModel.getPlayerCoordinate(activePlayer), FieldCoordinateBounds.FIELD, 1, false))
 					.filter(fieldCoordinate -> game.getFieldModel().getPlayers(fieldCoordinate) == null)
@@ -464,6 +468,7 @@ public class StepEndBlocking extends AbstractStep {
 		IServerJsonOption.ADD_BLOCK_DIE_HANDLED.addTo(jsonObject, addBlockDieHandled);
 		IServerJsonOption.PLAYER_ACTION.addTo(jsonObject, bloodlustAction);
 		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
+		IServerJsonOption.USING_CHOMP.addTo(jsonObject, usingChomp);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldDefenderState);
 		IServerJsonOption.PLAYER_IDS_HIT.addTo(jsonObject, targetsRegularMultibLock);
 		IServerJsonOption.CHECK_FORGO.addTo(jsonObject, checkForgo);
@@ -492,6 +497,7 @@ public class StepEndBlocking extends AbstractStep {
 		oldDefenderState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		targetsRegularMultibLock.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS_HIT.getFrom(source, jsonObject)).collect(Collectors.toSet()));
 		checkForgo = toPrimitive(IServerJsonOption.CHECK_FORGO.getFrom(source, jsonObject));
+		usingChomp = toPrimitive(IServerJsonOption.USING_CHOMP.getFrom(source, jsonObject));
 		return this;
 	}
 

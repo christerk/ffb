@@ -264,6 +264,14 @@ public class ModelChangeProcessor {
 			case FIELD_MODEL_SET_WEATHER:
 				pGame.getFieldModel().setWeather((Weather) pModelChange.getValue());
 				return true;
+			case FIELD_MODEL_ADD_CHOMP:
+				pGame.getFieldModel().addChomp(pGame.getPlayerById(pModelChange.getKey()),
+					pGame.getPlayerById((String) pModelChange.getValue()));
+				return true;
+			case FIELD_MODEL_REMOVE_CHOMP:
+				pGame.getFieldModel().removeChomp(pGame.getPlayerById(pModelChange.getKey()),
+					pGame.getPlayerById((String) pModelChange.getValue()));
+				return true;
 
 			case GAME_SET_CONCEDED_LEGALLY:
 				pGame.setConcededLegally((Boolean) pModelChange.getValue());
