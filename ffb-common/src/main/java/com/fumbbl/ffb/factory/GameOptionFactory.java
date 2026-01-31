@@ -380,6 +380,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Animal Savagery lash out ends activation")
 					.setMessageFalse("Animal Savagery lash out does not end activation");
+			case ALLOW_SPECIAL_ACTIONS_FROM_PRONE:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Special actions can be declared when prone")
+					.setMessageFalse("Special actions can only be declared when standing");
 			default:
 				return null;
 		}

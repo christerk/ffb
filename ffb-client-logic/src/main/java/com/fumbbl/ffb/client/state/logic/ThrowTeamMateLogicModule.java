@@ -95,7 +95,7 @@ public class ThrowTeamMateLogicModule extends MoveLogicModule {
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(pPlayer);
 		// added a check so you could not throw the opponents players, maybe this should
 		// be in the server-check?
-		return mechanic.canThrow(actingPlayer.getPlayer())
+		return mechanic.canThrow(game, actingPlayer.getPlayer())
 			&& mechanic.canBeThrown(game, pPlayer)
 			&& catcherCoordinate.isAdjacent(throwerCoordinate);
 	}

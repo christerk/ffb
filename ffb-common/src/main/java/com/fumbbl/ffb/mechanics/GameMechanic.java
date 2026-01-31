@@ -1,11 +1,16 @@
 package com.fumbbl.ffb.mechanics;
 
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.PlayerStats;
+import com.fumbbl.ffb.model.Roster;
+import com.fumbbl.ffb.model.RosterPosition;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TeamResult;
 
 import java.util.Set;
 
@@ -21,7 +26,7 @@ public abstract class GameMechanic implements Mechanic {
 
 	public abstract boolean isBombActionAllowed(TurnMode turnMode);
 
-	public abstract boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction);
+	public abstract boolean isGazeActionAllowed(Game game, Player<?> player);
 
 	public abstract boolean declareGazeActionAtStart();
 

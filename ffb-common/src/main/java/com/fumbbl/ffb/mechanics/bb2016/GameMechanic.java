@@ -46,8 +46,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction) {
-		return playerAction == PlayerAction.MOVE;
+	public boolean isGazeActionAllowed(Game game, Player<?> player) {
+		return game.getActingPlayer().getPlayerAction() == PlayerAction.MOVE;
 	}
 
 	@Override

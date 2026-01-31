@@ -142,9 +142,8 @@ public abstract class LogicModule {
 		Game game = client.getGame();
 		GameMechanic mechanic =
 			(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		ActingPlayer actingPlayer = game.getActingPlayer();
 		return ((mechanic.declareGazeActionAtStart() == declareAtStart)
-			&& mechanic.isGazeActionAllowed(game.getTurnMode(), actingPlayer.getPlayerAction())
+			&& mechanic.isGazeActionAllowed(game, player)
 			&& UtilPlayer.canGaze(game, player, property));
 	}
 
@@ -427,7 +426,7 @@ public abstract class LogicModule {
 
 		return (mechanic.isTtmAvailable(game.getTurnData())
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& mechanic.canThrow(player) && rightStuffAvailable
+			&& mechanic.canThrow(game, player) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
 	}
 
