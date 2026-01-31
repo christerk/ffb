@@ -43,6 +43,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	private int popupIndex;
 	private List<JPopupMenu> popupMenus;
 	private final CoordinateConverter coordinateConverter;
+	private final Set<FieldCoordinate> markedCoordinates = new HashSet<>();
 
 	private Player<?> fPopupMenuPlayer;
 
@@ -96,10 +97,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 
 	protected void drawSelectSquare() {
-		drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
+		drawColoredSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
 	}
 
-	protected void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor) {
+	protected void drawColoredSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 
@@ -120,13 +121,23 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public void hideSelectSquare() {
 		if (fSelectSquareCoordinate != null) {
-			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-			Dimension dimension = pitchDimensionProvider.mapToLocal(fSelectSquareCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(),
-				pitchDimensionProvider.fieldSquareSize());
-			fieldComponent.refresh(bounds);
+			clearCoordinate(fSelectSquareCoordinate);
 			super.hideSelectSquare();
 		}
+		clearMarkedCoordinates();
+	}
+
+	private void clearCoordinate(FieldCoordinate coordinate) {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate);
+		Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(),
+			pitchDimensionProvider.fieldSquareSize());
+		fieldComponent.refresh(bounds);
+	}
+
+	private void clearMarkedCoordinates() {
+		markedCoordinates.forEach(this::clearCoordinate);
+		markedCoordinates.clear();
 	}
 
 	public void mouseMoved(MouseEvent pMouseEvent) {
@@ -255,11 +266,20 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			getClient().getClientData().setSelectedPlayer(pPlayer);
 			getClient().getUserInterface().refreshSideBars();
 		}
+		logicModule.chompedBy(pPlayer).forEach(coordinate -> {
+			drawColoredSquare(coordinate, Color.BLACK);
+			markedCoordinates.add(coordinate);
+		});
+		logicModule.chomps(pPlayer).forEach(coordinate -> {
+			drawColoredSquare(coordinate, markedCoordinates.contains(coordinate) ? Color.GRAY : Color.WHITE);
+			markedCoordinates.add(coordinate);
+		});
 		return true;
 	}
 
 	public boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		resetSidebars();
+		clearMarkedCoordinates();
 		return true;
 	}
 
@@ -446,7 +466,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext,
-																								 List<JMenuItem> prepopulated) {
+		List<JMenuItem> prepopulated) {
 		List<List<JMenuItem>> menuItemList = menuItems(actionContext);
 		menuItemList.get(0).addAll(0, prepopulated);
 		if (!menuItemList.get(0).isEmpty()) {
@@ -468,5 +488,4 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		List<JMenuItem> menuItemList = new ArrayList<>(uiOnlyMenuItems());
 		createAndShowPopupMenuForPlayer(actingPlayer.getPlayer(), actionContext, menuItemList);
 	}
-
 }
