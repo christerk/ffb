@@ -15,7 +15,6 @@ import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportNervesOfSteel;
 import com.fumbbl.ffb.report.mixed.ReportPassRoll;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 @ReportMessageType(ReportId.PASS_ROLL)
 @RulesCollection(Rules.BB2025)
@@ -90,17 +89,12 @@ public class PassRollMessage extends ReportMessageBase<ReportPassRoll> {
   			}
   		}
   		if (neededRoll != null) {
-				boolean ignoreRange = UtilPlayer.isPassingToPartner(thrower, game.getFieldModel().getPlayer(game.getPassCoordinate()));
 				String formattedModifiers = statusReport.formatRollModifiers(report.getRollModifiers());
 				StatBasedRollModifier statBasedRollModifier = report.getStatBasedRollModifier();
 				if (statBasedRollModifier != null) {
 					formattedModifiers += " + " + statBasedRollModifier.getModifier() + " " + statBasedRollModifier.getReportString();
 				}
-				if (ignoreRange) {
-					neededRoll.append(mechanic.formatRollRequirement(report.getPassingDistance(), formattedModifiers, thrower));
-				} else {
-					neededRoll.append(mechanic.formatRollRequirement(report.getPassingDistance(), formattedModifiers, thrower));
-				}
+				neededRoll.append(mechanic.formatRollRequirement(report.getPassingDistance(), formattedModifiers, thrower));
 				println(getIndent() + 2, TextStyle.NEEDED_ROLL, neededRoll.toString());
 			}
     }
