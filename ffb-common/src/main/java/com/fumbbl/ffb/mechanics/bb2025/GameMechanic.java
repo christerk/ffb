@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.mechanics.bb2025;
 
 import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -10,6 +9,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
@@ -62,8 +62,10 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction) {
-		return TurnMode.BLITZ != turnMode;
+	public boolean isGazeActionAllowed(Game game, Player<?> player) {
+		boolean canDeclare = game.getFieldModel().getPlayerState(player).getBase() != PlayerState.PRONE
+			|| UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE);
+		return canDeclare && TurnMode.BLITZ != game.getTurnMode();
 	}
 
 	@Override
