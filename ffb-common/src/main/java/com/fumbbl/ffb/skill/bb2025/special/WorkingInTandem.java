@@ -9,7 +9,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -32,7 +31,7 @@ public class WorkingInTandem extends Skill {
 	private final Evaluator evaluator;
 
 	public WorkingInTandem() {
-		super("Working in Tandem", SkillCategory.TRAIT, SkillUsageType.SPECIAL);
+		super("Working in Tandem", SkillCategory.TRAIT);
 		evaluator = new Evaluator();
 	}
 

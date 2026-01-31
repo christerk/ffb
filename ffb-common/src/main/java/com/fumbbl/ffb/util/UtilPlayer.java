@@ -667,4 +667,15 @@ public class UtilPlayer {
 			&& "block".equalsIgnoreCase(target.getSkillValueExcludingTemporaryOnes(tandem));
 	}
 
+	public static boolean isDefenderMarkedByPartner(Game game, Player<?> attacker, Player<?> defender) {
+		Skill tandem = attacker.getSkillWithProperty(NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
+		if (tandem == null || !"block".equalsIgnoreCase(attacker.getSkillValueExcludingTemporaryOnes(tandem))) {
+			return false;
+		}
+		Player<?>[] markers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, defender, 
+			game.getFieldModel().getPlayerCoordinate(defender), tandem, false);
+		return ArrayTool.isProvided(markers) && Arrays.stream(markers)
+			.anyMatch(p -> p != attacker && "pass".equalsIgnoreCase(p.getSkillValueExcludingTemporaryOnes(tandem)));
+	}
+
 }
