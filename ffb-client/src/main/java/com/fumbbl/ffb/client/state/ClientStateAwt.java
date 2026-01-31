@@ -267,11 +267,12 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			getClient().getUserInterface().refreshSideBars();
 		}
 		logicModule.chompedBy(pPlayer).forEach(coordinate -> {
-			drawColoredSquare(coordinate, Color.BLACK);
+			drawColoredSquare(coordinate, new Color(1.0f, 0.0f, 1.0f, 0.2f));
 			markedCoordinates.add(coordinate);
 		});
 		logicModule.chomps(pPlayer).forEach(coordinate -> {
-			drawColoredSquare(coordinate, markedCoordinates.contains(coordinate) ? Color.GRAY : Color.WHITE);
+			drawColoredSquare(coordinate,
+				markedCoordinates.contains(coordinate) ? new Color(0.5f, 1.0f, 0.0f, 0.5f) : new Color(1.0f, 1.0f, 0.0f, 0.2f));
 			markedCoordinates.add(coordinate);
 		});
 		return true;
