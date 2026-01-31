@@ -27,6 +27,7 @@ public enum ClientAction {
 	HAIL_MARY_PASS,
 	HIT_AND_RUN,
 	HAND_OVER,
+	INCORPOREAL,
 	JUMP,
 	KICK_EM_BLITZ,
 	KICK_EM_BLOCK,

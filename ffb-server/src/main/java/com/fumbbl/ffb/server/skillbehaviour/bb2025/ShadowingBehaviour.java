@@ -10,6 +10,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.mixed.ReportTentaclesShadowingRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -50,7 +51,8 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				boolean doNextStep = true;
-				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN));
+				boolean doShadowing = (!state.usingDivingTackle && (game.getTurnMode() != TurnMode.KICKOFF_RETURN) 
+					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.movesRandomly));
 				if (doShadowing && (state.coordinateFrom != null) && (state.usingShadowing == null)) {
 					Player<?>[] shadowers =
 						UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill, true);

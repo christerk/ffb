@@ -22,6 +22,7 @@ public class EyeGouge extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRemoveOpponentAssists);
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 
 }

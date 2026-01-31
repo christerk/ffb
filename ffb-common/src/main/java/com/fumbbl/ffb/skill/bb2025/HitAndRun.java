@@ -1,11 +1,10 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class HitAndRun extends Skill {
 	public HitAndRun() {
@@ -15,5 +14,6 @@ public class HitAndRun extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canMoveAfterBlock);
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 }

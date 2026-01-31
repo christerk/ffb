@@ -133,11 +133,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
-					Skill singleRrSkill =
-						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
-					if (actingPlayer.getPlayerAction().isBlitzing() && singleRrSkill != null) {
+					Skill rerollSkill = null;
+					if (actingPlayer.getPlayerAction().isBlitzing()) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
+					}
+					if (rerollSkill == null) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);
+					}
+					if (rerollSkill != null) {
 						setReRolledAction(ReRolledActions.BLOCK);
-						setReRollSource(singleRrSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
+						setReRollSource(rerollSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
 						dieIndex = commandUseSkill.getDieIndex();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -247,12 +252,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				new ReportBlockReRoll(reRolledWithPro, actingPlayer.getPlayerId(), getReRollSource()));
 			fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 			fBlockRoll[dieIndex] = reRolledWithPro[0];
-		} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM) {
+		} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM
+			|| getReRollSource() == ReRollSources.LORD_OF_CHAOS) {
 			if (dieIndex >= 0) {
 				int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 				getResult().addReport(
 					new ReportBlockReRoll(new int[]{rerolledDie}, actingPlayer.getPlayerId(), getReRollSource()));
-				actingPlayer.markSkillUsed(NamedProperties.canRerollSingleBlockDieDuringBlitz);
+				actingPlayer.markSkillUsed(getReRollSource(), ReRolledActions.SINGLE_BLOCK_DIE);
 				fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 				fBlockRoll[dieIndex] = rerolledDie;
 			}
@@ -297,8 +303,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		if (getReRollSource() == null) {
 
 			if (actingPlayer.getPlayerAction().isBlitzing()) {
-				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game);
+				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak + UM on blitz
+			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak on Block
 			}
+
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);

@@ -8,6 +8,8 @@ import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.PlayerGender;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
@@ -211,6 +213,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return null;
 	}
 
+	public Skill getUnusedSkillWithRerollSource(ReRollSource source, ReRolledAction action) {
+		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
+			if (playerSkill.getRerollSource(action) == source && !isUsed(playerSkill)) {
+				return playerSkill;
+			}
+		}
+		return null;
+	}
+
 	public int getAgilityWithModifiers() {
 		return getStatWithModifiers(PlayerStatKey.AG, getAgility());
 	}
@@ -328,6 +339,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean hasActiveEnhancement(String name) {
 		return getEnhancementSources().contains(name);
+	}
+
+	public boolean hasActiveEnhancement(ISkillProperty property) {
+		Skill skill = getSkillWithProperty(property);
+		return skill != null && hasActiveEnhancement(skill);
 	}
 
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);

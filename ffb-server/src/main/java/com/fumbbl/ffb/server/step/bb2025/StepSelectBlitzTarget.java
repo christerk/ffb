@@ -246,9 +246,13 @@ public class StepSelectBlitzTarget extends AbstractStep {
 						game.getFieldModel().addSkillEnhancements(game.getActingPlayer().getPlayer(), usedSkill);						
 						if (usedSkill.hasSkillProperty(NamedProperties.canGainFrenzyForBlitz)) {
 							getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_FRENZY_FOR_BLITZ));
-						} else if (usedSkill.hasSkillProperty(NamedProperties.canGainClawsForBlitz)) {
+						} 
+						if (usedSkill.hasSkillProperty(NamedProperties.canGainClawsForBlitz)) {
 							getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.GAIN_CLAWS_FOR_BLITZ));
-						}	
+						}
+						if (usedSkill.hasSkillProperty(NamedProperties.canAvoidDodging)) {
+							getResult().addReport(new ReportSkillUse(game.getActingPlayer().getPlayerId(), usedSkill, true, SkillUse.AVOID_DODGING));
+						}		
 					}
 				}
 				getResult().setNextAction(StepAction.NEXT_STEP);

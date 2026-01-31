@@ -35,6 +35,7 @@ public class NamedProperties {
 		"Can Attempt To Tackle Dodging Player");
 	public static final ISkillProperty canAttemptToTackleJumpingPlayer = new NamedProperty(
 		"Can Attempt To Tackle Jumping Player");
+	public static final ISkillProperty canAvoidDodging = new NamedProperty("Can Avoid Dodging");
 	public static final ISkillProperty canAvoidFallingDown = new NamedProperty("Can Avoid Falling Down");
 	public static final ISkillProperty canBeGainedByGettingEven = new NamedProperty("Can Be Gained By Getting Even");
 	public static final ISkillProperty canBeKicked = new NamedProperty("Can Be Kicked");
@@ -121,6 +122,7 @@ public class NamedProperties {
 	public static final ISkillProperty canReRollOnesOnKORecovery = new NamedProperty("Can Re-Roll Ones On KO Recovery");
 	public static final ISkillProperty canRerollOncePerTurn = new NamedProperty("Can Reroll Once Per Turn");
 	public static final ISkillProperty canRerollSingleDieOncePerPeriod = new NamedProperty("Can Reroll Single Die Once Per Period");
+	public static final ISkillProperty canRerollSingleBlockDieOncePerPeriod = new NamedProperty("Can Reroll Single Block Die Once Per Period");
 	public static final ISkillProperty canRerollSingleBlockDieDuringBlitz = new NamedProperty("Can Reroll Single Block Die During Blitz");
 	public static final ISkillProperty canRerollSingleSkull = new NamedProperty("Can Reroll Single Skull");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(

@@ -26,6 +26,7 @@ public class MultipleBlock extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canBlockTwoAtOnce);
+		registerConflictingProperty(NamedProperties.movesRandomly);
 	}
 
 }

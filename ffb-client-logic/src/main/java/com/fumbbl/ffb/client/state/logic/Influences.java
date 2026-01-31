@@ -10,7 +10,8 @@ public enum Influences {
 	HANDS_OVER_TO_ANYONE(ClientAction.HAND_OVER),
 	IS_THROWING_HAIL_MARY(ClientAction.HAIL_MARY_BOMB, ClientAction.HAIL_MARY_PASS),
 	IS_JUMPING(ClientAction.JUMP),
-	VOMIT_DUE_TO_PUTRID_REGURGITATION(ClientAction.PROJECTILE_VOMIT);
+	VOMIT_DUE_TO_PUTRID_REGURGITATION(ClientAction.PROJECTILE_VOMIT),
+	INCORPOREAL_ACTIVE(ClientAction.INCORPOREAL, ClientAction.END_MOVE);
 
 	private final List<ClientAction> influencedActions = new ArrayList<>();
 
