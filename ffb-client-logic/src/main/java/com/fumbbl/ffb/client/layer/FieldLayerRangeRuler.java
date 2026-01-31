@@ -42,7 +42,6 @@ public class FieldLayerRangeRuler extends FieldLayer {
 		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.SHORT_PASS, new Color(1.0f, 1.0f, 0.0f, 0.3f));
 		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.LONG_PASS, new Color(1.0f, 0.0f, 0.0f, 0.3f));
 		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.LONG_BOMB, new Color(0.0f, 0.0f, 0.0f, 0.3f));
-		_COLOR_BY_PASSING_DISTANCE.put(PassingDistance.PASS_TO_PARTNER, new Color(0.0f, 1.0f, 0.0f, 0.3f));
 	}
 
 	public static final Color COLOR_INTERCEPTION = new Color(1.0f, 1.0f, 1.0f, 0.3f);
