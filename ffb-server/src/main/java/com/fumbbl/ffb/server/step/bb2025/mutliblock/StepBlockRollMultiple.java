@@ -337,6 +337,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
+		if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+			addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BLOCK_DIE, game);
+		}
 
 		evaluateBrawlerAvailability(game, actionReRollSourceMap, roll);
 		evaluateHatredAvailability(game, actionReRollSourceMap, roll);
@@ -393,6 +396,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 					new int[]{roll.getProIndex()});
 			} else if (state.reRollSource == ReRollSources.SAVAGE_BLOW) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice,
+					roll.getReRollDiceIndexes());
+			} else if (state.reRollSource == ReRollSources.LORD_OF_CHAOS) {
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod,
 					roll.getReRollDiceIndexes());
 			} else {
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));

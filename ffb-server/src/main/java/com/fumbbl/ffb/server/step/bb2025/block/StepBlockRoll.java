@@ -133,18 +133,16 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
-					Skill blockActionRrSkill = 
-						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);	
-					Skill blitzRrSkill = 
-						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
-					if (blockActionRrSkill != null) {
+					Skill rerollSkill = null;
+					if (actingPlayer.getPlayerAction().isBlitzing()) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
+					}
+					if (rerollSkill == null) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);
+					}
+					if (rerollSkill != null) {
 						setReRolledAction(ReRolledActions.BLOCK);
-						setReRollSource(blockActionRrSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
-						dieIndex = commandUseSkill.getDieIndex();
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					} else if (actingPlayer.getPlayerAction().isBlitzing() && blitzRrSkill != null) {
-						setReRolledAction(ReRolledActions.BLOCK);
-						setReRollSource(blitzRrSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
+						setReRollSource(rerollSkill.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE));
 						dieIndex = commandUseSkill.getDieIndex();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -260,11 +258,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 				getResult().addReport(
 					new ReportBlockReRoll(new int[]{rerolledDie}, actingPlayer.getPlayerId(), getReRollSource()));
-				if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM) {
-					actingPlayer.markSkillUsed(NamedProperties.canRerollSingleBlockDieDuringBlitz);
-				} else {
-					actingPlayer.markSkillUsed(NamedProperties.canRerollSingleBlockDieOncePerPeriod);
-				}
+				actingPlayer.markSkillUsed(getReRollSource(), ReRolledActions.SINGLE_BLOCK_DIE);
 				fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 				fBlockRoll[dieIndex] = rerolledDie;
 			}
