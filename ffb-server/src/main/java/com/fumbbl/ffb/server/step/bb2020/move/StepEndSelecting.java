@@ -291,7 +291,7 @@ public final class StepEndSelecting extends AbstractStep {
         break;
       case BLITZ:
         if (pWithParameter) {
-          blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit, usingBreatheFire));
+          blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState(), fBlockDefenderId, fUsingStab, usingChainsaw, usingVomit, usingBreatheFire, false));
         } else {
           blitzBlockGenerator.pushSequence(new BlitzBlock.SequenceParams(getGameState()));
         }

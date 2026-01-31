@@ -67,7 +67,7 @@ public class BlockKindLogicModule extends LogicModule {
 					if (extension.isGoredAvailable() && goredSkill != null) {
 						client.getCommunication().sendUseSkill(goredSkill, true, actingPlayer.getPlayerId());
 					}
-					client.getCommunication().sendBlock(actingPlayer.getPlayerId(), player, false, false, false, false);
+					client.getCommunication().sendBlock(actingPlayer.getPlayerId(), player, false, false, false, false, false);
 					break;
 				default:
 					extension.perform(player, action);

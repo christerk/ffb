@@ -189,7 +189,7 @@ public class StepEndMoving extends AbstractStep {
 		boolean secureTheBallFailed = fEndPlayerAction && triesToSecureBall &&
 			!UtilPlayer.hasBall(game, actingPlayer.getPlayer());
 
-			if (secureTheBallFailed) {
+		if (secureTheBallFailed) {
 			getResult().addReport(new ReportPlayerEvent(actingPlayer.getPlayerId(), "could not secure the ball, causing a " +
 				"turnover"));
 		}
@@ -246,7 +246,7 @@ public class StepEndMoving extends AbstractStep {
 						new BlitzMove.SequenceParams(getGameState(), fMoveStack, null, moveStart));
 				} else {
 					moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, null, moveStart,
-					null,	bloodlustAction));
+						null, bloodlustAction));
 				}
 			} else if (UtilPlayer.isNextMovePossible(game, false)
 				|| ((PlayerAction.HAND_OVER_MOVE == playerAction) &&

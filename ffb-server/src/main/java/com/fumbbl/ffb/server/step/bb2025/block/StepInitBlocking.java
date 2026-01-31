@@ -50,7 +50,7 @@ public class StepInitBlocking extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
 	private String fBlockDefenderId;
-	private boolean fUsingStab, usingChainsaw, usingVomit, usingBreatheFire;
+	private boolean fUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp;
 	private String fMultiBlockDefenderId;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
@@ -105,6 +105,9 @@ public class StepInitBlocking extends AbstractStep {
 					case PUBLISH_DEFENDER:
 						publishDefender = (boolean) parameter.getValue();
 						break;
+					case USING_CHOMP:
+						usingChomp = (boolean) parameter.getValue();
+						break;
 					default:
 						break;
 				}
@@ -135,6 +138,7 @@ public class StepInitBlocking extends AbstractStep {
 							usingChainsaw = blockCommand.isUsingChainsaw();
 							usingVomit = blockCommand.isUsingVomit();
 							usingBreatheFire = blockCommand.isUsingBreatheFire();
+							usingChomp = blockCommand.isUsingChomp();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
 					}
@@ -149,6 +153,7 @@ public class StepInitBlocking extends AbstractStep {
 						usingChainsaw = false;
 						usingVomit = false;
 						usingBreatheFire = false;
+						usingChomp = false;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -226,6 +231,7 @@ public class StepInitBlocking extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.USING_CHAINSAW, usingChainsaw));
 					publishParameter(new StepParameter(StepParameterKey.USING_VOMIT, usingVomit));
 					publishParameter(new StepParameter(StepParameterKey.USING_BREATHE_FIRE, usingBreatheFire));
+					publishParameter(new StepParameter(StepParameterKey.USING_CHOMP, usingChomp));
 					game.getFieldModel().setPlayerState(defender, oldDefenderState.changeBase(PlayerState.BLOCKED));
 					if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE) {
 						UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.BLITZ,
@@ -253,6 +259,7 @@ public class StepInitBlocking extends AbstractStep {
 		IServerJsonOption.ASK_FOR_BLOCK_KIND.addTo(jsonObject, askForBlockKind);
 		IServerJsonOption.PUBLISH_DEFENDER.addTo(jsonObject, publishDefender);
 		IServerJsonOption.USING_BREATHE_FIRE.addTo(jsonObject, usingBreatheFire);
+		IServerJsonOption.USING_CHOMP.addTo(jsonObject, usingChomp);
 		return jsonObject;
 	}
 
@@ -271,6 +278,7 @@ public class StepInitBlocking extends AbstractStep {
 		askForBlockKind = toPrimitive(IServerJsonOption.ASK_FOR_BLOCK_KIND.getFrom(source, jsonObject));
 		publishDefender = toPrimitive(IServerJsonOption.PUBLISH_DEFENDER.getFrom(source, jsonObject));
 		usingBreatheFire = toPrimitive(IServerJsonOption.USING_BREATHE_FIRE.getFrom(source, jsonObject));
+		usingChomp = IServerJsonOption.USING_CHOMP.getFrom(source, jsonObject);
 		return this;
 	}
 

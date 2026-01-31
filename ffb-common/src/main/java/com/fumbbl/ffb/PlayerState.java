@@ -39,6 +39,7 @@ public class PlayerState {
 	private static final int _BIT_SELECTED_BLOCK_TARGET = 0x08000;
 	private static final int _BIT_SELECTED_GAZE_TARGET = 0x10000;
 	private static final int _BIT_EYE_GOUGED = 0x20000;
+	private static final int _BIT_CHOMPED = 0x40000;
 
 	private static final int[] _BASE_MASK = new int[]{
 		0x00000, // UNKNOWN
@@ -161,6 +162,14 @@ public class PlayerState {
 		return changeEyeGouged(false);
 	}
 
+	public PlayerState changeChomped(boolean chomped) {
+		return changeBit(_BIT_CHOMPED, chomped);
+	}
+
+	public boolean isChomped() {
+		return hasBit(_BIT_CHOMPED);
+	}
+
 	public boolean isSelectedStabTarget() {
 		return hasBit(_BIT_SELECTED_STAB_TARGET);
 	}
@@ -232,7 +241,7 @@ public class PlayerState {
 	}
 
 	public boolean isAbleToMove() {
-		return (((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase())) && isActive() && !isRooted());
+		return (((STANDING == getBase()) || (MOVING == getBase()) || (PRONE == getBase())) && isActive() && !isPinned());
 	}
 
 	public boolean canBeBlocked() {
@@ -254,6 +263,10 @@ public class PlayerState {
 
 	public boolean isCarried() {
 		return ((PICKED_UP == getBase()) || (IN_THE_AIR == getBase()));
+	}
+
+	public boolean isPinned() {
+		return isChomped() || isRooted();
 	}
 
 	private PlayerState changeBit(int pMask, boolean pBit) {

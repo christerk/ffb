@@ -18,6 +18,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class ServerUtilBlock {
@@ -41,6 +42,7 @@ public class ServerUtilBlock {
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);
 		boolean kicksDowned = playerAction != null && playerAction.isKickingDowned();
 		boolean viciousVines = PlayerAction.VICIOUS_VINES == playerAction;
+		boolean chomp = PlayerAction.CHOMP == playerAction;
 
 		if ((actingPlayer.getPlayer() != null)
 			&& (blocksDuringMove
@@ -58,6 +60,10 @@ public class ServerUtilBlock {
 				targetPlayers = UtilPlayer.findBlockablePlayersTwoSquaresAway(game, otherTeam, coordinateAttacker);
 			} else {
 				targetPlayers = UtilPlayer.findAdjacentBlockablePlayers(game, otherTeam, coordinateAttacker);
+			}
+			if (chomp) {
+				targetPlayers = Arrays.stream(targetPlayers)
+					.filter(player -> game.getFieldModel().notChomped(actingPlayer.getPlayer(), player)).toArray(Player[]::new);
 			}
 			addDiceDecorations(gameState, targetPlayers);
 			if (canBlockSameTeamPlayer) {
@@ -142,15 +148,15 @@ public class ServerUtilBlock {
 	}
 
 	public static int findNrOfBlockDice(GameState gameState, Player<?> attacker, Player<?> defender,
-																			boolean usingMultiBlock, boolean successfulDauntless) {
+		boolean usingMultiBlock, boolean successfulDauntless) {
 
 		return findNrOfBlockDice(gameState, attacker, defender, usingMultiBlock, successfulDauntless, false,
 			false).getLeft();
 	}
 
 	public static Pair<Integer, Boolean> findNrOfBlockDice(GameState gameState, Player<?> attacker, Player<?> defender,
-																												 boolean usingMultiBlock, boolean successfulDauntless,
-																												 boolean doubleTargetStrength, boolean addBlockDie) {
+		boolean usingMultiBlock, boolean successfulDauntless,
+		boolean doubleTargetStrength, boolean addBlockDie) {
 		Game game = gameState.getGame();
 		int nrOfDice = 0;
 		boolean addedDie = false;
@@ -186,7 +192,7 @@ public class ServerUtilBlock {
 			// is removed after the "first" block
 			if (gameState.hasAdditionalAssist(game.getActingTeam().getId()) && (
 				!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
-				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
+					multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
 				blockStrengthAttacker += 1;
 			}
 

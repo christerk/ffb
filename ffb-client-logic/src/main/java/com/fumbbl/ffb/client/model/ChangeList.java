@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")
+		versions.add(new VersionChangeList("Future")		);
+
+		versions.add(new VersionChangeList("2026-01-31")
 			.addBugfix("Prevent MB to be applied when blocking an opponent using chainsaw special action")
 			.addBugfix("No stalling check on turnover")
 			.addFeature("\"Excuse Me, Are You a Zoat?\" (Star Zolcath the Zoat)")
@@ -23,6 +25,7 @@ public class ChangeList {
 			.addFeature("Diving Tackle: only triggers when the dodger leaves the tackler's TZ (toggleable via game option).")
 			.addFeature("Incorporeal (Star Gretchen Wächter)")
 			.addFeature("Lord Of Chaos (Star Lord Borak the Despoiler)")
+			.addFeature("Monstrous Mouth")
 		);
 
 		versions.add(new VersionChangeList("2026-01-15")

@@ -111,6 +111,7 @@ public interface IJsonOption {
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
 	JsonBooleanOption CHOICE_PICK_UP = new JsonBooleanOption("choicePickUp");
 	JsonBooleanOption CHOICE_RECEIVE = new JsonBooleanOption("choiceReceive");
+	JsonStringListMapOption CHOMPED = new JsonStringListMapOption("chomped");
 	JsonStringOption CHOOSING_TEAM_ID = new JsonStringOption("choosingTeamId");
 	JsonEnumWithNameOption CLIENT_MODE = new JsonEnumWithNameOption("clientMode", Factory.CLIENT_MODE);
 	JsonStringArrayOption CLIENT_PROPERTY_NAMES = new JsonStringArrayOption("clientPropertyNames");
@@ -626,6 +627,7 @@ public interface IJsonOption {
 	JsonBooleanOption USES_TREASURY = new JsonBooleanOption("usesTreasury");
 	JsonBooleanOption USING_BREATHE_FIRE = new JsonBooleanOption("usingBreatheFire");
 	JsonBooleanOption USING_CHAINSAW = new JsonBooleanOption("usingChainsaw");
+	JsonBooleanOption USING_CHOMP = new JsonBooleanOption("usingChomp");
 	JsonBooleanOption USING_HIT_AND_RUN = new JsonBooleanOption("usingHitAndRun");
 	JsonBooleanOption USING_PILE_DRIVER = new JsonBooleanOption("usingPileDriver");
 	JsonBooleanOption USING_PUTRID_REGURGITATION = new JsonBooleanOption("usingPutridRegurgitation");

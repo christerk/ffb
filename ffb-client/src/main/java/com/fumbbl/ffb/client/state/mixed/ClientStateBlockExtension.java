@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;

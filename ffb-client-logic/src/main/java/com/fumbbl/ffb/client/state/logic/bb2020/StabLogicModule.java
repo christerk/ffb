@@ -44,7 +44,7 @@ public class StabLogicModule extends BlockLogicModule {
 
 	@Override
 	protected InteractionResult block(Player<?> player, ActingPlayer actingPlayer) {
-		extension.block(actingPlayer.getPlayerId(), player, true, false, false, false);
+		extension.block(actingPlayer.getPlayerId(), player, true, false, false, false, false);
 		return InteractionResult.handled();
 	}
 

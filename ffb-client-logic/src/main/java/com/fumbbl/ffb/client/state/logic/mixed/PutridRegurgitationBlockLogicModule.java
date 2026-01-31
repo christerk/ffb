@@ -33,7 +33,7 @@ public class PutridRegurgitationBlockLogicModule extends BlockLogicModule {
 			return super.playerInteraction(player);
 		} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
 			&& extension.isBlockable(game, player)) {
-			extension.block(actingPlayer.getPlayerId(), player, false, false, true, false);
+			extension.block(actingPlayer.getPlayerId(), player, false, false, true, false, false);
 			return InteractionResult.handled();
 		}
 		return InteractionResult.ignore();

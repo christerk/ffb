@@ -28,7 +28,7 @@ public class MaximumCarnageLogicModule extends BlockLogicModule {
 		if (actingPlayer.getPlayer() == pPlayer) {
 			return InteractionResult.selectAction(actionContext(actingPlayer));
 		} else if (!pPlayer.getId().equalsIgnoreCase(game.getLastDefenderId()) && !game.getActingTeam().hasPlayer(pPlayer)) {
-			extension.block(actingPlayer.getPlayerId(), pPlayer, false, true, false, false);
+			extension.block(actingPlayer.getPlayerId(), pPlayer, false, true, false, false, false);
 			return InteractionResult.handled();
 		}
 		return InteractionResult.ignore();

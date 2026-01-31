@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.factory;
+package com.fumbbl.ffb.server.factory.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;

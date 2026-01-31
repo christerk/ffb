@@ -90,7 +90,7 @@ public abstract class GenerifiedModifierFactory<
 			.forEach(modifiers::add);
 
 		getModifierCollection().getModifiers(ModifierType.REGULAR).stream()
-			.filter(passModifier -> passModifier.appliesToContext(null, context))
+			.filter(modifier -> modifier.appliesToContext(null, context))
 			.forEach(modifiers::add);
 
 		if (isAffectedByTackleZones(context)) {

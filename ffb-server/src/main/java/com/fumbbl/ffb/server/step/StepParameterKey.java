@@ -158,6 +158,7 @@ public enum StepParameterKey {
 	USING_BREATHE_FIRE, // Boolean
 	USING_BULLSEYE, // Boolean
 	USING_CHAINSAW, // Boolean
+	USING_CHOMP, // Boolean
 	USING_DIVING_TACKLE, // Boolean
 	USING_MODIFYING_SKILL, // Boolean
 	USING_PILING_ON, // Boolean,

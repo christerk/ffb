@@ -1,8 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -12,8 +10,6 @@ import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
-import com.fumbbl.ffb.mechanics.GameMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -22,7 +18,6 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -90,6 +85,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.SECURE_THE_BALL);
 			add(ClientAction.FORGO);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.CHOMP);
 		}};
 	}
 
@@ -117,6 +113,9 @@ public class SelectLogicModule extends LogicModule {
 					break;
 				case STAB:
 					communication.sendActingPlayer(player, PlayerAction.STAB, false);
+					break;
+				case CHOMP:
+					communication.sendActingPlayer(player, PlayerAction.CHOMP, false);
 					break;
 				case BLITZ:
 					communication.sendActingPlayer(player, PlayerAction.BLITZ_MOVE, false);
@@ -358,23 +357,10 @@ public class SelectLogicModule extends LogicModule {
 		if (isThenIStartedBlastinAvailable(player)) {
 			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
-		return context;
-	}
-
-	public boolean isSpecialBlockActionAvailable(Player<?> player, PlayerState playerState) {
-		Game game = client.getGame();
-		GameMechanic mechanic =
-			(GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-		if ((playerState != null) && !player.hasSkillProperty(NamedProperties.preventRegularBlockAction)
-			&& mechanic.isBlockActionAllowed(game.getTurnMode())
-			&& (playerState.getBase() != PlayerState.PRONE)
-		) {
-			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-			int blockablePlayers =
-				UtilPlayer.findAdjacentBlockablePlayers(game, game.getTeamAway(), playerCoordinate).length;
-			return (blockablePlayers > 0);
+		if (isChompAvailable(player)) {
+			context.add(ClientAction.CHOMP);
 		}
-		return false;
+		return context;
 	}
 
 	@Override
