@@ -246,10 +246,6 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		ReRollSource singleDieReRollSource =
 			UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.SINGLE_DIE);
 
-		System.out.println("Apply single-block reroll: source=" + getReRollSource()
-			+ " dieIndex=" + dieIndex
-			+ " length=" + (fBlockRoll != null ? fBlockRoll.length : -1));
-
 		if (getReRollSource() == ReRollSources.PRO ||
 			(getReRollSource() == singleDieReRollSource && singleDieReRollSource != null)) {
 			if (getReRollSource() == ReRollSources.PRO) {
