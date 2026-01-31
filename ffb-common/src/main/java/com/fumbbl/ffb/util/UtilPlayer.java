@@ -22,7 +22,6 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
-import com.fumbbl.ffb.skill.bb2025.special.WorkingInTandem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -660,15 +659,12 @@ public class UtilPlayer {
 	}
 
 	public static boolean isPassingToPartner(Player<?> thrower, Player<?> target) {
-		if (thrower == null || target == null) {
+		if (target == null) {
 			return false;
 		}
-		Skill tandemSkill = thrower.getSkillWithProperty(NamedProperties.canPassToPartnerWithNoModifiers);
-		if (tandemSkill == null) {
-			return false;
-		}
-		WorkingInTandem wit = (WorkingInTandem) tandemSkill;
-		return wit.isPassVariant(thrower) && wit.isBlockVariant(target);
+		Skill tandem = thrower.getSkillWithProperty(NamedProperties.canPassToPartnerWithNoModifiers);
+		return tandem != null && "pass".equalsIgnoreCase(thrower.getSkillValueExcludingTemporaryOnes(tandem))
+			&& "block".equalsIgnoreCase(target.getSkillValueExcludingTemporaryOnes(tandem));
 	}
 
 }

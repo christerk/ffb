@@ -149,7 +149,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 			PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
 
-			if (passingDistance != null && UtilPlayer.isPassingToPartner(thrower, target)){
+			if (passingDistance != null && UtilPlayer.isPassingToPartner(thrower, target)) {
 				passingDistance = PassingDistance.PASS_TO_PARTNER;
 			}
 			rangeRuler = UtilRangeRuler.createRangeRuler(game, thrower, pCoordinate, passingDistance);

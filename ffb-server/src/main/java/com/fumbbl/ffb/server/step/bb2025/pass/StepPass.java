@@ -178,7 +178,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			false);
 
 		Player<?> target = game.getFieldModel().getPlayer(game.getPassCoordinate());
-		if (passingDistance != null && UtilPlayer.isPassingToPartner(game.getThrower(), target)){
+		if (passingDistance != null && UtilPlayer.isPassingToPartner(game.getThrower(), target)) {
 			passingDistance = PassingDistance.PASS_TO_PARTNER;
 		}
 

@@ -49,14 +49,6 @@ public class WorkingInTandem extends Skill {
 		return evaluator;
 	}
 
-	public boolean isBlockVariant(Player<?> player) {
-		return "block".equalsIgnoreCase(player.getSkillValueExcludingTemporaryOnes(this));
-	}
-
-	public boolean isPassVariant(Player<?> player) {
-		return "pass".equalsIgnoreCase(player.getSkillValueExcludingTemporaryOnes(this));
-	}
-
 	private static class Evaluator implements SkillValueEvaluator {
 		@Override
 		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
