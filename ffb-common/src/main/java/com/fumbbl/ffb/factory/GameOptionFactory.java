@@ -384,6 +384,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Special actions can be declared when prone")
 					.setMessageFalse("Special actions can only be declared when standing");
+			case ALLOW_BRAWLER_ON_BOTH_BLOCKS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Brawler can be used twice on Frenzy or Multi Block")
+					.setMessageFalse("Brawler can only be used once per activation");
 			default:
 				return null;
 		}

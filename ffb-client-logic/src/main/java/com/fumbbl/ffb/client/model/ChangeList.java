@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("TTM and Gaze not available from unless game option \"allowSpecialActionsFromProne\" is set")
+			.addFeature("Brawler can only be used once per activation unless game option \"allowBrawlerOnBothBlocks\" is set")
 		);
 
 		versions.add(new VersionChangeList("2026-01-31")
