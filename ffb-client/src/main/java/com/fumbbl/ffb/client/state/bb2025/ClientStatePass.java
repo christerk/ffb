@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.client.state.bb2025;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.ActionKey;
@@ -18,10 +20,12 @@ import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.client.state.logic.bb2025.PassLogicModule;
 import com.fumbbl.ffb.client.util.UtilClientCursor;
-import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.NetCommand;
+import com.fumbbl.ffb.util.UtilPlayer;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
 import java.util.HashMap;
@@ -136,10 +140,19 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		RangeRuler rangeRuler;
 		Game game = getClient().getGame();
 		if (fShowRangeRuler && (game.getPassCoordinate() == null)) {
-			ActingPlayer actingPlayer = game.getActingPlayer();
 			UserInterface userInterface = getClient().getUserInterface();
 			FieldComponent fieldComponent = userInterface.getFieldComponent();
-			rangeRuler = UtilRangeRuler.createRangeRuler(game, actingPlayer.getPlayer(), pCoordinate, false);
+			Player<?> thrower = game.getActingPlayer().getPlayer();
+			Player<?> target = game.getFieldModel().getPlayer(pCoordinate);
+
+			FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
+			PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, pCoordinate, false);
+
+			if (passingDistance != null && UtilPlayer.isPassingToPartner(thrower, target)){
+				passingDistance = PassingDistance.PASS_TO_PARTNER;
+			}
+			rangeRuler = UtilRangeRuler.createRangeRuler(game, thrower, pCoordinate, passingDistance);
 			game.getFieldModel().setRangeRuler(rangeRuler);
 			if (rangeRuler != null) {
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_PASS);

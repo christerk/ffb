@@ -11,11 +11,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
-import com.fumbbl.ffb.modifiers.ModifierType;
-import com.fumbbl.ffb.modifiers.PassContext;
-import com.fumbbl.ffb.modifiers.PassModifier;
 import com.fumbbl.ffb.util.StringTool;
-import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,17 +42,6 @@ public class WorkingInTandem extends Skill {
 		registerRerollSource(ReRolledActions.SINGLE_BLOCK_DIE, ReRollSources.WORKING_IN_TANDEM);
 
 		registerProperty(NamedProperties.canPassToPartnerWithNoModifiers);
-		registerModifier(new PassModifier(getName(), "No range mod when passing to partner", 0, ModifierType.REGULAR) {
-			@Override
-			public boolean appliesToContext(Skill skill, PassContext context) {
-				Player<?> partner = context.getGame().getFieldModel().getPlayer(context.getTarget());
-				return isPassVariant(context.getPlayer())
-					&& partner != null
-					&& UtilCards.hasSkill(partner, WorkingInTandem.this)
-					&& isBlockVariant(partner)
-					&& super.appliesToContext(skill, context);
-			}
-		});
 	}
 
 	@Override
