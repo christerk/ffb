@@ -32,6 +32,7 @@ public enum GameOptionId implements INamedObject {
 	SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo"), STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge"),
 	SPIKED_BALL("spikedBall"), DIVING_TACKLE_LEAVING_TZ_ONLY("divingTackleLeavingTzOnly"),
 	ALLOW_SPECIAL_ACTIONS_FROM_PRONE("allowSpecialActionsFromProne"), ALLOW_BRAWLER_ON_BOTH_BLOCKS("allowBrawlerOnBothBlocks"),
+	ASK_FOR_KICK_AFTER_ROLL("askForKickAfterRoll"),
 
 	ARGUE_THE_CALL("argueTheCall"), MVP_NOMINATIONS("mvpNominations"), PETTY_CASH_AFFECTS_TV("pettyCashAffectsTv"),
 	WIZARD_AVAILABLE("wizardAvailable"),
