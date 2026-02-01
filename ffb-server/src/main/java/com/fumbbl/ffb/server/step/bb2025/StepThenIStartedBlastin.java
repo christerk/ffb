@@ -168,15 +168,12 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 				if (getReRolledAction() != ReRolledActions.BLASTIN_SOLVES_EVERYTHING && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.BLASTIN_SOLVES_EVERYTHING, 3, false)) {
 					setReRolledAction(ReRolledActions.BLASTIN_SOLVES_EVERYTHING);
 					getResult().setNextAction(StepAction.CONTINUE);
-					return;
 				} else {
 					fail();
 				}
 			}
 
 		}
-		publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, Boolean.TRUE));
-    getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
 	private void fail() {
@@ -210,6 +207,7 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 		getResult().setAnimation(new Animation(AnimationType.THEN_I_STARTED_BLASTIN,
 			startCoordinate,
 			targetCoordinate));
+		publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, Boolean.TRUE));
 	}
 
 	@Override
