@@ -30,7 +30,8 @@ public enum PlayerAction implements INamedObject {
 	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"), BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
 	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
 	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"), AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\""),
-	FORGO("forgo", 54, "forgoes the activation."), INCORPOREAL("incorporeal", 55, "becomes incorporeal"), CHOMP("chomp", 55, "starts a Chomp action");
+	FORGO("forgo", 54, "forgoes the activation."), INCORPOREAL("incorporeal", 55, "becomes incorporeal"), CHOMP("chomp", 56, "starts a Chomp action"),
+	PUNT("punt", 57, null), PUNT_MOVE("punt", 57, "starts a Punt action");
 
 	private final String fName;
 	private final int fType;

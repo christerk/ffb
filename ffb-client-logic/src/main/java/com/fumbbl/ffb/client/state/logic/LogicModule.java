@@ -390,6 +390,15 @@ public abstract class LogicModule {
 			&& !player.hasSkillProperty(NamedProperties.preventRegularPassAction));
 	}
 
+	public boolean isPuntActionAvailable(Player<?> player, boolean treacherousAvailable) {
+		Game game = client.getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		return (!game.getTurnData().isPuntUsed()
+			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
+			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
+			&& !player.hasSkillProperty(NamedProperties.preventRegularPassAction));
+	}
+
 	public boolean isHandOverActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);

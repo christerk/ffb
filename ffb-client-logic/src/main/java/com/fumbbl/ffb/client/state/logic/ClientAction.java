@@ -39,6 +39,7 @@ public enum ClientAction {
 	PASS,
 	PASS_LONG,
 	PASS_SHORT,
+	PUNT,
 	RAIDING_PARTY,
 	RECOVER,
 	SECURE_THE_BALL,
