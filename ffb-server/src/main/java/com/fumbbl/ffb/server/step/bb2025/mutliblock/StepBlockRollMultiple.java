@@ -37,6 +37,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockOrReRollChoiceForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseBrawler;
 import com.fumbbl.ffb.net.commands.ClientCommandUseHatred;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.mixed.ReportBlockReRoll;
@@ -246,6 +248,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 							getResult().setSound(SoundId.BLOCK);
 
 							if (state.reRollSource == ReRollSources.BRAWLER) {
+								if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_BRAWLER_ON_BOTH_BLOCKS)) {
+									actingPlayer.markSkillUsed(ReRollSources.BRAWLER, ReRolledActions.SINGLE_BOTH_DOWN);
+								}
 								handleImplicitReRollIndex(actingPlayer.getPlayer(), roll, BlockResult.BOTH_DOWN);
 							} else if (state.reRollSource == ReRollSources.HATRED) {
 								handleImplicitReRollIndex(actingPlayer.getPlayer(), roll, BlockResult.SKULL);
@@ -352,7 +357,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBothDown);
 		boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
-			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
+			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer())
+			&& (UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_BRAWLER_ON_BOTH_BLOCKS) ||
+			!actingPlayer.isSkillUsed(bothdownRrSkill));
 
 		if (brawlerOption) {
 			for (int roll : blockRoll.getBlockRoll()) {

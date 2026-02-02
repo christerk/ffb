@@ -10,8 +10,14 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+      .addFeature("Violent Innovator with Ball and Chain")
+
+		);
+
+		versions.add(new VersionChangeList("2026-02-01")
 			.addFeature("TTM and Gaze not available from unless game option \"allowSpecialActionsFromProne\" is set")
-			.addFeature("Violent Innovator with Ball and Chain")
+			.addFeature("Brawler can only be used once per activation unless game option \"allowBrawlerOnBothBlocks\" is set")
+			.addFeature("Game option \"askForKickAfterRoll\"")
 		);
 
 		versions.add(new VersionChangeList("2026-01-31")

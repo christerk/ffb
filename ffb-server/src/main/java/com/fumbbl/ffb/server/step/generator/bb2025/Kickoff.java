@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.server.step.generator.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.step.IStepLabel;
@@ -33,8 +35,12 @@ public class Kickoff extends com.fumbbl.ffb.server.step.generator.Kickoff {
 		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
 		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.MASTER_CHEF);
-		sequence.add(StepId.KICKOFF);		
-		sequence.add(StepId.KICKOFF_SCATTER_ROLL);
+		sequence.add(StepId.KICKOFF);
+		if (UtilGameOption.isOptionEnabled(gameState.getGame(), GameOptionId.ASK_FOR_KICK_AFTER_ROLL)) {
+			sequence.add(StepId.KICKOFF_SCATTER_ROLL_ASK_AFTER);
+		} else {
+			sequence.add(StepId.KICKOFF_SCATTER_ROLL);
+		}
 		sequence.add(StepId.KICKOFF_RETURN);
 		// may insert select sequence at this point
 		sequence.add(StepId.KICKOFF_RESULT_ROLL);
