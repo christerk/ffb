@@ -195,6 +195,7 @@ public interface IIconProperty {
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
 	String ACTION_SECURE_THE_BALL = "action.secureTheBall";
 	String ACTION_CHOMP = "action.chomp";
+	String ACTION_PUNT = "action.punt";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";
@@ -242,6 +243,7 @@ public interface IIconProperty {
 	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
 	String CURSOR_SKETCH = "cursor.sketch";
 	String CURSOR_CHOMP = "cursor.chomp";
+	String CURSOR_PUNT = "cursor.punt";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
