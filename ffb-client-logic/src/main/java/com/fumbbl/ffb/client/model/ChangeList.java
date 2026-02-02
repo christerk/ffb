@@ -10,6 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+      .addFeature("Violent Innovator with Ball and Chain")
+
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")

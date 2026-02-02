@@ -10,6 +10,8 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
@@ -17,7 +19,9 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProne;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProneForSpp;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunned;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockStunnedForSpp;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropGFI;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeSabotaged;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeSaboteur;
@@ -34,6 +38,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,10 +135,15 @@ public class StepDropFallingPlayers extends AbstractStep {
 			InjuryTypeServer<?> injuryType = new InjuryTypeBlock(InjuryTypeBlock.Mode.REGULAR, false);
 
 			if (state.oldDefenderState != null) {
+				Player<?> attacker = game.getActingPlayer().getPlayer();
+				// Ball and Chain + Violent Innovator
+				boolean grantsSpp = UtilCards.hasSkillWithProperty(attacker, NamedProperties.movesRandomly)
+					&& UtilCards.hasSkillWithProperty(attacker, NamedProperties.grantsSppFromSpecialActionsCas)
+					&& game.getDefender().getTeam() != attacker.getTeam();
 				if (state.oldDefenderState.isStunned()) {
-					injuryType = new InjuryTypeBlockStunned();
+					injuryType = (grantsSpp)	? new InjuryTypeBlockStunnedForSpp() : new InjuryTypeBlockStunned();
 				} else if (state.oldDefenderState.isProneOrStunned()) {
-					injuryType = new InjuryTypeBlockProne();
+					injuryType = (grantsSpp)	? new InjuryTypeBlockProneForSpp() : new InjuryTypeBlockProne();
 				}
 			}
 			if (state.saboteurTriggeredDefender) {
