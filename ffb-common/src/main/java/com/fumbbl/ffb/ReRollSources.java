@@ -40,6 +40,7 @@ public class ReRollSources {
 	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
 	public static final ReRollSource SWOOP = new ReRollSource("Swoop");
 	public static final ReRollSource HATRED = new ReRollSource("Hatred");
+	public static final ReRollSource PUNT = new ReRollSource("Punt");
 
 	private final Map<String, ReRollSource> values;
 

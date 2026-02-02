@@ -111,6 +111,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPerformTwoBlocksAfterFailedFury = new NamedProperty("Can Perform Two Blocks After Failed Fury");
 	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");
 	public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
+	public static final ISkillProperty canPunt = new NamedProperty("Can Punt");
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
