@@ -380,6 +380,18 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Animal Savagery lash out ends activation")
 					.setMessageFalse("Animal Savagery lash out does not end activation");
+			case ALLOW_SPECIAL_ACTIONS_FROM_PRONE:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Special actions can be declared when prone")
+					.setMessageFalse("Special actions can only be declared when standing");
+			case ALLOW_BRAWLER_ON_BOTH_BLOCKS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Brawler can be used twice on Frenzy or Multi Block")
+					.setMessageFalse("Brawler can only be used once per activation");
+			case ASK_FOR_KICK_AFTER_ROLL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Kick use is decided after the roll")
+					.setMessageFalse("Kick use has to be decided before the roll");
 			default:
 				return null;
 		}

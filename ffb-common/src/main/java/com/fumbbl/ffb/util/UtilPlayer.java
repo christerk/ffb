@@ -511,7 +511,7 @@ public class UtilPlayer {
 		TtmMechanic mechanic =
 				(TtmMechanic) pGame.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 		return ((pThrower != null) && (!pCheckPassUsed || mechanic.isTtmAvailable(pGame.getTurnData()))
-				&& mechanic.canThrow(pThrower)
+				&& mechanic.canThrow(pGame, pThrower)
 				&& (mechanic.findThrowableTeamMates(pGame, pThrower).length > 0));
 	}
 

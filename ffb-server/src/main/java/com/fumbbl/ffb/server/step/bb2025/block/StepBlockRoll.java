@@ -29,6 +29,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseConsummateReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseMultiBlockDiceReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSingleBlockDieReRoll;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBlock;
 import com.fumbbl.ffb.report.ReportBlockRoll;
 import com.fumbbl.ffb.report.mixed.ReportBlockReRoll;
@@ -142,7 +144,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
 					}
 					if (rerollSkill == null) {
-						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);
+						rerollSkill =
+							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod);
 					}
 					if (rerollSkill != null) {
 						setReRolledAction(ReRolledActions.BLOCK);
@@ -209,6 +212,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				getResult().addReport(new ReportBlock(game.getDefenderId()));
 				getResult().setSound(SoundId.BLOCK);
 				if (getReRollSource() == ReRollSources.BRAWLER) {
+					if (!UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_BRAWLER_ON_BOTH_BLOCKS)) {
+						actingPlayer.markSkillUsed(ReRollSources.BRAWLER, ReRolledActions.SINGLE_BOTH_DOWN);
+					}
 					handleImplicitReRollIndex(actingPlayer, BlockResult.BOTH_DOWN);
 				} else if (getReRollSource() == ReRollSources.HATRED) {
 					handleImplicitReRollIndex(actingPlayer, BlockResult.SKULL);
@@ -309,7 +315,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 			if (actingPlayer.getPlayerAction().isBlitzing()) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak + UM on blitz
-			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer,
+				NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak on Block
 			} else if (UtilPlayer.isAttackerWorkingInTandem(game, actingPlayer.getPlayer(), game.getDefender())) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Lucien with Valen marking
@@ -354,7 +361,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 		BlockResultFactory factory = game.getFactory(Factory.BLOCK_RESULT);
 		Skill bothdownRrSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canRerollSingleBothDown);
 		boolean brawlerOption = !actingPlayer.getPlayerAction().isBlitzing()
-			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
+			&& bothdownRrSkill != null && !bothdownRrSkill.conflictsWithAnySkill(actingPlayer.getPlayer())
+			&& (UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_BRAWLER_ON_BOTH_BLOCKS) ||
+			!actingPlayer.isSkillUsed(bothdownRrSkill));
 
 		if (brawlerOption) {
 			for (int roll : fBlockRoll) {

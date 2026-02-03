@@ -120,6 +120,7 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
+	KICKOFF_SCATTER_ROLL_ASK_AFTER("kickoffScatterRollAskAfter"), // phase.kickoff
 	LOOK_INTO_MY_EYES("lookIntoMyEyes"), // action.special
 	MISSED_PASS("missedPass"), // action.pass
 	MASTER_CHEF("masterChef"), // phase.kickoff
