@@ -339,8 +339,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
 		if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieOncePerPeriod)
-			|| (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking)
-				&& UtilPlayer.isDefenderMarkedByPartner(game, game.getActingPlayer().getPlayer(), game.getPlayerById(roll.getTargetId())))) {
+			|| (UtilPlayer.isAttackerWorkingInTandem(game, game.getActingPlayer().getPlayer(), game.getPlayerById(roll.getTargetId())))) {
 			addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BLOCK_DIE, game);
 		}
 

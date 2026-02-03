@@ -46,18 +46,4 @@ public class UtilRangeRuler {
 		}
 		return rangeRuler;
 	}
-
-	public static RangeRuler createRangeRuler(Game game, Player<?> thrower, FieldCoordinate targetCoordinate,	PassingDistance passingDistance) {
-		RangeRuler rangeRuler = null;
-		if (game != null && thrower != null && targetCoordinate != null && passingDistance != null) {
-			PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
-				.forName(Mechanic.Type.PASS.name());
-			PassModifierFactory factory = game.getFactory(FactoryType.Factory.PASS_MODIFIER);
-			Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, thrower, passingDistance, false));
-			Optional<Integer> minimumRoll = mechanic.minimumRoll(thrower, passingDistance, passModifiers, null);
-			rangeRuler = new RangeRuler(thrower.getId(), targetCoordinate, minimumRoll.orElse(0), false);
-		}
-		return rangeRuler;
-	}
-
 }

@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.WorkingInTandem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -663,19 +664,22 @@ public class UtilPlayer {
 			return false;
 		}
 		Skill tandem = thrower.getSkillWithProperty(NamedProperties.canPassToPartnerWithNoModifiers);
-		return tandem != null && "pass".equalsIgnoreCase(thrower.getSkillValueExcludingTemporaryOnes(tandem))
-			&& "block".equalsIgnoreCase(target.getSkillValueExcludingTemporaryOnes(tandem));
+		return tandem != null && WorkingInTandem.VARIANT_PASS.equalsIgnoreCase(thrower.getSkillValueExcludingTemporaryOnes(tandem))
+			&& WorkingInTandem.VARIANT_BLOCK.equalsIgnoreCase(target.getSkillValueExcludingTemporaryOnes(tandem));
 	}
 
-	public static boolean isDefenderMarkedByPartner(Game game, Player<?> attacker, Player<?> defender) {
+	public static boolean isAttackerWorkingInTandem(Game game, Player<?> attacker, Player<?> defender) {
 		Skill tandem = attacker.getSkillWithProperty(NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
-		if (tandem == null || !"block".equalsIgnoreCase(attacker.getSkillValueExcludingTemporaryOnes(tandem))) {
+		if (tandem == null || !WorkingInTandem.VARIANT_BLOCK.equalsIgnoreCase(attacker.getSkillValueExcludingTemporaryOnes(tandem))) {
 			return false;
 		}
-		Player<?>[] markers = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, defender, 
-			game.getFieldModel().getPlayerCoordinate(defender), tandem, false);
-		return ArrayTool.isProvided(markers) && Arrays.stream(markers)
-			.anyMatch(p -> p != attacker && "pass".equalsIgnoreCase(p.getSkillValueExcludingTemporaryOnes(tandem)));
+		return partnerMarksDefender(game, defender, tandem);
+	}
+
+	public static boolean partnerMarksDefender(Game game, Player<?> defender, Skill skill) {
+		Player<?>[] players = UtilPlayer.findAdjacentOpposingPlayersWithSkill(
+			game, defender, game.getFieldModel().getPlayerCoordinate(defender), skill, false);
+		return ArrayTool.isProvided(players) && players.length > 1;
 	}
 
 }

@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 @RulesCollection(Rules.BB2025)
 public class WorkingInTandem extends Skill {
 	private final Evaluator evaluator;
+	public static final String VARIANT_BLOCK = "block";
+	public static final String VARIANT_PASS = "pass";
 
 	public WorkingInTandem() {
 		super("Working in Tandem", SkillCategory.TRAIT);

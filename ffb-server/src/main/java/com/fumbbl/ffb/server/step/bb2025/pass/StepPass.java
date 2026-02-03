@@ -20,7 +20,6 @@ import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -48,7 +47,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
 import java.util.Set;
@@ -176,11 +174,6 @@ public class StepPass extends AbstractStepWithReRoll {
 		PassMechanic mechanic = (PassMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
 		PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate, game.getPassCoordinate(),
 			false);
-
-		Player<?> target = game.getFieldModel().getPlayer(game.getPassCoordinate());
-		if (passingDistance != null && UtilPlayer.isPassingToPartner(game.getThrower(), target)) {
-			passingDistance = PassingDistance.PASS_TO_PARTNER;
-		}
 
 		Set<PassModifier> passModifiers = factory.findModifiers(new PassContext(game, game.getThrower(),
 			passingDistance, false));

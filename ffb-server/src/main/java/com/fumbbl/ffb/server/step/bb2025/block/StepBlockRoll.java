@@ -135,7 +135,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
 					Skill rerollSkill = null;
-					if (UtilPlayer.isDefenderMarkedByPartner(getGameState().getGame(), actingPlayer.getPlayer(), getGameState().getGame().getDefender())) {
+					if (UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), getGameState().getGame().getDefender())) {
 						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
 					}
 					if (rerollSkill == null && actingPlayer.getPlayerAction().isBlitzing()) {
@@ -311,8 +311,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak + UM on blitz
 			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak on Block
-			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking)
-					&& UtilPlayer.isDefenderMarkedByPartner(game, actingPlayer.getPlayer(), game.getDefender())) {
+			} else if (UtilPlayer.isAttackerWorkingInTandem(game, actingPlayer.getPlayer(), game.getDefender())) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Lucien with Valen marking
 			}
 
