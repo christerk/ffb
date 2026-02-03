@@ -10,8 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")			
-		  .addBugfix("\"Blastin' Solves Everything\" roll-2 flow fixed")
-      .addFeature("Violent Innovator with Ball and Chain")
+			.addBugfix("\"Blastin' Solves Everything\" roll-2 flow fixed")
+			.addFeature("Violent Innovator with Ball and Chain")
 			.addFeature("Swift Brothers")
 		);
 
