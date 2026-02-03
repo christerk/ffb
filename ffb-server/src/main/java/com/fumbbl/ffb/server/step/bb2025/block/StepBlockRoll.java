@@ -137,11 +137,14 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
 					Skill rerollSkill = null;
-					if (UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), getGameState().getGame().getDefender())) {
-						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
+					if (UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), 
+						getGameState().getGame().getDefender())) {
+						rerollSkill = 
+							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
 					}
 					if (rerollSkill == null && actingPlayer.getPlayerAction().isBlitzing()) {
-						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
+						rerollSkill = 
+							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
 					}
 					if (rerollSkill == null) {
 						rerollSkill =
