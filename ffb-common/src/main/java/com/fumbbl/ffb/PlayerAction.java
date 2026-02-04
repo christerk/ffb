@@ -31,7 +31,7 @@ public enum PlayerAction implements INamedObject {
 	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
 	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"), AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\""),
 	FORGO("forgo", 54, "forgoes the activation."), INCORPOREAL("incorporeal", 55, "becomes incorporeal"), CHOMP("chomp", 56, "starts a Chomp action"),
-	PUNT("punt", 57, null), PUNT_MOVE("punt", 57, "starts a Punt action");
+	PUNT("punt", 57, null), PUNT_MOVE("puntMove", 57, "starts a Punt action");
 
 	private final String fName;
 	private final int fType;
@@ -68,7 +68,7 @@ public enum PlayerAction implements INamedObject {
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
 			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE
-			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ || this == SECURE_THE_BALL;
+			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ || this == SECURE_THE_BALL || this == PUNT_MOVE;
 	}
 
 	public boolean isPassing() {
