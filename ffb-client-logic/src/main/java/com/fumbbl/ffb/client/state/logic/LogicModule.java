@@ -30,6 +30,8 @@ import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -345,7 +347,7 @@ public abstract class LogicModule {
 			UtilPlayer.findPlayersWithTackleZonesTwoSquaresAway(game, game.getTeamAway(), ballCoordinate);
 
 		return fieldModel.isBallInPlay() && fieldModel.isBallMoving() && !game.getTurnData().isSecureTheBallUsed()
-			&& !player.hasSkillProperty(NamedProperties.preventSecureTheBall)
+			&& !player.hasSkillProperty(NamedProperties.preventSecureTheBallAction)
 			&& !player.getPosition().getKeywords().contains(Keyword.BIG_GUY)
 			&& !ArrayTool.isProvided(opponents);
 	}
@@ -396,7 +398,8 @@ public abstract class LogicModule {
 		return (!game.getTurnData().isPuntUsed()
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
-			&& !player.hasSkillProperty(NamedProperties.preventRegularPassAction));
+			&& (!(playerState.getBase() == PlayerState.PRONE) || UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE))
+			&& !player.hasSkillProperty(NamedProperties.preventPuntAction));
 	}
 
 	public boolean isHandOverActionAvailable(Player<?> player, boolean treacherousAvailable) {

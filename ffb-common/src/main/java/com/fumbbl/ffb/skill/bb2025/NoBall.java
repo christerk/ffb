@@ -25,6 +25,8 @@ public class NoBall extends Skill {
 		registerProperty(NamedProperties.preventHoldBall);
 		registerProperty(NamedProperties.preventRegularPassAction);
 		registerProperty(NamedProperties.preventRegularHandOverAction);
+		registerProperty(NamedProperties.preventSecureTheBallAction);
+		registerProperty(NamedProperties.preventPuntAction);
 	}
 
 }

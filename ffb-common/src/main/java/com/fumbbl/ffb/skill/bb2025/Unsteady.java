@@ -15,7 +15,7 @@ public class Unsteady extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerProperty(NamedProperties.preventSecureTheBall);
+		registerProperty(NamedProperties.preventSecureTheBallAction);
 	}
 
 }

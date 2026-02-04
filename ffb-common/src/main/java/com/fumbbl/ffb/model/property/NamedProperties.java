@@ -239,7 +239,8 @@ public class NamedProperties {
 	public static final ISkillProperty preventRegularHandOverAction = new NamedProperty(
 		"Prevent Regular Hand Over Action");
 	public static final ISkillProperty preventRegularPassAction = new NamedProperty("Prevent Regular Pass Action");
-	public static final ISkillProperty preventSecureTheBall = new NamedProperty("Prevent Secure The Ball");
+	public static final ISkillProperty preventPuntAction = new NamedProperty("Prevent Punt Action");
+	public static final ISkillProperty preventSecureTheBallAction = new NamedProperty("Prevent Secure The Ball Action");
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");
