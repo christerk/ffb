@@ -48,6 +48,7 @@ import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,8 +137,13 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
 					Skill rerollSkill = null;
-					if (actingPlayer.getPlayerAction().isBlitzing()) {
-						rerollSkill =
+					if (UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), 
+						getGameState().getGame().getDefender())) {
+						rerollSkill = 
+							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
+					}
+					if (rerollSkill == null && actingPlayer.getPlayerAction().isBlitzing()) {
+						rerollSkill = 
 							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz);
 					}
 					if (rerollSkill == null) {
@@ -260,7 +266,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			fBlockRoll = Arrays.copyOf(fBlockRoll, fBlockRoll.length);
 			fBlockRoll[dieIndex] = reRolledWithPro[0];
 		} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM
-			|| getReRollSource() == ReRollSources.LORD_OF_CHAOS) {
+			|| getReRollSource() == ReRollSources.LORD_OF_CHAOS
+			|| getReRollSource() == ReRollSources.WORKING_IN_TANDEM) {
 			if (dieIndex >= 0) {
 				int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 				getResult().addReport(
@@ -314,6 +321,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer,
 				NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
 				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak on Block
+			} else if (UtilPlayer.isAttackerWorkingInTandem(game, actingPlayer.getPlayer(), game.getDefender())) {
+				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Lucien with Valen marking
 			}
 
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);

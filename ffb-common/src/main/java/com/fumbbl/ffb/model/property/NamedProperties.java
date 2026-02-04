@@ -101,6 +101,7 @@ public class NamedProperties {
 	public static final ISkillProperty canMoveOpenTeamMate = new NamedProperty("Can Move Open Team-mate");
 	public static final ISkillProperty canMoveWhenOpponentPasses = new NamedProperty("Can Move When Opponent Passes");
 	public static final ISkillProperty canPassToAnySquare = new NamedProperty("Can Pass To Any Square");
+	public static final ISkillProperty canPassToPartnerWithNoModifiers = new NamedProperty("Can Pass To Partner With No Modifiers");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlock = new NamedProperty(
 		"Can Perform Armour Roll Instead Of Block");
 	public static final ISkillProperty canPerformArmourRollInsteadOfBlockThatMightFail = new NamedProperty(
@@ -124,6 +125,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRerollSingleDieOncePerPeriod = new NamedProperty("Can Reroll Single Die Once Per Period");
 	public static final ISkillProperty canRerollSingleBlockDieOncePerPeriod = new NamedProperty("Can Reroll Single Block Die Once Per Period");
 	public static final ISkillProperty canRerollSingleBlockDieDuringBlitz = new NamedProperty("Can Reroll Single Block Die During Blitz");
+	public static final ISkillProperty canRerollSingleBlockDieWhenPartnerIsMarking = new NamedProperty("Can Reroll Single Block Die When Partner Is Marking");
 	public static final ISkillProperty canRerollSingleSkull = new NamedProperty("Can Reroll Single Skull");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");

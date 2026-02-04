@@ -61,6 +61,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -342,7 +343,8 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
-		if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+		if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieOncePerPeriod)
+			|| (UtilPlayer.isAttackerWorkingInTandem(game, game.getActingPlayer().getPlayer(), game.getPlayerById(roll.getTargetId())))) {
 			addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BLOCK_DIE, game);
 		}
 
@@ -401,6 +403,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 			} else if (singleDieReRollSource != null && state.reRollSource == singleDieReRollSource) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleDieOncePerPeriod,
 					new int[]{roll.getProIndex()});
+			} else if (state.reRollSource == ReRollSources.WORKING_IN_TANDEM) {
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking,
+					roll.getReRollDiceIndexes());
 			} else if (state.reRollSource == ReRollSources.SAVAGE_BLOW) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice,
 					roll.getReRollDiceIndexes());

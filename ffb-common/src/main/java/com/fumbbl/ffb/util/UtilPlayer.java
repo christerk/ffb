@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.WorkingInTandem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -656,6 +657,29 @@ public class UtilPlayer {
 				.toArray(Player[]::new);
 		}		
 		return divingTacklers;
+	}
+
+	public static boolean isPassingToPartner(Player<?> thrower, Player<?> target) {
+		if (target == null) {
+			return false;
+		}
+		Skill tandem = thrower.getSkillWithProperty(NamedProperties.canPassToPartnerWithNoModifiers);
+		return tandem != null && WorkingInTandem.VARIANT_PASS.equalsIgnoreCase(thrower.getSkillValueExcludingTemporaryOnes(tandem))
+			&& WorkingInTandem.VARIANT_BLOCK.equalsIgnoreCase(target.getSkillValueExcludingTemporaryOnes(tandem));
+	}
+
+	public static boolean isAttackerWorkingInTandem(Game game, Player<?> attacker, Player<?> defender) {
+		Skill tandem = attacker.getSkillWithProperty(NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
+		if (tandem == null || !WorkingInTandem.VARIANT_BLOCK.equalsIgnoreCase(attacker.getSkillValueExcludingTemporaryOnes(tandem))) {
+			return false;
+		}
+		return partnerMarksDefender(game, defender, tandem);
+	}
+
+	public static boolean partnerMarksDefender(Game game, Player<?> defender, Skill skill) {
+		Player<?>[] players = UtilPlayer.findAdjacentOpposingPlayersWithSkill(
+			game, defender, game.getFieldModel().getPlayerCoordinate(defender), skill, false);
+		return ArrayTool.isProvided(players) && players.length > 1;
 	}
 
 }
