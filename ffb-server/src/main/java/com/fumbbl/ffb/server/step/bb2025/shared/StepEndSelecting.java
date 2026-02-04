@@ -366,6 +366,7 @@ public final class StepEndSelecting extends AbstractStep {
       case KICK_TEAM_MATE_MOVE:
       case HAND_OVER_MOVE:
       case GAZE:
+      case PUNT_MOVE:
       case SECURE_THE_BALL:
         if (pWithParameter) {
           moveGenerator.pushSequence(new Move.SequenceParams(getGameState(), fMoveStack, fGazeVictimId, moveStart, ballAndChainRrSetting));
