@@ -332,6 +332,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 		treacherous.put(ClientAction.HAND_OVER,
 			new MenuItemConfig("Hand Over Action (Treacherous)", IIconProperty.ACTION_HAND_OVER,
 				IPlayerPopupMenuKeys.KEY_HAND_OVER));
+		treacherous.put(ClientAction.PUNT,
+			new MenuItemConfig("Punt (Treacherous)", IIconProperty.ACTION_HAND_OVER,
+				IPlayerPopupMenuKeys.KEY_HAND_OVER));
 		return configs;
 	}
 }
