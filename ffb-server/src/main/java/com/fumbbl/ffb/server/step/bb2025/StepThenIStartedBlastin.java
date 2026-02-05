@@ -133,29 +133,6 @@ public class StepThenIStartedBlastin extends AbstractStepWithReRoll {
 
 
 			actingPlayer.markSkillUsed(skill);
-			switch (actingPlayer.getPlayerAction()) {
-				case BLITZ_MOVE:
-				case KICK_EM_BLITZ:
-					game.getTurnData().setBlitzUsed(true);
-					break;
-				case FOUL_MOVE:
-					if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
-						game.getTurnData().setFoulUsed(true);
-					}
-					break;
-				case HAND_OVER_MOVE:
-					game.getTurnData().setHandOverUsed(true);
-					break;
-				case PASS_MOVE:
-				case THROW_TEAM_MATE_MOVE:
-					game.getTurnData().setPassUsed(true);
-					break;
-				case KICK_TEAM_MATE_MOVE:
-					game.getTurnData().setKtmUsed(true);
-					break;
-				default:
-					break;
-			}
 
 			roll = getGameState().getDiceRoller().rollSkill();
 
