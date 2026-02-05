@@ -106,17 +106,23 @@ public class MoveLogicModule extends LogicModule {
 					communication.sendActingPlayer(player, PlayerAction.KICK_TEAM_MATE, actingPlayer.isJumping());
 					break;
 				case MOVE:
-					if (PlayerAction.GAZE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(player, PlayerAction.MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.PASS == actingPlayer.getPlayerAction() || PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(player, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.THROW_TEAM_MATE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(player, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isJumping());
-					}
-					if (PlayerAction.KICK_TEAM_MATE == actingPlayer.getPlayerAction()) {
-						communication.sendActingPlayer(player, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isJumping());
+					switch (actingPlayer.getPlayerAction()) {
+						case GAZE:
+							communication.sendActingPlayer(player, PlayerAction.MOVE, actingPlayer.isJumping());
+							break;
+						case PASS:
+						case HAIL_MARY_PASS:
+							communication.sendActingPlayer(player, PlayerAction.PASS_MOVE, actingPlayer.isJumping());
+							break;
+						case THROW_TEAM_MATE:
+							communication.sendActingPlayer(player, PlayerAction.THROW_TEAM_MATE_MOVE, actingPlayer.isJumping());
+							break;
+						case KICK_TEAM_MATE:
+							communication.sendActingPlayer(player, PlayerAction.KICK_TEAM_MATE_MOVE, actingPlayer.isJumping());
+							break;
+						default:
+							plugin.performAvailableAction(action, actingPlayer, this, communication);
+							break;
 					}
 					break;
 				case GAZE:
@@ -209,8 +215,10 @@ public class MoveLogicModule extends LogicModule {
 		if (actingPlayer != null) {
 			fromCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		}
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-		if (moveSquare != null && (actingPlayer == null || !actingPlayer.isJumping() || mechanic.isValidJump(game, actingPlayer.getPlayer(), fromCoordinate, coordinate))) {
+		JumpMechanic mechanic =
+			(JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		if (moveSquare != null && (actingPlayer == null || !actingPlayer.isJumping() ||
+			mechanic.isValidJump(game, actingPlayer.getPlayer(), fromCoordinate, coordinate))) {
 			return moveSquare;
 		}
 		return null;
@@ -248,10 +256,12 @@ public class MoveLogicModule extends LogicModule {
 			return false;
 		}
 
-		JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+		JumpMechanic mechanic =
+			(JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 
 		FieldCoordinate lastCoordinate = pCoordinates[pCoordinates.length - 1];
-		if (actingPlayer.isJumping() && !mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, lastCoordinate)) {
+		if (actingPlayer.isJumping() &&
+			!mechanic.isValidJump(game, actingPlayer.getPlayer(), coordinateFrom, lastCoordinate)) {
 			return false;
 		}
 
@@ -269,8 +279,10 @@ public class MoveLogicModule extends LogicModule {
 		return true;
 	}
 
-	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom, FieldCoordinate[] pCoordinates) {
-		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates, client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
+	protected void sendCommand(ActingPlayer actingPlayer, FieldCoordinate coordinateFrom,
+		FieldCoordinate[] pCoordinates) {
+		client.getCommunication().sendPlayerMove(actingPlayer.getPlayerId(), coordinateFrom, pCoordinates,
+			client.getProperty(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN));
 	}
 
 	// TODO do we really need both path finder calls?
@@ -325,17 +337,9 @@ public class MoveLogicModule extends LogicModule {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate position = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		if (player == actingPlayer.getPlayer()) {
-			JumpMechanic mechanic = (JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
-			if (actingPlayer.hasActed() || mechanic.canJump(game, player, position)
-				|| player.hasSkillProperty(NamedProperties.canGazeDuringMove)
-				|| isSpecialAbilityAvailable(actingPlayer)
-				|| (player.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, player))
-				|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, player))
-				|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, player))
-				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
-				|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE)) {
+			JumpMechanic mechanic =
+				(JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
+			if (actionAvailable(player, actingPlayer, mechanic, game, position)) {
 				return InteractionResult.selectAction(actionContext(actingPlayer));
 			} else {
 				deselectActingPlayer();
@@ -350,6 +354,20 @@ public class MoveLogicModule extends LogicModule {
 			}
 		}
 		return InteractionResult.ignore();
+	}
+
+	protected boolean actionAvailable(Player<?> player, ActingPlayer actingPlayer, JumpMechanic mechanic, Game game,
+		FieldCoordinate position) {
+		return actingPlayer.hasActed() || mechanic.canJump(game, player, position)
+			|| player.hasSkillProperty(NamedProperties.canGazeDuringMove)
+			|| isSpecialAbilityAvailable(actingPlayer)
+			|| (player.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, player))
+			|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, player))
+			|| ((actingPlayer.getPlayerAction() == PlayerAction.HAND_OVER_MOVE) && UtilPlayer.hasBall(game, player))
+			|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE);
 	}
 
 	@Override

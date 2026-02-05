@@ -151,6 +151,10 @@ public class StepTreacherous extends AbstractStep {
 					game.getTurnData().setFoulUsed(true);
 				}
 				break;
+			case PUNT:
+			case PUNT_MOVE:
+				game.getTurnData().setPuntUsed(true);
+				break;
 			default:
 				break;
 		}

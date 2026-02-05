@@ -112,7 +112,6 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case STAND_UP:
 								case STAND_UP_BLITZ:
 								case SECURE_THE_BALL:
-								case PUNT_MOVE:
 									clientStateId = ClientStateId.MOVE;
 									break;
 								case BLITZ_MOVE:
@@ -144,6 +143,10 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case PASS_MOVE:
 								case HAIL_MARY_PASS:
 									clientStateId = ClientStateId.PASS;
+									break;
+								case PUNT:
+								case PUNT_MOVE:
+									clientStateId = ClientStateId.PUNT;
 									break;
 								case THROW_TEAM_MATE:
 								case THROW_TEAM_MATE_MOVE:

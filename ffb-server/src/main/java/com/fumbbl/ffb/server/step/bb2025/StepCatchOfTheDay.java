@@ -187,6 +187,10 @@ public class StepCatchOfTheDay extends AbstractStepWithReRoll {
 					game.getTurnData().setFoulUsed(true);
 				}
 				break;
+			case PUNT:
+			case PUNT_MOVE:
+				game.getTurnData().setPuntUsed(true);
+				break;
 			default:
 				break;
 		}

@@ -153,6 +153,7 @@ public class ReallyStupidBehaviour extends SkillBehaviour<ReallyStupid> {
             case SECURE_THE_BALL:
                 game.getTurnData().setSecureTheBallUsed(true);
                 break;
+            case PUNT:
             case PUNT_MOVE:
                 game.getTurnData().setPuntUsed(true);
                 break;
