@@ -1,15 +1,14 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.injury.modification.AvOrInjModification;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
-import com.fumbbl.ffb.skill.mixed.special.DwarfenScourge;
+import com.fumbbl.ffb.skill.bb2025.special.DwarvenScourge;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
-public class DwarfenScourgeBehaviour extends SkillBehaviour<DwarfenScourge> {
+public class DwarvenScourgeBehaviour extends SkillBehaviour<DwarvenScourge> {
 
-	public DwarfenScourgeBehaviour() {
+	public DwarvenScourgeBehaviour() {
 		super();
 
 		registerModifier(new AvOrInjModification());
