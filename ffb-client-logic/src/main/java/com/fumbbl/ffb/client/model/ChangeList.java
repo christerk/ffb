@@ -9,10 +9,12 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")			
+		versions.add(new VersionChangeList("Future")
 			.addBugfix("\"Blastin' Solves Everything\" roll-2 flow fixed")
 			.addFeature("Violent Innovator with Ball and Chain")
 			.addFeature("Swift Brothers")
+			.addBugfix("One team's mascot was offered for opposing team on steady footing and other rolls")
+			.addBugfix("Catching Kick-Off still caused -1 modifier")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")

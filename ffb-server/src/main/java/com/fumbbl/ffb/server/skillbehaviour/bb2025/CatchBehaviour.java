@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -7,12 +7,11 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn;
-import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn.StepState;
+import com.fumbbl.ffb.server.step.bb2025.shared.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.bb2025.shared.StepCatchScatterThrowIn.StepState;
 import com.fumbbl.ffb.skill.common.Catch;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class CatchBehaviour extends SkillBehaviour<Catch> {
 	public CatchBehaviour() {

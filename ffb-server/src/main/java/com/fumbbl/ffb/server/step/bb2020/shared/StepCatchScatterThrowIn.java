@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2020.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -25,7 +25,6 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
@@ -96,7 +95,6 @@ import java.util.stream.Collectors;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	public static class StepState {
@@ -779,15 +777,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "throwInBall()");
 
 		DiceRoller diceRoller = getGameState().getDiceRoller();
+		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		FieldCoordinate ballCoordinateStart = fThrowInCoordinate;
 		fCatcherId = null;
 
-		ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
-		boolean cornerThrowIn = mechanic.isCornerThrowIn(ballCoordinateStart);
-		int directionRoll = cornerThrowIn ? diceRoller.rollCornerThrowInDirection() : diceRoller.rollThrowInDirection();
-		Direction direction = mechanic.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll, cornerThrowIn);
+		int directionRoll = diceRoller.rollThrowInDirection();
+		Direction direction = diceInterpreter.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll);
 		int[] distanceRoll = diceRoller.rollThrowInDistance();
-		int distance = mechanic.distance(distanceRoll);
+		int distance = distanceRoll[0] + distanceRoll[1] + 1;
 		FieldCoordinate ballCoordinateEnd = ballCoordinateStart;
 		FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
 		for (int i = 0; i < distance; i++) {
