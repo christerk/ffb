@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRolledActions;
@@ -28,7 +28,6 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 	public TentaclesBehaviour() {
@@ -48,7 +47,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 				ActingPlayer actingPlayer = game.getActingPlayer();
 				UtilServerDialog.hideDialog(step.getGameState());
 				if (state.usingTentacles == null) {
-					if (actingPlayer.isDodging() || actingPlayer.isJumping() || (actingPlayer.hasBlocked() && state.coordinateFrom != null)) {
+					if (actingPlayer.isDodging() || actingPlayer.isJumping()) {
 						Player<?>[] playerArray = UtilPlayer.findAdjacentOpposingPlayersWithSkill(game, state.coordinateFrom, skill,
 								false);
 						if (ArrayTool.isProvided(playerArray)) {
