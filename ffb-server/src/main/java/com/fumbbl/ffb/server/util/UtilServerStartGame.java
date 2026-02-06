@@ -226,7 +226,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue(RulesCollection.Rules.BB2020.name());
-			ruleSet.setValue(RulesCollection.Rules.BB2025.name());
+			//ruleSet.setValue(RulesCollection.Rules.BB2025.name());
 //			ruleSet.setValue(RulesCollection.Rules.BB2016.name());
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
