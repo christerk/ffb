@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2020.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -95,7 +95,6 @@ import java.util.stream.Collectors;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	public static class StepState {

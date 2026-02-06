@@ -14,6 +14,7 @@ public class ChangeList {
 			.addFeature("Violent Innovator with Ball and Chain")
 			.addFeature("Swift Brothers")
 			.addBugfix("One team's mascot was offered for opposing team on steady footing and other rolls")
+			.addBugfix("Catching Kick-Off still caused -1 modifier")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")
