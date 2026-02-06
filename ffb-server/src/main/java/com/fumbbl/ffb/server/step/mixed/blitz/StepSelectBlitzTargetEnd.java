@@ -81,6 +81,8 @@ public class StepSelectBlitzTargetEnd extends AbstractStep {
       if (targetSelectionState.isCanceled()) {
         if (actingPlayer.hasActed()) {
           targetSelectionState.getUsedSkills().forEach(actingPlayer::markSkillUsed);
+        } else {
+          getGameState().resetStalling();
         }
         targetSelectionState.getUsedSkills().forEach(skill -> game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), skill.getName()));
 
