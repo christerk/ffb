@@ -15,7 +15,7 @@ public class ChangeList {
 			.addFeature("Swift Brothers")
 			.addBugfix("One team's mascot was offered for opposing team on steady footing and other rolls")
 			.addBugfix("Catching Kick-Off still caused -1 modifier")
-			.addBugfix("Renamed Ivan skill to Dwarven Scoruge")
+			.addBugfix("Renamed Ivan skill to Dwarven Scourge")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")
