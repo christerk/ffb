@@ -8,9 +8,9 @@ import com.fumbbl.ffb.RulesCollection;
 public class ThrowInMechanic extends com.fumbbl.ffb.mechanics.ThrowInMechanic {
   
   @Override
-	public int distance(int[] distanceRoll) {
-		return distanceRoll[0] + distanceRoll[1];
-	}
+  public int distance(int[] distanceRoll) {
+    return distanceRoll[0] + distanceRoll[1];
+  }
 
   @Override
   public boolean isCornerThrowIn(FieldCoordinate pStartCoordinate) {
@@ -53,7 +53,7 @@ public class ThrowInMechanic extends com.fumbbl.ffb.mechanics.ThrowInMechanic {
       }
     }
 
-		throw new IllegalStateException("Unable to determine throwInDirection.");
+    throw new IllegalStateException("Unable to determine throwInDirection.");
   }
 
   private Direction interpretCornerThrowInDirectionRoll(Direction pCornerDirection, int roll) {
