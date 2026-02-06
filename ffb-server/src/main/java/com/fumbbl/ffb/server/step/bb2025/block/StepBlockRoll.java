@@ -329,8 +329,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 
-			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(),
-				actingPlayer.getPlayer())) {
+			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer())) {
 				properties.add(ReRollProperty.TRR);
 			}
 
@@ -340,7 +339,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
 			mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
 
-			if (mechanic.isMascotAvailable(game)) {
+			if (mechanic.isMascotAvailable(getGameState(), actingPlayer.getPlayer())) {
 				properties.add(ReRollProperty.MASCOT);
 			}
 		}

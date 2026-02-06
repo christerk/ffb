@@ -233,7 +233,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
 			List<ReRollProperty> properties = new ArrayList<>();
-			if (isMascotAvailable(game)) {
+			if (isMascotAvailable(gameState, player)) {
 				properties.add(ReRollProperty.MASCOT);
 			}
 			if (isTeamReRollAvailable(gameState, player)) {
@@ -394,7 +394,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private boolean checkTeamCaptain(StepResult stepResult, GameState gameState) {
 
-		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers()).noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls))) {
+		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers())
+			.noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls))) {
 			return false;
 		}
 
@@ -470,12 +471,14 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 
 	@Override
-	public boolean isMascotAvailable(Game game) {
+	public boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
 		InducementSet inducementSet = game.isHomePlaying() ?
 			game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
 
 		return Arrays.stream(inducementSet.getInducements())
-			.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0);
+			.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0)
+			&& isTeamReRollAvailable(pGameState, pPlayer, 1);
 
 	}
 
