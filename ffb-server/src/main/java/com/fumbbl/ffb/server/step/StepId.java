@@ -147,7 +147,8 @@ public enum StepId implements INamedObject {
 	PRAYERS("prayers"), // phase.kickoff
 	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
-	PUNT("punt"), // action.punt
+	PUNT_DIRECTION("puntDirection"), // action.punt
+	PUNT_DISTANCE("puntDistance"), // action.punt
 	PUSHBACK("pushback"), // action.block
 	QUICK_BITE("quickBite"),
 	RAIDING_PARTY("raidingParty"),

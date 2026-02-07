@@ -22,7 +22,7 @@ public class Punt extends com.fumbbl.ffb.server.step.generator.Punt {
 
 		sequence.add(StepId.INIT_PUNT, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END));
 		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END).addTo(sequence);
-		sequence.add(StepId.PUNT);
+		sequence.add(StepId.PUNT_DIRECTION);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.END_PUNT, IStepLabel.END);
 
