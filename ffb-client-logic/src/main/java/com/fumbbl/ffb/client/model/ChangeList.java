@@ -16,6 +16,10 @@ public class ChangeList {
 			.addBugfix("One team's mascot was offered for opposing team on steady footing and other rolls")
 			.addBugfix("Catching Kick-Off still caused -1 modifier")
 			.addFeature("Throw-Ins: The first square (under template) counts and corner Throw-Ins")
+			.addBugfix("Incorporeal was not working on first dodge")
+			.addBugfix("Renamed Ivan skill to Dwarven Scourge")
+			.addBugfix("Secure The Ball message did not show correct base value")
+			.addBugfix("Stalling check did not trigger if ball carrier was blitzing")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")
