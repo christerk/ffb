@@ -18,7 +18,6 @@ public class Punt extends Skill {
 
 	@Override
 	public void postConstruct() {
-		registerRerollSource(ReRolledActions.PUNT, ReRollSources.PUNT);
 		registerProperty(NamedProperties.canPunt);
 	}
 
