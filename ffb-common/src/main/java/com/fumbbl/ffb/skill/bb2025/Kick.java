@@ -18,7 +18,8 @@ public class Kick extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canReduceKickDistance);
-		registerRerollSource(ReRolledActions.PUNT, ReRollSources.KICK);
+		registerRerollSource(ReRolledActions.PUNT_DIRECTION, ReRollSources.KICK);
+		registerRerollSource(ReRolledActions.PUNT_DISTANCE, ReRollSources.KICK);
 	}
 
 }

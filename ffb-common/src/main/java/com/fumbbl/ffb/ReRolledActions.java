@@ -76,7 +76,8 @@ public class ReRolledActions {
 	public static final ReRolledAction SINGLE_SKULL = new ReRolledAction("Single Skull");
 	public static final ReRolledAction REGENERATION = new ReRolledAction("Regeneration");
 	public static final ReRolledAction BLASTIN_SOLVES_EVERYTHING = new ReRolledAction(BlastinSolvesEverything.class);
-	public static final ReRolledAction PUNT = new ReRolledAction("Punt");
+	public static final ReRolledAction PUNT_DIRECTION = new ReRolledAction("Punt Direction");
+	public static final ReRolledAction PUNT_DISTANCE = new ReRolledAction("Punt Distance");
 
 	private final Map<String, ReRolledAction> values;
 

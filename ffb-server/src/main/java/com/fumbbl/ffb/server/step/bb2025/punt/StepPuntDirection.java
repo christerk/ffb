@@ -17,7 +17,6 @@ import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2025.ReportPuntDirection;
@@ -121,48 +120,41 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		if (outOfBounds) {
 			fieldModel.setOutOfBounds(true);
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			publishParameter(
+				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 			getResult().addReport(new ReportPuntDirection(direction, 0, actingPlayer.getPlayerId()));
 			return;
 		}
 
-		if (ReRolledActions.PUNT == getReRolledAction()) {
+		if (ReRolledActions.PUNT_DIRECTION == getReRolledAction()) {
 			if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+				leave();
 				return;
-			} else {
-				direction = null;
 			}
 		}
 
-		if (direction == null) {
-			Direction baseDirection = coordinateFrom.getDirection(coordinateTo);
-			ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
-			int roll = getGameState().getDiceRoller().rollThrowInDirection();
-			direction = mechanic.interpretThrowInDirectionRoll(baseDirection, roll);
-			publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
-			FieldCoordinate ballIndicatorCoordinate = coordinateFrom.move(direction, 1);
-			if (!FieldCoordinateBounds.FIELD.isInBounds(ballIndicatorCoordinate)) {
-				fieldModel.setOutOfBounds(true);
-				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
-			} else {
-				fieldModel.setBallCoordinate(ballIndicatorCoordinate);
-			}
-
-			getResult().addReport(new ReportPuntDirection(direction, roll, actingPlayer.getPlayerId()));
+		Direction baseDirection = coordinateFrom.getDirection(coordinateTo);
+		ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
+		int roll = getGameState().getDiceRoller().rollThrowInDirection();
+		direction = mechanic.interpretThrowInDirectionRoll(baseDirection, roll);
+		publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
+		FieldCoordinate ballIndicatorCoordinate = coordinateFrom.move(direction, 1);
+		if (FieldCoordinateBounds.FIELD.isInBounds(ballIndicatorCoordinate)) {
+			fieldModel.setBallCoordinate(ballIndicatorCoordinate);
+		} else {
+			fieldModel.setOutOfBounds(true);
 		}
+		getResult().addReport(new ReportPuntDirection(direction, roll, actingPlayer.getPlayerId()));
+
 
 		if (getReRolledAction() == null) {
-			setReRolledAction(ReRolledActions.PUNT);
+			setReRolledAction(ReRolledActions.PUNT_DIRECTION);
 
 			ReRollSource skillReRoll = UtilCards.getUnusedRerollSource(actingPlayer, getReRolledAction());
 			if (skillReRoll != null) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(game.getThrowerId(), skillReRoll.getSkill(game), 0, null),
-					actingTeam.hasPlayer(game.getThrower()));
+					new DialogSkillUseParameter(game.getThrowerId(), skillReRoll.getSkill(game), 0, null), false);
 				getResult().setNextAction(StepAction.CONTINUE);
 			} else {
 				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), getReRolledAction(),
@@ -170,6 +162,21 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 					getResult().setNextAction(StepAction.CONTINUE);
 				}
 			}
+		} else {
+			leave();
+		}
+	}
+
+	private void leave() {
+		Game game = getGameState().getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		if (fieldModel.isOutOfBounds()) {
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+			publishParameter(
+				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
+		} else {
+			publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
 		}
 	}
 
