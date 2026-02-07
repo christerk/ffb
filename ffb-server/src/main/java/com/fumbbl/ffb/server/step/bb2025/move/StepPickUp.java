@@ -237,7 +237,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
 			getResult().addReport(new ReportPickupRoll(player.getId(), successful, roll,
-				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0])));
+				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0]), secureTheBall));
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {
