@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server;
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.Weather;
@@ -246,82 +245,6 @@ public class DiceInterpreter {
 
 	public Direction interpretScatterDirectionRoll(Game game, int roll) {
 		return game.<DirectionFactory>getFactory(Factory.DIRECTION).forRoll(roll);
-	}
-
-	public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {
-		// Endzone Home Team
-		if (pStartCoordinate.getX() < 1) {
-			return interpretThrowInDirectionRoll(Direction.EAST, roll);
-		}
-		// Endzone Away Team
-		if (pStartCoordinate.getX() > 24) {
-			return interpretThrowInDirectionRoll(Direction.WEST, roll);
-		}
-		// Lower Sideline
-		if (pStartCoordinate.getY() > 13) {
-			return interpretThrowInDirectionRoll(Direction.NORTH, roll);
-		}
-		// Upper Sideline
-		if (pStartCoordinate.getY() < 1) {
-			return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
-		}
-		throw new IllegalStateException("Unable to determine throwInDirection.");
-	}
-
-	public Direction interpretThrowInDirectionRoll(Direction pTemplateDirection, int roll) {
-		if (pTemplateDirection == Direction.EAST) {
-			switch (roll) {
-			case 1:
-			case 2:
-				return Direction.NORTHEAST;
-			case 3:
-			case 4:
-				return Direction.EAST;
-			case 5:
-			case 6:
-				return Direction.SOUTHEAST;
-			}
-		}
-		if (pTemplateDirection == Direction.WEST) {
-			switch (roll) {
-			case 1:
-			case 2:
-				return Direction.SOUTHWEST;
-			case 3:
-			case 4:
-				return Direction.WEST;
-			case 5:
-			case 6:
-				return Direction.NORTHWEST;
-			}
-		}
-		if (pTemplateDirection == Direction.NORTH) {
-			switch (roll) {
-			case 1:
-			case 2:
-				return Direction.NORTHWEST;
-			case 3:
-			case 4:
-				return Direction.NORTH;
-			case 5:
-			case 6:
-				return Direction.NORTHEAST;
-			}
-		}
-		if (pTemplateDirection == Direction.SOUTH) {
-			switch (roll) {
-			case 1:
-			case 2:
-				return Direction.SOUTHEAST;
-			case 3:
-			case 4:
-				return Direction.SOUTH;
-			case 5:
-			case 6:
-				return Direction.SOUTHWEST;
-			}
-		}
-		throw new IllegalStateException("Unable to determine throwInDirection.");
 	}
 
 	public int interpretRiotRoll(int pRiotRoll) {

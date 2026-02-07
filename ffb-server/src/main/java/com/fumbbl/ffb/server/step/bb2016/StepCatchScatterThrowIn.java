@@ -24,6 +24,7 @@ import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
@@ -486,14 +487,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "throwInBall()");
 		DiceRoller diceRoller = getGameState().getDiceRoller();
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 		FieldCoordinate ballCoordinateStart = fThrowInCoordinate;
 		fCatcherId = null;
 
+		ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 		int directionRoll = diceRoller.rollThrowInDirection();
-		Direction direction = diceInterpreter.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll);
+		Direction direction = mechanic.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll);
 		int[] distanceRoll = diceRoller.rollThrowInDistance();
-		int distance = distanceRoll[0] + distanceRoll[1];
+		int distance = mechanic.distance(distanceRoll);
 		FieldCoordinate ballCoordinateEnd = ballCoordinateStart;
 		FieldCoordinate lastValidCoordinate = ballCoordinateEnd;
 		for (int i = 0; i < distance; i++) {

@@ -16,6 +16,8 @@ import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -26,7 +28,6 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.report.ReportScatterPlayer;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
@@ -173,14 +174,15 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			boolean doRoll = playerScatter == null || (getReRollSource() != null && UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()));
 			if (doRoll) {
 				int scatterRoll = getGameState().getDiceRoller().rollThrowInDirection();
+				ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 				if (fCoordinateFrom.getX() < originalCoordinateTo.getX()) {
-					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
+					playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
 				} else if (fCoordinateFrom.getX() > originalCoordinateTo.getX()) {
-					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.WEST, scatterRoll);
+					playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.WEST, scatterRoll);
 				} else if (fCoordinateFrom.getY() < originalCoordinateTo.getY()) {
-					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.SOUTH, scatterRoll);
+					playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.SOUTH, scatterRoll);
 				} else { // coordinateFrom.getY() > coordinateTo.getY()
-					playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
+					playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
 				}
 				fCoordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(fCoordinateFrom, playerScatter, 1);
 				getResult().addReport(new ReportScatterPlayer(fCoordinateFrom, fCoordinateTo, new Direction[]{playerScatter},

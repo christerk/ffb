@@ -20,6 +20,7 @@ public class ChangeList {
 			.addBugfix("Secure The Ball message did not show correct base value")
 			.addBugfix("Stalling check did not trigger if ball carrier was blitzing")
 			.addFeature("Biased ref: Coach is banned on a natural 1 even with biased ref")
+			.addFeature("Throw-Ins: The first square (under template) counts and corner Throw-Ins")
 			.addBugfix("Tentacles only works on dodge and jump/leap")
 		);
 
