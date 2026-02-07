@@ -255,8 +255,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
 	}
 
-	public void sendUseSingleBlockDieReRollForBlock(int index) {
-		send(new ClientCommandUseSingleBlockDieReRoll(index));
+	public void sendUseSingleBlockDieReRollForBlock(int index, ReRollSource source) {
+		send(new ClientCommandUseSingleBlockDieReRoll(index, source));
 	}
 
 	public void sendUseMultiBlockDiceReRoll(int[] indexes) {
