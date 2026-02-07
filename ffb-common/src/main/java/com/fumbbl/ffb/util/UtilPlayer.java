@@ -689,7 +689,7 @@ public class UtilPlayer {
 		boolean bothDownSafe = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventFallOnBothDown)
 			|| actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canTakeDownPlayersWithHimOnBothDown)
 			|| (actingPlayer.getPlayerAction().isBlitzing()
-				&& UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.canTakeDownPlayersWithHimOnBothDown));
+				&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canConvertBothDownToPush));
 
 		boolean anyKnockDown = false;
 		boolean allKnockDown = true;
