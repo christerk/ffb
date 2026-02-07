@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Renamed Ivan skill to Dwarven Scourge")
 			.addBugfix("Secure The Ball message did not show correct base value")
 			.addBugfix("Stalling check did not trigger if ball carrier was blitzing")
+			.addFeature("Biased ref: Coach is banned on a natural 1 even with biased ref")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")
