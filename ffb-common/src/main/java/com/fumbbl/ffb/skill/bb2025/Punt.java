@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.skill.bb2025;
 
-import com.fumbbl.ffb.ReRollSources;
-import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;

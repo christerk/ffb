@@ -41,7 +41,7 @@ public class ReRollSources {
 	public static final ReRollSource SWOOP = new ReRollSource("Swoop");
 	public static final ReRollSource HATRED = new ReRollSource("Hatred");
 	public static final ReRollSource WORKING_IN_TANDEM = new ReRollSource("Working in Tandem");
-	public static final ReRollSource PUNT = new ReRollSource("Punt");
+	public static final ReRollSource KICK = new ReRollSource("Kick");
 
 	private final Map<String, ReRollSource> values;
 
