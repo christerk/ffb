@@ -405,6 +405,7 @@ public interface IJsonOption {
 	JsonBooleanOption PREVENT = new JsonBooleanOption("prevent");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
+	JsonBooleanOption PUNT_TO_CROWD = new JsonBooleanOption("puntToCrowd");
 	JsonBooleanOption PUNT_USED = new JsonBooleanOption("puntUsed");
 	JsonObjectOption PUSHBACK = new JsonObjectOption("pushback");
 	JsonEnumWithNameOption PUSHBACK_MODE = new JsonEnumWithNameOption("pushbackMode", Factory.PUSHBACK_MODE);

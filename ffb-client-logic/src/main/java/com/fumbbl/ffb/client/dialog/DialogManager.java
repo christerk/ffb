@@ -244,6 +244,9 @@ public class DialogManager {
 					case RE_ROLL_REGENERATION_MULTIPLE:
 						setDialogHandler(new DialogReRollRegenerationMultipleHandler(getClient()));
 						break;
+					case PUNT_TO_CROWD:
+						setDialogHandler(new DialogPuntToCrowdHandler(getClient()));
+						break;
 					default:
 						break;
 				}

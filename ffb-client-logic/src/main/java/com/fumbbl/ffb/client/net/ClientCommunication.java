@@ -575,6 +575,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandPositionSelection(position, teamId));
 	}
 
+	public void sendPuntToCrowd(boolean puntToCrowd) {
+		send(new ClientCommandPuntToCrowd(puntToCrowd));
+	}
+
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}
