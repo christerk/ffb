@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed.special;
+package com.fumbbl.ffb.skill.bb2020.special;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -12,7 +12,6 @@ import com.fumbbl.ffb.modifiers.VariableArmourModifier;
 import com.fumbbl.ffb.modifiers.VariableInjuryModifierAttacker;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class DwarfenScourge extends Skill {
 	public DwarfenScourge() {
 		super("Dwarfen Scourge", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_GAME);
