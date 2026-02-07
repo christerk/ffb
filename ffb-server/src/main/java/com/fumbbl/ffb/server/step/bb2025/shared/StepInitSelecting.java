@@ -411,12 +411,14 @@ public final class StepInitSelecting extends AbstractStep {
 						}	else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
 							game.getFieldModel().addSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUsed(commandUseSkill.getSkill());
+							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 						}
 					} else {
 						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
+							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 						}
 					}
 					break;

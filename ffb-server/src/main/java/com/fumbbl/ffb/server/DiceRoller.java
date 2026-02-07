@@ -208,6 +208,10 @@ public class DiceRoller {
 		return rollDice(6);
 	}
 
+	public int rollCornerThrowInDirection() {
+		return rollDice(3);
+	}
+
 	public int rollScatterDistance() {
 		return rollDice(6);
 	}
