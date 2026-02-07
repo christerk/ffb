@@ -42,7 +42,7 @@ public class StepInitPunt extends AbstractStep {
 
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnEnd;
-	private FieldCoordinate coordinate;
+	private FieldCoordinate coordinateTo;
 
 	public StepInitPunt(GameState pGameState) {
 		super(pGameState);
@@ -88,7 +88,7 @@ public class StepInitPunt extends AbstractStep {
 					break;
 				case CLIENT_FIELD_COORDINATE:
 					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
-					coordinate = commandFieldCoordinate.getFieldCoordinate();
+					coordinateTo = commandFieldCoordinate.getFieldCoordinate();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -114,6 +114,8 @@ public class StepInitPunt extends AbstractStep {
 		Game game = getGameState().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(actingPlayer.getPlayer());
+
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPunt);
 		if (endTurn) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
@@ -123,13 +125,14 @@ public class StepInitPunt extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else if (actingPlayer.getPlayerAction() == PlayerAction.PUNT && skill != null) {
-			if (coordinate != null) {
+			if (coordinateTo != null) {
 				game.getTurnData().setPuntUsed(true);
-				publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinate));
+				publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
+				publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, playerCoordinate));
 				fieldModel.clearMoveSquares();
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
-				findPuntSquares(fieldModel, actingPlayer.getPlayer()).stream()
+				findPuntSquares(playerCoordinate).stream()
 					.map(coord -> new MoveSquare(coord, 0, 0))
 					.forEach(fieldModel::add);
 				getResult().setNextAction(StepAction.CONTINUE);
@@ -138,8 +141,7 @@ public class StepInitPunt extends AbstractStep {
 		getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 	}
 
-	private Set<FieldCoordinate> findPuntSquares(FieldModel fieldModel, Player<?> player) {
-		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+	private Set<FieldCoordinate> findPuntSquares(FieldCoordinate playerCoordinate) {
 		List<Integer> deltas = new ArrayList<Integer>() {{
 			add(1);
 			add(-1);
@@ -166,7 +168,7 @@ public class StepInitPunt extends AbstractStep {
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, goToLabelOnEnd);
-		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, coordinate);
+		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, coordinateTo);
 		return jsonObject;
 	}
 
@@ -177,7 +179,7 @@ public class StepInitPunt extends AbstractStep {
 		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
-		coordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		return this;
 	}
 }
