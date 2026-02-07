@@ -684,7 +684,6 @@ public class UtilPlayer {
 		return ArrayTool.isProvided(players) && players.length > 1;
 	}
 
-
 	public static boolean blockWouldKnockDownAttacker(Game game, ActingPlayer actingPlayer, int[] blockRoll, boolean defenderChooses) {
 		BlockResultFactory factory = game.getFactory(FactoryType.Factory.BLOCK_RESULT);
 		boolean bothDownSafe = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventFallOnBothDown)
@@ -692,20 +691,18 @@ public class UtilPlayer {
 			|| (actingPlayer.getPlayerAction().isBlitzing()
 				&& UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.canTakeDownPlayersWithHimOnBothDown));
 
+		boolean anyKnockDown = false;
+		boolean allKnockDown = true;
 		for (int roll : blockRoll) {
 			BlockResult result = factory.forRoll(roll);
-			boolean knocksDown = (result == BlockResult.SKULL) || (result == BlockResult.BOTH_DOWN && !bothDownSafe);
-			if (defenderChooses) {
-				if (knocksDown) {
-					return true; // any bad face on uphill
-				}
+			boolean knocksDown = result == BlockResult.SKULL || (result == BlockResult.BOTH_DOWN && !bothDownSafe);
+			if (knocksDown) {
+				anyKnockDown = true;
 			} else {
-				if (!knocksDown) {
-					return false; // need all bad faces on normal
-				}
+				allKnockDown = false;
 			}
 		}
-		return !defenderChooses; // true if all were bad on normal; false if no bad on uphill
+		return defenderChooses ? anyKnockDown : allKnockDown;
 	}
 
 
