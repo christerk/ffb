@@ -7,6 +7,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.dialog.DialogPuntToCrowdParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -16,6 +17,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
+import com.fumbbl.ffb.net.commands.ClientCommandPuntToCrowd;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -27,6 +29,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -42,6 +45,7 @@ public class StepInitPunt extends AbstractStep {
 	private boolean endPlayerAction, endTurn;
 	private String goToLabelOnEnd;
 	private FieldCoordinate coordinateTo;
+	private Boolean puntToCrowd;
 
 	public StepInitPunt(GameState pGameState) {
 		super(pGameState);
@@ -86,12 +90,18 @@ public class StepInitPunt extends AbstractStep {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_FIELD_COORDINATE:
-					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
+					ClientCommandFieldCoordinate commandFieldCoordinate =
+						(ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 						coordinateTo = commandFieldCoordinate.getFieldCoordinate();
 					} else {
 						coordinateTo = commandFieldCoordinate.getFieldCoordinate().transform();
 					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				case CLIENT_PUNT_TO_CROWD:
+					ClientCommandPuntToCrowd clientCommandPuntToCrowd = (ClientCommandPuntToCrowd) pReceivedCommand.getCommand();
+					puntToCrowd = clientCommandPuntToCrowd.isPuntToCrowd();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
@@ -128,7 +138,20 @@ public class StepInitPunt extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		} else if (actingPlayer.getPlayerAction() == PlayerAction.PUNT && skill != null) {
-			if (coordinateTo != null) {
+			if (puntToCrowd == null
+				&& !FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(playerCoordinate)
+				&& !FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(playerCoordinate)
+				&& !FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(playerCoordinate)
+				&& FieldCoordinateBounds.ENDZONE_HOME.isInBounds(playerCoordinate)) {
+				puntToCrowd = false;
+			}
+			if (puntToCrowd == null) {
+				UtilServerDialog.showDialog(getGameState(), new DialogPuntToCrowdParameter(), false);
+				getResult().setNextAction(StepAction.CONTINUE);
+			} else if (puntToCrowd) {
+				publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			} else if (coordinateTo != null) {
 				game.getTurnData().setPuntUsed(true);
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, playerCoordinate));

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2025.punt;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -29,9 +30,12 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
+import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
+
+import java.util.Arrays;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPuntDirection extends AbstractStepWithReRoll {
@@ -46,7 +50,21 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 
 	private Direction direction;
 	private FieldCoordinate coordinateTo, coordinateFrom;
+	private boolean outOfBounds;
+	private String goToLabelOnEnd;
 
+
+	@Override
+	public void init(StepParameterSet pParameterSet) {
+		super.init(pParameterSet);
+		if (pParameterSet != null) {
+			Arrays.stream(pParameterSet.values()).forEach(parameter -> {
+				if (parameter.getKey() == StepParameterKey.GOTO_LABEL_ON_END) {
+					goToLabelOnEnd = (String) parameter.getValue();
+				}
+			});
+		}
+	}
 
 	@Override
 	public boolean setParameter(StepParameter parameter) {
@@ -57,6 +75,9 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 					return true;
 				case COORDINATE_FROM:
 					coordinateFrom = (FieldCoordinate) parameter.getValue();
+					return true;
+				case TOUCHBACK:
+					outOfBounds = parameter.getValue() != null && (boolean) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -93,8 +114,18 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		Game game = getGameState().getGame();
-		game.getFieldModel().setBallMoving(true);
+		FieldModel fieldModel = game.getFieldModel();
+		fieldModel.setBallMoving(true);
 		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		if (outOfBounds) {
+			fieldModel.setOutOfBounds(true);
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
+			getResult().addReport(new ReportPuntDirection(direction, 0, actingPlayer.getPlayerId()));
+			return;
+		}
 
 		if (ReRolledActions.PUNT == getReRolledAction()) {
 			if (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -105,7 +136,6 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		}
 
 		if (direction == null) {
-			FieldModel fieldModel = game.getFieldModel();
 			Direction baseDirection = coordinateFrom.getDirection(coordinateTo);
 			ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 			int roll = getGameState().getDiceRoller().rollThrowInDirection();
@@ -114,6 +144,9 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 			FieldCoordinate ballIndicatorCoordinate = coordinateFrom.move(direction, 1);
 			if (!FieldCoordinateBounds.FIELD.isInBounds(ballIndicatorCoordinate)) {
 				fieldModel.setOutOfBounds(true);
+				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+				getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 			} else {
 				fieldModel.setBallCoordinate(ballIndicatorCoordinate);
 			}
@@ -146,6 +179,8 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		IServerJsonOption.DIRECTION.addTo(jsonObject, direction);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, coordinateTo);
 		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, coordinateFrom);
+		IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, outOfBounds);
+		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, goToLabelOnEnd);
 		return jsonObject;
 	}
 
@@ -156,6 +191,8 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		direction = (Direction) IServerJsonOption.DIRECTION.getFrom(source, jsonObject);
 		coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
 		coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
+		outOfBounds = IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
+		goToLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		return this;
 	}
 }
