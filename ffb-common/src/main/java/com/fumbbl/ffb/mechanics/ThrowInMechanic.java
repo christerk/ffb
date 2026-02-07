@@ -15,7 +15,7 @@ public abstract class ThrowInMechanic implements Mechanic {
 
 	public abstract boolean isCornerThrowIn(FieldCoordinate startCoordinate);
 
-	public abstract Direction interpretThrowInDirectionRoll(FieldCoordinate start, int roll, boolean isCornerThrowIn);
+	public abstract Direction interpretThrowInDirectionRoll(FieldCoordinate start, int roll);
 
 	public Direction interpretThrowInDirectionRoll(Direction pTemplateDirection, int roll) {
 		if (pTemplateDirection == Direction.EAST) {

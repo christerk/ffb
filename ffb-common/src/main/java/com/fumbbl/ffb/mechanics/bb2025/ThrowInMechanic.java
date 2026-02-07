@@ -19,40 +19,36 @@ public class ThrowInMechanic extends com.fumbbl.ffb.mechanics.ThrowInMechanic {
   }
 
   @Override
-  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll,
-      boolean isCornerThrowIn) {
-    if (isCornerThrowIn) {
-      if (pStartCoordinate.getX() < 1 && pStartCoordinate.getY() < 1) {
-        return interpretCornerThrowInDirectionRoll(Direction.NORTHWEST, roll);
-      }
-      if (pStartCoordinate.getX() > 24 && pStartCoordinate.getY() < 1) {
-        return interpretCornerThrowInDirectionRoll(Direction.NORTHEAST, roll);
-      }
-      if (pStartCoordinate.getX() < 1 && pStartCoordinate.getY() > 13) {
-        return interpretCornerThrowInDirectionRoll(Direction.SOUTHWEST, roll);
-      }
-      if (pStartCoordinate.getX() > 24 && pStartCoordinate.getY() > 13) {
-        return interpretCornerThrowInDirectionRoll(Direction.SOUTHEAST, roll);
-      }
-    } else {
-      // Endzone Home Team
-      if (pStartCoordinate.getX() < 1) {
-        return interpretThrowInDirectionRoll(Direction.EAST, roll);
-      }
-      // Endzone Away Team
-      if (pStartCoordinate.getX() > 24) {
-        return interpretThrowInDirectionRoll(Direction.WEST, roll);
-      }
-      // Lower Sideline
-      if (pStartCoordinate.getY() > 13) {
-        return interpretThrowInDirectionRoll(Direction.NORTH, roll);
-      }
-      // Upper Sideline
-      if (pStartCoordinate.getY() < 1) {
-        return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
-      }
-    }
+  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {
 
+    if (pStartCoordinate.getX() < 1 && pStartCoordinate.getY() < 1) {
+      return interpretCornerThrowInDirectionRoll(Direction.NORTHWEST, roll);
+    }
+    if (pStartCoordinate.getX() > 24 && pStartCoordinate.getY() < 1) {
+      return interpretCornerThrowInDirectionRoll(Direction.NORTHEAST, roll);
+    }
+    if (pStartCoordinate.getX() < 1 && pStartCoordinate.getY() > 13) {
+      return interpretCornerThrowInDirectionRoll(Direction.SOUTHWEST, roll);
+    }
+    if (pStartCoordinate.getX() > 24 && pStartCoordinate.getY() > 13) {
+      return interpretCornerThrowInDirectionRoll(Direction.SOUTHEAST, roll);
+    }
+    // Endzone Home Team
+    if (pStartCoordinate.getX() < 1) {
+      return interpretThrowInDirectionRoll(Direction.EAST, roll);
+    }
+    // Endzone Away Team
+    if (pStartCoordinate.getX() > 24) {
+      return interpretThrowInDirectionRoll(Direction.WEST, roll);
+    }
+    // Lower Sideline
+    if (pStartCoordinate.getY() > 13) {
+      return interpretThrowInDirectionRoll(Direction.NORTH, roll);
+    }
+    // Upper Sideline
+    if (pStartCoordinate.getY() < 1) {
+      return interpretThrowInDirectionRoll(Direction.SOUTH, roll);
+    }
     throw new IllegalStateException("Unable to determine throwInDirection.");
   }
 

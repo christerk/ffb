@@ -18,8 +18,7 @@ public class ThrowInMechanic extends com.fumbbl.ffb.mechanics.ThrowInMechanic {
   }
 
   @Override
-  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll,
-    boolean isCornerThrowIn) {
+  public Direction interpretThrowInDirectionRoll(FieldCoordinate pStartCoordinate, int roll) {
     // Endzone Home Team
     if (pStartCoordinate.getX() < 1) {
       return interpretThrowInDirectionRoll(Direction.EAST, roll);

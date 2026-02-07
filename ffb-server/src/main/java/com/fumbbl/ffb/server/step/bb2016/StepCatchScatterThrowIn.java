@@ -492,7 +492,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 		int directionRoll = diceRoller.rollThrowInDirection();
-		Direction direction = mechanic.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll, false);
+		Direction direction = mechanic.interpretThrowInDirectionRoll(ballCoordinateStart, directionRoll);
 		int[] distanceRoll = diceRoller.rollThrowInDistance();
 		int distance = mechanic.distance(distanceRoll);
 		FieldCoordinate ballCoordinateEnd = ballCoordinateStart;
