@@ -67,6 +67,7 @@ public enum StepId implements INamedObject {
 	END_KICKOFF("endKickoff"), // phase.kickoff
 	END_MOVING("endMoving"), // action.move
 	END_PASSING("endPassing"), // action.pass
+	END_PUNT("endPunt"), // action.punt
 	END_SCATTER_PLAYER("endScatterPlayer"), // action.ttm
 	END_SELECTING("endSelecting"), // action.select
 	END_THROW_TEAM_MATE("endThrowTeamMate"), // action.ttm
@@ -104,6 +105,7 @@ public enum StepId implements INamedObject {
 	INIT_KICKOFF("initKickoff"), // phase.kickoff
 	INIT_MOVING("initMoving"), // action.move
 	INIT_PASSING("initPassing"), // action.pass
+	INIT_PUNT("initPunt"), // action.punt
 	INIT_SCATTER_PLAYER("initScatterPlayer"), // action.ttm
 	INIT_SELECTING("initSelecting"), // action.select
 	INIT_START_GAME("initStartGame"), // game.start
@@ -145,6 +147,7 @@ public enum StepId implements INamedObject {
 	PRAYERS("prayers"), // phase.kickoff
 	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
+	PUNT("punt"), // action.punt
 	PUSHBACK("pushback"), // action.block
 	QUICK_BITE("quickBite"),
 	RAIDING_PARTY("raidingParty"),

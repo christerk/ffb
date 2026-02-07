@@ -121,6 +121,6 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean forceDispatch() {
-		return this == PlayerAction.FURIOUS_OUTPBURST || this == PlayerAction.FORGO;
+		return this == PlayerAction.FURIOUS_OUTPBURST || this == PlayerAction.FORGO || this == PlayerAction.PUNT;
 	}
 }
