@@ -87,7 +87,11 @@ public class StepInitPunt extends AbstractStep {
 					break;
 				case CLIENT_FIELD_COORDINATE:
 					ClientCommandFieldCoordinate commandFieldCoordinate = (ClientCommandFieldCoordinate) pReceivedCommand.getCommand();
-					coordinateTo = commandFieldCoordinate.getFieldCoordinate();
+					if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
+						coordinateTo = commandFieldCoordinate.getFieldCoordinate();
+					} else {
+						coordinateTo = commandFieldCoordinate.getFieldCoordinate().transform();
+					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				default:
