@@ -1,0 +1,78 @@
+package com.fumbbl.ffb.report.bb2025;
+
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Direction;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonOption;
+import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.report.IReport;
+import com.fumbbl.ffb.report.NoDiceReport;
+import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.UtilReport;
+
+/**
+ * @author Kalimar
+ */
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class ReportPuntDirection extends NoDiceReport {
+
+	private Direction fDirection;
+	private int fDirectionRoll;
+	private String playerId;
+
+	@SuppressWarnings("unused")
+	public ReportPuntDirection() {
+		super();
+	}
+
+	public ReportPuntDirection(Direction pDirection, int pDirectionRoll, String playerId) {
+		fDirection = pDirection;
+		fDirectionRoll = pDirectionRoll;
+		this.playerId = playerId;
+	}
+
+	public ReportId getId() {
+		return ReportId.THROW_IN;
+	}
+
+	public Direction getDirection() {
+		return fDirection;
+	}
+
+	public int getDirectionRoll() {
+		return fDirectionRoll;
+	}
+
+	public String getPlayerId() {
+		return playerId;
+	}
+
+// transformation
+
+	public IReport transform(IFactorySource source) {
+		return new ReportPuntDirection(getDirection().transform(), getDirectionRoll(), playerId);
+	}
+
+	// JSON serialization
+
+	public JsonObject toJsonValue() {
+		JsonObject jsonObject = new JsonObject();
+		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
+		IJsonOption.DIRECTION.addTo(jsonObject, fDirection);
+		IJsonOption.DIRECTION_ROLL.addTo(jsonObject, fDirectionRoll);
+		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		return jsonObject;
+	}
+
+	public ReportPuntDirection initFrom(IFactorySource source, JsonValue jsonValue) {
+		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
+		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
+		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(source, jsonObject);
+		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		return this;
+	}
+
+}

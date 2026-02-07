@@ -69,7 +69,7 @@ public enum ReportId implements INamedObject {
 	PRAYERS_AND_INDUCEMENTS_BOUGHT("prayersAndInducementsBought"), THROW_AT_PLAYER("throwAtPlayer"), STEADY_FOOTING_ROLL("steadyFootingRoll"),
 	MASCOT_USED("mascotUsed"), TEAM_EVENT("teamEvent"), TEAM_CAPTAIN_ROLL("teamCaptainRoll"),
 	GETTING_EVEN_ROLL("gettingEvenRoll"), SABOTEUR_ROLL("saboteurRoll"), CHOMP_ROLL("chompRoll"),
-	CHOMP_REMOVED("chompRemoved")
+	CHOMP_REMOVED("chompRemoved"), PUNT_DIRECTION_ROLL("puntDirectionRoll"), PUNT_DISTANCE_ROLL("puntDistanceRoll")
 	;
 
 	// obsolete: 50 (spiralling expenses)
