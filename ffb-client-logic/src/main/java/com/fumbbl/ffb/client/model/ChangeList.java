@@ -22,6 +22,7 @@ public class ChangeList {
 			.addFeature("Biased ref: Coach is banned on a natural 1 even with biased ref")
 			.addFeature("Throw-Ins: The first square (under template) counts and corner Throw-Ins")
 			.addBugfix("Tentacles only works on dodge and jump/leap")
+			.addBugfix("Woodland Fury (Star Willow Rosebark")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")
