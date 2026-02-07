@@ -53,6 +53,7 @@ public class NamedProperties {
 	public static final ISkillProperty canChooseToIgnoreRushModifierAfterRoll = new NamedProperty("Can Choose To Ignore Rush Modifier After Roll");
 	public static final ISkillProperty canChooseOwnPushedBackSquare = new NamedProperty(
 		"Can Choose Own Pushed Back Square");
+	public static final ISkillProperty canConvertBothDownToPush = new NamedProperty("Can Convert BothDown To Push");
 	public static final ISkillProperty canDoubleStrengthAfterDauntless = new NamedProperty("Can Double Strength After Dauntless");
 	public static final ISkillProperty canDropBall = new NamedProperty("Can Drop Ball");
 	public static final ISkillProperty canFollowPlayerLeavingTacklezones = new NamedProperty("Can Follow Player Leaving Tacklezones");
@@ -126,6 +127,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRerollSingleBlockDieOncePerPeriod = new NamedProperty("Can Reroll Single Block Die Once Per Period");
 	public static final ISkillProperty canRerollSingleBlockDieDuringBlitz = new NamedProperty("Can Reroll Single Block Die During Blitz");
 	public static final ISkillProperty canRerollSingleBlockDieWhenPartnerIsMarking = new NamedProperty("Can Reroll Single Block Die When Partner Is Marking");
+	public static final ISkillProperty canRerollSingleBlockDieWhenWouldBeKnockedDown = new NamedProperty("Can Reroll Single Block Die When Would Be Knocked Down");
 	public static final ISkillProperty canRerollSingleSkull = new NamedProperty("Can Reroll Single Skull");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");

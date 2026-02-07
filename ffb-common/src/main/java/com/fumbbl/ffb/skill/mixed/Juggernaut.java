@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.common;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -14,7 +14,8 @@ import com.fumbbl.ffb.model.skill.Skill;
  * choose to treat a "Both Down" result as if a "Pushed" result has been rolled
  * instead.
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
+@RulesCollection(Rules.BB2020)
 public class Juggernaut extends Skill {
 
 	public Juggernaut() {
