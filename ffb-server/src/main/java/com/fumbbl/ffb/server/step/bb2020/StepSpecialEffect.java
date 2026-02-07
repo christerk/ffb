@@ -31,7 +31,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.mixed.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.UtilPlayer;
 

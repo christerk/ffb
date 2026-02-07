@@ -65,7 +65,7 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);
 
-	public abstract boolean isMascotAvailable(Game game);
+	public abstract boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer);
 
 	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
 		String originalBomberId = null;

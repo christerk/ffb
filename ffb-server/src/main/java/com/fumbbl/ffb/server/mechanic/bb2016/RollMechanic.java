@@ -338,7 +338,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public boolean isMascotAvailable(Game game) {
+	public boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer) {
 		return false;
 	}
 }

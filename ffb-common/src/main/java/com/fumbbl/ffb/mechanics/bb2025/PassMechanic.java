@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.mechanics.bb2025;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PassingDistance;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -128,6 +130,19 @@ public class PassMechanic extends com.fumbbl.ffb.mechanics.PassMechanic {
 			return "Pass Roll [ " + roll + " ]";
 		}
 		return "Pass fumbled automatically as " + thrower.getName() + " has no Passing Ability";
+	}
+
+	@Override
+	public PassingDistance findPassingDistance(Game game, FieldCoordinate fromCoordinate, FieldCoordinate toCoordinate, boolean throwTeamMate) {
+		PassingDistance distance = super.findPassingDistance(game, fromCoordinate, toCoordinate, throwTeamMate);
+		PlayerAction action = game.getActingPlayer().getPlayerAction();
+
+		if (distance != null && !throwTeamMate && !action.isBomb()) {
+			if (UtilPlayer.isPassingToPartner(game.getFieldModel().getPlayer(fromCoordinate), game.getFieldModel().getPlayer(toCoordinate))) {
+				distance = PassingDistance.PASS_TO_PARTNER;
+			}
+		}
+		return distance;
 	}
 
 }

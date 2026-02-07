@@ -9,7 +9,8 @@ public enum PassingDistance implements INamedObject {
 	QUICK_PASS("Quick Pass", 1, 0,'Q'),
 	SHORT_PASS("Short Pass", 0, 1, 'S'),
 	LONG_PASS("Long Pass", -1, 2, 'L'),
-	LONG_BOMB("Long Bomb", -2, 3, 'B');
+	LONG_BOMB("Long Bomb", -2, 3, 'B'),
+	PASS_TO_PARTNER("Pass to Partner", 0, 0, 'R');
 
 	private final String fName;
 	private final int modifier2016;

@@ -16,6 +16,7 @@ import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
+import com.fumbbl.ffb.report.ReportPickupRoll;
 import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
 
 import java.util.Collections;
@@ -125,7 +126,7 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
+	public String formatPickupResult(ReportPickupRoll report, Player<?> player) {
 		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
