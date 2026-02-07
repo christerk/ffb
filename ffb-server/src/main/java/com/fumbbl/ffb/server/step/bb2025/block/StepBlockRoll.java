@@ -137,7 +137,10 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
 					Skill rerollSkill = null;
-					if (UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), 
+					if (UtilPlayer.blockWouldKnockDownAttacker(getGameState().getGame(), actingPlayer, fBlockRoll, fNrOfDice < 0)) {
+						rerollSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown);
+					}
+					if (rerollSkill == null && UtilPlayer.isAttackerWorkingInTandem(getGameState().getGame(), actingPlayer.getPlayer(), 
 						getGameState().getGame().getDefender())) {
 						rerollSkill = 
 							UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking);
@@ -267,7 +270,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			fBlockRoll[dieIndex] = reRolledWithPro[0];
 		} else if (getReRollSource() == ReRollSources.UNSTOPPABLE_MOMENTUM
 			|| getReRollSource() == ReRollSources.LORD_OF_CHAOS
-			|| getReRollSource() == ReRollSources.WORKING_IN_TANDEM) {
+			|| getReRollSource() == ReRollSources.WORKING_IN_TANDEM
+			|| getReRollSource() == ReRollSources.WOODLAND_FURY) {
 			if (dieIndex >= 0) {
 				int rerolledDie = getGameState().getDiceRoller().rollBlockDice(1)[0];
 				getResult().addReport(
@@ -316,13 +320,24 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 		if (getReRollSource() == null) {
 
-			if (actingPlayer.getPlayerAction().isBlitzing()) {
-				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak + UM on blitz
-			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer,
-				NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
-				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Borak on Block
+			ReRollSource singleBlock = null;
+			if (actingPlayer.getPlayerAction().isBlitzing()
+				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)) {
+				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)
+					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
+			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)
+					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
 			} else if (UtilPlayer.isAttackerWorkingInTandem(game, actingPlayer.getPlayer(), game.getDefender())) {
-				addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_BLOCK_DIE, game); // Lucien with Valen marking
+				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking)
+					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
+			} else if (UtilPlayer.blockWouldKnockDownAttacker(game, actingPlayer, fBlockRoll, fNrOfDice < 0)
+				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)) {
+				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)
+					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
+			}
+			if (singleBlock != null) {
+				actionToSource.put(ReRolledActions.SINGLE_BLOCK_DIE, singleBlock);
 			}
 
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE, game);

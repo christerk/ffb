@@ -126,6 +126,7 @@ public class NamedProperties {
 	public static final ISkillProperty canRerollSingleBlockDieOncePerPeriod = new NamedProperty("Can Reroll Single Block Die Once Per Period");
 	public static final ISkillProperty canRerollSingleBlockDieDuringBlitz = new NamedProperty("Can Reroll Single Block Die During Blitz");
 	public static final ISkillProperty canRerollSingleBlockDieWhenPartnerIsMarking = new NamedProperty("Can Reroll Single Block Die When Partner Is Marking");
+	public static final ISkillProperty canRerollSingleBlockDieWhenWouldBeKnockedDown = new NamedProperty("Can Reroll Single Block Die When Would Be Knocked Down");
 	public static final ISkillProperty canRerollSingleSkull = new NamedProperty("Can Reroll Single Skull");
 	public static final ISkillProperty canRollToMatchOpponentsStrength = new NamedProperty(
 		"Can Roll To Match Opponents Strength");

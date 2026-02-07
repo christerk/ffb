@@ -1,10 +1,12 @@
 package com.fumbbl.ffb.util;
 
+import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.TurnMode;
+import com.fumbbl.ffb.factory.BlockResultFactory;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SkillMechanic;
@@ -681,5 +683,30 @@ public class UtilPlayer {
 			game, defender, game.getFieldModel().getPlayerCoordinate(defender), skill, false);
 		return ArrayTool.isProvided(players) && players.length > 1;
 	}
+
+
+	public static boolean blockWouldKnockDownAttacker(Game game, ActingPlayer actingPlayer, int[] blockRoll, boolean defenderChooses) {
+		BlockResultFactory factory = game.getFactory(FactoryType.Factory.BLOCK_RESULT);
+		boolean bothDownSafe = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventFallOnBothDown)
+			|| actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canTakeDownPlayersWithHimOnBothDown)
+			|| (actingPlayer.getPlayerAction().isBlitzing()
+				&& UtilCards.hasSkillToCancelProperty(actingPlayer.getPlayer(), NamedProperties.canTakeDownPlayersWithHimOnBothDown));
+
+		for (int roll : blockRoll) {
+			BlockResult result = factory.forRoll(roll);
+			boolean knocksDown = (result == BlockResult.SKULL) || (result == BlockResult.BOTH_DOWN && !bothDownSafe);
+			if (defenderChooses) {
+				if (knocksDown) {
+					return true; // any bad face on uphill
+				}
+			} else {
+				if (!knocksDown) {
+					return false; // need all bad faces on normal
+				}
+			}
+		}
+		return !defenderChooses; // true if all were bad on normal; false if no bad on uphill
+	}
+
 
 }
