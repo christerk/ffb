@@ -147,6 +147,7 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, fieldModel.getBallCoordinate()));
 		} else {
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_PUNT));
