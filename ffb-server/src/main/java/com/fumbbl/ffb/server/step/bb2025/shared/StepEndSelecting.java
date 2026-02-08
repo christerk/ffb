@@ -38,6 +38,7 @@ import com.fumbbl.ffb.server.step.generator.FuriousOutburst;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.Punt;
 import com.fumbbl.ffb.server.step.generator.RadingParty;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SelectBlitzTarget;
@@ -300,6 +301,7 @@ public final class StepEndSelecting extends AbstractStep {
     MultiBlock multiBlock = (MultiBlock) factory.forName(SequenceGenerator.Type.MultiBlock.name());
     Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), true, blockTargets);
     Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
+    Punt puntGenerator = (Punt) factory.forName(SequenceGenerator.Type.Punt.name());
 
     ActingPlayer actingPlayer = game.getActingPlayer();
     switch (pPlayerAction) {
@@ -353,6 +355,9 @@ public final class StepEndSelecting extends AbstractStep {
         } else {
           foulGenerator.pushSequence(new Foul.SequenceParams(getGameState()));
         }
+        break;
+      case PUNT:
+        puntGenerator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
         break;
       case MOVE:
         if (game.getFieldModel().getPlayerState(game.getActingPlayer().getPlayer()).isPinned()) {

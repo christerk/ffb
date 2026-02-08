@@ -12,6 +12,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -34,6 +35,7 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Foul;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
+import com.fumbbl.ffb.server.step.generator.Punt;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThrowTeamMate;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -66,7 +68,7 @@ public class StepEndMoving extends AbstractStep {
 	private Boolean fFeedingAllowed;
 	private FieldCoordinate[] fMoveStack;
 	private FieldCoordinate moveStart;
-	private PlayerAction fDispatchPlayerAction, bloodlustAction;
+	private PlayerAction dispatchPlayerAction, bloodlustAction;
 	private String fBlockDefenderId, thrownPlayerId;
 
 	public StepEndMoving(GameState pGameState) {
@@ -94,7 +96,7 @@ public class StepEndMoving extends AbstractStep {
 					consume(parameter);
 					return true;
 				case DISPATCH_PLAYER_ACTION:
-					fDispatchPlayerAction = (PlayerAction) parameter.getValue();
+					dispatchPlayerAction = (PlayerAction) parameter.getValue();
 					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
@@ -159,13 +161,24 @@ public class StepEndMoving extends AbstractStep {
 				case CLIENT_PASS:
 				case CLIENT_THROW_TEAM_MATE:
 				case CLIENT_KICK_TEAM_MATE:
-					commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+					commandStatus = dispatchPlayerAction(dispatchPlayerAction);
+					break;
+				case CLIENT_ACTING_PLAYER:
+					ClientCommandActingPlayer clientCommandActingPlayer =
+						(ClientCommandActingPlayer) pReceivedCommand.getCommand();
+					switch (clientCommandActingPlayer.getPlayerAction()) {
+						case PUNT:
+							commandStatus = dispatchPlayerAction(dispatchPlayerAction);
+							break;
+						default:
+							break;
+					}
 					break;
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					if (useSkill.isSkillUsed() &&
 						useSkill.getSkill().hasSkillProperty(NamedProperties.canAddBlockDie)) {
-						commandStatus = dispatchPlayerAction(fDispatchPlayerAction);
+						commandStatus = dispatchPlayerAction(dispatchPlayerAction);
 					}
 				default:
 					break;
@@ -329,6 +342,9 @@ public class StepEndMoving extends AbstractStep {
 					((Move) factory.forName(SequenceGenerator.Type.Move.name()))
 						.pushSequence(new Move.SequenceParams(getGameState()));
 					return true;
+				case PUNT:
+					((Punt) factory.forName(SequenceGenerator.Type.Punt.name())).pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+					return true;
 				default:
 					break;
 			}
@@ -345,7 +361,7 @@ public class StepEndMoving extends AbstractStep {
 		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, fEndPlayerAction);
 		IServerJsonOption.FEEDING_ALLOWED.addTo(jsonObject, fFeedingAllowed);
 		IServerJsonOption.MOVE_STACK.addTo(jsonObject, fMoveStack);
-		IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, fDispatchPlayerAction);
+		IServerJsonOption.DISPATCH_PLAYER_ACTION.addTo(jsonObject, dispatchPlayerAction);
 		IServerJsonOption.BLOCK_DEFENDER_ID.addTo(jsonObject, fBlockDefenderId);
 		IServerJsonOption.USING_CHAINSAW.addTo(jsonObject, usingChainsaw);
 		IServerJsonOption.THROWN_PLAYER_ID.addTo(jsonObject, thrownPlayerId);
@@ -362,7 +378,7 @@ public class StepEndMoving extends AbstractStep {
 		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		fFeedingAllowed = IServerJsonOption.FEEDING_ALLOWED.getFrom(source, jsonObject);
 		fMoveStack = IServerJsonOption.MOVE_STACK.getFrom(source, jsonObject);
-		fDispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
+		dispatchPlayerAction = (PlayerAction) IServerJsonOption.DISPATCH_PLAYER_ACTION.getFrom(source, jsonObject);
 		fBlockDefenderId = IServerJsonOption.BLOCK_DEFENDER_ID.getFrom(source, jsonObject);
 		usingChainsaw = IServerJsonOption.USING_CHAINSAW.getFrom(source, jsonObject);
 		thrownPlayerId = IServerJsonOption.THROWN_PLAYER_ID.getFrom(source, jsonObject);
