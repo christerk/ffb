@@ -13,6 +13,8 @@ import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.Animation;
+import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -149,6 +151,11 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_PUNT));
 		}
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		getResult().setAnimation(new Animation(AnimationType.PASS, fieldModel.getPlayerCoordinate(actingPlayer.getPlayer()), game.getFieldModel().getBallCoordinate()));
+
 	}
 
 	@Override
