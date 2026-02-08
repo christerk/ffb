@@ -17,7 +17,13 @@ public class PuntDistanceMessage extends ReportMessageBase<ReportPuntDistance> {
   		int distanceRoll = report.getRoll();
   		if (distanceRoll > 0) {
 			  println(getIndent(), TextStyle.ROLL, "Punt Distance Roll [ " + distanceRoll + " ]");
-  			println(getIndent() + 1, "The ball is punted "+ distanceRoll +" squares.");
+				StringBuilder status = new StringBuilder("The ball is punted ");
+				status.append(distanceRoll);
+				status.append(" squares");
+			  if (report.isOutOfBounds()) {
+				  status.append(" putting it out of bounds");
+			  }
+  			println(getIndent() + 1, status.toString());
   		}
     }
 }

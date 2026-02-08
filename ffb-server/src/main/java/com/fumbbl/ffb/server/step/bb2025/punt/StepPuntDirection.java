@@ -125,7 +125,7 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
-			getResult().addReport(new ReportPuntDirection(direction, 0, actingPlayer.getPlayerId()));
+			getResult().addReport(new ReportPuntDirection(direction, 0, actingPlayer.getPlayerId(), true));
 			return;
 		}
 
@@ -146,7 +146,7 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		} else {
 			fieldModel.setOutOfBounds(true);
 		}
-		getResult().addReport(new ReportPuntDirection(direction, roll, actingPlayer.getPlayerId()));
+		getResult().addReport(new ReportPuntDirection(direction, roll, actingPlayer.getPlayerId(), fieldModel.isOutOfBounds()));
 
 
 		if (getReRolledAction() == null) {

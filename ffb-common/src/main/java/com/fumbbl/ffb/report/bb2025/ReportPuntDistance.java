@@ -15,14 +15,16 @@ import com.fumbbl.ffb.report.UtilReport;
 public class ReportPuntDistance extends NoDiceReport {
 
 	private int roll;
+	private boolean outOfBounds;
 
 	@SuppressWarnings("unused")
 	public ReportPuntDistance() {
 		super();
 	}
 
-	public ReportPuntDistance(int roll) {
+	public ReportPuntDistance(int roll, boolean outOfBounds) {
 		this.roll = roll;
+		this.outOfBounds = outOfBounds;
 	}
 
 	public ReportId getId() {
@@ -34,11 +36,13 @@ public class ReportPuntDistance extends NoDiceReport {
 		return roll;
 	}
 
-
+	public boolean isOutOfBounds() {
+		return outOfBounds;
+	}
 // transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportPuntDistance(roll);
+		return new ReportPuntDistance(roll, outOfBounds);
 	}
 
 	// JSON serialization
@@ -47,6 +51,7 @@ public class ReportPuntDistance extends NoDiceReport {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.ROLL.addTo(jsonObject, roll);
+		IJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, outOfBounds);
 		return jsonObject;
 	}
 
@@ -54,6 +59,7 @@ public class ReportPuntDistance extends NoDiceReport {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		outOfBounds = IJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
 		return this;
 	}
 

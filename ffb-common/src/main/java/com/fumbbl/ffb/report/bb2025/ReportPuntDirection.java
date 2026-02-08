@@ -18,19 +18,21 @@ import com.fumbbl.ffb.report.UtilReport;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class ReportPuntDirection extends NoDiceReport {
 
-	private Direction fDirection;
+	private Direction direction;
 	private int directionRoll;
 	private String playerId;
+	private boolean outOfBounds;
 
 	@SuppressWarnings("unused")
 	public ReportPuntDirection() {
 		super();
 	}
 
-	public ReportPuntDirection(Direction pDirection, int pDirectionRoll, String playerId) {
-		fDirection = pDirection;
+	public ReportPuntDirection(Direction pDirection, int pDirectionRoll, String playerId, boolean outOfBounds) {
+		direction = pDirection;
 		directionRoll = pDirectionRoll;
 		this.playerId = playerId;
+		this.outOfBounds = outOfBounds;
 	}
 
 	public ReportId getId() {
@@ -38,7 +40,7 @@ public class ReportPuntDirection extends NoDiceReport {
 	}
 
 	public Direction getDirection() {
-		return fDirection;
+		return direction;
 	}
 
 	public int getDirectionRoll() {
@@ -49,10 +51,13 @@ public class ReportPuntDirection extends NoDiceReport {
 		return playerId;
 	}
 
+	public boolean isOutOfBounds() {
+		return outOfBounds;
+	}
 // transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportPuntDirection(getDirection().transform(), getDirectionRoll(), playerId);
+		return new ReportPuntDirection(getDirection().transform(), getDirectionRoll(), playerId, outOfBounds);
 	}
 
 	// JSON serialization
@@ -60,18 +65,20 @@ public class ReportPuntDirection extends NoDiceReport {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
-		IJsonOption.DIRECTION.addTo(jsonObject, fDirection);
+		IJsonOption.DIRECTION.addTo(jsonObject, direction);
 		IJsonOption.DIRECTION_ROLL.addTo(jsonObject, directionRoll);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
+		IJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, outOfBounds);
 		return jsonObject;
 	}
 
 	public ReportPuntDirection initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
-		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
+		direction = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
 		directionRoll = IJsonOption.DIRECTION_ROLL.getFrom(source, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
+		outOfBounds = IJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
 		return this;
 	}
 

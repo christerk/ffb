@@ -23,7 +23,13 @@ public class PuntDirectionMessage extends ReportMessageBase<ReportPuntDirection>
 			  status.append("Punt Direction Roll [ ").append(directionRoll).append(" ] ").append(directionName);
 				println(getIndent(), TextStyle.ROLL, status.toString());
 				print(getIndent() +1 , false, game.getPlayerById(report.getPlayerId()));
-  			println(getIndent() + 1, " punts the ball " + directionName + ".");
+				status = new StringBuilder(" punts the ball ");
+				status.append(directionName);
+				if (report.isOutOfBounds()) {
+					status.append(" putting it out of bounds");
+				}
+				status.append(".");
+  			println(getIndent() + 1,  status.toString());
   		}
     }
 }

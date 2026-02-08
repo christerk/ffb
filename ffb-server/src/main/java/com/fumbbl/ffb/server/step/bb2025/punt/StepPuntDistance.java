@@ -110,7 +110,7 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 		}
 		fieldModel.setBallCoordinate(ballIndicatorCoordinate);
 
-		getResult().addReport(new ReportPuntDistance(roll));
+		getResult().addReport(new ReportPuntDistance(roll, fieldModel.isOutOfBounds()));
 
 		if (getReRolledAction() == null) {
 			setReRolledAction(ReRolledActions.PUNT_DISTANCE);
