@@ -121,11 +121,10 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			if (skillReRoll != null) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(game.getThrowerId(), skillReRoll.getSkill(game), 0, null),
-					actingTeam.hasPlayer(game.getThrower()));
+					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, null), false);
 				getResult().setNextAction(StepAction.CONTINUE);
 			} else {
-				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), getReRolledAction(),
+				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),
 					0, false, null, null)) {
 					getResult().setNextAction(StepAction.CONTINUE);
 				}
