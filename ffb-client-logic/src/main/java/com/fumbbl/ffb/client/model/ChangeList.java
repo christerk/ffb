@@ -10,6 +10,9 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+		);
+
+		versions.add(new VersionChangeList("2026-02-08")
 			.addBugfix("\"Blastin' Solves Everything\" roll-2 flow fixed")
 			.addFeature("Violent Innovator with Ball and Chain")
 			.addFeature("Swift Brothers")
@@ -22,6 +25,7 @@ public class ChangeList {
 			.addFeature("Biased ref: Coach is banned on a natural 1 even with biased ref")
 			.addFeature("Throw-Ins: The first square (under template) counts and corner Throw-Ins")
 			.addBugfix("Tentacles only works on dodge and jump/leap")
+			.addBugfix("Woodland Fury (Star Willow Rosebark")
 		);
 
 		versions.add(new VersionChangeList("2026-02-01")

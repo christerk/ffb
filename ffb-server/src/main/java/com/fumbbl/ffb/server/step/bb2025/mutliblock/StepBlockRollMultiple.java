@@ -344,7 +344,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_DIE, game);
 		addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.MULTI_BLOCK_DICE, game);
 		if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieOncePerPeriod)
-			|| (UtilPlayer.isAttackerWorkingInTandem(game, game.getActingPlayer().getPlayer(), game.getPlayerById(roll.getTargetId())))) {
+			|| (UtilPlayer.isAttackerWorkingInTandem(game, game.getActingPlayer().getPlayer(), game.getPlayerById(roll.getTargetId())))
+			|| (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)
+				&& UtilPlayer.blockWouldKnockDownAttacker(game, game.getActingPlayer(), roll.getBlockRoll(), !roll.isOwnChoice()))) {
 			addReRollSourceMapping(actionReRollSourceMap, ReRolledActions.SINGLE_BLOCK_DIE, game);
 		}
 
@@ -411,6 +413,9 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 					roll.getReRollDiceIndexes());
 			} else if (state.reRollSource == ReRollSources.LORD_OF_CHAOS) {
 				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod,
+					roll.getReRollDiceIndexes());
+			} else if (state.reRollSource == ReRollSources.WOODLAND_FURY) {
+				adjustRollForIndexedReRoll(roll, actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown,
 					roll.getReRollDiceIndexes());
 			} else {
 				roll.setBlockRoll(getGameState().getDiceRoller().rollBlockDice(roll.getNrOfDice()));

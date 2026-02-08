@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.common;
+package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.BlockResult;
 import com.fumbbl.ffb.PlayerAction;
@@ -20,10 +20,10 @@ import com.fumbbl.ffb.server.step.action.block.StepJuggernaut;
 import com.fumbbl.ffb.server.step.action.block.StepJuggernaut.StepState;
 import com.fumbbl.ffb.server.step.action.block.UtilBlockSequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.common.Juggernaut;
+import com.fumbbl.ffb.skill.bb2025.Juggernaut;
 import com.fumbbl.ffb.util.UtilCards;
 
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2025)
 public class JuggernautBehaviour extends SkillBehaviour<Juggernaut> {
 	public JuggernautBehaviour() {
 		super();
