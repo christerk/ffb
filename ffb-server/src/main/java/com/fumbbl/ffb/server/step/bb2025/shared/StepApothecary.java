@@ -167,12 +167,13 @@ public class StepApothecary extends AbstractStep {
 								getResult().addReport(new ReportInducement(player.getTeam().getId(), inducementType, 1));
 								if (UtilServerInjury.handleRegeneration(this, player, fInjuryResult.injuryContext().getPlayerState(),
 									true)) {
+									fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 								} else {
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 								}
-								fInjuryResult.passedRegeneration();
 							}
+							fInjuryResult.passedRegeneration();
 						} else if (inducementType == null) {
 							fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
 							fInjuryResult.passedRegeneration();
@@ -191,8 +192,8 @@ public class StepApothecary extends AbstractStep {
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 								}
 							}
-							fInjuryResult.passedRegeneration();
 						}
+						fInjuryResult.passedRegeneration();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -269,6 +270,7 @@ public class StepApothecary extends AbstractStep {
 				&& player.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)
 				&& (fInjuryResult.injuryContext().getInjuryType().canUseApo())) {
 				if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
+					fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 					fInjuryResult.passedRegeneration();
 				} else {
@@ -488,6 +490,8 @@ public class StepApothecary extends AbstractStep {
 			if ((fInjuryResult.injuryContext().getPlayerState().getBase() == PlayerState.KNOCKED_OUT)
 				&& (fInjuryResult.injuryContext().getInjuryType().canApoKoIntoStun())) {
 				fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.STUNNED));
+			} else {
+				fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.RESERVE));
 			}
 			getResult().addReport(
 				new ReportApothecaryChoice(defender.getId(), fInjuryResult.injuryContext().getPlayerState(), null));

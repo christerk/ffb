@@ -150,6 +150,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 								}
 								if (doRoll) {
 									if (UtilServerInjury.handleRegeneration(this, player, result.injuryContext().getPlayerState(), true)) {
+										result.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 										result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 										regenerationFailedResults.remove(result);
 									}
@@ -176,6 +177,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 								if (UtilServerReRoll.useReRoll(this, ReRollSources.TEAM_RE_ROLL, player)) {
 									if (UtilServerInjury.handleRegeneration(this, player, result.injuryContext().getPlayerState(),
 										true)) {
+										result.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 										result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 										regenerationFailedResults.remove(result);
 									}
@@ -638,6 +640,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 				PlayerState playerState = result.injuryContext().getPlayerState();
 
 				if (result.injuryContext().isCasualty() && UtilServerInjury.handleRegeneration(this, player, playerState)) {
+					result.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 					result.passedRegeneration();
 					result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
 				} else if (result.injuryContext().isCasualty() && regenerationReRollsAvailable(player)) {
