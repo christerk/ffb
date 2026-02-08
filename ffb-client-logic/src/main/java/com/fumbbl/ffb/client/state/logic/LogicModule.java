@@ -396,6 +396,7 @@ public abstract class LogicModule {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return (!game.getTurnData().isPuntUsed()
+			&& player.hasSkillProperty(NamedProperties.canPunt)
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
 			&& (!(playerState.getBase() == PlayerState.PRONE) || UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE))
