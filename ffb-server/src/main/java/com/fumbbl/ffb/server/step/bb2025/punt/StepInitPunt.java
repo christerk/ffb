@@ -142,7 +142,7 @@ public class StepInitPunt extends AbstractStep {
 				&& !FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(playerCoordinate)
 				&& !FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(playerCoordinate)
 				&& !FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(playerCoordinate)
-				&& FieldCoordinateBounds.ENDZONE_HOME.isInBounds(playerCoordinate)) {
+				&& !FieldCoordinateBounds.ENDZONE_HOME.isInBounds(playerCoordinate)) {
 				puntToCrowd = false;
 			}
 			if (puntToCrowd == null) {
@@ -163,8 +163,9 @@ public class StepInitPunt extends AbstractStep {
 					.forEach(fieldModel::add);
 				getResult().setNextAction(StepAction.CONTINUE);
 			}
+		} else {
+			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 		}
-		getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 	}
 
 	private Set<FieldCoordinate> findPuntSquares(FieldCoordinate playerCoordinate) {
