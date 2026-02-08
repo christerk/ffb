@@ -124,6 +124,7 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, fieldModel.getBallCoordinate()));
 			getResult().setNextAction(StepAction.GOTO_LABEL, goToLabelOnEnd);
 			getResult().addReport(new ReportPuntDirection(direction, 0, actingPlayer.getPlayerId(), true));
 			return;

@@ -30,6 +30,9 @@ public class PuntDirectionMessage extends ReportMessageBase<ReportPuntDirection>
 				}
 				status.append(".");
   			println(getIndent() + 1,  status.toString());
-  		}
+  		} else {
+			  print(getIndent() +1 , false, game.getPlayerById(report.getPlayerId()));
+			  println(getIndent() + 1,  " intentionally punts the ball out of bounds.");
+		  }
     }
 }

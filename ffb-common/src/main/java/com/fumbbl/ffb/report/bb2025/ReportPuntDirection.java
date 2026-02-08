@@ -57,7 +57,7 @@ public class ReportPuntDirection extends NoDiceReport {
 // transformation
 
 	public IReport transform(IFactorySource source) {
-		return new ReportPuntDirection(getDirection().transform(), getDirectionRoll(), playerId, outOfBounds);
+		return new ReportPuntDirection(direction != null ? direction.transform() : null, getDirectionRoll(), playerId, outOfBounds);
 	}
 
 	// JSON serialization
