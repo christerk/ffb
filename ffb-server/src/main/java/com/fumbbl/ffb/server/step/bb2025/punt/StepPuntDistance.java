@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -120,7 +121,7 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			ReRollSource skillReRoll = UtilCards.getUnusedRerollSource(actingPlayer, getReRolledAction());
 			if (skillReRoll != null) {
 				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, null), false);
+					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, SkillUse.RE_ROLL_PUNT_DISTANCE), false);
 				getResult().setNextAction(StepAction.CONTINUE);
 				return;
 			} else if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),

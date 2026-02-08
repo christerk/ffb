@@ -16,7 +16,7 @@ import com.fumbbl.ffb.model.skill.Skill;
  * rounding any fractions down (i.e., 1 = 0, 2-3 = 1, 4-5 = 2, 6 = 3).
  */
 @RulesCollection(Rules.BB2016)
-@RulesCollection(Rules.BB2025)
+@RulesCollection(Rules.BB2020)
 public class Kick extends Skill {
 
 	public Kick() {

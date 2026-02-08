@@ -70,6 +70,8 @@ public enum SkillUse implements INamedObject {
 	SAVED_FUMBLE_BALL("savedFumbleBall", "to hold on to the ball"),
 	SAVED_FUMBLE_BOMB("savedFumbleBomb", "to hold on to the bomb and put out the fuse"),
 	GAIN_CLAWS_FOR_BLITZ("gainClaws", "to gain the Claws skill for this Blitz action"),
+	RE_ROLL_PUNT_DIRECTION("reRollPuntDirection", "to re-roll the punt direction"),
+	RE_ROLL_PUNT_DISTANCE("reRollPuntDistance", "to re-roll the punt distance"),
 	AVOID_DODGING("avoidDodging", "to avoid dodge rolls");
 
 	private final String fName;
