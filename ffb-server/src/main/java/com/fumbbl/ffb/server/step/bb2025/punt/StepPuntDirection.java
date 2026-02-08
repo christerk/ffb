@@ -17,6 +17,7 @@ import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2025.ReportPuntDirection;
@@ -116,7 +117,8 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		FieldModel fieldModel = game.getFieldModel();
 		fieldModel.setBallMoving(true);
 		ActingPlayer actingPlayer = game.getActingPlayer();
-
+		game.getTurnData().setPuntUsed(true);
+		actingPlayer.markSkillUsed(NamedProperties.canPunt);
 		if (outOfBounds) {
 			fieldModel.setOutOfBounds(true);
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));

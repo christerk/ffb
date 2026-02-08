@@ -152,7 +152,6 @@ public class StepInitPunt extends AbstractStep {
 				publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else if (coordinateTo != null) {
-				game.getTurnData().setPuntUsed(true);
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
 				publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, playerCoordinate));
 				fieldModel.clearMoveSquares();
