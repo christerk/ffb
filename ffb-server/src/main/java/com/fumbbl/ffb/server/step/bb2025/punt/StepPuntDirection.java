@@ -140,7 +140,6 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 		ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 		int roll = getGameState().getDiceRoller().rollThrowInDirection();
 		direction = mechanic.interpretThrowInDirectionRoll(baseDirection, roll);
-		publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
 		FieldCoordinate ballIndicatorCoordinate = coordinateFrom.move(direction, 1);
 		if (FieldCoordinateBounds.FIELD.isInBounds(ballIndicatorCoordinate)) {
 			fieldModel.setBallCoordinate(ballIndicatorCoordinate);
@@ -158,15 +157,14 @@ public class StepPuntDirection extends AbstractStepWithReRoll {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, null), false);
 				getResult().setNextAction(StepAction.CONTINUE);
-			} else {
-				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),
-					0, false, null, null)) {
-					getResult().setNextAction(StepAction.CONTINUE);
-				}
+				return;
+			} else if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),
+				0, false, null, null)) {
+				getResult().setNextAction(StepAction.CONTINUE);
+				return;
 			}
-		} else {
-			leave();
 		}
+		leave();
 	}
 
 	private void leave() {

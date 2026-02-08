@@ -112,7 +112,6 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 
 		getResult().addReport(new ReportPuntDistance(roll));
 
-
 		if (getReRolledAction() == null) {
 			setReRolledAction(ReRolledActions.PUNT_DISTANCE);
 
@@ -121,15 +120,14 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, null), false);
 				getResult().setNextAction(StepAction.CONTINUE);
-			} else {
-				if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),
-					0, false, null, null)) {
-					getResult().setNextAction(StepAction.CONTINUE);
-				}
+				return;
+			} else if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), getReRolledAction(),
+				0, false, null, null)) {
+				getResult().setNextAction(StepAction.CONTINUE);
+				return;
 			}
-		} else {
-			leave();
 		}
+		leave();
 	}
 
 	private FieldCoordinate findLastSquareOnPitch(int distance) {
@@ -148,7 +146,6 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 		} else {
-			publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_PUNT));
 		}
