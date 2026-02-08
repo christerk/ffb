@@ -15,7 +15,6 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2025.ReportPuntDistance;
@@ -119,7 +118,6 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 
 			ReRollSource skillReRoll = UtilCards.getUnusedRerollSource(actingPlayer, getReRolledAction());
 			if (skillReRoll != null) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogSkillUseParameter(actingPlayer.getPlayerId(), skillReRoll.getSkill(game), 0, null), false);
 				getResult().setNextAction(StepAction.CONTINUE);
