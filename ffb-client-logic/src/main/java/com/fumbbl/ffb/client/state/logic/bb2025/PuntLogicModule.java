@@ -41,7 +41,7 @@ public class PuntLogicModule extends MoveLogicModule {
 		if (player == actingPlayer.getPlayer()) {
 			return super.playerInteraction(player);
 		}
-		return InteractionResult.ignore();
+		return fieldInteraction(game.getFieldModel().getPlayerCoordinate(player));
 	}
 
 	@Override
