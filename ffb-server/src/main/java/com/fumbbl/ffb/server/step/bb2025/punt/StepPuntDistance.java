@@ -18,7 +18,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.bb2025.ReportPuntDirection;
+import com.fumbbl.ffb.report.bb2025.ReportPuntDistance;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -111,7 +111,7 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 		}
 		fieldModel.setBallCoordinate(ballIndicatorCoordinate);
 
-		getResult().addReport(new ReportPuntDirection(direction, roll, actingPlayer.getPlayerId()));
+		getResult().addReport(new ReportPuntDistance(roll));
 
 
 		if (getReRolledAction() == null) {
@@ -150,9 +150,10 @@ public class StepPuntDistance extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
-			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			publishParameter(new StepParameter(StepParameterKey.DIRECTION, direction));
+			publishParameter(
+				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_PUNT));
 		}
 	}
 

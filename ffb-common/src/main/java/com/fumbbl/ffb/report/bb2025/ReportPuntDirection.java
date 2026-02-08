@@ -19,7 +19,7 @@ import com.fumbbl.ffb.report.UtilReport;
 public class ReportPuntDirection extends NoDiceReport {
 
 	private Direction fDirection;
-	private int fDirectionRoll;
+	private int directionRoll;
 	private String playerId;
 
 	@SuppressWarnings("unused")
@@ -29,12 +29,12 @@ public class ReportPuntDirection extends NoDiceReport {
 
 	public ReportPuntDirection(Direction pDirection, int pDirectionRoll, String playerId) {
 		fDirection = pDirection;
-		fDirectionRoll = pDirectionRoll;
+		directionRoll = pDirectionRoll;
 		this.playerId = playerId;
 	}
 
 	public ReportId getId() {
-		return ReportId.THROW_IN;
+		return ReportId.PUNT_DIRECTION_ROLL;
 	}
 
 	public Direction getDirection() {
@@ -42,7 +42,7 @@ public class ReportPuntDirection extends NoDiceReport {
 	}
 
 	public int getDirectionRoll() {
-		return fDirectionRoll;
+		return directionRoll;
 	}
 
 	public String getPlayerId() {
@@ -61,7 +61,7 @@ public class ReportPuntDirection extends NoDiceReport {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.REPORT_ID.addTo(jsonObject, getId());
 		IJsonOption.DIRECTION.addTo(jsonObject, fDirection);
-		IJsonOption.DIRECTION_ROLL.addTo(jsonObject, fDirectionRoll);
+		IJsonOption.DIRECTION_ROLL.addTo(jsonObject, directionRoll);
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		return jsonObject;
 	}
@@ -70,7 +70,7 @@ public class ReportPuntDirection extends NoDiceReport {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilReport.validateReportId(this, (ReportId) IJsonOption.REPORT_ID.getFrom(source, jsonObject));
 		fDirection = (Direction) IJsonOption.DIRECTION.getFrom(source, jsonObject);
-		fDirectionRoll = IJsonOption.DIRECTION_ROLL.getFrom(source, jsonObject);
+		directionRoll = IJsonOption.DIRECTION_ROLL.getFrom(source, jsonObject);
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
