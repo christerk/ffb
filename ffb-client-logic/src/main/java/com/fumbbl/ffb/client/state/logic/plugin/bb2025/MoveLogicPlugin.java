@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.state.logic.plugin.bb2025;
 
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -36,6 +37,11 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
 					boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
 					communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
+				}
+				break;
+			case MOVE:
+				if (PlayerAction.PUNT == actingPlayer.getPlayerAction()) {
+					communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUNT_MOVE, actingPlayer.isJumping());
 				}
 				break;
 			default:

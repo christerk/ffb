@@ -73,6 +73,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				put(IPlayerPopupMenuKeys.KEY_STAB, ClientAction.STAB);
 				put(IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT, ClientAction.PROJECTILE_VOMIT);
 				put(IPlayerPopupMenuKeys.KEY_CHOMP, ClientAction.CHOMP);
+				put(IPlayerPopupMenuKeys.KEY_PUNT, ClientAction.PUNT);
 			} else {
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING, ClientAction.SHOT_TO_NOTHING);
 				put(IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING_BOMB, ClientAction.SHOT_TO_NOTHING_BOMB);
@@ -173,6 +174,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 					break;
 				case PLAYER_ACTION_SECURE_THE_BALL:
 					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_SECURE_THE_BALL);
+					break;
+				case PLAYER_ACTION_PUNT:
+					menuItemSelected(selectedPlayer, IPlayerPopupMenuKeys.KEY_PUNT);
 					break;
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
@@ -310,6 +314,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 			new MenuItemConfig("\"Blastin' Solves Everything\"", IIconProperty.ACTION_STARTED_BLASTIN,
 				IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN));
 		configs.put(ClientAction.CHOMP, new MenuItemConfig("Chomp", IIconProperty.ACTION_CHOMP, IPlayerPopupMenuKeys.KEY_CHOMP));
+		configs.put(ClientAction.PUNT, new MenuItemConfig("Punt", IIconProperty.ACTION_PUNT, IPlayerPopupMenuKeys.KEY_PUNT));
 
 		return configs;
 	}
@@ -326,6 +331,9 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 				IPlayerPopupMenuKeys.KEY_SHOT_TO_NOTHING));
 		treacherous.put(ClientAction.HAND_OVER,
 			new MenuItemConfig("Hand Over Action (Treacherous)", IIconProperty.ACTION_HAND_OVER,
+				IPlayerPopupMenuKeys.KEY_HAND_OVER));
+		treacherous.put(ClientAction.PUNT,
+			new MenuItemConfig("Punt (Treacherous)", IIconProperty.ACTION_HAND_OVER,
 				IPlayerPopupMenuKeys.KEY_HAND_OVER));
 		return configs;
 	}

@@ -147,6 +147,8 @@ public class DialogParameterFactory {
 				return new DialogSelectPositionParameter();
 			case RE_ROLL_REGENERATION_MULTIPLE:
 				return new DialogReRollRegenerationMultipleParameter();
+			case PUNT_TO_CROWD:
+				return new DialogPuntToCrowdParameter();
 			default:
 				return null;
 		}

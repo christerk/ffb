@@ -10,6 +10,7 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_GAZE_ZOAT = KeyEvent.VK_A;
 	int KEY_TREACHEROUS = KeyEvent.VK_A;
+	int KEY_PUNT = KeyEvent.VK_A;
 
 	int KEY_BLOCK = KeyEvent.VK_B;
 

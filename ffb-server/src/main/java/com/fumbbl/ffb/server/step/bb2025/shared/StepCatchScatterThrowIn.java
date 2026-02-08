@@ -294,6 +294,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case CATCH_HAND_OFF:
 			case CATCH_KICKOFF:
 			case CATCH_SCATTER:
+			case CATCH_PUNT:
 				fBombMode = false;
 				if (!StringTool.isProvided(fCatcherId)) {
 					fCatcherId = (playerUnderBall != null) ? playerUnderBall.getId() : null;
@@ -543,7 +544,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				getResult().setSound(SoundId.CATCH);
 				setReRolledAction(null);
 				if (((fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF)
-					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_ACCURATE_PASS))
+					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_ACCURATE_PASS)
+					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_PUNT))
 					&& (game.getTurnMode() != TurnMode.DUMP_OFF)
 					&& ((game.isHomePlaying() && game.getTeamAway().hasPlayer(state.catcher))
 					|| (!game.isHomePlaying() && game.getTeamHome().hasPlayer(state.catcher)))) {

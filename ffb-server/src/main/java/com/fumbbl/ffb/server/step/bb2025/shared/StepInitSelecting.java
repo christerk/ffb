@@ -455,6 +455,9 @@ public final class StepInitSelecting extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if (game.isTimeoutEnforced() || fEndTurn) {
+			if (game.isTimeoutEnforced()) {
+				publishParameter(StepParameter.from(StepParameterKey.CHECK_FORGO, true));
+			}
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 		} else if (fEndPlayerAction) {

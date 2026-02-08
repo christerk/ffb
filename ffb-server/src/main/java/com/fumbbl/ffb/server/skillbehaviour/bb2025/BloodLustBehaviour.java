@@ -112,7 +112,7 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 				}
 				if (status == ActionStatus.FAILURE) {
 					if (Arrays.asList(new PlayerAction[]
-							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, MULTIPLE_BLOCK, SECURE_THE_BALL}
+							{VICIOUS_VINES, BLOCK, PASS, HAND_OVER, THROW_BOMB, THROW_TEAM_MATE, KICK_TEAM_MATE, FOUL, STAND_UP, STAND_UP_BLITZ, MULTIPLE_BLOCK, SECURE_THE_BALL, PUNT}
 						)
 						.contains(actingPlayer.getPlayerAction())) {
 						boolean changeToMove = Arrays.asList(new PlayerAction[]{VICIOUS_VINES, BLOCK, THROW_BOMB, STAND_UP, MULTIPLE_BLOCK, SECURE_THE_BALL}).contains(actingPlayer.getPlayerAction());

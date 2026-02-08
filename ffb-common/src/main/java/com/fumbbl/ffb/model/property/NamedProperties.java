@@ -113,6 +113,7 @@ public class NamedProperties {
 	public static final ISkillProperty canPerformTwoBlocksAfterFailedFury = new NamedProperty("Can Perform Two Blocks After Failed Fury");
 	public static final ISkillProperty canPlaceBallWhenKnockedDownOrPlacedProne = new NamedProperty("Can Place Ball When Knocked Down Or Placed Prone");
 	public static final ISkillProperty canPushBackToAnySquare = new NamedProperty("Can Push Back To Any Square");
+	public static final ISkillProperty canPunt = new NamedProperty("Can Punt");
 	public static final ISkillProperty canPileOnOpponent = new NamedProperty("Can Pile On Opponent");
 	public static final ISkillProperty canReduceKickDistance = new NamedProperty("Can Reduce Kick Distance");
 	public static final ISkillProperty canRefuseToBePushed = new NamedProperty("Can Refuse To Be Pushed");
@@ -242,7 +243,8 @@ public class NamedProperties {
 	public static final ISkillProperty preventRegularHandOverAction = new NamedProperty(
 		"Prevent Regular Hand Over Action");
 	public static final ISkillProperty preventRegularPassAction = new NamedProperty("Prevent Regular Pass Action");
-	public static final ISkillProperty preventSecureTheBall = new NamedProperty("Prevent Secure The Ball");
+	public static final ISkillProperty preventPuntAction = new NamedProperty("Prevent Punt Action");
+	public static final ISkillProperty preventSecureTheBallAction = new NamedProperty("Prevent Secure The Ball Action");
 	public static final ISkillProperty preventStandUpAction = new NamedProperty("Prevent Regular Stand Up Action");
 	public static final ISkillProperty preventStuntyDodgeModifier = new NamedProperty("Prevent Stunty Dodge Modifier");
 	public static final ISkillProperty preventThrowTeamMateAction = new NamedProperty("Prevent Throw Team Mate Action");

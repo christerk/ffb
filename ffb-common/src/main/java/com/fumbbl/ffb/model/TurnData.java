@@ -39,6 +39,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean ktmUsed;
 	private boolean bombUsed;
 	private boolean secureTheBallUsed;
+	private boolean puntUsed;
 	private InducementSet fInducementSet;
 	private LeaderState fLeaderState;
 
@@ -309,6 +310,18 @@ public class TurnData implements IJsonSerializable {
 		notifyObservers(ModelChangeId.TURN_DATA_SET_SECURE_THE_BALL_USED, secureTheBallUsed);
 	}
 
+	public boolean isPuntUsed() {
+		return puntUsed;
+	}
+
+	public void setPuntUsed(boolean puntUsed) {
+		if (this.puntUsed == puntUsed) {
+			return;
+		}
+		this.puntUsed = puntUsed;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_PUNT_USED, puntUsed);
+	}
+
 	public boolean isHomeData() {
 		return fHomeData;
 	}
@@ -362,6 +375,7 @@ public class TurnData implements IJsonSerializable {
 		setBombUsed(false);
 		setSecureTheBallUsed(false);
 		setTtmUsed(false);
+		setPuntUsed(false);
 	}
 
 	public void init(TurnData pTurnData) {
@@ -384,6 +398,7 @@ public class TurnData implements IJsonSerializable {
 			bombUsed = pTurnData.isBombUsed();
 			secureTheBallUsed = pTurnData.isSecureTheBallUsed();
 			ttmUsed = pTurnData.isTtmUsed();
+			puntUsed = pTurnData.isPuntUsed();
 		}
 	}
 
@@ -426,6 +441,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE.addTo(jsonObject, reRollsPumpUpTheCrowdOneDrive);
 		IJsonOption.PLAGUE_DOCTORS.addTo(jsonObject, plagueDoctors);
 		IJsonOption.TTM_USED.addTo(jsonObject, ttmUsed);
+		IJsonOption.PUNT_USED.addTo(jsonObject, puntUsed);
 		return jsonObject;
 	}
 
@@ -455,6 +471,8 @@ public class TurnData implements IJsonSerializable {
 		secureTheBallUsed = secureTheBallValue != null && secureTheBallValue;
 		Boolean ttmValue = IJsonOption.TTM_USED.getFrom(source, jsonObject);
 		ttmUsed = ttmValue != null && ttmValue;
+		Boolean puntValue = IJsonOption.PUNT_USED.getFrom(source, jsonObject);
+		puntUsed = puntValue != null && puntValue;
 
 		fLeaderState = (LeaderState) IJsonOption.LEADER_STATE.getFrom(source, jsonObject);
 		fInducementSet = new InducementSet(this);

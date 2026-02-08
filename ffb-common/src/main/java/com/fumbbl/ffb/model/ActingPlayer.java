@@ -127,6 +127,7 @@ public class ActingPlayer implements IJsonSerializable {
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_CURRENT_MOVE, fCurrentMove);
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isMustCompleteAction() {
 		return mustCompleteAction;
 	}

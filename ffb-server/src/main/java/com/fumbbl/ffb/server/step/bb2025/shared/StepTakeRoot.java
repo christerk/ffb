@@ -113,6 +113,7 @@ public class StepTakeRoot extends AbstractStepWithReRoll {
 			case SECURE_THE_BALL:
 				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				// fall through
+			case PUNT_MOVE:
 			case MOVE:
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), false);
 				break;

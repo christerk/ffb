@@ -139,7 +139,8 @@ public class StepInitMoving extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
+			UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 			Game game = getGameState().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			switch (pReceivedCommand.getId()) {
@@ -148,7 +149,8 @@ public class StepInitMoving extends AbstractStep {
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
+							UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
 								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz)));
@@ -161,7 +163,8 @@ public class StepInitMoving extends AbstractStep {
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
+							UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
 								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
@@ -173,7 +176,8 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_BLOCK:
 					ClientCommandBlock blockCommand = (ClientCommandBlock) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blockCommand)) {
-						if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) && !actingPlayer.hasBlocked()
+						if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE ||
+							actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) && !actingPlayer.hasBlocked()
 							|| actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
 							if (actingPlayer.getPlayerAction() == PlayerAction.KICK_EM_BLITZ) {
 								commandStatus = dispatchPlayerAction(PlayerAction.KICK_EM_BLITZ);
@@ -215,11 +219,13 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
-						&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE || actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
+						&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE ||
+						actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
 
 						publishParameter(
 							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
-						PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
+						PlayerAction ttmAction =
+							throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 						commandStatus = dispatchPlayerAction(ttmAction);
 					}
 					break;
@@ -233,18 +239,27 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
-						if (actingPlayer.getPlayerAction() == PlayerAction.PUTRID_REGURGITATION_BLITZ) {
-							// we have to reset this here since other logic would otherwise prevent the vomit attack
-							// when the target does not match the selection state data
-							// there is another line like this in StepEndBlocking#executeStep
-							game.getFieldModel().setTargetSelectionState(null);
+						switch (actingPlayer.getPlayerAction()) {
+							case PUTRID_REGURGITATION_BLITZ:
+								// we have to reset this here since other logic would otherwise prevent the vomit attack
+								// when the target does not match the selection state data
+								// there is another line like this in StepEndBlocking#executeStep
+								game.getFieldModel().setTargetSelectionState(null);
+								break;
+							case PUNT:
+								commandStatus = dispatchPlayerAction(actingPlayer.getPlayerAction());
+							default:
+								break;
 						}
 					} else {
 						fEndPlayerAction = true;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
@@ -267,13 +282,18 @@ public class StepInitMoving extends AbstractStep {
 					Skill skill = clientCommandUseSkill.getSkill();
 					TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 					commandStatus = StepCommandStatus.SKIP_STEP;
-					if (targetSelectionState != null && skill.hasSkillProperty(NamedProperties.canAddBlockDie) && UtilCards.hasUnusedSkill(actingPlayer, skill)) {
-						FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
+					if (targetSelectionState != null && skill.hasSkillProperty(NamedProperties.canAddBlockDie) &&
+						UtilCards.hasUnusedSkill(actingPlayer, skill)) {
+						FieldCoordinate targetCoordinate =
+							game.getFieldModel().getPlayerCoordinate(game.getPlayerById(targetSelectionState.getSelectedPlayerId()));
 						FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 						DiceDecoration diceDecoration = game.getFieldModel().getDiceDecoration(targetCoordinate);
 						Player<?> defender = game.getPlayerById(targetSelectionState.getSelectedPlayerId());
-						boolean opponentCanMove = UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.canMoveBeforeBeingBlocked);
-						if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
+						boolean opponentCanMove =
+							UtilCards.hasUnusedSkillWithProperty(defender, NamedProperties.canMoveBeforeBeingBlocked);
+						if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 ||
+							(diceDecoration.getNrOfDice() == 3 && opponentCanMove)) &&
+							targetCoordinate.isAdjacent(playerCoordinate)) {
 							targetSelectionState.addUsedSkill(skill);
 							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ADD_BLOCK_DIE));
 							ServerUtilBlock.updateDiceDecorations(getGameState());
@@ -359,6 +379,10 @@ public class StepInitMoving extends AbstractStep {
 							break;
 						case SECURE_THE_BALL:
 							game.getTurnData().setSecureTheBallUsed(true);
+							break;
+						case PUNT:
+						case PUNT_MOVE:
+							game.getTurnData().setPuntUsed(true);
 							break;
 						default:
 							break;

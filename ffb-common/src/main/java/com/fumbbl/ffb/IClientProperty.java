@@ -70,6 +70,7 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_FORGO = "key.player.action.forgo";
 	String KEY_PLAYER_ACTION_CHOMP = "key.player.action.chomp";
 	String KEY_PLAYER_ACTION_INCORPOREAL = "key.player.action.incorporeal";
+	String KEY_PLAYER_ACTION_PUNT = "key.player.action.punt";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";

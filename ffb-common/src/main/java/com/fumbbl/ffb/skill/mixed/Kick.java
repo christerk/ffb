@@ -1,8 +1,8 @@
-package com.fumbbl.ffb.skill.common;
+package com.fumbbl.ffb.skill.mixed;
 
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
@@ -15,7 +15,8 @@ import com.fumbbl.ffb.model.skill.Skill;
  * choose to halve the number of squares that the ball scatters on kick-off,
  * rounding any fractions down (i.e., 1 = 0, 2-3 = 1, 4-5 = 2, 6 = 3).
  */
-@RulesCollection(Rules.COMMON)
+@RulesCollection(Rules.BB2016)
+@RulesCollection(Rules.BB2020)
 public class Kick extends Skill {
 
 	public Kick() {

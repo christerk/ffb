@@ -86,6 +86,7 @@ public class SelectLogicModule extends LogicModule {
 			add(ClientAction.FORGO);
 			add(ClientAction.THEN_I_STARTED_BLASTIN);
 			add(ClientAction.CHOMP);
+			add(ClientAction.PUNT);
 		}};
 	}
 
@@ -129,6 +130,13 @@ public class SelectLogicModule extends LogicModule {
 				case SECURE_THE_BALL:
 					if (isSecureTheBallActionAvailable(player)) {
 						communication.sendActingPlayer(player, PlayerAction.SECURE_THE_BALL, false);
+					}
+					break;
+				case PUNT:
+					communication.sendActingPlayer(player, PlayerAction.PUNT_MOVE, false);
+					if (isTreacherousAvailable(player)) {
+						Skill treacherous = player.getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
+						communication.sendUseSkill(treacherous, true, player.getId());
 					}
 					break;
 				case STAND_UP:
@@ -305,6 +313,9 @@ public class SelectLogicModule extends LogicModule {
 			if (UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGainHailMary)) {
 				context.add(ClientAction.SHOT_TO_NOTHING);
 			}
+		}
+		if (isPuntActionAvailable(player, treacherousAvailable)) {
+			context.add(ClientAction.PUNT);
 		}
 		if (isHandOverActionAvailable(player, treacherousAvailable)) {
 			context.add(ClientAction.HAND_OVER);

@@ -68,7 +68,8 @@ public enum NetCommandId implements INamedObject {
 	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches"),
 	CLIENT_SET_PREVENT_SKETCHING("clientSetPreventSketching"), SERVER_SET_PREVENT_SKETCHING("serverSetPreventSketching"),
 	CLIENT_PICK_UP_CHOICE("clientPickUpChoice"), CLIENT_KEYWORD_SELECTION("clientKeywordSelection"),
-	CLIENT_USE_HATRED("clientUseHatred"), CLIENT_POSITION_SELECTION("clientPositionSelection")
+	CLIENT_USE_HATRED("clientUseHatred"), CLIENT_POSITION_SELECTION("clientPositionSelection"),
+	CLIENT_PUNT_TO_CROWD("clientPuntToCrowd")
 	;
 
 	private final String fName;
@@ -328,6 +329,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandUseHatred();
 			case CLIENT_POSITION_SELECTION:
 				return new ClientCommandPositionSelection();
+			case CLIENT_PUNT_TO_CROWD:
+				return new ClientCommandPuntToCrowd();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

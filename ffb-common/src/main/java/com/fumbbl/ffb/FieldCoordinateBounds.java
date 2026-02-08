@@ -23,9 +23,6 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 	public static final FieldCoordinateBounds UPPER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 0),
 			new FieldCoordinate(25, 7));
 
-	public static final FieldCoordinateBounds LOWER_HALF = new FieldCoordinateBounds(new FieldCoordinate(0, 7),
-			new FieldCoordinate(25, 14));
-
 	public static final FieldCoordinateBounds CENTER_FIELD_HOME = new FieldCoordinateBounds(new FieldCoordinate(0, 4),
 			new FieldCoordinate(11, 10));
 
@@ -104,7 +101,7 @@ public class FieldCoordinateBounds implements IJsonSerializable {
 	}
 
 	public FieldCoordinate[] fieldCoordinates() {
-		LinkedList<FieldCoordinate> fieldCoordinates = new LinkedList<FieldCoordinate>();
+		LinkedList<FieldCoordinate> fieldCoordinates = new LinkedList<>();
 		for (int i = getTopLeftCorner().getX(); i <= getBottomRightCorner().getX(); i++) {
 			for (int k = getTopLeftCorner().getY(); k <= getBottomRightCorner().getY(); k++) {
 				fieldCoordinates.add(new FieldCoordinate(i, k));
