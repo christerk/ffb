@@ -29,7 +29,7 @@ public class DialogPuntToCrowdHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		DialogConfirmEndAction dialog = (DialogConfirmEndAction) pDialog;
+		DialogPuntToCrowd dialog = (DialogPuntToCrowd) pDialog;
 		getClient().getCommunication().sendPuntToCrowd(dialog.isChoiceYes());
 	}
 
