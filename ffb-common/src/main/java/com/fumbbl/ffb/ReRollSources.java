@@ -22,7 +22,8 @@ public class ReRollSources {
 	public static final ReRollSource BRIBERY_AND_CORRUPTION = new ReRollSource("Bribery and Corruption");
 	public static final ReRollSource BLIND_RAGE = new ReRollSource("Blind Rage");
 	public static final ReRollSource THE_BALLISTA = new ReRollSource("The Ballista", 2);
-	public static final ReRollSource MESMERIZING_DANCE = new ReRollSource("Mesmerizing Dance");
+	public static final ReRollSource MESMERISING_DANCE = new ReRollSource("Mesmerising Dance");
+	public static final ReRollSource MESMERIZING_DANCE = new ReRollSource("Mesmerizing Dance");	
 	public static final ReRollSource LORD_OF_CHAOS = new ReRollSource("Lord of Chaos");
 	public static final ReRollSource CONSUMMATE_PROFESSIONAL = new ReRollSource("Consummate Professional");
 	public static final ReRollSource PUMP_UP_THE_CROWD = new ReRollSource("Pump up the Crowd");
