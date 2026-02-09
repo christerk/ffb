@@ -12,9 +12,9 @@ import java.util.Set;
 
 public abstract class PlayerSelector {
 
-	public List<Player<?>> selectPlayers(Team team, Game game, int amount) {
+	public List<Player<?>> selectPlayers(Team team, Game game, int amount, Set<Skill> skills) {
 		List<Player<?>> selected = new ArrayList<>();
-		List<Player<?>> available = eligiblePlayers(determineTeam(team, game), game, Collections.emptySet());
+		List<Player<?>> available = eligiblePlayers(determineTeam(team, game), game, skills);
 
 		for (int i = 0; i < Math.min(amount, available.size()); i++) {
 			Collections.shuffle(available);

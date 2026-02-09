@@ -2,11 +2,14 @@ package com.fumbbl.ffb.server.inducements.mixed.prayers;
 
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.report.mixed.ReportPrayerWasted;
 import com.fumbbl.ffb.server.GameState;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 
@@ -16,7 +19,7 @@ public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 
 	@Override
 	public final boolean initEffect(GameState gameState, Team prayingTeam) {
-		List<Player<?>> players = selector().selectPlayers(prayingTeam, gameState.getGame(), affectedPlayers(gameState));
+		List<Player<?>> players = selector().selectPlayers(prayingTeam, gameState.getGame(), affectedPlayers(gameState), addedSkills(gameState));
 		if (players.isEmpty()) {
 			reports.add(new ReportPrayerWasted(this.handledPrayer().getName()));
 		}
@@ -30,5 +33,9 @@ public abstract class RandomSelectionPrayerHandler extends PrayerHandler {
 	@Override
 	public final void removeEffectInternal(GameState gameState, Team team) {
 		enhancementRemover.removeEnhancement(gameState, team, selector(), handledPrayer());
+	}
+
+	protected Set<Skill> addedSkills(GameState gameState) {
+		return Collections.emptySet();
 	}
 }

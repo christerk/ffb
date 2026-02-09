@@ -8,7 +8,7 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatDecrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatIncrementer;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
-import com.fumbbl.ffb.skill.mixed.Pro;
+import com.fumbbl.ffb.skill.bb2025.Pro;
 import com.fumbbl.ffb.skill.mixed.Loner;
 import com.fumbbl.ffb.skill.bb2025.MightyBlow;
 import com.fumbbl.ffb.skill.bb2025.Stab;

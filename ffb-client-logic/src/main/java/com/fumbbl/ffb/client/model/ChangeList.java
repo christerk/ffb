@@ -9,12 +9,15 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")
+		versions.add(new VersionChangeList("Future"));
+
+		versions.add(new VersionChangeList("2026-02-09")
 			.addBugfix("Apos not sending BH to reserve")
 			.addBugfix("Successfully regenerated players still marked as dead in dugout")
 			.addBugfix("Skipping regeneration re-roll caused loop")
 			.addBugfix("Prevent Plague Ridden against regeneration")
 			.addBugfix("Prevent raising star player")
+			.addBugfix("Dodgy Snack was removed properly")
 		);
 
 		versions.add(new VersionChangeList("2026-02-08b")
