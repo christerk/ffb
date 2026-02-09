@@ -18,6 +18,8 @@ public class ChangeList {
 			.addBugfix("Prevent Plague Ridden against regeneration")
 			.addBugfix("Prevent raising star player")
 			.addBugfix("Dodgy Snack was removed properly")
+			.addBugfix("Old Pro (Star Helmut Wulf)")
+			.addFeature("Mesmerising Dance (Star Eldril Sidewinder)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-08b")

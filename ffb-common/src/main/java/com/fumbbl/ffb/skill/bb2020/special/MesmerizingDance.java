@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed.special;
+package com.fumbbl.ffb.skill.bb2020.special;
 
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
@@ -13,7 +13,6 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
  */
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class MesmerizingDance extends Skill {
 
 	public MesmerizingDance() {
