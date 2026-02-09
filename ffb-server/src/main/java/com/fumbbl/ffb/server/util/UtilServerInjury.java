@@ -167,6 +167,11 @@ public class UtilServerInjury {
 		return handleRegeneration(pStep, pPlayer, null);
 	}
 
+	/**
+	 * The passed in player state will be modified in case of a success and saved to the field model.
+	 * Callers need to apply that to the injury context themselves.
+	 *
+	 */
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer, PlayerState givenPlayerState) {
 		return handleRegeneration(pStep, pPlayer, givenPlayerState, false);
 	}

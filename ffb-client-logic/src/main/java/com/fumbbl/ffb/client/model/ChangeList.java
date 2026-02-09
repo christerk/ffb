@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+			.addBugfix("Apos not sending BH to reserve")
+			.addBugfix("Successfully regenerated players still marked as dead in dugout")
+			.addBugfix("Skipping regeneration re-roll caused loop")
+			.addBugfix("Prevent Plague Ridden against regeneration")
+			.addBugfix("Prevent raising star player")
 		);
 
 		versions.add(new VersionChangeList("2026-02-08b")
