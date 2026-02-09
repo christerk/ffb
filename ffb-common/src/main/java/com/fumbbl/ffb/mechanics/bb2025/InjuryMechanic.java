@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 	@Override
@@ -67,7 +66,8 @@ public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 
 	@Override
 	public List<RosterPosition> raisePositions(Team team) {
-		return Arrays.stream(team.getRoster().getPositions()).filter(pos -> pos.getKeywords().contains(Keyword.LINEMAN))
+		return Arrays.stream(team.getRoster().getPositions())
+			.filter(pos -> pos.getKeywords().contains(Keyword.LINEMAN) && pos.getType() != PlayerType.STAR)
 			.collect(Collectors.toList());
 	}
 
