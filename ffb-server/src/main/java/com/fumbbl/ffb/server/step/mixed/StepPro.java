@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.bb2020;
+package com.fumbbl.ffb.server.step.mixed;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -28,6 +28,7 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import java.util.Arrays;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPro extends AbstractStepWithReRoll {
 
 	private String playerId;
