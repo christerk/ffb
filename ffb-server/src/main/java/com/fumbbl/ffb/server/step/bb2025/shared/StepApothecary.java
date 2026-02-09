@@ -189,6 +189,7 @@ public class StepApothecary extends AbstractStep {
 							if (UtilServerReRoll.useReRoll(this, ReRollSources.TEAM_RE_ROLL, player)) {
 								if (UtilServerInjury.handleRegeneration(this, player, fInjuryResult.injuryContext().getPlayerState(),
 									true)) {
+									fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 								}
 							}
