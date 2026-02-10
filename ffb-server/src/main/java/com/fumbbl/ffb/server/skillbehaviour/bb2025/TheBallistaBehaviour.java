@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2025;
 
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -10,7 +11,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2025.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2025.ttm.StepThrowTeamMate;
-import com.fumbbl.ffb.skill.mixed.special.TheBallista;
+import com.fumbbl.ffb.skill.bb2025.special.TheBallista;
 
 @RulesCollection(Rules.BB2025)
 public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
@@ -21,7 +22,8 @@ public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 			@Override
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepThrowTeamMate.StepState state,
 			                                           ClientCommandUseSkill useSkillCommand) {
-				step.setReRolledAction(ReRolledActions.THROW_TEAM_MATE);
+				ReRolledAction action = state.kicked ? ReRolledActions.KICK_TEAM_MATE : ReRolledActions.THROW_TEAM_MATE;
+				step.setReRolledAction(action);
 				step.setReRollSource(useSkillCommand.isSkillUsed() ? getReRollSource() : null);
 				return StepCommandStatus.EXECUTE_STEP;
 			}

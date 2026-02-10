@@ -11,6 +11,11 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Toxin Connoisseur (Rashnak Backstabber) - Also works with Violent Innovator"));
+			.addFeature("The Ballista (Star Morg 'n' Thorg) now works with KTM too")
+			.addFeature("Crushing Blow (The Mighty Zug)")
+			.addFeature("Maximum Carnage (Star Max Spleenripper)")
+			.addFeature("Bounding Leap (Rowana Forestfoot)")
+		);
 
 		versions.add(new VersionChangeList("2026-02-09")
 			.addBugfix("Apos not sending BH to reserve")
