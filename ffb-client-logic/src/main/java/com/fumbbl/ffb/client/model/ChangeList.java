@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+			.addFeature("The Ballista (Star Morg 'n' Thorg) now works with KTM too")
 			.addFeature("Crushing Blow (The Mighty Zug)")
 			.addFeature("Maximum Carnage (Star Max Spleenripper)")
 			.addFeature("Bounding Leap (Rowana Forestfoot)")

@@ -10,7 +10,7 @@ import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2020.pass.StepHailMaryPass;
 import com.fumbbl.ffb.server.step.bb2020.ttm.StepThrowTeamMate;
-import com.fumbbl.ffb.skill.mixed.special.TheBallista;
+import com.fumbbl.ffb.skill.bb2020.special.TheBallista;
 
 @RulesCollection(Rules.BB2020)
 public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
