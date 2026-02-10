@@ -265,7 +265,7 @@ public class StepJump extends AbstractStepWithReRoll {
 			(AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 
-		boolean doRoll = usingDivingTackle == null
+		boolean doRoll = (usingDivingTackle == null || useIgnoreModifierSkill)
 			&& (reRolled  || ((status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) && !dtRerollAsked));
 		if (doRoll) {
 			roll = getGameState().getDiceRoller().rollSkill();
