@@ -427,7 +427,7 @@ public class StepEndBlocking extends AbstractStep {
 						} else if (
 							usingChainsaw && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformSecondChainsawAttack)
 								&& attackerState.hasTacklezones() && hasValidOtherOpponent &&
-								(blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.BLOCK || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ && playerState.isRooted()))
+								(blitzWithMoveLeft || actingPlayer.getPlayerAction() == PlayerAction.CHAINSAW || (actingPlayer.getPlayerAction() == PlayerAction.BLITZ && playerState.isRooted()))
 						) {
 							game.setLastDefenderId(defenderId);
 							UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MAXIMUM_CARNAGE, false);
