@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed.special;
+package com.fumbbl.ffb.skill.bb2020.special;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillCategory;
@@ -8,7 +8,6 @@ import com.fumbbl.ffb.modifiers.StaticInjuryModifierAttacker;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class ASneakyPair extends Skill {
 	public ASneakyPair() {
 		super("A Sneaky Pair", SkillCategory.TRAIT);
