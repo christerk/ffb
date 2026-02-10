@@ -45,7 +45,7 @@ public class InjuryTypeTTMHitPlayerForSpp extends InjuryTypeServer<TTMHitPlayerF
 			if (!injuryContext.isArmorBroken() && lethalFlight.isPresent() 
 					&& !UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
 				lethalFlight.get().getArmorModifiers().stream()
-					.filter(mod -> mod.appliesToContext(new ArmorModifierContext(game, pAttacker, pDefender, false, false)))
+					.filter(mod -> mod.appliesToContext(new ArmorModifierContext(game, pAttacker, pDefender, false, false, 0, true)))
 					.forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 				lethalFlight = Optional.empty(); // consumed on armour
@@ -56,7 +56,7 @@ public class InjuryTypeTTMHitPlayerForSpp extends InjuryTypeServer<TTMHitPlayerF
 			injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
 			lethalFlight.ifPresent(skill -> skill.getInjuryModifiers().stream()
-				.filter(mod -> mod.appliesToContext(new InjuryModifierContext(game, injuryContext, pAttacker, pDefender, false, false, false, false)))
+				.filter(mod -> mod.appliesToContext(new InjuryModifierContext(game, injuryContext, pAttacker, pDefender, false, false, false, false, true)))
 				.forEach(injuryContext::addInjuryModifier));
 
 			setInjury(pDefender, gameState, diceRoller);

@@ -10,18 +10,25 @@ public class ArmorModifierContext {
 	private final boolean isStab;
 	private final boolean isFoul;
 	private final int foulAssists;
+	private final boolean isTtm;
 
 	public ArmorModifierContext(Game game, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul) {
 		this(game, attacker, defender, isStab, isFoul, 0);
 	}
 
 	public ArmorModifierContext(Game game, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul, int foulAssists) {
+		this(game, attacker, defender, isStab, isFoul, foulAssists, false);
+	}
+
+	public ArmorModifierContext(Game game, Player<?> attacker, Player<?> defender, boolean isStab, boolean isFoul, int foulAssists, 
+		boolean isTtm) {
 		this.game = game;
 		this.attacker = attacker;
 		this.defender = defender;
 		this.isStab = isStab;
 		this.isFoul = isFoul;
 		this.foulAssists = foulAssists;
+		this.isTtm = isTtm;
 	}
 
 	public Game getGame() {
@@ -46,5 +53,9 @@ public class ArmorModifierContext {
 
 	public int getFoulAssists() {
 		return foulAssists;
+	}
+
+	public boolean isTtm() {
+		return isTtm;
 	}
 }
