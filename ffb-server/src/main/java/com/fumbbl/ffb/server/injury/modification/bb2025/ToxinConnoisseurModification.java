@@ -1,19 +1,25 @@
-package com.fumbbl.ffb.server.injury.modification;
+package com.fumbbl.ffb.server.injury.modification.bb2025;
 
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.Stab;
+import com.fumbbl.ffb.injury.StabForSpp;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
+import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
-import java.util.Collections;
+import java.util.HashSet;
 
 public class ToxinConnoisseurModification extends InjuryContextModification<ModificationParams> {
 
 	public ToxinConnoisseurModification() {
-		super(Collections.singleton(Stab.class));
+		super(new HashSet<Class<? extends InjuryType>>() {{
+			add(Stab.class);
+			add(StabForSpp.class);
+		}});
 	}
 
 	@Override
