@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future"));
+		versions.add(new VersionChangeList("Future")
+			.addFeature("Crushing Blow (The Mighty Zug)")
+		);
 
 		versions.add(new VersionChangeList("2026-02-09")
 			.addBugfix("Apos not sending BH to reserve")
