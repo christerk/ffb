@@ -20,25 +20,25 @@ public class ASneakyPair extends Skill {
 
 	@Override
 	public void postConstruct() {
-    registerModifier(new StaticArmourModifier(getName(), 1, false) {
-      @Override
-      public boolean appliesToContext(ArmorModifierContext context) {
-        return super.appliesToContext(context) && (context.isFoul() || context.isStab())
-          && UtilPlayer.partnerMarksDefender(context.getGame(), context.getDefender(), ASneakyPair.this);
-      }
-    });
+		registerModifier(new StaticArmourModifier(getName(), 1, false) {
+			@Override
+			public boolean appliesToContext(ArmorModifierContext context) {
+				return super.appliesToContext(context) && (context.isFoul() || context.isStab())
+					&& UtilPlayer.partnerMarksDefender(context.getGame(), context.getDefender(), ASneakyPair.this);
+			}
+		});
 
 		registerModifier(new StaticInjuryModifierAttacker(getName(), 1, false) {
-      @Override
-      public boolean appliesToContext(InjuryModifierContext context) {
-        return super.appliesToContext(context)
+			@Override
+			public boolean appliesToContext(InjuryModifierContext context) {
+				return super.appliesToContext(context)
 					&& (context.isFoul() || context.isStab())
 					&& UtilPlayer.partnerMarksDefender(context.getGame(), context.getDefender(), ASneakyPair.this)
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())
 					.noneMatch(mod -> mod.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner));
-      }
-    });
+			}
+		});
 
-    registerProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner);
+		registerProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner);
 	}
 }

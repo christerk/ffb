@@ -15,7 +15,7 @@ public class ChangeList {
 			.addFeature("Crushing Blow (The Mighty Zug)")
 			.addFeature("Maximum Carnage (Star Max Spleenripper)")
 			.addFeature("Bounding Leap (Rowana Forestfoot)")
-			.addFeature("A Sneaky Pair(Dribl and Drull)")
+			.addFeature("A Sneaky Pair (Dribl and Drull)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
