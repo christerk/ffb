@@ -9,7 +9,8 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future"));
+		versions.add(new VersionChangeList("Future")
+			.addFeature("Toxin Connoisseur (Rashnak Backstabber) - Also works with Violent Innovator"));
 
 		versions.add(new VersionChangeList("2026-02-09")
 			.addBugfix("Apos not sending BH to reserve")
