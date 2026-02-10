@@ -23,7 +23,7 @@ public class TheBallistaBehaviour extends AbstractPassBehaviour<TheBallista> {
 			public StepCommandStatus handleCommandHook(StepThrowTeamMate step, StepThrowTeamMate.StepState state,
 			                                           ClientCommandUseSkill useSkillCommand) {
 				ReRolledAction action = state.kicked ? ReRolledActions.KICK_TEAM_MATE : ReRolledActions.THROW_TEAM_MATE;
-    		step.setReRolledAction(action);
+				step.setReRolledAction(action);
 				step.setReRollSource(useSkillCommand.isSkillUsed() ? getReRollSource() : null);
 				return StepCommandStatus.EXECUTE_STEP;
 			}
