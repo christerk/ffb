@@ -11,6 +11,8 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addFeature("Crushing Blow (The Mighty Zug)")
+			.addFeature("Maximum Carnage (Star Max Spleenripper)")
+			.addFeature("Bounding Leap (Rowana Forestfoot)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
