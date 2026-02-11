@@ -38,7 +38,8 @@ public class LethalFlight extends Skill {
 		registerModifier(new StaticArmourModifier("Lethal Flight", 1, false) {
 			@Override
 			public boolean appliesToContext(ArmorModifierContext context) {
-				return context.getAttacker() != null
+				return context.isTtm() 
+					&& context.getAttacker() != null
 					&& UtilCards.hasSkill(context.getAttacker(), registeredTo)
 					&& context.getAttacker().getTeam() != context.getDefender().getTeam();
 			}
@@ -47,6 +48,7 @@ public class LethalFlight extends Skill {
 			@Override
 			public boolean appliesToContext(InjuryModifierContext context) {
 				return super.appliesToContext(context)
+					&& context.isTtm()
 					&& context.getAttacker() != null
 					&& context.getAttacker().getTeam() != context.getDefender().getTeam()
 					&& Arrays.stream(context.getInjuryContext().getArmorModifiers())

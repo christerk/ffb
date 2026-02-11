@@ -15,6 +15,7 @@ public class ChangeList {
 			.addFeature("Crushing Blow (The Mighty Zug)")
 			.addFeature("Maximum Carnage (Star Max Spleenripper)")
 			.addFeature("Bounding Leap (Rowana Forestfoot)")
+			.addBugfix("Lethal Flight modifier was being added to other actions")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
