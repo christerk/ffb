@@ -45,7 +45,7 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 	}
 
 	protected void register(ClientState<? extends LogicModule, T> pClientState) {
-		fClientStateById.put(pClientState.getId(), pClientState);
+		fClientStateById.putIfAbsent(pClientState.getId(), pClientState);
 	}
 
 	public ClientState<? extends LogicModule, T> getStateForGame() {
