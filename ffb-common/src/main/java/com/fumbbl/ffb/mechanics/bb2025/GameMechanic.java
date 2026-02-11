@@ -15,9 +15,11 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.WisdomOfTheWhiteDwarf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -184,7 +186,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return Collections.emptySet();
+		return new HashSet<Class<? extends Skill>>() {{
+			add(WisdomOfTheWhiteDwarf.class);
+		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
 	}
 
 	@Override

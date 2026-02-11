@@ -39,7 +39,6 @@ import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
 import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
-import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
@@ -459,7 +458,8 @@ public class FieldModel implements IJsonSerializable {
 
 	public void addWisdomSkill(String playerId, SkillWithValue skillWithValue) {
 		Player<?> player = getGame().getPlayerById(playerId);
-		Skill wisdomSkill = ((SkillFactory) getGame().getFactory(Factory.SKILL)).forClass(WisdomOfTheWhiteDwarf.class);
+		SkillFactory skillFactory = (SkillFactory) getGame().getFactory(Factory.SKILL);
+		Skill wisdomSkill = skillFactory.forName("Wisdom of the White Dwarf");
 		player.addTemporarySkills(wisdomSkill.getName(), Collections.singleton(skillWithValue));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_WISDOM, playerId, skillWithValue.getSkill());
 	}
