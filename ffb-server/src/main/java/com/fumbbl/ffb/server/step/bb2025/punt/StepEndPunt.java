@@ -7,7 +7,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
@@ -19,7 +18,6 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndPunt extends AbstractStep {
@@ -72,15 +70,7 @@ public final class StepEndPunt extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		EndPlayerAction endGenerator = ((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()));
 
-		Player<?> catcher;
-		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
-		if (ballWasSnatched) {
-			catcher = game.getPlayerById(catcherId);
-		} else {
-			catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
-		}
-
-		endTurn |= (UtilServerSteps.checkTouchdown(getGameState()) || (catcher == null));
+		endTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, true, endTurn));
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
