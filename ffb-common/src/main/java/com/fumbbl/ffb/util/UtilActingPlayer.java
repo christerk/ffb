@@ -58,7 +58,10 @@ public class UtilActingPlayer {
 				actingPlayer.getSkillsGrantedBy().forEach((key, value) -> {
 					if (key != null && value != null) {
 						Skill skill = skillFactory.forName(key);
-						value.stream().map(pGame::getPlayerById).forEach(player -> player.markUnused(skill, pGame));
+							value.stream().map(pGame::getPlayerById).forEach(player -> {
+								player.markUnused(skill, pGame);
+								pGame.getFieldModel().removeSkillEnhancements(player, key);
+						});
 					}
 				});
 			}
