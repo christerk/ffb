@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")
+		versions.add(new VersionChangeList("Future")		);
+
+		versions.add(new VersionChangeList("2026-02-12")
 			.addBugfix("Lethal Flight modifier was being added to other actions")
 			.addBugfix("Plague Doctor usage for failed regeneration did not update apo count")
 			.addBugfix("Declining Mortuary Assistant usage for failed regeneration did always ask for apo even when none was available")
