@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Plague Doctor usage for failed regeneration did not update apo count")
 			.addBugfix("Declining Mortuary Assistant usage for failed regeneration did always ask for apo even when none was available")
 			.addFeature("A Sneaky Pair (Dribl and Drull)")
+			.addBugfix("No turnover when punt lands on the ground")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
