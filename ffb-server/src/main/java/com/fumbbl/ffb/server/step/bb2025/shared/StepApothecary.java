@@ -170,7 +170,9 @@ public class StepApothecary extends AbstractStep {
 									fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 								} else {
-									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
+									ApothecaryStatus newStatus = ApothecaryType.forPlayer(game, player,
+										fInjuryResult.injuryContext().getPlayerState()).isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
+									fInjuryResult.injuryContext().setApothecaryStatus(newStatus);
 								}
 							}
 							fInjuryResult.passedRegeneration();

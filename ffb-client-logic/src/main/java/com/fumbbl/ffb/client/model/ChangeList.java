@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+			.addBugfix("Lethal Flight modifier was being added to other actions")
+			.addBugfix("Plague Doctor usage for failed regeneration did not update apo count")
+		);
+
+		versions.add(new VersionChangeList("2026-02-09")
 			.addFeature("Toxin Connoisseur (Rashnak Backstabber) - Also works with Violent Innovator")
 			.addFeature("The Ballista (Star Morg 'n' Thorg) now works with KTM too")
 			.addFeature("Crushing Blow (The Mighty Zug)")
