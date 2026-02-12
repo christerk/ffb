@@ -12,6 +12,8 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Lethal Flight modifier was being added to other actions")
 			.addBugfix("Plague Doctor usage for failed regeneration did not update apo count")
+			.addBugfix("Declining Mortuary Assistant usage for failed regeneration did always ask for apo even when none was available")
+			.addFeature("A Sneaky Pair (Dribl and Drull)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
@@ -20,7 +22,6 @@ public class ChangeList {
 			.addFeature("Crushing Blow (The Mighty Zug)")
 			.addFeature("Maximum Carnage (Star Max Spleenripper)")
 			.addFeature("Bounding Leap (Rowana Forestfoot)")
-			.addFeature("A Sneaky Pair (Dribl and Drull)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")

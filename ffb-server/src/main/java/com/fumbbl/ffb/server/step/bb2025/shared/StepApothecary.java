@@ -156,9 +156,9 @@ public class StepApothecary extends AbstractStep {
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
 					if (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE) {
 						InducementType inducementType = clientCommandUseInducement.getInducementType();
+						Player<?> player = injuredPlayer();
 						if (inducementType != null && inducementType.hasUsage(Usage.REGENERATION)) {
 							if (UtilServerInducementUse.useInducement(inducementType, 1, getTurnData().getInducementSet())) {
-								Player<?> player = injuredPlayer();
 								if (inducementType.hasUsage(Usage.APOTHECARY_JOURNEYMEN)) {
 									TurnData turnData =
 										game.getTeamHome().hasPlayer(player) ? game.getTurnDataHome() : game.getTurnDataAway();
@@ -177,7 +177,9 @@ public class StepApothecary extends AbstractStep {
 							}
 							fInjuryResult.passedRegeneration();
 						} else if (inducementType == null) {
-							fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
+							ApothecaryStatus newStatus = ApothecaryType.forPlayer(game, player,
+								fInjuryResult.injuryContext().getPlayerState()).isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
+							fInjuryResult.injuryContext().setApothecaryStatus(newStatus);
 							fInjuryResult.passedRegeneration();
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
