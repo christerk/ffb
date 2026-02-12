@@ -75,8 +75,19 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 			if (!injuryContext.isArmorBroken()) {
 				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
 					isFoul());
+					
+				Optional<ArmorModifier> sneakyPair = armorModifiers.stream()
+					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner))
+					.findFirst();
+				sneakyPair.ifPresent(armorModifiers::remove);
+
 				injuryContext.addArmorModifiers(armorModifiers);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+
+				if (!injuryContext.isArmorBroken() && sneakyPair.isPresent()) {
+					injuryContext.addArmorModifier(sneakyPair.get());
+					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+				}
 			}
 
 		}
