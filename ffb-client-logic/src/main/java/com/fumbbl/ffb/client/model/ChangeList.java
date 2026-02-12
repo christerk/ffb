@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Lethal Flight modifier was being added to other actions")
 			.addBugfix("Plague Doctor usage for failed regeneration did not update apo count")
+			.addFeature("Wisdom of the White Dwarf (Star Grombrindal)")
 		);
 
 		versions.add(new VersionChangeList("2026-02-09")
