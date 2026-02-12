@@ -194,7 +194,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
 		return new HashSet<Class<? extends Skill>>() {{
 			add(WisdomOfTheWhiteDwarf.class);
-		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
+		}}.stream().map(skillFactory::forClass).map(Skill::enhancementSourceName).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -238,6 +238,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 		return Arrays.stream(teamMates)
 			.filter(teamMate -> !teamMate.getId().equals(player.getId()))
+			.filter(teamMate -> game.getFieldModel().getPlayerState(teamMate).isActive())
 			.anyMatch(teamMate -> {
 				Set<Skill> targetOwnedSkills = teamMate.getSkillsIncludingTemporaryOnes();
 				return Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()

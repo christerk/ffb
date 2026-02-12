@@ -458,9 +458,8 @@ public class FieldModel implements IJsonSerializable {
 
 	public void addWisdomSkill(String playerId, SkillWithValue skillWithValue) {
 		Player<?> player = getGame().getPlayerById(playerId);
-		SkillFactory skillFactory = (SkillFactory) getGame().getFactory(Factory.SKILL);
-		Skill wisdomSkill = skillFactory.forName("Wisdom of the White Dwarf");
-		player.addTemporarySkills(wisdomSkill.getName(), Collections.singleton(skillWithValue));
+		Skill wisdomSkill = ((SkillFactory) getGame().getFactory(Factory.SKILL)).forName("Wisdom of the White Dwarf");
+		player.addTemporarySkills(wisdomSkill.enhancementSourceName(), Collections.singleton(skillWithValue));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_WISDOM, playerId, skillWithValue.getSkill());
 	}
 

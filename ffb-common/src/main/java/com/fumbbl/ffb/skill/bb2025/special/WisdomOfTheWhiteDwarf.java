@@ -23,4 +23,9 @@ public class WisdomOfTheWhiteDwarf extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canGrantSkillsToTeamMates);
 	}
+
+	@Override
+	public String enhancementSourceName() {
+		return "Granted by Wisdom of the White Dwarf";
+	}
 }
