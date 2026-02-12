@@ -99,7 +99,6 @@ public class StepWisdomOfTheWhiteDwarf extends AbstractStep {
 		if (!StringTool.isProvided(playerId)) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 			String[] wisePlayers = Arrays.stream(UtilPlayer.findStandingOrPronePlayers(game, game.getActingTeam(), playerCoordinate, 2))
-				.filter(teamMate -> !teamMate.getId().equals(player.getId()))
 				.filter(teamMate -> game.getFieldModel().getPlayerState(teamMate).isActive())
 				.map(Player::getId)
 				.toArray(String[]::new);
