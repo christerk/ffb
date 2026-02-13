@@ -141,7 +141,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		if (injuryContext instanceof ModifiedInjuryContext) {
 			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
 			if (modification == InjuryModification.INJURY) {
-				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
+				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.EVERYTHING_BUT_CAS;
 			}
 		} else if (injuryContext.getModifiedInjuryContext() != null) {
 			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
