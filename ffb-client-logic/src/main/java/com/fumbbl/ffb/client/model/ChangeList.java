@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Whirling Dervish can only be used once")
 			.addBugfix("B&C prevents Secure the Ball")
+			.addBugfix("\"Kick'em while they're down\" as blitz version is working again")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
