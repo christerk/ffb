@@ -237,7 +237,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		Player<?>[] teamMates = UtilPlayer.findStandingOrPronePlayers(game, player.getTeam(), playerCoordinate, 2);
 
 		return Arrays.stream(teamMates)
-			.filter(teamMate -> !teamMate.getId().equals(player.getId()))
 			.filter(teamMate -> game.getFieldModel().getPlayerState(teamMate).isActive())
 			.anyMatch(teamMate -> {
 				Set<Skill> targetOwnedSkills = teamMate.getSkillsIncludingTemporaryOnes();
