@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")		);
+		versions.add(new VersionChangeList("Future")
+			.addBugfix("Whirling Dervish can only be used once")
+		);
 
 		versions.add(new VersionChangeList("2026-02-12")
 			.addBugfix("Lethal Flight modifier was being added to other actions")
