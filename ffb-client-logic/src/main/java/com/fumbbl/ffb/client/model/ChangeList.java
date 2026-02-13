@@ -10,10 +10,14 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
+			.addBugfix("Savage Mauling reports injury only once")
+			.addBugfix("Team Captain needs to be on the pitch to save re-roll")
+		);
+
+		versions.add(new VersionChangeList("2026-02-12")
 			.addBugfix("Whirling Dervish can only be used once")
 			.addBugfix("B&C prevents Secure the Ball")
 			.addBugfix("\"Kick'em while they're down\" as blitz version is working again")
-			.addBugfix("Savage Mauling reports injury only once")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
