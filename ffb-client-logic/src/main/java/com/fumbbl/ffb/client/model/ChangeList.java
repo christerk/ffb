@@ -13,6 +13,7 @@ public class ChangeList {
 			.addBugfix("Whirling Dervish can only be used once")
 			.addBugfix("B&C prevents Secure the Ball")
 			.addBugfix("\"Kick'em while they're down\" as blitz version is working again")
+			.addBugfix("Savage Mauling reports injury only once")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
