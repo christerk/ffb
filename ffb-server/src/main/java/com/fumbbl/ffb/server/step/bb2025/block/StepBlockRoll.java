@@ -56,6 +56,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -134,7 +135,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
-					ClientCommandUseSingleBlockDieReRoll commandUseSkill = (ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
+					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
+						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
 					setReRolledAction(ReRolledActions.BLOCK);
 					setReRollSource(commandUseSkill.getReRollSource());
 					dieIndex = commandUseSkill.getDieIndex();
@@ -234,12 +236,9 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			actingPlayer.markSkillUsed(addDieSkill.get());
 		}
 
-
-		ReRollSource singleDieReRollSource =
-			UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.SINGLE_DIE);
-
 		if (getReRollSource() == ReRollSources.PRO ||
-			(getReRollSource() == singleDieReRollSource && singleDieReRollSource != null)) {
+			(getReRollSource() != null &&
+				getReRollSource().getSkill(game).hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod))) {
 			if (getReRollSource() == ReRollSources.PRO) {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 			}
@@ -302,18 +301,24 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 			ReRollSource singleBlock = null;
 			if (UtilPlayer.blockWouldKnockDownAttacker(game, actingPlayer, fBlockRoll, fNrOfDice < 0)
-				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)) {
-				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)
+				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer,
+				NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown)) {
+				singleBlock = Objects.requireNonNull(UtilCards.getUnusedSkillWithProperty(actingPlayer,
+						NamedProperties.canRerollSingleBlockDieWhenWouldBeKnockedDown))
 					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
 			} else if (actingPlayer.getPlayerAction().isBlitzing()
 				&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)) {
-				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz)
+				singleBlock = Objects.requireNonNull(
+						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieDuringBlitz))
 					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
-			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
-				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod)
+			} else if (UtilCards.hasUnusedSkillWithProperty(actingPlayer,
+				NamedProperties.canRerollSingleBlockDieOncePerPeriod)) {
+				singleBlock = Objects.requireNonNull(
+						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieOncePerPeriod))
 					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
 			} else if (UtilPlayer.isAttackerWorkingInTandem(game, actingPlayer.getPlayer(), game.getDefender())) {
-				singleBlock = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking)
+				singleBlock = Objects.requireNonNull(UtilCards.getUnusedSkillWithProperty(actingPlayer,
+						NamedProperties.canRerollSingleBlockDieWhenPartnerIsMarking))
 					.getRerollSource(ReRolledActions.SINGLE_BLOCK_DIE);
 			}
 			if (singleBlock != null) {

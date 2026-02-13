@@ -9,9 +9,12 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")
+		versions.add(new VersionChangeList("Future")		);
+
+		versions.add(new VersionChangeList("2026-02-13")
 			.addBugfix("Savage Mauling reports injury only once")
 			.addBugfix("Team Captain needs to be on the pitch to save re-roll")
+			.addBugfix("Thinking Man's Troll re-rolled whole dice pool on regular blocks")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
