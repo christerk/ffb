@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Whirling Dervish can only be used once")
+			.addBugfix("B&C prevents Secure the Ball")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
