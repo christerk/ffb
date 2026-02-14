@@ -236,9 +236,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			actingPlayer.markSkillUsed(addDieSkill.get());
 		}
 
+		Skill reRollSkill = getReRollSource() != null ? getReRollSource().getSkill(game) : null;
+
 		if (getReRollSource() == ReRollSources.PRO ||
-			(getReRollSource() != null &&
-				getReRollSource().getSkill(game).hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod))) {
+			(reRollSkill != null &&
+				reRollSkill.hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod))) {
 			if (getReRollSource() == ReRollSources.PRO) {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 			}
