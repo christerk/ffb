@@ -13,4 +13,8 @@ public class BlockProne extends InjuryType {
 		return true;
 	}
 
+	@Override
+	public boolean isBlock() {
+		return true;
+	}
 }

@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
@@ -193,8 +194,9 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 
 		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
 
+		InjuryType injuryType = pInjuryResult.injuryContext().getInjuryType();
 		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
-			pInjuryResult.injuryContext().isCasualty() &&
+			pInjuryResult.injuryContext().isCasualty() && injuryType != null && injuryType.isBlock() &&
 			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingBlockCas)) {
 			TurnData turnData = game.getTurnData();
 			turnData.setReRolls(turnData.getReRolls() + 1);

@@ -76,6 +76,10 @@ public abstract class InjuryType implements INamedObject {
 		return false;
 	}
 
+	public boolean isBlock() {
+		return false;
+	}
+
 	public void reportInjuryString(StringBuilder string, Player<?> attacker, Player<?> defender) {
 
 	}

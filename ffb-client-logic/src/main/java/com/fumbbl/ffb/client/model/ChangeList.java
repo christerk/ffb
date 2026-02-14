@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("Future")
 			.addBugfix("Added missing keywords for Akhorne, Skorg and Boa")
+			.addBugfix("Pump Up The Crowd must only work on blocking cas")
 		);
 
 		versions.add(new VersionChangeList("2026-02-13")
