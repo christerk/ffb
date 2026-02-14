@@ -195,11 +195,11 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 
 		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
 			pInjuryResult.injuryContext().isCasualty() &&
-			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingCas)) {
+			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingBlockCas)) {
 			TurnData turnData = game.getTurnData();
 			turnData.setReRolls(turnData.getReRolls() + 1);
 			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
-			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingCas), game);
+			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingBlockCas), game);
 			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
 			pStep.getResult().setSound(SoundId.PUMP_CROWD);
 			return true;
