@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("Future")		);
+		versions.add(new VersionChangeList("Future")
+			.addBugfix("Added missing keywords for Akhorne, Skorg and Boa")
+		);
 
 		versions.add(new VersionChangeList("2026-02-13")
 			.addBugfix("Savage Mauling reports injury only once")
