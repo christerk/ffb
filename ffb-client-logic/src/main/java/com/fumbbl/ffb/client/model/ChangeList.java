@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Savage Mauling reports injury only once")
 			.addBugfix("Team Captain needs to be on the pitch to save re-roll")
 			.addBugfix("Thinking Man's Troll re-rolled whole dice pool on regular blocks")
+			.addBugfix("Using Team RR during a block no longer crashes the game")
 		);
 
 		versions.add(new VersionChangeList("2026-02-12")
