@@ -13,6 +13,7 @@ public enum Keyword {
 	BIG_GUY("Big Guy", false),
 	BLITZER("Blitzer", false),
 	BLOCKER("Blocker", false),
+	BUGMAN("Bugman", false),
 	CATCHER("Catcher", false),
 	CONSTRUCT("Construct"),
 	DWARF("Dwarf"),
