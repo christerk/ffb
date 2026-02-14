@@ -19,12 +19,12 @@ public abstract class StateMechanic implements Mechanic {
 	}
 
 	public abstract void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-	                                                IStep pStep);
+		IStep pStep);
 
 	protected boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
 		for (Player<?> player : pTeam.getPlayers()) {
 			if (playerOnField(player, pFieldModel)
-					&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
+				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
 				return true;
 			}
 		}
@@ -43,25 +43,27 @@ public abstract class StateMechanic implements Mechanic {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setApothecaries(team.getApothecaries());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasSingleUsage(
-						Usage.APOTHECARY))
-				.findFirst().ifPresent(entry -> {
-					Inducement wanderingApothecaries = entry.getValue();
-					if (wanderingApothecaries.getValue() > 0) {
-						turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
-						turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
-						pStep.getResult().addReport(
-								new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
-					}
-				});
+		turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().hasSingleUsage(
+				Usage.APOTHECARY))
+			.findFirst().ifPresent(entry -> {
+				Inducement wanderingApothecaries = entry.getValue();
+				if (wanderingApothecaries.getValue() > 0) {
+					turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
+					turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
+					pStep.getResult().addReport(
+						new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
+				}
+			});
 
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.APOTHECARY_JOURNEYMEN))
-				.findFirst().ifPresent(entry -> {
-					Inducement plagueDoctors = entry.getValue();
-					if (plagueDoctors.getValue() > 0) {
-						turnData.setPlagueDoctors(plagueDoctors.getValue());
-					}
-				});
+		turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().hasUsage(Usage.APOTHECARY_JOURNEYMEN))
+			.findFirst().ifPresent(entry -> {
+				Inducement plagueDoctors = entry.getValue();
+				if (plagueDoctors.getValue() > 0) {
+					turnData.setPlagueDoctors(plagueDoctors.getValue());
+				}
+			});
 	}
 
 	protected void addReRolls(IStep pStep, boolean pHomeTeam) {
@@ -69,15 +71,16 @@ public abstract class StateMechanic implements Mechanic {
 		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
 		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
 		turnData.setReRolls(team.getReRolls());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.REROLL))
-				.findFirst().ifPresent(entry -> {
-					Inducement extraTraining = entry.getValue();
-					if (extraTraining.getValue() > 0) {
-						turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
-						pStep.getResult()
-								.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
-					}
-				});
+		turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().hasUsage(Usage.REROLL))
+			.findFirst().ifPresent(entry -> {
+				Inducement extraTraining = entry.getValue();
+				if (extraTraining.getValue() > 0) {
+					turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
+					pStep.getResult()
+						.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
+				}
+			});
 	}
 
 
@@ -95,4 +98,6 @@ public abstract class StateMechanic implements Mechanic {
 	}
 
 	public abstract void reportInjury(IStep step, InjuryResult injuryResult);
+
+	public abstract boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult);
 }

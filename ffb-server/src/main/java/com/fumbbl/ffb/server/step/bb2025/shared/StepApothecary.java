@@ -47,6 +47,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -342,8 +343,9 @@ public class StepApothecary extends AbstractStep {
 
 
 		fInjuryResult.applyTo(this);
+		StateMechanic stateMechanic = game.getMechanic(Mechanic.Type.STATE);
 
-		if (UtilServerInjury.handlePumpUp(this, fInjuryResult)) {
+		if (stateMechanic.handlePumpUp(this, fInjuryResult)) {
 			UtilServerGame.syncGameModel(this);
 		}
 

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.mechanic.bb2025;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
@@ -24,6 +25,7 @@ import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportStartHalf;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
@@ -183,5 +185,26 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 			step.getResult().setSound(injuryContext.getSound());
 		}
 		injuryResult.setAlreadyReported(true);
+	}
+
+	public boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
+		GameState gameState = pStep.getGameState();
+		Game game = gameState.getGame();
+
+		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
+
+		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
+			pInjuryResult.injuryContext().isCasualty() &&
+			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingCas)) {
+			TurnData turnData = game.getTurnData();
+			turnData.setReRolls(turnData.getReRolls() + 1);
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
+			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingCas), game);
+			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
+			pStep.getResult().setSound(SoundId.PUMP_CROWD);
+			return true;
+		}
+
+		return false;
 	}
 }
