@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.CardEffect;
 import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.Constant;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -29,7 +28,6 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -180,17 +178,8 @@ public abstract class LogicModule {
 
 	protected boolean isWisdomAvailable(Player<?> player) {
 		Game game = client.getGame();
-
-		Set<Skill> ownedSkills = player.getSkillsIncludingTemporaryOnes();
-
-		boolean canGainSkill = Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()
-			.map(SkillWithValue::getSkill)
-			.anyMatch(skillClass -> !ownedSkills.contains(skillClass));
-
-		return canGainSkill && Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
-				game.getFieldModel().getPlayerCoordinate(player), false))
-			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates) &&
-				!teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
+		GameMechanic mechanic = (GameMechanic) game.getMechanic(Mechanic.Type.GAME);
+		return mechanic.isWisdomAvailable(game, player);
 	}
 
 	public boolean isBlackInkAvailable(ActingPlayer player) {

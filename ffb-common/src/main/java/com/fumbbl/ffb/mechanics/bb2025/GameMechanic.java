@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.mechanics.bb2025;
 
 import com.fumbbl.ffb.Constant;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -15,9 +17,15 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.WisdomOfTheWhiteDwarf;
+import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -184,7 +192,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return Collections.emptySet();
+		return new HashSet<Class<? extends Skill>>() {{
+			add(WisdomOfTheWhiteDwarf.class);
+		}}.stream().map(skillFactory::forClass).map(Skill::enhancementSourceName).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -216,4 +226,24 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean playersForGoActivations(Game game) {
 		return UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK);
 	}
+
+	@Override
+	public boolean isWisdomAvailable(Game game, Player<?> player) {
+		if (!UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGrantSkillsToTeamMates)) {
+			return false;
+		}
+
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		Player<?>[] teamMates = UtilPlayer.findStandingOrPronePlayers(game, player.getTeam(), playerCoordinate, 2);
+
+		return Arrays.stream(teamMates)
+			.filter(teamMate -> game.getFieldModel().getPlayerState(teamMate).isActive())
+			.anyMatch(teamMate -> {
+				Set<Skill> targetOwnedSkills = teamMate.getSkillsIncludingTemporaryOnes();
+				return Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()
+					.map(SkillWithValue::getSkill)
+					.anyMatch(skill -> !targetOwnedSkills.contains(skill));
+			});
+	}
+
 }
