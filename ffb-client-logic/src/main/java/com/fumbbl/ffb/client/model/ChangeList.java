@@ -10,6 +10,11 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("3.0.1")
+			.addBugfix("Stalling: No stalling did not grant cash bonus")
+			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
+		);
+
 		versions.add(new VersionChangeList("3.0.0")
 			.setDescription("First version of 2025 rules, a.k.a. 3rd Season - beware of bugs"));
 	}
