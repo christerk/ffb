@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Do not offer Forgo for prone players")
 			.addBugfix("Jump: Declining re-roll granted a free re-roll")
 			.addBugfix("Hypnotic Gaze: rushing twice would end activation before selecting the target")
+			.addBugfix("Brilliant Coaching: Tied result did give no re-roll to either team")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")

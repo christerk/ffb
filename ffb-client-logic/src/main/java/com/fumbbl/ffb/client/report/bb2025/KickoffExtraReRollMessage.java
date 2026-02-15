@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -10,7 +10,6 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
 
 @ReportMessageType(ReportId.KICKOFF_EXTRA_RE_ROLL)
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
 
@@ -52,7 +51,7 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 		println(getIndent() + 1, status.toString());
 
 		if (report.getTeamId() == null) {
-			println(getIndent(), "Neither team gains a Re-Roll.");
+			println(getIndent(), "Both teams gain a Re-Roll only available for this drive.");
 		} else {
 			if (report.getTeamId().equals(game.getTeamHome().getId())) {
 				print(getIndent(), "Team ");

@@ -444,7 +444,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_BRILLIANT_COACHING));
 
 		String teamId = null;
-		boolean homeGainsReRoll = (totalHome > totalAway);
+		boolean homeGainsReRoll = (totalHome >= totalAway);
 		if (homeGainsReRoll) {
 			turnDataHome.setReRolls(turnDataHome.getReRolls() + 1);
 			turnDataHome.setReRollsBrilliantCoachingOneDrive(
@@ -452,12 +452,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			teamId = game.getTeamHome().getId();
 		}
 
-		boolean awayGainsReRoll = (totalAway > totalHome);
+		boolean awayGainsReRoll = (totalAway >= totalHome);
 		if (awayGainsReRoll) {
 			turnDataAway.setReRolls(turnDataAway.getReRolls() + 1);
 			turnDataAway.setReRollsBrilliantCoachingOneDrive(
 				turnDataAway.getReRollsBrilliantCoachingOneDrive() + 1);
 			teamId = game.getTeamAway().getId();
+		}
+
+		if (rollAway == rollHome) {
+			teamId = null;
 		}
 
 		getResult().addReport(new ReportKickoffExtraReRoll(rollHome, rollAway, teamId));
