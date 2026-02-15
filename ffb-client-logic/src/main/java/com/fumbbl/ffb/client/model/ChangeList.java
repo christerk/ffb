@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Stalling: No stalling did not grant cash bonus")
 			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
 			.addBugfix("Do not offer Forgo for prone players")
+			.addBugfix("Hypnotic Gaze: rushing twice would end activation before selecting the target")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
