@@ -518,7 +518,9 @@ public class TeamResult implements IJsonSerializable {
 		fanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
 		dedicatedFansModifier = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
 		penaltyScore = IJsonOption.PENALTY_SCORE.getFrom(source, jsonObject);
-		hasStalled = IJsonOption.STALLING.getFrom(source, jsonObject);
+		if (IJsonOption.STALLING.isDefinedIn(jsonObject)) {
+			hasStalled = IJsonOption.STALLING.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 
