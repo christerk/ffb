@@ -48,7 +48,7 @@
         <strength>6</strength>
         <agility>1</agility>
         <passing>5</passing>
-        <armour>10</armour>
+        <armour>11</armour>
         <portrait>portraits/halfling_treeman.png</portrait>
         <iconSet size="3">iconsets/halfling_treeman.png</iconSet>
         <skillList>
