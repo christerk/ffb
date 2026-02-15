@@ -9,7 +9,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -168,9 +167,8 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (doLeap) {
 			if (ReRolledActions.JUMP == getReRolledAction() 
 				&& !Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)
-				&& usingDivingTackle == null
-				&& getReRollSource() != null) {
-				if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
+				&& usingDivingTackle == null) {
+				if (!dtRerollAsked && (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
 					if (!Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 						handleFailure(game);
 						doLeap = false;
@@ -266,7 +264,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 
 		boolean doRoll = (usingDivingTackle == null || useIgnoreModifierSkill)
-			&& (reRolled  || ((status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) && !dtRerollAsked));
+			&& (reRolled || ((status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) && !dtRerollAsked));
 		if (doRoll) {
 			roll = getGameState().getDiceRoller().rollSkill();
 		}
@@ -295,9 +293,9 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (doRoll) {
 			getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled,
 				jumpModifiers.toArray(new JumpModifier[0])));
-		}	
+		}
 
-		if (successful) {			
+		if (successful) {
 			if (usingDivingTackle == null) {
 				status =
 					checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to), modifierFactory,
@@ -339,7 +337,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory,
-																				 AgilityMechanic mechanic) {
+		AgilityMechanic mechanic) {
 		boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(),
 			NamedProperties.canAttemptToTackleJumpingPlayer));
 
@@ -365,7 +363,8 @@ public class StepJump extends AbstractStepWithReRoll {
 				}
 
 				if (!dtRerollAsked && getReRolledAction() != ReRolledActions.JUMP) {
-					List<String> message = Collections.singletonList("Diving Tackle can make this jump fail. Reroll the jump now?");
+					List<String> message =
+						Collections.singletonList("Diving Tackle can make this jump fail. Reroll the jump now?");
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer().getPlayer(),
 						ReRolledActions.JUMP, minimumRoll, false, null, null, null, null, message)) {
 						dtRerollAsked = true;
