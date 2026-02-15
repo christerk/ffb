@@ -14,6 +14,7 @@ public class ChangeList {
 			.addBugfix("Stalling: No stalling did not grant cash bonus")
 			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
 			.addBugfix("Do not offer Forgo for prone players")
+			.addBugfix("Jump: Declining re-roll granted a free re-roll")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
