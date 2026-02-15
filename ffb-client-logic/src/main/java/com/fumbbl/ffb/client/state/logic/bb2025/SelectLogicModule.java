@@ -362,7 +362,8 @@ public class SelectLogicModule extends LogicModule {
 		if (isSecureTheBallActionAvailable(player)) {
 			context.add(ClientAction.SECURE_THE_BALL);
 		}
-		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)) {
+		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)
+			&& !playerState.isProneOrStunned()) {
 			context.add(ClientAction.FORGO);
 		}
 		if (isThenIStartedBlastinAvailable(player)) {

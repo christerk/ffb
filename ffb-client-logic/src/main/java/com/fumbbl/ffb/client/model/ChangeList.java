@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.0.1")
 			.addBugfix("Stalling: No stalling did not grant cash bonus")
 			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
+			.addBugfix("Do not offer Forgo for prone players")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
