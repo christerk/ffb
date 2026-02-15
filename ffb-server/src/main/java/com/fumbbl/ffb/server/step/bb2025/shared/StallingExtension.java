@@ -64,9 +64,16 @@ public class StallingExtension {
 		GameState gameState = step.getGameState();
 		Game game = gameState.getGame();
 
-		int roll = gameState.getDiceRoller().rollDice(6);
+		int roll = 0;
+		boolean successful;
 
-		boolean successful = roll >= game.getTurnData().getTurnNr();
+		if (game.getTurnData().getTurnNr() > 6) {
+			successful = false;
+		} else {
+			roll = gameState.getDiceRoller().rollDice(6);
+
+			successful = roll >= game.getTurnData().getTurnNr();
+		}
 
 		step.getResult().addReport(new ReportThrowAtStallingPlayer(player.getId(), roll, successful));
 
