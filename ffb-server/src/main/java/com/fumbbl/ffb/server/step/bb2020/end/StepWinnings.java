@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.end;
+package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
@@ -19,7 +19,6 @@ import com.fumbbl.ffb.server.step.StepId;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepWinnings extends AbstractStep {
 
 	public StepWinnings(GameState pGameState) {
