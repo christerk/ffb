@@ -3,10 +3,12 @@ package com.fumbbl.ffb.server.mechanic.bb2025;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.InjuryModification;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
@@ -24,6 +26,7 @@ import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportStartHalf;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
@@ -141,7 +144,7 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		if (injuryContext instanceof ModifiedInjuryContext) {
 			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
 			if (modification == InjuryModification.INJURY) {
-				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.ARMOUR;
+				skip = injuryResult.isPreRegeneration() ? SkipInjuryParts.ARMOUR_AND_CAS : SkipInjuryParts.EVERYTHING_BUT_CAS;
 			}
 		} else if (injuryContext.getModifiedInjuryContext() != null) {
 			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
@@ -183,5 +186,27 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 			step.getResult().setSound(injuryContext.getSound());
 		}
 		injuryResult.setAlreadyReported(true);
+	}
+
+	public boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
+		GameState gameState = pStep.getGameState();
+		Game game = gameState.getGame();
+
+		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
+
+		InjuryType injuryType = pInjuryResult.injuryContext().getInjuryType();
+		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
+			pInjuryResult.injuryContext().isCasualty() && injuryType != null && injuryType.isBlock() &&
+			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingBlockCas)) {
+			TurnData turnData = game.getTurnData();
+			turnData.setReRolls(turnData.getReRolls() + 1);
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
+			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingBlockCas), game);
+			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
+			pStep.getResult().setSound(SoundId.PUMP_CROWD);
+			return true;
+		}
+
+		return false;
 	}
 }

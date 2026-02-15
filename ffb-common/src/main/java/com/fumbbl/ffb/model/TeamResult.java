@@ -30,7 +30,7 @@ public class TeamResult implements IJsonSerializable {
 	private int fSeriousInjurySuffered;
 	private int fRipSuffered;
 
-	private boolean fConceded;
+	private boolean fConceded, hasStalled;
 	private int fRaisedDead;
 	private int fPettyCashTransferred;
 	private int fPettyCashUsed;
@@ -80,6 +80,14 @@ public class TeamResult implements IJsonSerializable {
 
 	public boolean hasConceded() {
 		return fConceded;
+	}
+
+	public boolean hasStalled() {
+		return hasStalled;
+	}
+
+	public void setStalled(boolean hasStalled) {
+		this.hasStalled = hasStalled;
 	}
 
 	public void setRaisedDead(int pRaisedDead) {
@@ -476,6 +484,7 @@ public class TeamResult implements IJsonSerializable {
 		IJsonOption.FAN_FACTOR.addTo(jsonObject, fanFactor);
 		IJsonOption.DEDICATED_FANS.addTo(jsonObject, dedicatedFansModifier);
 		IJsonOption.PENALTY_SCORE.addTo(jsonObject, penaltyScore);
+		IJsonOption.STALLING.addTo(jsonObject, hasStalled);
 		return jsonObject;
 	}
 
@@ -509,6 +518,9 @@ public class TeamResult implements IJsonSerializable {
 		fanFactor = IJsonOption.FAN_FACTOR.getFrom(source, jsonObject);
 		dedicatedFansModifier = IJsonOption.DEDICATED_FANS.getFrom(source, jsonObject);
 		penaltyScore = IJsonOption.PENALTY_SCORE.getFrom(source, jsonObject);
+		if (IJsonOption.STALLING.isDefinedIn(jsonObject)) {
+			hasStalled = IJsonOption.STALLING.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 

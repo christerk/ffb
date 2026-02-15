@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.mechanic.bb2025;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerState;
@@ -18,6 +19,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
@@ -394,8 +396,10 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private boolean checkTeamCaptain(StepResult stepResult, GameState gameState) {
 
+		FieldModel fieldModel = gameState.getGame().getFieldModel();
 		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers())
-			.noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls))) {
+			.noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls) &&
+				FieldCoordinateBounds.FIELD.isInBounds(fieldModel.getPlayerCoordinate(player)))) {
 			return false;
 		}
 

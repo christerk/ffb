@@ -20,6 +20,7 @@ public class BallAndChain extends Skill {
 		registerProperty(NamedProperties.ignoreBlockAssists);
 		registerProperty(NamedProperties.preventAutoMove);
 		registerProperty(NamedProperties.preventPickup);
+		registerProperty(NamedProperties.preventSecureTheBallAction);
 		registerProperty(NamedProperties.preventRegularBlitzAction);
 		registerProperty(NamedProperties.preventRegularBlockAction);
 		registerProperty(NamedProperties.preventRegularFoulAction);

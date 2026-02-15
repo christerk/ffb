@@ -21,11 +21,9 @@ import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportRaiseDead;
 import com.fumbbl.ffb.report.ReportRegenerationRoll;
-import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
@@ -33,13 +31,13 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBallAndChain;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.UtilBox;
-import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
@@ -211,28 +209,9 @@ public class UtilServerInjury {
 			UtilServerGame.syncGameModel(pStep);
 		}
 
-		return handlePumpUp(pStep, pInjuryResult);
-	}
-
-	public static boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
-		GameState gameState = pStep.getGameState();
-		Game game = gameState.getGame();
-
-		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
-
-		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
-			pInjuryResult.injuryContext().isCasualty() &&
-			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingCas)) {
-			TurnData turnData = game.getTurnData();
-			turnData.setReRolls(turnData.getReRolls() + 1);
-			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
-			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingCas), game);
-			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
-			pStep.getResult().setSound(SoundId.PUMP_CROWD);
-			return true;
-		}
-
-		return false;
+		Game game = pStep.getGameState().getGame();
+		StateMechanic mechanic = game.getMechanic(Mechanic.Type.STATE);
+		return mechanic.handlePumpUp(pStep, pInjuryResult);
 	}
 
 	private static boolean handleRaiseDead(IStep pStep, InjuryResult pInjuryResult) {

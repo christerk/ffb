@@ -13,6 +13,7 @@ public enum Keyword {
 	BIG_GUY("Big Guy", false),
 	BLITZER("Blitzer", false),
 	BLOCKER("Blocker", false),
+	BUGMAN("Bugman", false),
 	CATCHER("Catcher", false),
 	CONSTRUCT("Construct"),
 	DWARF("Dwarf"),
@@ -31,9 +32,11 @@ public enum Keyword {
 	RUNNER("Runner", false),
 	SKAVEN("Skaven"),
 	SKELETON("Skeleton"),
+	SNAKEMAN("Snakeman"),
 	SNOTLING("Snotling"),
 	SPAWN("Spawn"),
 	SPECIAL("Special", false),
+	SQUIRREL("Squirrel"),
 	THRALL("Thrall"),
 	THROWER("Thrower", false),
 	TREEMAN("Treeman"),
@@ -42,6 +45,7 @@ public enum Keyword {
 	VAMPIRE("Vampire"),
 	WEREWOLF("Werewolf"),
 	WRAITH("Wraith"),
+	YHETEE("Yhetee"),
 	ZOMBIE("Zombie"),
 
 	// fallback

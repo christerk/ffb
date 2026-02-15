@@ -488,6 +488,11 @@ public class UtilPlayer {
 		return false;
 	}
 
+	public static boolean hasAdjacentGazeTarget(Game game, Player<?> player) {
+		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+		Team otherTeam = UtilPlayer.findOtherTeam(game, player);
+		return UtilPlayer.findAdjacentPlayersWithTacklezones(game, otherTeam, playerCoordinate, false).length > 0;
+	}
 
 	public static boolean canFoul(Game pGame, Player<?> pPlayer) {
 		FieldModel fieldModel = pGame.getFieldModel();

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.mechanic.mixed;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.InjuryModification;
@@ -10,16 +11,19 @@ import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.*;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
 import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportStartHalf;
 import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(RulesCollection.Rules.BB2016)
 @RulesCollection(RulesCollection.Rules.BB2020)
@@ -137,4 +141,24 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		injuryResult.setAlreadyReported(true);
 	}
 
+	public boolean handlePumpUp(IStep pStep, InjuryResult pInjuryResult) {
+		GameState gameState = pStep.getGameState();
+		Game game = gameState.getGame();
+
+		Player<?> attacker = game.getPlayerById(pInjuryResult.injuryContext().getAttackerId());
+
+		if (game.getActingTeam().hasPlayer(attacker) && !game.getFieldModel().getPlayerState(attacker).isProneOrStunned() &&
+			pInjuryResult.injuryContext().isCasualty() &&
+			UtilCards.hasUnusedSkillWithProperty(attacker, NamedProperties.grantsTeamReRollWhenCausingCas)) {
+			TurnData turnData = game.getTurnData();
+			turnData.setReRolls(turnData.getReRolls() + 1);
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() + 1);
+			attacker.markUsed(attacker.getSkillWithProperty(NamedProperties.grantsTeamReRollWhenCausingCas), game);
+			pStep.getResult().addReport(new ReportPumpUpTheCrowdReRoll(attacker.getId()));
+			pStep.getResult().setSound(SoundId.PUMP_CROWD);
+			return true;
+		}
+
+		return false;
+	}
 }

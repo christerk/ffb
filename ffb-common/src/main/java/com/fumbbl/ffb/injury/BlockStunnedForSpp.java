@@ -13,4 +13,8 @@ public class BlockStunnedForSpp extends InjuryType {
 		return true;
 	}
 
+	@Override
+	public boolean isBlock() {
+		return true;
+	}
 }

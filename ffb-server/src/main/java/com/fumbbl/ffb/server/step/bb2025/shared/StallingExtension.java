@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2025.shared;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
@@ -41,32 +42,46 @@ public class StallingExtension {
 
 	public boolean isConsideredStalling(Game game, Player<?> player) {
 		return UtilPlayer.hasBall(game, player)
-				&& player.getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream())
-				.noneMatch(rollAtActivation::contains)
-				&& !ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(player.getTeam()),
-				game.getFieldModel().getPlayerCoordinate(player), false))
-				&& hasOpenPathToEndzone(game, player);
+			&& player.getSkillsIncludingTemporaryOnes().stream().flatMap(skill -> skill.getSkillProperties().stream())
+			.noneMatch(rollAtActivation::contains)
+			&& !ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(player.getTeam()),
+			game.getFieldModel().getPlayerCoordinate(player), false))
+			&& hasOpenPathToEndzone(game, player);
 	}
 
 	private boolean hasOpenPathToEndzone(Game game, Player<?> player) {
 		FieldCoordinateBounds endzoneBounds =
-				game.getTeamHome().hasPlayer(player) ? FieldCoordinateBounds.ENDZONE_AWAY : FieldCoordinateBounds.ENDZONE_HOME;
+			game.getTeamHome().hasPlayer(player) ? FieldCoordinateBounds.ENDZONE_AWAY : FieldCoordinateBounds.ENDZONE_HOME;
 
 		Set<FieldCoordinate> endZoneCoordinates =
-				Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
+			Arrays.stream(endzoneBounds.fieldCoordinates()).collect(Collectors.toSet());
 
-		return ArrayTool.isProvided(PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, endZoneCoordinates, player, 0));
+		return ArrayTool.isProvided(
+			PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, endZoneCoordinates, player, 0));
 	}
 
 	public void handleStaller(IStep step, Player<?> player) {
 		GameState gameState = step.getGameState();
 		Game game = gameState.getGame();
 
-		int roll = gameState.getDiceRoller().rollDice(6);
+		int roll = 0;
+		boolean successful;
 
-		boolean successful = roll >= game.getTurnData().getTurnNr();
+		if (game.getTurnData().getTurnNr() > 6) {
+			successful = false;
+		} else {
+			roll = gameState.getDiceRoller().rollDice(6);
+
+			successful = roll >= game.getTurnData().getTurnNr();
+		}
 
 		step.getResult().addReport(new ReportThrowAtStallingPlayer(player.getId(), roll, successful));
+
+		TeamResult teamResult =
+			game.getTeamHome().hasPlayer(player) ? game.getGameResult().getTeamResultHome() :
+				game.getGameResult().getTeamResultAway();
+
+		teamResult.setStalled(true);
 
 		if (successful) {
 			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
@@ -82,10 +97,10 @@ public class StallingExtension {
 			UtilServerGame.syncGameModel(step);
 
 			InjuryResult injuryResult = UtilServerInjury.handleInjury(step,
-					new InjuryTypeThrowARockStalling(), null, player, playerCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+				new InjuryTypeThrowARockStalling(), null, player, playerCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 			step.publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-					new SteadyFootingContext(injuryResult, Collections.singletonList(new DropPlayerCommand(player.getId(),
-							ApothecaryMode.HIT_PLAYER, true)))));
+				new SteadyFootingContext(injuryResult, Collections.singletonList(new DropPlayerCommand(player.getId(),
+					ApothecaryMode.HIT_PLAYER, true)))));
 		}
 	}
 }

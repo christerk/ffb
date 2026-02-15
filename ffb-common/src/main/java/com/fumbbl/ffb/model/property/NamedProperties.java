@@ -174,6 +174,7 @@ public class NamedProperties {
 	public static final ISkillProperty grantsCatchBonusToReceiver = new NamedProperty("Grants Catch Bonus To Receiver");
 	public static final ISkillProperty grantsSppWhenHittingOpponentOnTtm = new NamedProperty("Grants Spp When Hitting Opponent On Ttm");
 	public static final ISkillProperty grantsSppFromSpecialActionsCas = new NamedProperty("Grants Spp From Special Actions Cas");
+	public static final ISkillProperty grantsTeamReRollWhenCausingBlockCas = new NamedProperty("Grants Team Re-Roll When Causing Block Cas");
 	public static final ISkillProperty grantsTeamReRollWhenCausingCas = new NamedProperty("Grants Team Re-Roll When Causing Cas");
 	public static final ISkillProperty grantsTeamReRollWhenOnPitch = new NamedProperty(
 		"Grants Team Re-Roll When On Pitch");
