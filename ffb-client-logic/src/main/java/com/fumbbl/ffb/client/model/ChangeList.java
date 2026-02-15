@@ -15,6 +15,7 @@ public class ChangeList {
 			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
 			.addBugfix("Do not offer Forgo for prone players")
 			.addBugfix("Jump: Declining re-roll granted a free re-roll")
+			.addBugfix("Hypnotic Gaze: rushing twice would end activation before selecting the target")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
