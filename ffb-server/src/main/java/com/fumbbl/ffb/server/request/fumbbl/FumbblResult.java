@@ -335,6 +335,8 @@ public class FumbblResult implements IXmlWriteable {
 			PlayerGender gender = player.getPlayerGender() != null ? player.getPlayerGender() : PlayerGender.NEUTRAL;
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_GENDER, gender.getName());
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_NAME, player.getName());
+			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_POSITION_ID, player.getPositionId());
+
 			UtilXml.startElement(pHandler, _XML_TAG_PLAYER_RESULT, attributes);
 
 			UtilXml.addValueElement(pHandler, _XML_TAG_DEFECTING, pPlayerResult.isDefecting());
