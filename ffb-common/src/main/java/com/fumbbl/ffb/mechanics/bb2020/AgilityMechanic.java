@@ -16,7 +16,8 @@ import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
-import com.fumbbl.ffb.report.bb2020.ReportDodgeRoll;
+import com.fumbbl.ffb.report.ReportPickupRoll;
+import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
 
 import java.util.Collections;
 import java.util.Set;
@@ -125,7 +126,7 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	}
 
 	@Override
-	public String formatPickupResult(ReportSkillRoll report, Player<?> player) {
+	public String formatPickupResult(ReportPickupRoll report, Player<?> player) {
 		return formatResult(player.getAgilityWithModifiers(), report.getRollModifiers());
 	}
 
@@ -137,7 +138,8 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 		return new Wording("Interference", "deflect", "deflects", "interfering player");
 	}
 
-	private int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
+	@Override
+	public int minimumRoll(int agility, Set<? extends RollModifier<?>> modifiers) {
 		return minimumRoll(agility, modifiers, 0);
 	}
 

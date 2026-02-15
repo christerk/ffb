@@ -1,7 +1,9 @@
 package com.fumbbl.ffb.client.state.bb2016;
 
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.layer.FieldLayerRangeRuler;
@@ -12,11 +14,12 @@ import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.bb2016.KtmLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.bb2016.TtmMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,6 +29,7 @@ import java.util.Map;
  *
  * @author Christer
  */
+@RulesCollection(RulesCollection.Rules.BB2016)
 public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicModule> {
 
 	public ClientStateKickTeamMate(FantasyFootballClientAwt pClient) {
@@ -75,7 +79,8 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		Game game = getClient().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		UserInterface userInterface = getClient().getUserInterface();
-		Player<?>[] kickablePlayers = UtilPlayer.findKickableTeamMates(game, actingPlayer.getPlayer());
+		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+		Player<?>[] kickablePlayers = mechanic.findKickableTeamMates(game, actingPlayer.getPlayer());
 		if ((game.getDefender() == null) && ArrayTool.isProvided(kickablePlayers)) {
 			userInterface.getFieldComponent().getLayerRangeRuler().markPlayers(kickablePlayers,
 					FieldLayerRangeRuler.COLOR_THROWABLE_PLAYER);
@@ -95,7 +100,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 	}
 
 	@Override
-	protected Map<Integer, ClientAction> actionMapping() {
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
 		return new HashMap<Integer, ClientAction>() {{
 			put(IPlayerPopupMenuKeys.KEY_SHORT, ClientAction.PASS_SHORT);
 			put(IPlayerPopupMenuKeys.KEY_LONG, ClientAction.PASS_LONG);

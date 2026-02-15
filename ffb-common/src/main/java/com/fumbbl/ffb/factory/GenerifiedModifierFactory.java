@@ -31,7 +31,7 @@ public abstract class GenerifiedModifierFactory<
 	@Override
 	public void initialize(Game game) {
 		getScanner()
-			.getSubclasses(game.getOptions()).stream().findFirst()
+			.getSubclassInstances(game.getOptions()).stream().findFirst()
 			.ifPresent(this::setModifierCollection);
 		modifierAggregator = game.getModifierAggregator();
 	}
@@ -90,7 +90,7 @@ public abstract class GenerifiedModifierFactory<
 			.forEach(modifiers::add);
 
 		getModifierCollection().getModifiers(ModifierType.REGULAR).stream()
-			.filter(passModifier -> passModifier.appliesToContext(null, context))
+			.filter(modifier -> modifier.appliesToContext(null, context))
 			.forEach(modifiers::add);
 
 		if (isAffectedByTackleZones(context)) {

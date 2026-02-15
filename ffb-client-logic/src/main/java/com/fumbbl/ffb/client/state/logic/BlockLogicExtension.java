@@ -2,9 +2,12 @@ package com.fumbbl.ffb.client.state.logic;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.factory.LogicPluginFactory;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.plugin.BlockLogicExtensionPlugin;
+import com.fumbbl.ffb.client.state.logic.plugin.LogicPlugin;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -17,9 +20,12 @@ import java.util.Set;
 
 public class BlockLogicExtension extends LogicModule {
 
+	private final BlockLogicExtensionPlugin plugin;
 
 	public BlockLogicExtension(FantasyFootballClient client) {
 		super(client);
+		LogicPluginFactory factory = client.getGame().getFactory(FactoryType.Factory.LOGIC_PLUGIN);
+		plugin = (BlockLogicExtensionPlugin) factory.forType(LogicPlugin.Type.BLOCK);
 	}
 
 	@Override
@@ -40,7 +46,8 @@ public class BlockLogicExtension extends LogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.BREATHE_FIRE);
-			add(ClientAction.THEN_I_STARTED_BLASTIN);
+			add(ClientAction.AUTO_GAZE_ZOAT);
+			addAll(plugin.availableActions());
 		}};
 	}
 
@@ -70,10 +77,10 @@ public class BlockLogicExtension extends LogicModule {
 		if (isCatchOfTheDayAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.CATCH_OF_THE_DAY);
 		}
-		if (isThenIStartedBlastinAvailable(actingPlayer)) {
-			actionContext.add(ClientAction.THEN_I_STARTED_BLASTIN);
+		if (isZoatGazeAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
 		}
-		return actionContext;
+		return plugin.actionContext(actingPlayer, actionContext, this);
 	}
 
 	public ActionContext blockActionContext(ActingPlayer actingPlayer, boolean multiBlock) {
@@ -103,24 +110,24 @@ public class BlockLogicExtension extends LogicModule {
 		}
 		actionContext.add(ClientAction.BLOCK);
 
-		return actionContext;
+		return plugin.blockActionContext(actingPlayer, multiBlock, actionContext, this);
 	}
 
-	protected void performAvailableAction(Player<?> player, ClientAction action) {
+	public void performAvailableAction(Player<?> player, ClientAction action) {
 		ClientCommunication communication = client.getCommunication();
 		ActingPlayer actingPlayer = client.getGame().getActingPlayer();
 		switch (action) {
 			case BLOCK:
-				block(actingPlayer.getPlayerId(), player, false, false, false, false);
+				block(actingPlayer.getPlayerId(), player, false, false, false, false, false);
 				break;
 			case STAB:
-				block(actingPlayer.getPlayerId(), player, true, false, false, false);
+				block(actingPlayer.getPlayerId(), player, true, false, false, false, false);
 				break;
 			case CHAINSAW:
-				block(actingPlayer.getPlayerId(), player, false, true, false, false);
+				block(actingPlayer.getPlayerId(), player, false, true, false, false, false);
 				break;
 			case PROJECTILE_VOMIT:
-				block(actingPlayer.getPlayerId(), player, false, false, true, false);
+				block(actingPlayer.getPlayerId(), player, false, false, true, false, false);
 				break;
 			case TREACHEROUS:
 				Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canStabTeamMateForBall);
@@ -146,25 +153,22 @@ public class BlockLogicExtension extends LogicModule {
 				communication.sendUseSkill(blackInk, true, actingPlayer.getPlayerId());
 				break;
 			case BREATHE_FIRE:
-				block(actingPlayer.getPlayerId(), player, false, false, false, true);
+				block(actingPlayer.getPlayerId(), player, false, false, false, true, false);
 				break;
-			case THEN_I_STARTED_BLASTIN:
-				if (isThenIStartedBlastinAvailable(actingPlayer)) {
-					Skill blastinSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canBlastRemotePlayer);
-					communication.sendUseSkill(blastinSkill, true, actingPlayer.getPlayerId());
-				}
+			case AUTO_GAZE_ZOAT:
+				Skill zoatGazeInkSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
+				communication.sendUseSkill(zoatGazeInkSkill, true, actingPlayer.getPlayerId());
 				break;
 			default:
+				plugin.performAvailableAction(action, actingPlayer, this, communication, player);
 				break;
 
 		}
 	}
 
 	public void block(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab,
-										boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
-		// TODO is this needed? Was in place in old structure
-		//pClientState.getClient().getUserInterface().getFieldComponent().refresh();
-		client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire);
+										boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire, boolean usingChomp) {
+		client.getCommunication().sendBlock(pActingPlayerId, pDefender, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp);
 	}
 
 	@Override
@@ -182,12 +186,12 @@ public class BlockLogicExtension extends LogicModule {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		// rooted players can not move but still spend movement for the blitz action
-		if (isBlockable(game, pDefender) && (!pDoBlitz || playerState.isRooted() || UtilPlayer.isNextMovePossible(game, false))) {
+		if (isBlockable(game, pDefender) && (!pDoBlitz || plugin.playerCanNotMove(playerState) || UtilPlayer.isNextMovePossible(game, false))) {
 			FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(pDefender);
 			if (UtilCards.hasUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.providesBlockAlternative) || (isGoredAvailable() && pDoBlitz)) {
 				return InteractionResult.selectAction(blockActionContext(actingPlayer, multiBlock));
 			} else if (game.getFieldModel().getDiceDecoration(defenderCoordinate) != null) {
-				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false);
+				block(actingPlayer.getPlayerId(), pDefender, false, false, false, false, false);
 				return InteractionResult.handled();
 			}
 		}

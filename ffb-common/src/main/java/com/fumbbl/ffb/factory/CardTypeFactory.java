@@ -1,15 +1,14 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.Scanner;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 
@@ -32,9 +31,6 @@ public class CardTypeFactory implements INamedObjectFactory<CardType> {
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(com.fumbbl.ffb.inducement.CardType.class)
-			.getClassesImplementing(game.getOptions()).stream().findFirst()
-			.ifPresent(cls -> cardTypes.addAll(Arrays.asList(cls.getEnumConstants())));
+		cardTypes.addAll(new Scanner<>(CardType.class).getEnumValues(game.getOptions()));
 	}
-
 }

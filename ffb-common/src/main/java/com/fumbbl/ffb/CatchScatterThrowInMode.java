@@ -14,6 +14,7 @@ public enum CatchScatterThrowInMode implements INamedObject {
 	CATCH_HAND_OFF("catchHandOff", false),
 	CATCH_KICKOFF("catchKickoff", false),
 	CATCH_MISSED_PASS("catchMissedPass", false),
+	CATCH_PUNT("catchPunt", false),
 	CATCH_SCATTER("catchScatter", false),
 	CATCH_THROW_IN("catchThrowIn", false),
 	DEFLECTED("deflected", false),

@@ -84,6 +84,10 @@ public class GameOptionFactory {
 			case CLAW_DOES_NOT_STACK:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
+			case DIVING_TACKLE_LEAVING_TZ_ONLY:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+        .setMessageTrue("Diving Tackle only when the dodger leaves the tackler's TZ")
+        .setMessageFalse("Diving Tackle allowed even if the dodger stays adjacent");
 			case EXTRA_MVP:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("An extra MVP is awarded at the end of the match");
@@ -115,6 +119,9 @@ public class GameOptionFactory {
 					.setMessage("Bribes for reduced price can be purchased for $1 gps each.");
 			case INDUCEMENT_BRIBES_MAX:
 				return new GameOptionInt(pOptionId).setDefault(3).setMessage("Coaches may purchase up to $1 bribe(s).");
+			case INDUCEMENT_BRIBES_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(6).setMessage("Coaches may purchase up to $1 bribe(s) for " +
+					"reduced costs.");
 			case INDUCEMENT_CHEFS_COST:
 				return new GameOptionInt(pOptionId).setDefault(300000)
 					.setMessage("Halfling Master Chefs can be purchased for $1 gps each.");
@@ -124,6 +131,9 @@ public class GameOptionFactory {
 			case INDUCEMENT_CHEFS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1)
 					.setMessage("Coaches may purchase up to $1 Halfling Master Chef(s).");
+			case INDUCEMENT_CHEFS_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Halfling Master Chef(s) for reduced costs.");
 			case INDUCEMENT_IGORS_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Igors can be purchased for $1 gps each.");
 			case INDUCEMENT_IGORS_MAX:
@@ -154,6 +164,10 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Rerolls can be purchased for $1 gps each.");
 			case INDUCEMENT_EXTRA_TRAINING_MAX:
 				return new GameOptionInt(pOptionId).setDefault(4).setMessage("Coaches may purchase up to $1 reroll(s).");
+			case INDUCEMENT_MASCOT_COST:
+				return new GameOptionInt(pOptionId).setDefault(25000).setMessage("Team Mascots can be purchased for $1 gps each.");
+			case INDUCEMENT_MASCOT_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Team Mascot(s).");
 			case INDUCEMENT_STAFF_MAX:
 				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 infamous coaching staff member(s).");
 			case INDUCEMENT_STARS_MAX:
@@ -292,6 +306,9 @@ public class GameOptionFactory {
 			case INDUCEMENT_BIASED_REF_COST:
 				return new GameOptionInt(pOptionId).setDefault(120000)
 					.setMessage("Biased Refs can be hired for $1 gps each.");
+			case INDUCEMENT_BIASED_REF_REDUCED_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches my hire $1 Biased Refs for reduced " +
+					"costs.");
 			case INDUCEMENT_BIASED_REF_REDUCED_COST:
 				return new GameOptionInt(pOptionId).setDefault(80000)
 					.setMessage("Biased Ref for reduced price can be purchased for $1 gps each.");
@@ -349,6 +366,32 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
 					.setMessageFalse("Tacklezone overlays are disabled.");
+			case MB_STACKS_AGAINST_CHAINSAW:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Mighty Blow can be used against Chainsaw players")
+					.setMessageFalse("Mighty Blow can not be used against Chainsaw players");
+			case INDUCEMENT_DUMMY:
+				return new GameOptionInt(pOptionId).setDefault(0);
+			case BOMB_BOUNCES_ON_EMPTY_SQUARES:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageTrue("Bombs bounce on empty squares")
+					.setMessageFalse("Bombs explode on empty squares");
+			case ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageTrue("Animal Savagery lash out ends activation")
+					.setMessageFalse("Animal Savagery lash out does not end activation");
+			case ALLOW_SPECIAL_ACTIONS_FROM_PRONE:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Special actions can be declared when prone")
+					.setMessageFalse("Special actions can only be declared when standing");
+			case ALLOW_BRAWLER_ON_BOTH_BLOCKS:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Brawler can be used twice on Frenzy or Multi Block")
+					.setMessageFalse("Brawler can only be used once per activation");
+			case ASK_FOR_KICK_AFTER_ROLL:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Kick use is decided after the roll")
+					.setMessageFalse("Kick use has to be decided before the roll");
 			default:
 				return null;
 		}

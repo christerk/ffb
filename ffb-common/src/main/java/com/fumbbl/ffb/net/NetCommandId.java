@@ -66,7 +66,11 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_SKETCH_SET_COLOR("clientSketchSetColor"), CLIENT_SKETCH_SET_LABEL("clientSketchSetLabel"), CLIENT_CLEAR_SKETCHES("clientClearSketches"),
 	SERVER_ADD_SKETCHES("serverAddSketches"), SERVER_REMOVE_SKETCHES("serverRemoveSketches"), SERVER_SKETCH_ADD_COORDINATE("serverSketchAddCoordinate"),
 	SERVER_SKETCH_SET_COLOR("serverSketchSetColor"), SERVER_SKETCH_SET_LABEL("serverSketchSetLabel"), SERVER_CLEAR_SKETCHES("serverClearSketches"),
-	CLIENT_SET_PREVENT_SKETCHING("clientSetPreventSketching"), SERVER_SET_PREVENT_SKETCHING("serverSetPreventSketching");
+	CLIENT_SET_PREVENT_SKETCHING("clientSetPreventSketching"), SERVER_SET_PREVENT_SKETCHING("serverSetPreventSketching"),
+	CLIENT_PICK_UP_CHOICE("clientPickUpChoice"), CLIENT_KEYWORD_SELECTION("clientKeywordSelection"),
+	CLIENT_USE_HATRED("clientUseHatred"), CLIENT_POSITION_SELECTION("clientPositionSelection"),
+	CLIENT_PUNT_TO_CROWD("clientPuntToCrowd")
+	;
 
 	private final String fName;
 
@@ -317,6 +321,16 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandSetPreventSketching();
 			case SERVER_SET_PREVENT_SKETCHING:
 				return new ServerCommandSetPreventSketching();
+			case CLIENT_PICK_UP_CHOICE:
+				return new ClientCommandPickUpChoice();
+			case CLIENT_KEYWORD_SELECTION:
+				return new ClientCommandKeywordSelection();
+			case CLIENT_USE_HATRED:
+				return new ClientCommandUseHatred();
+			case CLIENT_POSITION_SELECTION:
+				return new ClientCommandPositionSelection();
+			case CLIENT_PUNT_TO_CROWD:
+				return new ClientCommandPuntToCrowd();
 			default:
 				throw new IllegalStateException("Unhandled netCommandId " + this + ".");
 		}

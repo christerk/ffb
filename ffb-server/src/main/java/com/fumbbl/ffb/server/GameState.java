@@ -2,12 +2,12 @@ package com.fumbbl.ffb.server;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;
@@ -17,6 +17,8 @@ import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ServerCommand;
+import com.fumbbl.ffb.server.factory.ObserverFactory;
+import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -28,7 +30,7 @@ import com.fumbbl.ffb.server.step.StepException;
 import com.fumbbl.ffb.server.step.StepFactory;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.step.StepStack;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
@@ -137,6 +139,11 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (change != null) {
 			fChangeList.add(change);
 		}
+
+		if (getGame().isInitialized() && change != null) {
+			ObserverFactory factory = getGame().getFactory(FactoryType.Factory.OBSERVERS);
+			factory.getObservers().forEach(observer -> observer.next(this, change));
+		}
 	}
 
 	public DiceRoller getDiceRoller() {
@@ -169,7 +176,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void setStatus(GameStatus pStatus) {
 		fStatus = pStatus;
-		update(null);
 	}
 
 	public long getSpectatorCooldownTime(String pCoach) {
@@ -350,6 +356,43 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 	}
 
+	public void setTeamIdsAdditionalAssist(Set<String> teamIdsAdditionalAssist) {
+		activeEffects.setTeamIdsAdditionalAssist(teamIdsAdditionalAssist);
+	}
+
+	public boolean hasAdditionalAssist(String teamId) {
+		return activeEffects.getTeamIdsAdditionalAssist().contains(teamId);
+	}
+
+	public void removeAdditionalAssist(String teamId) {
+		activeEffects.removeAdditionalAssist(teamId);
+	}
+
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public boolean isStalling() {
+		return activeEffects.isStalling();
+	}
+
+	public void stallingDetected() {
+		activeEffects.setStalling(true);
+	}
+
+	public void resetStalling() {
+		activeEffects.setStalling(false);
+	}
+
+	public void resetShadowers() {
+		activeEffects.clearShadowers();
+	}
+
+	public void addShadower(String playerId) {
+		activeEffects.addShadower(playerId);
+	}
+
+	public int shadowingCount(String playerId) {
+		return (int) activeEffects.getShadowers().stream().filter(id -> id.equals(playerId)).count();
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -394,6 +437,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 
 		IServerJsonOption.ACTIVE_EFFECTS.addTo(jsonObject, activeEffects.toJsonValue());
+
 		return jsonObject;
 	}
 
@@ -457,6 +501,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		if (IServerJsonOption.ACTIVE_EFFECTS.isDefinedIn(jsonObject)) {
 			activeEffects = new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
 		}
+
 		return this;
 	}
 

@@ -7,7 +7,6 @@ public class Stab extends InjuryType {
 
 	public Stab() {
 		super("stab", false, SendToBoxReason.STABBED);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

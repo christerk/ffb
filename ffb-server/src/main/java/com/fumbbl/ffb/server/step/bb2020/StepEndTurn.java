@@ -23,14 +23,15 @@ import com.fumbbl.ffb.dialog.DialogBribesParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -56,22 +57,23 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportBribesRoll;
 import com.fumbbl.ffb.report.ReportSecretWeaponBan;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportArgueTheCallRoll;
-import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
-import com.fumbbl.ffb.report.bb2020.ReportBrilliantCoachingReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportPrayerEnd;
-import com.fumbbl.ffb.report.bb2020.ReportPumpUpTheCrowdReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportShowStarReRoll;
-import com.fumbbl.ffb.report.bb2020.ReportShowStarReRollsLost;
-import com.fumbbl.ffb.report.bb2020.ReportTurnEnd;
+import com.fumbbl.ffb.report.mixed.ReportArgueTheCallRoll;
+import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
+import com.fumbbl.ffb.report.mixed.ReportBrilliantCoachingReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportPrayerEnd;
+import com.fumbbl.ffb.report.mixed.ReportPumpUpTheCrowdReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportShowStarReRoll;
+import com.fumbbl.ffb.report.mixed.ReportShowStarReRollsLost;
+import com.fumbbl.ffb.report.mixed.ReportTurnEnd;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.PrayerState;
 import com.fumbbl.ffb.server.ServerMode;
-import com.fumbbl.ffb.server.factory.PrayerHandlerFactory;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.factory.mixed.PrayerHandlerFactory;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.request.fumbbl.FumbblRequestUpdateGamestate;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -82,10 +84,10 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndGame;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement.SequenceParams;
-import com.fumbbl.ffb.server.step.generator.common.Kickoff;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -247,6 +249,8 @@ public class StepEndTurn extends AbstractStep {
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		Kickoff kickoffGenerator = (Kickoff) factory.forName(SequenceGenerator.Type.Kickoff.name());
 		EndGame endGenerator = (EndGame) factory.forName(SequenceGenerator.Type.EndGame.name());
+		MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic stateMechanic = (StateMechanic) mechanicsFactory.forName(Mechanic.Type.STATE.name());
 
 		Player<?> touchdownPlayer = null;
 
@@ -383,7 +387,7 @@ public class StepEndTurn extends AbstractStep {
 					getResult().setSound(SoundId.WHISTLE);
 					GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
 
-					UtilServerGame.resetSpecialSkillAtEndOfDrive(game);
+					stateMechanic.resetSpecialSkillAtEndOfDrive(game);
 
 					if (mechanic.touchdownEndsGame(game)) {
 						endGenerator.pushSequence(new EndGame.SequenceParams(getGameState(), false));
@@ -496,7 +500,7 @@ public class StepEndTurn extends AbstractStep {
 				boolean drawWithOvertime = UtilGameOption.isOptionEnabled(game, GameOptionId.OVERTIME)
 					&& (gameResult.getTeamResultHome().getScore() == gameResult.getTeamResultAway().getScore());
 				if (game.getHalf() == 1 || (game.getHalf() == 2 && drawWithOvertime)) {
-					UtilServerGame.startHalf(this, game.getHalf() + 1);
+					stateMechanic.startHalf(this, game.getHalf() + 1);
 				}
 			}
 
@@ -959,7 +963,7 @@ public class StepEndTurn extends AbstractStep {
 			return false;
 		}
 		List<String> playerIds = playersForArgue(team, game);
-		if (playerIds.size() > 0) {
+		if (!playerIds.isEmpty()) {
 			TurnData turnData = (game.getTeamHome() == team) ? game.getTurnDataHome() : game.getTurnDataAway();
 			if (!turnData.isCoachBanned()) {
 				int biasedRefBonus = inducementSet.value(Usage.ADD_TO_ARGUE_ROLL);

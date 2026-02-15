@@ -13,7 +13,7 @@ public enum PlayerAction implements INamedObject {
 	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, "starts a Throw Team-mate action"),
 	REMOVE_CONFUSION("removeConfusion", 14, null),
 	GAZE("gaze", 15, null), GAZE_SELECT("gazeSelect", 15, null), GAZE_MOVE("gazeMove", 15, "starts a Gaze action"),
-	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
+	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Multi-Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
 	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
 	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
 	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null),
@@ -26,7 +26,12 @@ public enum PlayerAction implements INamedObject {
 	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
 	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
-	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst");
+	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
+	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"), BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
+	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
+	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"), AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\""),
+	FORGO("forgo", 54, "forgoes the activation."), INCORPOREAL("incorporeal", 55, "becomes incorporeal"), CHOMP("chomp", 56, "starts a Chomp action"),
+	PUNT("punt", 57, null), PUNT_MOVE("puntMove", 57, "starts a Punt action");
 
 	private final String fName;
 	private final int fType;
@@ -63,7 +68,7 @@ public enum PlayerAction implements INamedObject {
 	public boolean isMoving() {
 		return ((this == MOVE) || (this == BLITZ_MOVE) || (this == HAND_OVER_MOVE) || (this == PASS_MOVE)
 			|| (this == FOUL_MOVE) || (this == THROW_TEAM_MATE_MOVE) || (this == KICK_TEAM_MATE_MOVE) || this == GAZE_MOVE
-			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ;
+			|| this == PUTRID_REGURGITATION_MOVE) || this == KICK_EM_BLITZ || this == SECURE_THE_BALL || this == PUNT_MOVE;
 	}
 
 	public boolean isPassing() {
@@ -112,10 +117,10 @@ public enum PlayerAction implements INamedObject {
 	}
 
 	public boolean isBlockAction() {
-		return this == BLOCK || this == VICIOUS_VINES;
+		return this == BLOCK || this == VICIOUS_VINES || this == BREATHE_FIRE || this == CHAINSAW || this == STAB || this == PROJECTILE_VOMIT || this == CHOMP;
 	}
 
 	public boolean forceDispatch() {
-		return this == PlayerAction.FURIOUS_OUTPBURST;
+		return this == PlayerAction.FURIOUS_OUTPBURST || this == PlayerAction.FORGO || this == PlayerAction.PUNT;
 	}
 }

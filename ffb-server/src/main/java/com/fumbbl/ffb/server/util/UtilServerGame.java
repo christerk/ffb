@@ -1,40 +1,25 @@
 package com.fumbbl.ffb.server.util;
 
-import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.LeaderState;
-import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.PlayerState;
-import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.Animation;
-import com.fumbbl.ffb.model.FieldModel;
-import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.InducementSet;
-import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.TurnData;
+import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.change.ModelChangeList;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.net.ServerStatus;
-import com.fumbbl.ffb.report.ReportInducement;
-import com.fumbbl.ffb.report.ReportLeader;
 import com.fumbbl.ffb.report.ReportList;
 import com.fumbbl.ffb.report.ReportMasterChefRoll;
 import com.fumbbl.ffb.report.ReportPlayerAction;
-import com.fumbbl.ffb.report.ReportStartHalf;
-import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
 import com.fumbbl.ffb.report.bb2020.ReportTwoForOne;
+import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
@@ -105,41 +90,6 @@ public class UtilServerGame {
 		}
 	}
 
-	public static void startHalf(IStep pStep, int pHalf) {
-		GameState gameState = pStep.getGameState();
-		Game game = gameState.getGame();
-		game.setHalf(pHalf);
-		game.getTurnDataHome().setTurnNr(0);
-		game.getTurnDataAway().setTurnNr(0);
-		if (game.isHomeFirstOffense()) {
-			game.setHomePlaying(game.getHalf() % 2 == 0);
-		} else {
-			game.setHomePlaying(game.getHalf() % 2 > 0);
-		}
-		game.getFieldModel().setBallCoordinate(null);
-		game.getFieldModel().setBallInPlay(false);
-		pStep.getResult().addReport(new ReportStartHalf(game.getHalf()));
-		// handle Apothecaries + Wandering Apothecaries
-		if (game.getHalf() < 2) {
-			addApothecaries(pStep, true);
-			addApothecaries(pStep, false);
-		}
-		// handle ReRolls + Extra Team Training
-		if (game.getHalf() < 3) {
-			addReRolls(pStep, true);
-			addReRolls(pStep, false);
-
-			GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-			if (mechanic.rollForChefAtStartOfHalf()) {
-				handleChefRolls(pStep, game);
-			}
-		}
-		resetLeaderState(game);
-		updatePlayerStateDependentProperties(pStep);
-		resetSpecialSkillsAtHalfTime(game);
-
-	}
-
 	public static void handleChefRolls(IStep pStep, Game game) {
 		// handle Master Chefs
 		int reRollsStolenHome = rollMasterChef(pStep, true);
@@ -177,25 +127,7 @@ public class UtilServerGame {
 		}
 	}
 
-	private static void resetLeaderState(Game pGame) {
-		if (pGame.getHalf() <= 2) {
-			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
-			pGame.getTurnDataAway().setLeaderState(LeaderState.NONE);
-		}
-	}
 
-	private static void resetSpecialSkillsAtHalfTime(Game game) {
-		for (Player<?> player : game.getPlayers()) {
-			player.resetUsedSkills(SkillUsageType.ONCE_PER_HALF, game);
-		}
-		resetSpecialSkillAtEndOfDrive(game);
-	}
-
-	public static void resetSpecialSkillAtEndOfDrive(Game game) {
-		for (Player<?> player : game.getPlayers()) {
-			player.resetUsedSkills(SkillUsageType.ONCE_PER_DRIVE, game);
-		}
-	}
 
 	public static void checkForWastedSkills(Player<?> player, IStep step, FieldModel fieldModel) {
 
@@ -213,8 +145,10 @@ public class UtilServerGame {
 
 	public static void updatePlayerStateDependentProperties(IStep pStep) {
 		Game game = pStep.getGameState().getGame();
-		updateLeaderReRollsForTeam(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel(), pStep);
-		updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
+		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+		StateMechanic mechanic = (StateMechanic) factory.forName(Mechanic.Type.STATE.name());
+		mechanic.updateLeaderReRollsForTeam(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel(), pStep);
+		mechanic.updateLeaderReRollsForTeam(game.getTurnDataAway(), game.getTeamAway(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamHome(), game.getFieldModel(), pStep);
 		checkForMissingPartners(game, game.getTeamAway(), game.getFieldModel(), pStep);
 		updateSingleUseReRolls(game.getTurnDataHome(), game.getTeamHome(), game.getFieldModel());
@@ -247,35 +181,6 @@ public class UtilServerGame {
 		step.getResult().addReport(new ReportTwoForOne(player.getId(), partner.getId(), true));
 	}
 
-	private static void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
-																								 IStep pStep) {
-		if (!LeaderState.USED.equals(pTurnData.getLeaderState())) {
-			if (teamHasLeaderOnField(pTeam, pFieldModel)) {
-				if (LeaderState.NONE.equals(pTurnData.getLeaderState())) {
-					pTurnData.setLeaderState(LeaderState.AVAILABLE);
-					pTurnData.setReRolls(pTurnData.getReRolls() + 1);
-					pStep.getResult().addReport(new ReportLeader(pTeam.getId(), pTurnData.getLeaderState()));
-				}
-			} else {
-				if (LeaderState.AVAILABLE.equals(pTurnData.getLeaderState())) {
-					pTurnData.setLeaderState(LeaderState.NONE);
-					pTurnData.setReRolls(Math.max(pTurnData.getReRolls() - 1, 0));
-					pStep.getResult().addReport(new ReportLeader(pTeam.getId(), pTurnData.getLeaderState()));
-				}
-			}
-		}
-	}
-
-	protected static boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-		for (Player<?> player : pTeam.getPlayers()) {
-			if (playerOnField(player, pFieldModel)
-				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static void updateSingleUseReRolls(TurnData turnData, Team team, FieldModel fieldModel) {
 		int reRolls = (int) Arrays.stream(team.getPlayers())
 			.filter(player -> UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.grantsSingleUseTeamRerollWhenOnPitch))
@@ -284,52 +189,6 @@ public class UtilServerGame {
 			.count();
 
 		turnData.setSingleUseReRolls(reRolls);
-	}
-
-	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
-		FieldCoordinate fieldCoordinate = pFieldModel.getPlayerCoordinate(pPlayer);
-		return ((fieldCoordinate != null) && !fieldCoordinate.isBoxCoordinate());
-	}
-
-	private static void addApothecaries(IStep pStep, boolean pHomeTeam) {
-		Game game = pStep.getGameState().getGame();
-		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
-		turnData.setApothecaries(team.getApothecaries());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasSingleUsage(Usage.APOTHECARY))
-			.findFirst().ifPresent(entry -> {
-				Inducement wanderingApothecaries = entry.getValue();
-				if (wanderingApothecaries.getValue() > 0) {
-					turnData.setApothecaries(turnData.getApothecaries() + wanderingApothecaries.getValue());
-					turnData.setWanderingApothecaries(wanderingApothecaries.getValue());
-					pStep.getResult().addReport(
-						new ReportInducement(team.getId(), entry.getKey(), wanderingApothecaries.getValue()));
-				}
-			});
-
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.APOTHECARY_JOURNEYMEN))
-			.findFirst().ifPresent(entry -> {
-				Inducement plagueDoctors = entry.getValue();
-				if (plagueDoctors.getValue() > 0) {
-					turnData.setPlagueDoctors(plagueDoctors.getValue());
-				}
-			});
-	}
-
-	private static void addReRolls(IStep pStep, boolean pHomeTeam) {
-		Game game = pStep.getGameState().getGame();
-		Team team = pHomeTeam ? game.getTeamHome() : game.getTeamAway();
-		TurnData turnData = pHomeTeam ? game.getTurnDataHome() : game.getTurnDataAway();
-		turnData.setReRolls(team.getReRolls());
-		turnData.getInducementSet().getInducementMapping().entrySet().stream().filter(entry -> entry.getKey().hasUsage(Usage.REROLL))
-			.findFirst().ifPresent(entry -> {
-				Inducement extraTraining = entry.getValue();
-				if (extraTraining.getValue() > 0) {
-					turnData.setReRolls(turnData.getReRolls() + extraTraining.getValue());
-					pStep.getResult()
-						.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
-				}
-			});
 	}
 
 	private static int rollMasterChef(IStep pStep, boolean pHomeTeam) {

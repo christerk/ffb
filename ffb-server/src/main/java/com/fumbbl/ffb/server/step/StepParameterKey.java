@@ -16,8 +16,11 @@ public enum StepParameterKey {
 	APOTHECARY_MODE, // ApothecaryMode
 	ARGUE_THE_CALL_SUCCESSFUL, // Boolean
 	ASK_FOR_BLOCK_KIND, // Boolean
+	ATTACKER_ALREADY_DOWN, // Boolean
+	ATTEMPT_PICK_UP, // Boolean
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
+	BALL_KNOCKED_LOSE, // Boolean
 	BLOCK_DEFENDER_ID, // String
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult
@@ -29,6 +32,7 @@ public enum StepParameterKey {
 	CARD, // Card
 	CATCH_SCATTER_THROW_IN_MODE, // CatchScatterThrowinMode
 	CATCHER_ID, // String
+	CHECK_FORGO, // Boolean
 	CHOOSING_TEAM_ID, // String
 	CLIENT_RECEIVE_CHOICE, // Boolean
 	CONSUME_PARAMETER, // Set<StepParameterKey>
@@ -84,6 +88,8 @@ public enum StepParameterKey {
 	INJURY_TYPE, // InjuryType
 	INTERCEPTOR_ID, // String
 	IS_KICKED_PLAYER, // Boolean
+	JUMPED, // Boolean
+	KEYWORD, // Keyword
 	KICKED_PLAYER_ID, // String
 	KICKED_PLAYER_STATE, // PlayerState
 	KICKED_PLAYER_HAS_BALL, // Boolean
@@ -105,12 +111,16 @@ public enum StepParameterKey {
 	PASS_FUMBLE, // Boolean
 	PASS_RESULT, // PassResult
 	PASSING_DISTANCE, // PassingDistance
+	PICK_UP_OPTIONAL, // Boolean
 	PLAYER_ENTERING_SQUARE, // String
 	PLAYER_ID, // String
 	PLAYER_IDS, // List<String>
 	PLAYER_ID_TO_REMOVE, // String
 	PLAYER_ID_DAUNTLESS_SUCCESS, // String
+	PLAYER_ON_BALL_ID, // string
 	PLAYER_WAS_PUSHED, // Boolean
+	PRAYERS_BOUGHT_AWAY, // Integer
+	PRAYERS_BOUGHT_HOME, // Integer
 	PRAYER_ROLL, // Integer
 	PUBLISH_DEFENDER, // Boolean
 	PUSH_SELECT, // Boolean
@@ -124,6 +134,7 @@ public enum StepParameterKey {
 	ROLL_FOR_EFFECT, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
+	STEADY_FOOTING_CONTEXT, // SteadFootingContext
 	SUPPRESS_EXTRA_EFFECT_HANDLING, // Boolean
 	SHOW_NAME_IN_REPORT, // Boolean
 	SUCCESSFUL_DAUNTLESS, // Boolean
@@ -145,11 +156,14 @@ public enum StepParameterKey {
 	USE_ALTERNATE_LABEL, // Boolean
 	USING_BREAK_TACKLE, // Boolean
 	USING_BREATHE_FIRE, // Boolean
+	USING_BULLSEYE, // Boolean
 	USING_CHAINSAW, // Boolean
+	USING_CHOMP, // Boolean
 	USING_DIVING_TACKLE, // Boolean
 	USING_MODIFYING_SKILL, // Boolean
 	USING_PILING_ON, // Boolean,
 	USING_STAB, // Boolean
+	USING_SWOOP, // Boolean
 	USING_VOMIT // Boolean
 
 }

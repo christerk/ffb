@@ -31,16 +31,17 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 /**
  * Step in inducement sequence to handle spell effect.
- *
+ * <p>
  * Needs to be initialized with stepParameter PLAYER_ID. Needs to be initialized
  * with stepParameter ROLL_FOR_EFFECT. Needs to be initialized with
  * stepParameter SPECIAL_EFFECT.
- *
+ * <p>
  * Sets stepParameter END_TURN for all steps on the stack. Sets stepParameter
  * INJURY_RESULT for all steps on the stack.
  *

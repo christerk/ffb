@@ -2,7 +2,15 @@ package com.fumbbl.ffb.model;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.InjuryAttribute;
+import com.fumbbl.ffb.PlayerGender;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.PlayerType;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
@@ -24,11 +32,17 @@ import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.modifiers.TemporaryStatModifier;
 import com.fumbbl.ffb.xml.IXmlSerializable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.fumbbl.ffb.model.skill.SkillValueEvaluator.ANIMOSITY_TO_ALL;
 
 /**
  * @author Kalimar
@@ -199,6 +213,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return null;
 	}
 
+	public Skill getUnusedSkillWithRerollSource(ReRollSource source, ReRolledAction action) {
+		for (Skill playerSkill : getSkillsIncludingTemporaryOnes()) {
+			if (playerSkill.getRerollSource(action) == source && !isUsed(playerSkill)) {
+				return playerSkill;
+			}
+		}
+		return null;
+	}
+
 	public int getAgilityWithModifiers() {
 		return getStatWithModifiers(PlayerStatKey.AG, getAgility());
 	}
@@ -220,10 +243,13 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	}
 
 	private int getStatWithModifiers(PlayerStatKey stat, int baseValue) {
-		int sum = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
-			.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
+		int sum =
+			getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
+				.map(modifier -> modifier.apply(0)).reduce(baseValue, Integer::sum);
 
-		Optional<PlayerStatLimit> limit = getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat)).map(TemporaryStatModifier::getLimit).findFirst();
+		Optional<PlayerStatLimit> limit =
+			getTemporaryModifiers().values().stream().flatMap(Collection::stream).filter(modifier -> modifier.appliesTo(stat))
+				.map(TemporaryStatModifier::getLimit).findFirst();
 
 		if (limit.isPresent() && limit.get().getMax() != 0) {
 			sum = Math.min(limit.get().getMax(), sum);
@@ -315,6 +341,11 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		return getEnhancementSources().contains(name);
 	}
 
+	public boolean hasActiveEnhancement(ISkillProperty property) {
+		Skill skill = getSkillWithProperty(property);
+		return skill != null && hasActiveEnhancement(skill);
+	}
+
 	public abstract void addTemporarySkills(String source, Set<SkillWithValue> skills);
 
 	public abstract void removeTemporarySkills(String source);
@@ -328,9 +359,18 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public boolean hasUnusedSkillProperty(ISkillProperty property) {
 		return Stream.concat(
-			getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill)).flatMap(skill -> skill.getSkillProperties().stream()),
+			getSkillsIncludingTemporaryOnes().stream().filter(skill -> !this.isUsed(skill))
+				.flatMap(skill -> skill.getSkillProperties().stream()),
 			getTemporaryProperties().values().stream().flatMap(Collection::stream)
 		).anyMatch(prop -> prop.equals(property));
+	}
+
+	public boolean hasUsableSkillProperty(ISkillProperty property, PlayerState state) {
+		return hasSkillProperty(property)	&& state.isStanding() && !state.isDistracted();
+	}
+
+	public boolean hasUsableSkillProperty(ISkillProperty property, Game game) {
+		return hasUsableSkillProperty(property, game.getFieldModel().getPlayerState(this));
 	}
 
 	public boolean hasSkill(ISkillProperty property) {
@@ -368,12 +408,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 		if (!hasActiveEnhancement(name)) {
 			addTemporaryModifiers(name, enhancements.getModifiers());
 			addTemporaryProperties(name, enhancements.getProperties());
-			addTemporarySkills(name, enhancements.getSkills().stream().map(scwv -> new SkillWithValue(factory.forClass(scwv.getSkill()), scwv.getValue().orElse(null))).collect(Collectors.toSet()));
+			addTemporarySkills(name, enhancements.getSkills().stream()
+				.map(scwv -> new SkillWithValue(factory.forClass(scwv.getSkill()), scwv.getValue().orElse(null)))
+				.collect(Collectors.toSet()));
 		}
 	}
 
 	public String getSource(ISkillProperty property) {
-		return getTemporaryProperties().entrySet().stream().filter(entry -> entry.getValue().contains(property)).map(Map.Entry::getKey).findFirst().orElse(null);
+		return getTemporaryProperties().entrySet().stream().filter(entry -> entry.getValue().contains(property))
+			.map(Map.Entry::getKey).findFirst().orElse(null);
 	}
 
 	public List<SkillDisplayInfo> skillInfos() {
@@ -393,23 +436,9 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 			.map(swv -> swv.getValue().orElse(null)).filter(Objects::nonNull).collect(Collectors.toSet());
 	}
 
-	public boolean hasAnimosityTowards(Player<?> player) {
-		Skill animosity = getSkillWithProperty(NamedProperties.hasToRollToPassBallOn);
-		if (animosity == null || !getTeam().getId().equals(player.getTeam().getId()) || player.getPlayerType() == PlayerType.MERCENARY || player.getPlayerType() == PlayerType.STAR) {
-			return false;
-		}
-
-		Set<String> pattern = new HashSet<String>() {{
-			add(ANIMOSITY_TO_ALL);
-			add(player.getPositionId());
-			add(player.getRace());
-		}}.stream().filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
-
-		return animosity.evaluator().values(animosity, this).stream().map(String::toLowerCase).anyMatch(pattern::contains);
-	}
-
 	public boolean canBeThrown() {
-		return hasSkillProperty(NamedProperties.canBeThrown) || (hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
+		return hasSkillProperty(NamedProperties.canBeThrown) ||
+			(hasSkillProperty(NamedProperties.canBeThrownIfStrengthIs3orLess) && getStrengthWithModifiers() <= 3);
 	}
 
 	public abstract PlayerStatus getPlayerStatus();
@@ -417,7 +446,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract boolean isJourneyman();
 
 	public boolean isUsed(ISkillProperty property) {
-		Optional<Skill> skill = getSkillsIncludingTemporaryOnes().stream().filter(s -> s.hasSkillProperty(property)).findFirst();
+		Optional<Skill> skill =
+			getSkillsIncludingTemporaryOnes().stream().filter(s -> s.hasSkillProperty(property)).findFirst();
 
 		return skill.isPresent() && isUsed(skill.get());
 	}
@@ -440,8 +470,16 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null && skill.getSkillBehaviour().hasInjuryModifier(injuryType))
+			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null &&
+				skill.getSkillBehaviour().hasInjuryModifier(injuryType))
 			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
 	}
 
+	public boolean canDeclareSkillAction(ISkillProperty property, PlayerState playerState) {
+		return Stream.concat(
+			getSkillsIncludingTemporaryOnes().stream(),
+			getTemporarySkills().values().stream().flatMap(set -> set.stream().map(SkillWithValue::getSkill))
+		).anyMatch(skill -> !this.isUsed(skill) && skill.hasSkillProperty(property) &&
+			skill.getDeclareCondition().fulfilled(playerState));
+	}
 }

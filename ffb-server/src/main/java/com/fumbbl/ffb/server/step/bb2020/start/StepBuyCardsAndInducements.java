@@ -22,7 +22,7 @@ import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.inducement.bb2020.BriberyAndCorruptionAction;
+import com.fumbbl.ffb.inducement.BriberyAndCorruptionAction;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -45,9 +45,9 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportDoubleHiredStarPlayer;
-import com.fumbbl.ffb.report.bb2020.ReportBriberyAndCorruptionReRoll;
+import com.fumbbl.ffb.report.mixed.ReportBriberyAndCorruptionReRoll;
 import com.fumbbl.ffb.report.bb2020.ReportCardsAndInducementsBought;
-import com.fumbbl.ffb.report.bb2020.ReportDoubleHiredStaff;
+import com.fumbbl.ffb.report.mixed.ReportDoubleHiredStaff;
 import com.fumbbl.ffb.server.CardDeck;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
@@ -63,10 +63,10 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.Kickoff;
+import com.fumbbl.ffb.server.step.generator.Kickoff;
 import com.fumbbl.ffb.server.step.generator.common.RiotousRookies;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.skill.bb2020.Loner;
+import com.fumbbl.ffb.skill.mixed.Loner;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
@@ -353,7 +353,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 		return Stream.concat(
 			Stream.concat(
 				Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.STAR).map(RosterPosition::getCost).filter(i -> i > 0),
-				factory.allTypes().stream().filter(type -> type.getCostId() != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
+				factory.allTypes().stream().filter(type -> type.getActualCostId(team) != null && !type.getName().equals("card")).map(type -> UtilGameOption.getIntOption(getGameState().getGame(), type.getActualCostId(team)))
 			),
 			Arrays.stream(roster.getPositions()).filter(pos -> pos.getType() == PlayerType.MERCENARY).map(pos -> pos.getCost() + UtilGameOption.getIntOption(getGameState().getGame(), GameOptionId.INDUCEMENT_MERCENARIES_EXTRA_COST))
 		).min(Integer::compareTo).orElse(Integer.MAX_VALUE);
@@ -475,7 +475,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 			UtilBox.putPlayerIntoBox(game, mercenary);
 		}
 
-		if (addedPlayerList.size() > 0) {
+		if (!addedPlayerList.isEmpty()) {
 			RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 			UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 		}
@@ -536,7 +536,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (removedPlayerList.size() > 0) {
+			if (!removedPlayerList.isEmpty()) {
 				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAR);
 				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAR);
 				for (Player<?> player : removedPlayerList) {
@@ -547,7 +547,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (addedPlayerList.size() > 0) {
+			if (!addedPlayerList.isEmpty()) {
 				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 			}
@@ -599,7 +599,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (removedPlayerList.size() > 0) {
+			if (!removedPlayerList.isEmpty()) {
 				removeDuplicatePlayerInducements(game.getTurnDataHome(), removedPlayerList.size(), Usage.STAFF);
 				removeDuplicatePlayerInducements(game.getTurnDataAway(), removedPlayerList.size(), Usage.STAFF);
 				for (Player<?> player : removedPlayerList) {
@@ -610,7 +610,7 @@ public final class StepBuyCardsAndInducements extends AbstractStep {
 				}
 			}
 
-			if (addedPlayerList.size() > 0) {
+			if (!addedPlayerList.isEmpty()) {
 				RosterPlayer[] addedPlayers = addedPlayerList.toArray(new RosterPlayer[0]);
 				UtilServerSteps.sendAddedPlayers(getGameState(), pTeam, addedPlayers);
 			}

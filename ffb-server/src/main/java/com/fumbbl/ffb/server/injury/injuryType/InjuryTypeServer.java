@@ -68,6 +68,10 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return injuryType.isVomitLike();
 	}
 
+	public boolean isChainsaw() {
+		return injuryType.isChainsaw();
+	}
+
 	public boolean stunIsTreatedAsKo() {
 		return false;
 	}

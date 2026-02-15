@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
  * @author Kalimar
  */
 public class FumbblResult implements IXmlWriteable {
@@ -102,7 +101,9 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_INTERCEPTIONS = "interceptions";
 	private static final String _XML_TAG_CASUALTIES = "casualties";
 	private static final String _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP = "casualtiesWithAdditionalSpp";
+	private static final String _XML_TAG_CATCHES_WITH_ADDITIONAL_SPP = "catchesWithAdditionalSpp";
 	private static final String _XML_TAG_PLAYER_AWARDS = "playerAwards";
+	private static final String _XML_TAG_LANDINGS = "landings";
 
 	private static final String _XML_TAG_STATISTICS = "statistics";
 	private static final String _XML_TAG_BLOCKS = "blocks";
@@ -112,8 +113,9 @@ public class FumbblResult implements IXmlWriteable {
 	private static final String _XML_TAG_TURNS_PLAYED = "turnsPlayed";
 
 	private static final String _XML_TAG_DEFECTING = "defecting";
-
 	private static final String _XML_TAG_INJURY = "injury";
+	private static final String _XML_TAG_GAINED_HATRED = "gainedHatred";
+	private static final String _XML_TAG_KEYWORD = "keyword";
 
 	private final Game fGame;
 
@@ -194,7 +196,8 @@ public class FumbblResult implements IXmlWriteable {
 			}
 
 			if (pTeamResult.getTreasurySpentOnInducements() > 0) {
-				UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS, pTeamResult.getTreasurySpentOnInducements());
+				UtilXml.addValueElement(pHandler, _XML_TAG_TREASURY_SPENT_ON_INDUCEMENTS,
+					pTeamResult.getTreasurySpentOnInducements());
 			}
 
 			attributes = new AttributesImpl();
@@ -323,8 +326,8 @@ public class FumbblResult implements IXmlWriteable {
 		if ((getGame() != null) && (pPlayerResult != null)) {
 
 			String playerTypeName = (pPlayerResult.getPlayer().getPlayerType() != null)
-					? pPlayerResult.getPlayer().getPlayerType().getName()
-					: null;
+				? pPlayerResult.getPlayer().getPlayerType().getName()
+				: null;
 
 			AttributesImpl attributes = new AttributesImpl();
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_PLAYER_ID, pPlayerResult.getPlayerId());
@@ -347,7 +350,8 @@ public class FumbblResult implements IXmlWriteable {
 					UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS, pPlayerResult.getCompletions());
 				}
 				if (pPlayerResult.getCompletionsWithAdditionalSpp() > 0) {
-					UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS_WITH_ADDITIONAL_SPP, pPlayerResult.getCompletionsWithAdditionalSpp());
+					UtilXml.addValueElement(pHandler, _XML_TAG_COMPLETIONS_WITH_ADDITIONAL_SPP,
+						pPlayerResult.getCompletionsWithAdditionalSpp());
 				}
 				if (pPlayerResult.getTouchdowns() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_TOUCHDOWNS, pPlayerResult.getTouchdowns());
@@ -362,7 +366,15 @@ public class FumbblResult implements IXmlWriteable {
 					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES, pPlayerResult.getCasualties());
 				}
 				if (pPlayerResult.getCasualtiesWithAdditionalSpp() > 0) {
-					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP, pPlayerResult.getCasualtiesWithAdditionalSpp());
+					UtilXml.addValueElement(pHandler, _XML_TAG_CASUALTIES_WITH_ADDITIONAL_SPP,
+						pPlayerResult.getCasualtiesWithAdditionalSpp());
+				}
+				if (pPlayerResult.getCatchesWithAdditionalSpp() > 0) {
+					UtilXml.addValueElement(pHandler, _XML_TAG_CATCHES_WITH_ADDITIONAL_SPP,
+						pPlayerResult.getCatchesWithAdditionalSpp());
+				}
+				if (pPlayerResult.getLandings() > 0) {
+					UtilXml.addValueElement(pHandler, _XML_TAG_LANDINGS, pPlayerResult.getLandings());
 				}
 				if (pPlayerResult.getPlayerAwards() > 0) {
 					UtilXml.addValueElement(pHandler, _XML_TAG_PLAYER_AWARDS, pPlayerResult.getPlayerAwards());
@@ -373,8 +385,8 @@ public class FumbblResult implements IXmlWriteable {
 			}
 
 			if (((pPlayerResult.totalEarnedSpps() > 0) || (pPlayerResult.getBlocks() > 0) || (pPlayerResult.getFouls() > 0)
-					|| (pPlayerResult.getRushing() != 0) || (pPlayerResult.getPassing() != 0)
-					|| (pPlayerResult.getTurnsPlayed() > 0))) {
+				|| (pPlayerResult.getRushing() != 0) || (pPlayerResult.getPassing() != 0)
+				|| (pPlayerResult.getTurnsPlayed() > 0))) {
 
 				UtilXml.startElement(pHandler, _XML_TAG_STATISTICS);
 
@@ -404,6 +416,13 @@ public class FumbblResult implements IXmlWriteable {
 
 			if (pPlayerResult.getSeriousInjuryDecay() != null) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_INJURY, pPlayerResult.getSeriousInjuryDecay().getName());
+			}
+
+			if (!pPlayerResult.getGainedHatred().isEmpty()) {
+				UtilXml.startElement(pHandler, _XML_TAG_GAINED_HATRED);
+				pPlayerResult.getGainedHatred()
+					.forEach(keyword -> UtilXml.addValueElement(pHandler, _XML_TAG_KEYWORD, keyword.getName().toLowerCase()));
+				UtilXml.endElement(pHandler, _XML_TAG_GAINED_HATRED);
 			}
 
 			UtilXml.endElement(pHandler, _XML_TAG_PLAYER_RESULT);

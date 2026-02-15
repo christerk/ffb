@@ -4,9 +4,9 @@ public enum LeaderState implements INamedObject {
 
 	NONE("none"), AVAILABLE("available"), USED("used");
 
-	private String fName;
+	private final String fName;
 
-	private LeaderState(String pName) {
+	LeaderState(String pName) {
 		fName = pName;
 	}
 

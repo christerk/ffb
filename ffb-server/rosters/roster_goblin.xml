@@ -111,6 +111,10 @@
             <skill>Right Stuff</skill>
             <skill>Stunty</skill>
             <skill>Thick Skull</skill>
+            <skill value="all">Animosity</skill>
+            <skill>Plague Ridden</skill>
+            <skill>Regeneration</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -120,6 +124,8 @@
         </skillCategoryList>
         <keywords>
             <keyword>Dwarf</keyword>
+            <keyword>goblin</keyword>
+            <keyword>Lineman</keyword>
         </keywords>
     </position>
 
@@ -143,6 +149,8 @@
             <skill>Really Stupid</skill>
             <skill>Regeneration</skill>
             <skill>Throw Team-Mate</skill>
+            <skill>Regeneration</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Strength</normal>
@@ -150,6 +158,11 @@
             <double>Agility</double>
             <double>Passing</double>
         </skillCategoryList>
+        <keywords>
+            <keyword>Undead</keyword>
+            <keyword>human</keyword>
+            <keyword>Lineman</keyword>
+        </keywords>
     </position>
 
     <position id="goblin.bombardier">
@@ -170,6 +183,8 @@
             <skill>Dodge</skill>
             <skill value="5">Secret Weapon</skill>
             <skill>Stunty</skill>
+            <skill>Regeneration</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -197,6 +212,9 @@
             <skill>Leap</skill>
             <skill>Stunty</skill>
             <skill>Very Long Legs</skill>
+            <skill value="goblin">Animosity</skill>
+            <skill>Regeneration</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>
@@ -223,6 +241,9 @@
             <skill>Chainsaw</skill>
             <skill>Secret Weapon</skill>
             <skill>Stunty</skill>
+            <skill>Animosity</skill>
+            <skill>Regeneration</skill>
+            <skill>Multiple Block</skill>
         </skillList>
         <skillCategoryList>
             <normal>Agility</normal>

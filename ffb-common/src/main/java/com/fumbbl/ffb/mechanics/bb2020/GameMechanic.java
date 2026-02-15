@@ -1,33 +1,24 @@
 package com.fumbbl.ffb.mechanics.bb2020;
 
-import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.Constant;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SendToBoxReason;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
-import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerStats;
 import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
-import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
-import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.SkillDisplayInfo;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,82 +27,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.inducement.Usage.GAME_MODIFICATION;
+import static com.fumbbl.ffb.inducement.Usage.LONER;
+import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
+import static com.fumbbl.ffb.inducement.Usage.STAFF;
+import static com.fumbbl.ffb.inducement.Usage.STAR;
+
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
-	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
-		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
-		add(TurnMode.DUMP_OFF);
-		add(TurnMode.BLITZ);
-		add(TurnMode.QUICK_SNAP);
-		add(TurnMode.BETWEEN_TURNS);
-	}};
-
-	private static final Set<TurnMode> modesAllowingPro = new HashSet<TurnMode>() {{
-		add(TurnMode.REGULAR);
-		add(TurnMode.BLITZ);
-		add(TurnMode.BOMB_HOME);
-		add(TurnMode.BOMB_AWAY);
-	}};
-
-	@Override
-	public ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData) {
-		turnData.setReRolls(turnData.getReRolls() - 1);
-		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			return ReRollSources.BRILLIANT_COACHING_RE_ROLL;
-		}
-		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
-			return ReRollSources.PUMP_UP_THE_CROWD;
-		}
-		if (turnData.getReRollShowStarOneDrive() > 0) {
-			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
-			return ReRollSources.SHOW_STAR;
-		}
-
-		return null;
-	}
-
-	@Override
-	public int minimumLonerRoll(Player<?> player) {
-		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
-	}
-
-	@Override
-	public int minimumProRoll() {
-		return 3;
-	}
-
-	@Override
-	public boolean eligibleForPro(Game game, Player<?> player, String originalBomberId) {
-		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getActingPlayer().isStandingUp() || game.getActingPlayer().hasActedIgnoringNegativeTraits())
-			&& !playerState.isProneOrStunned() && !playerState.isStunned()
-			&& game.getActingPlayer().getPlayer() == player
-			&& modesAllowingPro.contains(game.getTurnMode())
-			&& (!game.getTurnMode().isBombTurn() || player.getId().equals(originalBomberId));
-	}
-
-	@Override
-	public SendToBoxReason raisedByNurgleReason() {
-		return SendToBoxReason.PLAGUE_RIDDEN;
-	}
-
-	@Override
-	public String raisedByNurgleMessage() {
-		return " is now Plague Ridden and will join team ";
-	}
-
-	@Override
-	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return !modesProhibitingReRolls.contains(turnMode);
-	}
-
-	@Override
-	public int mvpSpp() {
-		return 4;
-	}
 
 	@Override
 	public String[] concessionDialogMessages(boolean legalConcession) {
@@ -131,36 +54,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isValidAssist(boolean usingMultiBlock, FieldModel fieldModel, Player<?> player) {
-		return !(usingMultiBlock && fieldModel.isMultiBlockTarget(player.getId()));
-	}
-
-	@Override
-	public boolean isValidPushbackSquare(FieldModel fieldModel, FieldCoordinate coordinate) {
-		return !(fieldModel.wasMultiBlockTargetSquare(coordinate));
-	}
-
-	@Override
-	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult) {
-		return team.getSpecialRules().contains(SpecialRule.FAVOURED_OF_NURGLE) && teamResult.getRaisedDead() == 0;
-	}
-
-	@Override
-	public boolean infectedGoesToReserves() {
-		return true;
-	}
-
-	@Override
-	public boolean canRaiseDead(Team team) {
-		return team.getSpecialRules().contains(SpecialRule.MASTERS_OF_UNDEATH);
-	}
-
-	@Override
-	public boolean canPreventStripBall(PlayerState playerState) {
-		return playerState.hasTacklezones();
-	}
-
-	@Override
 	public boolean isFoulActionAllowed(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
@@ -171,8 +64,8 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public boolean isGazeActionAllowed(TurnMode turnMode, PlayerAction playerAction) {
-		return TurnMode.BLITZ != turnMode;
+	public boolean isGazeActionAllowed(Game game, Player<?> player) {
+		return TurnMode.BLITZ != game.getTurnMode();
 	}
 
 	@Override
@@ -182,11 +75,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isKickTeamMateActionAllowed(TurnMode turnMode) {
-		return TurnMode.BLITZ != turnMode;
-	}
-
-	@Override
-	public boolean allowsCancellingGuard(TurnMode turnMode) {
 		return TurnMode.BLITZ != turnMode;
 	}
 
@@ -226,38 +114,16 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public String calculatePlayerLevel(Game game, Player<?> player) {
-		int gainedSkills = (int) player.skillInfos().stream()
-			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
-				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE).count();
-
-		switch (gainedSkills) {
-			case 0:
-				return "Rookie";
-			case 1:
-				return "Experienced";
-			case 2:
-				return "Veteran";
-			case 3:
-				return "Emerging";
-			case 4:
-				return "Star";
-			case 5:
-				return "Super Star";
-			default:
-				return "Legend";
-		}
-	}
-
-	@Override
 	public boolean touchdownEndsGame(Game game) {
-		return game.getHalf() == 3 && ((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
+		return game.getHalf() == 3 &&
+			((GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.OVERTIME_GOLDEN_GOAL)).isEnabled();
 	}
 
 	@Override
 	public RosterPosition riotousRookiesPosition(Roster roster) {
-		List<RosterPosition> rosterPositions = Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
-			.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
+		List<RosterPosition> rosterPositions =
+			Arrays.stream(roster.getPositions()).filter(pos -> pos.getQuantity() == 12 || pos.getQuantity() == 16)
+				.filter(pos -> pos.getType() != PlayerType.IRREGULAR).collect(Collectors.toList());
 		if (rosterPositions.isEmpty()) {
 			return null;
 		}
@@ -267,10 +133,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean isLegalConcession(Game game, Team team) {
-		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
-			.map(player -> game.getFieldModel().getPlayerState(player))
-			.filter(PlayerState::canBeSetUpNextDrive)
-			.count() <= 3;
+		return game.getTurnMode() == TurnMode.SETUP &&
+			Arrays.stream(team.getPlayers()).map(player -> game.getFieldModel().getPlayerState(player))
+				.filter(PlayerState::canBeSetUpNextDrive).count() <= 3;
 	}
 
 	@Override
@@ -299,21 +164,12 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	}
 
 	@Override
-	public PlayerType raisedNurgleType() {
-		return PlayerType.PLAGUE_RIDDEN;
-	}
-
-	@Override
-	public boolean canUseApo(Game game, Player<?> defender, PlayerState playerState) {
-		return !ApothecaryType.forPlayer(game, defender, playerState).isEmpty();
-	}
-
-	@Override
 	public String weatherDescription(Weather weather) {
 
 		switch (weather) {
 			case SWELTERING_HEAT:
-				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next kick-off.";
+				return "D3 random players from each team on the pitch will suffer from heat exhaustion before the next " +
+					"kick-off.";
 			case VERY_SUNNY:
 				return "A -1 modifier applies to all passing rolls.";
 			case NICE:
@@ -330,7 +186,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public Set<String> enhancementsToRemoveAtEndOfTurn(SkillFactory skillFactory) {
-		return Constant.getEnhancementSkillsToRemoveAtEndOfTurn(skillFactory);
+		return new HashSet<Class<? extends Skill>>() {{
+			add(WisdomOfTheWhiteDwarf.class);
+		}}.stream().map(skillFactory::forClass).map(Skill::getName).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -345,6 +203,22 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 
 	@Override
 	public boolean allowMovementInEndZone() {
+		return false;
+	}
+
+	@Override
+	public Set<Usage> explicitlySelectedInducements() {
+		return new HashSet<Usage>() {{
+			add(LONER);
+			add(STAR);
+			add(GAME_MODIFICATION);
+			add(STAFF);
+			add(REROLL_ONES_ON_KOS);
+		}};
+	}
+
+	@Override
+	public boolean playersForGoActivations(Game game) {
 		return false;
 	}
 }

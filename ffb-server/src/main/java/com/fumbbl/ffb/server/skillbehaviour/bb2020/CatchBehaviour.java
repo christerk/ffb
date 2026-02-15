@@ -7,9 +7,9 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
-import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn;
-import com.fumbbl.ffb.server.step.bb2020.StepCatchScatterThrowIn.StepState;
-import com.fumbbl.ffb.skill.Catch;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCatchScatterThrowIn;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCatchScatterThrowIn.StepState;
+import com.fumbbl.ffb.skill.common.Catch;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)

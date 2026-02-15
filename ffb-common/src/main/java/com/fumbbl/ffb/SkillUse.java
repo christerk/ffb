@@ -30,6 +30,7 @@ public enum SkillUse implements INamedObject {
 	INCREASE_CHAINSAW_DAMAGE("increaseChainsawDamage", "to add +4 instead of +3 to armour roll"),
 	ADD_INJURY_MODIFIER("addInjuryModifier", "to add +1 to injury roll"),
 	RE_ROLL_INJURY("reRollInjury", "to re-roll the injury roll"),
+	RE_ROLL_ARMOUR("reRollArmour", "to re-roll the armour roll"),
 	FUMBLED_PLAYER_LANDS_SAFELY("fumbledPlayerLandsSafely", "to let the fumbled player land safely"),
 	GAIN_FRENZY_FOR_BLITZ("gainFrenzy", "to gain the Frenzy skill for this Blitz action"),
 	GAIN_GAZE("gainFrenzy", "to gain the Hypnotic Gaze skill"),
@@ -60,7 +61,18 @@ public enum SkillUse implements INamedObject {
 	PASS_JUMP_WITHOUT_MODIFIERS("passJumpWithoutModifiers", "to pass the jump roll ignoring modifiers"),
 	PASS_RUSH_WITHOUT_MODIFIERS("passRushWithoutModifiers", "to pass the rush roll ignoring modifiers"),
 	QUICK_BITE("quickBite", "to try to get the ball"),
-	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones");
+	STEADY_FOOTING("steadyFooting", "to keep standing"),
+	NO_TACKLEZONE("noTackleZone", "because they have no tacklezones"),
+	FORCE_FOLLOW_UP("forceFollowUp", "to force %g opponent to follow up"),
+	EYE_GOUGED("eyeGouged", "to prevent the pushed player from assisting blocks"),
+	DISTRACT_OPPONENT("distractOpponent", "to distract %g opponent"),
+	BULLSEYE("bullseye", "to land the thrown player in the target square"),
+	SAVED_FUMBLE_BALL("savedFumbleBall", "to hold on to the ball"),
+	SAVED_FUMBLE_BOMB("savedFumbleBomb", "to hold on to the bomb and put out the fuse"),
+	GAIN_CLAWS_FOR_BLITZ("gainClaws", "to gain the Claws skill for this Blitz action"),
+	RE_ROLL_PUNT_DIRECTION("reRollPuntDirection", "to re-roll the punt direction"),
+	RE_ROLL_PUNT_DISTANCE("reRollPuntDistance", "to re-roll the punt distance"),
+	AVOID_DODGING("avoidDodging", "to avoid dodge rolls");
 
 	private final String fName;
 	private final String fDescription;

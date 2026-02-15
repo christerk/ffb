@@ -11,29 +11,29 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String blockDefenderId;
 		private final String multiBlockDefenderId;
-		private final boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, usingBreatheFire;
+		private final boolean usingStab, usingChainsaw, usingVomit, frenzyBlock, askForBlockKind, usingBreatheFire, usingChomp;
 		private boolean publishDefender;
 
-		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire) {
-			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false, usingBreatheFire);
+		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw, boolean usingVomit, boolean usingBreatheFire, boolean usingChomp) {
+			this(gameState, blockDefenderId, usingStab, usingChainsaw, usingVomit, false, null, false, usingBreatheFire, usingChomp);
 		}
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, String multiBlockDefenderId) {
-			this(gameState, blockDefenderId, usingStab, false, false, false, multiBlockDefenderId, false, false);
+			this(gameState, blockDefenderId, usingStab, false, false, false, multiBlockDefenderId, false, false, false);
 		}
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean frenzyBlock, String multiBlockDefenderId) {
-			this(gameState, blockDefenderId, usingStab, false, false, frenzyBlock, multiBlockDefenderId, false, false);
+			this(gameState, blockDefenderId, usingStab, false, false, frenzyBlock, multiBlockDefenderId, false, false, false);
 		}
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean frenzyBlock,
 													String multiBlockDefenderId, boolean askForBlockKind) {
-			this(gameState, blockDefenderId, usingStab, false, false, frenzyBlock, multiBlockDefenderId, askForBlockKind, false);
+			this(gameState, blockDefenderId, usingStab, false, false, frenzyBlock, multiBlockDefenderId, askForBlockKind, false, false);
 		}
 
 		public SequenceParams(GameState gameState, String blockDefenderId, boolean usingStab, boolean usingChainsaw,
 													boolean usingVomit, boolean frenzyBlock, String multiBlockDefenderId, boolean askForBlockKind,
-													boolean usingBreatheFire) {
+													boolean usingBreatheFire, boolean usingChomp) {
 			super(gameState);
 			this.blockDefenderId = blockDefenderId;
 			this.multiBlockDefenderId = multiBlockDefenderId;
@@ -43,14 +43,15 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 			this.frenzyBlock = frenzyBlock;
 			this.askForBlockKind = askForBlockKind;
 			this.usingBreatheFire = usingBreatheFire;
+			this.usingChomp = usingChomp;
 		}
 
 		public SequenceParams(GameState gameState, boolean usingChainsaw) {
-			this(gameState, null, false, usingChainsaw, false, false, null, false, false);
+			this(gameState, null, false, usingChainsaw, false, false, null, false, false, false);
 		}
 
 		public SequenceParams(GameState gameState) {
-			this(gameState, null, false, false, false, false, null, false, false);
+			this(gameState, null, false, false, false, false, null, false, false, false);
 		}
 
 		public SequenceParams(GameState gameState, boolean usingChainsaw, boolean publishDefender) {
@@ -92,6 +93,10 @@ public abstract class BlitzBlock extends SequenceGenerator<BlitzBlock.SequencePa
 
 		public boolean isUsingBreatheFire() {
 			return usingBreatheFire;
+		}
+
+		public boolean isUsingChomp() {
+			return usingChomp;
 		}
 	}
 }

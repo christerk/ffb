@@ -16,7 +16,7 @@ import com.fumbbl.ffb.modifiers.IRegistrationAwareModifier;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportInjury;
+import com.fumbbl.ffb.report.mixed.ReportInjury;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;

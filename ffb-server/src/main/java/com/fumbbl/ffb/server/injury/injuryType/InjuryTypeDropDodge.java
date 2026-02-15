@@ -26,14 +26,24 @@ import java.util.stream.Collectors;
 
 public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 	private final Player<?> divingTackler;
+	private final boolean useArmBarModifiers;
 
 	public InjuryTypeDropDodge() {
-		this(null);
+		this(null, true);
 	}
 
 	public InjuryTypeDropDodge(Player<?> divingTackler) {
+		this(divingTackler, true);
+	}
+
+	public InjuryTypeDropDodge(boolean useArmBarModifiers) {
+		this(null, useArmBarModifiers);
+	}
+
+	private InjuryTypeDropDodge(Player<?> divingTackler, boolean useArmBarModifiers) {
 		super(new DropDodge());
 		this.divingTackler = divingTackler;
+		this.useArmBarModifiers = useArmBarModifiers;
 	}
 
 	@Override
@@ -57,7 +67,7 @@ public class InjuryTypeDropDodge extends InjuryTypeServer<DropDodge> {
 
 		Skill avOrInjModifierSkill = null;
 
-		if (fromCoordinate != null) {
+		if (useArmBarModifiers && fromCoordinate != null) {
 			Set<Player<?>> players = Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(pDefender.getTeam()), fromCoordinate, false))
 				.collect(Collectors.toSet());
 

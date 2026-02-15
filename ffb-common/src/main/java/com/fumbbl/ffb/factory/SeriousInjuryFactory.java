@@ -1,16 +1,14 @@
 package com.fumbbl.ffb.factory;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.Scanner;
+
+import java.util.Set;
 
 @FactoryType(FactoryType.Factory.SERIOUS_INJURY)
 @RulesCollection(Rules.COMMON)
@@ -30,8 +28,7 @@ public class SeriousInjuryFactory implements INamedObjectFactory<SeriousInjury> 
 
 	@Override
 	public void initialize(Game game) {
-		values = new Scanner<>(SeriousInjury.class).getClassesImplementing(game.getOptions()).stream()
-			.flatMap(cls -> Arrays.stream(cls.getEnumConstants())).collect(Collectors.toSet());
+		values = new Scanner<>(SeriousInjury.class).getEnumValues(game.getOptions());
 
 		values.forEach(value -> {
 			if (value.isDead()) {

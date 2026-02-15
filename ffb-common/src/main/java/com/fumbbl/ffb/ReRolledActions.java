@@ -1,16 +1,15 @@
 package com.fumbbl.ffb;
 
-import com.fumbbl.ffb.skill.Dauntless;
-import com.fumbbl.ffb.skill.FoulAppearance;
-import com.fumbbl.ffb.skill.JumpUp;
-import com.fumbbl.ffb.skill.Pass;
+import com.fumbbl.ffb.skill.common.Dauntless;
+import com.fumbbl.ffb.skill.common.FoulAppearance;
+import com.fumbbl.ffb.skill.common.JumpUp;
+import com.fumbbl.ffb.skill.common.Pass;
 import com.fumbbl.ffb.skill.bb2016.WildAnimal;
-import com.fumbbl.ffb.skill.bb2020.AnimalSavagery;
-import com.fumbbl.ffb.skill.bb2020.BreatheFire;
-import com.fumbbl.ffb.skill.bb2020.ProjectileVomit;
-import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
-import com.fumbbl.ffb.skill.bb2020.special.CatchOfTheDay;
+import com.fumbbl.ffb.skill.mixed.AnimalSavagery;
+import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
+import com.fumbbl.ffb.skill.mixed.special.CatchOfTheDay;
 import com.fumbbl.ffb.skill.bb2020.special.ThenIStartedBlastin;
+import com.fumbbl.ffb.skill.bb2025.special.BlastinSolvesEverything;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -50,12 +49,13 @@ public class ReRolledActions {
 	public static final ReRolledAction JUMP_UP = new ReRolledAction(JumpUp.class);
 	public static final ReRolledAction STAND_UP = new ReRolledAction("standUp");
 	public static final ReRolledAction CHAINSAW = new ReRolledAction("Chainsaw");
+	public static final ReRolledAction CHOMP = new ReRolledAction("Chomp");
 	public static final ReRolledAction BLOOD_LUST = new ReRolledAction("Bloodlust");
 	public static final ReRolledAction HYPNOTIC_GAZE = new ReRolledAction("Hypnotic Gaze");
 	public static final ReRolledAction ANIMOSITY = new ReRolledAction("Animosity");
 	public static final ReRolledAction UNCHANNELED_FURY = new ReRolledAction(UnchannelledFury.class);
-	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction(ProjectileVomit.class);
-	public static final ReRolledAction BREATHE_FIRE = new ReRolledAction(BreatheFire.class);
+	public static final ReRolledAction PROJECTILE_VOMIT = new ReRolledAction("Projectile Vomit");
+	public static final ReRolledAction BREATHE_FIRE = new ReRolledAction("Breathe Fire");
 	public static final ReRolledAction TRAP_DOOR = new ReRolledAction("Trapdoor");
 	public static final ReRolledAction ARGUE_THE_CALL = new ReRolledAction("Argue the Call");
 	public static final ReRolledAction OLD_PRO = new ReRolledAction("Old Pro");
@@ -69,6 +69,15 @@ public class ReRolledActions {
 	public static final ReRolledAction SINGLE_BLOCK_DIE = new ReRolledAction("Single Block Die");
 	public static final ReRolledAction THEN_I_STARTED_BLASTIN = new ReRolledAction(ThenIStartedBlastin.class);
 	public static final ReRolledAction MULTI_BLOCK_DICE = new ReRolledAction("Multi Block Dice");
+	public static final ReRolledAction STEADY_FOOTING = new ReRolledAction("Steady Footing");
+	public static final ReRolledAction SINGLE_BOTH_DOWN = new ReRolledAction("Single BothDown");
+	public static final ReRolledAction SINGLE_DIE_PER_ACTIVATION = new ReRolledAction("Single Die Per Activation");
+	public static final ReRolledAction GETTING_EVEN = new ReRolledAction("Getting Even");
+	public static final ReRolledAction SINGLE_SKULL = new ReRolledAction("Single Skull");
+	public static final ReRolledAction REGENERATION = new ReRolledAction("Regeneration");
+	public static final ReRolledAction BLASTIN_SOLVES_EVERYTHING = new ReRolledAction(BlastinSolvesEverything.class);
+	public static final ReRolledAction PUNT_DIRECTION = new ReRolledAction("Punt Direction");
+	public static final ReRolledAction PUNT_DISTANCE = new ReRolledAction("Punt Distance");
 
 	private final Map<String, ReRolledAction> values;
 
@@ -89,7 +98,7 @@ public class ReRolledActions {
 			}
 
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
+			//noinspection CallToPrintStackTrace
 			e.printStackTrace();
 		}
 	}

@@ -17,7 +17,8 @@ public enum AnimationType implements INamedObject {
 	KICKOFF_POURING_RAIN("kickoffPouringRain"), KICKOFF_QUICK_SNAP("kickoffQuickSnap"), KICKOFF_RIOT("kickoffRiot"),
 	KICKOFF_TIMEOUT("kickoffTimeout"),
 	KICKOFF_SWELTERING_HEAT("kickoffSwelteringHeat"), KICKOFF_THROW_A_ROCK("kickoffThrowARock"),
-	KICKOFF_VERY_SUNNY("kickoffVerySunny"), HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
+	KICKOFF_VERY_SUNNY("kickoffVerySunny"), KICKOFF_CHARGE("kickoffCharge"), KICKOFF_DODGY_SNACK("kickoffDodgySnack"),
+	HAIL_MARY_PASS("hailMaryPass"), THROW_A_ROCK("throwARock"),
 	THROW_BOMB("throwBomb"), HAIL_MARY_BOMB("hailMaryBomb"), BOMB_EXPLOSION("bombExplosion"), CARD("card"),
 	THROW_KEG("throwKeg"), FUMBLED_KEG("fumbledKeg"), TRICKSTER("trickster"), BREATHE_FIRE("breatheFire"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
@@ -25,7 +26,8 @@ public enum AnimationType implements INamedObject {
 	PRAYER_FAN_INTERACTION("fanInteraction"), PRAYER_FOULING_FRENZY("foulingFrenzy"), PRAYER_FRIENDS_WITH_THE_REF("friendsWithTheRef"),
 	PRAYER_GREASY_CLEATS("greasyCleats"), PRAYER_INTENSIVE_TRAINING("intensiveTraining"), PRAYER_IRON_MAN("ironMan"),
 	PRAYER_KNUCKLE_DUSTERS("knuckleDusters"), PRAYER_MOLES_UNDER_THE_PITCH("molesUnderThePitch"), PRAYER_NECESSARY_VIOLENCE("necessaryViolence"),
-	PRAYER_PERFECT_PASSING("perfectPassing"), PRAYER_STILETTO("stiletto"), PRAYER_THROW_A_ROCK("throwARockPrayer"), PRAYER_UNDER_SCRUTINY("underScrutiny");
+	PRAYER_PERFECT_PASSING("perfectPassing"), PRAYER_STILETTO("stiletto"), PRAYER_THROW_A_ROCK("throwARockPrayer"),
+	PRAYER_DAZZLING_CATCHING("dazzlingCatching"), PRAYER_UNDER_SCRUTINY("underScrutiny");
 
 	private final String fName;
 

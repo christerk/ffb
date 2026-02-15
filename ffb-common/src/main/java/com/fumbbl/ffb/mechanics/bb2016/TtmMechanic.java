@@ -76,7 +76,27 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	}
 
 	@Override
-	public boolean canThrow(Player<?> player) {
+	public boolean canThrow(Game game, Player<?> player) {
 		return player.hasSkillProperty(NamedProperties.canThrowTeamMates);
 	}
+
+	@Override
+	public boolean isTtmAvailable(TurnData turnData) {
+		return !turnData.isPassUsed();
+	}
+
+	@Override
+	public Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
+		List<Player<?>> kickablePlayers = new ArrayList<>();
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
+		for (Player<?> adjacentPlayer : adjacentPlayers) {
+			if (canBeKicked(pGame, adjacentPlayer)) {
+				kickablePlayers.add(adjacentPlayer);
+			}
+		}
+		return kickablePlayers.toArray(new Player[0]);
+	}
+
 }

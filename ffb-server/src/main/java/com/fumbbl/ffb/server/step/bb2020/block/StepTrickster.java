@@ -187,7 +187,7 @@ public class StepTrickster extends AbstractStep {
 			} else {
 				fieldModel.setPlayerCoordinate(defender, toCoordinate);
 				publishParameter(new StepParameter(StepParameterKey.DEFENDER_POSITION, toCoordinate));
-				ServerUtilBlock.updateDiceDecorations(game);
+				ServerUtilBlock.updateDiceDecorations(getGameState());
 				if (withBall) {
 					fieldModel.setBallCoordinate(toCoordinate);
 				}

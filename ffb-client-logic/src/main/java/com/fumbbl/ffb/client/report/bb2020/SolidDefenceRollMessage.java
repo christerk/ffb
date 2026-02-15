@@ -5,7 +5,7 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportSolidDefenceRoll;
+import com.fumbbl.ffb.report.mixed.ReportSolidDefenceRoll;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
 @ReportMessageType(ReportId.SOLID_DEFENCE_ROLL)

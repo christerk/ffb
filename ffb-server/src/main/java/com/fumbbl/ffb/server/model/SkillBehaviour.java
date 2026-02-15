@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.model;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollections;
 import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.PlayerModifier;
@@ -13,9 +14,11 @@ import com.fumbbl.ffb.server.step.StepId;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour<T> {
 
@@ -26,8 +29,8 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	}
 
 	@SuppressWarnings("unchecked")
-	public final Class<T> skillClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-		.getActualTypeArguments()[0];
+	public final Class<T> skillClass =
+		(Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
 	private final List<PlayerModifier> playerModifiers;
 	private final List<StepModifier<? extends IStep, ?>> stepModifiers;
@@ -40,12 +43,24 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		stepModifiers = new ArrayList<>();
 		steps = new HashMap<>();
 
-		RulesCollection skillRules = skillClass.getAnnotation(RulesCollection.class);
-		RulesCollection behaviourRules = getClass().getAnnotation(RulesCollection.class);
-		
-		if (!skillRules.value().matches(behaviourRules.value())) {
+		List<RulesCollection.Rules> skillRules = getRules(skillClass);
+		List<RulesCollection.Rules> behaviourRules = getRules(getClass());
+
+		if (behaviourRules.stream().noneMatch(bRule -> skillRules.stream().anyMatch(bRule::isOrExtends))) {
 			throw new FantasyFootballException("Skill behaviour rule does not match skill rule");
 		}
+	}
+
+	private List<RulesCollection.Rules> getRules(Class<?> cls) {
+		List<RulesCollection.Rules> foundRules = new ArrayList<>();
+		RulesCollection rule = cls.getAnnotation(RulesCollection.class);
+		RulesCollections rules = cls.getAnnotation(RulesCollections.class);
+		if (rule != null) {
+			foundRules.add(rule.value());
+		} else if (rules != null) {
+			foundRules.addAll(Arrays.stream(rules.value()).map(RulesCollection::value).collect(Collectors.toList()));
+		}
+		return foundRules;
 	}
 
 	public void setSkill(T skill) {
@@ -64,7 +79,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		playerModifiers.add(playerModifier);
 	}
 
-	protected void registerModifier(InjuryContextModification injuryContextModification) {
+	protected void registerModifier(InjuryContextModification<?> injuryContextModification) {
 		this.injuryContextModification = injuryContextModification;
 	}
 
@@ -81,7 +96,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	}
 
 	@Override
-	public InjuryContextModification getInjuryContextModification() {
+	public InjuryContextModification<?> getInjuryContextModification() {
 		return injuryContextModification;
 	}
 

@@ -5,10 +5,7 @@ import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +24,7 @@ public class DialogEndTurn extends Dialog implements ActionListener, KeyListener
 	private final JButton fButtonNo;
 	private int fChoice;
 
-	public DialogEndTurn(FantasyFootballClient pClient) {
+	public DialogEndTurn(FantasyFootballClient pClient, boolean showForgo) {
 
 		super(pClient, "End Turn", false);
 
@@ -47,9 +44,23 @@ public class DialogEndTurn extends Dialog implements ActionListener, KeyListener
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.X_AXIS));
 		JLabel messageLabel = new JLabel(dimensionProvider(), "Do you really want to end your turn?");
 		messageLabel.setFont(new Font(messageLabel.getFont().getName(), Font.BOLD, messageLabel.getFont().getSize()));
+		messagePanel.add(Box.createHorizontalGlue());
 		messagePanel.add(messageLabel);
 		messagePanel.add(Box.createHorizontalGlue());
 		textPanel.add(messagePanel);
+
+		if (showForgo) {
+			textPanel.add(Box.createVerticalStrut(dimensionProvider().scale(5)));
+			JPanel forGoPanel = new JPanel();
+			forGoPanel.setLayout(new BoxLayout(forGoPanel, BoxLayout.X_AXIS));
+			JLabel forGoLabel = new JLabel(dimensionProvider(), "Remaining players forgo their activation (stalling check " +
+				"still applies)");
+			forGoLabel.setFont(new Font(forGoLabel.getFont().getName(), Font.PLAIN, forGoLabel.getFont().getSize() - 2));
+			forGoLabel.add(Box.createHorizontalGlue());
+			forGoPanel.add(forGoLabel);
+			forGoLabel.add(Box.createHorizontalGlue());
+			textPanel.add(forGoPanel);
+		}
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));

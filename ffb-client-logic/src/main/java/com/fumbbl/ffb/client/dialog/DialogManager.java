@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyInducementsHandler;
+import com.fumbbl.ffb.client.dialog.inducements.DialogBuyPrayersAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogUseInducementHandler;
 import com.fumbbl.ffb.model.Game;
 
@@ -40,6 +41,9 @@ public class DialogManager {
 				switch (game.getDialogParameter().getId()) {
 					case RE_ROLL:
 						setDialogHandler(new DialogReRollHandler(getClient()));
+						break;
+					case RE_ROLL_PROPERTIES:
+						setDialogHandler(new DialogReRollPropertiesHandler(getClient()));
 						break;
 					case SKILL_USE:
 						setDialogHandler(new DialogSkillUseHandler(getClient()));
@@ -82,6 +86,9 @@ public class DialogManager {
 						break;
 					case BLOCK_ROLL_PARTIAL_RE_ROLL:
 						setDialogHandler(new DialogBlockRollPartialReRollHandler(getClient()));
+						break;
+					case BLOCK_ROLL_PROPERTIES:
+						setDialogHandler(new DialogBlockRollPropertiesHandler(getClient()));
 						break;
 					case PLAYER_CHOICE:
 						setDialogHandler(new DialogPlayerChoiceHandler(getClient()));
@@ -215,6 +222,30 @@ public class DialogManager {
 						break;
 					case PENALTY_SHOOTOUT:
 						setDialogHandler(new DialogPenaltyShootoutHandler(getClient()));
+						break;
+					case BUY_PRAYERS_AND_INDUCEMENTS:
+						setDialogHandler(new DialogBuyPrayersAndInducementsHandler(getClient()));
+						break;
+					case OPPONENT_BLOCK_SELECTION_PROPERTIES:
+						setDialogHandler(new DialogOpponentBlockSelectionPropertiesHandler(getClient()));
+						break;
+					case RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES:
+						setDialogHandler(new DialogReRollBlockForTargetsPropertiesHandler(getClient()));
+						break;
+					case PICK_UP_CHOICE:
+						setDialogHandler(new DialogPickUpChoiceHandler(getClient()));
+						break;
+					case SELECT_KEYWORD:
+						setDialogHandler(new DialogSelectKeywordHandler(getClient()));
+						break;
+					case SELECT_POSITION:
+						setDialogHandler(new DialogSelectPositionHandler(getClient()));
+						break;
+					case RE_ROLL_REGENERATION_MULTIPLE:
+						setDialogHandler(new DialogReRollRegenerationMultipleHandler(getClient()));
+						break;
+					case PUNT_TO_CROWD:
+						setDialogHandler(new DialogPuntToCrowdHandler(getClient()));
 						break;
 					default:
 						break;

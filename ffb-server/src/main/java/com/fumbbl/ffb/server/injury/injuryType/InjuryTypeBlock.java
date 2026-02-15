@@ -41,7 +41,8 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, InjuryContext injuryContext) {
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		factory.getNigglingInjuryModifier(pDefender).ifPresent(injuryContext::addInjuryModifier);
@@ -50,10 +51,11 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 		if (stunty != null) {
 			injuryContext.addInjuryModifiers(new HashSet<>(stunty.getInjuryModifiers()));
 		}
-		// do not use injuryModifiers on blocking own team-mate with b&c
-		if (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam())) {
+		// do not use injuryModifiers on blocking own team-mate with b&c or for BB2025 USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES mode
+		if (mode != Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES ||
+			(mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
 			Set<InjuryModifier> injuryModifiers = factory.findInjuryModifiersWithoutNiggling(game, injuryContext, pAttacker,
-				pDefender, isStab(), isFoul(), isVomitLike());
+				pDefender, isStab(), isFoul(), isVomitLike(), isChainsaw());
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
 
@@ -61,12 +63,14 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-														DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		if (!injuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 
+			boolean skillsStackAgainstChainsaw =
+				UtilGameOption.isOptionEnabled(game, GameOptionId.MB_STACKS_AGAINST_CHAINSAW);
 			Skill chainsaw = null;
 			if (!UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
 				chainsaw = allowAttackerChainsaw ? pAttacker.getSkillWithProperty(NamedProperties.blocksLikeChainsaw) : null;
@@ -79,14 +83,26 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			if (chainsaw != null) {
+			if (chainsaw != null && !skillsStackAgainstChainsaw) {
 				chainsaw.getArmorModifiers().forEach(injuryContext::addArmorModifier);
 				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-			} else if (!injuryContext.isArmorBroken() && (mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES || (mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
-				Set<ArmorModifier> armorModifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
-					isFoul());
+			} else if (!injuryContext.isArmorBroken() &&
+				(mode == Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES || mode == Mode.USE_MODIFIERS_AGAINST_TEAM_MATES ||
+					(mode != Mode.DO_NOT_USE_MODIFIERS && pAttacker.getTeam() != pDefender.getTeam()))) {
+				Set<ArmorModifier> armorModifiers =
+					armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(),
+						isFoul());
+				if (mode == Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES) {
+					// BB2025: Only apply Claws and Mighty Blow from attacker
+					armorModifiers = armorModifiers.stream()
+						.filter(modifier ->
+							modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue) ||
+								modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))
+						.collect(java.util.stream.Collectors.toSet());
+				}
 				Optional<ArmorModifier> claw = armorModifiers.stream()
-					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue)).findFirst();
+					.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.reducesArmourToFixedValue))
+					.findFirst();
 				if (claw.isPresent()) {
 					injuryContext.addArmorModifier(claw.get());
 					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
@@ -95,8 +111,11 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 							armorModifiers.remove(claw.get());
 							injuryContext.clearArmorModifiers();
 							injuryContext.addArmorModifiers(armorModifiers);
+							if (chainsaw != null) {
+								armorModifiers.addAll(chainsaw.getArmorModifiers());
+							}
 							injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-							if (!injuryContext.isArmorBroken()) {
+							if (!injuryContext.isArmorBroken() && chainsaw == null) {
 								// set claw as modifier as it should be displayed as used in the log when there is no stacking to avoid confusion
 								injuryContext.clearArmorModifiers();
 								injuryContext.addArmorModifier(claw.get());
@@ -107,15 +126,41 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 						injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 					}
 				} else {
-					injuryContext.addArmorModifiers(armorModifiers);
+					if (chainsaw != null) {
+						armorModifiers.addAll(chainsaw.getArmorModifiers());
+					}
+					handleChainsawAndMb(injuryContext, chainsaw, armorModifiers, gameState, diceInterpreter);
 					injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
-
 				}
 			}
 		}
 	}
 
+	private void handleChainsawAndMb(InjuryContext injuryContext, Skill chainsaw, Set<ArmorModifier> armorModifiers,
+		GameState gameState, DiceInterpreter diceInterpreter) {
+		Optional<ArmorModifier> mbOpt = armorModifiers.stream()
+			.filter(mod -> mod.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryOnBlock))
+			.findFirst();
+
+		if (chainsaw == null || !mbOpt.isPresent()) {
+			injuryContext.addArmorModifiers(armorModifiers);
+			return;
+		}
+
+		ArmorModifier mb = mbOpt.get();
+
+		armorModifiers.remove(mb);
+
+		injuryContext.clearArmorModifiers();
+		injuryContext.addArmorModifiers(armorModifiers);
+		injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+
+		if (!injuryContext.isArmorBroken()) {
+			injuryContext.addArmorModifier(mb);
+		}
+	}
+
 	public enum Mode {
-		REGULAR, USE_MODIFIERS_AGAINST_TEAM_MATES, DO_NOT_USE_MODIFIERS
+		REGULAR, USE_MODIFIERS_AGAINST_TEAM_MATES, DO_NOT_USE_MODIFIERS, USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES
 	}
 }

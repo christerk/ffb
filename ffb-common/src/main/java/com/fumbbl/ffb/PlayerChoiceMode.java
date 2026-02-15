@@ -13,7 +13,8 @@ public enum PlayerChoiceMode implements INamedObject {
 	INDOMITABLE("indomitable"), PICK_ME_UP("pickMeUp", false, true),
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
-	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst");
+	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
+	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -119,6 +120,18 @@ public enum PlayerChoiceMode implements INamedObject {
 			case FURIOUS_OUTBURST:
 				header.append("Select player to attack");
 				break;
+			case SOLID_DEFENCE:
+				header.append("Select players to setup again");
+				break;
+			case CHARGE:
+				header.append("Select players to perform actions");
+				break;
+			case ARM_BAR:
+				header.append("Select a player to use Arm Bar");
+				break;
+			case AUTO_GAZE_ZOAT:
+				header.append("Select a player to Distract");
+				break;
 			default:
 				break;
 		}
@@ -200,6 +213,18 @@ public enum PlayerChoiceMode implements INamedObject {
 			case FURIOUS_OUTBURST:
 				title.append("Furious Outburst");
 				break;
+			case SOLID_DEFENCE:
+				title.append("Solid Defence");
+				break;
+			case CHARGE:
+				title.append("Charge!");
+				break;
+			case ARM_BAR:
+				title.append("Arm Bar");
+				break;
+			case AUTO_GAZE_ZOAT:
+				title.append("\"Excuse Me, Are You a Zoat?\"");
+				break;
 			default:
 				break;
 		}
@@ -280,6 +305,18 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case FURIOUS_OUTBURST:
 				message.append("Waiting for coach to select player to attack with furious outburst");
+				break;
+			case SOLID_DEFENCE:
+				message.append("Waiting for coach to select players to setup again");
+				break;
+			case CHARGE:
+				message.append("Waiting for coach to select players to perform actions");
+				break;
+			case ARM_BAR:
+				message.append("Waiting for coach to choose a player to use Arm Bar.");
+				break;
+			case AUTO_GAZE_ZOAT:
+				message.append("Waiting for coach to choose a player to Distract.");
 				break;
 			default:
 				break;

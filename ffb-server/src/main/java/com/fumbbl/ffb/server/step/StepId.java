@@ -15,6 +15,7 @@ public enum StepId implements INamedObject {
 	APOTHECARY_MULTIPLE("apothecaryMultiple"), // action.multiBlock 2020
 	APPLY_KICKOFF_RESULT("applyKickoffResult"), // phase.kickoff
 	ASSIGN_TOUCHDOWNS("assignTouchdowns"), // game.end
+	AUTO_GAZE_ZOAT("autoGazeZoat"), // action.special
 	BALEFUL_HEX("balefulHex"), // action.special
 	BLACK_INK("blackInk"), // action.special
 	BLITZ_TURN("blitzTurn"), // phase.kickoff
@@ -36,6 +37,7 @@ public enum StepId implements INamedObject {
 	BUY_INDUCEMENTS("buyInducements"), // game.start
 	CATCH_OF_THE_DAY("catchOfTheDay"), // action.special
 	CATCH_SCATTER_THROW_IN("catchScatterThrowIn"), // action.common
+	CHOMP("chomp"), // action.block
 	CHECK_STALLING("checkStalling"), // action.common
 	COIN_CHOICE("coinChoice"), // game.start
 	CONSUME_PARAMETER("consumeParameter"), // action.multiBlock 2020
@@ -65,6 +67,7 @@ public enum StepId implements INamedObject {
 	END_KICKOFF("endKickoff"), // phase.kickoff
 	END_MOVING("endMoving"), // action.move
 	END_PASSING("endPassing"), // action.pass
+	END_PUNT("endPunt"), // action.punt
 	END_SCATTER_PLAYER("endScatterPlayer"), // action.ttm
 	END_SELECTING("endSelecting"), // action.select
 	END_THROW_TEAM_MATE("endThrowTeamMate"), // action.ttm
@@ -75,11 +78,13 @@ public enum StepId implements INamedObject {
 	FAN_FACTOR("fanFactor"), // game.end
 	FIRST_MOVE_FURIOUS_OUTBURST("firstMoveFuriousOutburst"),
 	FOLLOWUP("followup"), // action.block
+	FORGONE_STALLING("forgoneStalling"), // action.common
 	FOUL("foul"), // action.foul
 	FOUL_APPEARANCE("foulAppearance"), // action.block
 	FOUL_APPEARANCE_MULTIPLE("foulAppearanceMultiple"), // action.multiBlock 2020
 	FOUL_CHAINSAW("foulChainsaw"), // action.foul
 	FUMBLE_TTM_PASS("fumbleTtmPass"), // action.ttm
+	GETTING_EVEN("gettingEven"), // action.common
 	GO_FOR_IT("goForIt"), // action.common
 	GOTO_LABEL("gotoLabel"), //
 	HAIL_MARY_PASS("hailMaryPass"), // action.pass
@@ -100,6 +105,7 @@ public enum StepId implements INamedObject {
 	INIT_KICKOFF("initKickoff"), // phase.kickoff
 	INIT_MOVING("initMoving"), // action.move
 	INIT_PASSING("initPassing"), // action.pass
+	INIT_PUNT("initPunt"), // action.punt
 	INIT_SCATTER_PLAYER("initScatterPlayer"), // action.ttm
 	INIT_SELECTING("initSelecting"), // action.select
 	INIT_START_GAME("initStartGame"), // game.start
@@ -116,8 +122,10 @@ public enum StepId implements INamedObject {
 	KICKOFF_RESULT_ROLL("kickoffResultRoll"), // phase.kickoff
 	KICKOFF_RETURN("kickoffReturn"), // phase.kickoff
 	KICKOFF_SCATTER_ROLL("kickoffScatterRoll"), // phase.kickoff
+	KICKOFF_SCATTER_ROLL_ASK_AFTER("kickoffScatterRollAskAfter"), // phase.kickoff
 	LOOK_INTO_MY_EYES("lookIntoMyEyes"), // action.special
 	MISSED_PASS("missedPass"), // action.pass
+	MASTER_CHEF("masterChef"), // phase.kickoff
 	MOVE("move"), // action.move
 	MOVE_BALL_AND_CHAIN("moveBallAndChain"), // action.move
 	MOVE_DODGE("moveDodge"), // action.move
@@ -139,6 +147,8 @@ public enum StepId implements INamedObject {
 	PRAYERS("prayers"), // phase.kickoff
 	PRO("pro"), // action.common
 	PROJECTILE_VOMIT("projectileVomit"),
+	PUNT_DIRECTION("puntDirection"), // action.punt
+	PUNT_DISTANCE("puntDistance"), // action.punt
 	PUSHBACK("pushback"), // action.block
 	QUICK_BITE("quickBite"),
 	RAIDING_PARTY("raidingParty"),
@@ -149,6 +159,7 @@ public enum StepId implements INamedObject {
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz
 	RESET_TO_MOVE("resetToMove"),
+	RESOLVE_BOMB("resolveBomb"),
 	RESOLVE_PASS("resolvePass"),
 	RIGHT_STUFF("rightStuff"), // action.ttm
 	RIOTOUS_ROOKIES("riotousRookies"),
@@ -168,12 +179,14 @@ public enum StepId implements INamedObject {
 	STAB("stab"), // action.block
 	STALLING_PLAYER("stallingPlayer"), // action.common
 	STAND_UP("standUp"), // action.select
+	STEADY_FOOTING("steadyFooting"), // action.common
 	SWARMING("swarming"), // phase.kickoff
 	SWOOP("swoop"), // action.ttm
 	TAKE_ROOT("takeRoot"), // action.common
 	TENTACLES("tentacles"), // action.move
 	TEST("test"), // test
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
+	THROW_A_ROCK("throwARock"), // prayer
 	THROW_KEG("throwKeg"), // action.special
 	THROW_TEAM_MATE("throwTeamMate"), // action.ttm
 	TRAP_DOOR("trapDoor"), // action.common

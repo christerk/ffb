@@ -6,7 +6,7 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportKickTeamMateFumble;
+import com.fumbbl.ffb.report.mixed.ReportKickTeamMateFumble;
 
 @ReportMessageType(ReportId.KICK_TEAM_MATE_FUMBLE)
 @RulesCollection(Rules.BB2020)

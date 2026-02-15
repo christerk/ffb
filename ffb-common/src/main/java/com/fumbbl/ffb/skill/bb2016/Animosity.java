@@ -5,7 +5,6 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillValueEvaluator;
 
 /**
  * A player with this skill does not like players from his team that are a
@@ -29,10 +28,5 @@ public class Animosity extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.hasToRollToPassBallOn);
-	}
-
-	@Override
-	public SkillValueEvaluator evaluator() {
-		return SkillValueEvaluator.DEFAULT;
 	}
 }

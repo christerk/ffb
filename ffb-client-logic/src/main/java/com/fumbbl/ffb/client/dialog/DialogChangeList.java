@@ -63,7 +63,7 @@ public class DialogChangeList extends Dialog {
 			.collect(Collectors.joining());
 
 		String info = "<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:10px\">List of changes in recent versions. Only shows once at startup for each version, can be displayed again from the Help menu.</div>" +
-			"<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:" + dimensionProvider.scale(10) + "px\">Unless stated otherwise the changes apply to 2020 rules.</div>";
+			"<div style=\"font-size:" + dimensionProvider.scale(11) + "px;padding-bottom:" + dimensionProvider.scale(10) + "px\">Unless stated otherwise the changes apply to 2025 rules.</div>";
 
 		contentPane.setText("<div style=\"padding:" + dimensionProvider.scale(10) + "px\"><div>" + info + "</div><div>" + versionsText + "</div></div>");
 		contentPane.setCaretPosition(0);
@@ -79,7 +79,7 @@ public class DialogChangeList extends Dialog {
 		builder.append("<font face=\"Sans Serif\" style=\"font-size:").append(dimensionProvider.scale(18)).append("px\"> <b>").append(list.getVersion()).append("</b> </font><br/>");
 
 		if (list.hasDescription()) {
-			builder.append("div style=\"font-size:").append(dimensionProvider.scale(11)).append("px\">").append(list.getDescription()).append("</div>");
+			builder.append("<div style=\"font-size:").append(dimensionProvider.scale(11)).append("px\">").append(list.getDescription()).append("</div>");
 		}
 
 		if (list.hasBehaviorChanges()) {

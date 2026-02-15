@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
-import com.fumbbl.ffb.report.bb2020.ReportTentaclesShadowingRoll;
+import com.fumbbl.ffb.report.mixed.ReportTentaclesShadowingRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -19,8 +19,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2020.StepShadowing;
-import com.fumbbl.ffb.server.step.bb2020.StepShadowing.StepState;
+import com.fumbbl.ffb.server.step.bb2020.move.StepShadowing;
+import com.fumbbl.ffb.server.step.bb2020.move.StepShadowing.StepState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -121,7 +121,7 @@ public class ShadowingBehaviour extends SkillBehaviour<Shadowing> {
 							state.defenderPosition = state.coordinateFrom;
 						}
 						UtilServerPlayerMove.updateMoveSquares(step.getGameState(), actingPlayer.isJumping());
-						ServerUtilBlock.updateDiceDecorations(game);
+						ServerUtilBlock.updateDiceDecorations(step.getGameState());
 						step.publishParameter(StepParameter.from(StepParameterKey.PLAYER_ENTERING_SQUARE, game.getDefender().getId()));
 					}
 				}

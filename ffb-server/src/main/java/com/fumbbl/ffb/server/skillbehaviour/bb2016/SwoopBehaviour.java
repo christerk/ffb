@@ -8,13 +8,14 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.bb2016.ReportSwoopPlayer;
-import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
@@ -25,8 +26,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.ttm.StepSwoop;
-import com.fumbbl.ffb.server.step.action.ttm.StepSwoop.StepState;
+import com.fumbbl.ffb.server.step.mixed.ttm.StepSwoop;
+import com.fumbbl.ffb.server.step.mixed.ttm.StepSwoop.StepState;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerPlayerSwoop;
@@ -61,14 +62,15 @@ public class SwoopBehaviour extends SkillBehaviour<Swoop> {
 
 					Direction playerScatter;
 					int scatterRoll = step.getGameState().getDiceRoller().rollThrowInDirection();
+					ThrowInMechanic mechanic = game.getMechanic(Mechanic.Type.THROW_IN);
 					if (state.coordinateFrom.getX() < state.coordinateTo.getX()) {
-						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
+						playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.EAST, scatterRoll);
 					} else if (state.coordinateFrom.getX() > state.coordinateTo.getX()) {
-						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.WEST, scatterRoll);
+						playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.WEST, scatterRoll);
 					} else if (state.coordinateFrom.getY() < state.coordinateTo.getY()) {
-						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.SOUTH, scatterRoll);
+						playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.SOUTH, scatterRoll);
 					} else { // coordinateFrom.getY() > coordinateTo.getY()
-						playerScatter = DiceInterpreter.getInstance().interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
+						playerScatter = mechanic.interpretThrowInDirectionRoll(Direction.NORTH, scatterRoll);
 					}
 					state.coordinateTo = UtilServerCatchScatterThrowIn.findScatterCoordinate(state.coordinateFrom, playerScatter,
 							1);

@@ -7,7 +7,6 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.factory.CatchModifierFactory;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.GazeModifierFactory;
-import com.fumbbl.ffb.factory.GoForItModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.IRollModifierFactory;
 import com.fumbbl.ffb.factory.InterceptionModifierFactory;
@@ -15,6 +14,7 @@ import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.factory.PassModifierFactory;
 import com.fumbbl.ffb.factory.PickupModifierFactory;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
+import com.fumbbl.ffb.factory.common.GoForItModifierFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
@@ -112,7 +112,7 @@ public abstract class ReportSkillRoll implements IReport {
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, fMinimumRoll);
 		IJsonOption.RE_ROLLED.addTo(jsonObject, fReRolled);
-		if (fRollModifierList.size() > 0) {
+		if (!fRollModifierList.isEmpty()) {
 			JsonArray modifierArray = new JsonArray();
 			for (RollModifier<?> modifier : fRollModifierList) {
 				modifierArray.add(UtilJson.toJsonValue(modifier));

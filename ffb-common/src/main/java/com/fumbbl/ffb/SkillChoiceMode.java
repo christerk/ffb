@@ -1,8 +1,5 @@
 package com.fumbbl.ffb;
 
-/**
- * @author Kalimar
- */
 public enum SkillChoiceMode implements INamedObject {
 
 	INTENSIVE_TRAINING("intensiveTraining", "Select a primary skill for ", "Intensive Training", "Waiting for coach to choose Skill."),

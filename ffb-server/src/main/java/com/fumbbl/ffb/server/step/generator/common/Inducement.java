@@ -34,7 +34,7 @@ public class Inducement extends SequenceGenerator<Inducement.SequenceParams> {
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.DEFENDER));
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.ATTACKER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_INDUCEMENT);
+		sequence.add(StepId.END_INDUCEMENT, from(StepParameterKey.CHECK_FORGO, params.checkForgo));
 		// may insert endTurn or inducement sequence at this point
 
 		gameState.getStepStack().push(sequence.getSequence());
@@ -42,12 +42,17 @@ public class Inducement extends SequenceGenerator<Inducement.SequenceParams> {
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final InducementPhase inducementPhase;
-		private final boolean homeTeam;
+		private final boolean homeTeam, checkForgo;
 
 		public SequenceParams(GameState gameState, InducementPhase inducementPhase, boolean homeTeam) {
+			this(gameState, inducementPhase, homeTeam, false);
+		}
+
+		public SequenceParams(GameState gameState, InducementPhase inducementPhase, boolean homeTeam, boolean checkForgo) {
 			super(gameState);
 			this.inducementPhase = inducementPhase;
 			this.homeTeam = homeTeam;
+			this.checkForgo = checkForgo;
 		}
 	}
 }

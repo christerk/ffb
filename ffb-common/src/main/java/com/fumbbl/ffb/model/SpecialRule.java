@@ -18,7 +18,9 @@ public enum SpecialRule {
 	FAVOURED_OF_TZEENTCH("Favoured of Tzeentch"),
 	FAVOURED_OF_SLAANESH("Favoured of Slaanesh"),
 	LOW_COST_LINEMEN("Low Cost Linemen"),
-	MASTERS_OF_UNDEATH("Masters of Undeath");
+	SWARMING("Swarming"),
+	MASTERS_OF_UNDEATH("Masters of Undeath"),
+	BRAWLIN_BRUTES("Brawlin' Brutes");
 
 	private final String ruleName;
 
@@ -31,7 +33,7 @@ public enum SpecialRule {
 	}
 
 	public static SpecialRule from(String name) {
-		return Arrays.stream(values()).filter(rule -> rule.ruleName.equals(name)).findFirst().orElse(null);
+		return Arrays.stream(values()).filter(rule -> rule.ruleName.equalsIgnoreCase(name)).findFirst().orElse(null);
 	}
 
 }

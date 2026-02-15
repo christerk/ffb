@@ -16,4 +16,9 @@ public class BallAndChain extends InjuryType {
 		string.append(defender.getPlayerGender().getGenitive());
 		string.append(" own Ball & Chain.");
 	}
+
+	@Override
+	public boolean isBlock() {
+		return true;
+	}
 }

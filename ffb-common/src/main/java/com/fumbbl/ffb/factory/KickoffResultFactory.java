@@ -1,12 +1,14 @@
 package com.fumbbl.ffb.factory;
 
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.kickoff.KickoffResult;
-import com.fumbbl.ffb.kickoff.KickoffResultMapping;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.kickoff.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResultMapping;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.Scanner;
+
+import java.util.Collection;
 
 /**
  * 
@@ -33,8 +35,11 @@ public class KickoffResultFactory implements INamedObjectFactory<KickoffResult> 
 
 	@Override
 	public void initialize(Game game) {
-		new Scanner<>(KickoffResultMapping.class).getSubclasses(game.getOptions())
+		new Scanner<>(KickoffResultMapping.class).getSubclassInstances(game.getOptions())
 			.stream().findFirst().ifPresent(mapping -> this.mapping = mapping);
 	}
 
+	public Collection<? extends KickoffResult> allResults() {
+		return mapping.getValues();
+	}
 }

@@ -13,8 +13,8 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportNervesOfSteel;
-import com.fumbbl.ffb.report.bb2020.ReportPassRoll;
+import com.fumbbl.ffb.report.mixed.ReportNervesOfSteel;
+import com.fumbbl.ffb.report.mixed.ReportPassRoll;
 
 @ReportMessageType(ReportId.PASS_ROLL)
 @RulesCollection(Rules.BB2020)

@@ -11,9 +11,12 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.PassModifier;
+import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -75,7 +78,7 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 	}
 
 	@Override
-	public boolean canThrow(Player<?> player) {
+	public boolean canThrow(Game game, Player<?> player) {
 		return player.hasSkillProperty(NamedProperties.canThrowTeamMates) && player.getStrengthWithModifiers() >= 5;
 	}
 
@@ -85,5 +88,24 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 			modifierTotal += passModifier.getModifier();
 		}
 		return modifierTotal;
+	}
+
+	@Override
+	public boolean isTtmAvailable(TurnData turnData) {
+		return !turnData.isPassUsed();
+	}
+
+	@Override
+	public Player<?>[] findKickableTeamMates(Game pGame, Player<?> pKicker) {
+		List<Player<?>> kickablePlayers = new ArrayList<>();
+		FieldModel fieldModel = pGame.getFieldModel();
+		FieldCoordinate kickerCoordinate = fieldModel.getPlayerCoordinate(pKicker);
+		Player<?>[] adjacentPlayers = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, pKicker.getTeam(), kickerCoordinate, false);
+		for (Player<?> adjacentPlayer : adjacentPlayers) {
+			if (canBeKicked(pGame, adjacentPlayer)) {
+				kickablePlayers.add(adjacentPlayer);
+			}
+		}
+		return kickablePlayers.toArray(new Player[0]);
 	}
 }

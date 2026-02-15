@@ -46,7 +46,7 @@ public class StatusReport {
 			return;
 		}
 		initialized = true;
-		Collection<ReportMessageBase> renderers = new Scanner<>(ReportMessageBase.class).getSubclasses(gameOptions);
+		Collection<ReportMessageBase> renderers = new Scanner<>(ReportMessageBase.class).getSubclassInstances(gameOptions);
 
 		for (ReportMessageBase<?> renderer : renderers) {
 			try {

@@ -10,7 +10,7 @@ import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.bb2020.CasualtyModifier;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportApothecaryRoll;
+import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;

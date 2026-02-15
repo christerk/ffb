@@ -34,6 +34,8 @@ public interface IIconProperty {
 	String DECORATION_CHAINSAW_TARGET = "decoration.chainsaw.target";
 	String DECORATION_CHECK_ICON_GREEN = "decoration.activated.checkIcon.green";
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
+	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
+	String DECORATION_CHOMPED = "decoration.chomped";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -191,6 +193,9 @@ public interface IIconProperty {
 	String ACTION_THE_FLASHING_BLADE = "action.theFlashingBlade";
 	String ACTION_VICIOUS_VINES = "action.viciousVines";
 	String ACTION_FURIOUS_OUTBURST = "action.furiousOutburst";
+	String ACTION_SECURE_THE_BALL = "action.secureTheBall";
+	String ACTION_CHOMP = "action.chomp";
+	String ACTION_PUNT = "action.punt";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";
@@ -237,6 +242,8 @@ public interface IIconProperty {
 	String CURSOR_FURIOUS = "cursor.furious";
 	String CURSOR_INVALID_FURIOUS = "cursor.invalidfurious";
 	String CURSOR_SKETCH = "cursor.sketch";
+	String CURSOR_CHOMP = "cursor.chomp";
+	String CURSOR_PUNT = "cursor.punt";
 
 	// Bloodspots
 	String BLOODSPOT_KO = "bloodspot.ko";
@@ -323,6 +330,8 @@ public interface IIconProperty {
 	String ANIMATION_KICKOFF_OFFICIOUS_REF = "animation.kickoff.officiousRef";
 	String ANIMATION_KICKOFF_THROW_A_ROCK = "animation.kickoff.throwARock";
 	String ANIMATION_KICKOFF_VERY_SUNNY = "animation.kickoff.verySunny";
+	String ANIMATION_KICKOFF_CHARGE = "animation.kickoff.charge";
+	String ANIMATION_KICKOFF_DODGY_SNACK = "animation.kickoff.dodgySnack";
 
 	String ANIMATION_CARD_DIRTY_TRICK_FRONT = "animation.card.dirtyTrick.front";
 	String ANIMATION_CARD_DIRTY_TRICK_BACK = "animation.card.dirtyTrick.back";
@@ -352,6 +361,7 @@ public interface IIconProperty {
 	String ANIMATION_PRAYER_STILETTO = "animation.prayer.stiletto";
 	String ANIMATION_PRAYER_THROW_A_ROCK = "animation.prayer.throw.a.rock";
 	String ANIMATION_PRAYER_UNDER_SCRUTINY = "animation.prayer.under.scrutiny";
+	String ANIMATION_PRAYER_DAZZLING_CATCHING = "animation.prayer.dazzling.catching";
 
 	// Augments
 	String AUGMENTS_SWEET_WHITE = "augments.sweet.white";

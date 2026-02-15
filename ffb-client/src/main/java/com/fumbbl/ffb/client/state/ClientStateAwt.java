@@ -4,8 +4,8 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.IClientPropertyValue;
+import com.fumbbl.ffb.IKeyedItem;
 import com.fumbbl.ffb.client.*;
-import com.fumbbl.ffb.client.CoordinateConverter;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 /**
  * @author Kalimar
  */
-public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<T, FantasyFootballClientAwt> implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener {
+public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<T, FantasyFootballClientAwt>
+	implements INetCommandHandler, MouseListener, MouseMotionListener, ActionListener, IKeyedItem {
 
 	private static final Set<String> ALLOW_RIGHT_CLICK_ON_PLAYER = new HashSet<String>() {{
 		add(IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE);
@@ -39,7 +40,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	private boolean fClickable;
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private JPopupMenu fPopupMenu;
+	private int popupIndex;
+	private List<JPopupMenu> popupMenus;
 	private final CoordinateConverter coordinateConverter;
+	private final Set<FieldCoordinate> markedCoordinates = new HashSet<>();
 
 	private Player<?> fPopupMenuPlayer;
 
@@ -64,6 +68,11 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	// Interface Methods
 
+	@Override
+	public String getKey() {
+		return logicModule.getId().name();
+	}
+
 	// MouseMotionListener
 	public void mouseDragged(MouseEvent pMouseEvent) {
 	}
@@ -87,19 +96,20 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	// Helper Methods
 
 
-
 	protected void drawSelectSquare() {
-		drawSelectSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
+		drawColoredSquare(fSelectSquareCoordinate, new Color(0.0f, 0.0f, 1.0f, 0.2f));
 	}
 
-	protected void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor) {
+	protected void drawColoredSquare(FieldCoordinate pCoordinate, Color pColor) {
 		if (pCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 
 			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
 			int x = dimension.width + 1;
 			int y = dimension.height + 1;
-			Rectangle bounds = new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 2, pitchDimensionProvider.fieldSquareSize() - 2);
+			Rectangle bounds =
+				new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 2,
+					pitchDimensionProvider.fieldSquareSize() - 2);
 
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
@@ -111,12 +121,23 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	public void hideSelectSquare() {
 		if (fSelectSquareCoordinate != null) {
-			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-			Dimension dimension = pitchDimensionProvider.mapToLocal(fSelectSquareCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
-			fieldComponent.refresh(bounds);
+			clearCoordinate(fSelectSquareCoordinate);
 			super.hideSelectSquare();
 		}
+		clearMarkedCoordinates();
+	}
+
+	private void clearCoordinate(FieldCoordinate coordinate) {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate);
+		Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(),
+			pitchDimensionProvider.fieldSquareSize());
+		fieldComponent.refresh(bounds);
+	}
+
+	private void clearMarkedCoordinates() {
+		markedCoordinates.forEach(this::clearCoordinate);
+		markedCoordinates.clear();
 	}
 
 	public void mouseMoved(MouseEvent pMouseEvent) {
@@ -158,26 +179,33 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 					offsetX = -1;
 				}
 
-				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+				Dimension dimension =
+					pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 
 				if (player.isPresent()) {
-					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), player.get(), dimension.width, dimension.height);
+					getClient().getUserInterface().getMarkerService()
+						.showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), player.get(),
+							dimension.width, dimension.height);
 
 				} else {
-					getClient().getUserInterface().getMarkerService().showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), coordinate, dimension.width, dimension.height);
+					getClient().getUserInterface().getMarkerService()
+						.showMarkerPopup(getClient(), getClient().getUserInterface().getFieldComponent(), coordinate,
+							dimension.width, dimension.height);
 				}
 			} else {
 				if (isClickable()) {
 					hideSelectSquare();
 					String rightClickProperty = getClient().getProperty(CommonProperty.SETTING_RIGHT_CLICK_END_ACTION);
-					if (logicModule.getActingPlayer().getPlayer() != null
-						&& pMouseEvent.getButton() == MouseEvent.BUTTON3 && IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
+					if (logicModule.getActingPlayer().getPlayer() != null && pMouseEvent.getButton() == MouseEvent.BUTTON3 &&
+						IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
 						if (logicModule.endPlayerActivation()) {
 							getClient().getUserInterface().getFieldComponent().refresh();
 						}
-					} else if (player.isPresent() && (pMouseEvent.getButton() != MouseEvent.BUTTON3 || ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
+					} else if (player.isPresent() && (pMouseEvent.getButton() != MouseEvent.BUTTON3 ||
+						ALLOW_RIGHT_CLICK_ON_PLAYER.contains(rightClickProperty))) {
 						clickOnPlayer(player.get());
-					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 || IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
+					} else if (pMouseEvent.getButton() != MouseEvent.BUTTON3 ||
+						IClientPropertyValue.SETTING_RIGHT_CLICK_LEGACY_MODE.equals(rightClickProperty)) {
 						clickOnField(coordinate);
 					}
 				}
@@ -185,12 +213,23 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		}
 	}
 
-	public void createPopupMenu(JMenuItem[] pMenuItems) {
-		fPopupMenu = new JPopupMenu();
-		for (JMenuItem pMenuItem : pMenuItems) {
-			pMenuItem.addActionListener(this);
-			fPopupMenu.add(pMenuItem);
-		}
+	public void createPopupMenus(List<List<JMenuItem>> menuItems) {
+		popupMenus = menuItems.stream().map(items -> {
+			JPopupMenu menu = new JPopupMenu();
+			items.forEach(item -> {
+				item.addActionListener(this);
+				menu.add(item);
+			});
+			if (menuItems.size() > 1) {
+				JMenuItem pager = new JMenuItem(pitchDimensionProvider, "More actions", IPlayerPopupMenuKeys.KEY_MORE_ACTION);
+				pager.setAccelerator(KeyStroke.getKeyStroke(IPlayerPopupMenuKeys.KEY_MORE_ACTION, 0));
+				pager.addActionListener(this);
+				menu.add(pager);
+			}
+			return menu;
+		}).collect(Collectors.toList());
+		popupIndex = 0;
+		fPopupMenu = popupMenus.get(popupIndex);
 	}
 
 	public void showPopupMenuForPlayer(Player<?> pPlayer) {
@@ -204,7 +243,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 				if (pitchDimensionProvider.isPitchPortrait()) {
 					offsetX = -1;
 				}
-				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+				Dimension dimension =
+					pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 				fPopupMenu.show(getClient().getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 			}
 		}
@@ -226,11 +266,21 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			getClient().getClientData().setSelectedPlayer(pPlayer);
 			getClient().getUserInterface().refreshSideBars();
 		}
+		logicModule.chompedBy(pPlayer).forEach(coordinate -> {
+			drawColoredSquare(coordinate, new Color(1.0f, 0.0f, 1.0f, 0.2f));
+			markedCoordinates.add(coordinate);
+		});
+		logicModule.chomps(pPlayer).forEach(coordinate -> {
+			drawColoredSquare(coordinate,
+				markedCoordinates.contains(coordinate) ? new Color(0.5f, 1.0f, 0.0f, 0.5f) : new Color(1.0f, 1.0f, 0.0f, 0.2f));
+			markedCoordinates.add(coordinate);
+		});
 		return true;
 	}
 
 	public boolean mouseOverField(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
 		resetSidebars();
+		clearMarkedCoordinates();
 		return true;
 	}
 
@@ -246,15 +296,25 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	public final void menuItemSelected(Player<?> player, int pMenuKey) {
+		if (pMenuKey == IPlayerPopupMenuKeys.KEY_MORE_ACTION) {
+			switchPopup(player);
+			return;
+		}
 		prePerform(pMenuKey);
-		ClientAction action = actionMapping().get(pMenuKey);
+		ClientAction action = actionMapping(popupIndex).get(pMenuKey);
 		if (action != null) {
 			logicModule.perform(player, action);
 		}
 		postPerform(pMenuKey);
 	}
 
-	protected abstract Map<Integer, ClientAction> actionMapping();
+	private void switchPopup(Player<?> player) {
+		popupIndex = (popupIndex + 1) % popupMenus.size();
+		fPopupMenu = popupMenus.get(popupIndex);
+		showPopupMenuForPlayer(player);
+	}
+
+	protected abstract Map<Integer, ClientAction> actionMapping(int menuIndex);
 
 	protected Map<Integer, ClientAction> genericBlockMapping() {
 		return new HashMap<Integer, ClientAction>() {{
@@ -270,6 +330,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_BREATHE_FIRE, ClientAction.BREATHE_FIRE);
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
+			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+			put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
 		}};
 	}
 
@@ -278,7 +340,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	public boolean isClickable() {
-		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() && (fPopupMenu == null || !fPopupMenu.isVisible()));
+		return (fClickable && getClient().getUserInterface().getDialogManager().isDialogHidden() &&
+			(fPopupMenu == null || !fPopupMenu.isVisible()));
 	}
 
 	public boolean isSelectable() {
@@ -286,11 +349,15 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	public boolean actionKeyPressed(ActionKey pActionKey) {
+	public final boolean actionKeyPressed(ActionKey pActionKey) {
+		return actionKeyPressed(pActionKey, popupIndex);
+	}
+
+	protected boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
 		return handleResize(pActionKey);
 	}
 
-	protected boolean handleResize(ActionKey pActionKey) {
+	public boolean handleResize(ActionKey pActionKey) {
 		GameMenuBar gameMenuBar = getClient().getUserInterface().getGameMenuBar();
 		switch (pActionKey) {
 			case RESIZE_LARGER:
@@ -309,9 +376,14 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			case RESIZE_SMALLER4:
 				gameMenuBar.decreaseScaling();
 				return true;
+			case PLAYER_ACTION_MORE_ACTIONS:
+				Player<?> selectedPlayer = getClient().getClientData().getSelectedPlayer();
+				switchPopup(selectedPlayer);
+				return true;
 			default:
 				break;
-		}		return false;
+		}
+		return false;
 	}
 
 	public boolean isInitDragAllowed(@SuppressWarnings("unused") FieldCoordinate pCoordinate) {
@@ -332,8 +404,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	protected void determineCursor(InteractionResult result) {
 		UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
-		evaluateCursorResult(result).ifPresent(property ->
-			UtilClientCursor.setCustomCursor(getClient().getUserInterface(), property));
+		evaluateCursorResult(result).ifPresent(
+			property -> UtilClientCursor.setCustomCursor(getClient().getUserInterface(), property));
 	}
 
 	private Optional<String> evaluateCursorResult(InteractionResult result) {
@@ -371,29 +443,36 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		return new HashMap<>();
 	}
 
-	protected List<JMenuItem> menuItems(ActionContext actionContext) {
+	protected List<List<JMenuItem>> menuItems(ActionContext actionContext) {
 		Map<ClientAction, MenuItemConfig> configs = new HashMap<>(itemConfigs(actionContext));
 
-		influencedItemConfigs().entrySet().stream()
-			.filter(entry -> actionContext.getInfluences().contains(entry.getKey())) // filter for influences present in current context
+		influencedItemConfigs().entrySet().stream().filter(entry -> actionContext.getInfluences()
+				.contains(entry.getKey())) // filter for influences present in current context
 			.flatMap(entry -> entry.getValue().entrySet().stream() // only allow actions defined in influence to be affected
 				.filter(influenceEntry -> entry.getKey().getInfluencedActions().contains(influenceEntry.getKey())))
 			.filter(entry -> configs.containsKey(entry.getKey()))
 			.forEach(entry -> configs.put(entry.getKey(), entry.getValue()));
 
-		return actionContext.getActions().stream().map(configs::get).map(this::menuItem).collect(Collectors.toList());
+		return actionContext.getActions().stream()
+			.collect(Collectors.groupingBy(this::menuIndex)).values().stream()
+			.map(values -> values.stream().map(configs::get).map(this::menuItem).collect(Collectors.toList()))
+			.collect(Collectors.toList());
+	}
+
+	protected int menuIndex(ClientAction action) {
+		return 0;
 	}
 
 	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext) {
 		createAndShowPopupMenuForPlayer(pPlayer, actionContext, new ArrayList<>());
 	}
 
-	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext, List<JMenuItem> prepopulated) {
-		List<JMenuItem> menuItemList = new ArrayList<>();
-		menuItemList.addAll(prepopulated);
-		menuItemList.addAll(menuItems(actionContext));
-		if (!menuItemList.isEmpty()) {
-			createPopupMenu(menuItemList.toArray(new JMenuItem[0]));
+	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext,
+		List<JMenuItem> prepopulated) {
+		List<List<JMenuItem>> menuItemList = menuItems(actionContext);
+		menuItemList.get(0).addAll(0, prepopulated);
+		if (!menuItemList.get(0).isEmpty()) {
+			createPopupMenus(menuItemList);
 			showPopupMenuForPlayer(pPlayer);
 		}
 	}
@@ -411,5 +490,4 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		List<JMenuItem> menuItemList = new ArrayList<>(uiOnlyMenuItems());
 		createAndShowPopupMenuForPlayer(actingPlayer.getPlayer(), actionContext, menuItemList);
 	}
-
 }

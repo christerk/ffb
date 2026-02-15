@@ -16,7 +16,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PassContext;
-import com.fumbbl.ffb.report.bb2020.ReportCloudBurster;
+import com.fumbbl.ffb.report.mixed.ReportCloudBurster;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -32,7 +32,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2020.pass.state.PassState;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.skill.bb2020.CloudBurster;
 import com.fumbbl.ffb.util.UtilCards;
 

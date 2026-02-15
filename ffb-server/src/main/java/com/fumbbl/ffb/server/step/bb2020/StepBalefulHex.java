@@ -21,8 +21,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportBalefulHexRoll;
-import com.fumbbl.ffb.report.bb2020.ReportSkillWasted;
+import com.fumbbl.ffb.report.mixed.ReportBalefulHexRoll;
+import com.fumbbl.ffb.report.mixed.ReportSkillWasted;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -179,7 +179,7 @@ public class StepBalefulHex extends AbstractStepWithReRoll {
 					fieldModel.setPlayerState(targetPlayer, fieldModel.getPlayerState(targetPlayer).changeHypnotized(true).changeActive(false));
 					fieldModel.addSkillEnhancements(targetPlayer, skill);
 					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-					ServerUtilBlock.updateDiceDecorations(game);
+					ServerUtilBlock.updateDiceDecorations(getGameState());
 				} else if (getReRolledAction() == null && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, RE_ROLLED_ACTION, 2, false)) {
 					getResult().setNextAction(StepAction.CONTINUE);
 				} else {

@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportTentaclesShadowingRoll;
+import com.fumbbl.ffb.report.mixed.ReportTentaclesShadowingRoll;
 
 @ReportMessageType(ReportId.TENTACLES_SHADOWING_ROLL)
 @RulesCollection(Rules.BB2020)

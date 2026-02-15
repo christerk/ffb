@@ -63,6 +63,14 @@ public interface IClientProperty {
 	String KEY_PLAYER_ACTION_THE_FLASHING_BLADE = "key.player.action.theFlashingBlade";
 	String KEY_PLAYER_ACTION_VICIOUS_VINES = "key.player.action.viciousVines";
 	String KEY_PLAYER_ACTION_FURIOUS_OUTBURST = "key.player.action.furiousOutburst";
+	String KEY_PLAYER_ACTION_MORE_ACTIONS = "key.player.action.moreActions";
+	String KEY_PLAYER_ACTION_SECURE_THE_BALL = "key.player.action.secureTheBall";
+	String KEY_PLAYER_ACTION_SLASHING_NAILS = "key.player.action.slashingNails";
+	String KEY_PLAYER_ACTION_AUTO_GAZE_ZOAT = "key.player.action.autoGazeZoat";
+	String KEY_PLAYER_ACTION_FORGO = "key.player.action.forgo";
+	String KEY_PLAYER_ACTION_CHOMP = "key.player.action.chomp";
+	String KEY_PLAYER_ACTION_INCORPOREAL = "key.player.action.incorporeal";
+	String KEY_PLAYER_ACTION_PUNT = "key.player.action.punt";
 
 	String KEY_MENU_REPLAY = "key.menu.replay";
 	String KEY_MENU_SETUP_LOAD = "key.menu.setup.load";

@@ -23,15 +23,15 @@ import java.util.Arrays;
 
 /**
  * Step in ttm sequence to actual throw the team mate.
- * 
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_FAILURE.
- * 
+ * <p>
  * Expects stepParameter THROWN_PLAYER_ID to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_STATE to be set by a preceding step. Expects
  * stepParameter THROWN_PLAYER_HAS_BALL to be set by a preceding step.
- * 
+ * <p>
  * Pushes new scatterPlayerSequence on the stack.
- * 
+ *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)

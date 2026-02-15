@@ -7,8 +7,10 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.InducementPhase;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandSetupPlayer;
@@ -19,6 +21,7 @@ import com.fumbbl.ffb.report.bb2016.ReportNoPlayersToField;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -31,7 +34,6 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
-import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerSetup;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -133,7 +135,9 @@ public final class StepSetup extends AbstractStep {
 		}
 		if (fEndSetup) {
 			getResult().setSound(SoundId.DING);
-			if (UtilKickoffSequence.checkSetup(getGameState(), game.isHomePlaying())) {
+			MechanicsFactory mechanicFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+			SetupMechanic mechanic = (SetupMechanic) mechanicFactory.forName(Mechanic.Type.SETUP.name());
+			if (mechanic.checkSetup(getGameState(), game.isHomePlaying())) {
 				game.setHomePlaying(!game.isHomePlaying());
 				game.getTurnData().setTurnStarted(false);
 				game.getTurnData().setFirstTurnAfterKickoff(false);

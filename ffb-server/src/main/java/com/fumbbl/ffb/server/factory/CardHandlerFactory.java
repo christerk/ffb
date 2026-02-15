@@ -29,6 +29,6 @@ public class CardHandlerFactory implements INamedObjectFactory<CardHandler> {
 
 	@Override
 	public void initialize(Game game) {
-		handlers.addAll(new Scanner<>(CardHandler.class).getSubclasses(game.getOptions()));
+		handlers.addAll(new Scanner<>(CardHandler.class).getSubclassInstances(game.getOptions()));
 	}
 }

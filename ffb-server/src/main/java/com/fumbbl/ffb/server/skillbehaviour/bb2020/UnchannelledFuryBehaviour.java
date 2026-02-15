@@ -19,11 +19,11 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury;
-import com.fumbbl.ffb.server.step.bb2020.StepUnchannelledFury.StepState;
+import com.fumbbl.ffb.server.step.mixed.StepUnchannelledFury;
+import com.fumbbl.ffb.server.step.mixed.StepUnchannelledFury.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.skill.bb2020.UnchannelledFury;
+import com.fumbbl.ffb.skill.mixed.UnchannelledFury;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
@@ -161,6 +161,9 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 				if (!actingPlayer.getPlayer().hasSkillProperty(NamedProperties.allowsAdditionalFoul)) {
 					game.getTurnData().setFoulUsed(true);
 				}
+				break;
+			case SECURE_THE_BALL:
+				game.getTurnData().setSecureTheBallUsed(true);
 				break;
 			default:
 				break;

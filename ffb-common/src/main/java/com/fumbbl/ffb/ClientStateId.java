@@ -6,7 +6,7 @@ package com.fumbbl.ffb;
  */
 public enum ClientStateId implements INamedObject {
 
-	LOGIN("login"), RE_ROLL("reRoll"), START_GAME("startGame"), SELECT_PLAYER("selectPlayer"), MOVE("move"),
+	LOGIN("login"), START_GAME("startGame"), SELECT_PLAYER("selectPlayer"), MOVE("move"),
 	BLOCK("block"), BLITZ("blitz"), HAND_OVER("handOver"), PASS("pass"), SPECTATE("spectate"), SETUP("setup"),
 	KICKOFF("kickoff"), PUSHBACK("pushback"), INTERCEPTION("interception"), FOUL("foul"), HIGH_KICK("highKick"),
 	QUICK_SNAP("quickSnap"), TOUCHBACK("touchback"), WAIT_FOR_OPPONENT("waitForOpponent"), REPLAY("replay"),
@@ -18,7 +18,7 @@ public enum ClientStateId implements INamedObject {
 	RAIDING_PARTY("raidingParty"), SELECT_BLOCK_KIND("selectBlockKind"), MAXIMUM_CARNAGE("maximumCarnage"),
 	HIT_AND_RUN("hitAndRun"), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz"), TRICKSTER("trickster"),
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock"), KICK_EM_BLOCK("kickEmBlock"), KICK_EM_BLITZ("kickEmBlitz"),
-	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"), STAB("stab"), FURIOUS_OUTBURST("furiousOutburst");
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"), STAB("stab"), FURIOUS_OUTBURST("furiousOutburst"), PUNT("punt");
 
 	private final String fName;
 

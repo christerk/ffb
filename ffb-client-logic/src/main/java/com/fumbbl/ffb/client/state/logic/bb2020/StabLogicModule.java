@@ -2,7 +2,7 @@ package com.fumbbl.ffb.client.state.logic.bb2020;
 
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.state.logic.BlockLogicModule;
+import com.fumbbl.ffb.client.state.logic.mixed.BlockLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -44,7 +44,7 @@ public class StabLogicModule extends BlockLogicModule {
 
 	@Override
 	protected InteractionResult block(Player<?> player, ActingPlayer actingPlayer) {
-		extension.block(actingPlayer.getPlayerId(), player, true, false, false, false);
+		extension.block(actingPlayer.getPlayerId(), player, true, false, false, false, false);
 		return InteractionResult.handled();
 	}
 

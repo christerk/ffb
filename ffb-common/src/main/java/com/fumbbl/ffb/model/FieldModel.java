@@ -18,9 +18,10 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.CardEffectFactory;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.PrayerFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
-import com.fumbbl.ffb.inducement.bb2020.Prayer;
+import com.fumbbl.ffb.inducement.Prayer;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
@@ -31,10 +32,13 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillClassWithValue;
 import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import com.fumbbl.ffb.model.stadium.TrapDoor;
+import com.fumbbl.ffb.modifiers.TemporaryEnhancements;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -82,8 +86,10 @@ public class FieldModel implements IJsonSerializable {
 	private final Set<FieldCoordinate> blockedForTricksterCoordinates = new HashSet<>();
 	private final List<TrapDoor> trapDoors = new ArrayList<>();
 	private boolean outOfBounds;
+	private final Map<String, List<String>> chomped = new HashMap<>();
 
-	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate; // no need to serialize this, as it can be
+	private final transient Map<FieldCoordinate, List<String>> fPlayerIdByCoordinate;
+	// no need to serialize this, as it can be
 	// reconstructed
 	private transient Game fGame;
 
@@ -181,6 +187,7 @@ public class FieldModel implements IJsonSerializable {
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isBlockedForTrickster(FieldCoordinate coordinate) {
 		return blockedForTricksterCoordinates.contains(coordinate);
 	}
@@ -395,7 +402,8 @@ public class FieldModel implements IJsonSerializable {
 		Set<CardEffect> cardEffects = fCardEffectsByPlayerId.computeIfAbsent(pPlayer.getId(), k -> new HashSet<>());
 		cardEffects.add(pCardEffect);
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
-		pPlayer.addTemporarySkills(pCardEffect.getName(), pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
+		pPlayer.addTemporarySkills(pCardEffect.getName(),
+			pCardEffect.skills().stream().map(cls -> new SkillWithValue(factory.forClass(cls))).collect(Collectors.toSet()));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CARD_EFFECT, pPlayer.getId(), pCardEffect);
 	}
 
@@ -406,11 +414,31 @@ public class FieldModel implements IJsonSerializable {
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PRAYER, player.getId(), prayer.name());
 	}
 
+	public void addEnhancements(Player<?> player, String name) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		getGame().getEnhancementRegistry().forName(name).ifPresent(enhancement -> {
+				player.addEnhancement(name, enhancement, factory);
+				notifyObservers(ModelChangeId.FIELD_MODEL_ADD_ENHANCEMENTS, player.getId(), name);
+			}
+		);
+	}
+
 	public void addSkillEnhancements(Player<?> player, Skill skill) {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		player.addEnhancement(skill.getName(), skill.getEnhancements(), factory);
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_SKILL_ENHANCEMENTS, player.getId(), skill.getName());
 	}
+
+	public void addHatred(Player<?> player, Keyword keyword) {
+		SkillFactory factory = getGame().getFactory(Factory.SKILL);
+		Skill skill = factory.forProperty(NamedProperties.canBeGainedByGettingEven);
+
+		player.addEnhancement("Getting Even " + keyword.getName(), new TemporaryEnhancements().withSkills(
+			Collections.singleton(new SkillClassWithValue(skill.getClass(), keyword.getName()))), factory);
+
+		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_HATRED, player.getId(), keyword.getName());
+	}
+
 
 	public void removeSkillEnhancements(Player<?> player, Skill skill) {
 		removeSkillEnhancements(player, skill.getName());
@@ -422,8 +450,10 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public void addIntensiveTrainingSkill(String playerId, Skill skill) {
+		PrayerFactory factory = getGame().getFactory(Factory.PRAYER);
 		Player<?> player = getGame().getPlayerById(playerId);
-		player.addTemporarySkills(Prayer.INTENSIVE_TRAINING.getName(), Collections.singleton(new SkillWithValue(skill, String.valueOf(skill.getDefaultSkillValue()))));
+		player.addTemporarySkills(factory.intensivePrayer().getName(), Collections.singleton(new SkillWithValue(skill,
+			String.valueOf(skill.getDefaultSkillValue()))));
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_INTENSIVE_TRAINING, playerId, skill);
 	}
 
@@ -515,7 +545,7 @@ public class FieldModel implements IJsonSerializable {
 	}
 
 	public FieldCoordinate[] findAdjacentCoordinates(FieldCoordinate pCoordinate, FieldCoordinateBounds pBounds,
-																									 int pSteps, boolean pWithStartCoordinate) {
+		int pSteps, boolean pWithStartCoordinate) {
 		List<FieldCoordinate> adjacentCoordinates = new ArrayList<>();
 		if ((pCoordinate != null) && (pBounds != null)) {
 			for (int y = -pSteps; y <= pSteps; y++) {
@@ -929,7 +959,7 @@ public class FieldModel implements IJsonSerializable {
 			transformedModel.add(playerMarker.transform());
 		}
 
-		for (DiceDecoration diceDecoration: getDiceDecorations()) {
+		for (DiceDecoration diceDecoration : getDiceDecorations()) {
 			transformedModel.add(diceDecoration.transform());
 		}
 
@@ -950,7 +980,98 @@ public class FieldModel implements IJsonSerializable {
 	public boolean isOutOfBounds() {
 		return outOfBounds;
 	}
-	
+
+	public Set<String> getMultiBlockTargets() {
+		return multiBlockTargets;
+	}
+
+	public void addChomp(Player<?> chomper, Player<?> chompee) {
+		List<String> chompees = chomped.computeIfAbsent(chomper.getId(), k -> new ArrayList<>());
+		chomped.put(chomper.getId(), chompees);
+		if (!chompees.contains(chompee.getId())) {
+			chompees.add(chompee.getId());
+			PlayerState playerState = getPlayerState(chompee);
+			setPlayerState(chompee, playerState.changeChomped(true));
+			notifyObservers(ModelChangeId.FIELD_MODEL_ADD_CHOMP, chomper.getId(), chompee.getId());
+		}
+	}
+
+	public Boolean removeChomp(Player<?> chomper, Player<?> chompee) {
+		List<String> chompees = chomped.get(chomper.getId());
+		Boolean result = null;
+		if (chompees != null && chompees.remove(chompee.getId())) {
+			result = false;
+			if (chomped.values().stream().noneMatch(list -> list.contains(chompee.getId()))) {
+				PlayerState playerState = getPlayerState(chompee);
+				setPlayerState(chompee, playerState.changeChomped(false));
+				result = true;
+			}
+			notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
+		}
+		return result;
+	}
+
+	public Set<FieldCoordinate> chompedBy(Player<?> player) {
+		return chomped.entrySet().stream().filter(entry -> entry.getValue().contains(player.getId()))
+			.map(Map.Entry::getKey)
+			.map(id -> getGame().getPlayerById(id))
+			.map(this::getPlayerCoordinate)
+			.collect(Collectors.toSet());
+	}
+
+	public Set<FieldCoordinate> chomps(Player<?> player) {
+		return chomped.computeIfAbsent(player.getId(), id -> new ArrayList<>()).stream()
+			.map(id -> getGame().getPlayerById(id))
+			.map(this::getPlayerCoordinate)
+			.collect(Collectors.toSet());
+	}
+
+	public Map<String, Boolean> removeChomps(Player<?> chomper) {
+		List<String> chompees = chomped.remove(chomper.getId());
+		Map<String, Boolean> result = new HashMap<>();
+		if (chompees != null) {
+			for (String chompeeId : chompees) {
+				Player<?> chompee = getGame().getPlayerById(chompeeId);
+				if (chomped.values().stream().noneMatch(list -> list.contains(chompeeId))) {
+					result.put(chompeeId, true);
+					PlayerState playerState = getPlayerState(chompee);
+					setPlayerState(chompee, playerState.changeChomped(false));
+				} else {
+					result.put(chompeeId, false);
+				}
+				notifyObservers(ModelChangeId.FIELD_MODEL_REMOVE_CHOMP, chomper.getId(), chompee.getId());
+			}
+		}
+		return result;
+	}
+
+	public Map<String, Boolean> updateChomps(Player<?> chomper) {
+		FieldCoordinate chomperCoordinate = getPlayerCoordinate(chomper);
+		List<String> chompees = chomped.get(chomper.getId());
+		List<String> remove = new ArrayList<>();
+		if (chompees != null) {
+			for (String chompeeId : chompees) {
+				Player<?> chompee = getGame().getPlayerById(chompeeId);
+				if (!chomperCoordinate.isAdjacent(getPlayerCoordinate(chompee))) {
+					remove.add(chompeeId);
+				}
+			}
+		}
+
+		Map<String, Boolean> result = new HashMap<>();
+		for (String chompeeId : remove) {
+			Player<?> chompee = getGame().getPlayerById(chompeeId);
+			result.put(chompeeId, removeChomp(chomper, chompee));
+		}
+
+		return result;
+	}
+
+	public boolean notChomped(Player<?> chomper, Player<?> chompee) {
+		List<String> chompees = chomped.get(chomper.getId());
+		return chompees == null || !chompees.contains(chompee.getId());
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, String pKey, Object pValue) {
@@ -1053,6 +1174,9 @@ public class FieldModel implements IJsonSerializable {
 		if (fRangeRuler != null) {
 			IJsonOption.RANGE_RULER.addTo(jsonObject, fRangeRuler.toJsonValue());
 		}
+
+		IJsonOption.CHOMPED.addTo(jsonObject, chomped);
+
 		return jsonObject;
 
 	}
@@ -1135,7 +1259,9 @@ public class FieldModel implements IJsonSerializable {
 
 			String[] cards = IJsonOption.CARDS.getFrom(source, playerDataObject);
 			if (ArrayTool.isProvided(cards)) {
-				for (String card : cards) addCard(player, cardFactory.forName(card));
+				for (String card : cards) {
+					addCard(player, cardFactory.forName(card));
+				}
 			}
 
 			String[] cardEffects = IJsonOption.CARD_EFFECTS.getFrom(source, playerDataObject);
@@ -1165,6 +1291,10 @@ public class FieldModel implements IJsonSerializable {
 
 		if (IJsonOption.RANGE_RULER.isDefinedIn(jsonObject)) {
 			fRangeRuler = new RangeRuler().initFrom(source, IJsonOption.RANGE_RULER.getFrom(source, jsonObject));
+		}
+
+		if (IJsonOption.CHOMPED.isDefinedIn(jsonObject)) {
+			chomped.putAll(IJsonOption.CHOMPED.getFrom(source, jsonObject));
 		}
 		return this;
 

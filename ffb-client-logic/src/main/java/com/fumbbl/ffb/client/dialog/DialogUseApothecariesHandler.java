@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -28,12 +30,14 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 		if (dialogParameter != null) {
 
 			if ((ClientMode.PLAYER == getClient().getMode())
-					&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
+				&& game.getTeamHome().getId().equals(dialogParameter.getTeamId())) {
 
 				if (dialogParameter.getInjuryDescriptions().size() == 1) {
 					InjuryDescription description = dialogParameter.getInjuryDescriptions().get(0);
-					setDialog(DialogUseApothecary.create(getClient(), new DialogUseApothecaryParameter(description.getPlayerId(), description.getPlayerState(), description.getSeriousInjury(),
-						description.getApothecaryTypes())));
+					setDialog(DialogUseApothecary.create(getClient(),
+						new DialogUseApothecaryParameter(description.getPlayerId(), description.getPlayerState(),
+							description.getSeriousInjury(),
+							description.getApothecaryTypes())));
 
 				} else {
 					setDialog(new DialogUseApothecaries(getClient(), dialogParameter));
@@ -56,25 +60,29 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 
 		String playerId = null;
 		ApothecaryType apothecaryType = null;
+		SeriousInjury seriousInjury = null;
+		PlayerState playerState = null;
 
 		if (testDialogHasId(pDialog, DialogId.USE_APOTHECARY)) {
 			DialogUseApothecary dialog = (DialogUseApothecary) pDialog;
-			if (dialog.isChoiceYes()) {
-				InjuryDescription injuryDescription = allInjuries.get(0);
+			InjuryDescription injuryDescription = allInjuries.get(0);
+			if (dialog.isChoiceOne()) {
 				playerId = injuryDescription.getPlayerId();
-				if (dialog.isChoiceOne()) {
-					apothecaryType = injuryDescription.getApothecaryTypes().get(0);
-				} else if (dialog.isChoiceTwo()) {
-					apothecaryType = injuryDescription.getApothecaryTypes().get(1);
-				}
+				apothecaryType = injuryDescription.getApothecaryTypes().get(0);
+			} else if (dialog.isChoiceTwo()) {
+				playerId = injuryDescription.getPlayerId();
+				apothecaryType = injuryDescription.getApothecaryTypes().get(1);
 			}
+			playerState = injuryDescription.getPlayerState();
 		} else if (testDialogHasId(pDialog, DialogId.USE_APOTHECARIES)) {
 			DialogUseApothecaries useApothecaries = (DialogUseApothecaries) pDialog;
 			playerId = useApothecaries.getSelectedPlayer();
 			apothecaryType = useApothecaries.getApothecaryType();
+			seriousInjury = useApothecaries.getSeriousInjury();
+			playerState = useApothecaries.getSelectedPlayerState();
 		}
 		if (StringTool.isProvided(playerId)) {
-			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType);
+			getClient().getCommunication().sendUseApothecary(playerId, true, apothecaryType, seriousInjury, playerState);
 		} else {
 			getClient().getCommunication().sendUseApothecaries(Collections.emptyList());
 		}

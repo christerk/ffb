@@ -177,7 +177,7 @@ public class StepBlackInk extends AbstractStep {
 				fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeHypnotized(true));
 				actingPlayer.markSkillUsed(skill);
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), game.getActingPlayer().isJumping());
-				ServerUtilBlock.updateDiceDecorations(game);
+				ServerUtilBlock.updateDiceDecorations(getGameState());
 
 			}
 		}

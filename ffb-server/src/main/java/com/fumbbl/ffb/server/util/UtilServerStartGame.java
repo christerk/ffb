@@ -225,8 +225,9 @@ public class UtilServerStartGame {
 			mvps.setValue(0);
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
-			ruleSet.setValue("BB2020");
-			//ruleSet.setValue("BB2016");
+			ruleSet.setValue(RulesCollection.Rules.BB2020.name());
+			ruleSet.setValue(RulesCollection.Rules.BB2025.name());
+//			ruleSet.setValue(RulesCollection.Rules.BB2016.name());
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
@@ -237,6 +238,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean prayer = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG);
 			prayer.setValue(false);
 			game.getOptions().addOption(prayer);
+			GameOptionInt prayerMax = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_MAX);
+			prayerMax.setValue(3);
+			game.getOptions().addOption(prayerMax);
+			GameOptionInt prayerCost = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_COST);
+			prayerCost.setValue(10000);
+			game.getOptions().addOption(prayerCost);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
 			game.getOptions().addOption(claw);
@@ -279,6 +286,24 @@ public class UtilServerStartGame {
 			GameOptionBoolean tacklezones = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_TACKLEZONE_OVERLAYS);
 			tacklezones.setValue(true);
 			game.getOptions().addOption(tacklezones);
+			GameOptionInt reducedMaxBribes = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_BRIBES_REDUCED_MAX);
+			reducedMaxBribes.setValue(5);
+			game.getOptions().addOption(reducedMaxBribes);
+			GameOptionInt reducedMaxChefs = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_CHEFS_REDUCED_MAX);
+			reducedMaxChefs.setValue(5);
+			game.getOptions().addOption(reducedMaxChefs);
+			GameOptionBoolean stackChainsaw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.MB_STACKS_AGAINST_CHAINSAW);
+			stackChainsaw.setValue(true);
+			game.getOptions().addOption(stackChainsaw);
+			GameOptionBoolean lashOutEnds = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION);
+			lashOutEnds.setValue(false);
+			//game.getOptions().addOption(lashOutEnds);
+			GameOptionBoolean stalling = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ENABLE_STALLING_CHECK);
+			stalling.setValue(false);
+			//game.getOptions().addOption(stalling);
+			GameOptionBoolean kick = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ASK_FOR_KICK_AFTER_ROLL);
+			kick.setValue(true);
+			//game.getOptions().addOption(kick);
 		}
 	}
 

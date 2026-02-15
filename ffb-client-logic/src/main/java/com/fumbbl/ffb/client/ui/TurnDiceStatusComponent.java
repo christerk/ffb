@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
@@ -12,6 +13,9 @@ import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.factory.MechanicsFactory;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.BlockRoll;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.DateTool;
@@ -409,6 +413,8 @@ public class TurnDiceStatusComponent extends JPanel
 	public void mouseReleased(MouseEvent pMouseEvent) {
 		FantasyFootballClient client = getSideBar().getClient();
 		Game game = client.getGame();
+		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
+		GameMechanic mechanic = (GameMechanic) factory.forName(Mechanic.Type.GAME.name());
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
 			&& buttonArea.contains(pMouseEvent.getPoint()) && buttonEnabled) {
@@ -418,7 +424,8 @@ public class TurnDiceStatusComponent extends JPanel
 				if (fHomePlaying) {
 					if (fTurnMode != null && fTurnMode.isCheckForActivePlayers()
 						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
-						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient());
+						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient(), mechanic.playersForGoActivations(
+							game));
 						endTurnDialog.showDialog(this);
 					} else {
 						client.getClientState().endTurn();

@@ -15,12 +15,12 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndTurn;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 
 /**
  * Step to end kickoff sequence.
- * 
+ * <p>
  * Pushes endTurnSequence and selectSequence on stack when finishing.
  * 
  * @author Kalimar
@@ -55,18 +55,13 @@ public final class StepEndKickoff extends AbstractStep {
 		Game game = getGameState().getGame();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		((EndTurn)factory.forName(SequenceGenerator.Type.EndTurn.name()))
-			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+			.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 		((Inducement)factory.forName(SequenceGenerator.Type.Inducement.name()))
 			.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.AFTER_KICKOFF_TO_OPPONENT,
 			game.isHomePlaying()));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	// ByteArray serialization
-
-	public int getByteArraySerializationVersion() {
-		return 1;
-	}
 
 	// JSON serialization
 

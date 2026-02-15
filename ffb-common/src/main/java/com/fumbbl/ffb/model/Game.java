@@ -3,6 +3,7 @@ package com.fumbbl.ffb.model;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryManager;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
@@ -14,6 +15,7 @@ import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.model.change.ModelChangeObservable;
@@ -23,10 +25,7 @@ import com.fumbbl.ffb.util.DateTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 
@@ -74,6 +73,9 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 	private final IFactorySource applicationSource;
 	private ModifierAggregator modifierAggregator;
 	private TeamState teamState = TeamState.FULL;
+	private EnhancementRegistry enhancementRegistry;
+
+	private transient boolean initialized;
 
 	public Game(IFactorySource applicationSource, FactoryManager manager) {
 		this.applicationSource = applicationSource;
@@ -118,6 +120,12 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		modifierAggregator = new ModifierAggregator();
 		rules.initialize(this);
 		modifierAggregator.init(this);
+		enhancementRegistry = new EnhancementRegistry(this);
+		initialized = true;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 	public IFactorySource getApplicationSource() {
@@ -126,6 +134,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public ModifierAggregator getModifierAggregator() {
 		return modifierAggregator;
+	}
+
+	public EnhancementRegistry getEnhancementRegistry() {
+		return enhancementRegistry;
 	}
 
 	public GameRules getRules() {
@@ -597,6 +609,15 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		return getActingTeam().hasPlayer(fActingPlayer.getPlayer());
 	}
 
+	public Set<String> getMultiBlockTargets() {
+		return getFieldModel().getMultiBlockTargets();
+	}
+
+	public void addHatred(Player<?> player, Keyword keyword) {
+		getGameResult().getPlayerResult(player).addGainedHatred(keyword);
+		getFieldModel().addHatred(player, keyword);
+	}
+
 	// transformation
 
 	public Game transform() {
@@ -770,6 +791,11 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 
 	public <T extends INamedObjectFactory<?>> T getFactory(Factory factory) {
 		return getRules().getFactory(factory);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Mechanic> T getMechanic(Mechanic.Type type) {
+		return (T) getRules().getFactory(FactoryType.Factory.MECHANIC).forName(type.name());
 	}
 
 	private enum TeamState {

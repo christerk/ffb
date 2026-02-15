@@ -3,6 +3,8 @@ package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -46,9 +48,8 @@ public class AnimosityBehaviour extends SkillBehaviour<Animosity> {
 						state.doRoll = true;
 					}
 				} else {
-					if (catcher != null && thrower != null) {
-						state.doRoll = thrower.hasAnimosityTowards(catcher);
-					}
+					SkillMechanic mechanic = game.getMechanic(Mechanic.Type.SKILL);
+					state.doRoll = mechanic.animosityExists(thrower, catcher);
 				}
 				if (state.doRoll) {
 					int roll = step.getGameState().getDiceRoller().rollSkill();

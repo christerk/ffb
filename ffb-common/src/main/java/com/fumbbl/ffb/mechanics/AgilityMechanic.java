@@ -14,6 +14,7 @@ import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
+import com.fumbbl.ffb.report.ReportPickupRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.Set;
@@ -44,6 +45,8 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract int minimumRollSafeThrow(Player<?> pPlayer);
 
+	public abstract int minimumRoll(int baseValue, Set<? extends RollModifier<?>> modifiers);
+
 	public abstract String formatDodgeResult(ReportSkillRoll report, Player<?> player);
 
 	public abstract String formatJumpResult(ReportSkillRoll report, Player<?> player);
@@ -60,7 +63,7 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract String formatHypnoticGazeResult(ReportSkillRoll report, Player<?> player);
 
-	public abstract String formatPickupResult(ReportSkillRoll report, Player<?> player);
+	public abstract String formatPickupResult(ReportPickupRoll report, Player<?> player);
 
 	public abstract Wording interceptionWording(boolean easyIntercept);
 

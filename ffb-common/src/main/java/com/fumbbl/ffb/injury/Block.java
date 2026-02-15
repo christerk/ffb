@@ -6,7 +6,6 @@ public class Block extends InjuryType {
 
 	public Block() {
 		super("block", true, SendToBoxReason.BLOCKED);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -14,4 +13,8 @@ public class Block extends InjuryType {
 		return true;
 	}
 
+	@Override
+	public boolean isBlock() {
+		return true;
+	}
 }

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.json.JsonIntOption;
 import com.fumbbl.ffb.json.JsonObjectOption;
 import com.fumbbl.ffb.json.JsonPlayerStateOption;
 import com.fumbbl.ffb.json.JsonStringArrayOption;
+import com.fumbbl.ffb.json.JsonStringListMapOption;
 import com.fumbbl.ffb.json.JsonStringOption;
 
 /**
@@ -30,8 +31,12 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ALREADY_DROPPED = new JsonBooleanOption("alreadyDropped");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_AWAY = new JsonBooleanOption("argueTheCallChoiceAway");
     JsonBooleanOption ARGUE_THE_CALL_CHOICE_HOME = new JsonBooleanOption("argueTheCallChoiceHome");
+    JsonBooleanOption ARM_BAR_CHOICE = new JsonBooleanOption("armBarChoice");
+    JsonStringOption ARM_BAR_PLAYER_ID = new JsonStringOption("armBarPlayerId");
     JsonBooleanOption ASK_FOR_BLOCK_KIND = new JsonBooleanOption("askForBlockKind");
+    JsonBooleanOption ATTEMPT_PICK_UP = new JsonBooleanOption("attemptPickup");
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
+    JsonStringListMapOption AVAILABLE_KEYWORDS_MAP = new JsonStringListMapOption("availableKeywordsMap");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
     JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
     JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
@@ -43,12 +48,15 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption CARDS_SELECTED_HOME = new JsonBooleanOption("cardsSelectedHome");
     JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode",
       Factory.CATCH_SCATTER_THROWIN_MODE);
+    JsonBooleanOption CHECK_FORGO = new JsonBooleanOption("checkForgo");
     JsonBooleanOption CONFIRMED = new JsonBooleanOption("confirmed");
     JsonBooleanOption CONFIRMED_SECONDED = new JsonBooleanOption("confirmedSeconded");
     JsonFieldCoordinateOption COORDINATE_TO = new JsonFieldCoordinateOption("coordinateTo");
     JsonBooleanOption CRASH_LANDING = new JsonBooleanOption("crashLanding");
     JsonObjectOption CURRENT_STEP = new JsonObjectOption("currentStep");
     JsonBooleanOption DEFENDER_PUSHED = new JsonBooleanOption("defenderPushed");
+    JsonEnumWithNameOption DEFERRED_COMMAND_ID = new JsonEnumWithNameOption("deferredCommandId", Factory.DEFERRED_COMMAND_ID);
+    JsonArrayOption DEFERRED_COMMANDS = new JsonArrayOption("deferredCommands");
     JsonEnumWithNameOption DISPATCH_PLAYER_ACTION = new JsonEnumWithNameOption("dispatchPlayerAction",
         Factory.PLAYER_ACTION);
     JsonBooleanOption DIVING_CATCH_CHOICE = new JsonBooleanOption("divingCatchChoice");
@@ -57,6 +65,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonIntOption DODGE_ROLL = new JsonIntOption("dodgeRoll");
     JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
     JsonBooleanOption DO_ROLL = new JsonBooleanOption("doRoll");
+    JsonBooleanOption DT_REROLL_ASKED = new JsonBooleanOption("dtRerollAsked");
     JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
@@ -80,6 +89,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption GAME_STATUS = new JsonEnumWithNameOption("gameStatus", Factory.GAME_STATUS);
     JsonStringOption GAZE_VICTIM_ID = new JsonStringOption("gazeVictimId");
     JsonStringArrayOption GET_ADDITIONAL_CASUALTY_SPP = new JsonStringArrayOption("getAdditionalCasualtySpp");
+    JsonStringArrayOption GET_ADDITIONAL_CATCHES_SPP = new JsonStringArrayOption("getAdditionalCatchesSpp");
     JsonStringArrayOption GET_ADDITIONAL_COMPLETION_SPP = new JsonStringArrayOption("getAdditionalCompletionSpp");
     JsonIntOption GOLD_USED_AWAY = new JsonIntOption("goldUsedAway");
     JsonIntOption GOLD_USED_HOME = new JsonIntOption("goldUsedHome");
@@ -110,6 +120,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption INDUCEMENTS_SELECTED_PARALLEL = new JsonBooleanOption("inducementsSelectedParallel");
     JsonObjectOption INJURY_RESULT = new JsonObjectOption("injuryResult");
     JsonArrayOption INJURY_RESULTS = new JsonArrayOption("injuryResults");
+    JsonArrayOption INJURY_RESULTS_DEAD = new JsonArrayOption("injuryResultsDead");
+    JsonArrayOption INJURY_RESULTS_GETTING_EVEN = new JsonArrayOption("injuryResultsGettingEven");
     JsonArrayOption INJURY_RESULTS_REGENERATION_FAILED = new JsonArrayOption("injuryResultsRegenerationFailed");
     JsonObjectOption INJURY_RESULT_DEFENDER = new JsonObjectOption("injuryResultDefender");
     JsonBooleanOption INTERCEPTION_SUCCESSFUL = new JsonBooleanOption("interceptionSuccessfull");
@@ -143,8 +155,12 @@ public interface IServerJsonOption extends IJsonOption {
     JsonObjectOption PASS_STATE = new JsonObjectOption("passState");
     JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
+    JsonBooleanOption PICK_UP_OPTIONAL = new JsonBooleanOption("pickUpOptional");
+    JsonStringOption PLAYER_ON_BALL_ID = new JsonStringOption("playerOnBallId");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
+    JsonBooleanOption PRE_REGENERATION = new JsonBooleanOption("preRegeneration");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
+    JsonBooleanOption REMOVE_CATCH_MODE = new JsonBooleanOption("removeCatchMode");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
@@ -152,6 +168,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
+    JsonBooleanOption SABOTEUR_TRIGGERED_ATTACKER = new JsonBooleanOption("saboteurTriggeredAttacker");
+    JsonBooleanOption SABOTEUR_TRIGGERED_DEFENDER = new JsonBooleanOption("saboteurTriggeredDefender");
     JsonObjectOption SCATTER_BOUNDS = new JsonObjectOption("scatterBounds");
     JsonIntOption SCATTER_DISTANCE = new JsonIntOption("scatterDistance");
     JsonBooleanOption SECOND_GO_FOR_IT = new JsonBooleanOption("secondGoForIt");
@@ -164,6 +182,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringArrayOption STALLERS = new JsonStringArrayOption("stallers");
 
     JsonObjectOption STARTING_PUSHBACK_SQUARE = new JsonObjectOption("startingPushbackSquare");
+    JsonObjectOption STEADY_FOOTING_CONTEXT = new JsonObjectOption("steadyFootingContext");
     JsonEnumWithNameOption STEP_ID = new JsonEnumWithNameOption("stepId", Factory.STEP_ID);
     JsonStringOption STEP_PHASE = new JsonStringOption("stepPhase");
     JsonObjectOption STEP_RESULT = new JsonObjectOption("stepResult");
@@ -186,6 +205,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USE_STAR_OF_THE_SHOW = new JsonBooleanOption("useStarOfTheShow");
     JsonBooleanOption USING_BLAST_IT = new JsonBooleanOption("usingBlastIt");
     JsonBooleanOption USING_BREAK_TACKLE = new JsonBooleanOption("usingBreakTackle");
+    JsonBooleanOption USING_BULLSEYE = new JsonBooleanOption("usingBullseye");
     JsonBooleanOption USING_DIVING_TACKLE = new JsonBooleanOption("usingDivingTackle");
     JsonBooleanOption USING_DODGE = new JsonBooleanOption("usingDodge");
     JsonBooleanOption USING_DUMP_OFF = new JsonBooleanOption("usingDumpOff");
@@ -197,9 +217,14 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption USING_MODIFIER_IGNORING_SKILL = new JsonBooleanOption("usingModifierIgnoringSkill");
     JsonBooleanOption USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL = new JsonBooleanOption("usingModifierIgnoringSkillBeforeRoll");
     JsonBooleanOption USING_PILING_ON = new JsonBooleanOption("usingPilingOn");
+    JsonBooleanOption USING_SAFE_PASS = new JsonBooleanOption("usingSafePass");
+    JsonBooleanOption USING_SABOTEUR_ATTACKER = new JsonBooleanOption("usingSaboteurAttacker");
+    JsonBooleanOption USING_SABOTEUR_DEFENDER = new JsonBooleanOption("usingSaboteurDefender");
     JsonBooleanOption USING_SHADOWING = new JsonBooleanOption("usingShadowing");
     JsonBooleanMapOption USING_SIDE_STEP = new JsonBooleanMapOption("usingSideStep");
     JsonBooleanMapOption USING_STAND_FIRM = new JsonBooleanMapOption("usingStandFirm");
+    JsonBooleanOption USING_SWOOP = new JsonBooleanOption("usingSwoop");
+    JsonBooleanOption USING_TAUNT = new JsonBooleanOption("usingTaunt");
     JsonBooleanOption USING_TENTACLES = new JsonBooleanOption("usingTentacles");
     JsonBooleanOption USING_TRICKSTER = new JsonBooleanOption("usingTrickster");
     JsonBooleanOption USING_WRESTLE_ATTACKER = new JsonBooleanOption("usingWrestleAttacker");

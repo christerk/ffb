@@ -29,7 +29,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
-import com.fumbbl.ffb.report.bb2020.ReportFumblerooskie;
+import com.fumbbl.ffb.report.mixed.ReportFumblerooskie;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -276,7 +276,7 @@ public class StepInitMoving extends AbstractStep {
 						if (diceDecoration != null && (diceDecoration.getNrOfDice() == 1 || diceDecoration.getNrOfDice() == 2 || (diceDecoration.getNrOfDice() == 3 && opponentCanMove)) && targetCoordinate.isAdjacent(playerCoordinate)) {
 							targetSelectionState.addUsedSkill(skill);
 							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ADD_BLOCK_DIE));
-							ServerUtilBlock.updateDiceDecorations(game);
+							ServerUtilBlock.updateDiceDecorations(getGameState());
 						}
 						if (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE && !actingPlayer.hasBlocked()) {
 
@@ -353,6 +353,9 @@ public class StepInitMoving extends AbstractStep {
 							break;
 						case KICK_TEAM_MATE_MOVE:
 							game.getTurnData().setKtmUsed(true);
+							break;
+						case SECURE_THE_BALL:
+							game.getTurnData().setSecureTheBallUsed(true);
 							break;
 						default:
 							break;

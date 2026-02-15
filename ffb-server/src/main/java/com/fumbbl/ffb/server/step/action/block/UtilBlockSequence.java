@@ -4,8 +4,8 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.SkillUse;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -27,14 +27,16 @@ public class UtilBlockSequence {
 	/**
 	 * Initializes pushback by setting the starting square, handles skill
 	 * STRIP_BALL.
-	 * 
+	 * <p>
 	 * Sets stepParameter STARTING_PUSHBACK_SQUARE for all steps on the stack. Sets
 	 * stepParameter CATCH_SCATTER_THROWIN_MODE for all steps on the stack.
 	 */
 	public static StepParameterSet initPushback(IStep pStep) {
 		StepParameterSet parameterSet = new StepParameterSet();
 		Game game = pStep.getGameState().getGame();
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
+
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
@@ -56,7 +58,7 @@ public class UtilBlockSequence {
 				pStep.getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skillCanForceOpponentToDropBall, true, SkillUse.STEAL_BALL));
 				parameterSet
 					.add(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-				actingPlayer.markSkillUsed(skillCanForceOpponentToDropBall);
+				parameterSet.add(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, true));
 				if (game.getDefender() != null) {
 					boolean defenderHasTacklezones = game.getFieldModel().getPlayerState(game.getDefender()).hasTacklezones();
 					if (!defenderHasTacklezones && skillCanCounterOpponentForcingDropBall != null) {

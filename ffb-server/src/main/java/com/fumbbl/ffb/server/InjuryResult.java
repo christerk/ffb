@@ -9,22 +9,19 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.factory.CardFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.ReportFactory;
 import com.fumbbl.ffb.factory.SeriousInjuryFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.injury.context.InjuryContext;
-import com.fumbbl.ffb.injury.context.InjuryModification;
-import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.ReportInjury;
-import com.fumbbl.ffb.report.logcontrol.SkipInjuryParts;
+import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -40,6 +37,7 @@ import java.util.List;
 public class InjuryResult implements IJsonSerializable {
 
 	private boolean alreadyReported;
+	private boolean preRegeneration = true;
 
 	private static final List<Integer> basePrecedenceList = new ArrayList<Integer>() {{
 		add(PlayerState.PRONE);
@@ -63,6 +61,18 @@ public class InjuryResult implements IJsonSerializable {
 
 	public void setInjuryContext(InjuryContext context) {
 		injuryContext = context;
+	}
+
+	public void setAlreadyReported(boolean alreadyReported) {
+		this.alreadyReported = alreadyReported;
+	}
+
+	public boolean isPreRegeneration() {
+		return preRegeneration;
+	}
+
+	public void passedRegeneration() {
+		this.preRegeneration = false;
 	}
 
 	public void applyTo(IStep pStep) {
@@ -151,7 +161,9 @@ public class InjuryResult implements IJsonSerializable {
 					&& injuryContext.getInjuryType().isWorthSpps()
 					&& (attacker.getTeam() != defender.getTeam())) {
 					PlayerResult attackerResult = gameResult.getPlayerResult(attacker);
-					pStep.getGameState().getPrayerState().addCasualty(attackerResult);
+					SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+					spp.addCasualty(pStep.getGameState().getPrayerState().getAdditionalCasSppTeams(), attackerResult);
+
 				}
 			}
 			game.getFieldModel().add(new BloodSpot(injuryContext.getDefenderPosition(), injuryContext.getSufferedInjury()));
@@ -162,56 +174,10 @@ public class InjuryResult implements IJsonSerializable {
 	}
 
 	public void report(IStep pStep) {
-
-		SkipInjuryParts skip = SkipInjuryParts.NONE;
-		boolean playSound = true;
-		if (injuryContext instanceof ModifiedInjuryContext) {
-			InjuryModification modification = ((ModifiedInjuryContext) injuryContext).getModification();
-			if (modification == InjuryModification.INJURY) {
-				skip = SkipInjuryParts.ARMOUR;
-			}
-		} else if (injuryContext.getModifiedInjuryContext() != null) {
-			InjuryModification modification = injuryContext.getModifiedInjuryContext().getModification();
-			if (alreadyReported) {
-				switch (modification) {
-					case ARMOUR:
-						skip = SkipInjuryParts.ARMOUR;
-						break;
-					case INJURY:
-						skip = SkipInjuryParts.ARMOUR_AND_INJURY;
-						break;
-					default:
-						break;
-				}
-				alreadyReported = false;
-			} else {
-				playSound = false;
-				switch (modification) {
-					case ARMOUR:
-						skip = SkipInjuryParts.INJURY;
-						break;
-					case INJURY:
-						skip = SkipInjuryParts.CAS;
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		if (alreadyReported) {
-			return;
-		}
-
-		ReportFactory factory = pStep.getGameState().getGame().getFactory(FactoryType.Factory.REPORT);
-		ReportInjury reportInjury = (ReportInjury) factory.forId(ReportId.INJURY);
-		pStep.getResult().addReport(reportInjury.init(injuryContext, skip));
-		if (playSound) {
-			pStep.getResult().setSound(injuryContext.getSound());
-		}
-		alreadyReported = true;
+		Game game = pStep.getGameState().getGame();
+		StateMechanic mechanic = game.getMechanic(Mechanic.Type.STATE);
+		mechanic.reportInjury(pStep, this);
 	}
-
 
 	public boolean handleIgnoringArmourBreaks(IStep pStep, Player<?> pDefender, Game game) {
 		if (injuryContext.isArmorBroken()) {
@@ -244,6 +210,7 @@ public class InjuryResult implements IJsonSerializable {
 		}
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isAlreadyReported() {
 		return alreadyReported;
 	}
@@ -252,7 +219,7 @@ public class InjuryResult implements IJsonSerializable {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = new JsonObject();
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
-
+		IServerJsonOption.PRE_REGENERATION.addTo(jsonObject, preRegeneration);
 		injuryContext.toJsonValue(jsonObject);
 
 		return jsonObject;
@@ -265,6 +232,10 @@ public class InjuryResult implements IJsonSerializable {
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
 
 		injuryContext.initFrom(source, jsonObject);
+
+		if (IServerJsonOption.PRE_REGENERATION.isDefinedIn(jsonObject)) {
+			preRegeneration = IServerJsonOption.PRE_REGENERATION.getFrom(source, jsonObject);
+		}
 
 		return this;
 	}

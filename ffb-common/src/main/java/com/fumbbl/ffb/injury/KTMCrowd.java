@@ -7,7 +7,6 @@ public class KTMCrowd extends InjuryType {
 
 	public KTMCrowd() {
 		super("ktmCrowd", false, SendToBoxReason.CROWD_KICKED);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

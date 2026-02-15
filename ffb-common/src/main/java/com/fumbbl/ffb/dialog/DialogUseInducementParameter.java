@@ -11,6 +11,7 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,29 @@ public class DialogUseInducementParameter implements IDialogParameter {
 	private String fTeamId;
 	private InducementType[] fInducementTypes;
 	private Card[] fCards;
+	private String playerId;
 
 	public DialogUseInducementParameter() {
 		super();
 	}
 
+	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes) {
+		this(pTeamId, pInducementTypes, new Card[0]);
+	}
+
+	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes, String playerId) {
+		this(pTeamId, pInducementTypes, new Card[0], playerId);
+	}
+
 	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes, Card[] pCards) {
+		this(pTeamId, pInducementTypes, pCards, null);
+	}
+
+	public DialogUseInducementParameter(String pTeamId, InducementType[] pInducementTypes, Card[] pCards, String playerId) {
 		fTeamId = pTeamId;
 		fInducementTypes = pInducementTypes;
 		fCards = pCards;
+		this.playerId = playerId;
 	}
 
 	public DialogId getId() {
@@ -51,10 +66,14 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		return fCards;
 	}
 
+	public String getPlayerId() {
+		return playerId;
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogUseInducementParameter(getTeamId(), getInducementTypes(), getCards());
+		return new DialogUseInducementParameter(getTeamId(), getInducementTypes(), getCards(), playerId);
 	}
 
 	// JSON serialization
@@ -71,6 +90,9 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		List<String> cardNames = new ArrayList<>();
 		for (Card card : getCards()) {
 			cardNames.add(card.getName());
+		}
+		if (StringTool.isProvided(playerId)) {
+			IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		}
 		IJsonOption.CARDS.addTo(jsonObject, cardNames);
 		return jsonObject;
@@ -91,6 +113,9 @@ public class DialogUseInducementParameter implements IDialogParameter {
 		CardFactory cardFactory = source.getFactory(Factory.CARD);
 		for (int i = 0; i < fCards.length; i++) {
 			fCards[i] = cardFactory.forName(cardNames[i]);
+		}
+		if (IJsonOption.PLAYER_ID.isDefinedIn(jsonObject)) {
+			playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		}
 		return this;
 	}

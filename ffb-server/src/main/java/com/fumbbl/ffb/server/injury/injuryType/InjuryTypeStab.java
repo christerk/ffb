@@ -16,6 +16,7 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
@@ -52,6 +53,12 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
 			Set<ArmorModifier> modifiers = armorModifierFactory.findArmorModifiers(game, pAttacker, pDefender, isStab(), isFoul());
+
+			Optional<ArmorModifier> sneakyPair = modifiers.stream()
+				.filter(modifier -> modifier.isRegisteredToSkillWithProperty(NamedProperties.affectsEitherArmourOrInjuryWithPartner))
+				.findFirst();
+			sneakyPair.ifPresent(modifiers::remove);
+
 			injuryContext.addArmorModifiers(modifiers);
 
 			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
@@ -67,6 +74,11 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 				injuryContext.setArmorRoll(diceRoller.rollArmour());
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+
+			if (!injuryContext.isArmorBroken() && sneakyPair.isPresent()) {
+				injuryContext.addArmorModifier(sneakyPair.get());
+				injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
+			}
 		}
 	}
 

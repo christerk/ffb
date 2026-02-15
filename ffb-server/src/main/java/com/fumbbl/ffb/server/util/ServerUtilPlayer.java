@@ -2,8 +2,8 @@ package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -36,13 +36,21 @@ public class ServerUtilPlayer {
 		FieldCoordinate coordinateDefender = game.getFieldModel().getPlayerCoordinate(defender);
 		Player<?>[] offensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, attacker.getTeam(),
 				coordinateDefender, false);
-		GameMechanic mechanic = (GameMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
 
 		for (Player<?> offensiveAssist : offensiveAssists) {
 			if (offensiveAssist != attacker) {
+				if (game.getFieldModel().getPlayerState(offensiveAssist).isEyeGouged()) {
+          continue;
+        }
 				FieldCoordinate coordinateAssist = game.getFieldModel().getPlayerCoordinate(offensiveAssist);
 				Player<?>[] defensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, defenderTeam, coordinateAssist,
 					false);
+
+				defensiveAssists = Arrays.stream(defensiveAssists)
+					.filter(p -> !game.getFieldModel().getPlayerState(p).isEyeGouged())
+					.toArray(Player[]::new);
 				// Check to see if the assisting player is not close to anyone else but the
 				// defending blocker
 				int defendingPlayersOtherThanBlocker = 0;

@@ -10,7 +10,7 @@ import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.bb2020.ReportHypnoticGazeRoll;
+import com.fumbbl.ffb.report.mixed.ReportHypnoticGazeRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 @ReportMessageType(ReportId.HYPNOTIC_GAZE_ROLL)

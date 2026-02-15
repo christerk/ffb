@@ -21,13 +21,13 @@ import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndTurn;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
 /**
  * Final step of the feed sequence. Consumes all expected stepParameters.
- * 
+ * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * Expects stepParameter END_TURN to be set by a preceding step.
  * 
@@ -81,7 +81,7 @@ public class StepEndFeeding extends AbstractStep {
 		if (fEndTurn) {
 			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
-					.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+					.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 			} else {
 				UtilServerSteps.changePlayerAction(this, null, null, false);
 				((Inducement) factory.forName(SequenceGenerator.Type.Inducement.name()))

@@ -89,7 +89,7 @@ public class FantasyFootballServer implements IFactorySource {
 		fProperties = pProperties;
 		factoryManager = new FactoryManager();
 
-		factories = factoryManager.getFactoriesForContext(getContext());
+		factories = factoryManager.getFactoriesForContext(getContext(), this);
 
 		for (INamedObjectFactory factory : factories.values()) {
 			factory.initialize(null);

@@ -6,12 +6,15 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -21,13 +24,12 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.phase.kickoff.UtilKickoffSequence;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
 
 /**
  * Step in kickoff sequence to handle blitz kickoff result.
- * 
+ * <p>
  * Expects stepParameter END_TURN to be set by a preceding step. (parameter is
  * consumed on TurnMode.BLITZ)
  * 
@@ -90,7 +92,10 @@ public final class StepBlitzTurn extends AbstractStep {
 
 			game.setTurnMode(TurnMode.BLITZ);
 			Team blitzingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			UtilKickoffSequence.pinPlayersInTacklezones(getGameState(), blitzingTeam);
+
+			MechanicsFactory mechanicsFactory = game.getFactory(FactoryType.Factory.MECHANIC);
+			SetupMechanic mechanic = (SetupMechanic) mechanicsFactory.forName(Mechanic.Type.SETUP.name());
+			mechanic.pinPlayersInTacklezones(getGameState(), blitzingTeam);
 			long currentTimeMillis = System.currentTimeMillis();
 			if (game.isTurnTimeEnabled()) {
 				UtilServerTimer.stopTurnTimer(getGameState(), currentTimeMillis);

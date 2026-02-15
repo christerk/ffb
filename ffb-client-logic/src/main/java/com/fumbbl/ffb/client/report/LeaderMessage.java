@@ -14,15 +14,15 @@ public class LeaderMessage extends ReportMessageBase<ReportLeader> {
     protected void render(ReportLeader report) {
   		StringBuilder status = new StringBuilder();
   		LeaderState leaderState = report.getLeaderState();
-
+		setIndent(0);
   		if (LeaderState.AVAILABLE.equals(leaderState)) {
-  			printTeamName(game, false, report.getTeamId());
+  			printTeamName(false, report.getTeamId());
   			status.append(" gain a Leader re-roll.");
   			print(getIndent() + 1, status.toString());
   		} else {
   			status.append("Leader re-roll removed from ");
   			print(getIndent() + 1, status.toString());
-  			printTeamName(game, false, report.getTeamId());
+  			printTeamName(false, report.getTeamId());
   		}
   		println(getIndent() + 1, ".");
     }

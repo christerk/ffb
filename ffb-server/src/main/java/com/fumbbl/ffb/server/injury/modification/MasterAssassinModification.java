@@ -37,7 +37,7 @@ public class MasterAssassinModification extends InjuryContextModification<Modifi
 	}
 
 	@Override
-	SkillUse skillUse() {
+	protected SkillUse skillUse() {
 		return SkillUse.RE_ROLL_INJURY;
 	}
 }

@@ -9,14 +9,18 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * 
  * @author Kalimar
  */
 public class PlayerResult implements IJsonSerializable {
@@ -25,6 +29,7 @@ public class PlayerResult implements IJsonSerializable {
 	private int fTouchdowns;
 	private int fInterceptions;
 	private int fCasualties;
+	private int landings;
 	private int fPlayerAwards;
 	private int fBlocks;
 	private int fFouls;
@@ -42,8 +47,9 @@ public class PlayerResult implements IJsonSerializable {
 	private int fSendToBoxHalf;
 	private String fSendToBoxByPlayerId;
 	private boolean fHasUsedSecretWeapon;
-	private int deflections, completionsWithAdditionalSpp, casualtiesWithAdditionalSpp;
+	private int deflections, completionsWithAdditionalSpp, casualtiesWithAdditionalSpp, catchesWithAdditionalSpp;
 	private transient Player<?> fPlayer;
+	private List<Keyword> gainedHatred = new ArrayList<>(); // not synced to clients, is visualized by enhancements
 
 	public PlayerResult(TeamResult pTeamResult) {
 		this(pTeamResult, null);
@@ -330,42 +336,87 @@ public class PlayerResult implements IJsonSerializable {
 		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_DEFECTING, fDefecting);
 	}
 
-	public int totalEarnedSpps() {
-
-		GameMechanic mechanic = (GameMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.GAME.name());
-
-		return ((getPlayerAwards() * mechanic.mvpSpp()) + (getTouchdowns() * 3) + (getCasualties() * 2) + (getInterceptions() * 2)
-			+ getCompletions() + getDeflections() + getCompletionsWithAdditionalSpp() + getCasualtiesWithAdditionalSpp());
+	public int getCatchesWithAdditionalSpp() {
+		return catchesWithAdditionalSpp;
 	}
+
+	public void setCatchesWithAdditionalSpp(int catchesWithAdditionalSpp) {
+		if (this.catchesWithAdditionalSpp == catchesWithAdditionalSpp) {
+			return;
+		}
+		this.catchesWithAdditionalSpp = catchesWithAdditionalSpp;
+		notifyObservers(ModelChangeId.PLAYER_RESULT_SET_CATCHES_WITH_ADDITIONAL_SPP, catchesWithAdditionalSpp);
+	}
+
+	public List<Keyword> getGainedHatred() {
+		return gainedHatred;
+	}
+
+	public void addGainedHatred(Keyword keyword) {
+		gainedHatred.add(keyword);
+	}
+
+	public int getLandings() { 
+		return landings; 
+	}
+
+  public void setLandings(int landings) {
+    if (this.landings == landings) { return; }
+    this.landings = landings;
+    notifyObservers(ModelChangeId.PLAYER_RESULT_SET_LANDINGS, landings);
+  }
+
+	public int totalEarnedSpps() {
+		SppMechanic spp =
+			(SppMechanic) getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
+		Team team = getPlayer().getTeam();
+
+		return (getPlayerAwards() * spp.mvpSpp())
+			+ (getTouchdowns() * spp.touchdownSpp(team))
+			+ (getCasualties() * spp.casualtySpp(team))
+			+ (getInterceptions() * spp.interceptionSpp())
+			+ (getCompletions() * spp.completionSpp())
+			+ (getDeflections() * spp.deflectionSpp())
+			+ (getCompletionsWithAdditionalSpp() * spp.additionalCompletionSpp())
+			+ (getCasualtiesWithAdditionalSpp() * spp.additionalCasualtySpp())
+			+ (getCatchesWithAdditionalSpp() * spp.additionalCatchSpp())
+			+ (getLandings() * spp.landingSpp());
+	}
+
 
 	public Game getGame() {
 		return getTeamResult().getGame();
 	}
 
-	public void init(PlayerResult pPlayerResult) {
-		if (pPlayerResult != null) {
-			fPlayer = pPlayerResult.getPlayer();
-			fCompletions = pPlayerResult.getCompletions();
-			completionsWithAdditionalSpp = pPlayerResult.getCompletionsWithAdditionalSpp();
-			fTouchdowns = pPlayerResult.getTouchdowns();
-			fInterceptions = pPlayerResult.getInterceptions();
-			deflections = pPlayerResult.getDeflections();
-			fCasualties = pPlayerResult.getCasualties();
-			casualtiesWithAdditionalSpp = pPlayerResult.getCasualtiesWithAdditionalSpp();
-			fPlayerAwards = pPlayerResult.getPlayerAwards();
-			fBlocks = pPlayerResult.getBlocks();
-			fFouls = pPlayerResult.getFouls();
-			fRushing = pPlayerResult.getRushing();
-			fPassing = pPlayerResult.getPassing();
-			fTurnsPlayed = pPlayerResult.getTurnsPlayed();
-			fCurrentSpps = pPlayerResult.getCurrentSpps();
-			fDefecting = pPlayerResult.isDefecting();
-			fSeriousInjury = pPlayerResult.getSeriousInjury();
-			fSendToBoxReason = pPlayerResult.getSendToBoxReason();
-			fSendToBoxTurn = pPlayerResult.getSendToBoxTurn();
-			fSendToBoxHalf = pPlayerResult.getSendToBoxHalf();
-			fSendToBoxByPlayerId = pPlayerResult.getSendToBoxByPlayerId();
-			fHasUsedSecretWeapon = pPlayerResult.hasUsedSecretWeapon();
+	public void init(PlayerResult playerResult) {
+		if (playerResult != null) {
+			fPlayer = playerResult.getPlayer();
+			fCompletions = playerResult.getCompletions();
+			completionsWithAdditionalSpp = playerResult.getCompletionsWithAdditionalSpp();
+			fTouchdowns = playerResult.getTouchdowns();
+			fInterceptions = playerResult.getInterceptions();
+			deflections = playerResult.getDeflections();
+			fCasualties = playerResult.getCasualties();
+			casualtiesWithAdditionalSpp = playerResult.getCasualtiesWithAdditionalSpp();
+			fPlayerAwards = playerResult.getPlayerAwards();
+			fBlocks = playerResult.getBlocks();
+			fFouls = playerResult.getFouls();
+			fRushing = playerResult.getRushing();
+			fPassing = playerResult.getPassing();
+			fTurnsPlayed = playerResult.getTurnsPlayed();
+			fCurrentSpps = playerResult.getCurrentSpps();
+			fDefecting = playerResult.isDefecting();
+			fSeriousInjury = playerResult.getSeriousInjury();
+			fSendToBoxReason = playerResult.getSendToBoxReason();
+			fSendToBoxTurn = playerResult.getSendToBoxTurn();
+			fSendToBoxHalf = playerResult.getSendToBoxHalf();
+			fSendToBoxByPlayerId = playerResult.getSendToBoxByPlayerId();
+			fHasUsedSecretWeapon = playerResult.hasUsedSecretWeapon();
+			catchesWithAdditionalSpp = playerResult.getCatchesWithAdditionalSpp();
+			if (playerResult.getGainedHatred() != null) {
+				gainedHatred = playerResult.getGainedHatred();
+			}
+			landings = playerResult.getLandings();
 		}
 	}
 
@@ -385,7 +436,7 @@ public class PlayerResult implements IJsonSerializable {
 		JsonObject jsonObject = new JsonObject();
 		IJsonOption.PLAYER_ID.addTo(jsonObject, getPlayerId());
 		IJsonOption.COMPLETIONS.addTo(jsonObject, fCompletions);
-		IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
+		IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.addTo(jsonObject, completionsWithAdditionalSpp);
 		IJsonOption.TOUCHDOWNS.addTo(jsonObject, fTouchdowns);
 		IJsonOption.INTERCEPTIONS.addTo(jsonObject, fInterceptions);
 		IJsonOption.CASUALTIES.addTo(jsonObject, fCasualties);
@@ -405,6 +456,9 @@ public class PlayerResult implements IJsonSerializable {
 		IJsonOption.TURNS_PLAYED.addTo(jsonObject, fTurnsPlayed);
 		IJsonOption.HAS_USED_SECRET_WEAPON.addTo(jsonObject, fHasUsedSecretWeapon);
 		IJsonOption.DEFECTING.addTo(jsonObject, fDefecting);
+		IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.addTo(jsonObject, catchesWithAdditionalSpp);
+		IJsonOption.GAINED_HATRED.addTo(jsonObject, gainedHatred.stream().map(Keyword::getName).collect(Collectors.toList()));
+		IJsonOption.LANDINGS.addTo(jsonObject, landings);
 		return jsonObject;
 	}
 
@@ -413,7 +467,7 @@ public class PlayerResult implements IJsonSerializable {
 		String playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		fPlayer = getTeamResult().getTeam().getPlayerById(playerId);
 		fCompletions = IJsonOption.COMPLETIONS.getFrom(source, jsonObject);
-		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITONAL_SPP.getFrom(source, jsonObject);
+		completionsWithAdditionalSpp = IJsonOption.COMPLETIONS_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
 		fTouchdowns = IJsonOption.TOUCHDOWNS.getFrom(source, jsonObject);
 		fInterceptions = IJsonOption.INTERCEPTIONS.getFrom(source, jsonObject);
 		fCasualties = IJsonOption.CASUALTIES.getFrom(source, jsonObject);
@@ -433,6 +487,14 @@ public class PlayerResult implements IJsonSerializable {
 		fTurnsPlayed = IJsonOption.TURNS_PLAYED.getFrom(source, jsonObject);
 		fHasUsedSecretWeapon = IJsonOption.HAS_USED_SECRET_WEAPON.getFrom(source, jsonObject);
 		fDefecting = IJsonOption.DEFECTING.getFrom(source, jsonObject);
+		if (IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.isDefinedIn(jsonObject)) {
+			catchesWithAdditionalSpp = IJsonOption.CATCHES_WITH_ADDITIONAL_SPP.getFrom(source, jsonObject);
+		}
+		if (IJsonOption.GAINED_HATRED.isDefinedIn(jsonObject)) {
+			gainedHatred.addAll(Arrays.stream(IJsonOption.GAINED_HATRED.getFrom(source, jsonObject)).map(Keyword::forName).collect(
+				Collectors.toList()));
+		}
+		landings = IJsonOption.LANDINGS.getFrom(source, jsonObject);
 		return this;
 	}
 

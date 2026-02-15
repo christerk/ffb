@@ -255,8 +255,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseConsummateReRollForBlock(proIndex));
 	}
 
-	public void sendUseSingleBlockDieReRollForBlock(int index) {
-		send(new ClientCommandUseSingleBlockDieReRoll(index));
+	public void sendUseSingleBlockDieReRollForBlock(int index, ReRollSource source) {
+		send(new ClientCommandUseSingleBlockDieReRoll(index, source));
 	}
 
 	public void sendUseMultiBlockDiceReRoll(int[] indexes) {
@@ -303,9 +303,9 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendBlock(String pActingPlayerId, Player<?> pDefender, boolean pUsingStab, boolean usingChainsaw,
-												boolean usingVomit, boolean usingBreatheFire) {
+												boolean usingVomit, boolean usingBreatheFire, boolean usingChomp) {
 		String defenderId = (pDefender != null) ? pDefender.getId() : null;
-		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire));
+		send(new ClientCommandBlock(pActingPlayerId, defenderId, pUsingStab, usingChainsaw, usingVomit, usingBreatheFire, usingChomp));
 	}
 
 	public void sendFoul(String pActingPlayerId, Player<?> pDefender, boolean usingChainsaw) {
@@ -375,8 +375,13 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 			pTeamSetup.getCoordinates()));
 	}
 
-	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType) {
-		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType));
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType, SeriousInjury seriousInjury) {
+		sendUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury, null);
+	}
+
+	public void sendUseApothecary(String pPlayerId, boolean pApothecaryUsed, ApothecaryType apothecaryType, SeriousInjury seriousInjury,
+		PlayerState playerState) {
+		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury, playerState));
 	}
 
 	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
@@ -462,6 +467,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, proIndex, reRollSource));
 	}
 
+	public void sendBlockOrReRollChoiceForTarget(String targetId, int selectedIndex, ReRollSource reRollSource, int proIndex, int[] anyDiceIndexes) {
+		send(new ClientCommandBlockOrReRollChoiceForTarget(targetId, selectedIndex, proIndex, reRollSource, anyDiceIndexes));
+	}
+
 	public void sendPileDriver(String playerId) {
 		send(new ClientCommandPileDriver(playerId));
 	}
@@ -474,6 +483,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseBrawler(targetId));
 	}
 
+	public void sendUseHatred(String targetId) {
+		send(new ClientCommandUseHatred(targetId));
+	}
+
 	public void sendFieldCoordinate(FieldCoordinate fieldCoordinate) {
 		send(new ClientCommandFieldCoordinate(fieldCoordinate));
 	}
@@ -484,6 +497,10 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendSkillSelection(String playerId, Skill skill) {
 		send(new ClientCommandSkillSelection(playerId, skill));
+	}
+
+	public void sendKeywordSelection(String playerId, List<Keyword> keywords) {
+		send(new ClientCommandKeywordSelection(playerId, keywords));
 	}
 
 	public void sendThrowKeg(Player<?> player) {
@@ -548,6 +565,18 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 
 	public void sendPreventFromSketching(String coach, boolean prevent) {
 		send(new ClientCommandSetPreventSketching(coach, prevent));
+	}
+	
+	public void sendPickUpChoice(boolean attemptPickUp) {
+		send(new ClientCommandPickUpChoice(attemptPickUp));
+	}
+
+	public void sendPositionSelection(String[] position, String teamId) {
+		send(new ClientCommandPositionSelection(position, teamId));
+	}
+
+	public void sendPuntToCrowd(boolean puntToCrowd) {
+		send(new ClientCommandPuntToCrowd(puntToCrowd));
 	}
 
 	public FantasyFootballClient getClient() {

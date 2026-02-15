@@ -38,12 +38,14 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 
 	public abstract void registerStates();
 
+	public abstract void registerStatesForRules();
+
 	public ClientState<? extends LogicModule, T> getStateForId(ClientStateId pClientStateId) {
 		return fClientStateById.get(pClientStateId);
 	}
 
 	protected void register(ClientState<? extends LogicModule, T> pClientState) {
-		fClientStateById.put(pClientState.getId(), pClientState);
+		fClientStateById.putIfAbsent(pClientState.getId(), pClientState);
 	}
 
 	public ClientState<? extends LogicModule, T> getStateForGame() {
@@ -109,14 +111,20 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case MOVE:
 								case STAND_UP:
 								case STAND_UP_BLITZ:
+								case SECURE_THE_BALL:
 									clientStateId = ClientStateId.MOVE;
 									break;
 								case BLITZ_MOVE:
 									clientStateId = ClientStateId.BLITZ;
 									break;
+								case BREATHE_FIRE:
 								case BLITZ:
 								case BLOCK:
+								case CHAINSAW:
+								case PROJECTILE_VOMIT:
+								case STAB:
 								case VICIOUS_VINES:
+								case CHOMP:
 									clientStateId = ClientStateId.BLOCK;
 									break;
 								case MULTIPLE_BLOCK:
@@ -135,6 +143,10 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 								case PASS_MOVE:
 								case HAIL_MARY_PASS:
 									clientStateId = ClientStateId.PASS;
+									break;
+								case PUNT:
+								case PUNT_MOVE:
+									clientStateId = ClientStateId.PUNT;
 									break;
 								case THROW_TEAM_MATE:
 								case THROW_TEAM_MATE_MOVE:

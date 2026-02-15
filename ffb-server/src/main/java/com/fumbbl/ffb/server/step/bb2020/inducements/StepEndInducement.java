@@ -17,10 +17,10 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.bb2020.StepCheckStalling;
+import com.fumbbl.ffb.server.step.bb2020.shared.StepCheckStalling;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.EndTurn;
+import com.fumbbl.ffb.server.step.generator.EndTurn;
 import com.fumbbl.ffb.server.step.generator.common.Inducement;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 
@@ -91,7 +91,7 @@ public final class StepEndInducement extends AbstractStep {
         fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
         SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
         EndTurn endTurnGenerator = ((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()));
-        SequenceGenerator.SequenceParams endTurnParams = new SequenceGenerator.SequenceParams(getGameState());
+        EndTurn.SequenceParams endTurnParams = new EndTurn.SequenceParams(getGameState(), false);
         switch (fInducementPhase) {
             case END_OF_OWN_TURN:
             case END_OF_OPPONENT_TURN:

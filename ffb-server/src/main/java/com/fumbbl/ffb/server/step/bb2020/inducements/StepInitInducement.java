@@ -31,8 +31,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.common.Card.SequenceParams;
+import com.fumbbl.ffb.server.step.generator.mixed.Card.SequenceParams;
 import com.fumbbl.ffb.server.step.generator.common.Wizard;
+import com.fumbbl.ffb.server.step.mixed.inducements.StepWeatherMage;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.util.ArrayTool;
 
@@ -141,7 +142,7 @@ public final class StepInitInducement extends AbstractStep {
 			getGameState().getStepStack().push(new StepWeatherMage(getGameState()));
 			leaveStep(false);
 		} else if (fCard != null) {
-			((com.fumbbl.ffb.server.step.generator.common.Card) factory.forName(SequenceGenerator.Type.Card.name()))
+			((com.fumbbl.ffb.server.step.generator.mixed.Card) factory.forName(SequenceGenerator.Type.Card.name()))
 				.pushSequence(new SequenceParams(getGameState(), fCard, fHomeTeam));
 			leaveStep(false);
 		} else {

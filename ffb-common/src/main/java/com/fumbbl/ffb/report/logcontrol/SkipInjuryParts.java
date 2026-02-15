@@ -1,8 +1,13 @@
 package com.fumbbl.ffb.report.logcontrol;
 
 public enum SkipInjuryParts {
-	ARMOUR(true, false), ARMOUR_AND_INJURY(true, true), INJURY(false, true),
-	CAS(false, false, true), NONE(false, false);
+	ARMOUR(true, false),
+	ARMOUR_AND_CAS(true, false, true),
+	ARMOUR_AND_INJURY(true, true),
+	EVERYTHING_BUT_CAS(true, true, false),
+	INJURY(false, true),
+	CAS(false, false, true),
+	NONE(false, false);
 
 	private final boolean armour;
 	private final boolean injury;
@@ -26,6 +31,7 @@ public enum SkipInjuryParts {
 		return injury;
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isCas() {
 		return cas;
 	}
