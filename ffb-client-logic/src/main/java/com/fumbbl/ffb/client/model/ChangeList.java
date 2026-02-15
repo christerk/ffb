@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Hypnotic Gaze: rushing twice would end activation before selecting the target")
 			.addBugfix("Brilliant Coaching: Tied result did give no re-roll to either team")
 			.addImprovement("iron Man: Only players with AV 10+ or less are eligible")
+			.addBugfix("Under Scrutiny: Only triggers for av breaks")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
