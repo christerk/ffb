@@ -213,8 +213,10 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportSteadyFootingRoll(player.getId(), successful, roll, MINMUM_ROLL, reRolled));
 
 		if (successful) {
-			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
-			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
+			if (game.getActingTeam().hasPlayer(player)) {
+				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
+				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
+			}
 			if (removeCatchMode) {
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 			}

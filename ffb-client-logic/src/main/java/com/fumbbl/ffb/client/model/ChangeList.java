@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Stripball: no longer works against Stand Firm/Rooted players")
 			.addBugfix("Master Chef was rolled twice also stealing Leader re-rolls")
 			.addBugfix("Selected kick-off results for overtime did not work")
+			.addBugfix("Steady Footing: Attacker blocks defender with both down, defender uses Steady Footing Successfully while attacker fell down, did not cause a turnover")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
