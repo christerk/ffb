@@ -23,7 +23,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.InducementType;
-import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.model.sketch.Sketch;

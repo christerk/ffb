@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Under Scrutiny: Only triggers for av breaks")
 			.addBugfix("Stripball: no longer works against Stand Firm/Rooted players")
 			.addBugfix("Master Chef was rolled twice also stealing Leader re-rolls")
+			.addBugfix("Selected kick-off results for overtime did not work")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")

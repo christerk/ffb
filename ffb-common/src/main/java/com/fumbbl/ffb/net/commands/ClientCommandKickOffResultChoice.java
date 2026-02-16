@@ -5,7 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.kickoff.bb2020.KickoffResult;
+import com.fumbbl.ffb.kickoff.KickoffResult;
 import com.fumbbl.ffb.net.NetCommandId;
 
 public class ClientCommandKickOffResultChoice extends ClientCommand {
@@ -21,10 +21,6 @@ public class ClientCommandKickOffResultChoice extends ClientCommand {
 
 	public KickoffResult getKickoffResult() {
 		return kickoffResult;
-	}
-
-	public void setKickoffResult(KickoffResult kickoffResult) {
-		this.kickoffResult = kickoffResult;
 	}
 
 	@Override

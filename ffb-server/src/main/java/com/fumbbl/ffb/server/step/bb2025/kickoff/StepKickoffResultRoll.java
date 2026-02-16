@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.kickoff;
+package com.fumbbl.ffb.server.step.bb2025.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -32,7 +32,6 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepKickoffResultRoll extends AbstractStep {
 
@@ -86,9 +85,9 @@ public final class StepKickoffResultRoll extends AbstractStep {
 				rollKickoff = validRolls[index];
 				fKickoffResult = DiceInterpreter.getInstance().interpretRollKickoff(getGameState().getGame(), rollKickoff);
 			} else if (GameOptionString.OVERTIME_KICK_OFF_BLITZ.equals(overTimeKickOffs.getValue())) {
-				fKickoffResult = com.fumbbl.ffb.kickoff.bb2020.KickoffResult.BLITZ;
+				fKickoffResult = com.fumbbl.ffb.kickoff.bb2025.KickoffResult.CHARGE;
 			} else if (GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE.equals(overTimeKickOffs.getValue())) {
-				fKickoffResult = com.fumbbl.ffb.kickoff.bb2020.KickoffResult.SOLID_DEFENCE;
+				fKickoffResult = com.fumbbl.ffb.kickoff.bb2025.KickoffResult.SOLID_DEFENCE;
 			} else {
 				UtilServerDialog.showDialog(getGameState(), new DialogKickOffResultParameter(game.getActingTeam().getId()), false);
 				getResult().setNextAction(StepAction.CONTINUE);
