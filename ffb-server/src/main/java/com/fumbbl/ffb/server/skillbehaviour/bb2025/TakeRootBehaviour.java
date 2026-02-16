@@ -101,6 +101,8 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 					state.pushbackStack.clear();
 					step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+					step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
+					step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 					return true;
 				}
 

@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Brilliant Coaching: Tied result did give no re-roll to either team")
 			.addImprovement("iron Man: Only players with AV 10+ or less are eligible")
 			.addBugfix("Under Scrutiny: Only triggers for av breaks")
+			.addBugfix("Stripball: no longer works against Stand Firm/Rooted players")
 			.addBugfix("Master Chef was rolled twice also stealing Leader re-rolls")
 		);
 
