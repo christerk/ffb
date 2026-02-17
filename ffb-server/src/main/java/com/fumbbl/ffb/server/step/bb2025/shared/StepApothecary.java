@@ -170,6 +170,7 @@ public class StepApothecary extends AbstractStep {
 									true)) {
 									fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+									fInjuryResult.injuryContext().setSeriousInjury(null);
 								} else {
 									ApothecaryStatus newStatus = ApothecaryType.forPlayer(game, player,
 										fInjuryResult.injuryContext().getPlayerState()).isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
@@ -196,6 +197,7 @@ public class StepApothecary extends AbstractStep {
 									true)) {
 									fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 									fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+									fInjuryResult.injuryContext().setSeriousInjury(null);
 								}
 							}
 						}
@@ -278,6 +280,7 @@ public class StepApothecary extends AbstractStep {
 				if (UtilServerInjury.handleRegeneration(this, player, playerState)) {
 					fInjuryResult.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
 					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+					fInjuryResult.injuryContext().setSeriousInjury(null);
 					fInjuryResult.passedRegeneration();
 				} else {
 					Optional<InducementType> inducementType = regenerationInducementType();
