@@ -33,6 +33,8 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.ThrowTeamMate;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @RulesCollection(Rules.BB2025)
@@ -100,13 +102,16 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 						return true;
 					}
 
-					if (successful) {
+					if (state.passResult == PassResult.ACCURATE ) {
 						handlePassResult(state.passResult, step);
 					} else {
 						if (step.getReRolledAction() != rerolledAction && playerCanPass) {
 							step.setReRolledAction(rerolledAction);
-							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), actingPlayer,
-								rerolledAction, minimumRoll, false)) {
+							int superbTarget = thrower.getPassingWithModifiers() + ttmMechanic.modifierSum(passingDistance, passModifiers);
+							List<String> messages = buildTtmRerollMessage(thrower, superbTarget, state.passResult);
+
+							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), thrower, rerolledAction,
+									minimumRoll, false, null, null, null, null, messages)) {
 								handlePassResult(state.passResult, step);
 							}
 						} else {
@@ -140,6 +145,19 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 				} else {
 					return PassResult.INACCURATE;
 				}
+			}
+
+			private List<String> buildTtmRerollMessage(Player<?> thrower, int superbTarget, PassResult passResult) {
+				if (passResult != PassResult.INACCURATE) {
+					return null; // fumble uses default reroll dialog text
+				}
+
+				String targetText = superbTarget > 6 ? "a natural 6" : superbTarget + "+";
+				String text = thrower.hasSkillProperty(NamedProperties.canSkipTtmScatterOnSuperbThrow)
+					? "This is a Subpar result. Re-roll needed: " + targetText + " for a Superb result and to trigger Bullseye."
+					: "This is a Subpar result. Re-roll for a chance at a Superb result (" + targetText + ", SPP and easier landing).";
+
+				return Collections.singletonList(text);
 			}
 		});
 	}
