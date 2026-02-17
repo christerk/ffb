@@ -191,12 +191,15 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				case CLIENT_PLAYER_CHOICE:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						ClientCommandPlayerChoice commandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-						if (TurnMode.SOLID_DEFENCE == getGameState().getGame().getTurnMode() ||
+						if (commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.SOLID_DEFENCE ||
 							commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.CHARGE) {
 							Arrays.stream(commandPlayerChoice.getPlayerIds()).map(id -> getGameState().getGame().getPlayerById(id))
 								.forEach(selectedPlayers::add);
 							if (selectedPlayers.stream().anyMatch(player -> !eligiblePlayers.contains(player))) {
 								throw new FantasyFootballException("Client selected player that is not eligible");
+							}
+							if (commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.SOLID_DEFENCE) {
+								getGameState().getGame().setTurnMode(TurnMode.SOLID_DEFENCE);
 							}
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -339,7 +342,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			if (eligiblePlayers.isEmpty()) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
-				game.setTurnMode(TurnMode.SOLID_DEFENCE);
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(actingTeam.getId(), PlayerChoiceMode.SOLID_DEFENCE,
 						eligiblePlayers.toArray(new Player[0]), null, nrOfPlayersAllowed), false);

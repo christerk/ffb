@@ -19,11 +19,12 @@ public class ChangeList {
 			.addBugfix("Brilliant Coaching: Tied result did give no re-roll to either team")
 			.addImprovement("iron Man: Only players with AV 10+ or less are eligible")
 			.addBugfix("Under Scrutiny: Only triggers for av breaks")
-			.addBugfix("Stripball: no longer works against Stand Firm/Rooted players")
+			.addBugfix("Strip Ball: no longer works against Stand Firm/Rooted players")
 			.addBugfix("Master Chef was rolled twice also stealing Leader re-rolls")
 			.addBugfix("Selected kick-off results for overtime did not work")
 			.addBugfix("Steady Footing: Attacker blocks defender with both down, defender uses Steady Footing Successfully while attacker fell down, did not cause a turnover")
 			.addImprovement("TTM and KTM: reroll choice for Subpar results")
+			.addBugfix("Solid Defence: During player selection it was able to move players around")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
