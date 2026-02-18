@@ -26,6 +26,7 @@ public class ChangeList {
 			.addImprovement("TTM and KTM: reroll choice for Subpar results")
 			.addBugfix("Solid Defence: During player selection it was able to move players around")
 			.addBugfix("Permanent injuries were not removed by regeneration")
+			.addBugfix("Charge: During kickoff blitz, Dodge and Rush skill re-rolls were not available")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
