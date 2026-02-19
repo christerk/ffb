@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
@@ -238,9 +239,9 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 		} else {
 			if (getReRolledAction() != ReRolledActions.RUSH) {
 				setReRolledAction(ReRolledActions.RUSH);
-				ReRollSource gfiRerollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.RUSH);
+				ReRollSource gfiRerollSource = findSkillReRollSource(ReRolledActions.RUSH);
 
-				if (TurnMode.REGULAR == game.getTurnMode() && gfiRerollSource != null) {
+				if (gfiRerollSource != null) {
 					if (usingModifierIgnoringSkill == null && skill != null) {
 						setReRolledAction(null);
 						UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), skill, 0), false);
@@ -252,9 +253,6 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 					return rush();
 				} else {
 					Set<Skill> ignore = new HashSet<>();
-					if (gfiRerollSource != null) {
-						UtilCards.getSkillForReRollSource(actingPlayer.getPlayer(), gfiRerollSource, ReRolledActions.RUSH).ifPresent(ignore::add);
-					}
 					if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer,
 						ReRolledActions.RUSH, minimumRoll, false, skill, ignore)) {
 						return ActionStatus.WAITING_FOR_RE_ROLL;
@@ -269,6 +267,16 @@ public class StepGoForIt extends AbstractStepWithReRoll {
 				return ActionStatus.FAILURE;
 			}
 		}
+	}
+
+	@Override
+	protected ReRollSource findSkillReRollSource(ReRolledAction reRolledAction) {
+		Game game = getGameState().getGame();
+		ReRollSource skillRerollSource = null;
+		if (TurnMode.REGULAR == game.getTurnMode() || game.getTurnMode() == TurnMode.BLITZ) {
+			skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), reRolledAction);
+		}
+		return skillRerollSource;
 	}
 
 	// JSON serialization

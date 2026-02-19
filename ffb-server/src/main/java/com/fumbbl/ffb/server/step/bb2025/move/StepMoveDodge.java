@@ -7,9 +7,11 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
@@ -567,6 +569,16 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 		return source;
+	}
+
+	@Override
+	protected ReRollSource findSkillReRollSource(ReRolledAction reRolledAction) {
+		Game game = getGameState().getGame();
+		ReRollSource skillRerollSource = null;
+		if (TurnMode.REGULAR == game.getTurnMode() || game.getTurnMode() == TurnMode.BLITZ) {
+			skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), reRolledAction);
+		}
+		return skillRerollSource;
 	}
 
 	// JSON serialization
