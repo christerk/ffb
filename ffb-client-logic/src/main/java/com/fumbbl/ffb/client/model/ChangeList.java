@@ -27,7 +27,7 @@ public class ChangeList {
 			.addBugfix("Solid Defence: During player selection it was able to move players around")
 			.addBugfix("Permanent injuries were not removed by regeneration")
 			.addBugfix("Hypnotic Gaze + Bloodlust: prone players now can move/feed after failed Bloodlust instead of auto-gazing and ending activation")
-			.addBugfix("Fixen wording for \"Under Scrutiny\"")
+			.addBugfix("Fixed wording for \"Under Scrutiny\"")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
