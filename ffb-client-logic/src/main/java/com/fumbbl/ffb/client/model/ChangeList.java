@@ -30,6 +30,7 @@ public class ChangeList {
 			.addBugfix("Hypnotic Gaze + Bloodlust: prone players now can move/feed after failed Bloodlust instead of auto-gazing and ending activation")
 			.addBugfix("Fixed wording for \"Under Scrutiny\"")
 			.addImprovement("Add strip ball cancel message")
+			.addBugfix("Chomped state was not removed if chomper blocked chompee and rolled a skull")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
