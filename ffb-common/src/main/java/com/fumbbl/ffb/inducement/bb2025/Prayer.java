@@ -116,7 +116,7 @@ public enum Prayer implements com.fumbbl.ffb.inducement.Prayer {
 	THROW_A_ROCK("Throw a Rock",
 		"Once a game at the start of any turn, a randomly selected opponent on the pitch gets knocked down on a 4+",
 		InducementDuration.UNTIL_END_OF_GAME),
-	UNDER_SCRUTINY("Under Scrutiny", "Fouls by opposing players are always spotted",
+	UNDER_SCRUTINY("Under Scrutiny", "Fouls by opposing players are always spotted if armour is broken",
 		InducementDuration.UNTIL_END_OF_GAME), INTENSIVE_TRAINING("Intensive Training",
 		"One random player available to play this game gains a chosen Primary skill",
 		InducementDuration.UNTIL_END_OF_GAME, false, true);

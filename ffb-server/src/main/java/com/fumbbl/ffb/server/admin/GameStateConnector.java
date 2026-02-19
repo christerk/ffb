@@ -105,7 +105,7 @@ public class GameStateConnector {
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
 				System.out.println(servletResponse);
 			} else if (GameStateServlet.RESET.equals(args[0])) {
-				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_RESULT.url(serverProperties),
+				String url = StringTool.bind(ServerUrlProperty.GAMESTATE_URL_RESET.url(serverProperties),
 					response, args[1]);
 				System.out.println(url);
 				String servletResponse = UtilServerHttpClient.fetchPage(url);
