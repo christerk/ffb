@@ -11,6 +11,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
+import com.fumbbl.ffb.report.mixed.ReportEvent;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -72,6 +73,7 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 						step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
 						step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 						step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
+						step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is standing firm."));
 					}
 
 					return true;

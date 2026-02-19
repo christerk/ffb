@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
+import com.fumbbl.ffb.report.mixed.ReportEvent;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -103,6 +104,7 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 					step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
 					step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
 					step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+					step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is rooted."));
 					return true;
 				}
 

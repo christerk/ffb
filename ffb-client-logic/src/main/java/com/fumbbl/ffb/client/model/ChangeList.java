@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("Charge: During kickoff blitz, Dodge and Rush skill re-rolls were not available")
 			.addBugfix("Hypnotic Gaze + Bloodlust: prone players now can move/feed after failed Bloodlust instead of auto-gazing and ending activation")
 			.addBugfix("Fixed wording for \"Under Scrutiny\"")
+			.addImprovement("Add strip ball cancel message")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
