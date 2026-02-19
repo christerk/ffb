@@ -134,7 +134,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 		return game.getTurnMode() == TurnMode.SETUP && Arrays.stream(team.getPlayers())
 			.map(player -> game.getFieldModel().getPlayerState(player))
 			.filter(PlayerState::canBeSetUpNextDrive)
-			.count() <= 3;
+			.count() < 3;
 	}
 
 	@Override
