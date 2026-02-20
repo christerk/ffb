@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.end;
+package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -29,7 +29,6 @@ import java.util.List;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepPlayerLoss extends AbstractStep {
 
 	public StepPlayerLoss(GameState pGameState) {
@@ -73,7 +72,7 @@ public final class StepPlayerLoss extends AbstractStep {
 					playerResult.setDefecting(playerDefecting);
 				}
 			}
-			if (defectingPlayerIds.size() > 0) {
+			if (!defectingPlayerIds.isEmpty()) {
 				getResult()
 						.addReport(new ReportDefectingPlayers(defectingPlayerIds.toArray(new String[0]),
 								ArrayTool.toIntArray(defectingRolls), ArrayTool.toBooleanArray(defectingFlags)));
