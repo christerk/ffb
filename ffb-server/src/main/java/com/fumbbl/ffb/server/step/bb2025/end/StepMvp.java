@@ -107,9 +107,11 @@ public final class StepMvp extends AbstractStep {
 			}
 			if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
 				fNrOfHomeMvps = 0;
+				fNrOfAwayMvps++;
 			}
 			if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
 				fNrOfAwayMvps = 0;
+				fNrOfHomeMvps++;
 			}
 		}
 
