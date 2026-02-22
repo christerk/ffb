@@ -47,6 +47,7 @@ public class FumbblResult implements IXmlWriteable {
 
 	private static final String _XML_TAG_SCORE = "score";
 	private static final String _XML_TAG_CONCEDED = "conceded";
+	private static final String _XML_TAG_CONCEDED_LEGALLY = "concededLegally";
 	private static final String _XML_TAG_STALLED = "stalled";
 	private static final String _XML_TAG_FAME = "fame";
 	private static final String _XML_TAG_SPECTATORS = "spectators";
@@ -164,6 +165,9 @@ public class FumbblResult implements IXmlWriteable {
 
 			UtilXml.addValueElement(pHandler, _XML_TAG_SCORE, pTeamResult.getScore());
 			UtilXml.addValueElement(pHandler, _XML_TAG_CONCEDED, pTeamResult.hasConceded());
+			if (pTeamResult.hasConceded()) {
+				UtilXml.addValueElement(pHandler, _XML_TAG_CONCEDED_LEGALLY, getGame().isConcededLegally());
+			}
 			UtilXml.addValueElement(pHandler, _XML_TAG_STALLED, pTeamResult.hasStalled());
 			if (pTeamResult.getPenaltyScore() >= 0) {
 				UtilXml.addValueElement(pHandler, _XML_TAG_PENALTY_SCORE, pTeamResult.getPenaltyScore());

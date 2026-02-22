@@ -42,11 +42,12 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			messages[0] = "Do you want to concede this game?";
 			messages[1] = "The concession will have no negative consequences at this point.";
 		} else {
-			messages = new String[4];
+			messages = new String[5];
 			messages[0] = "Do you want to concede this game?";
 			messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
 			messages[2] = "You will lose your player award and all your winnings.";
 			messages[3] = "Some valuable players (3 or more advancements) may decide to leave your team.";
+			messages[4] = "You will loose all SPP earned during this game";
 		}
 		return messages;
 	}
