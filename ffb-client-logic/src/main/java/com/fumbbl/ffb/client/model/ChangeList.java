@@ -35,6 +35,7 @@ public class ChangeList {
 			.addBugfix("Dauntless has to be handled before horns")
 			.addBugfix("Support multiple cheering fans assist per team")
 			.addBugfix("Ensure only players in reserves can be selected for prayers")
+			.addFeature("Support icon set index for player icons")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
