@@ -541,6 +541,14 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
 		}
 
+		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		if (attacker.hasSkillProperty(NamedProperties.addStrengthOnBlitz)
+			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
+			blockStrengthAttacker++;
+		}
+
 		blockStrengthAttacker =
 			ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
 
@@ -569,19 +577,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 		if (isMultiBlock) {
 			strength += multiBlockAttackerModifier();
-		}
-
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ ||
-			actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-			&& actingPlayer.hasMoved() && defender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
-			strength--;
-		}
-
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.addStrengthOnBlitz)
-			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
-			strength++;
 		}
 
 		return Math.max(strength, 1);
