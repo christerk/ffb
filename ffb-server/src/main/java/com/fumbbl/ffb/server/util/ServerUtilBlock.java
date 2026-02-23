@@ -19,7 +19,6 @@ import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.Set;
 
 public class ServerUtilBlock {
 
@@ -122,31 +121,6 @@ public class ServerUtilBlock {
 		}
 	}
 
-	public static int getAttackerStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock) {
-		int strength = attacker.getStrengthWithModifiers();
-
-		if (isMultiBlock) {
-			RollMechanic mechanic =
-				(RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
-			strength += mechanic.multiBlockAttackerModifier();
-		}
-
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ ||
-			actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
-			&& actingPlayer.hasMoved() && defender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
-			strength--;
-		}
-
-		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.addStrengthOnBlitz)
-			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
-			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
-			strength++;
-		}
-
-		return Math.max(strength, 1);
-	}
-
 	public static int findNrOfBlockDice(GameState gameState, Player<?> attacker, Player<?> defender,
 		boolean usingMultiBlock, boolean successfulDauntless) {
 
@@ -165,36 +139,12 @@ public class ServerUtilBlock {
 			RollMechanic mechanic =
 				(RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
 
-			int blockStrengthAttacker = getAttackerStrength(game, attacker, defender, usingMultiBlock);
 			int defenderStrength = defender.getStrengthWithModifiers();
 			if (usingMultiBlock) {
 				defenderStrength += mechanic.multiBlockDefenderModifier();
 			}
-
-			if (successfulDauntless) {
-				blockStrengthAttacker =
-					Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
-			}
-
-			blockStrengthAttacker =
-				ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
-
-
-			Set<String> multiBlockTargets = gameState.getGame().getMultiBlockTargets();
-			// add additional assist when:
-			// - effect is present
-			// - either no multi block
-			// - or no multiblock target yet selected (we are only showing decorations)
-			// - or only this player is selected (also showing decorations but keep the assist for the "first" target)
-			// - or two multiblock targets are selected
-			//
-			// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
-			// is removed after the "first" block
-			if (gameState.hasAdditionalAssist(game.getActingTeam().getId()) && (
-				!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
-					multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
-				blockStrengthAttacker += 1;
-			}
+			int blockStrengthAttacker = mechanic.getTotalAttackerStrength(gameState, attacker, defender, usingMultiBlock, successfulDauntless, doubleTargetStrength,
+				defenderStrength);
 
 			int blockStrengthDefender =
 				ServerUtilPlayer.findBlockStrength(game, defender, defenderStrength, attacker, usingMultiBlock);

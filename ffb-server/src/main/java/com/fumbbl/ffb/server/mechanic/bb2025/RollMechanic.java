@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.LeaderState;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
@@ -37,6 +38,7 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.util.ServerUtilPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.util.UtilCards;
@@ -528,5 +530,60 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return Optional.empty();
 	}
 
+	@Override
+	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender, boolean usingMultiBlock,
+		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength) {
+		Game game = gameState.getGame();
+		int blockStrengthAttacker = getAttackerBaseStrength(game, attacker, defender, usingMultiBlock);
 
+		if (successfulDauntless) {
+			blockStrengthAttacker =
+				Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
+		}
+
+		blockStrengthAttacker =
+			ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
+
+
+		Set<String> multiBlockTargets = gameState.getGame().getMultiBlockTargets();
+		// add additional assist when:
+		// - effect is present
+		// - either no multi block
+		// - or no multiblock target yet selected (we are only showing decorations)
+		// - or only this player is selected (also showing decorations but keep the assist for the "first" target)
+		// - or two multiblock targets are selected
+		//
+		// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
+		// is removed after the "first" block
+		if (gameState.hasAdditionalAssist(game.getActingTeam().getId()) && (
+			!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
+				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
+			blockStrengthAttacker += 1;
+		}
+		return blockStrengthAttacker;
+	}
+
+	@Override
+	public int getAttackerBaseStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock) {
+		int strength = attacker.getStrengthWithModifiers();
+
+		if (isMultiBlock) {
+			strength += multiBlockAttackerModifier();
+		}
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ ||
+			actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
+			&& actingPlayer.hasMoved() && defender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
+			strength--;
+		}
+
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.addStrengthOnBlitz)
+			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
+			strength++;
+		}
+
+		return Math.max(strength, 1);
+	}
 }

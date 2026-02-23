@@ -104,4 +104,8 @@ public abstract class RollMechanic implements Mechanic {
 			&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
 	}
 
+	public abstract int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender, boolean usingMultiBlock,
+		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength);
+
+	public abstract int getAttackerBaseStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock);
 }
