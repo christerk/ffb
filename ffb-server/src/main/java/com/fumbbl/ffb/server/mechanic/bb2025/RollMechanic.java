@@ -44,6 +44,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +52,14 @@ import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
+
+	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
+		add(TurnMode.KICKOFF);
+		add(TurnMode.PASS_BLOCK);
+		add(TurnMode.DUMP_OFF);
+		add(TurnMode.QUICK_SNAP);
+		add(TurnMode.BETWEEN_TURNS);
+	}};
 
 	private static final int MASCOT_MINIMUM_ROLL = 4;
 	private static final int TEAM_CAPTAIN_MINIMUM_ROLL = 6;
@@ -470,7 +479,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return true;
+		return !modesProhibitingReRolls.contains(turnMode);
 	}
 
 
