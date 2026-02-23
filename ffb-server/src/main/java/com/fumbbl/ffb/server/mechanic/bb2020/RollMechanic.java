@@ -390,21 +390,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
 
 
-		Set<String> multiBlockTargets = gameState.getGame().getMultiBlockTargets();
-		// add additional assist when:
-		// - effect is present
-		// - either no multi block
-		// - or no multiblock target yet selected (we are only showing decorations)
-		// - or only this player is selected (also showing decorations but keep the assist for the "first" target)
-		// - or two multiblock targets are selected
-		//
-		// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
-		// is removed after the "first" block
-		if (gameState.hasAdditionalAssist(game.getActingTeam().getId()) && (
-			!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
-				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
-			blockStrengthAttacker += 1;
-		}
 		return blockStrengthAttacker;
 	}
 

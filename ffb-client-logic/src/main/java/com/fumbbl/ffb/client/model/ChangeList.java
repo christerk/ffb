@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Chomped state was not removed if chomper blocked chompee and rolled a skull")
 			.addFeature("Implement concession rules")
 			.addBugfix("Dauntless has to be handled before horns")
+			.addBugfix("Support multiple cheering fans assist per team")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")

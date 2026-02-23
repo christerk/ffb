@@ -360,8 +360,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.setTeamIdsAdditionalAssist(teamIdsAdditionalAssist);
 	}
 
-	public boolean hasAdditionalAssist(String teamId) {
-		return activeEffects.getTeamIdsAdditionalAssist().contains(teamId);
+	public int getAdditionalAssist(String teamId) {
+		return (int) activeEffects.getTeamIdsAdditionalAssist().stream().filter(val -> val.equals(teamId)).count();
 	}
 
 	public void removeAdditionalAssist(String teamId) {

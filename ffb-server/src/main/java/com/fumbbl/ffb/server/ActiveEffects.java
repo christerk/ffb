@@ -9,7 +9,6 @@ import com.fumbbl.ffb.json.UtilJson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ public class ActiveEffects implements IJsonSerializable {
 
 	private Weather oldWeather;
 	private boolean skipRestoreWeather, stalling;
-	private final Set<String> teamIdsAdditionalAssist = new HashSet<>();
+	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
 
 	public Weather getOldWeather() {
@@ -40,12 +39,12 @@ public class ActiveEffects implements IJsonSerializable {
 		this.teamIdsAdditionalAssist.addAll(teamIdsAdditionalAssist);
 	}
 
-	public Set<String> getTeamIdsAdditionalAssist() {
+	public List<String> getTeamIdsAdditionalAssist() {
 		return teamIdsAdditionalAssist;
 	}
 
 	public void removeAdditionalAssist(String teamId) {
-		teamIdsAdditionalAssist.remove(teamId);
+		teamIdsAdditionalAssist.removeIf(val -> val.equals(teamId));
 	}
 
 	public boolean isStalling() {

@@ -554,6 +554,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 
 		Set<String> multiBlockTargets = gameState.getGame().getMultiBlockTargets();
+		int additionalAssists = gameState.getAdditionalAssist(game.getActingTeam().getId());
 		// add additional assist when:
 		// - effect is present
 		// - either no multi block
@@ -563,10 +564,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		//
 		// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
 		// is removed after the "first" block
-		if (gameState.hasAdditionalAssist(game.getActingTeam().getId()) && (
-			!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
-				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId()))) {
-			blockStrengthAttacker += 1;
+		if (!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
+				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId())) {
+			blockStrengthAttacker += additionalAssists;
 		}
 		return blockStrengthAttacker;
 	}
