@@ -242,7 +242,7 @@ public class UtilServerStartGame {
 			prayerMax.setValue(3);
 			game.getOptions().addOption(prayerMax);
 			GameOptionInt prayerCost = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_COST);
-			prayerCost.setValue(10000);
+			prayerCost.setValue(30000);
 			game.getOptions().addOption(prayerCost);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
@@ -304,6 +304,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean kick = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ASK_FOR_KICK_AFTER_ROLL);
 			kick.setValue(true);
 			//game.getOptions().addOption(kick);
+			GameOptionBoolean treasuryToPetty = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.FORCE_TREASURY_TO_PETTY_CASH);
+			treasuryToPetty.setValue(false);
+			game.getOptions().addOption(treasuryToPetty);
+			GameOptionBoolean pettyTopTv = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.PETTY_CASH_AFFECTS_TV);
+			pettyTopTv.setValue(true);
+			game.getOptions().addOption(pettyTopTv);
 		}
 	}
 
