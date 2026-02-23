@@ -34,6 +34,7 @@ public class ChangeList {
 			.addFeature("Implement concession rules")
 			.addBugfix("Dauntless has to be handled before horns")
 			.addBugfix("Support multiple cheering fans assist per team")
+			.addBugfix("Ensure only players in reserves can be selected for prayers")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
