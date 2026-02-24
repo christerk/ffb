@@ -884,7 +884,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		movedPlayer = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		nrOfMovedPlayers = IServerJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
-		Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject))
+		Arrays.stream(IServerJsonOption.PLAYER_IDS_SELECTED.getFrom(source, jsonObject))
 			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(selectedPlayers::add);
 		Arrays.stream(IServerJsonOption.ELIGIBLE_PLAYER_IDS.getFrom(source, jsonObject))
 			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(eligiblePlayers::add);

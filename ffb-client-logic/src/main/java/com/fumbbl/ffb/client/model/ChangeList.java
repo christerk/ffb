@@ -10,6 +10,10 @@ public class ChangeList {
 
 	public ChangeList() {
 
+		versions.add(new VersionChangeList("3.1.1")
+			.addBugfix("Reloading during kick off sequence was broken")
+		);
+
 		versions.add(new VersionChangeList("3.1.0")
 			.addBugfix("Stalling: No stalling did not grant cash bonus")
 			.addImprovement("Stalling: On turn 7+ do not roll for stalling")
