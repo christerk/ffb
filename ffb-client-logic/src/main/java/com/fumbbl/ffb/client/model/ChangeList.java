@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Steady Footing after being pushed on ball did not bounce the ball")
 			.addBugfix("Hypnotic Gaze triggers Foul Appearance")
 			.addBugfix("Black Ink and Zoat Gaze are only available if non-distracted players are in range")
+			.addBugfix("Punt was not available when rushes were exhausted")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")
