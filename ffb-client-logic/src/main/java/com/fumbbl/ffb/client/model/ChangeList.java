@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("3.1.1")
 			.addBugfix("Reloading during kick off sequence was broken")
+			.addBugfix("Steady Footing after being pushed on ball did not bounce the ball")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")

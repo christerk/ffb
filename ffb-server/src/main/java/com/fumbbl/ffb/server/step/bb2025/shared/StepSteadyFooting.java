@@ -120,6 +120,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					return true;
 				}
 				break;
+			case PUSHED_ON_BALL:
 			case BALL_KNOCKED_LOSE:
 				removeCatchMode = !toPrimitive((Boolean) parameter.getValue());
 				consume(parameter);
