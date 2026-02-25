@@ -39,6 +39,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlackInk extends AbstractStep {
@@ -187,7 +188,8 @@ public class StepBlackInk extends AbstractStep {
 		FieldModel fieldModel = game.getFieldModel();
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 
-		return Arrays.asList(UtilPlayer.findAdjacentStandingOrPronePlayers(game, game.getOtherTeam(game.getActingTeam()), playerCoordinate));
+		return Arrays.stream(UtilPlayer.findAdjacentStandingOrPronePlayers(game, game.getOtherTeam(game.getActingTeam()), playerCoordinate))
+			.filter(opponent -> !fieldModel.getPlayerState(opponent).isDistracted()).collect(Collectors.toList());
 	}
 
 
