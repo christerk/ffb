@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Hypnotic Gaze triggers Foul Appearance")
 			.addBugfix("Black Ink and Zoat Gaze are only available if non-distracted players are in range")
 			.addBugfix("Punt was not available when rushes were exhausted")
+			.addBugfix("High Kick with no open players did not skip sequence")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")

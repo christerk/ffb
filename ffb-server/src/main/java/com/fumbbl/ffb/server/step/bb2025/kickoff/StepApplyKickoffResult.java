@@ -396,6 +396,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private void handleHighKick() {
 		Game game = getGameState().getGame();
+		boolean skip = false;
 		if (game.getTurnMode() == TurnMode.HIGH_KICK) {
 			if (fEndKickoff) {
 				game.setHomePlaying(!game.isHomePlaying());
@@ -411,13 +412,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				game.setTurnMode(TurnMode.HIGH_KICK);
 				MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
 				SetupMechanic mechanic = (SetupMechanic) factory.forName(Mechanic.Type.SETUP.name());
-				if (game.isHomePlaying()) {
-					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamHome());
-				} else {
-					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamAway());
-				}
+				mechanic.pinPlayersInTacklezones(getGameState(), game.getActingTeam());
+				skip = Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive());
 			}
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_HIGH_KICK));
+			if (skip) {
+				UtilServerGame.syncGameModel(this);
+				game.setHomePlaying(!game.isHomePlaying());
+				game.setTurnMode(TurnMode.KICKOFF);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
 		}
 	}
 
