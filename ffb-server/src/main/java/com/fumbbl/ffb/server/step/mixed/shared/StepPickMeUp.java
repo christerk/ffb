@@ -55,7 +55,8 @@ public class StepPickMeUp extends AbstractStep {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
+			pReceivedCommand.getId() == NetCommandId.CLIENT_PLAYER_CHOICE) {
 			ClientCommandPlayerChoice playerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 
 			String[] selected = playerChoice.getPlayerIds();
@@ -82,20 +83,22 @@ public class StepPickMeUp extends AbstractStep {
 	}
 
 	private void executeStep() {
-		if (firstRun && UtilServerSteps.checkTouchdown(getGameState())) {
+		Game game = getGameState().getGame();
+		if (firstRun && (UtilServerSteps.checkTouchdown(getGameState()) ||
+			(game.getTurnDataHome().getTurnNr() == 8 && game.getTurnDataAway().getTurnNr() == 8))) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 		UtilServerDialog.hideDialog(getGameState());
-		Game game = getGameState().getGame();
 		Team team = game.getOtherTeam(game.getActingTeam());
-		List<Player<?>> pickMeUpPlayers = Arrays.asList(UtilPlayer.findPlayersOnPitchWithProperty(game, team, NamedProperties.canStandUpTeamMates));
+		List<Player<?>> pickMeUpPlayers =
+			Arrays.asList(UtilPlayer.findPlayersOnPitchWithProperty(game, team, NamedProperties.canStandUpTeamMates));
 		FieldModel fieldModel = game.getFieldModel();
 		if (firstRun) {
 			playerIds.addAll(pickMeUpPlayers.stream().filter(player -> fieldModel.getPlayerState(player).hasTacklezones())
 				.flatMap(player -> Arrays.stream(team.getPlayers()).filter(teamMate -> {
-					FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(teamMate);
-					PlayerState playerState = fieldModel.getPlayerState(teamMate);
+						FieldCoordinate coordinate = fieldModel.getPlayerCoordinate(teamMate);
+						PlayerState playerState = fieldModel.getPlayerState(teamMate);
 						return coordinate != null && !coordinate.isBoxCoordinate()
 							&& playerState.getBase() == PlayerState.PRONE
 							&& coordinate.distanceInSteps(fieldModel.getPlayerCoordinate(player)) <= 3;
@@ -121,7 +124,8 @@ public class StepPickMeUp extends AbstractStep {
 		}
 
 		UtilServerDialog.showDialog(getGameState(),
-			new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.PICK_ME_UP, playerIds.toArray(new String[0]), null, playerIds.size(), 0), false);
+			new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.PICK_ME_UP, playerIds.toArray(new String[0]), null,
+				playerIds.size(), 0), false);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Black Ink and Zoat Gaze are only available if non-distracted players are in range")
 			.addBugfix("Punt was not available when rushes were exhausted")
 			.addBugfix("High Kick with no open players did not skip sequence")
+			.addImprovement("Skip Pick Me Up in last turn of half")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")
