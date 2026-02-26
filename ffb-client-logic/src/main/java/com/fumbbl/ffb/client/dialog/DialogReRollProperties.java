@@ -334,7 +334,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 	private void determineTeamReRollSource() {
 		if (willUseMascot) {
-			if (fallbackToTrr.isSelected()) {
+			if (fallbackToTrr != null && fallbackToTrr.isSelected()) {
 				fReRollSource = ReRollSources.MASCOT_TRR;
 			} else {
 				fReRollSource = ReRollSources.MASCOT;

@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Punt was not available when rushes were exhausted")
 			.addBugfix("High Kick with no open players did not skip sequence")
 			.addImprovement("Skip Pick Me Up in last turn of half")
+			.addBugfix("When Mascot re-roll was available without a team re-roll regular re-roll dialog did not react to mascot button and block dialog did not offer mascot")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")

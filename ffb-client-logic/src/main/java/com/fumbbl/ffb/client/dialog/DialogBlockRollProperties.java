@@ -58,7 +58,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final Map<ReRolledAction, ReRollSource> actionToSource;
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
-	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter dialogParameter, Map<ReRolledAction, ReRollSource> actionToSource) {
+	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter dialogParameter,
+		Map<ReRolledAction, ReRollSource> actionToSource) {
 
 		super(pClient, "Block Roll", false);
 
@@ -200,25 +201,23 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		reRollPanel.add(verticalGlue1);
 		reRollPanel.setOpaque(false);
 
-		if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
-			if (willUseMascot) {
-				JPanel mascotPanel = new JPanel();
-				mascotPanel.setBackground(null);
-				mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
-				mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-				mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-				fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
-				mascotPanel.add(fButtonTeamReRoll);
-				mascotPanel.setOpaque(false);
-				if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-					fallbackToTrr = mascotExtension.checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE, dimensionProvider(),
-						this, this);
-					mascotPanel.add(fallbackToTrr);
-				}
-				reRollPanel.add(mascotPanel);
-			} else {
-				reRollPanel.add(mascotExtension.wrapperPanel(fButtonTeamReRoll));
+		if (willUseMascot) {
+			JPanel mascotPanel = new JPanel();
+			mascotPanel.setBackground(null);
+			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
+			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
+			mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
+			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
+			mascotPanel.add(fButtonTeamReRoll);
+			mascotPanel.setOpaque(false);
+			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+				fallbackToTrr = mascotExtension.checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE, dimensionProvider(),
+					this, this);
+				mascotPanel.add(fallbackToTrr);
 			}
+			reRollPanel.add(mascotPanel);
+		} else if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
+			reRollPanel.add(mascotExtension.wrapperPanel(fButtonTeamReRoll));
 		}
 
 		if (getDialogParameter().getNrOfDice() == 1) {
