@@ -20,6 +20,7 @@ public class ChangeList {
 			.addImprovement("Skip Pick Me Up in last turn of half")
 			.addBugfix("When Mascot re-roll was available without a team re-roll regular re-roll dialog did not react to mascot button and block dialog did not offer mascot")
 			.addBugfix("Sprint was not considered when calculating blitz range")
+			.addBugfix("B&C could perform Multi Block if skill was present")
 		);
 
 		versions.add(new VersionChangeList("3.1.0")

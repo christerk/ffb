@@ -312,7 +312,7 @@ public abstract class LogicModule {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& playerState.isActive()
+			&& playerState.isActive() && !player.hasSkillProperty(NamedProperties.preventRegularBlockAction)
 			&& ((UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockMoreThanOnce)
 			&& !UtilCards.hasSkillToCancelProperty(player, NamedProperties.canBlockMoreThanOnce))
 			|| (UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockTwoAtOnce)
