@@ -20,10 +20,6 @@ public abstract class InjuryType implements INamedObject {
 		sendToBoxReason = pSendToBoxReason;
 	}
 
-	public InjuryType injuryType() {
-		return this;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -77,6 +73,10 @@ public abstract class InjuryType implements INamedObject {
 	}
 
 	public boolean isBlock() {
+		return false;
+	}
+
+	public boolean isBallAndChain() {
 		return false;
 	}
 

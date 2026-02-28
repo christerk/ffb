@@ -173,14 +173,16 @@ public class StepApothecary extends AbstractStep {
 									fInjuryResult.injuryContext().setSeriousInjury(null);
 								} else {
 									ApothecaryStatus newStatus = ApothecaryType.forPlayer(game, player,
-										fInjuryResult.injuryContext().getPlayerState()).isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
+											fInjuryResult.injuryContext().getPlayerState())
+										.isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
 									fInjuryResult.injuryContext().setApothecaryStatus(newStatus);
 								}
 							}
 							fInjuryResult.passedRegeneration();
 						} else if (inducementType == null) {
 							ApothecaryStatus newStatus = ApothecaryType.forPlayer(game, player,
-								fInjuryResult.injuryContext().getPlayerState()).isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
+									fInjuryResult.injuryContext().getPlayerState())
+								.isEmpty() ? ApothecaryStatus.NO_APOTHECARY : ApothecaryStatus.DO_REQUEST;
 							fInjuryResult.injuryContext().setApothecaryStatus(newStatus);
 							fInjuryResult.passedRegeneration();
 						}
@@ -246,7 +248,9 @@ public class StepApothecary extends AbstractStep {
 			switch (parameter.getKey()) {
 				case INJURY_RESULT:
 					InjuryResult injuryResult = (InjuryResult) parameter.getValue();
-					if ((injuryResult != null) && (fApothecaryMode == injuryResult.injuryContext().getApothecaryMode())) {
+					if ((injuryResult != null)
+						&& (fApothecaryMode == injuryResult.injuryContext().getApothecaryMode())
+						&& acceptInjury(injuryResult)) {
 						fInjuryResult = injuryResult;
 						return true;
 					}
@@ -356,7 +360,7 @@ public class StepApothecary extends AbstractStep {
 		if (playerState != null) {
 			Player<?> defender = game.getPlayerById(defenderId);
 			Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
-					if (playerState.isSi() && attacker != null) {
+			if (playerState.isSi() && attacker != null) {
 				Set<Keyword> availableKeywords =
 					attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith)
 						.collect(Collectors.toSet());
@@ -406,6 +410,11 @@ public class StepApothecary extends AbstractStep {
 				}
 			}
 		}
+	}
+
+	private boolean acceptInjury(InjuryResult newInjury) {
+		return fInjuryResult == null ||
+			(newInjury.injuryContext().getInjuryType().isBallAndChain() && !fInjuryResult.injuryContext().isCasualty());
 	}
 
 	private Optional<InducementType> regenerationInducementType() {

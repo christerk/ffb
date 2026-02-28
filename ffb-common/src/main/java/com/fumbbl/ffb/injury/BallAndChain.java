@@ -21,4 +21,9 @@ public class BallAndChain extends InjuryType {
 	public boolean isBlock() {
 		return true;
 	}
+
+	@Override
+	public boolean isBallAndChain() {
+		return true;
+	}
 }

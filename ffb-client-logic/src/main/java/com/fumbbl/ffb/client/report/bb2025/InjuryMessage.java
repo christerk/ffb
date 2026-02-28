@@ -39,12 +39,13 @@ public class InjuryMessage extends ReportMessageBase<ReportInjury> {
 
 		// report injury type
 
-		report.getInjuryType().reportInjuryString(status, attacker, defender);
-		if (status.length() > 0) {
-			println(getIndent() + 1, status.toString());
-			status = new StringBuilder();
+		if (!(report.getInjuryType().isBallAndChain() && ArrayTool.isProvided(report.getCasualtyRoll()))) {
+			report.getInjuryType().reportInjuryString(status, attacker, defender);
+			if (status.length() > 0) {
+				println(getIndent() + 1, status.toString());
+				status = new StringBuilder();
+			}
 		}
-
 		// report armour roll
 
 		int[] armorRoll = report.getArmorRoll();
