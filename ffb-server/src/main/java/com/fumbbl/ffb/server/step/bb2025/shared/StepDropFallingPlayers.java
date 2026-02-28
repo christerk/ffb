@@ -17,6 +17,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.injury.injuryType.BlockInjuryEvaluator;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProne;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlockProneForSpp;
@@ -132,7 +133,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		}
 		if (((defenderState != null) && (defenderState.getBase() == PlayerState.FALLING) && (defenderCoordinate != null))) {
 
-			InjuryTypeServer<?> injuryType = new InjuryTypeBlock(InjuryTypeBlock.Mode.REGULAR, false);
+			InjuryTypeServer<?> injuryType = new InjuryTypeBlock(BlockInjuryEvaluator.Mode.REGULAR, false);
 
 			if (state.oldDefenderState != null) {
 				Player<?> attacker = game.getActingPlayer().getPlayer();

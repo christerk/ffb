@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.model;
 
 import com.fumbbl.ffb.injury.BallAndChain;
+import com.fumbbl.ffb.injury.BallAndChainBlockKnockDown;
 import com.fumbbl.ffb.injury.Bitten;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.injury.BlockProne;
@@ -51,6 +52,7 @@ import com.fumbbl.ffb.injury.TrapDoorFallForSpp;
 
 public class InjuryTypeConstants {
 	public static final InjuryType BALL_AND_CHAIN = new BallAndChain();
+	public static final InjuryType BALL_AND_CHAIN_BLOCK_KNOCK_DOWN = new BallAndChainBlockKnockDown();
 	public static final InjuryType BITTEN = new Bitten();
 	public static final InjuryType BLOCK = new Block();
 	public static final InjuryType BLOCK_PRONE = new BlockProne();

@@ -100,7 +100,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						}
 					} else {
 
-						InjuryTypeBlock.Mode mode = (attackerState != null && attackerState.getBase() == PlayerState.FALLING) ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.REGULAR;
+						BlockInjuryEvaluator.Mode mode = (attackerState != null && attackerState.getBase() == PlayerState.FALLING) ? BlockInjuryEvaluator.Mode.DO_NOT_USE_MODIFIERS : BlockInjuryEvaluator.Mode.REGULAR;
 
 						InjuryTypeServer<?> injuryType = new InjuryTypeBlock(mode, false);
 
@@ -170,7 +170,7 @@ public class PilingOnBehaviour extends SkillBehaviour<PilingOn> {
 						} else {
 							step.publishParameters(
 								UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-							injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS),
+							injuryResultAttacker = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(BlockInjuryEvaluator.Mode.DO_NOT_USE_MODIFIERS),
 								game.getDefender(), actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 							if (game.getDefender().hasSkillProperty(NamedProperties.appliesPoisonOnBadlyHurt)
 								&& injuryResultAttacker.injuryContext().isBadlyHurt()) {

@@ -14,6 +14,7 @@ import com.fumbbl.ffb.report.mixed.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.injury.injuryType.BlockInjuryEvaluator;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -192,7 +193,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		game.setDefenderId(player.getId());
 		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
-		InjuryTypeBlock.Mode mode = (actingPlayer.isStandingUp() || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam()) ? InjuryTypeBlock.Mode.DO_NOT_USE_MODIFIERS : InjuryTypeBlock.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
+		BlockInjuryEvaluator.Mode mode = (actingPlayer.isStandingUp() || actingPlayer.getPlayer().getTeam() != game.getDefender().getTeam()) ? BlockInjuryEvaluator.Mode.DO_NOT_USE_MODIFIERS : BlockInjuryEvaluator.Mode.USE_MODIFIERS_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult = UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false),
 			actingPlayer.getPlayer(), game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
 

@@ -29,6 +29,7 @@ import com.fumbbl.ffb.report.mixed.ReportAnimalSavagery;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.server.injury.injuryType.BlockInjuryEvaluator;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBlock;
 import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.DropPlayerContextBuilder;
@@ -226,7 +227,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 		step.getResult().addReport(new ReportAnimalSavagery(actingPlayer.getPlayerId(), player.getId()));
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());
 		// BB2025: Animal Savagery lash-outs only apply attacker Claws/Mighty Blow to armour
-		InjuryTypeBlock.Mode mode = InjuryTypeBlock.Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES;
+		BlockInjuryEvaluator.Mode mode = BlockInjuryEvaluator.Mode.USE_ARMOUR_MODIFIERS_ONLY_AGAINST_TEAM_MATES;
 		InjuryResult injuryResult =
 			UtilServerInjury.handleInjury(step, new InjuryTypeBlock(mode, false), actingPlayer.getPlayer(),
 				game.getDefender(), playerCoordinate, null, null, ApothecaryMode.ANIMAL_SAVAGERY);
