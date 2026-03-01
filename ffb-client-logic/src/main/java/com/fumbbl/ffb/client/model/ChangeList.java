@@ -14,6 +14,7 @@ public class ChangeList {
 			.addImprovement("Reword B&C knock out message")
 			.addBugfix("B&C self cas did not generate spp")
 			.addBugfix("For underdog teams with less than 50k treasury the report used treasury was reported incorrectly")
+			.addBugfix("Foul Appearance triggered for the first move after blitzing a player with that skill")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
