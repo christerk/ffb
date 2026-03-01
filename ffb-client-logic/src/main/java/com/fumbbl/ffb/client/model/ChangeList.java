@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.1.2")
 			.addBugfix("B&C could perform Multi Block if skill was present")
+			.addImprovement("Reword B&C knock out message")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
