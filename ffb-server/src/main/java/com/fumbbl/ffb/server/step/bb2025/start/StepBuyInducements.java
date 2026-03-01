@@ -669,8 +669,8 @@ public final class StepBuyInducements extends AbstractStep {
 	private void setUnderDogCashValues(TeamResult teamResult, int usedInducementGold, int availableInducementGold,
 																		 int freeCash) {
 		int unspent = availableInducementGold - usedInducementGold;
-		int unspentAllowance = Math.min(unspent, MAX_UNDERDOG_ALLOWANCE);
-		int treasurySpentOnInducements = MAX_UNDERDOG_ALLOWANCE - unspentAllowance;
+		int unspentAllowance = Math.min(unspent, treasury);
+		int treasurySpentOnInducements = treasury - unspentAllowance;
 		teamResult.setTreasurySpentOnInducements(treasurySpentOnInducements);
 
 		int usedPettyCash = usedInducementGold - treasurySpentOnInducements - freeCash;

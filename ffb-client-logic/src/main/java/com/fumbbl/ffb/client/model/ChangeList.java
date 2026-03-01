@@ -13,6 +13,7 @@ public class ChangeList {
 			.addBugfix("B&C could perform Multi Block if skill was present")
 			.addImprovement("Reword B&C knock out message")
 			.addBugfix("B&C self cas did not generate spp")
+			.addBugfix("For underdog teams with less than 50k treasury the report used treasury was reported incorrectly")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
