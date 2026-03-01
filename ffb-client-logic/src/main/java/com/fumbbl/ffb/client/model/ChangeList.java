@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.1.2")
 			.addBugfix("B&C could perform Multi Block if skill was present")
 			.addImprovement("Reword B&C knock out message")
+			.addBugfix("B&C self cas did not generate spp")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

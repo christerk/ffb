@@ -253,6 +253,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+
+		context.getDeferredCommands().forEach(command -> command.execute(this));
+
 		if (context.getDropPlayerContext() != null) {
 			publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT, context.getDropPlayerContext()));
 		}
@@ -266,7 +269,6 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			publishParameter(StepParameter.from(StepParameterKey.ATTACKER_ALREADY_DOWN, true));
 		}
 
-		context.getDeferredCommands().forEach(command -> command.execute(this));
 	}
 
 	// JSON serialization
