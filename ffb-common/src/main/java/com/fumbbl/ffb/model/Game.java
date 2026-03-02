@@ -618,6 +618,10 @@ public class Game extends ModelChangeObservable implements IJsonSerializable {
 		getFieldModel().addHatred(player, keyword);
 	}
 
+	public boolean firstTurnOfHalf() {
+		return getTurnDataAway().getTurnNr() == 0 && getTurnDataHome().getTurnNr() == 0;
+	}
+
 	// transformation
 
 	public Game transform() {

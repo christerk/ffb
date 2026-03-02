@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.mechanic.mixed;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
@@ -80,6 +81,28 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 		UtilServerGame.updatePlayerStateDependentProperties(pStep);
 		resetSpecialSkillsAtHalfTime(game);
 
+	}
+
+	private void resetLeaderState(Game pGame) {
+		if (pGame.getHalf() <= 2) {
+			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
+			pGame.getTurnDataAway().setLeaderState(LeaderState.NONE);
+		}
+	}
+
+	private boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
+		for (Player<?> player : pTeam.getPlayers()) {
+			if (playerOnField(player, pFieldModel)
+				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
+		FieldCoordinate fieldCoordinate = pFieldModel.getPlayerCoordinate(pPlayer);
+		return ((fieldCoordinate != null) && !fieldCoordinate.isBoxCoordinate());
 	}
 
 	private void resetSpecialSkillsAtHalfTime(Game game) {

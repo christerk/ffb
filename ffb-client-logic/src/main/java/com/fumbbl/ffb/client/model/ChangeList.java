@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("For underdog teams with less than 50k treasury the report used treasury was reported incorrectly")
 			.addBugfix("Foul Appearance triggered for the first move after blitzing a player with that skill")
 			.addBugfix("Monstrous Mouth: On both downs chomp states were not always removed properly")
+			.addBugfix("Leader re-roll was not restored if player returned to pitch after KO or surf")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

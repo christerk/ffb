@@ -52,17 +52,17 @@ public final class StepKickoff extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			Game game = getGameState().getGame();
 			switch (pReceivedCommand.getId()) {
-			case CLIENT_KICKOFF:
-				ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pReceivedCommand.getCommand();
-				if (game.isHomePlaying()) {
-					fKickoffStartCoordinate = kickoffCommand.getBallCoordinate();
-				} else {
-					fKickoffStartCoordinate = kickoffCommand.getBallCoordinate().transform();
-				}
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
-				break;
-			default:
-				break;
+				case CLIENT_KICKOFF:
+					ClientCommandKickoff kickoffCommand = (ClientCommandKickoff) pReceivedCommand.getCommand();
+					if (game.isHomePlaying()) {
+						fKickoffStartCoordinate = kickoffCommand.getBallCoordinate();
+					} else {
+						fKickoffStartCoordinate = kickoffCommand.getBallCoordinate().transform();
+					}
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					break;
+				default:
+					break;
 			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
@@ -80,9 +80,9 @@ public final class StepKickoff extends AbstractStep {
 			SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 			Inducement generator = (Inducement) factory.forName(SequenceGenerator.Type.Inducement.name());
 			generator.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
-					game.isHomePlaying()));
+				game.isHomePlaying()));
 			generator.pushSequence(new Inducement.SequenceParams(getGameState(), InducementPhase.BEFORE_KICKOFF_SCATTER,
-					!game.isHomePlaying()));
+				!game.isHomePlaying()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		} else {
 			getGameState().getGame().setTurnMode(TurnMode.KICKOFF);

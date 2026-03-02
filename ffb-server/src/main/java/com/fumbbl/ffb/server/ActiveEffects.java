@@ -9,6 +9,7 @@ import com.fumbbl.ffb.json.UtilJson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class ActiveEffects implements IJsonSerializable {
 	private boolean skipRestoreWeather, stalling;
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
+	private final Set<String> leaders = new HashSet<>();
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -67,6 +69,18 @@ public class ActiveEffects implements IJsonSerializable {
 		return shadowers;
 	}
 
+	public void addLeader(String leader) {
+		leaders.add(leader);
+	}
+
+	public Set<String> getLeaders() {
+		return leaders;
+	}
+
+	public void clearLeaders() {
+		leaders.clear();
+	}
+
 	@Override
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -86,6 +100,10 @@ public class ActiveEffects implements IJsonSerializable {
 			shadowers.addAll(Arrays.asList(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)));
 		}
 
+		if (IServerJsonOption.LEADERS.isDefinedIn(jsonObject)) {
+			leaders.addAll(Arrays.asList(IServerJsonOption.LEADERS.getFrom(source, jsonObject)));
+		}
+
 		return this;
 	}
 
@@ -97,6 +115,7 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.addTo(jsonObject, teamIdsAdditionalAssist);
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
+		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
 		return jsonObject;
 	}
 }
