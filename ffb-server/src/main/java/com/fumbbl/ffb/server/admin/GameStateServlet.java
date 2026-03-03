@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.server.admin;
 
+import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PasswordChallenge;
@@ -200,7 +200,7 @@ public class GameStateServlet extends HttpServlet {
 	}
 
 	private String handleSet(String body) {
-		GameState gameState = new GameState(getServer()).initFrom(getServer().getFactorySource(), JsonValue.readFrom(body));
+		GameState gameState = new GameState(getServer()).initFrom(getServer().getFactorySource(), Json.parse(body));
 
 		SessionManager sessionManager = getServer().getSessionManager();
 		Session[] sessions = sessionManager.getSessionsForGameId(gameState.getId());
