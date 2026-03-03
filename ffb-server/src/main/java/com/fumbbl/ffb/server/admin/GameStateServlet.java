@@ -37,7 +37,6 @@ public class GameStateServlet extends HttpServlet {
 	public static final String CHALLENGE = "challenge";
 	public static final String GET = "get";
 	public static final String SET = "set";
-	public static final String AUTO = "auto";
 	public static final String RESULT = "result";
 	public static final String RESET = "reset";
 
@@ -46,7 +45,6 @@ public class GameStateServlet extends HttpServlet {
 
 	private static final String _PARAMETER_RESPONSE = "response";
 	private static final String _PARAMETER_GAME_ID = "gameId";
-	private static final String _PARAMETER_FROM_DB = "fromDb";
 	private static final String _PARAMETER_INCLUDE_LOG = "includeLog";
 
 	private static final String _XML_TAG_ADMIN = "admin";
@@ -156,21 +154,14 @@ public class GameStateServlet extends HttpServlet {
 	private GameState getGameState(Map<String, String[]> pParameters) {
 		String gameIdString = ArrayTool.firstElement(pParameters.get(_PARAMETER_GAME_ID));
 		long gameId = parseGameId(gameIdString);
-		String fromDbString = ArrayTool.firstElement(pParameters.get(_PARAMETER_FROM_DB));
-		Boolean fromDb = null;
-		if (StringTool.isProvided(fromDbString) && !AUTO.equals(fromDbString)) {
-			fromDb = Boolean.parseBoolean(fromDbString);
-		}
 
 		GameCache gameCache = getServer().getGameCache();
-		GameState gameState = null;
-		if (fromDb == null || !fromDb) {
-			gameState = gameCache.getGameStateById(gameId);
-		}
+		GameState gameState = gameCache.getGameStateById(gameId);
 
-		if (gameState == null && (fromDb == null || fromDb)) {
+		if (gameState == null) {
 			gameState = gameCache.queryFromDb(gameId);
 		}
+
 		return gameState;
 	}
 
