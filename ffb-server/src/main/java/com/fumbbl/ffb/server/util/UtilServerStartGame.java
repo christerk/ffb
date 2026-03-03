@@ -222,7 +222,7 @@ public class UtilServerStartGame {
 			apos.setDefault(9);
 			game.getOptions().addOption(apos);
 			GameOptionInt mvps = (GameOptionInt) optionFactory.createGameOption(GameOptionId.MVP_NOMINATIONS);
-			mvps.setValue(0);
+			mvps.setValue(6);
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue(RulesCollection.Rules.BB2020.name());
@@ -231,7 +231,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
-			game.getOptions().addOption(overtime);
+			//game.getOptions().addOption(overtime);
 			GameOptionBoolean allowConcessions = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_CONCESSIONS);
 			allowConcessions.setValue(false);
 			//game.getOptions().addOption(allowConcessions);

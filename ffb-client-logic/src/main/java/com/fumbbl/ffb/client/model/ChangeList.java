@@ -23,6 +23,7 @@ public class ChangeList {
 			.addImprovement("Message about preventing Strip Ball (Stand Firm, Rooted, Chomped) is only shown if player is actually carrying the ball")
 			.addBugfix("Lone Fouler did not work for Chainsaw fouls")
 			.addBugfix("TTM landing on the ball did allow a pick up")
+			.addBugfix("It was possible to move players on the pitch during mvp selection")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

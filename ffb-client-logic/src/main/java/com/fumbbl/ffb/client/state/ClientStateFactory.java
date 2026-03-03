@@ -344,6 +344,9 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
 					break;
+				case END_GAME:
+					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					break;
 				default:
 					break;
 			}
