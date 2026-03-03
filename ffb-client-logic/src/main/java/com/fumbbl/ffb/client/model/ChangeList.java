@@ -26,6 +26,7 @@ public class ChangeList {
 			.addBugfix("It was possible to move players on the pitch during mvp selection")
 			.addBugfix("Brilliant coaching message reported a tie when rolls were equal but ignored modifiers")
 			.addImprovement("Technical: Game results are now also loaded from backups if game is not in cache anymore")
+			.addBugfix("Eye Gouge: In addition to not assisting, gouged players did also not cancel opposing assist")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
