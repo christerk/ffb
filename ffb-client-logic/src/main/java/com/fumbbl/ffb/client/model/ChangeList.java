@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Lone Fouler did not work for Chainsaw fouls")
 			.addBugfix("TTM landing on the ball did allow a pick up")
 			.addBugfix("It was possible to move players on the pitch during mvp selection")
+			.addBugfix("Brilliant coaching message reported a tie when rolls were equal but ignored modifiers")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

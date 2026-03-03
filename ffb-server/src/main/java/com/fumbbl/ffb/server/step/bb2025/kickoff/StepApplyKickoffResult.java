@@ -466,7 +466,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			teamId = game.getTeamAway().getId();
 		}
 
-		if (rollAway == rollHome) {
+		if (totalAway == totalHome) {
 			teamId = null;
 		}
 
