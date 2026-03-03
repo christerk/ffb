@@ -2,35 +2,44 @@ package com.fumbbl.ffb.server.injury.modification.bb2025;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.injury.Foul;
+import com.fumbbl.ffb.injury.FoulForSpp;
+import com.fumbbl.ffb.injury.FoulForSppWithChainsaw;
+import com.fumbbl.ffb.injury.FoulWithChainsaw;
+import com.fumbbl.ffb.injury.InjuryType;
 import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.util.UtilPlayer;
-import com.fumbbl.ffb.mechanics.SkillMechanic;
 
-import java.util.Collections;
+import java.util.HashSet;
 
 public class LoneFoulerModification extends RerollArmourModification {
 
-  public LoneFoulerModification() {
-    super(Collections.singleton(Foul.class));
-  }
+	public LoneFoulerModification() {
+		super(new HashSet<Class<? extends InjuryType>>() {{
+			add(Foul.class);
+			add(FoulForSpp.class);
+			add(FoulWithChainsaw.class);
+			add(FoulForSppWithChainsaw.class);
+		}});
+	}
 
-  @Override
-  protected boolean tryArmourRollModification(ModificationParams params) {
-    Game game = params.getGameState().getGame();
-    Player<?> attacker = game.getActingPlayer().getPlayer();
-    Player<?> defender = game.getPlayerById(params.getNewContext().fDefenderId);
+	@Override
+	protected boolean tryArmourRollModification(ModificationParams params) {
+		Game game = params.getGameState().getGame();
+		Player<?> attacker = game.getActingPlayer().getPlayer();
+		Player<?> defender = game.getPlayerById(params.getNewContext().fDefenderId);
 
-    SkillMechanic mechanic =
-      (SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
+		SkillMechanic mechanic =
+			(SkillMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SKILL.name());
 
-    int offensiveAssists = UtilPlayer.findOffensiveFoulAssists(game, attacker, defender, mechanic);
-    int defensiveAssists = UtilPlayer.findDefensiveFoulAssists(game, attacker, defender);
-    boolean noAssists = offensiveAssists == 0 && defensiveAssists == 0;
+		int offensiveAssists = UtilPlayer.findOffensiveFoulAssists(game, attacker, defender, mechanic);
+		int defensiveAssists = UtilPlayer.findDefensiveFoulAssists(game, attacker, defender);
+		boolean noAssists = offensiveAssists == 0 && defensiveAssists == 0;
 
-    return noAssists && super.tryArmourRollModification(params);
-  }
+		return noAssists && super.tryArmourRollModification(params);
+	}
 
 }

@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBehaviorChange("Fallback checkbox for team re-roll on mascot use is now pre-selected")
 			.addBugfix("Diving Catch did not trigger for kick-offs")
 			.addImprovement("Message about preventing Strip Ball (Stand Firm, Rooted, Chomped) is only shown if player is actually carrying the ball")
+			.addBugfix("Lone Fouler did not work for Chainsaw fouls")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
