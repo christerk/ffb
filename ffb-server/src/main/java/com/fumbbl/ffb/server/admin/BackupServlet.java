@@ -1,10 +1,5 @@
 package com.fumbbl.ffb.server.admin;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.PasswordChallenge;
 import com.fumbbl.ffb.json.UtilJson;
@@ -25,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.sax.TransformerHandler;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -198,7 +192,7 @@ public class BackupServlet extends HttpServlet {
 		Closeable out = null;
 		try {
 
-			GameState gameState = loadGameState(gameId);
+			GameState gameState = UtilBackup.loadGameState(gameId, fServer);
 			if (gameState == null) {
 				return;
 			}
@@ -235,54 +229,7 @@ public class BackupServlet extends HttpServlet {
 
 	}
 
-	private GameState loadGameState(long gameId) {
-		GameState gameState = UtilBackup.load(getServer(), gameId);
-		if (gameState != null) {
-			fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from file system.");
-		}
-		if (gameState == null) {
-			// fallback: try to load gameState from db
-			gameState = fServer.getGameCache().queryFromDb(gameId);
-			if (gameState != null) {
-				fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from database.");
-			}
-		}
-		if ((gameState == null)) {
-			gameState = loadFromS3(gameId);
-			if (gameState != null) {
-				fServer.getDebugLog().log(IServerLogLevel.WARN, gameId, "Replay loaded from s3 bucket.");
-			}
-		}
-		return gameState;
-	}
 
-
-	private GameState loadFromS3(long gameId) {
-		String basePath = fServer.getProperty(IServerProperty.BACKUP_S3_BASE_PATH);
-		if (!basePath.endsWith("/")) {
-			basePath += "/";
-		}
-		String fileName = basePath + UtilBackup.calculateFolderPathForGame(fServer, String.valueOf(gameId));
-		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(fServer.getProperty(IServerProperty.BACKUP_S3_REGION))
-			.withCredentials(new ProfileCredentialsProvider(fServer.getProperty(IServerProperty.BACKUP_S3_PROFILE))).build();
-
-		byte[] buffer = new byte[1024];
-		int buffer_size;
-
-		try (S3Object s3Replay = s3.getObject(fServer.getProperty(IServerProperty.BACKUP_S3_BUCKET), fileName);
-				 S3ObjectInputStream s3Stream = s3Replay.getObjectContent();
-				 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-			while ((buffer_size = s3Stream.read(buffer)) > 0) {
-				byteArrayOutputStream.write(buffer, 0, buffer_size);
-			}
-			GameState gameState = new GameState(fServer);
-			gameState.initFrom(gameState.getGame().getRules(), UtilJson.gunzip(byteArrayOutputStream.toByteArray()));
-			return gameState;
-		} catch (Exception e) {
-			fServer.getDebugLog().log(gameId, e);
-		}
-		return null;
-	}
 
 	private long parseGameId(String pGameStateId) {
 		if (StringTool.isProvided(pGameStateId)) {

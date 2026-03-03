@@ -159,7 +159,7 @@ public class GameStateServlet extends HttpServlet {
 		GameState gameState = gameCache.getGameStateById(gameId);
 
 		if (gameState == null) {
-			gameState = gameCache.queryFromDb(gameId);
+			gameState = UtilBackup.loadGameState(gameId, fServer);
 		}
 
 		return gameState;
