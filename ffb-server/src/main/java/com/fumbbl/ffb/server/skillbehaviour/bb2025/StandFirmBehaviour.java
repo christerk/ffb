@@ -21,6 +21,7 @@ import com.fumbbl.ffb.server.step.bb2025.block.StepPushback;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.skill.common.StandFirm;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.BB2025)
 public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
@@ -73,7 +74,9 @@ public class StandFirmBehaviour extends SkillBehaviour<StandFirm> {
 						step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
 						step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 						step.getResult().addReport(new ReportSkillUse(state.defender.getId(), skill, true, SkillUse.AVOID_PUSH));
-						step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is standing firm."));
+						if (UtilPlayer.hasBall(game, state.defender)) {
+							step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is standing firm."));
+						}
 					}
 
 					return true;

@@ -13,6 +13,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.bb2025.block.StepPushback;
 import com.fumbbl.ffb.skill.bb2025.MonstrousMouth;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.BB2025)
 public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
@@ -38,7 +39,9 @@ public class MonstrousMouthBehaviour extends SkillBehaviour<MonstrousMouth> {
 					step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
 					step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
 					step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-					step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is chomped."));
+					if (UtilPlayer.hasBall(game, state.defender)) {
+						step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is chomped."));
+					}
 					return true;
 				}
 
