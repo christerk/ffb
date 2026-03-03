@@ -151,6 +151,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 				fallbackToTrr = mascotExtension.checkBox( "TRR fallback", KeyEvent.VK_F, Color.BLACK, dimensionProvider(),
 					this, this);
+				fallbackToTrr.setSelected(true);
 				mascotPanel.add(fallbackToTrr);
 			}
 			buttonPanel.add(mascotPanel);

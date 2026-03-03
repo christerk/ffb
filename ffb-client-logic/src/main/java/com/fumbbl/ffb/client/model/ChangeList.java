@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Monstrous Mouth: On both downs chomp states were not always removed properly")
 			.addBugfix("Leader re-roll was not restored if player returned to pitch after KO or surf")
 			.addBugfix("Using Safe Pair Of Hands with Wrestle on ball carrier did not prevent turnover")
+			.addBehaviorChange("Fallback checkbox for team re-roll on mascot use is now pre-selected")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

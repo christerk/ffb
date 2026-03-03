@@ -213,6 +213,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
 				fallbackToTrr = mascotExtension.checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE, dimensionProvider(),
 					this, this);
+				fallbackToTrr.setSelected(true);
 				mascotPanel.add(fallbackToTrr);
 			}
 			reRollPanel.add(mascotPanel);

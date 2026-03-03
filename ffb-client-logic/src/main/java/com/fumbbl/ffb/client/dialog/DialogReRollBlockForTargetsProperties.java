@@ -145,6 +145,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 							checkBoxes.trr = mascotExtension.checkBox("TRR fallback", currentMnemonics.trrFallback, Color.WHITE,
 								dimensionProvider(),
 								null, null);
+							checkBoxes.trr.setSelected(true);
 							mascotPanel.add(checkBoxes.trr);
 						}
 						buttonPanel.add(mascotPanel);
