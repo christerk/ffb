@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Diving Catch did not trigger for kick-offs")
 			.addImprovement("Message about preventing Strip Ball (Stand Firm, Rooted, Chomped) is only shown if player is actually carrying the ball")
 			.addBugfix("Lone Fouler did not work for Chainsaw fouls")
+			.addBugfix("TTM landing on the ball did allow a pick up")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
