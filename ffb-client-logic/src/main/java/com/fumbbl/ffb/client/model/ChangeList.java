@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Leader re-roll was not restored if player returned to pitch after KO or surf")
 			.addBugfix("Using Safe Pair Of Hands with Wrestle on ball carrier did not prevent turnover")
 			.addBehaviorChange("Fallback checkbox for team re-roll on mascot use is now pre-selected")
+			.addBugfix("Diving Catch did not trigger for kick-offs")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")

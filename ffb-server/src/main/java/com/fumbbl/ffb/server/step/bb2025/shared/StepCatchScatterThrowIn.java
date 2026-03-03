@@ -315,7 +315,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					} else {
 						fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 					}
-				} else {
+				} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_KICKOFF) {
+					fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
+				}else {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
