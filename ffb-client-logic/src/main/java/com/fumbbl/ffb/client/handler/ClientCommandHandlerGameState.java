@@ -21,6 +21,8 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.SwingUtilities;
 import java.lang.reflect.InvocationTargetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -98,7 +100,10 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 					.collect(
 						Collectors.toList());
 
-			ForkJoinPool.commonPool().invokeAll(tasks);
+			AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> {
+				ForkJoinPool.commonPool().invokeAll(tasks);
+				return true;
+			});
 
 			getClient().getClientState().hideIconProgress();
 
