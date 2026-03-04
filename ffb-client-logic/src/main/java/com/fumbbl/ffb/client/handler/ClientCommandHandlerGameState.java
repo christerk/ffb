@@ -100,9 +100,9 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 					.collect(
 						Collectors.toList());
 
-			AccessController.doPrivileged((PrivilegedAction<Boolean>) () -> {
+			AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 				ForkJoinPool.commonPool().invokeAll(tasks);
-				return true;
+				return null;
 			});
 
 			getClient().getClientState().hideIconProgress();

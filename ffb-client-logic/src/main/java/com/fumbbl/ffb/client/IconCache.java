@@ -34,8 +34,10 @@ import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.security.AccessController;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivilegedAction;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -141,7 +143,7 @@ public class IconCache {
 				updateMapFile();
 			}
 			try (FileReader fileReader = new FileReader(mapFileName);
-					 BufferedReader reader = new BufferedReader(fileReader)) {
+			     BufferedReader reader = new BufferedReader(fileReader)) {
 
 				@SuppressWarnings("deprecation") JsonObject jsonObject = JsonObject.readFrom(reader);
 				localCacheMap.putAll(JSON_OPTION.getFrom(getClient(), jsonObject));
@@ -295,37 +297,42 @@ public class IconCache {
 		}
 
 		Weather weather = findPitchWeather(pUrl);
-		if (weather != null) {
-			loadPitchFromUrl(pUrl.substring(0, pUrl.length() - 7 - weather.getShortName().length()));
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+			if (weather != null) {
+				loadPitchFromUrl(pUrl.substring(0, pUrl.length() - 7 - weather.getShortName().length()));
 
-		} else {
-			URL iconUrl = null;
-			try {
-				iconUrl = new URL(pUrl);
-				HttpGet get = new HttpGet(pUrl);
-				httpClient.execute(get, response -> {
-					System.out.println("Start " + pUrl + " on " + Thread.currentThread().getName());
-					final HttpEntity entity = response.getEntity();
-					if (entity != null) {
-						Header header = response.getHeader(HttpHeaders.CONTENT_TYPE);
-						String contentType = header != null ? header.getValue() : "";
-						BufferedImage icon = ImageIO.read(entity.getContent());
-						EntityUtils.consumeQuietly(entity);
-						fIconByKey.put(pUrl, icon);
-						addLocalCacheEntry(pUrl, icon, getFormat(contentType));
+			} else {
+				URL iconUrl = null;
+				try {
+					iconUrl = new URL(pUrl);
+					HttpGet get = new HttpGet(pUrl);
+
+					httpClient.execute(get, response -> {
+						System.out.println("Start " + pUrl + " on " + Thread.currentThread().getName());
+						final HttpEntity entity = response.getEntity();
+						if (entity != null) {
+							Header header = response.getHeader(HttpHeaders.CONTENT_TYPE);
+							String contentType = header != null ? header.getValue() : "";
+							BufferedImage icon = ImageIO.read(entity.getContent());
+							EntityUtils.consumeQuietly(entity);
+							fIconByKey.put(pUrl, icon);
+							addLocalCacheEntry(pUrl, icon, getFormat(contentType));
+						}
+						System.out.println("Stop " + pUrl + " on " + Thread.currentThread().getName());
+						return null;
+					});
+
+				} catch (Exception pAny) {
+					synchronized (this) {
+						getClient().logError(0, pAny.getMessage());
+						// This should catch issues where the image is broken...
+						getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 					}
-					System.out.println("Stop " + pUrl + " on " + Thread.currentThread().getName());
-					return null;
-				});
-
-			} catch (Exception pAny) {
-				synchronized (this) {
-					getClient().logError(0, pAny.getMessage());
-					// This should catch issues where the image is broken...
-					getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 				}
+
 			}
-		}
+			return null;
+		});
 
 	}
 
@@ -368,7 +375,7 @@ public class IconCache {
 		JSON_OPTION.addTo(jsonObject, localCacheMap);
 		String json = jsonObject.toString();
 		try (FileWriter fileWriter = new FileWriter(localCacheFolder + LOCAL_CACHE_MAP_FILE);
-				 BufferedWriter writer = new BufferedWriter(fileWriter)) {
+		     BufferedWriter writer = new BufferedWriter(fileWriter)) {
 			writer.write(json);
 			writer.flush();
 		} catch (IOException e) {
@@ -485,7 +492,8 @@ public class IconCache {
 					iconProperty = IIconProperty.BLOODSPOT_LIGHTNING;
 					break;
 				default:
-					throw new IllegalArgumentException("Cannot get icon for blood spot with injury " + pBloodspot.getInjury() + ".");
+					throw new IllegalArgumentException(
+						"Cannot get icon for blood spot with injury " + pBloodspot.getInjury() + ".");
 			}
 			pBloodspot.setIconProperty(iconProperty);
 		}
