@@ -176,7 +176,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
-		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused()) {
+		if (skip || !skill.isPresent() || !playerState.hasTacklezones()) {
 			fail();
 			return;
 		}
