@@ -308,7 +308,6 @@ public class IconCache {
 					HttpGet get = new HttpGet(pUrl);
 
 					httpClient.execute(get, response -> {
-						System.out.println("Start " + pUrl + " on " + Thread.currentThread().getName());
 						final HttpEntity entity = response.getEntity();
 						if (entity != null) {
 							Header header = response.getHeader(HttpHeaders.CONTENT_TYPE);
@@ -318,7 +317,6 @@ public class IconCache {
 							fIconByKey.put(pUrl, icon);
 							addLocalCacheEntry(pUrl, icon, getFormat(contentType));
 						}
-						System.out.println("Stop " + pUrl + " on " + Thread.currentThread().getName());
 						return null;
 					});
 
