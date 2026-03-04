@@ -96,7 +96,29 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			final AtomicInteger currentIconNr = new AtomicInteger(0);
 
 			List<LoadTask> tasks =
-				iconUrlsToDownload.stream().map(url -> new LoadTask(getClient(), iconCache, url, nrOfIcons, currentIconNr))
+				iconUrlsToDownload.stream().sorted(
+						(path1, path2) -> {
+							if (path1 == null) {
+								if (path2 == null) {
+									return 0;
+								}
+								return 1;
+							} else if (path2 == null) {
+								return -1;
+							}
+
+							boolean isZip1 = path1.toLowerCase().endsWith(".zip");
+							boolean isZip2 = path2.toLowerCase().endsWith(".zip");
+
+							// If both are zip or both are not zip, sort alphabetically
+							if (isZip1 == isZip2) {
+								return path1.compareToIgnoreCase(path2);
+							}
+
+							// If only path1 is zip, it goes first
+							return isZip1 ? -1 : 1;
+						}
+					).map(url -> new LoadTask(getClient(), iconCache, url, nrOfIcons, currentIconNr))
 					.collect(
 						Collectors.toList());
 
