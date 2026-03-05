@@ -108,7 +108,7 @@ public class IconCache {
 				.build();
 
 			PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
-				.setSSLSocketFactory(sslCF).setMaxConnTotal(2).setMaxConnPerRoute(2)
+				.setSSLSocketFactory(sslCF).setMaxConnTotal(5).setMaxConnPerRoute(5)
 				.setDefaultConnectionConfig(connectionConfig).build();
 
 			httpClient = HttpClients.custom().setConnectionManager(cm).build();
