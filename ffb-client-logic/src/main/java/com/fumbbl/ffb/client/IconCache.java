@@ -108,7 +108,7 @@ public class IconCache {
 				.build();
 
 			PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
-				.setSSLSocketFactory(sslCF).setMaxConnTotal(1).setMaxConnPerRoute(1)
+				.setSSLSocketFactory(sslCF).setMaxConnTotal(2).setMaxConnPerRoute(2)
 				.setDefaultConnectionConfig(connectionConfig).build();
 
 			httpClient = HttpClients.custom().setConnectionManager(cm).build();
@@ -310,11 +310,6 @@ public class IconCache {
 					httpClient.execute(get, response -> {
 						final HttpEntity entity = response.getEntity();
 						if (entity != null) {
-							try {
-								Thread.sleep(5000);
-							} catch (InterruptedException e) {
-								throw new RuntimeException(e);
-							}
 							Header header = response.getHeader(HttpHeaders.CONTENT_TYPE);
 							String contentType = header != null ? header.getValue() : "";
 							BufferedImage icon = ImageIO.read(entity.getContent());
