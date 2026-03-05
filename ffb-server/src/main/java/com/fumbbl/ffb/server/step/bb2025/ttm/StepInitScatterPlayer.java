@@ -282,9 +282,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 
 				if (lethalSpp && violentSpp && injuryResultHitPlayer.injuryContext().isCasualty()) {
-					SppMechanic spp = (SppMechanic) game.getMechanic(Mechanic.Type.SPP);
-					Player<?> secondary = attacker == thrownPlayer ? thrower : thrownPlayer;
-					spp.addCasualty(getGameState().getPrayerState().getAdditionalCasSppTeams(),	game.getGameResult().getPlayerResult(secondary));
+					SppMechanic spp = game.getMechanic(Mechanic.Type.SPP);
+					spp.addCasualty(getGameState().getPrayerState().getAdditionalCasSppTeams(),	game.getGameResult().getPlayerResult(
+						thrower));
 				}
 			} else {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
@@ -354,7 +354,7 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		isKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		swoopDirection = (Direction) IServerJsonOption.SCATTER_DIRECTION.getFrom(source, jsonObject);
 		usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
-		usingSwoop = (Boolean) IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
+		usingSwoop = IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		return this;
 	}
