@@ -109,15 +109,15 @@ public class StepDispatchScatterPlayer extends AbstractStep {
 					break;
 				case INACCURATE:
 				case ACCURATE:
-					throwScatter = true;
+					if (usingBullseye) {
+						throwScatter = false;
+						scattersSingleDirection = false;
+					} else {
+						throwScatter = true;
+					}
 					break;
 				default:
 					throw new IllegalStateException("Unexpected pass result for ttm: " + passResult.getName());
-			}
-
-			if (passResult == PassResult.ACCURATE && usingBullseye) {
-				throwScatter = false;
-				scattersSingleDirection = false;
 			}
 
 			((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
