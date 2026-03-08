@@ -107,7 +107,8 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.TRAP_DOOR));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 
-		sequence.add(StepId.END_BLOCKING, IStepLabel.END_BLOCKING);
+		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE, IStepLabel.END_BLOCKING, from(StepParameterKey.RETAIN_MODEL_DATA, true));
+		sequence.add(StepId.END_BLOCKING);
 		// may insert endTurn sequence add this point
 
 		gameState.getStepStack().push(sequence.getSequence());
