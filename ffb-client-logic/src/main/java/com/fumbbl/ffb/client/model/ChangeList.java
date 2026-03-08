@@ -31,6 +31,7 @@ public class ChangeList {
 			.addBugfix("Knocking down team-mates on TTM/KTM did not cause turnovers")
 			.addBugfix("Chomp was not available on blitz during Charge!")
 			.addBugfix("Target selection was not always removed after a blitz")
+			.addBugfix("When using swoop it is now possible to re-roll direction and distance")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
