@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -6,11 +6,10 @@ import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.report.ReportMessageBase;
 import com.fumbbl.ffb.client.report.ReportMessageType;
 import com.fumbbl.ffb.report.ReportId;
-import com.fumbbl.ffb.report.mixed.ReportSwoopPlayer;
+import com.fumbbl.ffb.report.bb2020.ReportSwoopPlayer;
 
 @ReportMessageType(ReportId.SWOOP_PLAYER)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class SwoopPlayerMessage extends ReportMessageBase<ReportSwoopPlayer> {
 
 	@Override

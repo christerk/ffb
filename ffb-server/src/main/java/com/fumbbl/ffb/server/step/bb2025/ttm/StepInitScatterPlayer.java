@@ -6,7 +6,9 @@ import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
@@ -19,8 +21,8 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
+import com.fumbbl.ffb.report.bb2025.ReportSwoopPlayer;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
-import com.fumbbl.ffb.report.mixed.ReportSwoopPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -29,7 +31,7 @@ import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayerForSpp;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
-import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
 import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -39,12 +41,13 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
-import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
+import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
@@ -72,13 +75,14 @@ import java.util.List;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2025)
-public final class StepInitScatterPlayer extends AbstractStep {
+public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState, oldPlayerState;
 	private FieldCoordinate thrownPlayerCoordinate;
 	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye, usingSwoop;
 	private Direction swoopDirection;
+	private UtilThrowTeamMateSequence.ScatterResult scatterResult;
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -124,8 +128,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 						swoopDirection = (Direction) parameter.getValue();
 						break;
 					case USING_SWOOP:
-					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
+						usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
 					default:
 						break;
 				}
@@ -186,8 +190,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(thrownPlayerId);
+		boolean swooping = swoopDirection != null && usingSwoop;
 
-		if (thrownPlayerState != null && thrownPlayerState.getBase() == PlayerState.PICKED_UP) {
+		if (!swooping && thrownPlayerState != null && thrownPlayerState.getBase() == PlayerState.PICKED_UP) {
 			thrownPlayerState = thrownPlayerState.changeBase(PlayerState.IN_THE_AIR);
 			game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
 		}
@@ -213,9 +218,30 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			game.getFieldModel().clearMoveSquares();
 			startCoordinate = game.getPassCoordinate();
 		}
-		UtilThrowTeamMateSequence.ScatterResult scatterResult;
-		if (swoopDirection != null && usingSwoop) {
-			scatterResult = swoop(startCoordinate, swoopDirection);
+
+		if (swooping) {
+			boolean doRoll = getReRolledAction() != ReRolledActions.SWOOP_DISTANCE ||
+				(getReRollSource() != null && UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer));
+
+			if (doRoll) {
+				GameOptionInt distance =
+					(GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
+				scatterResult = swoop(startCoordinate, swoopDirection, distance.getValue());
+
+				game.getFieldModel().clearMoveSquares();
+				if (scatterResult.isInBounds()) {
+					game.getFieldModel().add(new MoveSquare(scatterResult.getLastValidCoordinate(), 0, 0));
+				}
+
+				if (distance.getValue() == 0 && getReRolledAction() == null &&
+					UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.SWOOP_DISTANCE, 0,
+						false)) {
+					getResult().setNextAction(StepAction.CONTINUE);
+					return;
+				}
+			}
+			thrownPlayerState = thrownPlayerState.changeBase(PlayerState.IN_THE_AIR);
+			game.getFieldModel().setPlayerState(thrownPlayer, thrownPlayerState);
 		} else {
 			scatterResult = UtilThrowTeamMateSequence.scatterPlayer(this, startCoordinate, throwScatter);
 		}
@@ -223,14 +249,17 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		// send animation before sending player coordinate and state change (otherwise
 		// thrown player will be displayed in landing square first)
 		getResult()
-			.setAnimation(new Animation(swoopDirection != null ? startCoordinate : thrownPlayerCoordinate, endCoordinate, thrownPlayerId, thrownPlayerHasBall));
+			.setAnimation(
+				new Animation(swoopDirection != null ? startCoordinate : thrownPlayerCoordinate, endCoordinate, thrownPlayerId,
+					thrownPlayerHasBall));
 
 
 		UtilServerGame.syncGameModel(this);
 		if (scatterResult.isInBounds()) {
 			handleLanding(thrownPlayer, endCoordinate);
 		} else {
-			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate,	thrownPlayerHasBall, new InjuryTypeCrowdPush());
+			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate, thrownPlayerHasBall,
+				new InjuryTypeCrowdPush());
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));
@@ -240,22 +269,25 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 	}
 
-	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction) {
-		GameOptionInt distance = (GameOptionInt) getGameState().getGame().getOptions().getOptionWithDefault(GameOptionId.SWOOP_DISTANCE);
+	private UtilThrowTeamMateSequence.ScatterResult swoop(FieldCoordinate throwerCoordinate, Direction direction,
+		int distanceOption) {
 
-		int distanceRoll = distance.getValue() == 0 ?getGameState().getDiceRoller().rollDice(6) : distance.getValue();
-		FieldCoordinate coordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
+		int distanceRoll = distanceOption == 0 ? getGameState().getDiceRoller().rollDice(6) : distanceOption;
+		FieldCoordinate coordinateEnd =
+			UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, distanceRoll);
 		FieldCoordinate lastValidCoordinate = coordinateEnd;
 		int validDistance = distanceRoll;
 		while (!FieldCoordinateBounds.FIELD.isInBounds(lastValidCoordinate) && validDistance > 0) {
 			validDistance--;
-			lastValidCoordinate = UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
+			lastValidCoordinate =
+				UtilServerCatchScatterThrowIn.findScatterCoordinate(throwerCoordinate, direction, validDistance);
 		}
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, lastValidCoordinate));
 
-		getResult().addReport(new ReportSwoopPlayer(throwerCoordinate, coordinateEnd, direction, distanceRoll));
+		boolean inBounds = FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd);
+		getResult().addReport(new ReportSwoopPlayer(throwerCoordinate, coordinateEnd, direction, distanceRoll, !inBounds));
 
-		return new UtilThrowTeamMateSequence.ScatterResult(lastValidCoordinate, FieldCoordinateBounds.FIELD.isInBounds(coordinateEnd));
+		return new UtilThrowTeamMateSequence.ScatterResult(lastValidCoordinate, inBounds);
 
 	}
 
@@ -271,8 +303,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 			Player<?> thrower = game.getActingPlayer().getPlayer();
 			boolean vsOpponent = thrownPlayer.getTeam() != playerLandedUpon.getTeam();
-			boolean lethalSpp = thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState);
-			boolean violentSpp = isKickedPlayer	&& UtilCards.hasSkillWithProperty(thrower, NamedProperties.grantsSppFromSpecialActionsCas);
+			boolean lethalSpp =
+				thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState);
+			boolean violentSpp =
+				isKickedPlayer && UtilCards.hasSkillWithProperty(thrower, NamedProperties.grantsSppFromSpecialActionsCas);
 			InjuryResult injuryResultHitPlayer;
 
 			if (vsOpponent && (lethalSpp || violentSpp)) {
@@ -283,8 +317,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 
 				if (lethalSpp && violentSpp && injuryResultHitPlayer.injuryContext().isCasualty()) {
 					SppMechanic spp = game.getMechanic(Mechanic.Type.SPP);
-					spp.addCasualty(getGameState().getPrayerState().getAdditionalCasSppTeams(),	game.getGameResult().getPlayerResult(
-						thrower));
+					spp.addCasualty(getGameState().getPrayerState().getAdditionalCasSppTeams(),
+						game.getGameResult().getPlayerResult(
+							thrower));
 				}
 			} else {
 				injuryResultHitPlayer = UtilServerInjury.handleInjury(
@@ -292,7 +327,8 @@ public final class StepInitScatterPlayer extends AbstractStep {
 					playerLandedUpon, endCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
 			}
 			List<DeferredCommand> commands = new ArrayList<>();
-			GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
+			GameOptionBoolean alwaysTurnOver = (GameOptionBoolean) game.getOptions()
+				.getOptionWithDefault(GameOptionId.END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM);
 			if (alwaysTurnOver.isEnabled() || ((game.isHomePlaying() && game.getTeamHome().hasPlayer(playerLandedUpon))
 				|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
 				commands.add(new HitPlayerTurnOverCommand());
@@ -300,8 +336,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 			commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
 
 			getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
-			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResultHitPlayer, commands)));
-			
+			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
+				new SteadyFootingContext(injuryResultHitPlayer, commands)));
+
 			// continue loop in end step
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
 			publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, thrownPlayerId));
@@ -340,6 +377,9 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		IServerJsonOption.USING_BULLSEYE.addTo(jsonObject, usingBullseye);
 		IServerJsonOption.USING_SWOOP.addTo(jsonObject, usingSwoop);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
+		if (scatterResult != null) {
+			IServerJsonOption.SCATTER_RESULT.addTo(jsonObject, scatterResult.toJsonValue());
+		}
 		return jsonObject;
 	}
 
@@ -357,6 +397,10 @@ public final class StepInitScatterPlayer extends AbstractStep {
 		usingBullseye = IServerJsonOption.USING_BULLSEYE.getFrom(source, jsonObject);
 		usingSwoop = IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		if (IServerJsonOption.SCATTER_RESULT.isDefinedIn(jsonObject)) {
+			scatterResult = new UtilThrowTeamMateSequence.ScatterResult(null, false).initFrom(source,
+				IServerJsonOption.SCATTER_RESULT.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.report.mixed;
+package com.fumbbl.ffb.report.bb2020;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -14,7 +14,6 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.UtilReport;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class ReportSwoopPlayer extends NoDiceReport {
 
 	private FieldCoordinate startCoordinate;
@@ -22,6 +21,7 @@ public class ReportSwoopPlayer extends NoDiceReport {
 	private Direction direction;
 	private int distance;
 
+	@SuppressWarnings("unused")
 	public ReportSwoopPlayer() {
 	}
 

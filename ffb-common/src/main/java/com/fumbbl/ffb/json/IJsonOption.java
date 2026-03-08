@@ -468,6 +468,7 @@ public interface IJsonOption {
 	JsonIntOption RUSHING = new JsonIntOption("rushing");
 	JsonBooleanOption SAFE_THROW_HOLD = new JsonBooleanOption("safeThrowHold");
 	JsonEnumWithNameOption SCATTER_DIRECTION = new JsonEnumWithNameOption("scatterDirection", Factory.DIRECTION);
+	JsonObjectOption SCATTER_RESULT = new JsonObjectOption("scatterResult");
 	JsonDateOption SCHEDULED = new JsonDateOption("scheduled");
 	JsonIntOption SCORE = new JsonIntOption("score");
 	JsonBooleanOption SECURE_THE_BALL_USED = new JsonBooleanOption("secureTheBallUsed");
