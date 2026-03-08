@@ -758,11 +758,7 @@ public abstract class LogicModule {
 	}
 
 	private boolean canChomp(Player<?> player) {
-		Game game = client.getGame();
-		PlayerState playerState =
-			game.getFieldModel().getPlayerState(player);
-		return isSpecialBlockActionAvailable(player, playerState) &&
-			player.hasSkillProperty(NamedProperties.canPinPlayers);
+		return player.hasSkillProperty(NamedProperties.canPinPlayers);
 	}
 }
 

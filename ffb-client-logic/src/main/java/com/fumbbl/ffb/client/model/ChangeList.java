@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("Eye Gouge: In addition to not assisting, gouged players did also not cancel opposing assist")
 			.addBugfix("Steady Footing was triggered for prone/stunned players being hit by Ball&Chain")
 			.addBugfix("Knocking down team-mates on TTM/KTM did not cause turnovers")
+			.addBugfix("Chomp was not available on blitz during Charge!")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
