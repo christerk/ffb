@@ -11,6 +11,7 @@ import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
@@ -61,6 +62,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		add(TurnMode.DUMP_OFF);
 		add(TurnMode.QUICK_SNAP);
 		add(TurnMode.BETWEEN_TURNS);
+	}};
+
+	private static final Set<ReRolledAction> passiveReRollActions = new HashSet<ReRolledAction>() {{
+		add(ReRolledActions.SWOOP_DISTANCE);
+		add(ReRolledActions.SWOOP_DIRECTION);
 	}};
 
 	private static final int MASCOT_MINIMUM_ROLL = 4;
@@ -258,9 +264,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				properties.add(ReRollProperty.LONER);
 			}
 
-			if (isProReRollAvailable(player, game, gameState.getPassState())) {
+			if (!passiveReRollActions.contains(reRolledAction) &&
+				isProReRollAvailable(player, game, gameState.getPassState())) {
 				properties.add(ReRollProperty.PRO);
 			}
+			
 			if (reRollSkill == null) {
 				Optional<Skill> reRollOnce =
 					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
@@ -531,7 +539,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender, boolean usingMultiBlock,
+	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender,
+		boolean usingMultiBlock,
 		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength) {
 		Game game = gameState.getGame();
 		int blockStrengthAttacker = getAttackerBaseStrength(game, attacker, defender, usingMultiBlock);
@@ -565,7 +574,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
 		// is removed after the "first" block
 		if (!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
-				multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId())) {
+			multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId())) {
 			blockStrengthAttacker += additionalAssists;
 		}
 		return blockStrengthAttacker;

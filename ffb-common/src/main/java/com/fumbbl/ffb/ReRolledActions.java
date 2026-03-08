@@ -78,6 +78,8 @@ public class ReRolledActions {
 	public static final ReRolledAction BLASTIN_SOLVES_EVERYTHING = new ReRolledAction(BlastinSolvesEverything.class);
 	public static final ReRolledAction PUNT_DIRECTION = new ReRolledAction("Punt Direction");
 	public static final ReRolledAction PUNT_DISTANCE = new ReRolledAction("Punt Distance");
+	public static final ReRolledAction SWOOP_DIRECTION = new ReRolledAction("Swoop Direction");
+	public static final ReRolledAction SWOOP_DISTANCE = new ReRolledAction("Swoop Distance");
 
 	private final Map<String, ReRolledAction> values;
 
