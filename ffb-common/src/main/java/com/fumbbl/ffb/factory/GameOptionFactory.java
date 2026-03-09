@@ -392,6 +392,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Kick use is decided after the roll")
 					.setMessageFalse("Kick use has to be decided before the roll");
+			case BOMB_TEAM_MATE_KNOCK_DOWN_CAUSES_TURNOVER:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageTrue("Bombs knocking down team-mates cause turnovers")
+					.setMessageFalse("Bombs knocking down team-mates do not cause turnovers");
 			default:
 				return null;
 		}
