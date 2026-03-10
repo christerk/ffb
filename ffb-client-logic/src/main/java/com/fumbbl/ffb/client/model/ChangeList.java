@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Target selection was not always removed after a blitz")
 			.addBugfix("When using swoop it is now possible to re-roll direction and distance")
 			.addBugfix("Bomb knock down team-mates did not cause a turnover")
+			.addBugfix("Interception rolls where not modified per tacklezone but only by one for being marked")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
