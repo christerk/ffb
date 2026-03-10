@@ -34,6 +34,7 @@ public class ChangeList {
 			.addBugfix("When using swoop it is now possible to re-roll direction and distance")
 			.addBugfix("Bomb knock down team-mates did not cause a turnover")
 			.addBugfix("Interception rolls where not modified per tacklezone but only by one for being marked")
+			.addBugfix("Prayers were not added to inducement count")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
