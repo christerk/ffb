@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
 
@@ -219,7 +220,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			}
-			if (removeCatchMode) {
+			if (removeCatchMode && UtilPlayer.hasBall(game, player)) {
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 			}
 			if (oldDefenderState != null) {
