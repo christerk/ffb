@@ -22,10 +22,10 @@ public class JLabel extends javax.swing.JLabel {
 	}
 
 	private void setup(DimensionProvider dimensionProvider) {
+		dimensionProvider.scaleFont(this);
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setHorizontalTextPosition(SwingConstants.LEFT);
-		setIconTextGap(dimensionProvider.scale(5));
-		dimensionProvider.scaleFont(this);
+		setIconTextGap(4);
 	}
 
 }
