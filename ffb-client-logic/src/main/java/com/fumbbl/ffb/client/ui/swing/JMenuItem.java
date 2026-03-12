@@ -24,7 +24,7 @@ public class JMenuItem extends javax.swing.JMenuItem {
 
 	private void setup(DimensionProvider dimensionProvider) {
 		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
+		setHorizontalTextPosition(SwingConstants.RIGHT);
 		setIconTextGap(dimensionProvider.scale(5));
 		dimensionProvider.scaleFont(this);
 	}
