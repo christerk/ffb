@@ -24,7 +24,7 @@ public class JLabel extends javax.swing.JLabel {
 	private void setup(DimensionProvider dimensionProvider) {
 		dimensionProvider.scaleFont(this);
 		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
+		setHorizontalTextPosition(SwingConstants.RIGHT);
 		setIconTextGap(4);
 	}
 
