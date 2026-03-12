@@ -36,6 +36,7 @@ public class ChangeList {
 			.addBugfix("Interception rolls where not modified per tacklezone but only by one for being marked")
 			.addBugfix("Prayers were not added to inducement count")
 			.addBugfix("When a Steady Footing player blitzed the ball carrier with a both down (both no block) and got saved by Steady Footing the ball did not bounce")
+			.addBugfix("Interception SPP were not awarded")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
