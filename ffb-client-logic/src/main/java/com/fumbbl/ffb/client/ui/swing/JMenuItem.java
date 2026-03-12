@@ -3,24 +3,27 @@ package com.fumbbl.ffb.client.ui.swing;
 import com.fumbbl.ffb.client.DimensionProvider;
 
 import javax.swing.Icon;
+import javax.swing.SwingConstants;
 
 public class JMenuItem extends javax.swing.JMenuItem {
-	public JMenuItem() {
-		super();
-	}
 
 	public JMenuItem(DimensionProvider dimensionProvider, String name) {
 		super(name);
-		dimensionProvider.scaleFont(this);
+		setup(dimensionProvider);
 	}
 
 	public JMenuItem(DimensionProvider dimensionProvider, String text, int mnemonic) {
 		super(text, mnemonic);
-		dimensionProvider.scaleFont(this);
+		setup(dimensionProvider);
 	}
 
 	public JMenuItem(DimensionProvider dimensionProvider, String text, Icon icon) {
 		super(text, icon);
+		setup(dimensionProvider);
+	}
+
+	private void setup(DimensionProvider dimensionProvider) {
+		setHorizontalAlignment(SwingConstants.LEFT);
 		dimensionProvider.scaleFont(this);
 	}
 }
