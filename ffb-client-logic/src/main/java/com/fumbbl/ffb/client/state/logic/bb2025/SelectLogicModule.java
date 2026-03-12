@@ -364,7 +364,7 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)
 			&& !playerState.isProneOrStunned()) {
-			//context.add(ClientAction.FORGO);
+			context.add(ClientAction.FORGO);
 		}
 		if (isThenIStartedBlastinAvailable(player)) {
 			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
