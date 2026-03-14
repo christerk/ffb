@@ -9,101 +9,104 @@ package com.fumbbl.ffb;
  */
 public interface IClientPropertyValue extends CommonPropertyValue {
 
-	String SETTING_SOUND_ON = "soundOn";
-	String SETTING_SOUND_MUTE_SPECTATORS = "muteSpectators";
-	String SETTING_SOUND_OFF = "soundOff";
+    String SETTING_SOUND_ON = "soundOn";
+    String SETTING_SOUND_MUTE_SPECTATORS = "muteSpectators";
+    String SETTING_SOUND_OFF = "soundOff";
 
-	String SETTING_ICONS_TEAM = "iconsTeam";
-	String SETTING_ICONS_ROSTER_OPPONENT = "iconsRosterOpponent";
-	String SETTING_ICONS_ROSTER_BOTH = "iconsRoster";
-	String SETTING_ICONS_ABSTRACT = "iconsAbstract";
+    String SETTING_ICONS_TEAM = "iconsTeam";
+    String SETTING_ICONS_ROSTER_OPPONENT = "iconsRosterOpponent";
+    String SETTING_ICONS_ROSTER_BOTH = "iconsRoster";
+    String SETTING_ICONS_ABSTRACT = "iconsAbstract";
 
-	String SETTING_AUTOMOVE_ON = "automoveOn";
-	String SETTING_AUTOMOVE_OFF = "automoveOff";
+    String SETTING_AUTOMOVE_ON = "automoveOn";
+    String SETTING_AUTOMOVE_OFF = "automoveOff";
 
-	String SETTING_BLITZ_TARGET_PANEL_ON = "showBlitzTargetPanelOn";
-	String SETTING_BLITZ_TARGET_PANEL_OFF = "showBlitzTargetPanelOff";
+    String SETTING_BLITZ_TARGET_PANEL_ON = "showBlitzTargetPanelOn";
+    String SETTING_BLITZ_TARGET_PANEL_OFF = "showBlitzTargetPanelOff";
 
-	String SETTING_GAZE_TARGET_PANEL_ON = "showGazeTargetPanelOn";
-	String SETTING_GAZE_TARGET_PANEL_OFF = "showGazeTargetPanelOff";
+    String SETTING_GAZE_TARGET_PANEL_ON = "showGazeTargetPanelOn";
+    String SETTING_GAZE_TARGET_PANEL_OFF = "showGazeTargetPanelOff";
 
-	String SETTING_RIGHT_CLICK_END_ACTION_ON = "rightClickEndActionOn";
-	String SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU = "rightClickOpensContextMenu";
-	String SETTING_RIGHT_CLICK_LEGACY_MODE = "rightClickLegacyMode";
-	String SETTING_RIGHT_CLICK_END_ACTION_OFF = "rightClickEndActionOff";
+    String SETTING_RIGHT_CLICK_END_ACTION_ON = "rightClickEndActionOn";
+    String SETTING_RIGHT_CLICK_OPENS_CONTEXT_MENU = "rightClickOpensContextMenu";
+    String SETTING_RIGHT_CLICK_LEGACY_MODE = "rightClickLegacyMode";
+    String SETTING_RIGHT_CLICK_END_ACTION_OFF = "rightClickEndActionOff";
 
-	String SETTING_PITCH_CUSTOM = "pitchCustom";
-	String SETTING_PITCH_DEFAULT = "pitchDefault";
-	String SETTING_PITCH_BASIC = "pitchBasic";
+    String SETTING_PITCH_CUSTOM = "pitchCustom";
+    String SETTING_PITCH_DEFAULT = "pitchDefault";
+    String SETTING_PITCH_BASIC = "pitchBasic";
 
-	String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
-	String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";
+    String SETTING_PITCH_MARKINGS_ON = "pitchMarkingsOn";
+    String SETTING_PITCH_MARKINGS_OFF = "pitchMarkingsOff";
 
-	String SETTING_PITCH_MARKINGS_ROW_ON = "pitchMarkingsRowOn";
-	String SETTING_PITCH_MARKINGS_ROW_OFF = "pitchMarkingsRowOff";
+    String SETTING_PITCH_MARKINGS_ROW_ON = "pitchMarkingsRowOn";
+    String SETTING_PITCH_MARKINGS_ROW_OFF = "pitchMarkingsRowOff";
 
-	// keep old property value ids for backwards compatibility
-	String SETTING_LAYOUT_LANDSCAPE = "pitchLandscape";
-	String SETTING_LAYOUT_PORTRAIT = "pitchPortrait";
-	String SETTING_LAYOUT_SQUARE = "layoutSquare";
-	String SETTING_LAYOUT_WIDE = "layoutWide";
+    // keep old property value ids for backwards compatibility
+    String SETTING_LAYOUT_LANDSCAPE = "pitchLandscape";
+    String SETTING_LAYOUT_PORTRAIT = "pitchPortrait";
+    String SETTING_LAYOUT_SQUARE = "layoutSquare";
+    String SETTING_LAYOUT_WIDE = "layoutWide";
 
-	String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
-	String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";
-	String SETTING_TEAM_LOGOS_NONE = "teamLogosNone";
+    String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
+    String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";
+    String SETTING_TEAM_LOGOS_NONE = "teamLogosNone";
 
-	String SETTING_PITCH_WEATHER_ON = "pitchWeatherOn";
-	String SETTING_PITCH_WEATHER_OFF = "pitchWeatherOff";
+    String SETTING_PITCH_WEATHER_ON = "pitchWeatherOn";
+    String SETTING_PITCH_WEATHER_OFF = "pitchWeatherOff";
 
-	String SETTING_RANGEGRID_ALWAYS_ON = "rangegridAlwaysOn";
-	String SETTING_RANGEGRID_TOGGLE = "rangegridToggle";
+    String SETTING_RANGEGRID_ALWAYS_ON = "rangegridAlwaysOn";
+    String SETTING_RANGEGRID_TOGGLE = "rangegridToggle";
 
-	String SETTING_MARK_USED_PLAYERS_DEFAULT = "markUsedPlayersDefault";
-	String SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN = "markUsedPlayersCheckIconGreen";
-	String SETTING_HIDE_AUTO_MARKING_DIALOG = "hideAutoMarkingDialog";
+    String SETTING_MARK_USED_PLAYERS_DEFAULT = "markUsedPlayersDefault";
+    String SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN = "markUsedPlayersCheckIconGreen";
+    String SETTING_HIDE_AUTO_MARKING_DIALOG = "hideAutoMarkingDialog";
 
-	String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";
-	String SETTING_SWAP_TEAM_COLORS_OFF = "swapTeamColorsOff";
+    String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";
+    String SETTING_SWAP_TEAM_COLORS_OFF = "swapTeamColorsOff";
 
-	String SETTING_BACKGROUND_FRAME_ICONS = "backgroundFrameIcons";
-	String SETTING_BACKGROUND_FRAME_COLOR = "backgroundFrameColor";
+    String SETTING_SWAP_MARKING_GRAPHICS_ON = "swapMarkingGraphicsOn";
+    String SETTING_SWAP_MARKING_GRAPHICS_OFF = "swapMarkingGraphicsOff";
 
-	String SETTING_CRATERS_AND_BLOODSPOTS_SHOW = "cratersAndBloodspotsShow";
-	String SETTING_CRATERS_AND_BLOODSPOTS_HIDE = "cratersAndBloodspotsHide";
+    String SETTING_BACKGROUND_FRAME_ICONS = "backgroundFrameIcons";
+    String SETTING_BACKGROUND_FRAME_COLOR = "backgroundFrameColor";
 
-	String SETTING_SWEET_SPOT_OFF = "sweetSpotOff";
-	String SETTING_SWEET_SPOT_BLACK = "sweetSpotBlack";
-	String SETTING_SWEET_SPOT_WHITE = "sweetSpotWhite";
+    String SETTING_CRATERS_AND_BLOODSPOTS_SHOW = "cratersAndBloodspotsShow";
+    String SETTING_CRATERS_AND_BLOODSPOTS_HIDE = "cratersAndBloodspotsHide";
 
-	String SETTING_LOCAL_ICON_CACHE_OFF = "localIconCacheOff";
-	String SETTING_LOCAL_ICON_CACHE_ON = "localIconCacheOn";
+    String SETTING_SWEET_SPOT_OFF = "sweetSpotOff";
+    String SETTING_SWEET_SPOT_BLACK = "sweetSpotBlack";
+    String SETTING_SWEET_SPOT_WHITE = "sweetSpotWhite";
 
-	String SETTING_LOG_ON = "logOn";
-	String SETTING_LOG_OFF = "logOff";
+    String SETTING_LOCAL_ICON_CACHE_OFF = "localIconCacheOff";
+    String SETTING_LOCAL_ICON_CACHE_ON = "localIconCacheOn";
 
-	String SETTING_SKETCH_CURSOR_ON = "sketchCursorOn";
-	String SETTING_SKETCH_CURSOR_OFF = "sketchCursorOff";
+    String SETTING_LOG_ON = "logOn";
+    String SETTING_LOG_OFF = "logOff";
 
-	// Tacklezones (toggle style)
-	String SETTING_TACKLEZONES_NONE = "none";
-	String SETTING_TACKLEZONES_HOME = "home";
-	String SETTING_TACKLEZONES_AWAY = "away";
-	String SETTING_TACKLEZONES_BOTH = "both";
-	String SETTING_TACKLEZONES_PASSIVE = "passive";
-	String SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP = "passiveBothOnSetup";
-	String SETTING_TACKLEZONES_OVERLAP_ON = "overlapTzOn";
-	String SETTING_TACKLEZONES_OVERLAP_OFF = "overlapTzOff";
-	String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";
-	String SETTING_TACKLEZONES_CONTOUR_OFF = "tzContourOff";
+    String SETTING_SKETCH_CURSOR_ON = "sketchCursorOn";
+    String SETTING_SKETCH_CURSOR_OFF = "sketchCursorOff";
 
-	// Click strategy settings
-	String SETTING_CLICK_LEFT = "clickLeft";
-	String SETTING_CLICK_LEFT_ALT = "clickLeftAlt";
-	String SETTING_CLICK_LEFT_CTRL = "clickLeftCtrl";
-	String SETTING_CLICK_LEFT_SHIFT = "clickLeftShift";
-	String SETTING_CLICK_DOUBLE = "clickDouble";
+    // Tacklezones (toggle style)
+    String SETTING_TACKLEZONES_NONE = "none";
+    String SETTING_TACKLEZONES_HOME = "home";
+    String SETTING_TACKLEZONES_AWAY = "away";
+    String SETTING_TACKLEZONES_BOTH = "both";
+    String SETTING_TACKLEZONES_PASSIVE = "passive";
+    String SETTING_TACKLEZONES_PASSIVE_BOTH_ON_SETUP = "passiveBothOnSetup";
+    String SETTING_TACKLEZONES_OVERLAP_ON = "overlapTzOn";
+    String SETTING_TACKLEZONES_OVERLAP_OFF = "overlapTzOff";
+    String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";
+    String SETTING_TACKLEZONES_CONTOUR_OFF = "tzContourOff";
 
-	String SETTING_AUTOCOMPLETE_ON = "on";
-	String SETTING_AUTOCOMPLETE_OFF = "off";
+    // Click strategy settings
+    String SETTING_CLICK_LEFT = "clickLeft";
+    String SETTING_CLICK_LEFT_ALT = "clickLeftAlt";
+    String SETTING_CLICK_LEFT_CTRL = "clickLeftCtrl";
+    String SETTING_CLICK_LEFT_SHIFT = "clickLeftShift";
+    String SETTING_CLICK_DOUBLE = "clickDouble";
+
+    String SETTING_AUTOCOMPLETE_ON = "on";
+    String SETTING_AUTOCOMPLETE_OFF = "off";
 
 }
