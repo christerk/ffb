@@ -125,21 +125,23 @@ public class PlayerIconFactory {
                 }
             }
             int totalWidth;
+            //int skillIconSize = dimensionProvider.scale(pIcon.getWidth()/3);
+            int skillIconSize = dimensionProvider.scale(14);
             if (!icons.isEmpty()) {
                 if (icons.size() < 3) {
-                    totalWidth = icons.size() * 16;
+                    totalWidth = icons.size() * skillIconSize;
                 }else {
-                    totalWidth = 3 * 16;
+                    totalWidth = 3 * skillIconSize;
                 }
                 int x = (pIcon.getWidth() - totalWidth) / 2;
                 int y;
                 if (bottom) {
-                    y = pIcon.getHeight() - 16 - 2;
+                    y = pIcon.getHeight() - skillIconSize - 2;
                 } else {
                     y = 2;
                 }
                 for (int i = 0; i < icons.size(); i++) {
-                    g2d.drawImage(icons.get(i), x + (i % 3) * 16, y - (i/3)*16, 16, 16, null);
+                    g2d.drawImage(icons.get(i), x + (i % 3) * skillIconSize, y - (i/3)*skillIconSize, skillIconSize, skillIconSize, null);
                 }
             }
 
