@@ -9,6 +9,11 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+
+		versions.add(new VersionChangeList("3.1.3")
+			.addBugfix("Banned coach does not affect Brilliant Coaching roll")
+		);
+
 		versions.add(new VersionChangeList("3.1.2")
 			.addBugfix("B&C could perform Multi Block if skill was present")
 			.addImprovement("Reword B&C knock out message")
