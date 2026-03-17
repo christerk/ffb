@@ -441,11 +441,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		TurnData turnDataHome = game.getTurnDataHome();
 		TurnData turnDataAway = game.getTurnDataAway();
-		boolean homeCoachBanned = turnDataHome.isCoachBanned();
-		boolean awayCoachBanned = turnDataAway.isCoachBanned();
-
-		totalHome += homeCoachBanned ? -1 : 0;
-		totalAway += awayCoachBanned ? -1 : 0;
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_BRILLIANT_COACHING));
 

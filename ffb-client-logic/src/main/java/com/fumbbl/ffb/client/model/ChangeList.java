@@ -10,7 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("3.1.2")
+		versions.add(new VersionChangeList("3.1.3")
+			.addBugfix("Banned coach does not affect Brilliant Coaching roll")
 			.addBugfix("Prevent staff and technical player types to be eligible to be raised")
 		);
 

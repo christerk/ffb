@@ -16,8 +16,6 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 	@Override
 	protected void render(ReportKickoffExtraReRoll report) {
 		StringBuilder status = new StringBuilder();
-		boolean homeBanned = game.getTurnDataHome().isCoachBanned();
-		boolean awayBanned = game.getTurnDataAway().isCoachBanned();
 
 		int homePart = game.getTurnDataHome().getInducementSet().value(Usage.ADD_COACH);
 		int awayPart = game.getTurnDataAway().getInducementSet().value(Usage.ADD_COACH);
@@ -25,28 +23,26 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 		status.append("Brilliant Coaching Roll Home Team [ ").append(report.getRollHome()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		int totalHome = report.getRollHome()
-			+ game.getTeamHome().getAssistantCoaches() - (homeBanned ? 1 : 0) + homePart;
+			+ game.getTeamHome().getAssistantCoaches() + homePart;
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollHome());
 		status.append(" + ").append(game.getTeamHome().getAssistantCoaches()).append(" Assistant Coaches");
 		if (homePart > 0) {
 			status.append(" + ").append(homePart).append(" Part-time Assistant Coaches");
 		}
-		status.append(" ").append(homeBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalHome).append(".");
 		println(getIndent() + 1, status.toString());
 		status = new StringBuilder();
 		status.append("Brilliant Coaching Roll Away Team [ ").append(report.getRollAway()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		int totalAway = report.getRollAway()
-			+ game.getTeamAway().getAssistantCoaches() - (awayBanned ? 1 : 0) + awayPart;
+			+ game.getTeamAway().getAssistantCoaches() + awayPart;
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollAway());
 		status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
 		if (awayPart > 0) {
 			status.append(" + ").append(awayPart).append(" Part-time Assistant Coaches");
 		}
-		status.append(" ").append(awayBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalAway).append(".");
 		println(getIndent() + 1, status.toString());
 
