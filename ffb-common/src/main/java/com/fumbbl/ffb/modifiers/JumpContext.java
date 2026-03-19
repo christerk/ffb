@@ -43,7 +43,8 @@ public class JumpContext implements ModifierContext {
 		this.accumulatedModifiers = accumulatedModifiers;
 	}
 
-	public void addModififerValue(int value) {
+	public void addModifierValue(int value) {
 		accumulatedModifiers += value;
 	}
 }
+

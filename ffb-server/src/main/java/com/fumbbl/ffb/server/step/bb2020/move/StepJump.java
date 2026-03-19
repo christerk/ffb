@@ -239,7 +239,7 @@ public class StepJump extends AbstractStepWithReRoll {
 				}
 
 				skill.get().getJumpModifiers().forEach(modifier -> {
-					context.addModififerValue(modifier.getModifier());
+					context.addModifierValue(modifier.getModifier());
 					divingTackleModifiers.add(modifier);
 				});
 			}
@@ -327,7 +327,7 @@ public class StepJump extends AbstractStepWithReRoll {
 			Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream().filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer))
 				.findFirst();
 			if (skill.isPresent()) {
-				skill.get().getJumpModifiers().forEach(modifier -> context.addModififerValue(modifier.getModifier()));
+				skill.get().getJumpModifiers().forEach(modifier -> context.addModifierValue(modifier.getModifier()));
 				Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
 				jumpModifiers.addAll(skill.get().getJumpModifiers());
 				int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);

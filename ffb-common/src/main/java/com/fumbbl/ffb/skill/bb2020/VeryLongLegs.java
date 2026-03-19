@@ -31,7 +31,7 @@ public class VeryLongLegs extends Skill {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpContext context) {
 				if (context.getAccumulatedModifiers() > 1) {
-					context.addModififerValue(getModifier());
+					context.addModifierValue(getModifier());
 					return true;
 				}
 				return false;
