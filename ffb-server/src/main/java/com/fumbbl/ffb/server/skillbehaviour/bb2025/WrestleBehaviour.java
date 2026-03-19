@@ -82,12 +82,12 @@ public class WrestleBehaviour extends SkillBehaviour<Wrestle> {
 				}
 
 				if (state.usingWrestleAttacker || state.usingWrestleDefender) {
+					if (UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+						step.publishParameter(StepParameter.from(StepParameterKey.REVERT_END_TURN, true));
+					}
 					step.publishParameters(UtilServerInjury.dropPlayer(step, game.getDefender(), ApothecaryMode.DEFENDER, true));
 					step.publishParameters(UtilServerInjury.dropPlayer(step, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
 
-					if (state.usingWrestleAttacker && UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-						step.publishParameter(StepParameter.from(StepParameterKey.REVERT_END_TURN, true));
-					}
 
 					if (game.getDefender().hasSkillProperty(NamedProperties.placedProneCausesInjuryRoll)) {
 						FieldCoordinate defenderCoordinate = game.getFieldModel().getPlayerCoordinate(game.getDefender());

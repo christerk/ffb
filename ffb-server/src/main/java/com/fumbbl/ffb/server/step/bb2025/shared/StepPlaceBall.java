@@ -164,7 +164,9 @@ public class StepPlaceBall extends AbstractStep {
 				game.getFieldModel().setBallMoving(true);
 				game.setTurnMode(game.getLastTurnMode());
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
-				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
+				if (revertEndTurn) {
+					publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
+				}
 				leave(game);
 				break;
 			case DONE:
