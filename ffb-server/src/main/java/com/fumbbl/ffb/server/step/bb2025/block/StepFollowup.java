@@ -143,6 +143,7 @@ public class StepFollowup extends AbstractStep {
 					if (defenderHasTacklezones) {
 						UtilServerDialog.showDialog(getGameState(),
 							new DialogSkillUseParameter(game.getDefenderId(), skillPreventsFollowingUp, 0), true);
+						return;
 					} else {
 						getResult().addReport(new ReportSkillUse(game.getDefenderId(), skillPreventsFollowingUp, false, SkillUse.NO_TACKLEZONE));
 						usingSkillPreventingFollowUp = false;
