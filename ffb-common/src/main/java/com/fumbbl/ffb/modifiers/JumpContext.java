@@ -8,7 +8,7 @@ public class JumpContext implements ModifierContext {
 	private final Game game;
 	private final Player<?> player;
 	private final FieldCoordinate from, to;
-	private int accumulatedModifiers;
+	private int accumulatedModifiers, modifierCount;
 
 	public JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to) {
 		this.game = game;
@@ -45,6 +45,15 @@ public class JumpContext implements ModifierContext {
 
 	public void addModifierValue(int value) {
 		accumulatedModifiers += value;
+		modifierCount++;
+	}
+
+	public void addModifierCount(int count) {
+		modifierCount+=count;
+	}
+
+	public int getModifierCount() {
+		return modifierCount;
 	}
 }
 
