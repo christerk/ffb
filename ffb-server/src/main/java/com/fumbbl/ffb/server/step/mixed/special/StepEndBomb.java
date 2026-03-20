@@ -21,8 +21,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
@@ -45,7 +43,6 @@ public final class StepEndBomb extends AbstractStep {
 	private String fCatcherId;
 	private boolean fEndTurn;
 	private boolean fBombExploded;
-	private boolean allowMoveAfterPass;
 
 	public StepEndBomb(GameState pGameState) {
 		super(pGameState);
@@ -76,18 +73,6 @@ public final class StepEndBomb extends AbstractStep {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void init(StepParameterSet parameterSet) {
-		super.init(parameterSet);
-		if (parameterSet != null) {
-			for (StepParameter parameter : parameterSet.values()) {
-				if (parameter.getKey() == StepParameterKey.ALLOW_MOVE_AFTER_PASS) {
-					allowMoveAfterPass = (boolean) parameter.getValue();
-				}
-			}
-		}
 	}
 
 	@Override
@@ -147,10 +132,15 @@ public final class StepEndBomb extends AbstractStep {
 						.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, fEndTurn));
 				}
 
-			} else if (!fEndTurn && allowMoveAfterPass) {
-				UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.MOVE, false);
+			} else if (!fEndTurn && state.isAllowMoveAfterBomb()) {
+				// first unset active player (might have been set above to the bomber already) so the player base is set
+				// correctly, otherwise ending the activation will leave the player active
+				UtilServerSteps.changePlayerAction(this, null, null, false);
+				game.getFieldModel().setPlayerState(originalBomber, playerState.changeActive(true));
+				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.MOVE, false);
 				((Move) factory.forName(SequenceGenerator.Type.Move.name()))
 					.pushSequence(new Move.SequenceParams(getGameState()));
+				game.getActingPlayer().markSkillUsed(NamedProperties.enableThrowBombAction);
 			} else {
 				((EndPlayerAction) factory.forName(SequenceGenerator.Type.EndPlayerAction.name()))
 					.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), false, true, fEndTurn));
@@ -179,7 +169,6 @@ public final class StepEndBomb extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
-		IServerJsonOption.ALLOW_MOVE_AFTER_PASS.addTo(jsonObject, allowMoveAfterPass);
 		return jsonObject;
 	}
 
@@ -189,7 +178,6 @@ public final class StepEndBomb extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
-		allowMoveAfterPass = toPrimitive(IServerJsonOption.ALLOW_MOVE_AFTER_PASS.getFrom(source, jsonObject));
 		return this;
 	}
 

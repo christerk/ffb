@@ -31,7 +31,7 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.step.generator.mixed.Bomb;
+import com.fumbbl.ffb.server.step.generator.bb2020.Bomb;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -172,13 +172,16 @@ public final class StepEndPassing extends AbstractStep {
 		boolean allowMoverAfterPass = PassingDistance.QUICK_PASS == passingDistance
 			&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterQuickPass)
 			&& !fPassFumble;
-		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble && actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier());
+		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble &&
+			actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier());
+		getGameState().getPassState().setAllowMoveAfterBomb(allowMoveAfterBomb);
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+				bombGenerator.pushSequence(
+					new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, dontDropFumble));
 			} else {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, dontDropFumble));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
@@ -188,14 +191,15 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		// failed animosity may try to choose a new target
 		if (actingPlayer.isSufferingAnimosity() && !fEndPlayerAction && (game.getPassCoordinate() == null)) {
-			((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
+			((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(
+				new Pass.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
-		FieldCoordinate endCoordinate =  game.getFieldModel().getPlayerCoordinate(catcher);
+		FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 
 		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher) || ballWasSnatched)
 			&& game.getThrower().getTeam().hasPlayer(catcher)
@@ -222,8 +226,11 @@ public final class StepEndPassing extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer())
 			&& actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
 			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() && actingPlayer.hasPassed())
-				|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() || fPassFumble);
+				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() &&
+				actingPlayer.hasPassed())
+				||
+				UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() ||
+				fPassFumble);
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {
 			PassState state = getGameState().getPassState();
@@ -261,7 +268,8 @@ public final class StepEndPassing extends AbstractStep {
 					&& UtilPlayer.isNextMovePossible(game, false));
 
 				if (fEndTurn || fEndPlayerAction) {
-					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
+					endGenerator.pushSequence(
+						new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 				} else {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.MOVE, actingPlayer.isJumping());

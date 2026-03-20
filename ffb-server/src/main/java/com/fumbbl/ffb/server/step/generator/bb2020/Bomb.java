@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.generator.mixed;
+package com.fumbbl.ffb.server.step.generator.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.server.GameState;
@@ -11,7 +11,6 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
-@RulesCollection(RulesCollection.Rules.BB2016)
 @RulesCollection(RulesCollection.Rules.BB2020)
 public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 
@@ -31,20 +30,19 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 			from(StepParameterKey.DONT_DROP_FUMBLE, params.dontDropFumble));
 		// may insert multiple specialEffect sequences add this point
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
+		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB);
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String catcherId;
-		private final boolean passFumble, allowMoveAfterPass, dontDropFumble;
+		private final boolean passFumble, dontDropFumble;
 
-		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean allowMoveAfterPass, boolean dontDropFumble) {
+		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean dontDropFumble) {
 			super(gameState);
 			this.catcherId = catcherId;
 			this.passFumble = passFumble;
-			this.allowMoveAfterPass = allowMoveAfterPass;
 			this.dontDropFumble = dontDropFumble;
 		}
 	}

@@ -175,16 +175,17 @@ public final class StepEndPassing extends AbstractStep {
 		boolean allowMoveAfterHandOff =
 			game.getThrowerAction() == PlayerAction.HAND_OVER
 				&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterHandOff);
-		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble &&
-			actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier());
+		if (actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier())) {
+			getGameState().getPassState().setAllowMoveAfterBomb(allowMoverAfterPass && !dontDropFumble);
+		}
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
 				bombGenerator.pushSequence(
-					new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+					new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, dontDropFumble));
 			} else {
 				bombGenerator.pushSequence(
-					new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+					new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, dontDropFumble));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));

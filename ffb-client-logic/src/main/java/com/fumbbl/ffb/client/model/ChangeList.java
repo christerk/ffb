@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Leap was not applied when combined with other positive modifiers like Very Long Legs and the resulting modifier was lower than 2")
 			.addBugfix("Player with Fend and Taunt was not able to use Taunt")
 			.addBugfix("Fumbled KTM did not apply stunty to injury roll")
+			.addBugfix("Give and Go did not trigger when a bomb was intercepted/caught")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")
