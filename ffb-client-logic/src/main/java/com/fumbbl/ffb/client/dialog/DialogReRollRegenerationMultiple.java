@@ -16,10 +16,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class DialogReRollRegenerationMultiple extends Dialog {
 
+	public static final Color HIGHLIGHT = Color.lightGray;
 	private String selectedTarget;
 
 	public DialogReRollRegenerationMultiple(FantasyFootballClient pClient,
@@ -66,11 +69,31 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 			String target = parameter.getPlayerIds().get(index);
 			Player<?> player = game.getPlayerById(target);
 
-			detailPanel.add(createButton(target, player.getName(), (char) index));
+			JPanel targetPanel = new JPanel();
+			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
+			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+			JPanel buttonPanel = new JPanel();
+			buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+			buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+			buttonPanel.add(Box.createHorizontalGlue());
+			buttonPanel.setBackground(HIGHLIGHT);
+			buttonPanel.add(createButton(target, player.getName(), (char) index));
+			buttonPanel.add(Box.createHorizontalGlue());
+
+			targetPanel.add(Box.createVerticalStrut(3));
+			targetPanel.add(buttonPanel);
+			targetPanel.add(Box.createVerticalStrut(3));
+			targetPanel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+			targetPanel.setBackground(HIGHLIGHT);
+			detailPanel.add(targetPanel);
 			detailPanel.add(Box.createVerticalStrut(5));
 		}
 
-		detailPanel.add(fButtonNoReRoll);
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
+		bottomPanel.add(fButtonNoReRoll);
+		detailPanel.add(bottomPanel);
 
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
@@ -81,7 +104,7 @@ public class DialogReRollRegenerationMultiple extends Dialog {
 		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
 		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		infoPanel.add(iconLabel);
-		infoPanel.add(Box.createHorizontalGlue());
+		infoPanel.add(Box.createHorizontalStrut(5));
 		infoPanel.add(detailPanel);
 		infoPanel.add(Box.createHorizontalGlue());
 
