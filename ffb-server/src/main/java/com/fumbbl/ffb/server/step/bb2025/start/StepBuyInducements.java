@@ -120,10 +120,10 @@ public final class StepBuyInducements extends AbstractStep {
 						Team team = game.getTeamById(command.getTeamId());
 						if (team == game.getTeamHome()) {
 							int newTvHome = getNewTv(usedInducementGoldHome, team);
-							getResult().addReport(generateReport(team, usedInducementGoldHome, newTvHome));
+							getResult().addReport(generateReport(team, usedInducementGoldHome, newTvHome, prayersBoughtHome));
 						} else {
 							int newTvAway = getNewTv(usedInducementGoldAway, team);
-							getResult().addReport(generateReport(team, usedInducementGoldAway, newTvAway));
+							getResult().addReport(generateReport(team, usedInducementGoldAway, newTvAway, prayersBoughtAway));
 						}
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -574,8 +574,8 @@ public final class StepBuyInducements extends AbstractStep {
 		int newTvAway = getNewTv(usedInducementGoldAway, teamAway);
 
 		if (parallel) {
-			getResult().addReport(generateReport(teamHome, usedInducementGoldHome, newTvHome));
-			getResult().addReport(generateReport(teamAway, usedInducementGoldAway, newTvAway));
+			getResult().addReport(generateReport(teamHome, usedInducementGoldHome, newTvHome, prayersBoughtHome));
+			getResult().addReport(generateReport(teamAway, usedInducementGoldAway, newTvAway, prayersBoughtAway));
 		}
 
 		SequenceGeneratorFactory factory = getGameState().getGame().getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
@@ -669,8 +669,8 @@ public final class StepBuyInducements extends AbstractStep {
 	private void setUnderDogCashValues(TeamResult teamResult, int usedInducementGold, int availableInducementGold,
 																		 int freeCash) {
 		int unspent = availableInducementGold - usedInducementGold;
-		int unspentAllowance = Math.min(unspent, MAX_UNDERDOG_ALLOWANCE);
-		int treasurySpentOnInducements = MAX_UNDERDOG_ALLOWANCE - unspentAllowance;
+		int unspentAllowance = Math.min(unspent, treasury);
+		int treasurySpentOnInducements = treasury - unspentAllowance;
 		teamResult.setTreasurySpentOnInducements(treasurySpentOnInducements);
 
 		int usedPettyCash = usedInducementGold - treasurySpentOnInducements - freeCash;
@@ -680,11 +680,11 @@ public final class StepBuyInducements extends AbstractStep {
 
 	}
 
-	private ReportPrayersAndInducementsBought generateReport(Team pTeam, int gold, int newTv) {
+	private ReportPrayersAndInducementsBought generateReport(Team pTeam, int gold, int newTv, int boughtPrayers) {
 		Game game = getGameState().getGame();
 		InducementSet inducementSet = (game.getTeamHome() == pTeam) ? game.getTurnDataHome().getInducementSet() :
 			game.getTurnDataAway().getInducementSet();
-		int nrOfInducements = 0, nrOfStars = 0, nrOfMercenaries = 0;
+		int nrOfInducements = boughtPrayers, nrOfStars = 0, nrOfMercenaries = 0;
 		for (Inducement inducement : inducementSet.getInducements()) {
 			Set<Usage> usages = inducement.getType().getUsages();
 			if (usages.contains(Usage.STAR)) {

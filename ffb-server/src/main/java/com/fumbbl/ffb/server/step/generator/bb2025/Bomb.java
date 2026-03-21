@@ -32,20 +32,19 @@ public class Bomb extends SequenceGenerator<Bomb.SequenceParams> {
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN); // handles the bomb bounce
 		sequence.add(StepId.RESOLVE_BOMB);
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
-		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB, from(StepParameterKey.ALLOW_MOVE_AFTER_PASS, params.allowMoveAfterPass));
+		sequence.add(StepId.END_BOMB, IStepLabel.END_BOMB);
 		// may insert endPlayerAction or pass sequence add this point
 		gameState.getStepStack().push(sequence.getSequence());
 	}
 
 	public static class SequenceParams extends SequenceGenerator.SequenceParams {
 		private final String catcherId;
-		private final boolean passFumble, allowMoveAfterPass, dontDropFumble;
+		private final boolean passFumble, dontDropFumble;
 
-		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean allowMoveAfterPass, boolean dontDropFumble) {
+		public SequenceParams(GameState gameState, String catcherId, boolean passFumble, boolean dontDropFumble) {
 			super(gameState);
 			this.catcherId = catcherId;
 			this.passFumble = passFumble;
-			this.allowMoveAfterPass = allowMoveAfterPass;
 			this.dontDropFumble = dontDropFumble;
 		}
 	}

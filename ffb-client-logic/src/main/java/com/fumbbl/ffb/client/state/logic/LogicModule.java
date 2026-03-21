@@ -193,8 +193,9 @@ public abstract class LogicModule {
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGazeAutomatically)
-			&& ArrayTool.isProvided(UtilPlayer
-			.findAdjacentStandingOrPronePlayers(game, game.getOtherTeam(game.getActingTeam()), playerCoordinate));
+			&& Arrays.stream(UtilPlayer
+			.findAdjacentStandingOrPronePlayers(game, game.getOtherTeam(game.getActingTeam()), playerCoordinate)).anyMatch(
+			opponent -> !fieldModel.getPlayerState(opponent).isDistracted());
 	}
 
 	public boolean isRaidingPartyAvailable(ActingPlayer player) {
@@ -300,7 +301,7 @@ public abstract class LogicModule {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
-			&& playerState.isActive()
+			&& playerState.isActive() && !player.hasSkillProperty(NamedProperties.preventRegularBlockAction)
 			&& ((UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockMoreThanOnce)
 			&& !UtilCards.hasSkillToCancelProperty(player, NamedProperties.canBlockMoreThanOnce))
 			|| (UtilCards.hasSkillWithProperty(player, NamedProperties.canBlockTwoAtOnce)
@@ -388,7 +389,8 @@ public abstract class LogicModule {
 			&& player.hasSkillProperty(NamedProperties.canPunt)
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
-			&& (!(playerState.getBase() == PlayerState.PRONE) || UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE))
+			&& (!(playerState.getBase() == PlayerState.PRONE) ||
+			UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE))
 			&& !player.hasSkillProperty(NamedProperties.preventPuntAction));
 	}
 
@@ -597,8 +599,8 @@ public abstract class LogicModule {
 			|| isCatchOfTheDayAvailable(actingPlayer)
 			|| isBlackInkAvailable(actingPlayer)
 			|| isThenIStartedBlastinAvailable(actingPlayer)
-				|| isZoatGazeAvailable(actingPlayer)
-				|| isIncorporealAvailable(actingPlayer);
+			|| isZoatGazeAvailable(actingPlayer)
+			|| isIncorporealAvailable(actingPlayer);
 	}
 
 	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
@@ -697,14 +699,15 @@ public abstract class LogicModule {
 		FieldCoordinate coord = fieldModel.getPlayerCoordinate(player);
 
 		return UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canGazeAutomaticallyThreeSquaresAway)
-			&& ArrayTool.isProvided(UtilPlayer.findPlayersWithTackleZones(
-			game, game.getOtherTeam(game.getActingTeam()), coord, 3));
+			&& Arrays.stream(UtilPlayer.findPlayersWithTackleZones(
+			game, game.getOtherTeam(game.getActingTeam()), coord, 3)).anyMatch(
+			opponent -> !fieldModel.getPlayerState(opponent).isDistracted());
 	}
 
 	public boolean isIncorporealAvailable(ActingPlayer actingPlayer) {
 		return (actingPlayer.getCurrentMove() == 0 || actingPlayer.hasOnlyStandingUpMove())
 			&& (isIncorporealAvailable(actingPlayer.getPlayer())
-				|| actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging));
+			|| actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging));
 	}
 
 	protected boolean isIncorporealAvailable(Player<?> player) {
@@ -744,11 +747,7 @@ public abstract class LogicModule {
 	}
 
 	private boolean canChomp(Player<?> player) {
-		Game game = client.getGame();
-		PlayerState playerState =
-			game.getFieldModel().getPlayerState(player);
-		return isSpecialBlockActionAvailable(player, playerState) &&
-			player.hasSkillProperty(NamedProperties.canPinPlayers);
+		return player.hasSkillProperty(NamedProperties.canPinPlayers);
 	}
 }
 

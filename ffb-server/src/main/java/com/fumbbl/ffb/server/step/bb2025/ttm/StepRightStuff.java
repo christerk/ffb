@@ -286,7 +286,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		kickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
-		usingSwoop = (Boolean) IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
+		usingSwoop = IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
 		return this;
 	}
 

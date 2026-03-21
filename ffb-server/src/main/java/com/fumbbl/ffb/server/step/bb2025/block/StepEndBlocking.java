@@ -397,6 +397,8 @@ public class StepEndBlocking extends AbstractStep {
 						} else {
 							newAction = PlayerAction.BLITZ_MOVE;
 						}
+						game.setDefenderId(null);
+						fieldModel.setTargetSelectionState(null);
 						UtilServerGame.changeActingPlayer(this, actingPlayerId, newAction, actingPlayer.isJumping());
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 						ServerUtilBlock.updateDiceDecorations(getGameState());

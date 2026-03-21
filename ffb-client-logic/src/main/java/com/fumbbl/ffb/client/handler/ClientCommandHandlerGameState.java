@@ -19,10 +19,17 @@ import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import java.lang.reflect.InvocationTargetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author Kalimar
@@ -86,13 +93,39 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 			getClient().getClientState().showIconProgress(this, nrOfIcons);
 
 			// preload all icon urls now
-			int currentIconNr = 0;
-			for (String iconUrl : iconUrlsToDownload) {
-				getClient().logDebug("download " + iconUrl);
-				iconCache.loadIconFromUrl(iconUrl);
-				String message = String.format("Loaded icon %d of %d.", ++currentIconNr, nrOfIcons);
-				getClient().getClientState().updateIconProgress(currentIconNr, message);
-			}
+			final AtomicInteger currentIconNr = new AtomicInteger(0);
+
+			List<LoadTask> tasks =
+				iconUrlsToDownload.stream().sorted(
+						(path1, path2) -> {
+							if (path1 == null) {
+								if (path2 == null) {
+									return 0;
+								}
+								return 1;
+							} else if (path2 == null) {
+								return -1;
+							}
+
+							boolean isZip1 = path1.toLowerCase().endsWith(".zip");
+							boolean isZip2 = path2.toLowerCase().endsWith(".zip");
+
+							// If both are zip or both are not zip, sort alphabetically
+							if (isZip1 == isZip2) {
+								return path1.compareToIgnoreCase(path2);
+							}
+
+							// If only path1 is zip, it goes first
+							return isZip1 ? -1 : 1;
+						}
+					).map(url -> new LoadTask(getClient(), iconCache, url, nrOfIcons, currentIconNr))
+					.collect(
+						Collectors.toList());
+
+			AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+				ForkJoinPool.commonPool().invokeAll(tasks);
+				return null;
+			});
 
 			getClient().getClientState().hideIconProgress();
 
@@ -142,4 +175,29 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		}
 	}
 
+	private static class LoadTask implements Callable<Boolean> {
+
+		private final FantasyFootballClient client;
+		private final IconCache iconCache;
+		private final String iconUrl;
+		private final int nrOfIcons;
+		private final AtomicInteger counter;
+
+		public LoadTask(FantasyFootballClient client, IconCache iconCache, String iconUrl, int nrOfIcons,
+			AtomicInteger counter) {
+			this.client = client;
+			this.iconCache = iconCache;
+			this.iconUrl = iconUrl;
+			this.nrOfIcons = nrOfIcons;
+			this.counter = counter;
+		}
+
+		@Override
+		public Boolean call() {
+			client.logDebug("download " + iconUrl);
+			iconCache.loadIconFromUrl(iconUrl);
+			client.getClientState().updateIconProgress(counter, nrOfIcons);
+			return true;
+		}
+	}
 }

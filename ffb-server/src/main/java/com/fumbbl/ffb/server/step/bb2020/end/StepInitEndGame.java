@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.end;
+package com.fumbbl.ffb.server.step.bb2020.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -22,14 +22,13 @@ import com.fumbbl.ffb.util.StringTool;
 
 /**
  * Initialization step in end game sequence.
- *
+ * <p>
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END. May be
  * initialized with stepParameter ADMIN_MODE.
  *
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepInitEndGame extends AbstractStep {
 
 	private String fGotoLabelOnEnd;

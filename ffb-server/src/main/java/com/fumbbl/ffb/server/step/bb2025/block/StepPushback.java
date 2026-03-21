@@ -130,7 +130,7 @@ public class StepPushback extends AbstractStep {
 		Game game = getGameState().getGame();
 		FieldModel fieldModel = game.getFieldModel();
 		// player chose a coordinate
-		if (state.pushbackStack.size() > 0) {
+		if (!state.pushbackStack.isEmpty()) {
 			Pushback lastPushback = state.pushbackStack.pop();
 			state.pushbackStack.push(lastPushback);
 			state.pushbackSquares = fieldModel.getPushbackSquares();
@@ -209,8 +209,8 @@ public class StepPushback extends AbstractStep {
 		}
 		if (state.doPush) {
 			publishParameter(new StepParameter(StepParameterKey.DEFENDER_PUSHED, true));
-			if (state.pushbackStack.size() > 0) {
-				while (state.pushbackStack.size() > 0) {
+			if (!state.pushbackStack.isEmpty()) {
+				while (!state.pushbackStack.isEmpty()) {
 					Pushback pushback = state.pushbackStack.pop();
 					Player<?> player = game.getPlayerById(pushback.getPlayerId());
 					pushPlayer(player, pushback.getCoordinate());
@@ -231,6 +231,7 @@ public class StepPushback extends AbstractStep {
 		if (fieldModel.isBallMoving() && pCoordinate.equals(fieldModel.getBallCoordinate())) {
 			publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
+			publishParameter(new StepParameter(StepParameterKey.PUSHED_ON_BALL, true));
 		}
 		publishParameter(new StepParameter(StepParameterKey.PLAYER_ENTERING_SQUARE, pPlayer.getId()));
 		publishParameter(new StepParameter(StepParameterKey.PLAYER_WAS_PUSHED, true));

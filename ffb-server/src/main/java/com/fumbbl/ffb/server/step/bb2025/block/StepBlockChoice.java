@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.block;
+package com.fumbbl.ffb.server.step.bb2025.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -49,7 +49,6 @@ import java.util.Optional;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlockChoice extends AbstractStep {
 
@@ -163,8 +162,8 @@ public class StepBlockChoice extends AbstractStep {
 		PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 		switch (fBlockResult) {
 			case SKULL:
+				game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState); // do this first, so chomp updates triggered by falling attacker do not get overwritten
 				game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), attackerState.changeBase(PlayerState.FALLING));
-				game.getFieldModel().setPlayerState(game.getDefender(), fOldDefenderState);
 				getResult().setNextAction(StepAction.NEXT_STEP);
 				break;
 			case BOTH_DOWN:

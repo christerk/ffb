@@ -48,9 +48,6 @@ public class ServerUtilPlayer {
 				Player<?>[] defensiveAssists = UtilPlayer.findAdjacentPlayersWithTacklezones(game, defenderTeam, coordinateAssist,
 					false);
 
-				defensiveAssists = Arrays.stream(defensiveAssists)
-					.filter(p -> !game.getFieldModel().getPlayerState(p).isEyeGouged())
-					.toArray(Player[]::new);
 				// Check to see if the assisting player is not close to anyone else but the
 				// defending blocker
 				int defendingPlayersOtherThanBlocker = 0;

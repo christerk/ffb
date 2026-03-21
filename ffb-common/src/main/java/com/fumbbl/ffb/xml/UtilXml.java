@@ -1,11 +1,12 @@
 package com.fumbbl.ffb.xml;
 
-import java.io.StringWriter;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.StringTool;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -14,23 +15,21 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.StringTool;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilXml {
 
-	private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); // 2001-07-04T12:08:56.235
+	private static final DateFormat _TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		// 2001-07-04T12:08:56.235
 
 	public static TransformerHandler createTransformerHandler(Writer pWriter, boolean pIndent) {
 		try {
@@ -161,9 +160,14 @@ public class UtilXml {
 		addAttribute(pXmlAttributes, pAttribute, Integer.toString(pValue));
 	}
 
-	public static int getIntAttribute(Attributes pXmlAttributes, String pAttribute) {
+	public static int getIntAttribute(Attributes pXmlAttributes, String pAttribute, int defaultValue) {
 		String value = getStringAttribute(pXmlAttributes, pAttribute);
-		return (value != null) ? Integer.parseInt(value) : 0;
+		return (value != null) ? Integer.parseInt(value) : defaultValue;
+	}
+
+
+	public static int getIntAttribute(Attributes pXmlAttributes, String pAttribute) {
+		return getIntAttribute(pXmlAttributes, pAttribute, 0);
 	}
 
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, long pValue) {
@@ -200,7 +204,7 @@ public class UtilXml {
 		if (pValue == null) {
 			return;
 		}
-		addAttribute(pXmlAttributes, pAttribute, new int[] { pValue.getX(), pValue.getY() });
+		addAttribute(pXmlAttributes, pAttribute, new int[]{pValue.getX(), pValue.getY()});
 	}
 
 	public static void addAttribute(AttributesImpl pXmlAttributes, String pAttribute, Date pTimestamp) {

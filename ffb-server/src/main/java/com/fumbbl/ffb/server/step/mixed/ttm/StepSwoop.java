@@ -32,13 +32,13 @@ import com.fumbbl.ffb.util.UtilActingPlayer;
 
 /**
  * Step in the move sequence to handle skill SWOOP.
- *
+ * <p>
  * Needs to be initialized with stepParameter THROWN_PLAYER_ID. Needs to be
  * initialized with stepParameter THROWN_PLAYER_STATE. Needs to be initialized
  * with stepParameter THROWN_PLAYER_HAS_BALL. Needs to be initialized with
  * stepParameter THROWN_PLAYER_COORDINATE. Needs to be initialized with
  * stepParameter THROW_SCATTER.
- *
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter DROP_TTM_PLAYER for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack. Sets stepParameter
@@ -180,7 +180,7 @@ public class StepSwoop extends AbstractStep {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
-		FieldCoordinate passCoordinate = state.thrownPlayerCoordinate;
+		FieldCoordinate passCoordinate;
 		if (state.throwScatter) {
 			game.getFieldModel().setRangeRuler(null);
 			game.getFieldModel().clearMoveSquares();

@@ -273,6 +273,7 @@ public class StepEndMoving extends AbstractStep {
 				|| ((PlayerAction.THROW_TEAM_MATE_MOVE == playerAction) &&
 				UtilPlayer.canThrowTeamMate(game, actingPlayer.getPlayer(), false))
 				|| playerAction != null && playerAction.isBlitzMove() && adjacentTarget
+				|| (PlayerAction.PUNT_MOVE == playerAction && UtilPlayer.hasBall(game, actingPlayer.getPlayer()))
 			) {
 				UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				if (playerAction != null && playerAction.isBlitzMove()) {

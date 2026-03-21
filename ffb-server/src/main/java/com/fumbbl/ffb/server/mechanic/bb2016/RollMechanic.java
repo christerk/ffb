@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.util.ServerUtilPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -340,5 +341,46 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	@Override
 	public boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer) {
 		return false;
+	}
+
+	@Override
+	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender, boolean usingMultiBlock,
+		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength) {
+		Game game = gameState.getGame();
+		int blockStrengthAttacker = getAttackerBaseStrength(game, attacker, defender, usingMultiBlock);
+
+		if (successfulDauntless) {
+			blockStrengthAttacker =
+				Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
+		}
+
+		blockStrengthAttacker =
+			ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
+
+		return blockStrengthAttacker;
+	}
+
+	@Override
+	public int getAttackerBaseStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock) {
+		int strength = attacker.getStrengthWithModifiers();
+
+		if (isMultiBlock) {
+			strength += multiBlockAttackerModifier();
+		}
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ ||
+			actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE)
+			&& actingPlayer.hasMoved() && defender.hasSkillProperty(NamedProperties.weakenOpposingBlitzer)) {
+			strength--;
+		}
+
+		if (actingPlayer.getPlayer().hasSkillProperty(NamedProperties.addStrengthOnBlitz)
+			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
+			strength++;
+		}
+
+		return Math.max(strength, 1);
 	}
 }

@@ -19,7 +19,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.ReportInjury;
@@ -32,19 +31,13 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.Optional;
-
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic {
 	@Override
 	public void updateLeaderReRollsForTeam(TurnData turnData, Team team, FieldModel fieldModel, IStep step) {
-		if (step.getGameState().getGame().getHalf() > 2) {
-			return;
-		}
 		if (!LeaderState.USED.equals(turnData.getLeaderState())) {
-			if (teamHasLeaderOnField(team, fieldModel)) {
-				if (teamHasUnusedLeaderOnField(team, fieldModel) &&
-					LeaderState.NONE.equals(turnData.getLeaderState())) {
+			if (step.getGameState().hasLeader(team)) {
+				if (LeaderState.NONE.equals(turnData.getLeaderState())) {
 					turnData.setLeaderState(LeaderState.AVAILABLE);
 					turnData.setReRolls(turnData.getReRolls() + 1);
 					step.getResult().addReport(new ReportLeader(team.getId(), turnData.getLeaderState()));
@@ -56,25 +49,6 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 					step.getResult().addReport(new ReportLeader(team.getId(), turnData.getLeaderState()));
 				}
 			}
-			markUsed(team, step.getGameState().getGame());
-		}
-	}
-
-	protected boolean teamHasUnusedLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-		for (Player<?> player : pTeam.getPlayers()) {
-			if (playerOnField(player, pFieldModel)
-				&& player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected void markUsed(Team team, Game game) {
-		for (Player<?> player : team.getPlayers()) {
-			Optional<Skill> skill =
-				UtilCards.getUnusedSkillWithProperty(player, NamedProperties.grantsTeamReRollWhenOnPitch);
-			skill.ifPresent(value -> player.markUsed(value, game));
 		}
 	}
 
@@ -103,9 +77,18 @@ public class StateMechanic extends com.fumbbl.ffb.server.mechanic.StateMechanic 
 			addReRolls(pStep, false);
 		}
 
-		resetLeaderState(game);
+		resetLeaderState(gameState);
 		resetSpecialSkillsAtHalfTime(game);
 		resetInducements(game);
+	}
+
+	private void resetLeaderState(GameState gameState) {
+		Game game = gameState.getGame();
+		if (game.getHalf() <= 2) {
+			gameState.resetLeaders();
+			game.getTurnDataHome().setLeaderState(LeaderState.NONE);
+			game.getTurnDataAway().setLeaderState(LeaderState.NONE);
+		}
 	}
 
 	private void resetInducements(Game game) {

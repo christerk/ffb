@@ -51,20 +51,22 @@ public final class StepWinnings extends AbstractStep {
 		double homeWinnings = gameResult.getTeamResultHome().getScore();
 		double awayWinnings = gameResult.getTeamResultAway().getScore();
 
-		if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
-			awayWinnings += attendance;
-		} else if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
-			homeWinnings += attendance;
-		} else {
-			awayWinnings += attendance / 2;
-			homeWinnings += attendance / 2;
-		}
-
 		if (!gameResult.getTeamResultHome().hasStalled()) {
 			homeWinnings += 1;
 		}
 		if (!gameResult.getTeamResultAway().hasStalled()) {
 			awayWinnings += 1;
+		}
+
+		if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
+			awayWinnings += attendance;
+			homeWinnings = 0;
+		} else if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
+			homeWinnings += attendance;
+			awayWinnings = 0;
+		} else {
+			awayWinnings += attendance / 2;
+			homeWinnings += attendance / 2;
 		}
 
 		homeWinnings *= 10000;

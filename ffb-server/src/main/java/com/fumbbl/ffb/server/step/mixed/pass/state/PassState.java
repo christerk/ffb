@@ -13,7 +13,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 
 public class PassState implements IJsonSerializable {
 	private String catcherId, interceptorId, originalBombardier;
-	private boolean passSkillUsed, interceptorChosen, deflectionSuccessful, interceptionSuccessful;
+	private boolean passSkillUsed, interceptorChosen, deflectionSuccessful, interceptionSuccessful, allowMoveAfterBomb;
 	private PassResult result;
 	private FieldCoordinate throwerCoordinate;
 	private TurnMode oldTurnMode;
@@ -27,6 +27,7 @@ public class PassState implements IJsonSerializable {
 		this.interceptorId = interceptorId;
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isInterceptorChosen() {
 		return interceptorChosen;
 	}
@@ -75,6 +76,7 @@ public class PassState implements IJsonSerializable {
 		this.catcherId = catcherId;
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isPassSkillUsed() {
 		return passSkillUsed;
 	}
@@ -115,10 +117,19 @@ public class PassState implements IJsonSerializable {
 		this.throwTwoBombs = throwTwoBombs;
 	}
 
+	public boolean isAllowMoveAfterBomb() {
+		return allowMoveAfterBomb;
+	}
+
+	public void setAllowMoveAfterBomb(boolean allowMoveAfterBomb) {
+		this.allowMoveAfterBomb = allowMoveAfterBomb;
+	}
+
 	public PassState populate(PassState passState) {
 		if (passState != null) {
 			originalBombardier = passState.originalBombardier;
 			throwTwoBombs = passState.throwTwoBombs;
+			allowMoveAfterBomb = passState.allowMoveAfterBomb;
 		}
 		return this;
 	}
@@ -126,6 +137,7 @@ public class PassState implements IJsonSerializable {
 	public void reset() {
 		originalBombardier = null;
 		throwTwoBombs = null;
+		allowMoveAfterBomb = false;
 	}
 
 	@Override
@@ -144,6 +156,7 @@ public class PassState implements IJsonSerializable {
 		IServerJsonOption.ORIGINAL_BOMBER.addTo(jsonObject, originalBombardier);
 		IServerJsonOption.USING_BLAST_IT.addTo(jsonObject, usingBlastIt);
 		IServerJsonOption.THROW_TWO_BOMBS.addTo(jsonObject, throwTwoBombs);
+		IServerJsonOption.ALLOW_MOVE_AFTER_BOMB.addTo(jsonObject, allowMoveAfterBomb);
 		return jsonObject;
 	}
 
@@ -164,6 +177,9 @@ public class PassState implements IJsonSerializable {
 		originalBombardier = IServerJsonOption.ORIGINAL_BOMBER.getFrom(source, jsonObject);
 		usingBlastIt = IServerJsonOption.USING_BLAST_IT.getFrom(source, jsonObject);
 		throwTwoBombs = IServerJsonOption.THROW_TWO_BOMBS.getFrom(source, jsonObject);
+		if (IServerJsonOption.ALLOW_MOVE_AFTER_BOMB.isDefinedIn(jsonObject)) {
+			allowMoveAfterBomb = IServerJsonOption.ALLOW_MOVE_AFTER_BOMB.getFrom(source, jsonObject);
+		}
 		return this;
 	}
 }

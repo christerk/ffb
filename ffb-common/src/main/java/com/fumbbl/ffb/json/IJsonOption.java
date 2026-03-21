@@ -276,6 +276,7 @@ public interface IJsonOption {
 	JsonEnumWithNameOption LAST_TURN_MODE = new JsonEnumWithNameOption("lastTurnMode", Factory.TURN_MODE);
 	JsonEnumWithNameOption LEADER_STATE = new JsonEnumWithNameOption("leaderState", Factory.LEADER_STATE);
 	JsonBooleanOption LAST_COMMAND = new JsonBooleanOption("lastCommand");
+	JsonStringArrayOption LEADERS = new JsonStringArrayOption("leaders");
 	JsonBooleanOption LIMIT_REACHED = new JsonBooleanOption("limitReached");
 	JsonBooleanOption LOAD_DIALOG = new JsonBooleanOption("loadDialog");
 	JsonBooleanOption LOCKED = new JsonBooleanOption("locked");
@@ -467,6 +468,7 @@ public interface IJsonOption {
 	JsonIntOption RUSHING = new JsonIntOption("rushing");
 	JsonBooleanOption SAFE_THROW_HOLD = new JsonBooleanOption("safeThrowHold");
 	JsonEnumWithNameOption SCATTER_DIRECTION = new JsonEnumWithNameOption("scatterDirection", Factory.DIRECTION);
+	JsonObjectOption SCATTER_RESULT = new JsonObjectOption("scatterResult");
 	JsonDateOption SCHEDULED = new JsonDateOption("scheduled");
 	JsonIntOption SCORE = new JsonIntOption("score");
 	JsonBooleanOption SECURE_THE_BALL_USED = new JsonBooleanOption("secureTheBallUsed");

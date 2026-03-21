@@ -222,7 +222,7 @@ public class UtilServerStartGame {
 			apos.setDefault(9);
 			game.getOptions().addOption(apos);
 			GameOptionInt mvps = (GameOptionInt) optionFactory.createGameOption(GameOptionId.MVP_NOMINATIONS);
-			mvps.setValue(0);
+			mvps.setValue(6);
 			game.getOptions().addOption(mvps);
 			GameOptionString ruleSet = (GameOptionString) optionFactory.createGameOption(GameOptionId.RULESVERSION);
 			ruleSet.setValue(RulesCollection.Rules.BB2020.name());
@@ -231,7 +231,7 @@ public class UtilServerStartGame {
 			game.getOptions().addOption(ruleSet);
 			GameOptionBoolean overtime = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.OVERTIME);
 			overtime.setValue(true);
-			game.getOptions().addOption(overtime);
+			//game.getOptions().addOption(overtime);
 			GameOptionBoolean allowConcessions = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ALLOW_CONCESSIONS);
 			allowConcessions.setValue(false);
 			//game.getOptions().addOption(allowConcessions);
@@ -242,7 +242,7 @@ public class UtilServerStartGame {
 			prayerMax.setValue(3);
 			game.getOptions().addOption(prayerMax);
 			GameOptionInt prayerCost = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_PRAYERS_COST);
-			prayerCost.setValue(10000);
+			prayerCost.setValue(30000);
 			game.getOptions().addOption(prayerCost);
 			GameOptionBoolean claw = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.CLAW_DOES_NOT_STACK);
 			claw.setValue(false);
@@ -304,6 +304,12 @@ public class UtilServerStartGame {
 			GameOptionBoolean kick = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.ASK_FOR_KICK_AFTER_ROLL);
 			kick.setValue(true);
 			//game.getOptions().addOption(kick);
+			GameOptionBoolean treasuryToPetty = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.FORCE_TREASURY_TO_PETTY_CASH);
+			treasuryToPetty.setValue(false);
+			game.getOptions().addOption(treasuryToPetty);
+			GameOptionBoolean pettyTopTv = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.PETTY_CASH_AFFECTS_TV);
+			pettyTopTv.setValue(true);
+			game.getOptions().addOption(pettyTopTv);
 		}
 	}
 

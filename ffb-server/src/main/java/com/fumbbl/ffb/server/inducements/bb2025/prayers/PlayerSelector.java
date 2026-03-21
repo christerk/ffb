@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.inducements.bb2025.prayers;
 
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -17,7 +18,9 @@ public class PlayerSelector extends com.fumbbl.ffb.server.inducements.mixed.pray
 
 	public List<Player<?>> eligiblePlayers(Team team, Game game, Set<Skill> skills) {
 		return Arrays.stream(team.getPlayers()).filter(
-			player -> (skills.isEmpty() || !player.getSkillsIncludingTemporaryOnes().containsAll(skills))
+			player ->
+				game.getFieldModel().getPlayerState(player).getBase() == PlayerState.RESERVE
+				&& (skills.isEmpty() || !player.getSkillsIncludingTemporaryOnes().containsAll(skills))
 				&& player.getPlayerType() != PlayerType.STAR
 				&& skills.stream().allMatch(s -> s.canBeAssignedTo(player))).collect(Collectors.toList());
 	}

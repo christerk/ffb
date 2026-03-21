@@ -36,6 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Optional;
 
@@ -120,6 +121,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					return true;
 				}
 				break;
+			case PUSHED_ON_BALL:
 			case BALL_KNOCKED_LOSE:
 				removeCatchMode = !toPrimitive((Boolean) parameter.getValue());
 				consume(parameter);
@@ -175,7 +177,8 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
-		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused()) {
+		// do not use hasTacklezones as blocked players have base FALLING which is not included in that
+		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused() || playerState.getBase() == PlayerState.HIT_ON_GROUND) {
 			fail();
 			return;
 		}
@@ -213,9 +216,11 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportSteadyFootingRoll(player.getId(), successful, roll, MINMUM_ROLL, reRolled));
 
 		if (successful) {
-			publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
-			publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
-			if (removeCatchMode) {
+			if (game.getActingTeam().hasPlayer(player)) {
+				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
+				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
+			}
+			if (removeCatchMode && UtilPlayer.hasBall(game, player)) {
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
 			}
 			if (oldDefenderState != null) {
@@ -250,6 +255,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		} else {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+
+		context.getDeferredCommands().forEach(command -> command.execute(this));
+
 		if (context.getDropPlayerContext() != null) {
 			publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT, context.getDropPlayerContext()));
 		}
@@ -263,7 +271,6 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 			publishParameter(StepParameter.from(StepParameterKey.ATTACKER_ALREADY_DOWN, true));
 		}
 
-		context.getDeferredCommands().forEach(command -> command.execute(this));
 	}
 
 	// JSON serialization

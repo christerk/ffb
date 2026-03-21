@@ -242,7 +242,7 @@ public class PathFinderWithMultiJump {
 
 		// increase max distance to include rushes but remove 1 since we will check to reach squares adjacent to the target
 		// and need one move for the actual blitz
-		maxDistance += targetPlayer.hasSkillProperty(NamedProperties.canMakeAnExtraGfi) ? 2 : 1;
+		maxDistance += actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canMakeAnExtraGfi) ? 2 : 1;
 
 		return getShortestPath(pGame, start, pEndCoords, maxDistance, theoreticalRangeContext, actingPlayer.getPlayer());
 	}

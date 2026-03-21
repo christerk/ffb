@@ -174,14 +174,18 @@ public final class StepEndPassing extends AbstractStep {
 			&& !fPassFumble;
 		boolean allowMoveAfterHandOff =
 			game.getThrowerAction() == PlayerAction.HAND_OVER
-			&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterHandOff);
-		boolean allowMoveAfterBomb = allowMoverAfterPass && !dontDropFumble && actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier());
+				&& game.getThrower().hasSkillProperty(NamedProperties.canMoveAfterHandOff);
+		if (actingPlayer.getPlayerId().equals(getGameState().getPassState().getOriginalBombardier())) {
+			getGameState().getPassState().setAllowMoveAfterBomb(allowMoverAfterPass && !dontDropFumble);
+		}
 		// throw bomb mode -> start bomb sequence
 		if (game.getTurnMode().isBombTurn()) {
 			if (StringTool.isProvided(fInterceptorId)) {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+				bombGenerator.pushSequence(
+					new Bomb.SequenceParams(getGameState(), fInterceptorId, fPassFumble, dontDropFumble));
 			} else {
-				bombGenerator.pushSequence(new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, allowMoveAfterBomb, dontDropFumble));
+				bombGenerator.pushSequence(
+					new Bomb.SequenceParams(getGameState(), fCatcherId, fPassFumble, dontDropFumble));
 			}
 			if (fBombOutOfBounds) {
 				publishParameter(new StepParameter(StepParameterKey.BOMB_OUT_OF_BOUNDS, true));
@@ -191,18 +195,20 @@ public final class StepEndPassing extends AbstractStep {
 		}
 		// failed animosity may try to choose a new target
 		if (actingPlayer.isSufferingAnimosity() && !fEndPlayerAction && (game.getPassCoordinate() == null)) {
-			((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(new Pass.SequenceParams(getGameState()));
+			((Pass) factory.forName(SequenceGenerator.Type.Pass.name())).pushSequence(
+				new Pass.SequenceParams(getGameState()));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 		Player<?> catcher = game.getPlayerById(fCatcherId);
 		// completions and passing statistic
 		boolean ballWasSnatched = StringTool.isProvided(ballSnatcherId);
-		FieldCoordinate endCoordinate =  game.getFieldModel().getPlayerCoordinate(catcher);
+		FieldCoordinate endCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
 
 		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher))) {
 			SppMechanic spp = (SppMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.SPP.name());
-			spp.addCatch(getGameState().getPrayerState().getAdditionalCatchesSppTeams(),game.getGameResult().getPlayerResult(catcher));
+			spp.addCatch(getGameState().getPrayerState().getAdditionalCatchesSppTeams(),
+				game.getGameResult().getPlayerResult(catcher));
 		}
 
 		if ((game.getThrower() != null) && (UtilPlayer.hasBall(game, catcher) || ballWasSnatched)
@@ -230,27 +236,26 @@ public final class StepEndPassing extends AbstractStep {
 		if (fEndTurn || fEndPlayerAction || ((game.getThrower() == actingPlayer.getPlayer())
 			&& actingPlayer.isSufferingBloodLust() && !actingPlayer.hasFed())) {
 			fEndTurn |= (UtilServerSteps.checkTouchdown(getGameState())
-				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() && actingPlayer.hasPassed())
-				|| UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() || fPassFumble);
+				|| ((catcher == null) && !actingPlayer.isSufferingAnimosity() && !actingPlayer.isSufferingBloodLust() &&
+				actingPlayer.hasPassed())
+				||
+				UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher) && !actingPlayer.isSufferingBloodLust() ||
+				fPassFumble);
 			endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 		} else {
 			PassState state = getGameState().getPassState();
-			if (state.isDeflectionSuccessful()) {
-				catcher = game.getPlayerById(state.getInterceptorId());
-				GameResult gameResult = game.getGameResult();
-				PlayerResult catcherResult = gameResult.getPlayerResult(catcher);
-				if (!isBomb) {
-					if (state.isInterceptionSuccessful()) {
-						catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
-						if (!ballWasSnatched) {
-							// this means the interceptor has been knocked down, e.g. by Quick Bite and the ball is already set to the correct position
-							FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
-							game.getFieldModel().setBallCoordinate(interceptorCoordinate);
-						}
-						game.getFieldModel().setBallMoving(false);
-					} else {
-						catcherResult.setDeflections(catcherResult.getDeflections() + 1);
+			catcher = game.getPlayerById(state.getInterceptorId());
+			GameResult gameResult = game.getGameResult();
+			PlayerResult catcherResult = gameResult.getPlayerResult(catcher);
+			if (!isBomb) {
+				if (state.isInterceptionSuccessful()) {
+					catcherResult.setInterceptions(catcherResult.getInterceptions() + 1);
+					if (!ballWasSnatched) {
+						// this means the interceptor has been knocked down, e.g. by Quick Bite and the ball is already set to the correct position
+						FieldCoordinate interceptorCoordinate = game.getFieldModel().getPlayerCoordinate(catcher);
+						game.getFieldModel().setBallCoordinate(interceptorCoordinate);
 					}
+					game.getFieldModel().setBallMoving(false);
 				}
 			}
 
@@ -269,7 +274,8 @@ public final class StepEndPassing extends AbstractStep {
 					&& UtilPlayer.isNextMovePossible(game, false));
 
 				if (fEndTurn || fEndPlayerAction) {
-					endGenerator.pushSequence(new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
+					endGenerator.pushSequence(
+						new EndPlayerAction.SequenceParams(getGameState(), true, fEndPlayerAction, fEndTurn));
 				} else {
 					String actingPlayerId = actingPlayer.getPlayer().getId();
 					UtilServerGame.changeActingPlayer(this, actingPlayerId, PlayerAction.MOVE, actingPlayer.isJumping());

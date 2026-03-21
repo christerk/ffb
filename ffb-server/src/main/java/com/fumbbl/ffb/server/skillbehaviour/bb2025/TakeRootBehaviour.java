@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportConfusionRoll;
+import com.fumbbl.ffb.report.mixed.ReportEvent;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
@@ -22,6 +23,7 @@ import com.fumbbl.ffb.server.step.bb2025.block.StepPushback;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.mixed.TakeRoot;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(Rules.BB2025)
 public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
@@ -101,6 +103,11 @@ public class TakeRootBehaviour extends SkillBehaviour<TakeRoot> {
 					state.pushbackStack.clear();
 					step.publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					step.publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, false));
+					step.publishParameter(new StepParameter(StepParameterKey.BALL_KNOCKED_LOSE, false));
+					step.publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+					if (UtilPlayer.hasBall(game, state.defender)) {
+						step.getResult().addReport(new ReportEvent("Strip ball is prevented as the player is rooted."));
+					}
 					return true;
 				}
 

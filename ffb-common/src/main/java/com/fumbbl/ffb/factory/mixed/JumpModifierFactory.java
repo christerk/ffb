@@ -98,6 +98,7 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 
 		int sum = modifiers.stream().mapToInt(JumpModifier::getModifier).sum();
 		context.setAccumulatedModifiers(sum + context.getAccumulatedModifiers());
+		context.addModifierCount(modifiers.size());
 		for (Skill skill : context.getPlayer().getSkills()) {
 			skill.getJumpModifiers().stream()
 				.filter(modifier -> modifier.getType() == ModifierType.DEPENDS_ON_SUM_OF_OTHERS

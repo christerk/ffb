@@ -191,12 +191,15 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				case CLIENT_PLAYER_CHOICE:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						ClientCommandPlayerChoice commandPlayerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-						if (TurnMode.SOLID_DEFENCE == getGameState().getGame().getTurnMode() ||
+						if (commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.SOLID_DEFENCE ||
 							commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.CHARGE) {
 							Arrays.stream(commandPlayerChoice.getPlayerIds()).map(id -> getGameState().getGame().getPlayerById(id))
 								.forEach(selectedPlayers::add);
 							if (selectedPlayers.stream().anyMatch(player -> !eligiblePlayers.contains(player))) {
 								throw new FantasyFootballException("Client selected player that is not eligible");
+							}
+							if (commandPlayerChoice.getPlayerChoiceMode() == PlayerChoiceMode.SOLID_DEFENCE) {
+								getGameState().getGame().setTurnMode(TurnMode.SOLID_DEFENCE);
 							}
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -339,7 +342,6 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			if (eligiblePlayers.isEmpty()) {
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			} else {
-				game.setTurnMode(TurnMode.SOLID_DEFENCE);
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogPlayerChoiceParameter(actingTeam.getId(), PlayerChoiceMode.SOLID_DEFENCE,
 						eligiblePlayers.toArray(new Player[0]), null, nrOfPlayersAllowed), false);
@@ -394,6 +396,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 	private void handleHighKick() {
 		Game game = getGameState().getGame();
+		boolean skip = false;
 		if (game.getTurnMode() == TurnMode.HIGH_KICK) {
 			if (fEndKickoff) {
 				game.setHomePlaying(!game.isHomePlaying());
@@ -409,13 +412,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				game.setTurnMode(TurnMode.HIGH_KICK);
 				MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
 				SetupMechanic mechanic = (SetupMechanic) factory.forName(Mechanic.Type.SETUP.name());
-				if (game.isHomePlaying()) {
-					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamHome());
-				} else {
-					mechanic.pinPlayersInTacklezones(getGameState(), game.getTeamAway());
-				}
+				mechanic.pinPlayersInTacklezones(getGameState(), game.getActingTeam());
+				skip = Arrays.stream(game.getActingTeam().getPlayers()).noneMatch(player -> game.getFieldModel().getPlayerState(player).isActive());
 			}
 			getResult().setAnimation(new Animation(AnimationType.KICKOFF_HIGH_KICK));
+			if (skip) {
+				UtilServerGame.syncGameModel(this);
+				game.setHomePlaying(!game.isHomePlaying());
+				game.setTurnMode(TurnMode.KICKOFF);
+				getResult().setNextAction(StepAction.NEXT_STEP);
+			}
 		}
 	}
 
@@ -435,16 +441,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		TurnData turnDataHome = game.getTurnDataHome();
 		TurnData turnDataAway = game.getTurnDataAway();
-		boolean homeCoachBanned = turnDataHome.isCoachBanned();
-		boolean awayCoachBanned = turnDataAway.isCoachBanned();
-
-		totalHome += homeCoachBanned ? -1 : 0;
-		totalAway += awayCoachBanned ? -1 : 0;
 
 		getResult().setAnimation(new Animation(AnimationType.KICKOFF_BRILLIANT_COACHING));
 
 		String teamId = null;
-		boolean homeGainsReRoll = (totalHome > totalAway);
+		boolean homeGainsReRoll = (totalHome >= totalAway);
 		if (homeGainsReRoll) {
 			turnDataHome.setReRolls(turnDataHome.getReRolls() + 1);
 			turnDataHome.setReRollsBrilliantCoachingOneDrive(
@@ -452,12 +453,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 			teamId = game.getTeamHome().getId();
 		}
 
-		boolean awayGainsReRoll = (totalAway > totalHome);
+		boolean awayGainsReRoll = (totalAway >= totalHome);
 		if (awayGainsReRoll) {
 			turnDataAway.setReRolls(turnDataAway.getReRolls() + 1);
 			turnDataAway.setReRollsBrilliantCoachingOneDrive(
 				turnDataAway.getReRollsBrilliantCoachingOneDrive() + 1);
 			teamId = game.getTeamAway().getId();
+		}
+
+		if (totalAway == totalHome) {
+			teamId = null;
 		}
 
 		getResult().addReport(new ReportKickoffExtraReRoll(rollHome, rollAway, teamId));
@@ -878,7 +883,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		movedPlayer = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		toCoordinate = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		nrOfMovedPlayers = IServerJsonOption.NR_OF_PLAYERS.getFrom(source, jsonObject);
-		Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject))
+		Arrays.stream(IServerJsonOption.PLAYER_IDS_SELECTED.getFrom(source, jsonObject))
 			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(selectedPlayers::add);
 		Arrays.stream(IServerJsonOption.ELIGIBLE_PLAYER_IDS.getFrom(source, jsonObject))
 			.map(id -> getGameState().getGame().getPlayerById(id)).forEach(eligiblePlayers::add);

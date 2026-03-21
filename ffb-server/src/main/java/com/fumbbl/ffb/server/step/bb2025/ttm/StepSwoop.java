@@ -2,9 +2,12 @@ package com.fumbbl.ffb.server.step.bb2025.ttm;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -15,6 +18,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandSwoop;
+import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.GameState;
@@ -36,13 +40,13 @@ import com.fumbbl.ffb.util.UtilActingPlayer;
 
 /**
  * Step in the move sequence to handle skill SWOOP.
- *
+ * <p>
  * Needs to be initialized with stepParameter THROWN_PLAYER_ID. Needs to be
  * initialized with stepParameter THROWN_PLAYER_STATE. Needs to be initialized
  * with stepParameter THROWN_PLAYER_HAS_BALL. Needs to be initialized with
  * stepParameter THROWN_PLAYER_COORDINATE. Needs to be initialized with
  * stepParameter THROW_SCATTER.
- *
+ * <p>
  * Sets stepParameter CATCH_SCATTER_THROW_IN_MODE for all steps on the stack.
  * Sets stepParameter DROP_TTM_PLAYER for all steps on the stack. Sets
  * stepParameter END_TURN for all steps on the stack. Sets stepParameter
@@ -69,12 +73,17 @@ public class StepSwoop extends AbstractStep {
 				ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 				state.usingSwoop = useSkill.isSkillUsed();
 				commandStatus = StepCommandStatus.EXECUTE_STEP;
-			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_SWOOP) {
+			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_SWOOP && state.coordinateTo == null) {
 				ClientCommandSwoop swoopCommand = (ClientCommandSwoop) pReceivedCommand.getCommand();
 				state.coordinateTo = swoopCommand.getTargetCoordinate();
 				if (!UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
 					state.coordinateTo = state.coordinateTo.transform();
 				}
+				executeSwoop();
+			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL) {
+				ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
+				state.reRollSource = clientCommandUseReRoll.getReRollSource();
+				state.reRolledAction = clientCommandUseReRoll.getReRolledAction();
 				executeSwoop();
 			}
 		}
@@ -99,31 +108,31 @@ public class StepSwoop extends AbstractStep {
 		if (pParameterSet != null) {
 			for (StepParameter parameter : pParameterSet.values()) {
 				switch (parameter.getKey()) {
-				// mandatory
-				case THROWN_PLAYER_ID:
-					state.thrownPlayerId = (String) parameter.getValue();
-					break;
-				// mandatory
-				case THROWN_PLAYER_HAS_BALL:
-					state.thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				// mandatory
-				case THROWN_PLAYER_COORDINATE:
-					state.thrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
-					break;
-				// mandatory
-				case THROWN_PLAYER_STATE:
-					state.thrownPlayerState = (PlayerState) parameter.getValue();
-					break;
-				// mandatory
-				case THROW_SCATTER:
-					state.throwScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					break;
-				case GOTO_LABEL_ON_FALL_DOWN:
-					state.goToLabelOnFallDown = (String) parameter.getValue();
-					break;
-				default:
-					break;
+					// mandatory
+					case THROWN_PLAYER_ID:
+						state.thrownPlayerId = (String) parameter.getValue();
+						break;
+					// mandatory
+					case THROWN_PLAYER_HAS_BALL:
+						state.thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					// mandatory
+					case THROWN_PLAYER_COORDINATE:
+						state.thrownPlayerCoordinate = (FieldCoordinate) parameter.getValue();
+						break;
+					// mandatory
+					case THROWN_PLAYER_STATE:
+						state.thrownPlayerState = (PlayerState) parameter.getValue();
+						break;
+					// mandatory
+					case THROW_SCATTER:
+						state.throwScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
+					case GOTO_LABEL_ON_FALL_DOWN:
+						state.goToLabelOnFallDown = (String) parameter.getValue();
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -145,14 +154,14 @@ public class StepSwoop extends AbstractStep {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
-			case COORDINATE_FROM:
-				state.coordinateFrom = (FieldCoordinate) parameter.getValue();
-				return true;
-			case COORDINATE_TO:
-				state.coordinateTo = (FieldCoordinate) parameter.getValue();
-				return true;
-			default:
-				break;
+				case COORDINATE_FROM:
+					state.coordinateFrom = (FieldCoordinate) parameter.getValue();
+					return true;
+				case COORDINATE_TO:
+					state.coordinateTo = (FieldCoordinate) parameter.getValue();
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -176,6 +185,9 @@ public class StepSwoop extends AbstractStep {
 		public FieldCoordinate coordinateTo;
 		public String goToLabelOnFallDown;
 		public Boolean usingSwoop;
+		public Direction swoopDirection;
+		public ReRolledAction reRolledAction;
+		public ReRollSource reRollSource;
 	}
 
 	private void executeSwoop() {
@@ -205,7 +217,7 @@ public class StepSwoop extends AbstractStep {
 			return;
 		}
 
-		FieldCoordinate passCoordinate = state.thrownPlayerCoordinate;
+		FieldCoordinate passCoordinate;
 		if (state.throwScatter) {
 			game.getFieldModel().setRangeRuler(null);
 			game.getFieldModel().clearMoveSquares();
@@ -253,6 +265,9 @@ public class StepSwoop extends AbstractStep {
 		IServerJsonOption.COORDINATE_FROM.addTo(jsonObject, state.coordinateFrom);
 		IServerJsonOption.COORDINATE_TO.addTo(jsonObject, state.coordinateTo);
 		IServerJsonOption.USING_SWOOP.addTo(jsonObject, state.usingSwoop);
+		IServerJsonOption.DIRECTION.addTo(jsonObject, state.swoopDirection);
+		IServerJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, state.reRolledAction);
+		IServerJsonOption.RE_ROLL_SOURCE.addTo(jsonObject, state.reRollSource);
 		return jsonObject;
 	}
 
@@ -268,6 +283,9 @@ public class StepSwoop extends AbstractStep {
 		state.coordinateFrom = IServerJsonOption.COORDINATE_FROM.getFrom(source, jsonObject);
 		state.coordinateTo = IServerJsonOption.COORDINATE_TO.getFrom(source, jsonObject);
 		state.usingSwoop = IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
+		state.swoopDirection = (Direction) IServerJsonOption.DIRECTION.getFrom(source, jsonObject);
+		state.reRolledAction = (ReRolledAction) IServerJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
+		state.reRollSource = (ReRollSource) IServerJsonOption.RE_ROLL_SOURCE.getFrom(source, jsonObject);
 		return this;
 	}
 

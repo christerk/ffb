@@ -51,6 +51,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 	private static final String KIND = "rosterPlayer";
 	private static final String _XML_ATTRIBUTE_DISPLAY_VALUE = "displayValueAs";
 	private static final String _XML_ATTRIBUTE_VALUE = "value";
+	private static final String _XML_ATTRIBUTE_ICON_SET_INDEX = "iconSetIndex";
 
 	private String fId;
 	private int fNr;
@@ -97,7 +98,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		fLastingInjuries = new ArrayList<>();
 		fSkills = new ArrayList<>();
 		setGender(PlayerGender.MALE);
-		fIconSetIndex = 0;
+		fIconSetIndex = -1;
 		fPosition = new RosterPosition(null);
 		skillValues = new LinkedHashMap<>();
 		displayValues = new LinkedHashMap<>();
@@ -264,7 +265,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 			if (getPlayerType() == null) {
 				setType(fPosition.getType());
 			}
-			fIconSetIndex = pPosition.findNextIconSetIndex();
+			if (fIconSetIndex < 0) {
+				fIconSetIndex = pPosition.findNextIconSetIndex();
+			}
 			if (!updateStats) {
 				return;
 			}
@@ -387,7 +390,9 @@ public class RosterPlayer extends Player<RosterPosition> {
 
 	@Override
 	public int getIconSetIndex() {
-		return fIconSetIndex;
+		// to make sure we never give out an invalid index, updatePosition is not necessarily called on all paths,
+		// e.g. when building icons for mercs or stars (hypothesis)
+		return Math.max(fIconSetIndex, 0);
 	}
 
 	@Override
@@ -429,6 +434,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 		if (playerStatus != null) {
 			UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_STATUS, playerStatus.getName());
 		}
+		UtilXml.addAttribute(attributes, _XML_ATTRIBUTE_ICON_SET_INDEX, getIconSetIndex());
 		UtilXml.startElement(pHandler, XML_TAG, attributes);
 
 		UtilXml.addValueElement(pHandler, _XML_TAG_NAME, getName());
@@ -504,6 +510,7 @@ public class RosterPlayer extends Player<RosterPosition> {
 				fId = UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_ID);
 				setNr(UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_NR));
 				playerStatus = PlayerStatus.forName(UtilXml.getStringAttribute(pXmlAttributes, _XML_ATTRIBUTE_STATUS));
+				fIconSetIndex = UtilXml.getIntAttribute(pXmlAttributes, _XML_ATTRIBUTE_ICON_SET_INDEX, -1);
 			}
 			if (_XML_TAG_INJURY_LIST.equals(pXmlTag)) {
 				fInsideInjuryList = true;

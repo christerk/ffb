@@ -16,7 +16,6 @@ import com.fumbbl.ffb.modifiers.RollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 import com.fumbbl.ffb.report.ReportPickupRoll;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -114,7 +113,7 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 
 	@Override
 	public int minimumRoll(int baseValue, Set<? extends RollModifier<?>> modifiers) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	private boolean usedStrength(ReportSkillRoll report) {

@@ -101,7 +101,7 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 					refereeSpotsFoul = (injuryRoll[0] == injuryRoll[1]);
 				}
 				boolean underScrutiny = step.getGameState().getPrayerState().isUnderScrutiny(actingPlayer.getPlayer().getTeam());
-				refereeSpotsFoul |= underScrutiny;
+				refereeSpotsFoul |= (underScrutiny && state.injuryResultDefender.injuryContext().isArmorBroken());
 				step.getResult().addReport(new ReportReferee(refereeSpotsFoul, underScrutiny));
 
 				if (!refereeSpotsFoul) {

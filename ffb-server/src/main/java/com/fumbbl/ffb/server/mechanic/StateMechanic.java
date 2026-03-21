@@ -1,12 +1,13 @@
 package com.fumbbl.ffb.server.mechanic;
 
-import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.mechanics.Mechanic;
-import com.fumbbl.ffb.model.*;
-import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.FieldModel;
+import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -20,21 +21,6 @@ public abstract class StateMechanic implements Mechanic {
 
 	public abstract void updateLeaderReRollsForTeam(TurnData pTurnData, Team pTeam, FieldModel pFieldModel,
 		IStep pStep);
-
-	protected boolean teamHasLeaderOnField(Team pTeam, FieldModel pFieldModel) {
-		for (Player<?> player : pTeam.getPlayers()) {
-			if (playerOnField(player, pFieldModel)
-				&& player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected static boolean playerOnField(Player<?> pPlayer, FieldModel pFieldModel) {
-		FieldCoordinate fieldCoordinate = pFieldModel.getPlayerCoordinate(pPlayer);
-		return ((fieldCoordinate != null) && !fieldCoordinate.isBoxCoordinate());
-	}
 
 	public abstract void startHalf(IStep pStep, int pHalf);
 
@@ -81,14 +67,6 @@ public abstract class StateMechanic implements Mechanic {
 						.addReport(new ReportInducement(team.getId(), entry.getKey(), extraTraining.getValue()));
 				}
 			});
-	}
-
-
-	protected void resetLeaderState(Game pGame) {
-		if (pGame.getHalf() <= 2) {
-			pGame.getTurnDataHome().setLeaderState(LeaderState.NONE);
-			pGame.getTurnDataAway().setLeaderState(LeaderState.NONE);
-		}
 	}
 
 	public void resetSpecialSkillAtEndOfDrive(Game game) {

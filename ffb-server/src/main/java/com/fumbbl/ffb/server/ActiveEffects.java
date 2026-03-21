@@ -17,8 +17,9 @@ public class ActiveEffects implements IJsonSerializable {
 
 	private Weather oldWeather;
 	private boolean skipRestoreWeather, stalling;
-	private final Set<String> teamIdsAdditionalAssist = new HashSet<>();
+	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
+	private final Set<String> leaders = new HashSet<>();
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -40,12 +41,12 @@ public class ActiveEffects implements IJsonSerializable {
 		this.teamIdsAdditionalAssist.addAll(teamIdsAdditionalAssist);
 	}
 
-	public Set<String> getTeamIdsAdditionalAssist() {
+	public List<String> getTeamIdsAdditionalAssist() {
 		return teamIdsAdditionalAssist;
 	}
 
 	public void removeAdditionalAssist(String teamId) {
-		teamIdsAdditionalAssist.remove(teamId);
+		teamIdsAdditionalAssist.removeIf(val -> val.equals(teamId));
 	}
 
 	public boolean isStalling() {
@@ -68,6 +69,18 @@ public class ActiveEffects implements IJsonSerializable {
 		return shadowers;
 	}
 
+	public void addLeader(String leader) {
+		leaders.add(leader);
+	}
+
+	public Set<String> getLeaders() {
+		return leaders;
+	}
+
+	public void clearLeaders() {
+		leaders.clear();
+	}
+
 	@Override
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -87,6 +100,10 @@ public class ActiveEffects implements IJsonSerializable {
 			shadowers.addAll(Arrays.asList(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)));
 		}
 
+		if (IServerJsonOption.LEADERS.isDefinedIn(jsonObject)) {
+			leaders.addAll(Arrays.asList(IServerJsonOption.LEADERS.getFrom(source, jsonObject)));
+		}
+
 		return this;
 	}
 
@@ -98,6 +115,7 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.addTo(jsonObject, teamIdsAdditionalAssist);
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
+		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
 		return jsonObject;
 	}
 }

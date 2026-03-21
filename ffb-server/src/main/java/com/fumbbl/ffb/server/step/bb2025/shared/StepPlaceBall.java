@@ -48,7 +48,7 @@ public class StepPlaceBall extends AbstractStep {
 	private String playerId;
 	private CatchScatterThrowInMode catchScatterThrowInMode;
 	private Phase phase = Phase.ASK;
-	private boolean ballCarrierTeamTurn;
+	private boolean ballCarrierTeamTurn, revertEndTurn;
 	private final Set<FieldCoordinate> adjacentSquares = new HashSet<>();
 	private FieldCoordinate selectedCoordinate;
 
@@ -114,6 +114,9 @@ public class StepPlaceBall extends AbstractStep {
 				case DROPPED_BALL_CARRIER:
 					playerId = (String) parameter.getValue();
 					return true;
+				case REVERT_END_TURN:
+					revertEndTurn = (boolean) parameter.getValue();
+					return true;
 				default:
 					break;
 			}
@@ -161,6 +164,9 @@ public class StepPlaceBall extends AbstractStep {
 				game.getFieldModel().setBallMoving(true);
 				game.setTurnMode(game.getLastTurnMode());
 				publishParameter(StepParameter.from(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, null));
+				if (revertEndTurn) {
+					publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
+				}
 				leave(game);
 				break;
 			case DONE:
@@ -220,6 +226,7 @@ public class StepPlaceBall extends AbstractStep {
 		JsonArray jsonArray = new JsonArray();
 		adjacentSquares.stream().map(FieldCoordinate::toJsonValue).forEach(jsonArray::add);
 		IServerJsonOption.FIELD_COORDINATES.addTo(jsonObject, jsonArray);
+		IServerJsonOption.PREVENT.addTo(jsonObject, revertEndTurn);
 		return jsonObject;
 	}
 
@@ -242,6 +249,8 @@ public class StepPlaceBall extends AbstractStep {
 			adjacentSquares.clear();
 			jsonArray.values().stream().map(value -> new FieldCoordinate().initFrom(source, value)).forEach(adjacentSquares::add);
 		}
+
+		revertEndTurn = toPrimitive(IServerJsonOption.PREVENT.getFrom(source, jsonObject));
 
 		return this;
 	}

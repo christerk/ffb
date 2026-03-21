@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.end;
+package com.fumbbl.ffb.server.step.bb2025.end;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -39,7 +39,6 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepMvp extends AbstractStep {
 
@@ -108,9 +107,11 @@ public final class StepMvp extends AbstractStep {
 			}
 			if (gameResult.getTeamResultHome().hasConceded() && !game.isConcededLegally()) {
 				fNrOfHomeMvps = 0;
+				fNrOfAwayMvps++;
 			}
 			if (gameResult.getTeamResultAway().hasConceded() && !game.isConcededLegally()) {
 				fNrOfAwayMvps = 0;
+				fNrOfHomeMvps++;
 			}
 		}
 

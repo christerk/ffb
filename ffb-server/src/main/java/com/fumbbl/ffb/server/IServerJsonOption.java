@@ -25,7 +25,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ADD_BLOCK_DIE_HANDLED = new JsonBooleanOption("addBlockDieHandled");
     JsonBooleanOption ADMIN_MODE = new JsonBooleanOption("adminMode");
     JsonBooleanOption ALREADY_REPORTED = new JsonBooleanOption("alreadyReported");
-    JsonBooleanOption ALLOW_MOVE_AFTER_PASS = new JsonBooleanOption("allowMoveAfterPass");
+    JsonBooleanOption ALLOW_MOVE_AFTER_BOMB = new JsonBooleanOption("allowMoveAfterBomb");
     JsonBooleanOption ALLOW_SECOND_BLOCK_ACTION = new JsonBooleanOption("allowSecondBlockAction");
     JsonStringOption ALTERNATE_GOTO_LABEL = new JsonStringOption("gotoLabelOnBlock");
     JsonBooleanOption ALREADY_DROPPED = new JsonBooleanOption("alreadyDropped");

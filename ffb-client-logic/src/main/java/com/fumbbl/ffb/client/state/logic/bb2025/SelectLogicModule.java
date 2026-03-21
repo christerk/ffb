@@ -369,7 +369,7 @@ public class SelectLogicModule extends LogicModule {
 		if (isThenIStartedBlastinAvailable(player)) {
 			context.add(ClientAction.THEN_I_STARTED_BLASTIN);
 		}
-		if (isChompAvailable(player)) {
+		if (specialBlocksAvailable && isChompAvailable(player)) {
 			context.add(ClientAction.CHOMP);
 		}
 		return context;

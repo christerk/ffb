@@ -5,11 +5,13 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.LeaderState;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
@@ -37,6 +39,7 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.util.ServerUtilPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.util.UtilCards;
@@ -44,6 +47,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,6 +55,19 @@ import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
+
+	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
+		add(TurnMode.KICKOFF);
+		add(TurnMode.PASS_BLOCK);
+		add(TurnMode.DUMP_OFF);
+		add(TurnMode.QUICK_SNAP);
+		add(TurnMode.BETWEEN_TURNS);
+	}};
+
+	private static final Set<ReRolledAction> passiveReRollActions = new HashSet<ReRolledAction>() {{
+		add(ReRolledActions.SWOOP_DISTANCE);
+		add(ReRolledActions.SWOOP_DIRECTION);
+	}};
 
 	private static final int MASCOT_MINIMUM_ROLL = 4;
 	private static final int TEAM_CAPTAIN_MINIMUM_ROLL = 6;
@@ -247,9 +264,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				properties.add(ReRollProperty.LONER);
 			}
 
-			if (isProReRollAvailable(player, game, gameState.getPassState())) {
+			if (!passiveReRollActions.contains(reRolledAction) &&
+				isProReRollAvailable(player, game, gameState.getPassState())) {
 				properties.add(ReRollProperty.PRO);
 			}
+			
 			if (reRollSkill == null) {
 				Optional<Skill> reRollOnce =
 					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
@@ -470,7 +489,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
-		return true;
+		return !modesProhibitingReRolls.contains(turnMode);
 	}
 
 
@@ -519,5 +538,56 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return Optional.empty();
 	}
 
+	@Override
+	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender,
+		boolean usingMultiBlock,
+		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength) {
+		Game game = gameState.getGame();
+		int blockStrengthAttacker = getAttackerBaseStrength(game, attacker, defender, usingMultiBlock);
 
+		if (successfulDauntless) {
+			blockStrengthAttacker =
+				Math.max(blockStrengthAttacker, doubleTargetStrength ? 2 * defenderStrength : defenderStrength);
+		}
+
+		ActingPlayer actingPlayer = game.getActingPlayer();
+
+		if (attacker.hasSkillProperty(NamedProperties.addStrengthOnBlitz)
+			&& ((actingPlayer.getPlayerAction() == PlayerAction.BLITZ)
+			|| (actingPlayer.getPlayerAction() == PlayerAction.BLITZ_MOVE))) {
+			blockStrengthAttacker++;
+		}
+
+		blockStrengthAttacker =
+			ServerUtilPlayer.findBlockStrength(game, attacker, blockStrengthAttacker, defender, usingMultiBlock);
+
+
+		Set<String> multiBlockTargets = gameState.getGame().getMultiBlockTargets();
+		int additionalAssists = gameState.getAdditionalAssist(game.getActingTeam().getId());
+		// add additional assist when:
+		// - effect is present
+		// - either no multi block
+		// - or no multiblock target yet selected (we are only showing decorations)
+		// - or only this player is selected (also showing decorations but keep the assist for the "first" target)
+		// - or two multiblock targets are selected
+		//
+		// if two players are selected we are actually blocking, so we can simply check for the existing effect as it
+		// is removed after the "first" block
+		if (!usingMultiBlock || multiBlockTargets.isEmpty() || multiBlockTargets.size() == 2 ||
+			multiBlockTargets.size() == 1 && multiBlockTargets.contains(defender.getId())) {
+			blockStrengthAttacker += additionalAssists;
+		}
+		return blockStrengthAttacker;
+	}
+
+	@Override
+	public int getAttackerBaseStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock) {
+		int strength = attacker.getStrengthWithModifiers();
+
+		if (isMultiBlock) {
+			strength += multiBlockAttackerModifier();
+		}
+
+		return Math.max(strength, 1);
+	}
 }

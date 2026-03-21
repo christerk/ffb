@@ -67,7 +67,8 @@ public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 	@Override
 	public List<RosterPosition> raisePositions(Team team) {
 		return Arrays.stream(team.getRoster().getPositions())
-			.filter(pos -> pos.getKeywords().contains(Keyword.LINEMAN) && pos.getType() != PlayerType.STAR)
+			.filter(pos -> pos.getKeywords().contains(Keyword.LINEMAN) && pos.getType() != PlayerType.STAR &&
+				pos.getType() != PlayerType.IRREGULAR && pos.getType() != PlayerType.INFAMOUS_STAFF)
 			.collect(Collectors.toList());
 	}
 

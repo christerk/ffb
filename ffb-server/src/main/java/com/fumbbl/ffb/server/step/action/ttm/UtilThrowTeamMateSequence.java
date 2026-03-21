@@ -1,15 +1,21 @@
 package com.fumbbl.ffb.server.step.action.ttm;
 
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.Direction;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.json.IJsonSerializable;
+import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.TtmMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.report.ReportScatterPlayer;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 
@@ -17,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilThrowTeamMateSequence {
 
-	public static class ScatterResult {
+	public static class ScatterResult implements IJsonSerializable {
 
-		private final FieldCoordinate fLastValidCoordinate;
-		private final boolean fInBounds;
+		private FieldCoordinate fLastValidCoordinate;
+		private boolean fInBounds;
 
 		public ScatterResult(FieldCoordinate pLastValidCoordinate, boolean pInBounds) {
 			fLastValidCoordinate = pLastValidCoordinate;
@@ -40,13 +46,34 @@ public class UtilThrowTeamMateSequence {
 			return fInBounds;
 		}
 
+		@Override
+		public ScatterResult initFrom(IFactorySource source, JsonValue jsonValue) {
+			JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
+			if (IServerJsonOption.FIELD_COORDINATE.isDefinedIn(jsonObject)) {
+				fLastValidCoordinate =
+					new FieldCoordinate().initFrom(source, IServerJsonOption.FIELD_COORDINATE.getFrom(source, jsonObject));
+			}
+			fInBounds = !IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject);
+			return null;
+		}
+
+		@Override
+		public JsonObject toJsonValue() {
+			JsonObject jsonObject = new JsonObject();
+			if (fLastValidCoordinate != null) {
+				IServerJsonOption.FIELD_COORDINATE.addTo(jsonObject, fLastValidCoordinate.toJsonValue());
+			}
+			IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, !fInBounds);
+			return jsonObject;
+		}
 	}
 
 	public static ScatterResult scatterPlayer(IStep pStep, FieldCoordinate pStartCoordinate, boolean pThrowScatter) {
 
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
-		TtmMechanic mechanic = (TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+		TtmMechanic mechanic =
+			(TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
 
 		FieldCoordinate endCoordinate = null;
 		FieldCoordinate lastValidCoordinate = null;
@@ -57,7 +84,7 @@ public class UtilThrowTeamMateSequence {
 		boolean inBounds = true;
 		while (inBounds) {
 			if ((pThrowScatter && (rollList.size() >= 3))
-					|| (!pThrowScatter && (rollList.size() >= 1) && mechanic.isValidEndScatterCoordinate(game, startCoordinate))) {
+				|| (!pThrowScatter && (!rollList.isEmpty()) && mechanic.isValidEndScatterCoordinate(game, startCoordinate))) {
 				break;
 			}
 			int roll = gameState.getDiceRoller().rollScatterDirection();
@@ -78,14 +105,15 @@ public class UtilThrowTeamMateSequence {
 			rolls[i] = rollList.get(i);
 		}
 		Direction[] directions = directionList.toArray(new Direction[0]);
-		pStep.getResult().addReport(new ReportScatterPlayer(pStartCoordinate, endCoordinate, directions, rolls, pThrowScatter));
+		pStep.getResult()
+			.addReport(new ReportScatterPlayer(pStartCoordinate, endCoordinate, directions, rolls, pThrowScatter));
 
 		return new ScatterResult(lastValidCoordinate, inBounds);
 
 	}
 
 	public static ScatterResult kickPlayer(IStep pStep, FieldCoordinate pKickedPlayerCoordinate,
-			FieldCoordinate pTargetCoordinate) {
+		FieldCoordinate pTargetCoordinate) {
 		FieldCoordinate lastValidCoordinate = pKickedPlayerCoordinate;
 		FieldCoordinate currentCoordinate = pKickedPlayerCoordinate;
 

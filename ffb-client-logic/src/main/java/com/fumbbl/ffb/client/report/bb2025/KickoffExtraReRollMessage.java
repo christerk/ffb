@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -10,15 +10,12 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.report.mixed.ReportKickoffExtraReRoll;
 
 @ReportMessageType(ReportId.KICKOFF_EXTRA_RE_ROLL)
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffExtraReRoll> {
 
 	@Override
 	protected void render(ReportKickoffExtraReRoll report) {
 		StringBuilder status = new StringBuilder();
-		boolean homeBanned = game.getTurnDataHome().isCoachBanned();
-		boolean awayBanned = game.getTurnDataAway().isCoachBanned();
 
 		int homePart = game.getTurnDataHome().getInducementSet().value(Usage.ADD_COACH);
 		int awayPart = game.getTurnDataAway().getInducementSet().value(Usage.ADD_COACH);
@@ -26,33 +23,31 @@ public class KickoffExtraReRollMessage extends ReportMessageBase<ReportKickoffEx
 		status.append("Brilliant Coaching Roll Home Team [ ").append(report.getRollHome()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		int totalHome = report.getRollHome()
-			+ game.getTeamHome().getAssistantCoaches() - (homeBanned ? 1 : 0) + homePart;
+			+ game.getTeamHome().getAssistantCoaches() + homePart;
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollHome());
 		status.append(" + ").append(game.getTeamHome().getAssistantCoaches()).append(" Assistant Coaches");
 		if (homePart > 0) {
 			status.append(" + ").append(homePart).append(" Part-time Assistant Coaches");
 		}
-		status.append(" ").append(homeBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalHome).append(".");
 		println(getIndent() + 1, status.toString());
 		status = new StringBuilder();
 		status.append("Brilliant Coaching Roll Away Team [ ").append(report.getRollAway()).append(" ]");
 		println(getIndent(), TextStyle.ROLL, status.toString());
 		int totalAway = report.getRollAway()
-			+ game.getTeamAway().getAssistantCoaches() - (awayBanned ? 1 : 0) + awayPart;
+			+ game.getTeamAway().getAssistantCoaches() + awayPart;
 		status = new StringBuilder();
 		status.append("Rolled ").append(report.getRollAway());
 		status.append(" + ").append(game.getTeamAway().getAssistantCoaches()).append(" Assistant Coaches");
 		if (awayPart > 0) {
 			status.append(" + ").append(awayPart).append(" Part-time Assistant Coaches");
 		}
-		status.append(" ").append(awayBanned ? "- 1 Banned" : " + 0 Head").append(" Coach");
 		status.append(" = ").append(totalAway).append(".");
 		println(getIndent() + 1, status.toString());
 
 		if (report.getTeamId() == null) {
-			println(getIndent(), "Neither team gains a Re-Roll.");
+			println(getIndent(), "Both teams gain a Re-Roll only available for this drive.");
 		} else {
 			if (report.getTeamId().equals(game.getTeamHome().getId())) {
 				print(getIndent(), "Team ");

@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.net.NetCommand;
 
 import java.awt.event.MouseEvent;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ClientState<T extends LogicModule, C extends FantasyFootballClient> {
 
@@ -134,8 +135,9 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 		dialogProgress.showDialog(listener);
 	}
 
-	public void updateIconProgress(int count, String message) {
-		dialogProgress.updateProgress(count, message);
+	public synchronized void updateIconProgress(AtomicInteger count, int total) {
+		String message = String.format("Loaded icon %d of %d.", count.incrementAndGet(), total);
+		dialogProgress.updateProgress(count.get(), message);
 	}
 
 	public void hideIconProgress() {

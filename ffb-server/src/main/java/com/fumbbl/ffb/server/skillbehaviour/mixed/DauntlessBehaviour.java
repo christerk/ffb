@@ -31,7 +31,6 @@ import com.fumbbl.ffb.server.step.action.block.StepDauntless;
 import com.fumbbl.ffb.server.step.action.block.StepDauntless.StepState;
 import com.fumbbl.ffb.server.step.bb2020.StepStateMultipleRolls;
 import com.fumbbl.ffb.server.step.mixed.multiblock.StepDauntlessMultiple;
-import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.common.Dauntless;
@@ -143,7 +142,7 @@ public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 			@Override
 			protected int minimumRoll(Game game, Player<?> actingPlayer, Player<?> opponentPlayer) {
 				RollMechanic mechanic = (RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
-				int attackerStrength = ServerUtilBlock.getAttackerStrength(game, actingPlayer, opponentPlayer, true);
+				int attackerStrength = mechanic.getAttackerBaseStrength(game, actingPlayer, opponentPlayer, true);
 				return DiceInterpreter.getInstance().minimumRollDauntless(attackerStrength, opponentPlayer.getStrength() + mechanic.multiBlockDefenderModifier());
 			}
 

@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.GameStatus;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -12,6 +13,7 @@ import com.fumbbl.ffb.model.BlitzTurnState;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ISkillBehaviour;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.change.IModelChangeObserver;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeList;
@@ -45,7 +47,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class GameState implements IModelChangeObserver, IJsonSerializable {
@@ -360,8 +362,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.setTeamIdsAdditionalAssist(teamIdsAdditionalAssist);
 	}
 
-	public boolean hasAdditionalAssist(String teamId) {
-		return activeEffects.getTeamIdsAdditionalAssist().contains(teamId);
+	public int getAdditionalAssist(String teamId) {
+		return (int) activeEffects.getTeamIdsAdditionalAssist().stream().filter(val -> val.equals(teamId)).count();
 	}
 
 	public void removeAdditionalAssist(String teamId) {
@@ -391,6 +393,23 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public int shadowingCount(String playerId) {
 		return (int) activeEffects.getShadowers().stream().filter(id -> id.equals(playerId)).count();
+	}
+
+	public void addLeader(Player<?> leader) {
+		activeEffects.addLeader(leader.getId());
+	}
+
+	public boolean hasLeader(Team team) {
+		return Arrays.stream(team.getPlayers())
+			.filter(player -> {
+				FieldCoordinate playerCoordinate = getGame().getFieldModel().getPlayerCoordinate(player);
+				return playerCoordinate != null && !playerCoordinate.isBoxCoordinate();
+			})
+			.anyMatch(player -> activeEffects.getLeaders().contains(player.getId()));
+	}
+
+	public void resetLeaders() {
+		activeEffects.clearLeaders();
 	}
 
 // JSON serialization
@@ -443,7 +462,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public GameState initFrom(IFactorySource emptySource, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		
+
 		// Preinitialize the game so we can get the correct factories later.
 		setGame(null);
 		JsonObject gameObject = IServerJsonOption.GAME.getFrom(emptySource, jsonObject);
@@ -499,7 +518,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		}
 
 		if (IServerJsonOption.ACTIVE_EFFECTS.isDefinedIn(jsonObject)) {
-			activeEffects = new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
+			activeEffects =
+				new ActiveEffects().initFrom(source, IServerJsonOption.ACTIVE_EFFECTS.getFrom(source, jsonObject));
 		}
 
 		return this;
@@ -512,7 +532,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			ISkillBehaviour<? extends Skill> behaviour = skill.getSkillBehaviour();
 			if (behaviour != null) {
 				List<StepModifier<? extends IStep, ?>> skillModifiers = ((SkillBehaviour<? extends Skill>) behaviour)
-						.getStepModifiers();
+					.getStepModifiers();
 				for (StepModifier<? extends IStep, ?> modifier : skillModifiers) {
 					if (modifier.appliesTo(step)) {
 						getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
@@ -525,7 +545,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 		modifiers.sort(StepModifier.Comparator);
 
-		String modifiersString = modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
+		String modifiersString =
+			modifiers.stream().map(modifier -> modifier.getClass().getName()).collect(Collectors.joining(", "));
 		getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
 			"Execute step hook: Sorted modifiers for step " + step.getName().toUpperCase() + " are: " + modifiersString);
 
@@ -533,7 +554,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			boolean stopProcessing = modifier.handleExecuteStep(step, state);
 			if (stopProcessing) {
 				getServer().getDebugLog().log(IServerLogLevel.DEBUG, getGame().getId(),
-					"Execute step hook: Modifier " + modifier.getClass().getName().toUpperCase() + " stopped processing for step " + step.getName());
+					"Execute step hook: Modifier " + modifier.getClass().getName().toUpperCase() +
+						" stopped processing for step " + step.getName());
 				return true;
 			}
 		}
