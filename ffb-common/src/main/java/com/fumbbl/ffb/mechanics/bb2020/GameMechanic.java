@@ -15,10 +15,14 @@ import com.fumbbl.ffb.model.Roster;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillWithValue;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.skill.bb2020.special.WisdomOfTheWhiteDwarf;
+import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.FactoryType;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -220,5 +224,19 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	@Override
 	public boolean playersForGoActivations(Game game) {
 		return false;
+	}
+
+	@Override
+	public boolean isWisdomAvailable(Game game, Player<?> player) {
+		Set<Skill> ownedSkills = player.getSkillsIncludingTemporaryOnes();
+
+		boolean canGainSkill = Constant.getGrantAbleSkills(game.getFactory(FactoryType.Factory.SKILL)).stream()
+			.map(SkillWithValue::getSkill)
+			.anyMatch(skill -> !ownedSkills.contains(skill));
+
+		return canGainSkill && Arrays.stream(UtilPlayer.findAdjacentPlayersWithTacklezones(game, player.getTeam(),
+				game.getFieldModel().getPlayerCoordinate(player), false))
+			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates)
+				&& !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
 	}
 }

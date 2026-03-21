@@ -368,5 +368,9 @@ public abstract class Skill implements INamedObject, Comparable<Skill> {
 		this.declareCondition = declareCondition;
 	}
 
+	public String enhancementSourceName() {
+		return getName();
+	}
+
 
 }
