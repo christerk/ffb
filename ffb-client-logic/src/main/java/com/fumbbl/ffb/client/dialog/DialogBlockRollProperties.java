@@ -34,14 +34,15 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 	private final JButton[] fBlockDice;
 
-	private JButton fButtonTeamReRoll;
-	private JButton fButtonProReRoll;
-	private JButton fButtonNoReRoll;
+	private JButton buttonTeamReRoll;
+	private JButton buttonFallbackReRoll;
+	private JButton buttonProReRoll;
+	private JButton buttonNoReRoll;
 	private JButton brawlerButton, hatredButton, proButton1, proButton2, proButton3,
 		anySingleDieButton, anySingleDieButton1, anySingleDieButton2, anySingleDieButton3,
 		singleDieButton, singleDieButton1, singleDieButton2, singleDieButton3, anyDiceButton;
 
-	private JCheckBox fallbackToTrr, proFallbackMascot, proFallbackTrr;
+	private JCheckBox proFallbackMascot, proFallbackTrr;
 	private JCheckBox[] diceBoxes;
 
 	private int fDiceIndex;
@@ -193,8 +194,13 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		reRollPanel.setOpaque(false);
 		reRollPanel.setLayout(new BoxLayout(reRollPanel, BoxLayout.X_AXIS));
 
-		fButtonTeamReRoll = button(trrSource.getName(getClient().getGame()), KeyEvent.VK_T);
-		fButtonNoReRoll = button("No Re-Roll", KeyEvent.VK_N);
+		String trrSourceText = trrSource.getName(getClient().getGame());
+		if (willUseMascot) {
+			trrSourceText += " (No Team Re-Roll)";
+		}
+
+		buttonTeamReRoll = button(trrSourceText, KeyEvent.VK_T);
+		buttonNoReRoll = button("No Re-Roll", KeyEvent.VK_N);
 
 		Box.Filler verticalGlue1 = (Box.Filler) Box.createVerticalGlue();
 		verticalGlue1.setOpaque(false);
@@ -202,33 +208,25 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		reRollPanel.setOpaque(false);
 
 		if (willUseMascot) {
-			JPanel mascotPanel = new JPanel();
-			mascotPanel.setBackground(null);
-			mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
-			mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-			mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-			fButtonTeamReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
-			mascotPanel.add(fButtonTeamReRoll);
-			mascotPanel.setOpaque(false);
-			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
-				fallbackToTrr = mascotExtension.checkBox("TRR fallback", KeyEvent.VK_F, Color.WHITE, dimensionProvider(),
-					this, this);
-				fallbackToTrr.setSelected(true);
-				mascotPanel.add(fallbackToTrr);
-			}
+			JPanel mascotPanel = mascotExtension.wrapperPanel(buttonTeamReRoll);
 			reRollPanel.add(mascotPanel);
+			if (dialogParameter.hasProperty(ReRollProperty.TRR)) {
+				buttonFallbackReRoll = button(ReRollSources.MASCOT.getName(getClient().getGame()) + " (or Team-ReRoll)", KeyEvent.VK_F);
+				JPanel fallbackPanel = mascotExtension.wrapperPanel(buttonFallbackReRoll);
+				reRollPanel.add(fallbackPanel);
+			}
 		} else if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
-			reRollPanel.add(mascotExtension.wrapperPanel(fButtonTeamReRoll));
+			reRollPanel.add(mascotExtension.wrapperPanel(buttonTeamReRoll));
 		}
 
 		if (getDialogParameter().getNrOfDice() == 1) {
 			if (singleDiePerActivationReRollSource != null) {
-				fButtonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
+				buttonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
 				if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
 					JPanel proPanel = proMascotPanelSingle();
 					reRollPanel.add(proPanel);
 				} else {
-					reRollPanel.add(mascotExtension.wrapperPanel(fButtonProReRoll));
+					reRollPanel.add(mascotExtension.wrapperPanel(buttonProReRoll));
 				}
 			}
 
@@ -261,7 +259,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		}
 
 		if (getDialogParameter().getNrOfDice() < 0) {
-			reRollPanel.add(mascotExtension.wrapperPanel(fButtonNoReRoll));
+			reRollPanel.add(mascotExtension.wrapperPanel(buttonNoReRoll));
 		}
 
 		Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
@@ -281,8 +279,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		proPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
 		proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 		proPanel.setOpaque(false);
-		fButtonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
-		proPanel.add(fButtonProReRoll);
+		buttonProReRoll.setAlignmentX(Box.CENTER_ALIGNMENT);
+		proPanel.add(buttonProReRoll);
 		if (willUseMascot) {
 			proFallbackMascot = mascotExtension.checkBox("Mascot", KeyEvent.VK_L, checkboxColor, dimensionProvider(), this,
 				this);
@@ -471,8 +469,15 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	public void actionPerformed(ActionEvent pActionEvent) {
 		Game game = getClient().getGame();
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());
-		if (pActionEvent.getSource() == fButtonTeamReRoll) {
-			determineTeamReRollSource();
+		if (pActionEvent.getSource() == buttonTeamReRoll) {
+			if (willUseMascot) {
+				fReRollSource = ReRollSources.MASCOT;
+			} else {
+				fReRollSource = ReRollSources.TEAM_RE_ROLL;
+			}
+		}
+		if (pActionEvent.getSource() == buttonFallbackReRoll) {
+			fReRollSource = ReRollSources.MASCOT_TRR;
 		}
 		if (pActionEvent.getSource() == anyDiceButton) {
 			evaluateCheckboxes();
@@ -509,7 +514,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			fReRollSource = singleDieReRollSource;
 			reRollIndexes.add(2);
 		}
-		if (pActionEvent.getSource() == fButtonProReRoll) {
+		if (pActionEvent.getSource() == buttonProReRoll) {
 			determineProReRollSource();
 			reRollIndexes.add(0);
 		}
@@ -551,7 +556,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			return;
 		}
 
-		if ((fReRollSource != null) || (fDiceIndex >= 0) || (pActionEvent.getSource() == fButtonNoReRoll)) {
+		if ((fReRollSource != null) || (fDiceIndex >= 0) || (pActionEvent.getSource() == buttonNoReRoll)) {
 			if (getCloseListener() != null) {
 				getCloseListener().dialogClosed(this);
 			}
@@ -627,7 +632,17 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			case KeyEvent.VK_T:
 				if (getDialogParameter().hasProperty(ReRollProperty.TRR)) {
 					keyHandled = true;
-					determineTeamReRollSource();
+					if (willUseMascot) {
+						fReRollSource = ReRollSources.MASCOT;
+					} else {
+						fReRollSource = ReRollSources.TEAM_RE_ROLL;
+					}
+				}
+				break;
+			case KeyEvent.VK_F:
+				if (buttonFallbackReRoll != null) {
+					keyHandled = true;
+					fReRollSource = ReRollSources.MASCOT_TRR;
 				}
 				break;
 			case KeyEvent.VK_P:
@@ -741,17 +756,6 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		return anyBlockDiceReRollSource;
 	}
 
-	private void determineTeamReRollSource() {
-		if (willUseMascot) {
-			if (fallbackToTrr.isSelected()) {
-				fReRollSource = ReRollSources.MASCOT_TRR;
-			} else {
-				fReRollSource = ReRollSources.MASCOT;
-			}
-		} else {
-			fReRollSource = ReRollSources.TEAM_RE_ROLL;
-		}
-	}
 
 	private void determineProReRollSource() {
 		boolean mascot = proFallbackMascot != null && proFallbackMascot.isSelected();
