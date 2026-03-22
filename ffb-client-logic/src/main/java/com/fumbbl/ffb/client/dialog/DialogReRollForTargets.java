@@ -1,7 +1,10 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType.Factory;
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.ReRolledAction;
+import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.client.ui.swing.JButton;
@@ -13,37 +16,25 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DialogReRollForTargets extends Dialog {
+public class DialogReRollForTargets extends AbstractDialogForTargets {
 
-	public static final Color HIGHLIGHT = Color.lightGray;
 	private final DialogReRollForTargetsParameter dialogParameter;
 	private ReRollSource reRollSource;
-	private String selectedTarget;
 
 	public DialogReRollForTargets(FantasyFootballClient pClient, DialogReRollForTargetsParameter parameter) {
 
-		super(pClient, "Use a Re-roll", false);
+		super(pClient, "Use a Re-roll");
 
 		dialogParameter = parameter;
 		ReRollSource singleUseReRollSource = parameter.getSingleUseReRollSource();
-
-		JButton fButtonNoReRoll = new JButton(dimensionProvider(), "No Re-Roll");
-		fButtonNoReRoll.addActionListener(e -> close());
-		this.addKeyListener(new PressedKeyListener('N') {
-			@Override
-			protected void handleKey() {
-				close();
-			}
-		});
-		fButtonNoReRoll.setMnemonic((int) 'N');
 
 		StringBuilder mainMessage = new StringBuilder();
 
@@ -69,29 +60,17 @@ public class DialogReRollForTargets extends Dialog {
 			mainMessages.add("<html>Player is a LONER - the Re-Roll is not guaranteed to help.</html>");
 		}
 
-		JPanel mainMessagePanel = new JPanel();
-		mainMessagePanel.setLayout(new BoxLayout(mainMessagePanel, BoxLayout.Y_AXIS));
-		mainMessagePanel.setAlignmentX(CENTER_ALIGNMENT);
-		mainMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-
-		mainMessages.stream().map(message -> new JLabel(dimensionProvider(), message)).forEach(label -> {
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			mainMessagePanel.add(label);
-			mainMessagePanel.add(Box.createVerticalStrut(5));
-		});
-
-		JPanel detailPanel = new JPanel();
-		detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
-		detailPanel.setAlignmentX(CENTER_ALIGNMENT);
+		JPanel detailPanel = createDetailPanel();
 		for (int index = 0; index < parameter.getTargetIds().size(); index++) {
-
-			JPanel targetPanel = new JPanel();
-			targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
-			targetPanel.setAlignmentX(CENTER_ALIGNMENT);
 
 			String target = parameter.getTargetIds().get(index);
 			if (parameter.getReRollAvailableAgainst().contains(target)) {
 				Player<?> player = game.getPlayerById(parameter.getTargetIds().get(index));
+
+				JPanel targetPanel = new JPanel();
+				targetPanel.setLayout(new BoxLayout(targetPanel, BoxLayout.Y_AXIS));
+				targetPanel.setAlignmentX(CENTER_ALIGNMENT);
+
 				if (parameter.getMinimumRolls().size() > index) {
 					JPanel textPanel = new JPanel();
 					textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
@@ -106,11 +85,7 @@ public class DialogReRollForTargets extends Dialog {
 					targetPanel.add(textPanel);
 				}
 
-				JPanel buttonPanel = new JPanel();
-				buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-				buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
-				buttonPanel.add(Box.createHorizontalGlue());
-				buttonPanel.setBackground(HIGHLIGHT);
+				JPanel buttonPanel = createButtonPanel();
 
 				if (parameter.isTeamReRollAvailable()) {
 					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'e'));
@@ -140,37 +115,11 @@ public class DialogReRollForTargets extends Dialog {
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 				targetPanel.add(Box.createVerticalStrut(3));
-				targetPanel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.BLACK, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-				targetPanel.setBackground(HIGHLIGHT);
-				detailPanel.add(targetPanel);
-				detailPanel.add(Box.createVerticalStrut(5));
+				addTargetPanel(detailPanel, targetPanel);
 			}
 		}
 
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setAlignmentX(CENTER_ALIGNMENT);
-		bottomPanel.add(fButtonNoReRoll);
-		detailPanel.add(bottomPanel);
-
-		JPanel infoPanel = new JPanel();
-		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.X_AXIS));
-		infoPanel.setAlignmentX(CENTER_ALIGNMENT);
-		infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		BufferedImage icon = getClient().getUserInterface().getIconCache().getIconByProperty(IIconProperty.GAME_DICE_SMALL, dimensionProvider());
-		JLabel iconLabel = new JLabel(dimensionProvider(), new ImageIcon(icon));
-		iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		infoPanel.add(iconLabel);
-		infoPanel.add(Box.createHorizontalStrut(5));
-		infoPanel.add(detailPanel);
-		infoPanel.add(Box.createHorizontalGlue());
-
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		getContentPane().add(mainMessagePanel);
-		getContentPane().add(infoPanel);
-
-		pack();
-		setLocationToCenter();
-
+		init(mainMessages, detailPanel);
 	}
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
@@ -192,18 +141,8 @@ public class DialogReRollForTargets extends Dialog {
 		close();
 	}
 
-	private void close() {
-		if (getCloseListener() != null) {
-			getCloseListener().dialogClosed(DialogReRollForTargets.this);
-		}
-	}
-
 	public DialogId getId() {
 		return DialogId.RE_ROLL_FOR_TARGETS;
-	}
-
-	public String getSelectedTarget() {
-		return selectedTarget;
 	}
 
 	public ReRollSource getReRollSource() {
