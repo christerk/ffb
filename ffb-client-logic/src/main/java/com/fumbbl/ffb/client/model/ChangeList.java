@@ -10,7 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 
-		versions.add(new VersionChangeList("3.1.3")
+		versions.add(new VersionChangeList("3.2.0")
 			.addBugfix("Banned coach does not affect Brilliant Coaching roll")
 			.addBugfix("Prevent staff and technical player types to be eligible to be raised")
 			.addBugfix("Safe Pair of Hands did prevent turnovers")
@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Player with Fend and Taunt was not able to use Taunt")
 			.addBugfix("Fumbled KTM did not apply stunty to injury roll")
 			.addBugfix("Give and Go did not trigger when a bomb was intercepted/caught")
+      .addFeature("Wisdom of the White Dwarf (Star Grombrindal)")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")

@@ -190,21 +190,24 @@ public class UtilPlayer {
 	}
 
 	public static Player<?>[] findAdjacentStandingOrPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {
-		List<Player<?>> adjacentPlayers = new ArrayList<>();
+		return findStandingOrPronePlayers(pGame, pTeam, pCoordinate, 1);
+	}
+
+	public static Player<?>[] findStandingOrPronePlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate, int pDistance) {
+		List<Player<?>> players = new ArrayList<>();
 		FieldModel fieldModel = pGame.getFieldModel();
-		FieldCoordinate[] adjacentCoordinates =
-				fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
-						1, false);
-		for (FieldCoordinate adjacentCoordinate : adjacentCoordinates) {
-			Player<?> player = fieldModel.getPlayer(adjacentCoordinate);
+		FieldCoordinate[] coordinates = fieldModel.findAdjacentCoordinates(pCoordinate, FieldCoordinateBounds.FIELD,
+			pDistance, false);
+		for (FieldCoordinate coordinate : coordinates) {
+			Player<?> player = fieldModel.getPlayer(coordinate);
 			if ((player != null) && (player.getTeam() == pTeam)) {
 				PlayerState playerState = fieldModel.getPlayerState(player);
 				if (!playerState.isStunned()) {
-					adjacentPlayers.add(player);
+					players.add(player);
 				}
 			}
 		}
-		return adjacentPlayers.toArray(new Player[0]);
+		return players.toArray(new Player[0]);
 	}
 
 	public static Player<?>[] findAdjacentPlayers(Game pGame, Team pTeam, FieldCoordinate pCoordinate) {

@@ -72,7 +72,8 @@ public enum SkillUse implements INamedObject {
 	GAIN_CLAWS_FOR_BLITZ("gainClaws", "to gain the Claws skill for this Blitz action"),
 	RE_ROLL_PUNT_DIRECTION("reRollPuntDirection", "to re-roll the punt direction"),
 	RE_ROLL_PUNT_DISTANCE("reRollPuntDistance", "to re-roll the punt distance"),
-	AVOID_DODGING("avoidDodging", "to avoid dodge rolls");
+	AVOID_DODGING("avoidDodging", "to avoid dodge rolls"),
+	GRANT_SKILL_TO_TEAM_MATE("grantSkillToTeamMate", "to grant a team-mate a skill for this turn");
 
 	private final String fName;
 	private final String fDescription;
