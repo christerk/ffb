@@ -11,7 +11,6 @@ import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.model.BlockRollProperties;
-import com.fumbbl.ffb.model.Game;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 
 public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBlockProperties {
@@ -81,8 +81,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		dialogParameter = parameter;
 		this.actionToSourceMaps = actionToSourceMaps;
 
-		Game game = getClient().getGame();
-
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
@@ -128,81 +126,23 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					blockWillUseMascot.add(target);
 				}
 
-				if (blockRoll.hasProperty(ReRollProperty.TRR) || willUseMascot) {
-					JButton trrButton =
-						createReRollButton(target, trrSource.getName(getClient().getGame()), ReRollSources.TEAM_RE_ROLL,
-							currentMnemonics.team);
-					if (willUseMascot) {
-						JPanel mascotPanel = new JPanel();
-						mascotPanel.setBackground(null);
-						mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
-						mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-						mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-						trrButton.setAlignmentX(Box.CENTER_ALIGNMENT);
-						mascotPanel.add(trrButton);
-						mascotPanel.setOpaque(false);
-						if (blockRoll.hasProperty(ReRollProperty.TRR)) {
-							checkBoxes.trr = mascotExtension.checkBox("TRR fallback", currentMnemonics.trrFallback, Color.WHITE,
-								dimensionProvider(),
-								null, null);
-							checkBoxes.trr.setSelected(true);
-							mascotPanel.add(checkBoxes.trr);
-						}
-						buttonPanel.add(mascotPanel);
-					} else {
-						buttonPanel.add(mascotExtension.wrapperPanel(trrButton));
-					}
+				Function<JButton, JPanel> proWrapperFactory = (willUseMascot || blockRoll.hasProperty(ReRollProperty.TRR))
+					? proButton -> proMascotPanelSingle(blockRoll, proButton, currentMnemonics)
+					: null;
 
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (blockRoll.getNrOfDice() == 1) {
-					if (singleDiePerActicationReRollSource != null) {
-						JButton proButton = createReRollButton(target, singleDiePerActicationReRollSource.getName(game),
-							singleDiePerActicationReRollSource,
-							currentMnemonics.pro.get(0));
-						if (willUseMascot || blockRoll.hasProperty(ReRollProperty.TRR)) {
-							buttonPanel.add(proMascotPanelSingle(blockRoll, proButton, currentMnemonics));
-						} else {
-							buttonPanel.add(mascotExtension.wrapperPanel(proButton));
-						}
-						buttonPanel.add(Box.createHorizontalGlue());
-					}
-					if (singleDieReRollSource != null) {
-						buttonPanel.add(mascotExtension.wrapperPanel(
-							createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource,
-								currentMnemonics.anyDie.get(0))));
-						buttonPanel.add(Box.createHorizontalGlue());
-					}
-					if (singleBlockDieReRollSource != null) {
-						buttonPanel.add(mascotExtension.wrapperPanel(
-							createReRollButton(target, singleBlockDieReRollSource.getName(game), singleBlockDieReRollSource, 
-								currentMnemonics.singleBlockDie.get(0))));
-						buttonPanel.add(Box.createHorizontalGlue());
-					}
-				}
-				if (bothDownReRollSource != null) {
-					buttonPanel.add(mascotExtension.wrapperPanel(
-						createReRollButton(target, "Brawler Re-Roll", bothDownReRollSource, currentMnemonics.brawler)));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (skullReRollSource != null) {
-					buttonPanel.add(mascotExtension.wrapperPanel(
-						createReRollButton(target, "Hatred Re-Roll", skullReRollSource, currentMnemonics.hatred)));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (anyDiceReRollSource != null) {
-					JButton anyDiceButton = createReRollButton(target, "Savage Blow", anyDiceReRollSource,
-						currentMnemonics.anyBlockDice);
-					anyDiceButton.setEnabled(blockRoll.getNrOfDice() == 1);
-					anyDiceButtons.put(target, anyDiceButton);
-					buttonPanel.add(mascotExtension.wrapperPanel(anyDiceButton));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (!ownChoice) {
-					buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "No Re-Roll", null,
-						currentMnemonics.none)));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
+				addReRollButtonsToPanel(
+					buttonPanel, currentMnemonics,
+					trrSource, willUseMascot, blockRoll.hasProperty(ReRollProperty.TRR),
+					ownChoice, blockRoll.getNrOfDice(),
+					singleDiePerActicationReRollSource, singleDieReRollSource, singleBlockDieReRollSource,
+					bothDownReRollSource, skullReRollSource, anyDiceReRollSource,
+					blockRoll.getNrOfDice() == 1,
+					proWrapperFactory,
+					btn -> anyDiceButtons.put(target, btn),
+					box -> checkBoxes.trr = box,
+					true,
+					true,
+					source -> handleReRollUse(target, source));
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
@@ -387,20 +327,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		}
 	}
 
-	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
-		JButton button = new JButton(dimensionProvider(), buttonName, mnemonic);
-		button.setOpaque(false);
-		button.addActionListener(e -> handleReRollUse(target, reRollSource));
-		this.addKeyListener(new PressedKeyListener(mnemonic) {
-			@Override
-			protected void handleKey() {
-				handleReRollUse(target, reRollSource);
-			}
-		});
-		button.setMnemonic((int) mnemonic);
-		return button;
-	}
-
 	private void handleReRollUse(String target, ReRollSource reRollSource) {
 		if (reRollSource == ReRollSources.PRO) {
 			proAction(target, 0);
@@ -476,26 +402,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 	public DialogReRollBlockForTargetsPropertiesParameter getDialogParameter() {
 		return dialogParameter;
-	}
-
-	private static class Mnemonics {
-		private final char team, brawler, hatred, none, anyBlockDice, trrFallback, proFallback, proTrrFallback;
-		private final List<Character> pro, anyDie, singleBlockDie;
-
-		public Mnemonics(char team, char none, char brawler, char hatred, List<Character> pro, List<Character> anyDie,
-			char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback, List<Character> singleBlockDie) {
-			this.team = team;
-			this.none = none;
-			this.brawler = brawler;
-			this.hatred = hatred;
-			this.pro = pro;
-			this.anyDie = anyDie;
-			this.anyBlockDice = anyBlockDice;
-			this.trrFallback = trrFallback;
-			this.proFallback = proFallback;
-			this.proTrrFallback = proTrrFallback;
-			this.singleBlockDie = singleBlockDie;
-		}
 	}
 
 	private static class FallbackCheckBoxes {
