@@ -1,26 +1,25 @@
 package com.fumbbl.ffb.dialog;
 
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 
 public class DialogReRollRegenerationMultipleParameter implements IDialogParameter {
 
-	private List<String> playerIds;
+	private final List<String> playerIds = new ArrayList<>();
 	private InducementType inducementType;
-	private List<Inducement> reRollOptions;
+	private final List<Inducement> reRollOptions = new ArrayList<>();
 
 	public DialogReRollRegenerationMultipleParameter() {
 		super();
@@ -31,15 +30,18 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 	}
 
 	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, List<Inducement> reRollOptions) {
-		this(playerIds, null, Objects.requireNonNull(reRollOptions, "Parameter reRollOptions must not be null."));
+		this(playerIds, null, reRollOptions);
 	}
 
 	private DialogReRollRegenerationMultipleParameter(List<String> playerIds, InducementType inducementType,
 		List<Inducement> reRollOptions) {
-		validateReRollData(inducementType, reRollOptions);
-		this.playerIds = Objects.requireNonNull(playerIds, "Parameter playerIds must not be null.");
+		if (playerIds != null) {
+			this.playerIds.addAll(playerIds);
+		}
 		this.inducementType = inducementType;
-		this.reRollOptions = reRollOptions;
+		if (reRollOptions != null) {
+			this.reRollOptions.addAll(reRollOptions);
+		}
 	}
 
 	public DialogId getId() {
@@ -73,35 +75,23 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 		if (inducementType != null) {
 			IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, inducementType);
 		}
-		if (reRollOptions != null) {
-			JsonArray reRollOptionsArray = new JsonArray();
-			reRollOptions.stream().map(Inducement::toJsonValue).forEach(reRollOptionsArray::add);
-			IJsonOption.RE_ROLL_OPTIONS.addTo(jsonObject, reRollOptionsArray);
-		}
+		JsonArray reRollOptionsArray = new JsonArray();
+		reRollOptions.stream().map(Inducement::toJsonValue).forEach(reRollOptionsArray::add);
+		IJsonOption.RE_ROLL_OPTIONS.addTo(jsonObject, reRollOptionsArray);
 		return jsonObject;
 	}
 
 	public DialogReRollRegenerationMultipleParameter initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
-		playerIds = Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject));
+		playerIds.addAll(Arrays.asList(IJsonOption.PLAYER_IDS.getFrom(source, jsonObject)));
 		inducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(source, jsonObject);
-		reRollOptions = null;
 		JsonArray reRollOptionsArray = IJsonOption.RE_ROLL_OPTIONS.getFrom(source, jsonObject);
 		if (reRollOptionsArray != null) {
-			reRollOptions = new ArrayList<>();
 			reRollOptionsArray.values().stream().map(value -> new Inducement().initFrom(source, value))
 				.forEach(reRollOptions::add);
 		}
-		validateReRollData(inducementType, reRollOptions);
 		return this;
-	}
-
-	private void validateReRollData(InducementType inducementType, List<Inducement> reRollOptions) {
-		if (inducementType != null && reRollOptions != null) {
-			throw new IllegalArgumentException(
-				"Cannot specify both inducementType and reRollOptions. Provide at most one; if none is provided, Team Re-Roll is used.");
-		}
 	}
 
 }
