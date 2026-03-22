@@ -37,7 +37,7 @@ import com.fumbbl.ffb.report.bb2025.ReportTeamCaptainRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.mechanic.ReRollOptions;
+import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;

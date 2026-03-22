@@ -54,6 +54,7 @@ import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -698,13 +699,25 @@ public class StepApothecaryMultiple extends AbstractStep {
 			Player<?> player = injuredPlayer(firstResult, game);
 			Team team = player.getTeam();
 
-			InducementType inducement = regenerationInducementType().orElse(null);
 			List<String> playerIds =
 				failsToProcess.stream().map(result -> result.injuryContext().getDefenderId()).collect(
 					Collectors.toList());
 
-			UtilServerDialog.showDialog(getGameState(), new DialogReRollRegenerationMultipleParameter(playerIds, inducement),
-				team != game.getActingTeam());
+			InducementType inducement = regenerationInducementType().orElse(null);
+			if (inducement == null) {
+				RollMechanic rollMechanic = getGameState().getGame().getMechanic(Mechanic.Type.ROLL);
+				List<ReRollOptions> options = playerIds.stream().map(id -> rollMechanic.findReRollOptions(getGameState(),
+					game.getPlayerById(id), ReRolledActions.REGENERATION, null)).collect(Collectors.toList());
+
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogReRollRegenerationMultipleParameter(playerIds, options),
+					team != game.getActingTeam());
+
+			} else {
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogReRollRegenerationMultipleParameter(playerIds, inducement),
+					team != game.getActingTeam());
+			}
 		}
 
 		return false;
@@ -714,7 +727,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 		InducementSet inducementSet = getTurnData().getInducementSet();
 		List<InducementType> regenerationTypes = regenerationTypes(inducementSet);
 		int usesLeft = regenerationTypes.stream().mapToInt(type -> inducementSet.get(type).getUsesLeft()).sum();
-		return usesLeft > 0 || UtilServerReRoll.isTeamReRollAvailable(getGameState(), player);
+		RollMechanic rollMechanic = getGameState().getGame().getMechanic(Mechanic.Type.ROLL);
+		return usesLeft > 0 || rollMechanic.findReRollOptions(getGameState(), player, ReRolledActions.REGENERATION, null).canActuallyReRoll();
 	}
 
 	private boolean handleSingleRegenReRoll(List<InjuryResult> failedRegens, Game game) {

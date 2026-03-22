@@ -4,8 +4,8 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.IDialogParameter;
+import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
@@ -19,7 +19,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 
 	private final List<String> playerIds = new ArrayList<>();
 	private InducementType inducementType;
-	private final List<Inducement> reRollOptions = new ArrayList<>();
+	private final List<ReRollOptions> reRollOptions = new ArrayList<>();
 
 	public DialogReRollRegenerationMultipleParameter() {
 		super();
@@ -29,12 +29,12 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 		this(playerIds, inducementType, null);
 	}
 
-	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, List<Inducement> reRollOptions) {
+	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, List<ReRollOptions> reRollOptions) {
 		this(playerIds, null, reRollOptions);
 	}
 
 	private DialogReRollRegenerationMultipleParameter(List<String> playerIds, InducementType inducementType,
-		List<Inducement> reRollOptions) {
+		List<ReRollOptions> reRollOptions) {
 		if (playerIds != null) {
 			this.playerIds.addAll(playerIds);
 		}
@@ -56,7 +56,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 		return playerIds;
 	}
 
-	public List<Inducement> getReRollOptions() {
+	public List<ReRollOptions> getReRollOptions() {
 		return reRollOptions;
 	}
 
@@ -76,7 +76,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 			IJsonOption.INDUCEMENT_TYPE.addTo(jsonObject, inducementType);
 		}
 		JsonArray reRollOptionsArray = new JsonArray();
-		reRollOptions.stream().map(Inducement::toJsonValue).forEach(reRollOptionsArray::add);
+		reRollOptions.stream().map(ReRollOptions::toJsonValue).forEach(reRollOptionsArray::add);
 		IJsonOption.RE_ROLL_OPTIONS.addTo(jsonObject, reRollOptionsArray);
 		return jsonObject;
 	}
@@ -88,7 +88,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 		inducementType = (InducementType) IJsonOption.INDUCEMENT_TYPE.getFrom(source, jsonObject);
 		JsonArray reRollOptionsArray = IJsonOption.RE_ROLL_OPTIONS.getFrom(source, jsonObject);
 		if (reRollOptionsArray != null) {
-			reRollOptionsArray.values().stream().map(value -> new Inducement().initFrom(source, value))
+			reRollOptionsArray.values().stream().map(value -> new ReRollOptions().initFrom(source, value))
 				.forEach(reRollOptions::add);
 		}
 		return this;

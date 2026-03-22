@@ -1,9 +1,7 @@
-package com.fumbbl.ffb.server.mechanic;
+package com.fumbbl.ffb;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.json.IJsonOption;

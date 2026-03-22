@@ -109,5 +109,5 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract int getAttackerBaseStrength(Game game, Player<?> attacker, Player<?> defender, boolean isMultiBlock);
 
-	public abstract ReRollOptions findReRollOptions(GameState gameState, Player<?> player, ReRolledAction reRolledAction, Skill reRollSkill);
+	public abstract com.fumbbl.ffb.ReRollOptions findReRollOptions(GameState gameState, Player<?> player, ReRolledAction reRolledAction, Skill reRollSkill);
 }
