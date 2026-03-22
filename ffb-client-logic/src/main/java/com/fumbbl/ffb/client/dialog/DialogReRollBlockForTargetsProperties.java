@@ -118,7 +118,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				buttonPanel.add(Box.createHorizontalGlue());
 				buttonPanel.setOpaque(false);
 
-				ReRollSource trrSource = mascotExtension.teamReRollText(blockRoll);
+				ReRollSource trrSource = mascotExtension.teamReRollSource(blockRoll);
 
 				FallbackCheckBoxes checkBoxes = new FallbackCheckBoxes();
 				boolean willUseMascot = trrSource == ReRollSources.MASCOT;

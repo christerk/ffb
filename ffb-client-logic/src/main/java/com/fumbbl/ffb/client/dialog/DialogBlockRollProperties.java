@@ -152,7 +152,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 		if (getDialogParameter().hasActualReRoll()) {
 
-			ReRollSource trrSource = mascotExtension.teamReRollText(dialogParameter);
+			ReRollSource trrSource = mascotExtension.teamReRollSource(dialogParameter);
 
 			willUseMascot = trrSource == ReRollSources.MASCOT;
 
