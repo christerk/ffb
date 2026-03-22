@@ -13,6 +13,7 @@ import com.eclipsesource.json.JsonValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 public class DialogReRollRegenerationMultipleParameter implements IDialogParameter {
@@ -27,14 +28,14 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 
 	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, InducementType inducementType) {
 		validateReRollData(inducementType, null);
-		this.playerIds = playerIds;
+		this.playerIds = Objects.requireNonNull(playerIds, "Parameter playerIds must not be null.");
 		this.inducementType = inducementType;
 	}
 
 	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, List<Inducement> reRollOptions) {
 		validateReRollData(null, reRollOptions);
-		this.playerIds = playerIds;
-		this.reRollOptions = reRollOptions;
+		this.playerIds = Objects.requireNonNull(playerIds, "Parameter playerIds must not be null.");
+		this.reRollOptions = Objects.requireNonNull(reRollOptions, "Parameter reRollOptions must not be null.");
 	}
 
 	public DialogId getId() {
@@ -96,7 +97,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 
 	private void validateReRollData(InducementType inducementType, List<Inducement> reRollOptions) {
 		if (inducementType != null && reRollOptions != null) {
-			throw new IllegalArgumentException("Only one of inducementType and reRollOptions may be provided.");
+			throw new IllegalArgumentException("Cannot specify both inducementType and reRollOptions. Provide at most one.");
 		}
 	}
 
