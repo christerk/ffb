@@ -295,7 +295,9 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 					}
 				break;
 			case KeyEvent.VK_F:
-				fReRollSource = ReRollSources.MASCOT_TRR;
+				if (buttonFallbackReRoll != null) {
+					fReRollSource = ReRollSources.MASCOT_TRR;
+				}
 				break;
 			case KeyEvent.VK_P:
 				if (getDialogParameter().hasProperty(ReRollProperty.PRO)) {
