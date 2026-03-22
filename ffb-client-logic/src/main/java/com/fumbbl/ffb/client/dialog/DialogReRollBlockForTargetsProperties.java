@@ -129,28 +129,22 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				}
 
 				if (blockRoll.hasProperty(ReRollProperty.TRR) || willUseMascot) {
-					JButton trrButton =
-						createReRollButton(target, trrSource.getName(getClient().getGame()), ReRollSources.TEAM_RE_ROLL,
-							currentMnemonics.team);
+					String trrSourceText = trrSource.getName(getClient().getGame());
+					ReRollSource buttonSource;
 					if (willUseMascot) {
-						JPanel mascotPanel = new JPanel();
-						mascotPanel.setBackground(null);
-						mascotPanel.setLayout(new BoxLayout(mascotPanel, BoxLayout.Y_AXIS));
-						mascotPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-						mascotPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-						trrButton.setAlignmentX(Box.CENTER_ALIGNMENT);
-						mascotPanel.add(trrButton);
-						mascotPanel.setOpaque(false);
-						if (blockRoll.hasProperty(ReRollProperty.TRR)) {
-							checkBoxes.trr = mascotExtension.checkBox("TRR fallback", currentMnemonics.trrFallback, Color.WHITE,
-								dimensionProvider(),
-								null, null);
-							checkBoxes.trr.setSelected(true);
-							mascotPanel.add(checkBoxes.trr);
-						}
-						buttonPanel.add(mascotPanel);
+						trrSourceText += " (No Team Re-Roll)";
+						buttonSource = ReRollSources.MASCOT;
 					} else {
-						buttonPanel.add(mascotExtension.wrapperPanel(trrButton));
+						buttonSource = ReRollSources.TEAM_RE_ROLL;
+					}
+					JButton trrButton =
+						createReRollButton(target, trrSourceText, buttonSource, currentMnemonics.team);
+					buttonPanel.add(mascotExtension.wrapperPanel(trrButton));
+					if (willUseMascot && blockRoll.hasProperty(ReRollProperty.TRR)) {
+						JButton fallbackButton = createReRollButton(target,
+							ReRollSources.MASCOT.getName(getClient().getGame()) + " (or Team-ReRoll)",
+							ReRollSources.MASCOT_TRR, currentMnemonics.trrFallback);
+						buttonPanel.add(mascotExtension.wrapperPanel(fallbackButton));
 					}
 
 					buttonPanel.add(Box.createHorizontalGlue());
@@ -407,7 +401,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 			return;
 		}
 
-		this.reRollSource = determineReRollSource(target, reRollSource);
+		this.reRollSource = reRollSource;
 		selectedTarget = target;
 		if (reRollSource == ReRollSources.SAVAGE_BLOW) {
 			List<JCheckBox> boxes = anyDiceCheckBoxes.get(target);
@@ -425,22 +419,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 			anyDiceIndexes.add(0);
 		}
 		close();
-	}
-
-	private ReRollSource determineReRollSource(String target, ReRollSource reRollSource) {
-		if (reRollSource != ReRollSources.TEAM_RE_ROLL) {
-			return reRollSource;
-		}
-		FallbackCheckBoxes checkBoxes = fallbackCheckBoxes.get(target);
-		if (blockWillUseMascot.contains(target)) {
-			if (checkBoxes.trr.isSelected()) {
-				return ReRollSources.MASCOT_TRR;
-			} else {
-				return ReRollSources.MASCOT;
-			}
-		} else {
-			return ReRollSources.TEAM_RE_ROLL;
-		}
 	}
 
 	@Override
@@ -499,6 +477,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 	}
 
 	private static class FallbackCheckBoxes {
-		private JCheckBox trr, pro, proTrr;
+		private JCheckBox pro, proTrr;
 	}
 }
