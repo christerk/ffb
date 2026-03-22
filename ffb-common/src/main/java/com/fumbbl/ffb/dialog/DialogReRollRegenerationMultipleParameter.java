@@ -61,9 +61,7 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 	// transformation
 
 	public IDialogParameter transform() {
-		return inducementType != null
-			? new DialogReRollRegenerationMultipleParameter(playerIds, inducementType)
-			: new DialogReRollRegenerationMultipleParameter(playerIds, reRollOptions);
+		return new DialogReRollRegenerationMultipleParameter(playerIds, inducementType, reRollOptions);
 	}
 
 	// JSON serialization
