@@ -165,7 +165,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
     JsonBooleanOption REPORTED_HOME = new JsonBooleanOption("reportedHome");
     JsonBooleanOption RE_ROLLING = new JsonBooleanOption("reRolling");
-    JsonEnumWithNameOption RE_ROLL_SKILL = new JsonEnumWithNameOption("reRollSkill", Factory.SKILL);
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
