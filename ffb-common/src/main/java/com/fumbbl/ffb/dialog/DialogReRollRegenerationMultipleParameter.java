@@ -27,15 +27,19 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 	}
 
 	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, InducementType inducementType) {
-		validateReRollData(inducementType, null);
-		this.playerIds = Objects.requireNonNull(playerIds, "Parameter playerIds must not be null.");
-		this.inducementType = inducementType;
+		this(playerIds, inducementType, null);
 	}
 
 	public DialogReRollRegenerationMultipleParameter(List<String> playerIds, List<Inducement> reRollOptions) {
-		validateReRollData(null, reRollOptions);
+		this(playerIds, null, Objects.requireNonNull(reRollOptions, "Parameter reRollOptions must not be null."));
+	}
+
+	private DialogReRollRegenerationMultipleParameter(List<String> playerIds, InducementType inducementType,
+		List<Inducement> reRollOptions) {
+		validateReRollData(inducementType, reRollOptions);
 		this.playerIds = Objects.requireNonNull(playerIds, "Parameter playerIds must not be null.");
-		this.reRollOptions = Objects.requireNonNull(reRollOptions, "Parameter reRollOptions must not be null.");
+		this.inducementType = inducementType;
+		this.reRollOptions = reRollOptions;
 	}
 
 	public DialogId getId() {
@@ -97,7 +101,8 @@ public class DialogReRollRegenerationMultipleParameter implements IDialogParamet
 
 	private void validateReRollData(InducementType inducementType, List<Inducement> reRollOptions) {
 		if (inducementType != null && reRollOptions != null) {
-			throw new IllegalArgumentException("Cannot specify both inducementType and reRollOptions. Provide at most one.");
+			throw new IllegalArgumentException(
+				"Cannot specify both inducementType and reRollOptions. Provide at most one; if none is provided, Team Re-Roll is used.");
 		}
 	}
 
