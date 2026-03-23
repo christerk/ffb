@@ -37,6 +37,7 @@ import com.fumbbl.ffb.report.bb2025.ReportTeamCaptainRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
@@ -251,41 +252,17 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		boolean dialogShown = false;
 		Game game = gameState.getGame();
 		if (minimumRoll >= 0) {
-			List<ReRollProperty> properties = new ArrayList<>();
-			if (isMascotAvailable(gameState, player)) {
-				properties.add(ReRollProperty.MASCOT);
-			}
-			if (isTeamReRollAvailable(gameState, player)) {
-				properties.add(ReRollProperty.TRR);
-			}
-			findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
-
-			if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
-				properties.add(ReRollProperty.LONER);
-			}
-
-			if (!passiveReRollActions.contains(reRolledAction) &&
-				isProReRollAvailable(player, game, gameState.getPassState())) {
-				properties.add(ReRollProperty.PRO);
-			}
-			
-			if (reRollSkill == null) {
-				Optional<Skill> reRollOnce =
-					UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
-				if (reRollOnce.isPresent()) {
-					reRollSkill = reRollOnce.get();
-				}
-			}
+			ReRollOptions reRollOptions = findReRollOptions(gameState, player, reRolledAction, reRollSkill);
 
 			dialogShown =
-				(properties.stream().anyMatch(ReRollProperty::isActualReRoll) || reRollSkill != null ||
-					modificationSkill != null);
+				(reRollOptions.canActuallyReRoll() || modificationSkill != null);
 			if (dialogShown) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
-					new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, properties, fumble, reRollSkill,
-						modificationSkill, menuProperty, defaultValueKey, messages), !actingTeam.hasPlayer(player));
+					new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, reRollOptions.getProperties(),
+						fumble, reRollOptions.getReRollSkill(), modificationSkill, menuProperty, defaultValueKey, messages),
+					!actingTeam.hasPlayer(player));
 			}
 		}
 		return dialogShown;
@@ -589,5 +566,37 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 
 		return Math.max(strength, 1);
+	}
+
+	@Override
+	public ReRollOptions findReRollOptions(GameState gameState, Player<?> player, ReRolledAction reRolledAction, Skill reRollSkill) {
+		Game game = gameState.getGame();
+		List<ReRollProperty> properties = new ArrayList<>();
+		if (isMascotAvailable(gameState, player)) {
+			properties.add(ReRollProperty.MASCOT);
+		}
+		if (isTeamReRollAvailable(gameState, player)) {
+			properties.add(ReRollProperty.TRR);
+		}
+		findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
+
+		if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+			properties.add(ReRollProperty.LONER);
+		}
+
+		if (!passiveReRollActions.contains(reRolledAction) &&
+			isProReRollAvailable(player, game, gameState.getPassState())) {
+			properties.add(ReRollProperty.PRO);
+		}
+
+		if (reRollSkill == null) {
+			Optional<Skill> reRollOnce =
+				UtilCards.getUnusedSkillWithProperty(player, NamedProperties.canRerollSingleDieOncePerPeriod);
+			if (reRollOnce.isPresent()) {
+				reRollSkill = reRollOnce.get();
+			}
+		}
+
+		return new ReRollOptions(properties, reRollSkill);
 	}
 }

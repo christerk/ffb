@@ -19,7 +19,7 @@ import static java.awt.Component.CENTER_ALIGNMENT;
 
 public class DialogExtensionMascot {
 
-	public ReRollSource teamReRollText(HasReRollProperties dialogParameter) {
+	public ReRollSource teamReRollSource(HasReRollProperties dialogParameter) {
 		if (dialogParameter.hasProperty(ReRollProperty.BRILLIANT_COACHING)) {
 			return ReRollSources.BRILLIANT_COACHING;
 		}
