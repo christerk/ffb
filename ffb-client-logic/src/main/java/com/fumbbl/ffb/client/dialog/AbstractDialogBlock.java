@@ -20,8 +20,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class AbstractDialogBlock extends Dialog {
 
@@ -77,6 +75,19 @@ public abstract class AbstractDialogBlock extends Dialog {
 		return button;
 	}
 
+	protected void handleReRollUse(ReRollSource source) {
+	}
+
+	protected void registerAnyDiceButton(JButton button) {
+	}
+
+	protected void registerTrrFallbackCheckbox(JCheckBox checkbox) {
+	}
+
+	protected JPanel wrapProButton(JButton proButton) {
+		return mascotExtension.wrapperPanel(proButton);
+	}
+
 	protected void addReRollButtonsToPanel(
 		JPanel panel,
 		Mnemonics mnemonics,
@@ -92,16 +103,12 @@ public abstract class AbstractDialogBlock extends Dialog {
 		ReRollSource skullSource,
 		ReRollSource anyDiceSource,
 		boolean anyDiceEnabled,
-		Function<JButton, JPanel> proWrapperFactory,
-		Consumer<JButton> anyDiceButtonConsumer,
-		Consumer<JCheckBox> trrFallbackCheckboxConsumer,
 		boolean brawlerBeforeAnyDice,
-		boolean addGlueAfterEach,
-		Consumer<ReRollSource> callback) {
+		boolean addGlueAfterEach) {
 
 		if (hasTrr || willUseMascot) {
 			JButton trrButton = createReRollButton(trrSource.getName(getClient().getGame()), mnemonics.team,
-				() -> callback.accept(ReRollSources.TEAM_RE_ROLL));
+				() -> handleReRollUse(ReRollSources.TEAM_RE_ROLL));
 			if (willUseMascot) {
 				JPanel mascotPanel = new JPanel();
 				mascotPanel.setBackground(null);
@@ -116,9 +123,7 @@ public abstract class AbstractDialogBlock extends Dialog {
 						java.awt.Color.WHITE, dimensionProvider(), null, null);
 					trrCheckbox.setSelected(true);
 					mascotPanel.add(trrCheckbox);
-					if (trrFallbackCheckboxConsumer != null) {
-						trrFallbackCheckboxConsumer.accept(trrCheckbox);
-					}
+					registerTrrFallbackCheckbox(trrCheckbox);
 				}
 				panel.add(mascotPanel);
 			} else {
@@ -132,25 +137,22 @@ public abstract class AbstractDialogBlock extends Dialog {
 		if (nrOfDice == 1) {
 			if (singleDiePerActivationSource != null) {
 				JButton proButton = createReRollButton(singleDiePerActivationSource.getName(getClient().getGame()),
-					mnemonics.pro.get(0), () -> callback.accept(singleDiePerActivationSource));
-				JPanel proWrapper = (proWrapperFactory != null)
-					? proWrapperFactory.apply(proButton)
-					: mascotExtension.wrapperPanel(proButton);
-				panel.add(proWrapper);
+					mnemonics.pro.get(0), () -> handleReRollUse(singleDiePerActivationSource));
+				panel.add(wrapProButton(proButton));
 				if (addGlueAfterEach) {
 					panel.add(Box.createHorizontalGlue());
 				}
 			}
 			if (singleDieSource != null) {
 				panel.add(mascotExtension.wrapperPanel(createReRollButton(singleDieSource.getName(getClient().getGame()),
-					mnemonics.anyDie.get(0), () -> callback.accept(singleDieSource))));
+					mnemonics.anyDie.get(0), () -> handleReRollUse(singleDieSource))));
 				if (addGlueAfterEach) {
 					panel.add(Box.createHorizontalGlue());
 				}
 			}
 			if (singleBlockDieSource != null) {
 				panel.add(mascotExtension.wrapperPanel(createReRollButton(singleBlockDieSource.getName(getClient().getGame()),
-					mnemonics.singleBlockDie.get(0), () -> callback.accept(singleBlockDieSource))));
+					mnemonics.singleBlockDie.get(0), () -> handleReRollUse(singleBlockDieSource))));
 				if (addGlueAfterEach) {
 					panel.add(Box.createHorizontalGlue());
 				}
@@ -158,18 +160,18 @@ public abstract class AbstractDialogBlock extends Dialog {
 		}
 
 		if (brawlerBeforeAnyDice) {
-			addBrawlerButton(panel, mnemonics, bothDownSource, addGlueAfterEach, callback);
-			addHatredButton(panel, mnemonics, skullSource, addGlueAfterEach, callback);
-			addAnyDiceButton(panel, mnemonics, anyDiceSource, anyDiceEnabled, anyDiceButtonConsumer, addGlueAfterEach, callback);
+			addBrawlerButton(panel, mnemonics, bothDownSource, addGlueAfterEach);
+			addHatredButton(panel, mnemonics, skullSource, addGlueAfterEach);
+			addAnyDiceButton(panel, mnemonics, anyDiceSource, anyDiceEnabled, addGlueAfterEach);
 		} else {
-			addAnyDiceButton(panel, mnemonics, anyDiceSource, anyDiceEnabled, anyDiceButtonConsumer, addGlueAfterEach, callback);
-			addBrawlerButton(panel, mnemonics, bothDownSource, addGlueAfterEach, callback);
-			addHatredButton(panel, mnemonics, skullSource, addGlueAfterEach, callback);
+			addAnyDiceButton(panel, mnemonics, anyDiceSource, anyDiceEnabled, addGlueAfterEach);
+			addBrawlerButton(panel, mnemonics, bothDownSource, addGlueAfterEach);
+			addHatredButton(panel, mnemonics, skullSource, addGlueAfterEach);
 		}
 
 		if (!ownChoice) {
 			panel.add(mascotExtension.wrapperPanel(createReRollButton("No Re-Roll", mnemonics.none,
-				() -> callback.accept(null))));
+				() -> handleReRollUse(null))));
 			if (addGlueAfterEach) {
 				panel.add(Box.createHorizontalGlue());
 			}
@@ -177,10 +179,10 @@ public abstract class AbstractDialogBlock extends Dialog {
 	}
 
 	private void addBrawlerButton(JPanel panel, Mnemonics mnemonics, ReRollSource bothDownSource,
-		boolean addGlueAfterEach, Consumer<ReRollSource> callback) {
+		boolean addGlueAfterEach) {
 		if (bothDownSource != null) {
 			panel.add(mascotExtension.wrapperPanel(createReRollButton("Brawler Re-Roll", mnemonics.brawler,
-				() -> callback.accept(bothDownSource))));
+				() -> handleReRollUse(bothDownSource))));
 			if (addGlueAfterEach) {
 				panel.add(Box.createHorizontalGlue());
 			}
@@ -188,10 +190,10 @@ public abstract class AbstractDialogBlock extends Dialog {
 	}
 
 	private void addHatredButton(JPanel panel, Mnemonics mnemonics, ReRollSource skullSource,
-		boolean addGlueAfterEach, Consumer<ReRollSource> callback) {
+		boolean addGlueAfterEach) {
 		if (skullSource != null) {
 			panel.add(mascotExtension.wrapperPanel(createReRollButton("Hatred Re-Roll", mnemonics.hatred,
-				() -> callback.accept(skullSource))));
+				() -> handleReRollUse(skullSource))));
 			if (addGlueAfterEach) {
 				panel.add(Box.createHorizontalGlue());
 			}
@@ -199,15 +201,12 @@ public abstract class AbstractDialogBlock extends Dialog {
 	}
 
 	private void addAnyDiceButton(JPanel panel, Mnemonics mnemonics, ReRollSource anyDiceSource,
-		boolean anyDiceEnabled, Consumer<JButton> anyDiceButtonConsumer,
-		boolean addGlueAfterEach, Consumer<ReRollSource> callback) {
+		boolean anyDiceEnabled, boolean addGlueAfterEach) {
 		if (anyDiceSource != null) {
 			JButton anyDiceButton = createReRollButton(anyDiceSource.getName(getClient().getGame()),
-				mnemonics.anyBlockDice, () -> callback.accept(anyDiceSource));
+				mnemonics.anyBlockDice, () -> handleReRollUse(anyDiceSource));
 			anyDiceButton.setEnabled(anyDiceEnabled);
-			if (anyDiceButtonConsumer != null) {
-				anyDiceButtonConsumer.accept(anyDiceButton);
-			}
+			registerAnyDiceButton(anyDiceButton);
 			panel.add(mascotExtension.wrapperPanel(anyDiceButton));
 			if (addGlueAfterEach) {
 				panel.add(Box.createHorizontalGlue());

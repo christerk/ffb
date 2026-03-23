@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 
 public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBlockProperties {
@@ -71,6 +70,10 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 			}}));
 	}};
 	private int proIndex;
+	private String currentTarget;
+	private BlockRollProperties currentBlockRoll;
+	private Mnemonics currentMnemonics;
+	private FallbackCheckBoxes currentFallbackCheckBoxes;
 
 	public DialogReRollBlockForTargetsProperties(FantasyFootballClient pClient,
 		DialogReRollBlockForTargetsPropertiesParameter parameter,
@@ -100,7 +103,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 			targetPanel.add(dicePanel);
 			if (blockRoll.hasReRollsLeft()) {
-				Mnemonics currentMnemonics = mnemonics.remove(0);
+				Mnemonics loopMnemonics = mnemonics.remove(0);
 
 				ReRollSource singleDiePerActicationReRollSource =
 					actionReRollSourceMap.get(ReRolledActions.SINGLE_DIE_PER_ACTIVATION);
@@ -126,40 +129,37 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 					blockWillUseMascot.add(target);
 				}
 
-				Function<JButton, JPanel> proWrapperFactory = (willUseMascot || blockRoll.hasProperty(ReRollProperty.TRR))
-					? proButton -> proMascotPanelSingle(blockRoll, proButton, currentMnemonics)
-					: null;
+				currentTarget = target;
+				currentBlockRoll = blockRoll;
+				currentMnemonics = loopMnemonics;
+				currentFallbackCheckBoxes = checkBoxes;
 
 				addReRollButtonsToPanel(
-					buttonPanel, currentMnemonics,
+					buttonPanel, loopMnemonics,
 					trrSource, willUseMascot, blockRoll.hasProperty(ReRollProperty.TRR),
 					ownChoice, blockRoll.getNrOfDice(),
 					singleDiePerActicationReRollSource, singleDieReRollSource, singleBlockDieReRollSource,
 					bothDownReRollSource, skullReRollSource, anyDiceReRollSource,
 					blockRoll.getNrOfDice() == 1,
-					proWrapperFactory,
-					btn -> anyDiceButtons.put(target, btn),
-					box -> checkBoxes.trr = box,
 					true,
-					true,
-					source -> handleReRollUse(target, source));
+					true);
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
 
 				if (Math.abs(blockRoll.getNrOfDice()) > 1) {
 					if (singleDiePerActicationReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(proTextPanel(),
-							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), currentMnemonics.pro, this::proAction));
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), loopMnemonics.pro, this::proAction));
 
-						targetPanel.add(proMascotPanelMultiple(blockRoll, currentMnemonics));
+						targetPanel.add(proMascotPanelMultiple(blockRoll, loopMnemonics));
 					}
 					if (singleDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleDieReRollSource.getName(getClient().getGame())),
-							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), currentMnemonics.anyDie, this::anyDieAction));
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()), loopMnemonics.anyDie, this::anyDieAction));
 					}
 					if (singleBlockDieReRollSource != null) {
 						targetPanel.add(createSingleDieReRollPanel(textPanel(singleBlockDieReRollSource.getName(getClient().getGame())),
-							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()),	currentMnemonics.singleBlockDie, this::singleBlockDieAction));
+							blockRoll.getTargetId(), Math.abs(blockRoll.getNrOfDice()),	loopMnemonics.singleBlockDie, this::singleBlockDieAction));
 					}
 				}
 
@@ -181,6 +181,29 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		pack();
 		setLocationToCenter();
 
+	}
+
+	@Override
+	protected void handleReRollUse(ReRollSource source) {
+		handleReRollUse(currentTarget, source);
+	}
+
+	@Override
+	protected void registerAnyDiceButton(JButton button) {
+		anyDiceButtons.put(currentTarget, button);
+	}
+
+	@Override
+	protected void registerTrrFallbackCheckbox(JCheckBox checkbox) {
+		currentFallbackCheckBoxes.trr = checkbox;
+	}
+
+	@Override
+	protected JPanel wrapProButton(JButton proButton) {
+		if (currentBlockRoll.hasProperty(ReRollProperty.TRR) || blockWillUseMascot.contains(currentTarget)) {
+			return proMascotPanelSingle(currentBlockRoll, proButton, currentMnemonics);
+		}
+		return super.wrapProButton(proButton);
 	}
 
 	private JPanel proMascotPanelSingle(BlockRollProperties blockRoll, JButton proButton, Mnemonics mnemonics) {

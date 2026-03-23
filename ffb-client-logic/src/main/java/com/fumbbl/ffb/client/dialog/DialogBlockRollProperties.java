@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class DialogBlockRollProperties extends AbstractDialogBlock implements ActionListener, KeyListener {
 
@@ -201,9 +200,6 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			'V', 'F', 'L', 'X',
 			Arrays.asList('U'));
 
-		Function<JButton, JPanel> proWrapperFactory = (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR))
-			? this::proMascotPanelSingle : null;
-
 		addReRollButtonsToPanel(
 			reRollPanel, mnemonics,
 			trrSource, willUseMascot, dialogParameter.hasProperty(ReRollProperty.TRR),
@@ -212,12 +208,8 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 			singleDiePerActivationReRollSource, singleDieReRollSource, singleBlockDieReRollSource,
 			bothDownReRollSource, skullReRollSource, anyBlockDiceReRollSource,
 			blockRoll.length == 1,
-			proWrapperFactory,
-			btn -> this.anyDiceButton = btn,
-			box -> this.fallbackToTrr = box,
 			false,
-			false,
-			this::handleReRollUse);
+			false);
 
 		Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
 		verticalGlue2.setOpaque(false);
@@ -317,7 +309,26 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		return panel;
 	}
 
-	private void handleReRollUse(ReRollSource source) {
+	@Override
+	protected void registerAnyDiceButton(JButton button) {
+		this.anyDiceButton = button;
+	}
+
+	@Override
+	protected void registerTrrFallbackCheckbox(JCheckBox checkbox) {
+		this.fallbackToTrr = checkbox;
+	}
+
+	@Override
+	protected JPanel wrapProButton(JButton proButton) {
+		if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
+			return proMascotPanelSingle(proButton);
+		}
+		return super.wrapProButton(proButton);
+	}
+
+	@Override
+	protected void handleReRollUse(ReRollSource source) {
 		if (source == null) {
 			// No Re-Roll: just close
 		} else if (source == ReRollSources.TEAM_RE_ROLL) {
