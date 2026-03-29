@@ -21,14 +21,17 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets {
+public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets implements MultiReRollMnemonics {
 
 	private ReRollSource reRollSource;
 	private boolean willUseMascot;
@@ -79,6 +82,8 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets {
 	private void buildReRollPanel(DialogReRollRegenerationMultipleParameter parameter, Game game,
 		List<ReRollOptions> reRollOptionsList) {
 
+		List<Mnemonics> mnemonics = mnemonics();
+
 		List<String> mainMessages = new ArrayList<>();
 		mainMessages.add("<html>Do you want to re-roll one of these Regeneration rolls?</html>");
 
@@ -96,6 +101,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets {
 		JPanel detailPanel = createDetailPanel();
 		for (int index = 0; index < parameter.getPlayerIds().size(); index++) {
 
+			Mnemonics currentMnemonics = mnemonics.remove(0);
 			String target = parameter.getPlayerIds().get(index);
 			ReRollOptions options = reRollOptionsList.get(index);
 
@@ -237,6 +243,45 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets {
 
 	public ReRollSource getReRollSource() {
 		return reRollSource;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_A:
+
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void handleCheckboxes(String id) {
+		CheckBoxes currentCheckBoxes = checkBoxes.get(id);
+		if (currentCheckBoxes.mascotFallback != null) {
+			currentCheckBoxes.mascotFallback.setSelected(!currentCheckBoxes.mascotFallback.isSelected());
+			if (currentCheckBoxes.trrFallback != null) {
+				if (!currentCheckBoxes.mascotFallback.isSelected()) {
+					currentCheckBoxes.trrFallback.setSelected(false);
+				}
+				currentCheckBoxes.trrFallback.setEnabled(currentCheckBoxes.mascotFallback.isSelected());
+			}
+		}
 	}
 
 	private static class CheckBoxes {
