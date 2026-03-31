@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Give and Go did not trigger when a bomb was intercepted/caught")
 			.addFeature("Wisdom of the White Dwarf (Star Grombrindal)")
 			.addImprovement("Set antialiasing for non-menu text components (mainly affecting Linux environments")
+			.addBugfix("Player Markings for 2020 skills caused false positives in 2025 games")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")
