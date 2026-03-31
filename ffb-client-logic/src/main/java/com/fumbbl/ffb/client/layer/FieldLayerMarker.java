@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.layer;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -39,6 +40,7 @@ public class FieldLayerMarker extends FieldLayer {
 			StyleProvider styleProvider = getClient().getUserInterface().getStyleProvider();
 			removeFieldMarker(pFieldMarker);
 			Graphics2D g2d = getImage().createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			g2d.setColor(styleProvider.getFieldMarker());
 			if (pFieldMarker.getHomeText().length() < 2) {
 				g2d.setFont(fontCache.font(Font.BOLD, 16, pitchDimensionProvider));

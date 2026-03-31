@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -83,6 +84,7 @@ public class ReplayControl extends JPanel implements MouseInputListener {
 	public void refresh() {
 		ClientReplayer replayer = getClient().getReplayer();
 		Graphics2D g2d = fImage.createGraphics();
+		GraphicsEnhancer.applyAAHints(g2d);
 		g2d.setPaint(new GradientPaint(0, 0, Color.WHITE, size.width / 2.0f, 0, new Color(128, 128, 128), false));
 		g2d.fillRect(0, 0, size.width / 2, size.height);
 		g2d.setPaint(new GradientPaint(size.width / 2.0f, 0, new Color(128, 128, 128), size.width, 0, Color.WHITE, false));

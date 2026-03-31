@@ -200,6 +200,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private void drawButton(String pButtonText) {
 		if (pButtonText != null) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage buttonImage = iconCache.getIconByProperty(
 					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, dimensionProvider);
@@ -228,6 +229,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private void drawStatus() {
 		if (StringTool.isProvided(fStatusTitle) && StringTool.isProvided(fStatusMessage)) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			String imageProperty = null;
 			switch (fStatusType) {
@@ -244,11 +246,13 @@ public class TurnDiceStatusComponent extends JPanel
 			}
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(statusTitleFont);
+			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics fontMetrics = g2d.getFontMetrics();
 			int x = 4;
 			int y = fontMetrics.getHeight();
 			g2d.drawString(fStatusTitle, x, y);
 			g2d.setFont(statusMessageFont);
+			GraphicsEnhancer.applyAAHints(g2d);
 			fontMetrics = g2d.getFontMetrics();
 			y += fontMetrics.getHeight();
 			final AttributedString attStr = new AttributedString(fStatusMessage);
@@ -274,6 +278,7 @@ public class TurnDiceStatusComponent extends JPanel
 		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
 		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			Composite oldComposite = g2d.getComposite();
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			int length = blockRoll.getBlockRoll().length;

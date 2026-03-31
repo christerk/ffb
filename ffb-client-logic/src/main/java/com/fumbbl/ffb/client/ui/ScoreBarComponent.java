@@ -98,6 +98,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private void drawScore() {
 		Graphics2D g2d = fImage.createGraphics();
+		GraphicsEnhancer.applyAAHints(g2d);
 		String scoreHome = Integer.toString(fScoreHome);
 		String scoreAway = Integer.toString(fScoreAway);
 		g2d.setFont(scoreFont);
@@ -118,6 +119,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 	private void drawTurn() {
 		Graphics2D g2d = fImage.createGraphics();
+		GraphicsEnhancer.applyAAHints(g2d);
 		Game game = getClient().getGame();
 
 		String turn = game.getTurnDataHome().getTurnNr() + " / " +
@@ -166,6 +168,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private void drawSpectators() {
 		if (spectatorCount > 0) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			BufferedImage spectatorsImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_SPECTATORS, dimensionProvider);
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);

@@ -27,7 +27,8 @@ public class MarkerGenerator {
 	public String generate(Game game, Player<?> player, AutoMarkingConfig config, boolean playsForMarkingCoach) {
 
 		List<Skill> baseSkills = new ArrayList<>(Arrays.asList(player.getPosition().getSkills()));
-		List<Skill> gainedSkills = player.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getCategory() != SkillCategory.STAT_INCREASE).collect(Collectors.toList());
+		List<Skill> gainedSkills = player.getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill.getCategory() != SkillCategory.STAT_INCREASE).collect(Collectors.toList());
 		gainedSkills.removeAll(baseSkills);
 		List<InjuryAttribute> injuriesAttributes = new ArrayList<>();
 
@@ -52,7 +53,8 @@ public class MarkerGenerator {
 		injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjury());
 		injuries.add(game.getGameResult().getPlayerResult(player).getSeriousInjuryDecay());
 		injuries.addAll(Arrays.asList(player.getLastingInjuries()));
-		injuriesAttributes.addAll(injuries.stream().filter(Objects::nonNull).map(SeriousInjury::getInjuryAttribute).filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
+		injuriesAttributes.addAll(injuries.stream().filter(Objects::nonNull).map(SeriousInjury::getInjuryAttribute)
+			.filter(inj -> inj == InjuryAttribute.NI).collect(Collectors.toList()));
 
 		List<AutoMarkingRecord> recordsToApply = new ArrayList<>();
 
@@ -60,22 +62,30 @@ public class MarkerGenerator {
 
 		String finalSeparator = separator == null ? "" : separator;
 		List<AutoMarkingRecord> records = config.getMarkings().stream()
-			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach)).collect(Collectors.toList());
+			.filter(markingRecord -> !markingRecord.getSkills().contains(null) && !markingRecord.getInjuries().contains(null))
+			.filter(markingRecord -> appliesTo(markingRecord.getApplyTo(), playsForMarkingCoach))
+			.collect(Collectors.toList());
 
 		if (config.getSortMode() == SortMode.NONE) {
-			records.forEach(markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes, recordsToApply));
-			return recordsToApply.stream().map(AutoMarkingRecord::getMarking).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
+			records.forEach(
+				markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes,
+					recordsToApply));
+			return recordsToApply.stream().map(AutoMarkingRecord::getMarking).filter(StringTool::isProvided)
+				.collect(Collectors.joining(finalSeparator));
 		} else {
 			populateAndSortRecords(records, baseSkills, gainedSkills, injuriesAttributes, recordsToApply);
 
 			return recordsToApply.stream()
-				.sorted(Comparator.comparingInt((AutoMarkingRecord record) -> record.isInjuryOnly() ? 1 : 0).thenComparing(AutoMarkingRecord::getMarking))
+				.sorted(Comparator.comparingInt((AutoMarkingRecord record) -> record.isInjuryOnly() ? 1 : 0)
+					.thenComparing(AutoMarkingRecord::getMarking))
 				.map(AutoMarkingRecord::getMarking).filter(StringTool::isProvided).collect(Collectors.joining(finalSeparator));
 		}
 
 	}
 
-	private void populateAndSortRecords(List<AutoMarkingRecord> records, List<Skill> baseSkills, List<Skill> gainedSkills, List<InjuryAttribute> injuriesAttributes, List<AutoMarkingRecord> recordsToApply) {
+	private void populateAndSortRecords(List<AutoMarkingRecord> records, List<Skill> baseSkills, List<Skill> gainedSkills,
+	                                    List<InjuryAttribute> injuriesAttributes,
+	                                    List<AutoMarkingRecord> recordsToApply) {
 		records.stream()
 			.collect(Collectors.groupingBy(AutoMarkingRecord::isInjuryOnly))
 			.entrySet().stream()
@@ -106,10 +116,12 @@ public class MarkerGenerator {
 							return 1;
 						})
 						.thenComparing(AutoMarkingRecord::isGainedOnly)
-						.thenComparing((o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
+						.thenComparing(
+							(o1, o2) -> o1.isApplyRepeatedly() == o2.isApplyRepeatedly() ? 0 : o1.isApplyRepeatedly() ? -1 : 1)
 						.thenComparing(
 							AutoMarkingRecord::getMarking))
-					.forEach(markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes, recordsToApply)));
+					.forEach(markingRecord -> populateMarkingRecords(markingRecord, baseSkills, gainedSkills, injuriesAttributes,
+						recordsToApply)));
 
 	}
 
@@ -145,7 +157,7 @@ public class MarkerGenerator {
 	}
 
 	private void populateMarkingRecords(AutoMarkingRecord markingRecord, List<Skill> baseSkills, List<Skill> gainedSkills,
-																			List<InjuryAttribute> injuries, List<AutoMarkingRecord> recordsToApply) {
+	                                    List<InjuryAttribute> injuries, List<AutoMarkingRecord> recordsToApply) {
 
 		if (recordsToApply.stream().noneMatch(markingRecord::isSubSetOf)) {
 
@@ -154,7 +166,8 @@ public class MarkerGenerator {
 				skillsToCheck.addAll(baseSkills);
 			}
 
-			int matches = findMin(isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck), isSubSetWithDuplicates(markingRecord.getInjuries(), injuries));
+			int matches = findMin(isSubSetWithDuplicates(markingRecord.getSkills(), skillsToCheck),
+				isSubSetWithDuplicates(markingRecord.getInjuries(), injuries));
 
 			if (!markingRecord.isApplyRepeatedly()) {
 				matches = Math.min(1, matches);
@@ -182,8 +195,10 @@ public class MarkerGenerator {
 			return Integer.MAX_VALUE;
 		}
 
-		Map<Integer, List<T>> subGroups = subSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
-		Map<Integer, List<T>> superGroups = superSet.stream().filter(Objects::nonNull).collect(Collectors.groupingBy(Object::hashCode));
+		Map<Integer, List<T>> subGroups = subSet.stream().filter(Objects::nonNull)
+			.collect(Collectors.groupingBy(Object::hashCode));
+		Map<Integer, List<T>> superGroups = superSet.stream().filter(Objects::nonNull)
+			.collect(Collectors.groupingBy(Object::hashCode));
 
 		return subGroups.entrySet().stream().map(entry -> {
 			List<T> superElements = superGroups.get(entry.getKey());

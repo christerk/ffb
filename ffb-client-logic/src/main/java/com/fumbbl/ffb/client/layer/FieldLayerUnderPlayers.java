@@ -7,6 +7,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.TrackNumber;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -44,10 +45,6 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 		}
 	}
 
-	public FieldCoordinate[] getMovePath() {
-		return fMovePath;
-	}
-
 	public synchronized boolean clearMovePath() {
 		synchronized (this) {
 			Game game = getClient().getGame();
@@ -72,6 +69,7 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 			clear(pCoordinate, true);
 			String numberString = Integer.toString(pNumber);
 			Graphics2D g2d = getImage().createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			g2d.setFont(fontCache.font(Font.BOLD, 15, pitchDimensionProvider));
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D numberBounds = metrics.getStringBounds(numberString, g2d);

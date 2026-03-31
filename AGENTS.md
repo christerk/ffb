@@ -11,7 +11,8 @@
 - Encoding: UTF-8
 - Testing: JUnit 5 with Mockito for mocking
 - Package naming: `com.fumbbl.*` 
-- Project structure: Multi-module Maven project with separate client/server/common modules
+- Project structure: Multi-module Maven project with `ffb-common`, `ffb-tools`, `ffb-server`, `ffb-client`, `ffb-client-logic`, and `ffb-resources`; most client logic lives in `ffb-client-logic`, while desktop/AWT-specific client code and packaging live in `ffb-client`
+- Architecture hotspots: server game flow is organized around `Step` / `SequenceGenerator` classes under `ffb-server/src/main/java/com/fumbbl/ffb/server/step`, while client input/game-phase flow is organized around `ClientState` classes under `ffb-client-logic/src/main/java/com/fumbbl/ffb/client/state`
 - Error handling: Use appropriate exception types, document exceptions in method signatures
 - Test style: Test class names end with "Test", use descriptive test method names
 
@@ -24,12 +25,12 @@
 6. Use blank lines to separate import groups
 
 ## Dependencies
-Dependencies are managed centrally in root pom.xml. Add new dependencies there first.
+Shared versions managed via root `pom.xml` currently include `classgraph`, JUnit 5, and Mockito. Many module-specific dependencies still declare versions in their own `pom.xml`, and `ffb-client` / `ffb-client-logic` also resolve bundled libraries from their module-local `repo/` directories.
 
 ## Build Order
 1. ffb-common
 2. ffb-tools
 3. ffb-server
-4. ffb-client
-5. ffb-client-logic
-6. ffb-resources
+4. ffb-client-logic
+5. ffb-resources
+6. ffb-client

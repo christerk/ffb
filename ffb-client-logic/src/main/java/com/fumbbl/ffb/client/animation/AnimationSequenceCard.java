@@ -5,6 +5,7 @@ import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.model.Animation;
 
@@ -85,6 +86,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 		BufferedImage cardIcon = new BufferedImage(frontIcon.getWidth(), frontIcon.getHeight(),
 			BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = cardIcon.createGraphics();
+		GraphicsEnhancer.applyAAHints(g2d);
 		g2d.drawImage(frontIcon, 0, 0, null);
 		g2d.setColor(Color.BLACK);
 		FontCache fontCache = pClient.getUserInterface().getFontCache();

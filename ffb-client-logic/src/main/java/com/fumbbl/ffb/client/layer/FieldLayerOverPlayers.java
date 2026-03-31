@@ -9,6 +9,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.PushbackSquare;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -129,6 +130,7 @@ public class FieldLayerOverPlayers extends FieldLayer {
 			int x = dimension.width + 2;
 			int y = dimension.height + 2;
 			Graphics2D g2d = getImage().createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 
 			g2d.setPaint(COLOR_MOVE_SQUARE);
 			Rectangle bounds = new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 4, pitchDimensionProvider.fieldSquareSize() - 4);
