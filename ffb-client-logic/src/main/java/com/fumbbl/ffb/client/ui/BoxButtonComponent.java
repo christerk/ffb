@@ -23,7 +23,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -134,9 +133,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private void drawButton(BoxType pBox) {
 		if (pBox != null) {
 			Graphics2D g2d = fImage.createGraphics();
-			g2d.setRenderingHint(
-					RenderingHints.KEY_TEXT_ANTIALIASING,
-					RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			Rectangle buttonLocation = fButtonLocations.get(pBox);
 			BufferedImage buttonImage;

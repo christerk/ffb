@@ -5,6 +5,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.util.StringTool;
@@ -43,6 +44,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
   private void drawRowMarker(int pY) {
     String distanceString = LETTERS[pY];
     Graphics2D g2d = getImage().createGraphics();
+    GraphicsEnhancer.applyAAHints(g2d);
     g2d.setFont(fontCache.font(Font.BOLD, 12, pitchDimensionProvider));
     FontMetrics metrics = g2d.getFontMetrics();
     Rectangle2D distanceBounds = metrics.getStringBounds(distanceString, g2d);

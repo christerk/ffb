@@ -1,7 +1,12 @@
 package com.fumbbl.ffb.client.layer;
 
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.UiDimensionProvider;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 
@@ -11,7 +16,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -67,12 +71,12 @@ public class FieldLayerPitch extends FieldLayer {
 			int translateX;
 			int translateY;
 			if (pitchDimensionProvider.isPitchPortrait()) {
-				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
+				translateX = (int) (((double) getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
 				translateY = (int) (pitchDimensionProvider.fieldSquareSize(25.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
 				translateX = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
-				translateY = (int) ((getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
+				translateY = (int) (((double) getImage().getHeight() / 2) + (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(-Math.PI / 2.0);
 			}
@@ -83,12 +87,12 @@ public class FieldLayerPitch extends FieldLayer {
 			metrics = g2d.getFontMetrics();
 			teamNameBounds = metrics.getStringBounds(teamNameAway, g2d);
 			if (pitchDimensionProvider.isPitchPortrait()) {
-				translateX = (int) ((getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
+				translateX = (int) (((double) getImage().getWidth() / 2) - (teamNameBounds.getWidth() / 2));
 				translateY = (int) (pitchDimensionProvider.fieldSquareSize(0.5) + (teamNameBounds.getHeight() / 2)) - 4;
 				g2d.translate(translateX, translateY);
 			} else {
 				translateX = (int) (pitchDimensionProvider.fieldSquareSize(25) + (teamNameBounds.getHeight() / 2)) - 4;
-				translateY = (int) ((getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
+				translateY = (int) (((double) getImage().getHeight() / 2) - (teamNameBounds.getWidth() / 2));
 				g2d.translate(translateX, translateY);
 				g2d.rotate(Math.PI / 2.0);
 			}
@@ -104,7 +108,7 @@ public class FieldLayerPitch extends FieldLayer {
 		g2d.setColor(Color.WHITE);
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
 		g2d.setFont(fontCache.font(Font.BOLD, 20, pitchDimensionProvider));
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		GraphicsEnhancer.applyAAHints(g2d);
 		return g2d;
 	}
 

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PassingDistance;
 import com.fumbbl.ffb.RangeRuler;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.FieldModel;
@@ -91,6 +92,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 				if (fPolygonComplete != null) {
 
 					Graphics2D g2d = getImage().createGraphics();
+					GraphicsEnhancer.applyAAHints(g2d);
 					g2d.setPaint(_COLOR_BY_PASSING_DISTANCE.get(passingDistance));
 					g2d.fillPolygon(fPolygonComplete);
 
