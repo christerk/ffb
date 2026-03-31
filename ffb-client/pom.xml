@@ -66,6 +66,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <!-- Keep the jar plugin to set main class (optional, assembly will override) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -84,42 +85,30 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.fumbbl.ffb:ffb-client-logic</include>
-                                </includes>
-                            </artifactSet>
-                            <finalName>FantasyFootballClient</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!-- REMOVE the maven-shade-plugin entirely (or comment it out) -->
+
+            <!-- Use assembly plugin to create a single fat JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/assembly.xml</descriptor>
-                    </descriptors>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
+                        </manifest>
+                    </archive>
                     <finalName>ffb-client</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
+                    <appendAssemblyId>false</appendAssemblyId> <!-- Removes "-jar-with-dependencies" suffix -->
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>

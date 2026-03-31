@@ -37,7 +37,10 @@ public interface IIconProperty {
 	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
 	String DECORATION_CHOMPED = "decoration.chomped";
 
-	// Game icons
+    //Skills
+    String SKILLS_ROOT = "skills.root";
+
+    // Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
 	String GAME_COIN_TAILS = "game.coin.tails";
 	String GAME_PUSHBACK_NORTH = "game.pushback.north";
