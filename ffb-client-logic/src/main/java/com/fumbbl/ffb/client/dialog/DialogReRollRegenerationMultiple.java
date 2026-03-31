@@ -6,7 +6,6 @@ import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.dialog.AbstractDialogMultiBlock.PressedKeyListener;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
@@ -21,10 +20,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,11 +29,10 @@ import java.util.Map;
 public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets implements MultiReRollMnemonics {
 
 	private ReRollSource reRollSource;
-	private boolean willUseMascot;
 	private final Map<String, CheckBoxes> checkBoxes = new HashMap<>();
 
 	public DialogReRollRegenerationMultiple(FantasyFootballClient pClient,
-		DialogReRollRegenerationMultipleParameter parameter) {
+	                                        DialogReRollRegenerationMultipleParameter parameter) {
 
 		super(pClient, "Re-roll Regeneration");
 
@@ -80,7 +74,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 	}
 
 	private void buildReRollPanel(DialogReRollRegenerationMultipleParameter parameter, Game game,
-		List<ReRollOptions> reRollOptionsList) {
+	                              List<ReRollOptions> reRollOptionsList) {
 
 		List<Mnemonics> mnemonics = mnemonics();
 
@@ -91,7 +85,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 		ReRollSource trrSource = mascotExtension.teamReRollSource(reRollOptionsList.get(0));
 
-		willUseMascot = trrSource == ReRollSources.MASCOT;
+		boolean willUseMascot = trrSource == ReRollSources.MASCOT;
 
 		String trrSourceText = trrSource.getName(getClient().getGame());
 		if (willUseMascot) {
@@ -137,16 +131,18 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 			if (willUseMascot) {
 				buttonPanel.add(createReRollButton(target, trrSourceText, trrSource,
-					index == 0 ? 'T' : 'e'));
+					currentMnemonics.getTeam()));
 				buttonPanel.add(Box.createHorizontalGlue());
 				if (options.hasProperty(ReRollProperty.TRR)) {
-					buttonPanel.add(createReRollButton(target, ReRollSources.MASCOT.getName(getClient().getGame()) + " (or Team-ReRoll)", ReRollSources.MASCOT_TRR,
-						index == 0 ? 'M' : 'a'));
+					buttonPanel.add(
+						createReRollButton(target, ReRollSources.MASCOT.getName(getClient().getGame()) + " (or Team-ReRoll)",
+							ReRollSources.MASCOT_TRR,
+							currentMnemonics.getTrrFallback()));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 			} else if (options.hasProperty(ReRollProperty.TRR)) {
 				buttonPanel.add(createReRollButton(target, trrSourceText, trrSource,
-					index == 0 ? 'T' : 'e'));
+					currentMnemonics.getTeam()));
 				buttonPanel.add(Box.createHorizontalGlue());
 			}
 
@@ -162,22 +158,36 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 					proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 					buttonPanel.add(proPanel);
 					if (willUseMascot) {
-						currentCheckBoxes.mascotFallback = mascotExtension.checkBox("Mascot", KeyEvent.VK_A, Color.BLACK, dimensionProvider(),
-							this, this);
+						currentCheckBoxes.mascotFallback = mascotExtension.checkBox("Mascot", currentMnemonics.getProFallback(),
+							Color.BLACK,
+							dimensionProvider(),
+							(event) -> handleCheckboxes(target), new PressedKeyListener(currentMnemonics.getProFallback()) {
+								@Override
+								protected void handleKey() {
+									handleCheckboxes(target);
+								}
+							});
 						proPanel.add(currentCheckBoxes.mascotFallback);
 					}
 					if (options.hasProperty(ReRollProperty.TRR)) {
-						currentCheckBoxes.trrFallback = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll", KeyEvent.VK_R,
-							Color.BLACK, dimensionProvider(), this, this);
+						currentCheckBoxes.trrFallback = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll",
+							currentMnemonics.getProTrrFallback(), Color.BLACK, dimensionProvider(),
+							(event) -> handleCheckboxes(target),
+							new PressedKeyListener(currentMnemonics.getProTrrFallback()) {
+								@Override
+								protected void handleKey() {
+									handleCheckboxes(target);
+								}
+							});
 						currentCheckBoxes.trrFallback.setEnabled(!willUseMascot);
 						proPanel.add(currentCheckBoxes.trrFallback);
 					}
-				buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
-					index == 0 ? 'P' : 'o'));
-				buttonPanel.add(Box.createHorizontalGlue());
+					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
+						currentMnemonics.getPro().get(0)));
+					buttonPanel.add(Box.createHorizontalGlue());
 				} else {
 					buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
-						index == 0 ? 'P' : 'o')));
+						currentMnemonics.getPro().get(0))));
 					buttonPanel.add(Box.createHorizontalStrut(5));
 				}
 			}
@@ -186,7 +196,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 				ReRollSource source = skill.getRerollSource(ReRolledActions.SINGLE_DIE);
 				if (source != null) {
 					buttonPanel.add(createReRollButton(target, skill.getName(), source,
-						index == 0 ? 'S' : 'k'));
+						currentMnemonics.getAnyDie().get(0)));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 			}
@@ -243,32 +253,6 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 	public ReRollSource getReRollSource() {
 		return reRollSource;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-
-				break;
-			default:
-				break;
-		}
 	}
 
 	private void handleCheckboxes(String id) {
