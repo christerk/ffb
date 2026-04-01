@@ -68,6 +68,12 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private static final Set<ReRolledAction> passiveReRollActions = new HashSet<ReRolledAction>() {{
 		add(ReRolledActions.SWOOP_DISTANCE);
 		add(ReRolledActions.SWOOP_DIRECTION);
+		// This is a workaround, in case of a multi block double self cas if both initial regeneration rolls fail
+		// and the then the first roll is rerolled successfully the player state is already set to not-stunned/prone
+		// so the pro check would then be positive for the second re-roll
+		// the "proper" fix would be to rework the multi apo step again to inject another phase between re-rolling
+		// regeneration and apo that is then used to reset the player state
+		add(ReRolledActions.REGENERATION);
 	}};
 
 	private static final int MASCOT_MINIMUM_ROLL = 4;
