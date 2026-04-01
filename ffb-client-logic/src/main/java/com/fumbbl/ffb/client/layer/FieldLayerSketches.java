@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.overlay.sketch.TriangleCoords;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.util.StringTool;
@@ -39,6 +40,7 @@ public class FieldLayerSketches extends FieldLayer {
 		List<Sketch> sketches = sketchState.getSketches();
 		clear(true);
 		Graphics2D graphics2D = getImage().createGraphics();
+		GraphicsEnhancer.applyAAHints(graphics2D);
 		Stroke stroke = new BasicStroke(pitchDimensionProvider.dimension(Component.SKETCH_STROKE).width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
 		graphics2D.setStroke(stroke);
 		Dimension sketchEnd = pitchDimensionProvider.dimension(Component.SKETCH_CIRCLE);

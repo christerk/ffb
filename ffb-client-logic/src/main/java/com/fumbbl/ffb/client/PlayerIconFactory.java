@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.marking.TransientPlayerMarker;
 import com.fumbbl.ffb.model.*;
@@ -47,6 +48,7 @@ public class PlayerIconFactory {
 		boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
 			Graphics2D g2d = pIcon.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			Color color;
 			if (homePlayer) {
 				if (bottom) {
@@ -184,6 +186,7 @@ public class PlayerIconFactory {
 				if (StringTool.isProvided(shorthand)) {
 					FontCache fontCache = pClient.getUserInterface().getFontCache();
 					Graphics2D g2d = icon.createGraphics();
+					GraphicsEnhancer.applyAAHints(g2d);
 					g2d.drawImage(playerIcon, 2, 2, null);
 					g2d.setFont(fontCache.font(Font.BOLD, fontSize, dimensionProvider));
 					FontMetrics metrics = g2d.getFontMetrics();

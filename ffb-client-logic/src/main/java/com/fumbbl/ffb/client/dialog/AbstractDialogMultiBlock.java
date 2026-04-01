@@ -20,7 +20,6 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,33 +113,5 @@ public abstract class AbstractDialogMultiBlock extends AbstractDialogBlock {
 	}
 
 	protected abstract void close();
-
-	protected static abstract class PressedKeyListener implements KeyListener {
-
-		private final int keyCode;
-
-		protected PressedKeyListener(int keyCode) {
-			this.keyCode = keyCode;
-		}
-
-		@Override
-		public void keyTyped(KeyEvent e) {
-
-		}
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == keyCode) {
-				handleKey();
-			}
-		}
-
-		protected abstract void handleKey();
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-
-		}
-	}
 
 }

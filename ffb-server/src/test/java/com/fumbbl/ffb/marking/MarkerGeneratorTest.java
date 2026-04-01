@@ -48,7 +48,7 @@ class MarkerGeneratorTest {
 	private static final String NI_MARKING = "Ni";
 	private static final String TACKLE_MARKING = "T";
 	private static final String WRESTLE_MARKING = "W";
-	public static final String OTHER_MARKING = "O";
+	private static final String OTHER_MARKING = "O";
 	private static final String SNEAKY_GIT = "sneaky git";
 	private static final String BLOCK = "block";
 	private static final String DODGE = "dodge";
@@ -178,6 +178,27 @@ class MarkerGeneratorTest {
 		String marking = generator.generate(game, player, config, true);
 
 		assertEquals(BLOCK_MARKING, marking);
+	}
+
+	@Test
+	public void ignoreMarkingWithUnknownSkills() {
+		Skill[] gainedSkills = {skillFactory.forName(BLOCK), skillFactory.forName(DODGE), null};
+		given(player.getSkills()).willReturn(gainedSkills);
+
+		markings.add(builder.withSkill(BLOCK).withSkill(UNKNOWN).withMarking(BLOCK_MARKING).build());
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals("", marking);
+	}
+
+	@Test
+	public void ignoreMarkingWithUnknownInjuries() {
+		markings.add(builder.withInjury(InjuryAttribute.MA).withInjury(null).withMarking(MA_MARKING).build());
+
+		String marking = generator.generate(game, player, config, true);
+
+		assertEquals("", marking);
 	}
 
 	@Test

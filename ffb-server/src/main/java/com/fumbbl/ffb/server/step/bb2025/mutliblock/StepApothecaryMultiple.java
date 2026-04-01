@@ -47,6 +47,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandPositionSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
@@ -181,6 +182,25 @@ public class StepApothecaryMultiple extends AbstractStep {
 							result.passedRegeneration();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
+					}
+					break;
+				case CLIENT_USE_RE_ROLL_FOR_TARGET:
+					ClientCommandUseReRollForTarget clientCommandUseReRollForTarget =
+						(ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
+					if (clientCommandUseReRollForTarget.getReRolledAction() == ReRolledActions.REGENERATION) {
+						String targetId = clientCommandUseReRollForTarget.getTargetId();
+						ReRollSource targetReRollSource = clientCommandUseReRollForTarget.getReRollSource();
+						if (targetId != null && targetReRollSource != null) {
+							regenerationFailedResults.stream()
+								.filter(result -> result.injuryContext().getDefenderId().equals(targetId))
+								.findFirst().ifPresent(result -> {
+									rerollRegen(game, targetReRollSource, result);
+									result.passedRegeneration();
+								});
+						} else {
+							regenerationFailedResults.forEach(InjuryResult::passedRegeneration);
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_USE_SKILL:
@@ -682,7 +702,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		} else {
 			failsToProcess.addAll(regenerationFailedResults.stream().filter(result -> {
 				Player<?> player = injuredPlayer(result, game);
-				return regenerationReRollsAvailable(player) && result.isPreRegeneration();
+				return result.isPreRegeneration() && regenerationReRollsAvailable(player);
 			}).collect(Collectors.toList()));
 		}
 

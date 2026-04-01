@@ -322,6 +322,7 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 			}
 			if (title != null) {
 				Graphics2D g2d = fImage.createGraphics();
+				GraphicsEnhancer.applyAAHints(g2d);
 				g2d.setFont(boxFont);
 				FontMetrics metrics = g2d.getFontMetrics();
 				Rectangle2D bounds = metrics.getStringBounds(title, g2d);

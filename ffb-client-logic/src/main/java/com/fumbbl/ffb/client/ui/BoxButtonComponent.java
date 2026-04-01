@@ -5,7 +5,12 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.DimensionProvider;
+import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.model.FieldModel;
 
 import javax.swing.JPanel;
@@ -21,7 +26,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +48,8 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private Font buttonFont;
 	private Dimension size;
 
-	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider,
+	                          FontCache fontCache) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
 		fButtonLocations = new HashMap<>();
@@ -63,11 +68,11 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 		if (getSideBar().isHomeSide()) {
 			fButtonLocations.put(BoxType.RESERVES, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.OUT,
-				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
+					new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
 		} else {
 			fButtonLocations.put(BoxType.OUT, new Rectangle(1, 0, button.width, button.height));
 			fButtonLocations.put(BoxType.RESERVES,
-				new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
+					new Rectangle((size.width / 2) + 1, 0, button.width, button.height));
 		}
 
 		setLayout(null);
@@ -128,6 +133,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private void drawButton(BoxType pBox) {
 		if (pBox != null) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			Rectangle buttonLocation = fButtonLocations.get(pBox);
 			BufferedImage buttonImage;
@@ -150,9 +156,7 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	private int findCenteredX(Graphics2D pG2d, String pText, int pWidth) {
-		FontMetrics metrics = pG2d.getFontMetrics();
-		Rectangle2D bounds = metrics.getStringBounds(pText, pG2d);
-		return ((pWidth - (int) bounds.getWidth()) / 2);
+		return UtilClientGraphics.findCenteredX(pG2d, pText, pWidth);
 	}
 
 	public void refresh() {

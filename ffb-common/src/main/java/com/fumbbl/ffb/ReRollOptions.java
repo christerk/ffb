@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ReRollOptions implements IJsonSerializable {
+public class ReRollOptions implements IJsonSerializable, HasReRollProperties {
 	private List<ReRollProperty> properties;
 	private Skill reRollSkill;
 	private boolean canActuallyReRoll;
@@ -66,5 +66,10 @@ public class ReRollOptions implements IJsonSerializable {
 		}
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		return jsonObject;
+	}
+
+	@Override
+	public boolean hasProperty(ReRollProperty property) {
+		return properties.contains(property);
 	}
 }

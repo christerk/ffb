@@ -105,6 +105,7 @@ public class PlayerDetailComponent extends JPanel {
 
 	private void drawBackground() {
 		Graphics2D g2d = fImage.createGraphics();
+		GraphicsEnhancer.applyAAHints(g2d);
 		IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 
 		String swapSetting = fSideBar.getClient().getProperty(CommonProperty.SETTING_SWAP_TEAM_COLORS);
@@ -150,6 +151,7 @@ public class PlayerDetailComponent extends JPanel {
 			int x = 3, y = 1;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(nameFont);
+			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics fontMetrics = g2d.getFontMetrics();
 			final AttributedString attStr = new AttributedString(getPlayer().getName());
 			attStr.addAttribute(TextAttribute.FONT, g2d.getFont());
@@ -175,6 +177,7 @@ public class PlayerDetailComponent extends JPanel {
 			Dimension offset = dimensionProvider.dimension(Component.PLAYER_PORTRAIT_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			String portraitUrl = PlayerIconFactory.getPortraitUrl(getPlayer());
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			StringBuilder positionName = new StringBuilder();
@@ -192,6 +195,7 @@ public class PlayerDetailComponent extends JPanel {
 			String keywords = "(" + getPlayer().getPosition().getKeywords().stream()
 				.map(Keyword::getName).sorted().collect(Collectors.joining(", ")) + ")";
 			g2d.setFont(positionFont);
+			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
 			BufferedImage portraitBackground =
@@ -247,6 +251,7 @@ public class PlayerDetailComponent extends JPanel {
 			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			Game game = getSideBar().getClient().getGame();
 			StatsMechanic mechanic = (StatsMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
 				.forName(Mechanic.Type.STAT.name());
@@ -335,6 +340,7 @@ public class PlayerDetailComponent extends JPanel {
 		int nigglingInjuries = findNigglings();
 		if (nigglingInjuries > 0) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			int x = 9;
 			int y = 36;
 			for (int i = 0; i < nigglingInjuries; i++) {
@@ -353,6 +359,7 @@ public class PlayerDetailComponent extends JPanel {
 		Game game = getSideBar().getClient().getGame();
 		if (ArrayTool.isProvided(game.getFieldModel().getCards(getPlayer()))) {
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			BufferedImage overlayCard =
 				iconCache.getIconByProperty(IIconProperty.SIDEBAR_OVERLAY_PLAYER_CARD, dimensionProvider);
@@ -367,6 +374,7 @@ public class PlayerDetailComponent extends JPanel {
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
 			g2d.setFont(sppFont);
+			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Game game = getSideBar().getClient().getGame();
 			SkillMechanic mechanic =
@@ -399,6 +407,7 @@ public class PlayerDetailComponent extends JPanel {
 			Dimension offset = dimensionProvider.dimension(Component.PLAYER_SKILL_OFFSET);
 			int x = offset.width, y = offset.height;
 			Graphics2D g2d = fImage.createGraphics();
+			GraphicsEnhancer.applyAAHints(g2d);
 			Game game = getSideBar().getClient().getGame();
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			PlayerState playerState = game.getFieldModel().getPlayerState(getPlayer());
@@ -466,6 +475,7 @@ public class PlayerDetailComponent extends JPanel {
 				} else {
 					pG2d.setFont(skillFont);
 				}
+				GraphicsEnhancer.applyAAHints(pG2d);
 				FontMetrics metrics = pG2d.getFontMetrics();
 				for (String part : splitSkill(skill)) {
 					height += metrics.getHeight();
@@ -524,6 +534,7 @@ public class PlayerDetailComponent extends JPanel {
 
 			pG2d.setColor(Color.BLACK);
 			pG2d.setFont(statFont);
+			GraphicsEnhancer.applyAAHints(pG2d);
 			if (modifier.isImprovement()) {
 				pG2d.setColor(Color.GREEN);
 				if (modifier.getAbsoluteModifier() > 1) {
