@@ -22,6 +22,8 @@ public class ChangeList {
 			.addFeature("Wisdom of the White Dwarf (Star Grombrindal)")
 			.addImprovement("Set antialiasing for non-menu text components (mainly affecting Linux environments")
 			.addBugfix("Player Markings for 2020 skills caused false positives in 2025 games")
+			.addBugfix("Blessing of Nuffle was not applied randomly (and still used the old name)")
+			.addBugfix("Thinking Man's Troll could not be used on regeneration re-rolls")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")

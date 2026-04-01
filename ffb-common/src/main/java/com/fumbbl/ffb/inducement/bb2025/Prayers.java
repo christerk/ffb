@@ -12,7 +12,7 @@ public class Prayers {
 		put(5, Prayer.KNUCKLE_DUSTERS);
 		put(6, Prayer.BAD_HABITS);
 		put(7, Prayer.GREASY_CLEATS);
-		put(8, Prayer.BLESSED_STATUE_OF_NUFFLE);
+		put(8, Prayer.BLESSING_OF_NUFFLE);
 		put(9, Prayer.MOLES_UNDER_THE_PITCH);
 		put(10, Prayer.PERFECT_PASSING);
 		put(11, Prayer.DAZZLING_CATCHING);

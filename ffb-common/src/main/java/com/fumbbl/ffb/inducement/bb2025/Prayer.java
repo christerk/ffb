@@ -90,7 +90,7 @@ public enum Prayer implements com.fumbbl.ffb.inducement.Prayer {
 		public String eventMessage() {
 			return " loses 1 MA";
 		}
-	}, BLESSED_STATUE_OF_NUFFLE("Blessed Statue of Nuffle",
+	}, BLESSING_OF_NUFFLE("Blessing of Nuffle",
 		"One chosen player available to play this game gains Pro",
 		InducementDuration.UNTIL_END_OF_GAME, false, true) {
 		@Override
