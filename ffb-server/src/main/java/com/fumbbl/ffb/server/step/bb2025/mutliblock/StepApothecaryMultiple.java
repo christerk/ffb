@@ -9,6 +9,7 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.KeywordChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PositionChoiceMode;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
@@ -46,12 +47,15 @@ import com.fumbbl.ffb.net.commands.ClientCommandPositionSelection;
 import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
+import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -168,23 +172,48 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
 					if (clientCommandUseReRoll.getReRolledAction() == ReRolledActions.REGENERATION) {
+						ReRollSource reRollSource = clientCommandUseReRoll.getReRollSource();
 
 						Optional<InjuryResult> preRegen =
 							regenerationFailedResults.stream().filter(InjuryResult::isPreRegeneration).findFirst();
 						if (preRegen.isPresent()) {
 							InjuryResult result = preRegen.get();
-							if (clientCommandUseReRoll.getReRollSource() == ReRollSources.TEAM_RE_ROLL) {
-								Player<?> player = injuredPlayer(result, game);
-
-								if (UtilServerReRoll.useReRoll(this, ReRollSources.TEAM_RE_ROLL, player)) {
-									if (UtilServerInjury.handleRegeneration(this, player, result.injuryContext().getPlayerState(),
-										true)) {
-										result.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
-										result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
-										result.injuryContext().setSeriousInjury(null);
-										regenerationFailedResults.remove(result);
-									}
-								}
+							rerollRegen(game, reRollSource, result);
+							result.passedRegeneration();
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
+					}
+					break;
+				case CLIENT_USE_RE_ROLL_FOR_TARGET:
+					ClientCommandUseReRollForTarget clientCommandUseReRollForTarget =
+						(ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
+					if (clientCommandUseReRollForTarget.getReRolledAction() == ReRolledActions.REGENERATION) {
+						String targetId = clientCommandUseReRollForTarget.getTargetId();
+						ReRollSource targetReRollSource = clientCommandUseReRollForTarget.getReRollSource();
+						if (targetId != null && targetReRollSource != null) {
+							regenerationFailedResults.stream()
+								.filter(result -> result.injuryContext().getDefenderId().equals(targetId))
+								.findFirst().ifPresent(result -> {
+									rerollRegen(game, targetReRollSource, result);
+									result.passedRegeneration();
+								});
+						} else {
+							regenerationFailedResults.forEach(InjuryResult::passedRegeneration);
+						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)) {
+						Optional<InjuryResult> preRegen =
+							regenerationFailedResults.stream().filter(InjuryResult::isPreRegeneration).filter(
+								injuryResult -> injuryResult.injuryContext().fDefenderId.equalsIgnoreCase(
+									commandUseSkill.getPlayerId())).findFirst();
+						if (preRegen.isPresent()) {
+							InjuryResult result = preRegen.get();
+							if (commandUseSkill.isSkillUsed()) {
+								rerollRegen(game, commandUseSkill.getSkill().getRerollSource(ReRolledActions.SINGLE_DIE), result);
 							}
 							result.passedRegeneration();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -290,6 +319,20 @@ public class StepApothecaryMultiple extends AbstractStep {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private void rerollRegen(Game game, ReRollSource reRollSource, InjuryResult result) {
+		Player<?> player = injuredPlayer(result, game);
+
+		if (UtilServerReRoll.useReRoll(this, reRollSource, player)) {
+			if (UtilServerInjury.handleRegeneration(this, player, result.injuryContext().getPlayerState(),
+				true)) {
+				result.injuryContext().setInjury(game.getFieldModel().getPlayerState(player));
+				result.injuryContext().setApothecaryStatus(ApothecaryStatus.NO_APOTHECARY);
+				result.injuryContext().setSeriousInjury(null);
+				regenerationFailedResults.remove(result);
+			}
+		}
 	}
 
 	private void checkGettingEven() {
@@ -659,7 +702,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		} else {
 			failsToProcess.addAll(regenerationFailedResults.stream().filter(result -> {
 				Player<?> player = injuredPlayer(result, game);
-				return regenerationReRollsAvailable(player) && result.isPreRegeneration();
+				return result.isPreRegeneration() && regenerationReRollsAvailable(player);
 			}).collect(Collectors.toList()));
 		}
 
@@ -676,13 +719,25 @@ public class StepApothecaryMultiple extends AbstractStep {
 			Player<?> player = injuredPlayer(firstResult, game);
 			Team team = player.getTeam();
 
-			InducementType inducement = regenerationInducementType().orElse(null);
 			List<String> playerIds =
 				failsToProcess.stream().map(result -> result.injuryContext().getDefenderId()).collect(
 					Collectors.toList());
 
-			UtilServerDialog.showDialog(getGameState(), new DialogReRollRegenerationMultipleParameter(playerIds, inducement),
-				team != game.getActingTeam());
+			InducementType inducement = regenerationInducementType().orElse(null);
+			if (inducement == null) {
+				RollMechanic rollMechanic = getGameState().getGame().getMechanic(Mechanic.Type.ROLL);
+				List<ReRollOptions> options = playerIds.stream().map(id -> rollMechanic.findReRollOptions(getGameState(),
+					game.getPlayerById(id), ReRolledActions.REGENERATION, null)).collect(Collectors.toList());
+
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogReRollRegenerationMultipleParameter(playerIds, options),
+					team != game.getActingTeam());
+
+			} else {
+				UtilServerDialog.showDialog(getGameState(),
+					new DialogReRollRegenerationMultipleParameter(playerIds, inducement),
+					team != game.getActingTeam());
+			}
 		}
 
 		return false;
@@ -692,7 +747,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 		InducementSet inducementSet = getTurnData().getInducementSet();
 		List<InducementType> regenerationTypes = regenerationTypes(inducementSet);
 		int usesLeft = regenerationTypes.stream().mapToInt(type -> inducementSet.get(type).getUsesLeft()).sum();
-		return usesLeft > 0 || UtilServerReRoll.isTeamReRollAvailable(getGameState(), player);
+		RollMechanic rollMechanic = getGameState().getGame().getMechanic(Mechanic.Type.ROLL);
+		return usesLeft > 0 || rollMechanic.findReRollOptions(getGameState(), player, ReRolledActions.REGENERATION, null).canActuallyReRoll();
 	}
 
 	private boolean handleSingleRegenReRoll(List<InjuryResult> failedRegens, Game game) {

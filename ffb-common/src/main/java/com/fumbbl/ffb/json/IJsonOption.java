@@ -435,6 +435,7 @@ public interface IJsonOption {
 	JsonIntOption RE_ROLL_COST = new JsonIntOption("reRollCost");
 	JsonBooleanOption RE_ROLL_INJURY = new JsonBooleanOption("reRollInjury");
 	JsonStringArrayOption RE_ROLL_PROPERTIES = new JsonStringArrayOption("reRollProperties");
+	JsonArrayOption RE_ROLL_OPTIONS = new JsonArrayOption("reRollOptions");
 	JsonEnumWithNameOption RE_ROLL_SOURCE = new JsonEnumWithNameOption("reRollSource", Factory.RE_ROLL_SOURCE);
 	JsonEnumWithNameOption RE_ROLL_SOURCE_SINGLE_USE = new JsonEnumWithNameOption("reRollSourceSingleUse", Factory.RE_ROLL_SOURCE);
 	JsonArrayOption RE_ROLL_SOURCES = new JsonArrayOption("reRollSources");

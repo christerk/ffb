@@ -69,9 +69,11 @@ public class DialogUseApothecariesHandler extends DialogHandler {
 			if (dialog.isChoiceOne()) {
 				playerId = injuryDescription.getPlayerId();
 				apothecaryType = injuryDescription.getApothecaryTypes().get(0);
+				seriousInjury = injuryDescription.getSeriousInjury();
 			} else if (dialog.isChoiceTwo()) {
 				playerId = injuryDescription.getPlayerId();
 				apothecaryType = injuryDescription.getApothecaryTypes().get(1);
+				seriousInjury = injuryDescription.getSeriousInjury();
 			}
 			playerState = injuryDescription.getPlayerState();
 		} else if (testDialogHasId(pDialog, DialogId.USE_APOTHECARIES)) {
