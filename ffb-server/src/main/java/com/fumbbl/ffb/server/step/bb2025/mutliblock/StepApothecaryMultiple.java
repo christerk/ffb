@@ -702,7 +702,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 		} else {
 			failsToProcess.addAll(regenerationFailedResults.stream().filter(result -> {
 				Player<?> player = injuredPlayer(result, game);
-				return regenerationReRollsAvailable(player) && result.isPreRegeneration();
+				return result.isPreRegeneration() && regenerationReRollsAvailable(player);
 			}).collect(Collectors.toList()));
 		}
 
