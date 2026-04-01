@@ -52,6 +52,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setAlignmentX(CENTER_ALIGNMENT);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+		List<Mnemonics> mnemonics = mnemonics();
 
 		for (BlockRollProperties blockRoll : parameter.getBlockRolls()) {
 			Map<ReRolledAction, ReRollSource> actionReRollSourceMap = actionToSourceMaps.get(blockRoll.getTargetId());
@@ -67,7 +68,6 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 			targetPanel.add(dicePanel);
 			if (blockRoll.hasReRollsLeft()) {
-				List<Mnemonics> mnemonics = mnemonics();
 				Mnemonics currentMnemonics = mnemonics.remove(0);
 
 				ReRollSource singleDiePerActicationReRollSource =
