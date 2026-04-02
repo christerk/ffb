@@ -27,6 +27,8 @@ public class ChangeList {
 			.addBugfix("Kaboom! did not work on bouncing bomb")
 			.addBugfix("Fumblerooski was not reverted when player was held in place by tentacles")
 			.addBugfix("Arm Bar against non-dodge players caused a second re-roll option in case of a failed dodge")
+			.addFeature("Added game option to turn off timeouts")
+			.addBugfix("Timeout did not work for first turn of a drive")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")

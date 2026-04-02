@@ -6,7 +6,7 @@ import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.GameState;
 
 /**
- * 
+ *
  * @author Kalimar
  */
 public class UtilServerTimer {
@@ -31,10 +31,11 @@ public class UtilServerTimer {
 		if (game.getStarted() != null) {
 			if (game.getFinished() == null) {
 				game.setGameTime(currentTimeMillis - game.getStarted().getTime());
-				if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled()) {
+				if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled() &&
+					UtilGameOption.isOptionEnabled(game, GameOptionId.TIMEOUT_ALLOWED)) {
 					game.setTurnTime(currentTimeMillis - gameState.getTurnTimeStarted());
 					if (!game.isTimeoutPossible() && (UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) > 0)
-							&& (game.getTurnTime() >= UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) * 1000)) {
+						&& (game.getTurnTime() >= UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) * 1000L)) {
 						game.setTimeoutPossible(true);
 					}
 				}

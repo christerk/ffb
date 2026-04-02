@@ -310,6 +310,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean pettyTopTv = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.PETTY_CASH_AFFECTS_TV);
 			pettyTopTv.setValue(true);
 			game.getOptions().addOption(pettyTopTv);
+			GameOptionBoolean allowTimeout = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.TIMEOUT_ALLOWED);
+			allowTimeout.setValue(false);
+			//game.getOptions().addOption(allowTimeout);
 		}
 	}
 

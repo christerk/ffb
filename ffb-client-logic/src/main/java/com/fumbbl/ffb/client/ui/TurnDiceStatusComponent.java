@@ -194,6 +194,7 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fFinished == null) && (fTurnMode != null) && !fHomePlaying && fTimeoutPossible && !fTimeoutEnforced) {
 			drawButton(_LABEL_TIMEOUT);
 			fTimeoutButtonShown = true;
+			buttonEnabled = true;
 		}
 	}
 

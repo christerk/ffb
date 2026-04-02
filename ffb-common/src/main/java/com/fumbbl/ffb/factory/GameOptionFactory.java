@@ -86,8 +86,8 @@ public class GameOptionFactory {
 					.setMessageTrue("Claw does not stack with other skills that modify armour rolls.");
 			case DIVING_TACKLE_LEAVING_TZ_ONLY:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
-        .setMessageTrue("Diving Tackle only when the dodger leaves the tackler's TZ")
-        .setMessageFalse("Diving Tackle allowed even if the dodger stays adjacent");
+					.setMessageTrue("Diving Tackle only when the dodger leaves the tackler's TZ")
+					.setMessageFalse("Diving Tackle allowed even if the dodger stays adjacent");
 			case EXTRA_MVP:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("An extra MVP is awarded at the end of the match");
@@ -100,7 +100,8 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("+1 to armour roll for a foul, if fouler is not in an opposing tacklezone.");
 			case FREE_CARD_CASH:
-				return new GameOptionInt(pOptionId).setDefault(0).setMessage("Both coaches get $1 extra gold to buy cards with.");
+				return new GameOptionInt(pOptionId).setDefault(0)
+					.setMessage("Both coaches get $1 extra gold to buy cards with.");
 			case FREE_INDUCEMENT_CASH:
 				return new GameOptionInt(pOptionId).setDefault(0)
 					.setMessage("Both coaches get $1 extra gold to buy inducements with.");
@@ -139,18 +140,22 @@ public class GameOptionFactory {
 			case INDUCEMENT_IGORS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Igor(s).");
 			case INDUCEMENT_MORTUARY_ASSISTANTS_COST:
-				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Mortuary Assistants can be purchased for $1 gps each.");
+				return new GameOptionInt(pOptionId).setDefault(100000)
+					.setMessage("Mortuary Assistants can be purchased for $1 gps each.");
 			case INDUCEMENT_MORTUARY_ASSISTANTS_MAX:
-				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Mortuary Assistant(s).");
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Mortuary Assistant(s).");
 			case INDUCEMENT_PLAGUE_DOCTORS_COST:
-				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Plague Doctors can be purchased for $1 gps each.");
+				return new GameOptionInt(pOptionId).setDefault(100000)
+					.setMessage("Plague Doctors can be purchased for $1 gps each.");
 			case INDUCEMENT_PLAGUE_DOCTORS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Plague Doctor(s).");
 			case INDUCEMENT_KEGS_COST:
 				return new GameOptionInt(pOptionId).setDefault(50000)
 					.setMessage("Bloodweiser Kegs can be purchased for $1 gps each.");
 			case INDUCEMENT_KEGS_MAX:
-				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 Bloodweiser Keg(s).");
+				return new GameOptionInt(pOptionId).setDefault(2)
+					.setMessage("Coaches may purchase up to $1 Bloodweiser Keg(s).");
 			case INDUCEMENT_MERCENARIES_EXTRA_COST:
 				return new GameOptionInt(pOptionId).setDefault(30000)
 					.setMessage("Mercenaries can be purchased for an extra $1 gps each.");
@@ -165,11 +170,13 @@ public class GameOptionFactory {
 			case INDUCEMENT_EXTRA_TRAINING_MAX:
 				return new GameOptionInt(pOptionId).setDefault(4).setMessage("Coaches may purchase up to $1 reroll(s).");
 			case INDUCEMENT_MASCOT_COST:
-				return new GameOptionInt(pOptionId).setDefault(25000).setMessage("Team Mascots can be purchased for $1 gps each.");
+				return new GameOptionInt(pOptionId).setDefault(25000)
+					.setMessage("Team Mascots can be purchased for $1 gps each.");
 			case INDUCEMENT_MASCOT_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 Team Mascot(s).");
 			case INDUCEMENT_STAFF_MAX:
-				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 infamous coaching staff member(s).");
+				return new GameOptionInt(pOptionId).setDefault(2)
+					.setMessage("Coaches may purchase up to $1 infamous coaching staff member(s).");
 			case INDUCEMENT_STARS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(2).setMessage("Coaches may purchase up to $1 star(s).");
 			case INDUCEMENT_WIZARDS_COST:
@@ -177,9 +184,11 @@ public class GameOptionFactory {
 			case INDUCEMENT_WIZARDS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(1).setMessage("Coaches may purchase up to $1 wizard(s).");
 			case INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV:
-				return new GameOptionBoolean(pOptionId).setDefault(false).setMessageTrue("On equal CTV teams can buy inducements from treasury");
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("On equal CTV teams can buy inducements from treasury");
 			case INDUCEMENTS_ALWAYS_USE_TREASURY:
-				return new GameOptionBoolean(pOptionId).setDefault(false).setMessageTrue("Teams will always use treasury instead of petty cash for inducements");
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Teams will always use treasury instead of petty cash for inducements");
 			case MAX_NR_OF_CARDS:
 				return new GameOptionInt(pOptionId).setDefault(5).setMessage("A maximum of $1 cards can be bought.");
 			case MAX_PLAYERS_IN_WIDE_ZONE:
@@ -239,6 +248,9 @@ public class GameOptionFactory {
 			case TEST_MODE:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Game is in TEST mode. No result will be uploaded. See help for available test commands.");
+			case TIMEOUT_ALLOWED:
+				return new GameOptionBoolean(pOptionId).setDefault(true).setMessageFalse("Timeouts are not allowed.")
+					.setMessageTrue("Timeouts are allowed.");
 			case TURNTIME:
 				return new GameOptionInt(pOptionId).setDefault(240).setMessage("Turntime is $1 sec.");
 			case USE_PREDEFINED_INDUCEMENTS:
@@ -356,8 +368,10 @@ public class GameOptionFactory {
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_ALL, "all events")
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ, "Blitz")
 					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_SOLID_DEFENCE, "Solid Defence")
-					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE, "Choice of Blitz or Solid Defence")
-					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE, "Blitz or Solid Defence, chosen randomly");
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_BLITZ_OR_SOLID_DEFENCE,
+						"Choice of Blitz or Solid Defence")
+					.addValueMessage(GameOptionString.OVERTIME_KICK_OFF_RANDOM_BLITZ_OR_SOLID_DEFENCE,
+						"Blitz or Solid Defence, chosen randomly");
 			case INDUCEMENTS_ALLOW_OVERDOG_SPENDING:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
