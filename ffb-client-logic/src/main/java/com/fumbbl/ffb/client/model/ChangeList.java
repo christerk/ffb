@@ -26,6 +26,7 @@ public class ChangeList {
 			.addBugfix("Thinking Man's Troll could not be used on regeneration re-rolls")
 			.addBugfix("Kaboom! did not work on bouncing bomb")
 			.addBugfix("Fumblerooski was not reverted when player was held in place by tentacles")
+			.addBugfix("Arm Bar against non-dodge players caused a second re-roll option in case of a failed dodge")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")

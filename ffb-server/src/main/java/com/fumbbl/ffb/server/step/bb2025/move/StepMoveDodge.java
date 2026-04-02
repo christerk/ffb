@@ -223,7 +223,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		if (ReRolledActions.DODGE == getReRolledAction() && !Boolean.TRUE.equals(usingModifierIgnoringSkill)
 			&& !(dtRerollAsked && getReRollSource() == null)) {
 			if (usingModifyingSkill == null) {
-				if (getReRollSource() == null) {
+				if (getReRollSource() == null || armBarChoice) {
 					failDodge();
 					return;
 				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
@@ -423,7 +423,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 					if (failsWithDt) {
 						// try BT + DT before reroll
-						if (!fUsingBreakTackle && UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge) != null) {
+						if (!fUsingBreakTackle && UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge).isPresent()) {
 							Set<DodgeModifier> withDtAndBt = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, true));
 							withDtAndBt.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 							StatBasedRollModifier btStat = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
