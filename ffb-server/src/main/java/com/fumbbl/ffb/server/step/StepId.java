@@ -154,7 +154,8 @@ public enum StepId implements INamedObject {
 	RAIDING_PARTY("raidingParty"),
 	REALLY_STUPID("reallyStupid"), // action.common
 	RECEIVE_CHOICE("receiveChoice"), // game.start
-	REFEREE("referee"), // action.foul
+	RECHECK_EXPLODE_SKILL("recheckExplodeSkill"), // action.bomb
+	REFEREE("referee"), // action.foul,
 	REMOVE_TARGET_SELECTION_STATE("removeTargetSelectionState", "removeBlitzState"), // action.blitz
 	REPORT_STAB_INJURY("reportInjury"), // action.multiBlock 2020
 	RESET_FUMBLEROOSKIE("resetFumblerooskie"), // action.move/action.blitz

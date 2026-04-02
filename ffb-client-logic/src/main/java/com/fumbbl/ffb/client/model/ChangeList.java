@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Player Markings for 2020 skills caused false positives in 2025 games")
 			.addBugfix("Blessing of Nuffle was not applied randomly (and still used the old name)")
 			.addBugfix("Thinking Man's Troll could not be used on regeneration re-rolls")
+			.addBugfix("Kaboom! did not work on bouncing bomb")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")

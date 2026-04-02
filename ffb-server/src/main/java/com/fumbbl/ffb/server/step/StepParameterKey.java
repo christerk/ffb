@@ -133,6 +133,7 @@ public enum StepParameterKey {
 	RETAIN_MODEL_DATA, // Boolean
 	REVERT_END_TURN, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
+	SKIP, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
 	STARTING_PUSHBACK_SQUARE, // PushbackSquare
 	STEADY_FOOTING_CONTEXT, // SteadFootingContext

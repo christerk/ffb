@@ -159,9 +159,10 @@ public final class StepInitBomb extends AbstractStep {
             fCatcherId = null;
         }
 
+        ActingPlayer actingPlayer = game.getActingPlayer();
+        Skill explodeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canForceBombExplosion);
+
         if (fCatcherId != null) {
-            ActingPlayer actingPlayer = game.getActingPlayer();
-            Skill explodeSkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canForceBombExplosion);
             if (explodeSkill != null) {
                 if (explodeSkillUsed == null) {
                     UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), explodeSkill, 0), false);
@@ -199,6 +200,9 @@ public final class StepInitBomb extends AbstractStep {
                         game.getFieldModel().setBombCoordinate(bounceTo);
                         game.getFieldModel().setBombMoving(true);
                         publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_BOMB));
+                        if (explodeSkill != null) {
+                            publishParameter(new StepParameter(StepParameterKey.SKIP, false));
+                        }
                     } else { // empty bounce square
                         fBombCoordinate = bounceTo;
                         game.getFieldModel().setBombCoordinate(bounceTo);
@@ -239,6 +243,7 @@ public final class StepInitBomb extends AbstractStep {
         IServerJsonOption.BOMB_COORDINATE.addTo(jsonObject, fBombCoordinate);
         IServerJsonOption.DONT_DROP_FUMBLE.addTo(jsonObject, dontDropFumble);
         IServerJsonOption.SKILL_USED.addTo(jsonObject, explodeSkillUsed);
+        IServerJsonOption.OUT_OF_BOUNDS.addTo(jsonObject, fBombOutOfBounds);
         return jsonObject;
     }
 
@@ -252,6 +257,7 @@ public final class StepInitBomb extends AbstractStep {
         fBombCoordinate = IServerJsonOption.BOMB_COORDINATE.getFrom(source, jsonObject);
         dontDropFumble = toPrimitive(IServerJsonOption.DONT_DROP_FUMBLE.getFrom(source, jsonObject));
         explodeSkillUsed = IServerJsonOption.SKILL_USED.getFrom(source, jsonObject);
+        fBombOutOfBounds = toPrimitive(IServerJsonOption.OUT_OF_BOUNDS.getFrom(source, jsonObject));
         return this;
     }
 
