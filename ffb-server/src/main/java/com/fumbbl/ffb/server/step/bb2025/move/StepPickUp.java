@@ -94,6 +94,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
+				case SKIP:
+					ignore = toPrimitive((Boolean) parameter.getValue());
+					return true;
 				case FOLLOWUP_CHOICE:
 					ignore = !toPrimitive((Boolean) parameter.getValue());
 					return true;
@@ -125,7 +128,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
-		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND && pReceivedCommand.getId() == NetCommandId.CLIENT_PICK_UP_CHOICE) {
+		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
+			pReceivedCommand.getId() == NetCommandId.CLIENT_PICK_UP_CHOICE) {
 			ClientCommandPickUpChoice command = (ClientCommandPickUpChoice) pReceivedCommand.getCommand();
 			attemptPickUp = command.isChoicePickUp();
 			commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -140,10 +144,11 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		Player<?> player = StringTool.isProvided(overridePlayerId)
 			? game.getPlayerById(overridePlayerId)
-			: (StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
+			:
+			(StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
 		secureTheBall = game.getActingPlayer().getPlayerAction() == PlayerAction.SECURE_THE_BALL;
 		boolean doPickUp = true;
-		
+
 		// Trickster optional path: coach declined; scatter already handled upstream
 		if (optionalPickUp && !attemptPickUp) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -163,7 +168,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 							getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 						} else {
 							getResult().setNextAction(StepAction.NEXT_STEP);
-						} 
+						}
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
 					}
@@ -187,7 +192,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 								getResult().setNextAction(StepAction.NEXT_STEP);
 							}
 							publishParameter(
-								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+								new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE,
+									CatchScatterThrowInMode.FAILED_PICK_UP));
 							break;
 						default:
 							break;
@@ -199,7 +205,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 				if (game.getActingTeam().hasPlayer(player) && !player.hasSkillProperty(NamedProperties.preventPickup)) {
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
-				publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+				publishParameter(
+					new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFailure);
 			}
 		} else {
@@ -210,23 +217,24 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	private boolean isPickUp(Player<?> player) {
 		Game game = getGameState().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-		return (
+		return
 			!ignore
 				&& game.getFieldModel().isBallInPlay()
 				&& game.getFieldModel().isBallMoving()
-				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate())
-		);
+				&& playerCoordinate.equals(game.getFieldModel().getBallCoordinate());
 	}
 
 	private ActionStatus pickUp(Player<?> player) {
 		Game game = getGameState().getGame();
-		if (player.hasSkillProperty(NamedProperties.preventHoldBall) || player.hasSkillProperty(NamedProperties.preventPickup)) {
+		if (player.hasSkillProperty(NamedProperties.preventHoldBall) ||
+			player.hasSkillProperty(NamedProperties.preventPickup)) {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
 			Set<PickupModifier> pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
 
-			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
+				.forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll;
 			if (secureTheBall) {
 				minimumRoll = mechanic.minimumRoll(2, pickupModifiers);

@@ -25,6 +25,7 @@ public class ChangeList {
 			.addBugfix("Blessing of Nuffle was not applied randomly (and still used the old name)")
 			.addBugfix("Thinking Man's Troll could not be used on regeneration re-rolls")
 			.addBugfix("Kaboom! did not work on bouncing bomb")
+			.addBugfix("Fumblerooski was not reverted when player was held in place by tentacles")
 		);
 
 		versions.add(new VersionChangeList("3.1.2")
