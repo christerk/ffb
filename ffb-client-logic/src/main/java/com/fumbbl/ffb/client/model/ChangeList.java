@@ -12,6 +12,10 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("3.2.1")
 			.addBugfix("Disabling timeout button also disabled the turn timer")
+			.addBugfix(
+				"All ruleset: Touchback with only no ball players could result in the ball not being available for the drive")
+			.addBehaviorChange(
+				"All ruleset: In case of a touchback with no players or only no ball players placing the ball in a field does not bounce it anymore")
 		);
 
 		versions.add(new VersionChangeList("3.2.0")
