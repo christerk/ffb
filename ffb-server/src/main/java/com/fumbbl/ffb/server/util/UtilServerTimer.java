@@ -31,11 +31,11 @@ public class UtilServerTimer {
 		if (game.getStarted() != null) {
 			if (game.getFinished() == null) {
 				game.setGameTime(currentTimeMillis - game.getStarted().getTime());
-				if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled() &&
-					UtilGameOption.isOptionEnabled(game, GameOptionId.TIMEOUT_ALLOWED)) {
+				if ((gameState.getTurnTimeStarted() > 0) && game.isTurnTimeEnabled()) {
 					game.setTurnTime(currentTimeMillis - gameState.getTurnTimeStarted());
 					if (!game.isTimeoutPossible() && (UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) > 0)
-						&& (game.getTurnTime() >= UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) * 1000L)) {
+						&& (game.getTurnTime() >= UtilGameOption.getIntOption(game, GameOptionId.TURNTIME) * 1000L) &&
+						UtilGameOption.isOptionEnabled(game, GameOptionId.TIMEOUT_ALLOWED)) {
 						game.setTimeoutPossible(true);
 					}
 				}

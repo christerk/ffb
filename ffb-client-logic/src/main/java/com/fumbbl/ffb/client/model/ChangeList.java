@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("3.2.1")
+			.addBugfix("Disabling timeout button also disabled the turn timer")
 		);
 
 		versions.add(new VersionChangeList("3.2.0")
