@@ -46,16 +46,15 @@ public class StepStallingPlayer extends AbstractStep {
 		boolean scored = UtilServerSteps.checkTouchdown(getGameState());
 		boolean noStalling = !getGameState().isStalling() || gotRid || scored;
 
-
-		getGameState().resetStalling();
-
 		if (noStalling || game.getFieldModel().getPlayerState(player).isProneOrStunned()) {
-			if (gotRid || scored) {
+			if (getGameState().isStalling() && (gotRid || scored)) {
 				getResult().addReport(new ReportPlayerEvent(player.getId(), "did not stall after all"));
 			}
+			getGameState().resetStalling();
 			return;
 		}
 
+		getGameState().resetStalling();
 		stallingExtension.handleStaller(this, player);
 
 	}
