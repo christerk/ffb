@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 
 		versions.add(new VersionChangeList("3.2.2")
+			.addBugfix("All prayer rolls resulted in Blessing of Nuffle")
 		);
 
 		versions.add(new VersionChangeList("3.2.1")
