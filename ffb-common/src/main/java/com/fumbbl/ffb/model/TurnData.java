@@ -42,6 +42,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean puntUsed;
 	private InducementSet fInducementSet;
 	private LeaderState fLeaderState;
+	private String fBlitzingPlayerId;
 
 	private transient Game fGame;
 
@@ -162,7 +163,16 @@ public class TurnData implements IJsonSerializable {
 			return;
 		}
 		fBlitzUsed = pBlitzUsed;
+		setBlitzingPlayerId(pBlitzUsed ? getGame().getActingPlayer().getPlayerId() : null);
 		notifyObservers(ModelChangeId.TURN_DATA_SET_BLITZ_USED, fBlitzUsed);
+	}
+
+	public String getBlitzingPlayerId() {
+		return fBlitzingPlayerId;
+	}
+
+	private void setBlitzingPlayerId(String pBlitzingPlayerId) {
+		fBlitzingPlayerId = pBlitzingPlayerId;
 	}
 
 	public boolean isBombUsed() {
@@ -367,6 +377,7 @@ public class TurnData implements IJsonSerializable {
 
 	public void startTurn() {
 		setBlitzUsed(false);
+		setBlitzingPlayerId(null);
 		setHandOverUsed(false);
 		setPassUsed(false);
 		setFoulUsed(false);
@@ -384,6 +395,7 @@ public class TurnData implements IJsonSerializable {
 			fReRolls = pTurnData.getReRolls();
 			fApothecaries = pTurnData.getApothecaries();
 			fBlitzUsed = pTurnData.isBlitzUsed();
+			fBlitzingPlayerId = pTurnData.getBlitzingPlayerId();
 			fFoulUsed = pTurnData.isFoulUsed();
 			fReRollUsed = pTurnData.isReRollUsed();
 			fHandOverUsed = pTurnData.isHandOverUsed();
@@ -442,6 +454,8 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.PLAGUE_DOCTORS.addTo(jsonObject, plagueDoctors);
 		IJsonOption.TTM_USED.addTo(jsonObject, ttmUsed);
 		IJsonOption.PUNT_USED.addTo(jsonObject, puntUsed);
+		IJsonOption.BLITZING_PLAYER_ID.addTo(jsonObject, fBlitzingPlayerId);
+
 		return jsonObject;
 	}
 
@@ -480,6 +494,7 @@ public class TurnData implements IJsonSerializable {
 
 		wanderingApothecaries = IJsonOption.WANDERING_APOTHECARIES.getFrom(source, jsonObject);
 		plagueDoctors = IJsonOption.PLAGUE_DOCTORS.getFrom(source, jsonObject);
+		fBlitzingPlayerId = IJsonOption.BLITZING_PLAYER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 

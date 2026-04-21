@@ -36,6 +36,8 @@ public interface IIconProperty {
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
 	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
 	String DECORATION_CHOMPED = "decoration.chomped";
+	String DECORATION_CHECK_ICON_BLITZ = "decoration.activated.checkIcon.blitz";
+
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";

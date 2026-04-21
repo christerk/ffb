@@ -355,9 +355,10 @@ public class PlayerIconFactory {
 			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
 				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
 				pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon =
-					decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider),
-						maxIconSize);
+				String decoration = pPlayer.getId().equals(game.getTurnData().getBlitzingPlayerId())
+					? IIconProperty.DECORATION_CHECK_ICON_BLITZ
+					: IIconProperty.DECORATION_CHECK_ICON_GREEN;
+				icon = decorateIcon(icon, iconCache.getIconByProperty(decoration, dimensionProvider), maxIconSize);
 			}
 		}
 
