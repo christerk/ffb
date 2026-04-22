@@ -90,6 +90,7 @@ public class ChangeList {
 			.addBugfix(
 				"When a Steady Footing player blitzed the ball carrier with a both down (both no block) and got saved by Steady Footing the ball did not bounce")
 			.addBugfix("Interception SPP were not awarded")
+			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
