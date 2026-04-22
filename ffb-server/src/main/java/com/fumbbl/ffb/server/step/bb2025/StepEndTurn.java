@@ -235,6 +235,7 @@ public class StepEndTurn extends AbstractStep {
 		getGameState().getPassState().reset();
 		if (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ) {
 			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+			game.getTurnData().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getActingTeam().getId()));
 			getGameState().resetStalling();
 		}
 

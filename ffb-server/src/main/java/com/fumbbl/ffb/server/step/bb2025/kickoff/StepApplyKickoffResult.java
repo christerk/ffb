@@ -505,6 +505,10 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		}
 
 		getGameState().setTeamIdsAdditionalAssist(teamIds);
+
+		game.getTurnDataHome().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getTeamHome().getId()));
+		game.getTurnDataAway().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getTeamAway().getId()));
+
 		getResult().addReport(new ReportCheeringFans(teamIds, rollHome, rollAway, rerolled));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 

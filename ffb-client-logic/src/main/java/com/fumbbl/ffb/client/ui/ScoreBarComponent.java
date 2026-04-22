@@ -45,9 +45,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private Rectangle weatherLocation;
 	private Rectangle spectatorLocation;
 	private Rectangle coachBannedHome;
+	private Rectangle coachBannedAway;
+	private Rectangle cheeringFansHome;
+	private Rectangle cheeringFansAway;
 
 	private final FantasyFootballClient fClient;
-	private Rectangle coachBannedAway;
 
 	private int fTurnHome;
 	private int fTurnAway;
@@ -55,6 +57,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 	private int fScoreHome;
 	private int fScoreAway;
 	private int spectatorCount;
+	private int fCheeringFansBlockAssistHome;
+	private int fCheeringFansBlockAssistAway;
 	private Weather fWeather;
 	private boolean fCoachBannedHome;
 	private boolean fCoachBannedAway;
@@ -174,7 +178,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			g2d.drawImage(spectatorsImage, spectatorLocation.x, spectatorLocation.y, null);
 			g2d.setFont(spectatorFont);
 			String spectatorString = Integer.toString(spectatorCount);
-			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + dimensionProvider.scale(108), spectatorLocation.y + dimensionProvider.scale(21), styleProvider);
+			UtilClientGraphics.drawShadowedText(g2d, spectatorString, spectatorLocation.x + dimensionProvider.scale(68), spectatorLocation.y + dimensionProvider.scale(21), styleProvider);
 			g2d.dispose();
 		}
 	}
@@ -191,6 +195,31 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 				BufferedImage coachBannedImage = iconCache.getIconByProperty(IIconProperty.SCOREBAR_COACH_BANNED_AWAY, dimensionProvider);
 				g2d.drawImage(coachBannedImage, coachBannedAway.x, coachBannedAway.y, null);
 			}
+			g2d.dispose();
+		}
+	}
+
+	private void drawCheeringFansBlockAssist() {
+		if (fCheeringFansBlockAssistHome > 0 || fCheeringFansBlockAssistAway > 0) {
+			Graphics2D g2d = fImage.createGraphics();
+			IconCache iconCache = getClient().getUserInterface().getIconCache();
+
+			if (fCheeringFansBlockAssistHome > 0) {
+				String iconProperty = fCheeringFansBlockAssistHome > 1
+					? IIconProperty.SCOREBAR_CHEERING_FANS_HOME_2
+					: IIconProperty.SCOREBAR_CHEERING_FANS_HOME_1;
+				BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
+				g2d.drawImage(icon, cheeringFansHome.x, cheeringFansHome.y, null);
+			}
+
+			if (fCheeringFansBlockAssistAway > 0) {
+				String iconProperty = fCheeringFansBlockAssistAway > 1
+					? IIconProperty.SCOREBAR_CHEERING_FANS_AWAY_2
+					: IIconProperty.SCOREBAR_CHEERING_FANS_AWAY_1;
+				BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
+				g2d.drawImage(icon, cheeringFansAway.x, cheeringFansAway.y, null);
+			}
+
 			g2d.dispose();
 		}
 	}
@@ -234,6 +263,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		fScoreHome = 0;
 		fScoreAway = 0;
 		spectatorCount = 0;
+		fCheeringFansBlockAssistHome = 0;
+		fCheeringFansBlockAssistAway = 0;
 		fWeather = null;
 		fRefreshNecessary = true;
 		spectators.clear();
@@ -250,15 +281,19 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		int unscaledWidth = dimensionProvider.unscaledDimension(Component.SCORE_BOARD).width;
 
 		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
-			weatherLocation = dimensionProvider.scale(new Rectangle(159, 64, 100, 32));
-			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 130, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle(1, 0, 36, 32));
 			coachBannedAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 37, 0, 36, 32));
+			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 66, 32));
+			cheeringFansHome = dimensionProvider.scale(new Rectangle(88, 64, 32, 32));
+			cheeringFansAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 130, 64, 32, 32));		
+			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 100, 64, 100, 32));			
 		} else {
+			cheeringFansHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 208), 0, 32, 32));
+			coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 166), 0, 32, 32));
+			coachBannedAway = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 130), 0, 32, 32));
+			cheeringFansAway = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 172), 0, 32, 32));
+			spectatorLocation = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 214), 0, 66, 32));
 			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 101, 0, 100, 32));
-			spectatorLocation = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 160), 0, 130, 32));
-			coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 130 - 36), 0, 36, 32));
-			coachBannedAway = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 130), 0, 36, 32));
 		}
 	}
 
@@ -277,7 +312,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		}
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = ((fScoreHome != game.getGameResult().getTeamResultHome().getScore())
-				|| (fTurnAway != game.getGameResult().getTeamResultAway().getScore()));
+				|| (fScoreAway != game.getGameResult().getTeamResultAway().getScore()));
 		}
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (spectatorCount != clientData.getSpectatorCount());
@@ -292,6 +327,11 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			fRefreshNecessary = (fCoachBannedHome != game.getTurnDataHome().isCoachBanned())
 				|| (fCoachBannedAway != game.getTurnDataAway().isCoachBanned());
 		}
+		if (!fRefreshNecessary) {
+			fRefreshNecessary = (fCheeringFansBlockAssistHome != game.getTurnDataHome().getCheeringFansBlockAssist())
+				|| (fCheeringFansBlockAssistAway != game.getTurnDataAway().getCheeringFansBlockAssist());
+		}
+
 		if (fRefreshNecessary) {
 			fTurnHome = game.getTurnDataHome().getTurnNr();
 			fTurnAway = game.getTurnDataAway().getTurnNr();
@@ -302,6 +342,22 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			fWeather = game.getFieldModel().getWeather();
 			fCoachBannedHome = game.getTurnDataHome().isCoachBanned();
 			fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
+			fCheeringFansBlockAssistHome = game.getTurnDataHome().getCheeringFansBlockAssist();
+			fCheeringFansBlockAssistAway = game.getTurnDataAway().getCheeringFansBlockAssist();
+
+
+			/* fTurnHome = 2;
+			fTurnAway = 1;
+			fHalf = 1;
+			fScoreHome = 0;
+			fScoreAway = 0;
+
+			spectatorCount = 1;
+			fCoachBannedHome = true;
+			fCoachBannedAway = true;
+			fCheeringFansBlockAssistHome = 2;
+			fCheeringFansBlockAssistAway = 1; */
+
 			spectators.clear();
 			spectators.addAll(clientData.getSpectators());
 			drawBackground();
@@ -310,6 +366,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			drawSpectators();
 			drawWeather();
 			drawBannedCoaches();
+			drawCheeringFansBlockAssist();
 			repaint();
 			fRefreshNecessary = false;
 		}
@@ -337,6 +394,18 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			toolTip = "<html>" + spectatorCount +
 				((spectatorCount == 1) ? " spectator is watching the game:" : " spectators are watching the game:") + coaches +
 				"</html>";
+		}
+		if ((fCheeringFansBlockAssistHome > 0) && cheeringFansHome.contains(pMouseEvent.getPoint())) {
+			toolTip = "<html><b>Cheering Fans</b><br>" +
+				game.getTeamHome().getName() + " gains +" + fCheeringFansBlockAssistHome +
+				" offensive assist" + (fCheeringFansBlockAssistHome > 1 ? "s" : "") +
+				" on their next block action.</html>";
+		}
+		if ((fCheeringFansBlockAssistAway > 0) && cheeringFansAway.contains(pMouseEvent.getPoint())) {
+			toolTip = "<html><b>Cheering Fans</b><br>" +
+				game.getTeamAway().getName() + " gains +" + fCheeringFansBlockAssistAway +
+				" offensive assist" + (fCheeringFansBlockAssistAway > 1 ? "s" : "") +
+				" on their next block action.</html>";
 		}
 		return toolTip;
 	}
