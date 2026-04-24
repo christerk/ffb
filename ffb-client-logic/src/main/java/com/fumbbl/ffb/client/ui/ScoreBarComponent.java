@@ -285,8 +285,8 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			coachBannedAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 37, 0, 36, 32));
 			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 66, 32));
 			cheeringFansHome = dimensionProvider.scale(new Rectangle(88, 64, 32, 32));
-			cheeringFansAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 130, 64, 32, 32));		
-			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 100, 64, 100, 32));			
+			cheeringFansAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 130, 64, 32, 32));
+			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 100, 64, 100, 32));
 		} else {
 			cheeringFansHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 208), 0, 32, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 166), 0, 32, 32));
