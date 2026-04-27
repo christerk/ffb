@@ -600,7 +600,8 @@ public abstract class LogicModule {
 			|| isBlackInkAvailable(actingPlayer)
 			|| isThenIStartedBlastinAvailable(actingPlayer)
 			|| isZoatGazeAvailable(actingPlayer)
-			|| isIncorporealAvailable(actingPlayer);
+			|| isIncorporealAvailable(actingPlayer)
+			|| isIllCarryYouAvailable(actingPlayer);
 	}
 
 	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
@@ -748,6 +749,12 @@ public abstract class LogicModule {
 
 	private boolean canChomp(Player<?> player) {
 		return player.hasSkillProperty(NamedProperties.canPinPlayers);
+	}
+
+	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
+		Game game = client.getGame();
+		return actingPlayer.isIllCarryYouAvailable()
+			&& UtilPlayer.findAdjacentCarriedPartner(game, actingPlayer.getPlayer()) != null;
 	}
 }
 

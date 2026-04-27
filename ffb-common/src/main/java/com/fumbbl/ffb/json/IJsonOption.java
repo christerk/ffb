@@ -240,6 +240,7 @@ public interface IJsonOption {
 	JsonStringArrayOption IDS = new JsonStringArrayOption("ids");
 	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
+	JsonBooleanOption ILL_CARRY_YOU_AVAILABLE = new JsonBooleanOption("illCarryYouAvailable");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");

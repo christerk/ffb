@@ -196,6 +196,7 @@ public interface IIconProperty {
 	String ACTION_SECURE_THE_BALL = "action.secureTheBall";
 	String ACTION_CHOMP = "action.chomp";
 	String ACTION_PUNT = "action.punt";
+	String ACTION_ILL_CARRY_YOU = "action.illCarryYou";
 
 	// Overlays
 	String SKETCH_DELETE = "overlays.trash";

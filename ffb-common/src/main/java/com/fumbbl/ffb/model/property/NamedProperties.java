@@ -49,6 +49,7 @@ public class NamedProperties {
 	public static final ISkillProperty canBlockOverDistance = new NamedProperty("Can Block Over Distance");
 	public static final ISkillProperty canBlockSameTeamPlayer = new NamedProperty("Can Block Same Team Player");
 	public static final ISkillProperty canCancelInterceptions = new NamedProperty("Can Force Interception Reroll");
+	public static final ISkillProperty canCarryPartner = new NamedProperty("Can Carry Partner");
 	public static final ISkillProperty canChooseToIgnoreDodgeModifierAfterRoll = new NamedProperty("Can Choose To Ignore Dodge Modifier After Roll");
 	public static final ISkillProperty canChooseToIgnoreJumpModifierAfterRoll = new NamedProperty("Can Choose To Ignore Jump Modifier After Roll");
 	public static final ISkillProperty canChooseToIgnoreRushModifierAfterRoll = new NamedProperty("Can Choose To Ignore Rush Modifier After Roll");

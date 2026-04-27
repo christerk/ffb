@@ -114,6 +114,8 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
       put(IPlayerPopupMenuKeys.KEY_BOUNDING_LEAP, ClientAction.BOUNDING_LEAP);
       put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
       put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
+      put(IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU, ClientAction.ILL_CARRY_YOU);
+      
     }};
   }
 
@@ -123,6 +125,7 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
     itemConfigs.put(ClientAction.FOUL, new MenuItemConfig("Foul Opponent", IIconProperty.ACTION_FOUL, IPlayerPopupMenuKeys.KEY_FOUL));
     itemConfigs.put(ClientAction.CHAINSAW, new MenuItemConfig("Chainsaw", IIconProperty.ACTION_CHAINSAW, IPlayerPopupMenuKeys.KEY_CHAINSAW));
     itemConfigs.put(ClientAction.INCORPOREAL, new MenuItemConfig("Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
+    itemConfigs.put(ClientAction.ILL_CARRY_YOU, new MenuItemConfig("I'll Carry You", IIconProperty.ACTION_ILL_CARRY_YOU, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU));
     return itemConfigs;
   }
 

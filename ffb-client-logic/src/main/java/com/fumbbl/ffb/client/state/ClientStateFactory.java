@@ -316,6 +316,14 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
 					break;
+				case PLACE_CARRIED_PLAYER:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.PLACE_CARRIED_PLAYER;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
+					}
+					break;
+
 				case RAIDING_PARTY:
 					if (game.isHomePlaying()) {
 						clientStateId = ClientStateId.RAIDING_PARTY;

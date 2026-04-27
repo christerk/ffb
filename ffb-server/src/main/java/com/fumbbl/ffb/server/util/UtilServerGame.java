@@ -25,6 +25,8 @@ import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.UtilPlayer;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
@@ -230,5 +232,42 @@ public class UtilServerGame {
 		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
 			StringTool.bind("Unable to load Team with id $1.", pTeamId));
 		UtilServerGame.closeGame(gameState);
+	}
+
+	public static boolean pickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
+		Game game = gameState.getGame();
+		Player<?> carrier = actingPlayer.getPlayer();
+		Player<?> carriedPlayer = UtilPlayer.findAdjacentCarriedPartner(game, carrier);
+
+		if (!actingPlayer.isIllCarryYouAvailable() || carriedPlayer == null) {
+			return false;
+		}
+
+		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
+				game.getFieldModel().getPlayerCoordinate(carriedPlayer));
+
+		game.getFieldModel().setPlayerState(
+			carriedPlayer,
+			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP)
+		);
+		game.getFieldModel().remove(carriedPlayer);
+		game.getFieldModel().addSkillEnhancements(carrier, skill);
+		carrier.markUsed(skill, game);
+		actingPlayer.setIllCarryYouAvailable(false);
+
+		return true;
+	}
+
+	public static void undoPickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
+		Game game = gameState.getGame();
+		Player<?> carrier = actingPlayer.getPlayer();
+		Player<?> carriedPlayer = game.getPlayerById(gameState.getCarriedPlayerId());
+
+		game.getFieldModel().setPlayerCoordinate(carriedPlayer, gameState.getOldCarriedPlayerCoordinate());
+		game.getFieldModel().setPlayerState(carriedPlayer, gameState.getOldCarriedPlayerState());
+		game.getFieldModel().removeSkillEnhancements(carrier, skill);
+		carrier.markUnused(skill, game);
+		actingPlayer.setIllCarryYouAvailable(true);
+		gameState.clearCarriedPlayer();
 	}
 }

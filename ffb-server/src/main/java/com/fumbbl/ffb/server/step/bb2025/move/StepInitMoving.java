@@ -43,6 +43,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -309,7 +310,12 @@ public class StepInitMoving extends AbstractStep {
 					} else if (skill.hasSkillProperty(NamedProperties.canIgnoreJumpModifiers)) {
 						actingPlayer.setJumpsWithoutModifiers(true);
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
+					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
+						if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, skill)) {
+							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ILL_CARRY_YOU));
+						}
 					}
+
 					break;
 				default:
 					break;

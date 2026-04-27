@@ -96,6 +96,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.BLACK_INK);
       add(ClientAction.AUTO_GAZE_ZOAT);
       add(ClientAction.INCORPOREAL);
+      add(ClientAction.ILL_CARRY_YOU);
     }};
   }
 
@@ -184,7 +185,13 @@ public class FoulLogicModule extends MoveLogicModule {
             boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
             communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
           }
-          break;  
+          break;
+        case ILL_CARRY_YOU:
+          if (isIllCarryYouAvailable(actingPlayer)) {
+            Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+            communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
+          }
+          break;
         default:
           break;
       }

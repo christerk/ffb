@@ -138,6 +138,7 @@ public final class StepInitSelecting extends AbstractStep {
 								playerAction, actingPlayerCommand.isJumping());
 
 						}
+						game.getActingPlayer().setIllCarryYouAvailable(UtilPlayer.canPickUpPartner(game, selectedPlayer));
 						checkForStaller();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
@@ -146,6 +147,8 @@ public final class StepInitSelecting extends AbstractStep {
 						boolean unusedGaze = actingPlayer.getPlayerAction().isGaze() && UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.inflictsConfusion);
 						boolean onlyMarkedAsStandingUp = actingPlayer.hasOnlyStandingUpMove();
 						boolean usingAvoidDodge = actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging);
+						Skill carrySkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+						boolean usingCarryPartner = carrySkill != null && StringTool.isProvided(getGameState().getCarriedPlayerId());
 						if (targetSelectionState != null
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {
@@ -171,6 +174,9 @@ public final class StepInitSelecting extends AbstractStep {
 								actingPlayer.setHasMoved(false);
 								actingPlayer.setCurrentMove(0);
 								actingPlayer.setStandingUp(false);
+								if (usingCarryPartner) {
+									UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, carrySkill);
+								}
 								getGameState().resetStalling();
 								fEndPlayerAction = true;
 								commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -179,10 +185,16 @@ public final class StepInitSelecting extends AbstractStep {
 							Skill incorporeal = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), incorporeal);
 							actingPlayer.markSkillUnused(incorporeal);
+							if (usingCarryPartner) {
+								UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, carrySkill);
+							}
 							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}  else {
+							if (usingCarryPartner) {
+								UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, carrySkill);
+							}
 							getGameState().resetStalling();
 							fEndPlayerAction = true;
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -413,6 +425,10 @@ public final class StepInitSelecting extends AbstractStep {
 							actingPlayer.markSkillUsed(commandUseSkill.getSkill());
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
+							if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill())) {
+								getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
+							}
 						}
 					} else {
 						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {

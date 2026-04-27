@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.GameStatus;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -410,6 +411,27 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public void resetLeaders() {
 		activeEffects.clearLeaders();
+	}
+
+	public String getCarriedPlayerId() {
+		return activeEffects.getCarriedPlayerId();
+	}
+
+	public PlayerState getOldCarriedPlayerState() {
+		return activeEffects.getOldCarriedPlayerState();
+	}
+
+	public FieldCoordinate getOldCarriedPlayerCoordinate() {
+		return activeEffects.getOldCarriedPlayerCoordinate();
+	}
+
+	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
+		FieldCoordinate oldCarriedPlayerCoordinate) {
+		activeEffects.setCarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate);
+	}
+
+	public void clearCarriedPlayer() {
+		activeEffects.clearCarriedPlayer();
 	}
 
 // JSON serialization

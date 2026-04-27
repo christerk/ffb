@@ -154,6 +154,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			put(IPlayerPopupMenuKeys.KEY_THEN_I_STARTED_BLASTIN, ClientAction.THEN_I_STARTED_BLASTIN);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
 			put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
+			put(IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU, ClientAction.ILL_CARRY_YOU);
 		}};
 	}
 
@@ -200,6 +201,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		itemConfigs.put(ClientAction.SLASHING_NAILS,	new MenuItemConfig("Slashing Nails", IIconProperty.ACTION_BLITZ, IPlayerPopupMenuKeys.KEY_SLASHING_NAILS));
 		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
 		itemConfigs.put(ClientAction.INCORPOREAL, new MenuItemConfig("Incorporeal", IIconProperty.ACTION_MOVE, IPlayerPopupMenuKeys.KEY_INCORPOREAL));
+		itemConfigs.put(ClientAction.ILL_CARRY_YOU,	new MenuItemConfig("I'll Carry You", IIconProperty.ACTION_ILL_CARRY_YOU, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU));
 
 		return itemConfigs;
 	}
@@ -289,6 +291,10 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 				case PLAYER_ACTION_INCORPOREAL:
 					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_INCORPOREAL);
 					return true;
+				case PLAYER_ACTION_ILL_CARRY_YOU:
+					menuItemSelected(player, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU);
+					break;
+
 				default:
 					actionHandled = super.actionKeyPressed(pActionKey, menuIndex);
 					break;

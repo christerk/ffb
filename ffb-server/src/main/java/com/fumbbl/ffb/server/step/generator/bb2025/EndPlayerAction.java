@@ -22,6 +22,8 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 
 		Sequence sequence = new Sequence(gameState);
 
+		sequence.add(StepId.PLACE_CARRIED_PLAYER);
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE,
 			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false), from(StepParameterKey.END_PLAYER_ACTION, true));

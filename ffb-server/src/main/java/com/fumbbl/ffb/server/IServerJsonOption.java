@@ -46,6 +46,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption BRIBE_SUCCESSFUL = new JsonBooleanOption("bribeSuccessful");
     JsonBooleanOption CARDS_SELECTED_AWAY = new JsonBooleanOption("cardsSelectedAway");
     JsonBooleanOption CARDS_SELECTED_HOME = new JsonBooleanOption("cardsSelectedHome");
+    JsonStringOption CARRIED_PLAYER_ID = new JsonStringOption("carriedPlayerId");
     JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode",
       Factory.CATCH_SCATTER_THROWIN_MODE);
     JsonBooleanOption CHECK_FORGO = new JsonBooleanOption("checkForgo");
@@ -145,6 +146,8 @@ public interface IServerJsonOption extends IJsonOption {
     JsonEnumWithNameOption NEXT_ACTION = new JsonEnumWithNameOption("nextAction", Factory.STEP_ACTION);
     JsonStringOption NEXT_ACTION_PARAMETER = new JsonStringOption("nextActionParameter");
     JsonBooleanOption NEXT_SEQUENCE_PUSHED = new JsonBooleanOption("nextSequencePushed");
+    JsonFieldCoordinateOption OLD_CARRIED_PLAYER_COORDINATE = new JsonFieldCoordinateOption("oldCarriedPlayerCoordinate");
+    JsonPlayerStateOption OLD_CARRIED_PLAYER_STATE = new JsonPlayerStateOption("oldCarriedPlayerState");
     JsonPlayerStateOption OLD_DEFENDER_STATE = new JsonPlayerStateOption("oldDefenderState");
     JsonIntArrayOption OLD_PLAYER_STATES = new JsonIntArrayOption("oldPlayerStates");
     JsonEnumWithNameOption OLD_TURN_MODE = new JsonEnumWithNameOption("oldTurnMode", Factory.TURN_MODE);

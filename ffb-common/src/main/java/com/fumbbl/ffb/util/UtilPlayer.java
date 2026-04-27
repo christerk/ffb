@@ -24,6 +24,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.IllCarryYou;
 import com.fumbbl.ffb.skill.bb2025.special.WorkingInTandem;
 
 import java.util.ArrayList;
@@ -713,5 +714,23 @@ public class UtilPlayer {
 		return defenderChooses ? anyKnockDown : allKnockDown;
 	}
 
+	public static boolean canPickUpPartner(Game game, Player<?> selectedPlayer) {
+		Skill illCarryYou = selectedPlayer.getSkillWithProperty(NamedProperties.canCarryPartner);
+		return illCarryYou != null
+			&& !selectedPlayer.isUsed(illCarryYou)
+			&& IllCarryYou.VARIANT_PICKUP.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))
+			&& findAdjacentCarriedPartner(game, selectedPlayer) != null;
+	}
+
+	public static Player<?> findAdjacentCarriedPartner(Game game, Player<?> player) {
+		return Arrays.stream(findAdjacentPlayers(game, player.getTeam(), game.getFieldModel().getPlayerCoordinate(player)))
+			.filter(teamMate -> {
+				Skill partnerSkill = teamMate.getSkillWithProperty(NamedProperties.canCarryPartner);
+				return partnerSkill != null
+					&& IllCarryYou.VARIANT_CARRIED.equalsIgnoreCase(teamMate.getSkillValueExcludingTemporaryOnes(partnerSkill));
+			})
+			.findFirst()
+			.orElse(null);
+	}
 
 }

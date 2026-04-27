@@ -2,6 +2,9 @@ package com.fumbbl.ffb.server;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
@@ -20,6 +23,9 @@ public class ActiveEffects implements IJsonSerializable {
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
 	private final Set<String> leaders = new HashSet<>();
+	private String carriedPlayerId;
+	private PlayerState oldCarriedPlayerState;
+	private FieldCoordinate oldCarriedPlayerCoordinate;
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -81,6 +87,31 @@ public class ActiveEffects implements IJsonSerializable {
 		leaders.clear();
 	}
 
+	public String getCarriedPlayerId() {
+		return carriedPlayerId;
+	}
+
+	public PlayerState getOldCarriedPlayerState() {
+		return oldCarriedPlayerState;
+	}
+
+	public FieldCoordinate getOldCarriedPlayerCoordinate() {
+		return oldCarriedPlayerCoordinate;
+	}
+
+	public void clearCarriedPlayer() {
+		carriedPlayerId = null;
+		oldCarriedPlayerState = null;
+		oldCarriedPlayerCoordinate = null;
+	}
+
+	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
+		FieldCoordinate oldCarriedPlayerCoordinate) {
+		this.carriedPlayerId = carriedPlayerId;
+		this.oldCarriedPlayerState = oldCarriedPlayerState;
+		this.oldCarriedPlayerCoordinate = oldCarriedPlayerCoordinate;
+	}
+
 	@Override
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -104,6 +135,19 @@ public class ActiveEffects implements IJsonSerializable {
 			leaders.addAll(Arrays.asList(IServerJsonOption.LEADERS.getFrom(source, jsonObject)));
 		}
 
+		if (IServerJsonOption.CARRIED_PLAYER_ID.isDefinedIn(jsonObject)) {
+			carriedPlayerId = IServerJsonOption.CARRIED_PLAYER_ID.getFrom(source, jsonObject);
+		}
+
+		if (IServerJsonOption.OLD_CARRIED_PLAYER_STATE.isDefinedIn(jsonObject)) {
+			oldCarriedPlayerState = IServerJsonOption.OLD_CARRIED_PLAYER_STATE.getFrom(source, jsonObject);
+		}
+
+		if (IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.isDefinedIn(jsonObject)) {
+			oldCarriedPlayerCoordinate = IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.getFrom(source, jsonObject);
+		}
+
+
 		return this;
 	}
 
@@ -116,6 +160,9 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
 		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
+		IServerJsonOption.CARRIED_PLAYER_ID.addTo(jsonObject, carriedPlayerId);
+		IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, oldCarriedPlayerState);
+		IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, oldCarriedPlayerCoordinate);
 		return jsonObject;
 	}
 }

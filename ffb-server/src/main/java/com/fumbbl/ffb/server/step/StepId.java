@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.step;
 
 import com.fumbbl.ffb.INamedObject;
+import com.fumbbl.ffb.server.step.bb2025.StepPlaceCarriedPlayer;
 
 /**
  * @author Kalimar
@@ -141,6 +142,7 @@ public enum StepId implements INamedObject {
 	PICK_UP("pickUp"), // action.common
 	PILE_DRIVER("pileDriver"), // skill.pileDriver
 	PLACE_BALL("placeBall"), // skill.safePairOfHands
+	PLACE_CARRIED_PLAYER("placeCarriedPlayer"), // action.end
 	PLAY_CARD("playCard"), // phase.inducement
 	PLAYER_LOSS("playerLoss"), // game.end
 	PRAYER("prayer"), // phase.kickoff

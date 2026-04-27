@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
@@ -24,7 +24,10 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 
 	@Override
 	public Set<ClientAction> availableActions() {
-		return Collections.singleton(ClientAction.INCORPOREAL);
+		return new HashSet<ClientAction>() {{
+			add(ClientAction.INCORPOREAL);
+			add(ClientAction.ILL_CARRY_YOU);
+		}};
 	}
 
 	@Override
@@ -44,6 +47,12 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 					communication.sendActingPlayer(actingPlayer.getPlayer(), PlayerAction.PUNT_MOVE, actingPlayer.isJumping());
 				}
 				break;
+			case ILL_CARRY_YOU:
+				if (logicModule.isIllCarryYouAvailable(actingPlayer)) {
+					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
+				}
+				break;
 			default:
 				break;
 		}
@@ -58,6 +67,9 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 			if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging)) {
 				actionContext.add(Influences.INCORPOREAL_ACTIVE);
 			}
+		}
+		if (logicModule.isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
 		return actionContext;
 	}
