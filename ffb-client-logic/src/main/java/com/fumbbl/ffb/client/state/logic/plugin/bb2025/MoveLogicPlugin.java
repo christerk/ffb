@@ -24,10 +24,12 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 
 	@Override
 	public Set<ClientAction> availableActions() {
-		return new HashSet<ClientAction>() {{
-			add(ClientAction.INCORPOREAL);
-			add(ClientAction.ILL_CARRY_YOU);
-		}};
+		return new HashSet<ClientAction>() {
+			{
+				add(ClientAction.INCORPOREAL);
+				add(ClientAction.ILL_CARRY_YOU);
+			}
+		};
 	}
 
 	@Override
