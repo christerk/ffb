@@ -243,13 +243,14 @@ public class UtilServerGame {
 			return false;
 		}
 
-		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
-				game.getFieldModel().getPlayerCoordinate(carriedPlayer));
+		boolean carriedPlayerHasBall = UtilPlayer.hasBall(game, carriedPlayer);
 
-		game.getFieldModel().setPlayerState(
-			carriedPlayer,
-			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP)
-		);
+		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
+			game.getFieldModel().getPlayerCoordinate(carriedPlayer), carriedPlayerHasBall);
+
+		game.getFieldModel().setPlayerState(carriedPlayer,
+			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP));
+
 		game.getFieldModel().remove(carriedPlayer);
 		game.getFieldModel().addSkillEnhancements(carrier, skill);
 		carrier.markUsed(skill, game);
@@ -263,6 +264,10 @@ public class UtilServerGame {
 
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, gameState.getOldCarriedPlayerCoordinate());
 		game.getFieldModel().setPlayerState(carriedPlayer, gameState.getOldCarriedPlayerState());
+		if (gameState.isCarriedPlayerHasBall()) {
+			game.getFieldModel().setBallCoordinate(gameState.getOldCarriedPlayerCoordinate());
+			game.getFieldModel().setBallMoving(false);
+		}
 		game.getFieldModel().removeSkillEnhancements(carrier, skill);
 		carrier.markUnused(skill, game);
 		gameState.clearCarriedPlayer();

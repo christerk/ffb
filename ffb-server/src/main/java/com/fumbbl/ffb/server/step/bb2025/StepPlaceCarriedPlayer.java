@@ -170,7 +170,10 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		if (oldState != null) {
 			game.getFieldModel().setPlayerState(carriedPlayer, oldState);
 		}
-		if (game.getFieldModel().isBallMoving() && coordinate.equals(game.getFieldModel().getBallCoordinate())) {
+		if (getGameState().isCarriedPlayerHasBall()) {
+			game.getFieldModel().setBallCoordinate(coordinate);
+			game.getFieldModel().setBallMoving(false);
+		} else if (game.getFieldModel().isBallMoving() && coordinate.equals(game.getFieldModel().getBallCoordinate())) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
 	}

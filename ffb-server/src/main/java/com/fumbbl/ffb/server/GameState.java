@@ -425,9 +425,13 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		return activeEffects.getOldCarriedPlayerCoordinate();
 	}
 
+	public boolean isCarriedPlayerHasBall() {
+		return activeEffects.isCarriedPlayerHasBall();
+	}
+
 	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
-		FieldCoordinate oldCarriedPlayerCoordinate) {
-		activeEffects.setCarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate);
+		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall) {
+		activeEffects.setCarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate, carriedPlayerHasBall);
 	}
 
 	public void clearCarriedPlayer() {

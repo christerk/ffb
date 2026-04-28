@@ -26,6 +26,7 @@ public class ActiveEffects implements IJsonSerializable {
 	private String carriedPlayerId;
 	private PlayerState oldCarriedPlayerState;
 	private FieldCoordinate oldCarriedPlayerCoordinate;
+	private boolean carriedPlayerHasBall;
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -99,17 +100,23 @@ public class ActiveEffects implements IJsonSerializable {
 		return oldCarriedPlayerCoordinate;
 	}
 
+	public boolean isCarriedPlayerHasBall() {
+		return carriedPlayerHasBall;
+	}
+
 	public void clearCarriedPlayer() {
 		carriedPlayerId = null;
 		oldCarriedPlayerState = null;
 		oldCarriedPlayerCoordinate = null;
+		carriedPlayerHasBall = false;
 	}
 
 	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
-		FieldCoordinate oldCarriedPlayerCoordinate) {
+		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall) {
 		this.carriedPlayerId = carriedPlayerId;
 		this.oldCarriedPlayerState = oldCarriedPlayerState;
 		this.oldCarriedPlayerCoordinate = oldCarriedPlayerCoordinate;
+		this.carriedPlayerHasBall = carriedPlayerHasBall;
 	}
 
 	@Override
@@ -147,6 +154,9 @@ public class ActiveEffects implements IJsonSerializable {
 			oldCarriedPlayerCoordinate = IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		}
 
+		if (IServerJsonOption.CARRIED_PLAYER_HAS_BALL.isDefinedIn(jsonObject)) {
+			carriedPlayerHasBall = IServerJsonOption.CARRIED_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		}
 
 		return this;
 	}
@@ -163,6 +173,7 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.CARRIED_PLAYER_ID.addTo(jsonObject, carriedPlayerId);
 		IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, oldCarriedPlayerState);
 		IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, oldCarriedPlayerCoordinate);
+		IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, carriedPlayerHasBall);
 		return jsonObject;
 	}
 }
