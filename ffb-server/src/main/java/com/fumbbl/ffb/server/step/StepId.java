@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.server.step;
 
 import com.fumbbl.ffb.INamedObject;
-import com.fumbbl.ffb.server.step.bb2025.StepPlaceCarriedPlayer;
 
 /**
  * @author Kalimar
