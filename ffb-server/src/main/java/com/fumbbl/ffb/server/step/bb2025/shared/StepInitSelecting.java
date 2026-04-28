@@ -138,7 +138,7 @@ public final class StepInitSelecting extends AbstractStep {
 								playerAction, actingPlayerCommand.isJumping());
 
 						}
-						game.getActingPlayer().setIllCarryYouAvailable(UtilPlayer.canPickUpPartner(game, selectedPlayer));
+						game.getActingPlayer().setStartedAdjacentToPartner(UtilPlayer.canPickUpPartner(game, selectedPlayer));
 						checkForStaller();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 

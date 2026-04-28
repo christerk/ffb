@@ -52,7 +52,7 @@ import java.util.Set;
 @RulesCollection(Rules.BB2025)
 public class IllCarryYou extends Skill {
 
-	public static final String VARIANT_PICKUP = "pickup";
+	public static final String VARIANT_CARRIER = "carrier";
 	public static final String VARIANT_CARRIED = "carried";
 
 	public IllCarryYou() {

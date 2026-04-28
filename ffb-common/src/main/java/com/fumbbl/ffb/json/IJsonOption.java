@@ -240,7 +240,6 @@ public interface IJsonOption {
 	JsonStringArrayOption IDS = new JsonStringArrayOption("ids");
 	JsonBooleanOption IGNORE_AGILITY = new JsonBooleanOption("ignoreAgility");
 	JsonBooleanOption IGNORE_NULL_VALUE = new JsonBooleanOption("ignoreNullValue");
-	JsonBooleanOption ILL_CARRY_YOU_AVAILABLE = new JsonBooleanOption("illCarryYouAvailable");
 	JsonBooleanOption IN_SELECT = new JsonBooleanOption("inSelect");
 	JsonArrayOption INDUCEMENT_ARRAY = new JsonArrayOption("inducementArray");
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
@@ -518,6 +517,7 @@ public interface IJsonOption {
 	JsonBooleanOption SKIP = new JsonBooleanOption("skip");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
+	JsonBooleanOption STARTED_ADJACENT_TO_PARTNER = new JsonBooleanOption("startedAdjacentToPartner");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonStringOption SORT_MODE = new JsonStringOption("sortMode");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);

@@ -239,7 +239,7 @@ public class UtilServerGame {
 		Player<?> carrier = actingPlayer.getPlayer();
 		Player<?> carriedPlayer = UtilPlayer.findAdjacentCarriedPartner(game, carrier);
 
-		if (!actingPlayer.isIllCarryYouAvailable() || carriedPlayer == null) {
+		if (!actingPlayer.isStartedAdjacentToPartner() || carriedPlayer == null) {
 			return false;
 		}
 
@@ -253,8 +253,6 @@ public class UtilServerGame {
 		game.getFieldModel().remove(carriedPlayer);
 		game.getFieldModel().addSkillEnhancements(carrier, skill);
 		carrier.markUsed(skill, game);
-		actingPlayer.setIllCarryYouAvailable(false);
-
 		return true;
 	}
 
@@ -267,7 +265,6 @@ public class UtilServerGame {
 		game.getFieldModel().setPlayerState(carriedPlayer, gameState.getOldCarriedPlayerState());
 		game.getFieldModel().removeSkillEnhancements(carrier, skill);
 		carrier.markUnused(skill, game);
-		actingPlayer.setIllCarryYouAvailable(true);
 		gameState.clearCarriedPlayer();
 	}
 }

@@ -223,7 +223,7 @@ public class ClientCommandHandlerModelSync extends ClientCommandHandler implemen
 					case ACTING_PLAYER_SET_STRENGTH:
 					case ACTING_PLAYER_SET_SUFFERING_ANIMOSITY:
 					case ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST:
-					case ACTING_PLAYER_SET_ILL_CARRY_YOU_AVAILABLE:
+					case ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNER:
 						fUpdateActingPlayer = true;
 						break;
 					case TURN_DATA_SET_TURN_NR:

@@ -753,7 +753,7 @@ public abstract class LogicModule {
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
 		Game game = client.getGame();
-		return actingPlayer.isIllCarryYouAvailable()
+		return actingPlayer.isStartedAdjacentToPartner()
 			&& UtilPlayer.findAdjacentCarriedPartner(game, actingPlayer.getPlayer()) != null;
 	}
 }

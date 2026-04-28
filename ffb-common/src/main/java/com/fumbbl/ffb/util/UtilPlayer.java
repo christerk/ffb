@@ -718,7 +718,7 @@ public class UtilPlayer {
 		Skill illCarryYou = selectedPlayer.getSkillWithProperty(NamedProperties.canCarryPartner);
 		return illCarryYou != null
 			&& !selectedPlayer.isUsed(illCarryYou)
-			&& IllCarryYou.VARIANT_PICKUP.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))
+			&& IllCarryYou.VARIANT_CARRIER.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))
 			&& findAdjacentCarriedPartner(game, selectedPlayer) != null;
 	}
 
