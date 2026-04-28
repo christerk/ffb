@@ -86,6 +86,7 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			add(ClientAction.BALEFUL_HEX);
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.AUTO_GAZE_ZOAT);
+			add(ClientAction.ILL_CARRY_YOU);
 		}};
 	}
 
@@ -100,6 +101,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			if (actingPlayer.hasActed()) {
 				actionContext.add(Influences.HAS_ACTED);
 			}
+		}
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
 		return actionContext;
 	}
@@ -145,6 +149,13 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			case AUTO_GAZE_ZOAT:
 				Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
 				client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+				break;
+			case ILL_CARRY_YOU:
+				if (isIllCarryYouAvailable(actingPlayer)) {
+					Skill illCarryYou = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					communication.sendUseSkill(illCarryYou, true, actingPlayer.getPlayer().getId());
+				}
+				break;
 			default:
 				break;
 		}

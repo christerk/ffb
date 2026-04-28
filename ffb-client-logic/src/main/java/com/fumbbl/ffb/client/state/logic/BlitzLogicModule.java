@@ -87,6 +87,7 @@ public class BlitzLogicModule extends MoveLogicModule {
 			add(ClientAction.BOUNDING_LEAP);
 			add(ClientAction.GORED_BY_THE_BULL);
 			add(ClientAction.INCORPOREAL);
+			add(ClientAction.ILL_CARRY_YOU);
 			addAll(extension.availableActions());
 		}};
 	}
@@ -130,6 +131,12 @@ public class BlitzLogicModule extends MoveLogicModule {
 						Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
 						boolean active = actingPlayer.getPlayer().hasActiveEnhancement(skill);
 						client.getCommunication().sendUseSkill(skill, !active, actingPlayer.getPlayer().getId());
+					}
+					break;
+				case ILL_CARRY_YOU:
+					if (isIllCarryYouAvailable(actingPlayer)) {
+						Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+						client.getCommunication().sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
 					}
 					break;
 				default:

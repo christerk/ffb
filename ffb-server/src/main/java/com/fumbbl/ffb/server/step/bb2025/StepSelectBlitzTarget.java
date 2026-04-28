@@ -47,6 +47,8 @@ import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.step.generator.bb2020.RaidingParty;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Arrays;
 
@@ -149,6 +151,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 								.forName(SequenceGenerator.Type.CatchOfTheDay.name());
 							generator.pushSequence(new CatchOfTheDay.SequenceParams(getGameState(), gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
+							if (UtilServerGame.pickUpPartner(getGameState(), getGameState().getGame().getActingPlayer(), commandUseSkill.getSkill())) {
+								getResult().addReport(new ReportSkillUse(getGameState().getGame().getActingPlayer().getPlayerId(),
+										commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
+							}
+							status = StepCommandStatus.EXECUTE_STEP;
 						} else {
 							usedSkill = commandUseSkill.getSkill();
 						}
@@ -224,6 +232,10 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				if (game.getActingPlayer().hasActed() && !confirmed) {
 					UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), game.getActingPlayer().getPlayerAction()), false);
 				} else {
+					Skill carrySkill = game.getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					if (carrySkill != null && StringTool.isProvided(getGameState().getCarriedPlayerId())) {
+						UtilServerGame.undoPickUpPartner(getGameState(), game.getActingPlayer(), carrySkill);
+					}
 					game.setTurnMode(game.getLastTurnMode());
 					game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);

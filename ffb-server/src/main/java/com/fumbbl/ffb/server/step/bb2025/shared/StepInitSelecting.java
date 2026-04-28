@@ -427,7 +427,7 @@ public final class StepInitSelecting extends AbstractStep {
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
 							if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill())) {
-								getResult().addReport(new ReportSkillUse(commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
+								getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
 							}
 						}
 					} else {

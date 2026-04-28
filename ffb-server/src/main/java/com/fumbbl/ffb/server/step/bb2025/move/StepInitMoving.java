@@ -312,7 +312,7 @@ public class StepInitMoving extends AbstractStep {
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
 						if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, skill)) {
-							getResult().addReport(new ReportSkillUse(skill, true, SkillUse.ILL_CARRY_YOU));
+							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ILL_CARRY_YOU));
 						}
 					}
 

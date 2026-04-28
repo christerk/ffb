@@ -151,6 +151,10 @@ public class HandOverLogicModule extends MoveLogicModule {
 			}
 		}
 
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
+		}
+
 		return actionContext;
 	}
 }

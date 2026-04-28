@@ -106,7 +106,10 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 		}
 		if (isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);
-		}		
+		}
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
+		}
 		return actionContext;
 	}
 
@@ -182,7 +185,13 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 						Skill skill = player.getSkillWithProperty(NamedProperties.canAvoidDodging);
 						client.getCommunication().sendUseSkill(skill, true, player.getId());
 					}
-					break;				
+					break;
+				case ILL_CARRY_YOU:
+					if (isIllCarryYouAvailable(client.getGame().getActingPlayer())) {
+						Skill skill = player.getSkillWithProperty(NamedProperties.canCarryPartner);
+						communication.sendUseSkill(skill, true, player.getId());
+					}
+					break;
 				default:
 					break;
 			}
@@ -204,6 +213,7 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 			add(ClientAction.SLASHING_NAILS);
 			add(ClientAction.AUTO_GAZE_ZOAT);
 			add(ClientAction.INCORPOREAL);
+			add(ClientAction.ILL_CARRY_YOU);
 		}};
 	}
 }
