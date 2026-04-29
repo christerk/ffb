@@ -4,6 +4,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
+import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
@@ -23,6 +24,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
+import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -32,6 +34,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
@@ -115,6 +118,16 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		}
 
 		if (eligibleSquares.isEmpty()) {
+			if (eligibleSquares.isEmpty()) {
+				if (FieldCoordinateBounds.ENDZONE_HOME.isInBounds(carrierCoordinate)
+					|| FieldCoordinateBounds.ENDZONE_AWAY.isInBounds(carrierCoordinate)
+					|| FieldCoordinateBounds.SIDELINE_UPPER.isInBounds(carrierCoordinate)
+					|| FieldCoordinateBounds.SIDELINE_LOWER.isInBounds(carrierCoordinate)) {
+					pushCarriedPlayerIntoCrowd(game, carriedPlayer, carrierCoordinate);
+				}
+				leave(game, carrier);
+				return;
+			}
 			leave(game, carrier);
 			return;
 		}
@@ -151,15 +164,8 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 			game.setTurnMode(TurnMode.PLACE_CARRIED_PLAYER);
 		}
 
-		UtilServerDialog.showDialog(
-			getGameState(),
-			new DialogInformationOkayParameter(
-				"I'll Carry You",
-				"Select a square to place carried player.",
-				false
-			),
-			false
-		);
+		UtilServerDialog.showDialog(getGameState(),
+				new DialogInformationOkayParameter("I'll Carry You", "Select a square to place carried player.", false), false);
 
 		getResult().setNextAction(StepAction.CONTINUE);
 	}
@@ -177,6 +183,20 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
 	}
+
+	private void pushCarriedPlayerIntoCrowd(Game game, Player<?> carriedPlayer, FieldCoordinate carrierCoordinate) {
+		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
+				UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, carriedPlayer, carrierCoordinate,
+						null, null, ApothecaryMode.CROWD_PUSH)));
+
+		if (getGameState().isCarriedPlayerHasBall()) {
+			game.getFieldModel().setBallCoordinate(null);
+			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
+			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, carrierCoordinate));
+		}
+
+		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+	}	
 
 	private void leave(Game game, Player<?> carrier) {
 		UtilServerDialog.hideDialog(getGameState());

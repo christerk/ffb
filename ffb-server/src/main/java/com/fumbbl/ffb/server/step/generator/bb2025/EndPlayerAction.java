@@ -23,6 +23,7 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 		Sequence sequence = new Sequence(gameState);
 
 		sequence.add(StepId.PLACE_CARRIED_PLAYER);
+		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE,
