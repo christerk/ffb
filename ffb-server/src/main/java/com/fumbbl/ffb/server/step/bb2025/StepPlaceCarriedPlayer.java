@@ -32,6 +32,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
@@ -112,15 +113,15 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		String carriedPlayerId = getGameState().getCarriedPlayerId();
+		CarriedPlayer carriedPlayerState = getGameState().getCarriedPlayer();
 
-		if (!StringTool.isProvided(carriedPlayerId)) {
+		if (carriedPlayerState == null || !StringTool.isProvided(carriedPlayerState.getPlayerId())) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
 
 		Player<?> carrier = actingPlayer.getPlayer();
-		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerId);
+		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
 
 		if (eligibleSquares.isEmpty()) {
@@ -183,11 +184,11 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 	}
 
 	private void placePlayerOnEmptySquare(Game game, Player<?> carrier, Player<?> carriedPlayer, FieldCoordinate coordinate) {
-		PlayerState oldState = getGameState().getOldCarriedPlayerState();
+		PlayerState oldState = getGameState().getCarriedPlayer().getOldState();
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
 		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
 
-		if (getGameState().isCarriedPlayerHasBall()) {
+		if (getGameState().getCarriedPlayer().hasBall()) {
 			game.getFieldModel().setBallCoordinate(coordinate);
 			game.getFieldModel().setBallMoving(false);
 		} else if (game.getFieldModel().isBallMoving() && coordinate.equals(game.getFieldModel().getBallCoordinate())) {
@@ -212,8 +213,9 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		}
 		commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
 
-		PlayerState oldState = getGameState().getOldCarriedPlayerState();
-		boolean carriedPlayerHasBall = getGameState().isCarriedPlayerHasBall();
+		CarriedPlayer carriedPlayerState = getGameState().getCarriedPlayer();
+		PlayerState oldState = carriedPlayerState.getOldState();
+		boolean carriedPlayerHasBall = carriedPlayerState.hasBall();
 
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
 		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
@@ -256,7 +258,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 				UtilServerInjury.handleInjury(this, new InjuryTypeCrowdPush(), null, carriedPlayer, carrierCoordinate,
 						null, null, ApothecaryMode.CROWD_PUSH)));
 
-		if (getGameState().isCarriedPlayerHasBall()) {
+		if (getGameState().getCarriedPlayer().hasBall()) {
 			game.getFieldModel().setBallCoordinate(null);
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 			publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, carrierCoordinate));

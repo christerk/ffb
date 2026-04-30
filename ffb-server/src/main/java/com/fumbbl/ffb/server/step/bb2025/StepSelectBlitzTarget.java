@@ -48,7 +48,6 @@ import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.step.generator.bb2020.RaidingParty;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
-import com.fumbbl.ffb.util.StringTool;
 
 import java.util.Arrays;
 
@@ -233,7 +232,7 @@ public class StepSelectBlitzTarget extends AbstractStep {
 					UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), game.getActingPlayer().getPlayerAction()), false);
 				} else {
 					Skill carrySkill = game.getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-					if (carrySkill != null && StringTool.isProvided(getGameState().getCarriedPlayerId())) {
+					if (carrySkill != null && getGameState().getCarriedPlayer() != null) {
 						UtilServerGame.undoPickUpPartner(getGameState(), game.getActingPlayer(), carrySkill);
 					}
 					game.setTurnMode(game.getLastTurnMode());

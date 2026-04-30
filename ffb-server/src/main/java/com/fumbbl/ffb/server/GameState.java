@@ -22,6 +22,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ServerCommand;
 import com.fumbbl.ffb.server.factory.ObserverFactory;
 import com.fumbbl.ffb.server.marking.AutoMarkingConfig;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -413,20 +414,8 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.clearLeaders();
 	}
 
-	public String getCarriedPlayerId() {
-		return activeEffects.getCarriedPlayerId();
-	}
-
-	public PlayerState getOldCarriedPlayerState() {
-		return activeEffects.getOldCarriedPlayerState();
-	}
-
-	public FieldCoordinate getOldCarriedPlayerCoordinate() {
-		return activeEffects.getOldCarriedPlayerCoordinate();
-	}
-
-	public boolean isCarriedPlayerHasBall() {
-		return activeEffects.isCarriedPlayerHasBall();
+	public CarriedPlayer getCarriedPlayer() {
+		return activeEffects.getCarriedPlayer();
 	}
 
 	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,

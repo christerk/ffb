@@ -148,7 +148,7 @@ public final class StepInitSelecting extends AbstractStep {
 						boolean onlyMarkedAsStandingUp = actingPlayer.hasOnlyStandingUpMove();
 						boolean usingAvoidDodge = actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging);
 						Skill carrySkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-						boolean usingCarryPartner = carrySkill != null && StringTool.isProvided(getGameState().getCarriedPlayerId());
+						boolean usingCarryPartner = carrySkill != null && getGameState().getCarriedPlayer() != null;
 						if (targetSelectionState != null
 							&& (unusedBlitz || unusedGaze)
 							&& (actingPlayer.getCurrentMove() == 0 || onlyMarkedAsStandingUp)) {

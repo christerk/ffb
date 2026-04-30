@@ -20,6 +20,7 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
@@ -260,12 +261,13 @@ public class UtilServerGame {
 	public static void undoPickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
 		Game game = gameState.getGame();
 		Player<?> carrier = actingPlayer.getPlayer();
-		Player<?> carriedPlayer = game.getPlayerById(gameState.getCarriedPlayerId());
+		CarriedPlayer carriedPlayerState = gameState.getCarriedPlayer();
+		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
 
-		game.getFieldModel().setPlayerCoordinate(carriedPlayer, gameState.getOldCarriedPlayerCoordinate());
-		game.getFieldModel().setPlayerState(carriedPlayer, gameState.getOldCarriedPlayerState());
-		if (gameState.isCarriedPlayerHasBall()) {
-			game.getFieldModel().setBallCoordinate(gameState.getOldCarriedPlayerCoordinate());
+		game.getFieldModel().setPlayerCoordinate(carriedPlayer, carriedPlayerState.getOldCoordinate());
+		game.getFieldModel().setPlayerState(carriedPlayer, carriedPlayerState.getOldState());
+		if (carriedPlayerState.hasBall()) {
+			game.getFieldModel().setBallCoordinate(carriedPlayerState.getOldCoordinate());
 			game.getFieldModel().setBallMoving(false);
 		}
 		game.getFieldModel().removeSkillEnhancements(carrier, skill);

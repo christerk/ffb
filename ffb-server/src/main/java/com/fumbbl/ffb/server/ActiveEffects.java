@@ -9,6 +9,7 @@ import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +24,7 @@ public class ActiveEffects implements IJsonSerializable {
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
 	private final Set<String> leaders = new HashSet<>();
-	private String carriedPlayerId;
-	private PlayerState oldCarriedPlayerState;
-	private FieldCoordinate oldCarriedPlayerCoordinate;
-	private boolean carriedPlayerHasBall;
+	private CarriedPlayer carriedPlayer;
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -88,35 +86,18 @@ public class ActiveEffects implements IJsonSerializable {
 		leaders.clear();
 	}
 
-	public String getCarriedPlayerId() {
-		return carriedPlayerId;
-	}
-
-	public PlayerState getOldCarriedPlayerState() {
-		return oldCarriedPlayerState;
-	}
-
-	public FieldCoordinate getOldCarriedPlayerCoordinate() {
-		return oldCarriedPlayerCoordinate;
-	}
-
-	public boolean isCarriedPlayerHasBall() {
-		return carriedPlayerHasBall;
+	public CarriedPlayer getCarriedPlayer() {
+		return carriedPlayer;
 	}
 
 	public void clearCarriedPlayer() {
-		carriedPlayerId = null;
-		oldCarriedPlayerState = null;
-		oldCarriedPlayerCoordinate = null;
-		carriedPlayerHasBall = false;
+		carriedPlayer = null;
 	}
 
 	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
 		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall) {
-		this.carriedPlayerId = carriedPlayerId;
-		this.oldCarriedPlayerState = oldCarriedPlayerState;
-		this.oldCarriedPlayerCoordinate = oldCarriedPlayerCoordinate;
-		this.carriedPlayerHasBall = carriedPlayerHasBall;
+		this.carriedPlayer =
+			new CarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate, carriedPlayerHasBall);
 	}
 
 	@Override
@@ -143,19 +124,7 @@ public class ActiveEffects implements IJsonSerializable {
 		}
 
 		if (IServerJsonOption.CARRIED_PLAYER_ID.isDefinedIn(jsonObject)) {
-			carriedPlayerId = IServerJsonOption.CARRIED_PLAYER_ID.getFrom(source, jsonObject);
-		}
-
-		if (IServerJsonOption.OLD_CARRIED_PLAYER_STATE.isDefinedIn(jsonObject)) {
-			oldCarriedPlayerState = IServerJsonOption.OLD_CARRIED_PLAYER_STATE.getFrom(source, jsonObject);
-		}
-
-		if (IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.isDefinedIn(jsonObject)) {
-			oldCarriedPlayerCoordinate = IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.getFrom(source, jsonObject);
-		}
-
-		if (IServerJsonOption.CARRIED_PLAYER_HAS_BALL.isDefinedIn(jsonObject)) {
-			carriedPlayerHasBall = IServerJsonOption.CARRIED_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+			carriedPlayer = new CarriedPlayer().initFrom(source, jsonObject);
 		}
 
 		return this;
@@ -170,10 +139,12 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
 		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
-		IServerJsonOption.CARRIED_PLAYER_ID.addTo(jsonObject, carriedPlayerId);
-		IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, oldCarriedPlayerState);
-		IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, oldCarriedPlayerCoordinate);
-		IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, carriedPlayerHasBall);
+		if (carriedPlayer != null) {
+			IServerJsonOption.CARRIED_PLAYER_ID.addTo(jsonObject, carriedPlayer.getPlayerId());
+			IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, carriedPlayer.getOldState());
+			IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, carriedPlayer.getOldCoordinate());
+			IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, carriedPlayer.hasBall());
+		}
 		return jsonObject;
 	}
 }
