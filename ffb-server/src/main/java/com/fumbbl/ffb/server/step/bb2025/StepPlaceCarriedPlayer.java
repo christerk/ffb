@@ -114,7 +114,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		String carriedPlayerId = getGameState().getCarriedPlayerId();
 
-		if (!StringTool.isProvided(carriedPlayerId) || actingPlayer == null || actingPlayer.getPlayer() == null) {
+		if (!StringTool.isProvided(carriedPlayerId)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}
@@ -122,11 +122,6 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		Player<?> carrier = actingPlayer.getPlayer();
 		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerId);
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
-
-		if (carriedPlayer == null || carrierCoordinate == null) {
-			leave(game, carrier);
-			return;
-		}
 
 		if (eligibleSquares.isEmpty()) {
 			List<FieldCoordinate> emptySquares = findEmptySquares(game, carrierCoordinate);
@@ -146,12 +141,18 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		}
 
 		if (eligibleSquares.size() == 1) {
-			placePlayer(game, carrier, carriedPlayer, eligibleSquares.get(0));
+			placePlayerOnEmptySquare(game, carrier, carriedPlayer, eligibleSquares.get(0));
 			return;
 		}
 
 		if (selectedCoordinate != null) {
-			placePlayer(game, carrier, carriedPlayer, selectedCoordinate);
+			Player<?> playerLandedUpon = game.getFieldModel().getPlayer(selectedCoordinate);
+			if (playerLandedUpon != null && !playerLandedUpon.getId().equals(carriedPlayer.getId())) {
+				placePlayerOnOccupiedSquare(game, carrier, carriedPlayer, playerLandedUpon, selectedCoordinate);
+				return;
+			} else {
+				placePlayerOnEmptySquare(game, carrier, carriedPlayer, selectedCoordinate);
+			}			
 			return;
 		}
 
@@ -181,13 +182,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		getResult().setNextAction(StepAction.CONTINUE);
 	}
 
-	private void placePlayer(Game game, Player<?> carrier, Player<?> carriedPlayer, FieldCoordinate coordinate) {
-		Player<?> playerLandedUpon = game.getFieldModel().getPlayer(coordinate);
-		if (playerLandedUpon != null && !playerLandedUpon.getId().equals(carriedPlayer.getId())) {
-			placePlayerOnOccupiedSquare(game, carrier, carriedPlayer, playerLandedUpon, coordinate);
-			return;
-		}
-
+	private void placePlayerOnEmptySquare(Game game, Player<?> carrier, Player<?> carriedPlayer, FieldCoordinate coordinate) {
 		PlayerState oldState = getGameState().getOldCarriedPlayerState();
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
 		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
@@ -255,7 +250,6 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 
 		leave(game, carrier);
 	}
-
 
 	private void pushCarriedPlayerIntoCrowd(Game game, Player<?> carriedPlayer, FieldCoordinate carrierCoordinate) {
 		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT,
