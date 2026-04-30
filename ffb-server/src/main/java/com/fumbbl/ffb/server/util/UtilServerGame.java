@@ -253,6 +253,11 @@ public class UtilServerGame {
 			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP));
 
 		game.getFieldModel().remove(carriedPlayer);
+
+		if (carriedPlayerHasBall) {
+			game.getFieldModel().setBallCoordinate(null);
+			game.getFieldModel().setBallMoving(false);
+		}
 		game.getFieldModel().addSkillEnhancements(carrier, skill);
 		carrier.markUsed(skill, game);
 		return true;

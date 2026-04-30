@@ -213,6 +213,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 
 		CarriedPlayer carriedPlayerState = getGameState().getCarriedPlayer();
 		PlayerState oldState = carriedPlayerState.getOldState();
+		PlayerState thrownPlayerState = oldState.changeBase(PlayerState.PICKED_UP);
 		boolean carriedPlayerHasBall = carriedPlayerState.hasBall();
 
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
@@ -227,11 +228,11 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 			new SteadyFootingContext(injuryResultHitPlayer, commands)));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, coordinate));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, carriedPlayer.getId()));
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, oldState));
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, carriedPlayerHasBall));
 		
 		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
-			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), oldState,
+			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), thrownPlayerState,
 				carriedPlayerHasBall, coordinate, false, false, false, false));
 		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
 		publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, true));
