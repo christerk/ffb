@@ -37,7 +37,6 @@ import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.DeferredCommand;
-import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
@@ -46,8 +45,8 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
+import com.fumbbl.ffb.server.step.generator.CarriedPlayerOccupiedSquare;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
-import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
@@ -150,7 +149,6 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 			Player<?> playerLandedUpon = game.getFieldModel().getPlayer(selectedCoordinate);
 			if (playerLandedUpon != null && !playerLandedUpon.getId().equals(carriedPlayer.getId())) {
 				placePlayerOnOccupiedSquare(game, carrier, carriedPlayer, playerLandedUpon, selectedCoordinate);
-				return;
 			} else {
 				placePlayerOnEmptySquare(game, carrier, carriedPlayer, selectedCoordinate);
 			}			
@@ -220,21 +218,9 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
 		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
 
-		Sequence parentSequence = new Sequence(getGameState());
-		parentSequence.add(StepId.STEADY_FOOTING,
-			StepParameter.from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
-		parentSequence.add(StepId.PLACE_BALL);
-		parentSequence.add(StepId.APOTHECARY,
-			StepParameter.from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
-		parentSequence.add(StepId.CATCH_SCATTER_THROW_IN);
-
-		parentSequence.add(StepId.RIGHT_STUFF, IStepLabel.RIGHT_STUFF,
-			StepParameter.from(StepParameterKey.IS_KICKED_PLAYER, false),
-			StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SCATTER_PLAYER));
-		parentSequence.add(StepId.STEADY_FOOTING,
-			StepParameter.from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SCATTER_PLAYER));
-		parentSequence.add(StepId.CATCH_SCATTER_THROW_IN, IStepLabel.END_SCATTER_PLAYER);
-		getGameState().getStepStack().push(parentSequence.getSequence());
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((CarriedPlayerOccupiedSquare) factory.forName(SequenceGenerator.Type.CarriedPlayerOccupiedSquare.name()))
+			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 
 		getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
 		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
@@ -245,7 +231,6 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, carriedPlayerHasBall));
 		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
 
-		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
 		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), oldState,
 				carriedPlayerHasBall, coordinate, false, false, false, false));
