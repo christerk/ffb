@@ -756,5 +756,13 @@ public abstract class LogicModule {
 		return actingPlayer.isStartedAdjacentToPartner()
 			&& UtilPlayer.findAdjacentCarriedPartner(game, actingPlayer.getPlayer()) != null;
 	}
+
+	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {
+		return actingPlayer != null
+			&& actingPlayer.getPlayer() != null
+			&& actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
+			&& actingPlayer.hasActed();
+	}
+
 }
 

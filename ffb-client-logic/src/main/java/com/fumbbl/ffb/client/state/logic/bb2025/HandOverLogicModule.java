@@ -143,6 +143,9 @@ public class HandOverLogicModule extends MoveLogicModule {
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);
 		}
+		if (mustPlaceCarriedPlayer(actingPlayer)) {
+			actionContext.add(Influences.CARRYING_TEAM_MATE);
+		}
 
 		if (isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);

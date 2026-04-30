@@ -101,6 +101,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			if (actingPlayer.hasActed()) {
 				actionContext.add(Influences.HAS_ACTED);
 			}
+			if (mustPlaceCarriedPlayer(actingPlayer)) {
+				actionContext.add(Influences.CARRYING_TEAM_MATE);
+			}
 		}
 		if (isIllCarryYouAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.ILL_CARRY_YOU);
