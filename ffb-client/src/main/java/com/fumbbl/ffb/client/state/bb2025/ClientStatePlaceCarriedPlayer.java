@@ -45,4 +45,9 @@ public class ClientStatePlaceCarriedPlayer extends ClientStateAwt<PlaceCarriedPl
 	protected String validCursor() {
 		return IIconProperty.CURSOR_PASS;
 	}
+
+	@Override
+	public void clickOnPlayer(Player<?> player) {
+		logicModule.playerInteraction(player);
+	}
 }

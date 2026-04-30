@@ -44,6 +44,25 @@ public class PlaceCarriedPlayerLogicModule extends LogicModule {
 	}
 
 	@Override
+	public InteractionResult playerInteraction(Player<?> player) {
+		FieldCoordinate coordinate = client.getGame().getFieldModel().getPlayerCoordinate(player);
+		if (coordinate != null && client.getGame().getFieldModel().getMoveSquare(coordinate) != null) {
+			client.getCommunication().sendFieldCoordinate(coordinate);
+			return InteractionResult.handled();
+		}
+		return InteractionResult.ignore();
+	}
+
+	@Override
+	public InteractionResult playerPeek(Player<?> player) {
+		FieldCoordinate coordinate = client.getGame().getFieldModel().getPlayerCoordinate(player);
+		if (coordinate != null && client.getGame().getFieldModel().getMoveSquare(coordinate) != null) {
+			return InteractionResult.perform();
+		}
+		return InteractionResult.reset();
+	}
+
+	@Override
 	public Set<ClientAction> availableActions() {
 		return Collections.emptySet();
 	}
