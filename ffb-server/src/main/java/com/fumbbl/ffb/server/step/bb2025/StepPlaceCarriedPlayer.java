@@ -229,11 +229,12 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, carriedPlayer.getId()));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, oldState));
 		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, carriedPlayerHasBall));
-		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
-
+		
 		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
 			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), oldState,
 				carriedPlayerHasBall, coordinate, false, false, false, false));
+		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
+		publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, true));
 
 		leave(game, carrier);
 	}
