@@ -94,7 +94,9 @@ public class SneakyGitBehaviour extends SkillBehaviour<SneakyGit> {
 					|| state.injuryResultDefender.injuryContext().isArmorBroken()
 					|| ((UtilCards.hasSkill(actingPlayer, skill) && UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_BAN_TO_KO))))) {
 					int[] armorRoll = state.injuryResultDefender.injuryContext().getArmorRoll();
-					refereeSpotsFoul = (armorRoll[0] == armorRoll[1]) && !UtilCards.hasSkill(actingPlayer, skill);
+					if (armorRoll != null) {
+						refereeSpotsFoul = (armorRoll[0] == armorRoll[1]) && !UtilCards.hasSkill(actingPlayer, skill);
+					}
 				}
 				if (!refereeSpotsFoul && state.injuryResultDefender.injuryContext().isArmorBroken()) {
 					int[] injuryRoll = state.injuryResultDefender.injuryContext().getInjuryRoll();
