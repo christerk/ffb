@@ -38,7 +38,6 @@ public interface IIconProperty {
 	String DECORATION_CHOMPED = "decoration.chomped";
 	String DECORATION_CHECK_ICON_BLITZ = "decoration.activated.checkIcon.blitz";
 
-
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
 	String GAME_COIN_TAILS = "game.coin.tails";

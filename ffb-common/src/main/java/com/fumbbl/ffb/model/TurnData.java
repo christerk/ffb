@@ -455,7 +455,6 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.TTM_USED.addTo(jsonObject, ttmUsed);
 		IJsonOption.PUNT_USED.addTo(jsonObject, puntUsed);
 		IJsonOption.BLITZING_PLAYER_ID.addTo(jsonObject, fBlitzingPlayerId);
-
 		return jsonObject;
 	}
 
