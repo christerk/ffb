@@ -204,21 +204,25 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			Graphics2D g2d = fImage.createGraphics();
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 
-			if (fCheeringFansBlockAssistHome > 0) {
-				String iconProperty = fCheeringFansBlockAssistHome > 1
+		if (fCheeringFansBlockAssistHome > 0) {
+			String iconProperty = fCheeringFansBlockAssistHome > 2
+				? IIconProperty.SCOREBAR_CHEERING_FANS_HOME_3
+				: fCheeringFansBlockAssistHome > 1
 					? IIconProperty.SCOREBAR_CHEERING_FANS_HOME_2
 					: IIconProperty.SCOREBAR_CHEERING_FANS_HOME_1;
-				BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
-				g2d.drawImage(icon, cheeringFansHome.x, cheeringFansHome.y, null);
-			}
+			BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
+			g2d.drawImage(icon, cheeringFansHome.x, cheeringFansHome.y, null);
+		}
 
-			if (fCheeringFansBlockAssistAway > 0) {
-				String iconProperty = fCheeringFansBlockAssistAway > 1
+		if (fCheeringFansBlockAssistAway > 0) {
+			String iconProperty = fCheeringFansBlockAssistAway > 2
+				? IIconProperty.SCOREBAR_CHEERING_FANS_AWAY_3
+				: fCheeringFansBlockAssistAway > 1
 					? IIconProperty.SCOREBAR_CHEERING_FANS_AWAY_2
 					: IIconProperty.SCOREBAR_CHEERING_FANS_AWAY_1;
-				BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
-				g2d.drawImage(icon, cheeringFansAway.x, cheeringFansAway.y, null);
-			}
+			BufferedImage icon = iconCache.getIconByProperty(iconProperty, dimensionProvider);
+			g2d.drawImage(icon, cheeringFansAway.x, cheeringFansAway.y, null);
+		}
 
 			g2d.dispose();
 		}
@@ -344,6 +348,18 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			fCoachBannedAway = game.getTurnDataAway().isCoachBanned();
 			fCheeringFansBlockAssistHome = game.getTurnDataHome().getCheeringFansBlockAssist();
 			fCheeringFansBlockAssistAway = game.getTurnDataAway().getCheeringFansBlockAssist();
+
+			fTurnHome = 2;
+			fTurnAway = 1;
+			fHalf = 1;
+			fScoreHome = 0;
+			fScoreAway = 0;
+
+			spectatorCount = 1;
+			fCoachBannedHome = true;
+			fCoachBannedAway = true;
+			fCheeringFansBlockAssistHome = 3;
+			fCheeringFansBlockAssistAway = 1;
 
 			spectators.clear();
 			spectators.addAll(clientData.getSpectators());

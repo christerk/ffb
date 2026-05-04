@@ -24,6 +24,7 @@ public class ChangeList {
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")
 			.addBugfix("Bloodlust: When opting to move instead of fouling directly due to failed Bloodlust the game crashed")
 			.addBugfix("Missing Zoat and Spite keywords caused Hatred/Getting Even to show Unknown")
+			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 		);
 
 		versions.add(new VersionChangeList("3.2.2")
@@ -90,7 +91,6 @@ public class ChangeList {
 			.addBugfix(
 				"When a Steady Footing player blitzed the ball carrier with a both down (both no block) and got saved by Steady Footing the ball did not bounce")
 			.addBugfix("Interception SPP were not awarded")
-			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 		);
 
 		versions.add(new VersionChangeList("3.1.1")
