@@ -133,6 +133,7 @@ public class ChangeList {
 			.addBugfix("Support multiple cheering fans assist per team")
 			.addBugfix("Ensure only players in reserves can be selected for prayers")
 			.addFeature("Support icon set index for player icons")
+			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
