@@ -349,18 +349,6 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 			fCheeringFansBlockAssistHome = game.getTurnDataHome().getCheeringFansBlockAssist();
 			fCheeringFansBlockAssistAway = game.getTurnDataAway().getCheeringFansBlockAssist();
 
-			fTurnHome = 2;
-			fTurnAway = 1;
-			fHalf = 1;
-			fScoreHome = 0;
-			fScoreAway = 0;
-
-			spectatorCount = 1;
-			fCoachBannedHome = true;
-			fCoachBannedAway = true;
-			fCheeringFansBlockAssistHome = 3;
-			fCheeringFansBlockAssistAway = 1;
-
 			spectators.clear();
 			spectators.addAll(clientData.getSpectators());
 			drawBackground();
