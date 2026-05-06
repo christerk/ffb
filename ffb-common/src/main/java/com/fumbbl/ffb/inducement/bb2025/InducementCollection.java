@@ -132,7 +132,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 
 		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
 
-		add(new InducementType("bugmansXXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", GameOptionId.INDUCEMENT_STAFF_MAX, null, null, true, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.REROLL_ONES_ON_KOS));
+		add(new InducementType("josefBugman", "Josef Bugman", "Josef Bugman", "Josef Bugman",
+			GameOptionId.INDUCEMENT_JOSEF_BUGMAN_MAX, GameOptionId.INDUCEMENT_JOSEF_BUGMAN_COST, null, true,
+			IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.STAFF, Usage.ADD_TO_KO_RECOVERY, Usage.RESETUP_D3_PLAYERS));
+
 	}};
 
 	protected Set<InducementType> getSubTypes() {

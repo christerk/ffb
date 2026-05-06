@@ -28,7 +28,6 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -645,20 +644,6 @@ public final class StepBuyInducements extends AbstractStep {
 
 			});
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ONES_ON_KOS)).findFirst()
-			.ifPresent(inducementType -> {
-
-				if (Arrays.stream(game.getTeamHome().getPlayers())
-					.anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
-					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
-				}
-
-				if (Arrays.stream(game.getTeamAway().getPlayers())
-					.anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
-					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
-				}
-
-			});
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
