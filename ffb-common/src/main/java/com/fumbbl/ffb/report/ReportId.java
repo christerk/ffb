@@ -70,7 +70,7 @@ public enum ReportId implements INamedObject {
 	MASCOT_USED("mascotUsed"), TEAM_EVENT("teamEvent"), TEAM_CAPTAIN_ROLL("teamCaptainRoll"),
 	GETTING_EVEN_ROLL("gettingEvenRoll"), SABOTEUR_ROLL("saboteurRoll"), CHOMP_ROLL("chompRoll"),
 	CHOMP_REMOVED("chompRemoved"), PUNT_DIRECTION_ROLL("puntDirectionRoll"), PUNT_DISTANCE_ROLL("puntDistanceRoll"),
-	SWOOP_DIRECTION_ROLL("swoopDirectionRoll"), SWOOP_DISTANCE_ROLL("swoopDistanceRoll")
+	SWOOP_DIRECTION_ROLL("swoopDirectionRoll"), SWOOP_DISTANCE_ROLL("swoopDistanceRoll"), DWARFEN_WISDOM_ROLL("dwarfenWisdomRoll")
 	;
 
 	// obsolete: 50 (spiralling expenses)

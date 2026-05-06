@@ -644,6 +644,21 @@ public final class StepBuyInducements extends AbstractStep {
 
 			});
 
+		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.ADD_TO_KO_RECOVERY)).findFirst()
+			.ifPresent(josefBugmanType ->
+				inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.RESETUP_D3_PLAYERS)).findFirst()
+					.ifPresent(dwarfenWisdomType -> {
+
+						if (game.getTurnDataHome().getInducementSet().getInducementTypes().contains(josefBugmanType)) {
+							game.getTurnDataHome().getInducementSet().addInducement(new Inducement(dwarfenWisdomType, 1));
+						}
+
+						if (game.getTurnDataAway().getInducementSet().getInducementTypes().contains(josefBugmanType)) {
+							game.getTurnDataAway().getInducementSet().addInducement(new Inducement(dwarfenWisdomType, 1));
+						}
+
+					})
+			);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

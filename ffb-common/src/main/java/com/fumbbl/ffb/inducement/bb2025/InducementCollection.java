@@ -134,7 +134,10 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 
 		add(new InducementType("josefBugman", "Josef Bugman", "Josef Bugman", "Josef Bugman",
 			GameOptionId.INDUCEMENT_JOSEF_BUGMAN_MAX, GameOptionId.INDUCEMENT_JOSEF_BUGMAN_COST, null, true,
-			IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.STAFF, Usage.ADD_TO_KO_RECOVERY, Usage.RESETUP_D3_PLAYERS));
+			IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.STAFF, Usage.ADD_TO_KO_RECOVERY));
+		add(new InducementType("dwarfenWisdom", "Dwarfen Wisdom", "Dwarfen Wisdom", "Dwarfen Wisdom",
+			GameOptionId.INDUCEMENT_JOSEF_BUGMAN_MAX, null, null, true, IIconProperty.RESOURCE_BLOODWEISER_KEG,
+			Usage.RESETUP_D3_PLAYERS));
 
 	}};
 

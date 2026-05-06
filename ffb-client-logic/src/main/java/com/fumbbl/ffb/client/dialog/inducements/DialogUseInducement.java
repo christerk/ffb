@@ -32,7 +32,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 	private InducementType fInducement;
 	private Card fCard;
 
-	private JButton fButtonWizard, weatherMageButton, throwARockButton, regenerationButton;
+	private JButton fButtonWizard, weatherMageButton, throwARockButton, regenerationButton, dwarfenWisdomButton;
 	private final JButton fButtonContinue;
 	private final Map<Card, JButton> fButtonPerCard;
 
@@ -138,6 +138,26 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		}
 
+		if (inducementSet.stream().anyMatch(type -> type.hasUsage(Usage.RESETUP_D3_PLAYERS))) {
+
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+			String buttonText = "<html>" +
+				"<b>Josef Bugman</b>" +
+				"<br>Use Dwarfen Wisdom" +
+				"</html>";
+			dwarfenWisdomButton = new JButton(dimensionProvider(), buttonText);
+			dwarfenWisdomButton.setHorizontalAlignment(SwingConstants.LEFT);
+			dwarfenWisdomButton.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
+			dwarfenWisdomButton.addActionListener(this);
+			panel.add(dwarfenWisdomButton);
+
+			panelMain.add(panel);
+			panelMain.add(Box.createVerticalStrut(5));
+
+		}
+
+
 		inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION))
 			.forEach(type -> {
 
@@ -157,6 +177,7 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				panelMain.add(Box.createVerticalStrut(5));
 
 			});
+			
 
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
@@ -201,6 +222,9 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				fCard = card;
 				break;
 			}
+		}
+		if (pActionEvent.getSource() == dwarfenWisdomButton) {
+			fInducement = getInducementByType(Usage.RESETUP_D3_PLAYERS);
 		}
 		if (pActionEvent.getSource() == fButtonContinue) {
 			fInducement = null;
