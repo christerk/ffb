@@ -176,7 +176,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		int maxStaff = ((GameOptionInt) gameOptions.getOptionWithDefault(GameOptionId.INDUCEMENT_STAFF_MAX)).getValue();
 
 		int verticalStrut = dimensionProvider().scale(10);
-		if (maxStaff > 0) {
+		if (maxStaff > 0 && tableModelInfamousStaff.getRowCount() > 0) {
 			rightPanel.add(Box.createVerticalStrut(verticalStrut));
 			tableInfamousStaff = new InfamousStaffTable(dimensionProvider(), tableModelInfamousStaff);
 			configureTable(rightPanel, tableInfamousStaff, tableModelInfamousStaff,
