@@ -104,14 +104,14 @@ public class StepDwarfenWisdom extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_USE_INDUCEMENT:
-          if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
-            ClientCommandUseInducement useInducementCommand =
-              (ClientCommandUseInducement) pReceivedCommand.getCommand();
-            selectedInducementType = useInducementCommand.getInducementType();
-            state.confirmed = true;
-            commandStatus = StepCommandStatus.EXECUTE_STEP;
-          }
-          break;
+					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+						ClientCommandUseInducement useInducementCommand =
+							(ClientCommandUseInducement) pReceivedCommand.getCommand();
+						selectedInducementType = useInducementCommand.getInducementType();
+						state.confirmed = true;
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
@@ -173,21 +173,21 @@ public class StepDwarfenWisdom extends AbstractStep {
 				if (selectedPlayers.isEmpty()) {
 					leave(game);
 				} else {
-          Team actingTeam = game.getTeamById(state.teamId);
-          UtilServerInducementUse.useInducement(getGameState(), actingTeam, selectedInducementType, 1);
-          for (Player<?> player : actingTeam.getPlayers()) {
-            FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-            if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
-              if (selectedPlayers.contains(player)) {
-                game.getFieldModel().setPlayerState(player,
-                  game.getFieldModel().getPlayerState(player).changeBase(PlayerState.RESERVE));
-                UtilBox.putPlayerIntoBox(game, player);
-              } else {
-                game.getFieldModel().setPlayerState(player,
-                  game.getFieldModel().getPlayerState(player).changeActive(false));
-              }
-            }
-          }
+					Team actingTeam = game.getTeamById(state.teamId);
+					UtilServerInducementUse.useInducement(getGameState(), actingTeam, selectedInducementType, 1);
+					for (Player<?> player : actingTeam.getPlayers()) {
+						FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+						if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
+							if (selectedPlayers.contains(player)) {
+								game.getFieldModel().setPlayerState(player,
+									game.getFieldModel().getPlayerState(player).changeBase(PlayerState.RESERVE));
+								UtilBox.putPlayerIntoBox(game, player);
+							} else {
+								game.getFieldModel().setPlayerState(player,
+									game.getFieldModel().getPlayerState(player).changeActive(false));
+							}
+						}
+					}
 				}
 			}
 			return;
@@ -197,7 +197,12 @@ public class StepDwarfenWisdom extends AbstractStep {
 			state.teamId = dwarfenWisdomTeam(game).getId();
 		}
 		Team team = game.getTeamById(state.teamId);
-		Optional<InducementType> wisdomType = dwarfenWisdomInducement(game, team);
+		InducementSet inducementSet = game.getTeamHome().getId().equals(team.getId())
+			? game.getTurnDataHome().getInducementSet()
+			: game.getTurnDataAway().getInducementSet();
+		Optional<InducementType> wisdomType = inducementSet.getInducementTypes().stream()
+			.filter(type -> type.hasUsage(Usage.RESETUP_D3_PLAYERS) && inducementSet.hasUsesLeft(type))
+			.findFirst();
 
 		if (!wisdomType.isPresent()) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -242,10 +247,10 @@ public class StepDwarfenWisdom extends AbstractStep {
 		state.allowedAmount = Math.min(state.roll, eligiblePlayers.size());
 		getResult().addReport(new ReportDwarfenWisdomRoll(state.teamId, state.roll, state.allowedAmount));
 
-    UtilServerDialog.showDialog(getGameState(),
-      new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.DWARFEN_WISDOM,
-        eligiblePlayers.stream().map(Player::getId).toArray(String[]::new), null, state.allowedAmount, 1),
-        false);
+		UtilServerDialog.showDialog(getGameState(),
+			new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.DWARFEN_WISDOM,
+				eligiblePlayers.stream().map(Player::getId).toArray(String[]::new), null, state.allowedAmount, 1),
+				false);
 	}
 
 	private boolean validDwarfenWisdom(List<Player<?>> movedPlayers) {
@@ -279,14 +284,6 @@ public class StepDwarfenWisdom extends AbstractStep {
 		}
 		return game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 	}
-
-  private Optional<InducementType> dwarfenWisdomInducement(Game game, Team team) {
-    InducementSet inducementSet = (team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway())
-      .getInducementSet();
-    return inducementSet.getInducementTypes().stream()
-      .filter(type -> type.hasUsage(Usage.RESETUP_D3_PLAYERS) && inducementSet.hasUsesLeft(type))
-      .findFirst();
-  }
 
 	@Override
 	public JsonObject toJsonValue() {
