@@ -173,6 +173,7 @@ public class StepDwarfenWisdom extends AbstractStep {
 				if (selectedPlayers.isEmpty()) {
 					leave(game);
 				} else {
+          UtilServerInducementUse.useInducement(getGameState(), actingTeam, selectedInducementType, 1);
 					for (Player<?> player : actingTeam.getPlayers()) {
 						FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
 						if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
@@ -240,9 +241,7 @@ public class StepDwarfenWisdom extends AbstractStep {
 		state.allowedAmount = Math.min(state.roll, eligiblePlayers.size());
 		getResult().addReport(new ReportDwarfenWisdomRoll(state.teamId, state.roll, state.allowedAmount));
 
-    UtilServerInducementUse.useInducement(getGameState(), team, selectedInducementType, 1);
-
-		UtilServerDialog.showDialog(getGameState(),
+    UtilServerDialog.showDialog(getGameState(),
 			new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.DWARFEN_WISDOM,
 				eligiblePlayers.toArray(new Player[0]), null, state.allowedAmount), false);
 	}
