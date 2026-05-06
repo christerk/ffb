@@ -644,21 +644,14 @@ public final class StepBuyInducements extends AbstractStep {
 
 			});
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.ADD_TO_KO_RECOVERY)).findFirst()
-			.ifPresent(josefBugmanType ->
-				inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.RESETUP_D3_PLAYERS)).findFirst()
-					.ifPresent(dwarfenWisdomType -> {
+			InducementType bugmansXXXXXXType = inducementType(inducementTypeFactory, Usage.ADD_TO_KO_RECOVERY);
+			InducementType dwarfenWisdomType = inducementType(inducementTypeFactory, Usage.RESETUP_D3_PLAYERS);
+			
+			replaceInducement(game.getTurnDataHome(), "josefBugman", new Inducement(bugmansXXXXXXType, 1),
+				new Inducement(dwarfenWisdomType, 1));
+			replaceInducement(game.getTurnDataAway(), "josefBugman", new Inducement(bugmansXXXXXXType, 1),
+				new Inducement(dwarfenWisdomType, 1));
 
-						if (game.getTurnDataHome().getInducementSet().getInducementTypes().contains(josefBugmanType)) {
-							game.getTurnDataHome().getInducementSet().addInducement(new Inducement(dwarfenWisdomType, 1));
-						}
-
-						if (game.getTurnDataAway().getInducementSet().getInducementTypes().contains(josefBugmanType)) {
-							game.getTurnDataAway().getInducementSet().addInducement(new Inducement(dwarfenWisdomType, 1));
-						}
-
-					})
-			);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -698,6 +691,27 @@ public final class StepBuyInducements extends AbstractStep {
 		return new ReportPrayersAndInducementsBought(pTeam.getId(), nrOfInducements, nrOfStars, nrOfMercenaries, gold,
 			newTv);
 	}
+
+	private InducementType inducementType(InducementTypeFactory factory, Usage usage) {
+		return factory.allTypes().stream()
+			.filter(type -> type.hasUsage(usage))
+			.findFirst().get();
+	}
+
+	private void replaceInducement(TurnData turnData, String sourceName, Inducement... replacements) {
+		Inducement source = turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> sourceName.equals(entry.getKey().getName()))
+			.map(Map.Entry::getValue)
+			.findFirst().orElse(null);
+
+		if (source != null) {
+			turnData.getInducementSet().removeInducement(source);
+			for (Inducement replacement : replacements) {
+				turnData.getInducementSet().addInducement(replacement);
+			}
+		}
+	}
+
 
 	// JSON serialization
 

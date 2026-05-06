@@ -143,8 +143,8 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 			JPanel panel = new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 			String buttonText = "<html>" +
-				"<b>Josef Bugman</b>" +
-				"<br>Use Dwarfen Wisdom" +
+				"<b>Dwarfen Wisdom</b>" +
+				"<br>Re-setup up to D3 players" +
 				"</html>";
 			dwarfenWisdomButton = new JButton(dimensionProvider(), buttonText);
 			dwarfenWisdomButton.setHorizontalAlignment(SwingConstants.LEFT);
