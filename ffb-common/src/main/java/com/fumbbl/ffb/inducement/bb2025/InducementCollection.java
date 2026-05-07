@@ -132,7 +132,7 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 
 		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
 
-		add(new InducementType("josefBugman", "Josef Bugman", "Josef Bugman", "Josef Bugman",
+		add(new InducementType("josefBugman", "Infamous Staff - Josef Bugman", "Josef Bugman", "Josef Bugman",
 			GameOptionId.INDUCEMENT_JOSEF_BUGMAN_MAX, GameOptionId.INDUCEMENT_JOSEF_BUGMAN_COST, null, false,
 			null, Usage.BUGMAN));
 
