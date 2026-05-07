@@ -131,6 +131,9 @@ public class StepDwarfenWisdom extends AbstractStep {
 							Arrays.stream(commandPlayerChoice.getPlayerIds())
 								.map(id -> getGameState().getGame().getPlayerById(id))
 								.forEach(selectedPlayers::add);
+							if (selectedPlayers.isEmpty()) {
+								throw new FantasyFootballException("Client submitted Dwarfen Wisdom without selecting a player");
+							}
 							if (selectedPlayers.stream().anyMatch(player -> !eligiblePlayers.contains(player))) {
 								throw new FantasyFootballException("Client selected player that is not eligible");
 							}
@@ -170,22 +173,18 @@ public class StepDwarfenWisdom extends AbstractStep {
 					leave(game);
 				}
 			} else {
-				if (selectedPlayers.isEmpty()) {
-					leave(game);
-				} else {
-					Team actingTeam = game.getTeamById(state.teamId);
-					UtilServerInducementUse.useInducement(getGameState(), actingTeam, selectedInducementType, 1);
-					for (Player<?> player : actingTeam.getPlayers()) {
-						FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-						if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
-							if (selectedPlayers.contains(player)) {
-								game.getFieldModel().setPlayerState(player,
-									game.getFieldModel().getPlayerState(player).changeBase(PlayerState.RESERVE));
-								UtilBox.putPlayerIntoBox(game, player);
-							} else {
-								game.getFieldModel().setPlayerState(player,
-									game.getFieldModel().getPlayerState(player).changeActive(false));
-							}
+				Team actingTeam = game.getTeamById(state.teamId);
+				UtilServerInducementUse.useInducement(getGameState(), actingTeam, selectedInducementType, 1);
+				for (Player<?> player : actingTeam.getPlayers()) {
+					FieldCoordinate fieldCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+					if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
+						if (selectedPlayers.contains(player)) {
+							game.getFieldModel().setPlayerState(player,
+								game.getFieldModel().getPlayerState(player).changeBase(PlayerState.RESERVE));
+							UtilBox.putPlayerIntoBox(game, player);
+						} else {
+							game.getFieldModel().setPlayerState(player,
+								game.getFieldModel().getPlayerState(player).changeActive(false));
 						}
 					}
 				}
