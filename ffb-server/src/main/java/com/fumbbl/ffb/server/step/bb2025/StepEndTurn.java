@@ -754,7 +754,7 @@ public class StepEndTurn extends AbstractStep {
 			int bugmansXXXXXXValue = inducementSet.value(Usage.ADD_TO_KO_RECOVERY);
 			int knockoutRecoveryModifier = bloodweiserKegValue + bugmansXXXXXXValue;
 			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, knockoutRecoveryModifier);
-			
+
 			playerRecoveries.add(new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue, bugmansXXXXXXValue, null));
 		}
 	}
