@@ -193,8 +193,8 @@ public class GameOptionFactory {
 				return new GameOptionInt(pOptionId).setDefault(100000)
 					.setMessage("Josef Bugman can be purchased for $1 gps.");
 			case INDUCEMENT_JOSEF_BUGMAN_MAX:
-			return new GameOptionInt(pOptionId).setDefault(1)
-				.setMessage("Coaches may purchase up to $1 Josef Bugman inducement(s).");
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Josef Bugman inducement(s).");
 			case MAX_NR_OF_CARDS:
 				return new GameOptionInt(pOptionId).setDefault(5).setMessage("A maximum of $1 cards can be bought.");
 			case MAX_PLAYERS_IN_WIDE_ZONE:

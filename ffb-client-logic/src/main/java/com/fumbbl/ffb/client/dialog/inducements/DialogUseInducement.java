@@ -157,7 +157,6 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 
 		}
 
-
 		inducementSet.stream().filter(type -> type.hasUsage(Usage.REGENERATION))
 			.forEach(type -> {
 
@@ -177,7 +176,6 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				panelMain.add(Box.createVerticalStrut(5));
 
 			});
-			
 
 		JPanel panelContinue = new JPanel();
 		panelContinue.setLayout(new BoxLayout(panelContinue, BoxLayout.X_AXIS));
