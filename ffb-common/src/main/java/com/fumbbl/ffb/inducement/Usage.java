@@ -15,11 +15,15 @@ public enum Usage {
 		add(STAFF);
 		add(REROLL_ARGUE);
 		add(REROLL_ONES_ON_KOS);
+		add(ADD_TO_KO_RECOVERY);
+		add(RESETUP_D3_PLAYERS);
 	}};
 
 	public static final Set<Usage> EXCLUDE_FROM_COUNT = new HashSet<Usage>() {{
 		add(REROLL_ARGUE);
 		add(REROLL_ONES_ON_KOS);
 		add(THROW_ROCK);
+		add(ADD_TO_KO_RECOVERY);
+		add(RESETUP_D3_PLAYERS);
 	}};
 }
