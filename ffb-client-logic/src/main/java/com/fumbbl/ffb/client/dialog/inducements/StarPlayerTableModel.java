@@ -4,6 +4,7 @@ import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.*;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.GameOptionInt;
@@ -71,6 +72,11 @@ public class StarPlayerTableModel extends AbstractTableModel {
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		if (pColumnIndex == 0) {
 			Player<?> player = (Player<?>) fRowData[pRowIndex][4];
+			if ((Boolean) pValue && player.getPosition().getKeywords().contains(Keyword.BUGMAN)
+				&& fDialog.inducementSelected(Usage.BUGMAN)) {
+				return;
+			}
+
 			int cost = player.getPosition().getCost();
 			String teamWithPositionId = player.getPosition().getTeamWithPositionId();
 			if (StringTool.isProvided(teamWithPositionId)) {

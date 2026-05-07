@@ -646,10 +646,10 @@ public final class StepBuyInducements extends AbstractStep {
 
 			InducementType bugmansXXXXXXType = inducementType(inducementTypeFactory, Usage.ADD_TO_KO_RECOVERY);
 			InducementType dwarfenWisdomType = inducementType(inducementTypeFactory, Usage.RESETUP_D3_PLAYERS);
-			
-			replaceInducement(game.getTurnDataHome(), "josefBugman", new Inducement(bugmansXXXXXXType, 1),
+
+			replaceInducement(game.getTurnDataHome(), Usage.BUGMAN, new Inducement(bugmansXXXXXXType, 1),
 				new Inducement(dwarfenWisdomType, 1));
-			replaceInducement(game.getTurnDataAway(), "josefBugman", new Inducement(bugmansXXXXXXType, 1),
+			replaceInducement(game.getTurnDataAway(), Usage.BUGMAN, new Inducement(bugmansXXXXXXType, 1),
 				new Inducement(dwarfenWisdomType, 1));
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -698,9 +698,9 @@ public final class StepBuyInducements extends AbstractStep {
 			.findFirst().get();
 	}
 
-	private void replaceInducement(TurnData turnData, String sourceName, Inducement... replacements) {
+	private void replaceInducement(TurnData turnData, Usage usage, Inducement... replacements) {
 		Inducement source = turnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> sourceName.equals(entry.getKey().getName()))
+			.filter(entry -> entry.getKey().hasUsage(usage))
 			.map(Map.Entry::getValue)
 			.findFirst().orElse(null);
 
@@ -711,7 +711,6 @@ public final class StepBuyInducements extends AbstractStep {
 			}
 		}
 	}
-
 
 	// JSON serialization
 

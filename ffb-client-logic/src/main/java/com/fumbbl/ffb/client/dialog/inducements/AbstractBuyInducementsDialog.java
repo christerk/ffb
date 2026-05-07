@@ -319,6 +319,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		for (DropDownPanel pan1 : fPanels) {
 			pan1.availableGoldChanged(getAvailableGold());
 		}
+		updateInducementSelectionAvailability();
 		updateGoldValue();
 	}
 
@@ -465,6 +466,34 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			resetPanels();
 		} else {
 			recalculateGold();
+		}
+	}
+
+	public boolean inducementSelected(Usage usage) {
+		return fPanels.stream().anyMatch(panel ->
+			panel.getInducementType().hasUsage(usage) && panel.getSelectedAmount() > 0);
+	}
+
+	public boolean starWithKeywordSelected(Keyword keyword) {
+		if (fTableModelStarPlayers != null) {
+			for (int i = 0; i < fTableModelStarPlayers.getRowCount(); i++) {
+				if ((Boolean) fTableModelStarPlayers.getValueAt(i, 0)) {
+					Player<?> starPlayer = (Player<?>) fTableModelStarPlayers.getValueAt(i, 4);
+					if (starPlayer.getPosition().getKeywords().contains(keyword)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private void updateInducementSelectionAvailability() {
+		boolean bugmanStarSelected = starWithKeywordSelected(Keyword.BUGMAN);
+		for (DropDownPanel panel : fPanels) {
+			if (panel.getInducementType().hasUsage(Usage.BUGMAN)) {
+				panel.setSelectionEnabled(!bugmanStarSelected);
+			}
 		}
 	}
 
