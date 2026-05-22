@@ -46,8 +46,8 @@ public class SidestepBehaviour extends SkillBehaviour<Sidestep> {
 				Skill cancellingSkill = null;
 				if (state.defender.getId().equals(game.getDefenderId())) {
 					cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
-					boolean grabCanCancelSidestepDuringBlitz = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
-					if (!grabCanCancelSidestepDuringBlitz && actingPlayer.getPlayerAction().isBlitzing() && cancellingSkill instanceof Grab) {
+					boolean blitzGrabEnabled = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
+					if (!blitzGrabEnabled && actingPlayer.getPlayerAction().isBlitzing() && cancellingSkill instanceof Grab) {
 						cancellingSkill = null;
 					}
 				}

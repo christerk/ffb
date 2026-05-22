@@ -53,8 +53,8 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 				boolean attackerHasConflictingSkill = skill.conflictsWithAnySkill(actingPlayer.getPlayer());
 
 				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.grabOutsideBlock);
-				boolean grabCanCancelSidestepDuringBlitz = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
-				boolean grabAllowed = !actingPlayer.getPlayerAction().isBlitzing() || grabCanCancelSidestepDuringBlitz;
+				boolean blitzGrabEnabled = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
+				boolean grabAllowed = !actingPlayer.getPlayerAction().isBlitzing() || blitzGrabEnabled;
 
 				if ((state.grabbing == null || state.grabbing)
 					&& state.freeSquareAroundDefender
