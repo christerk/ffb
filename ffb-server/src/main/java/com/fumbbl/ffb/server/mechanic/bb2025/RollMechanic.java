@@ -423,7 +423,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
 		} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
-			turnData.setLeaderState(LeaderState.USED);
+			if (!rrSaved) {
+				turnData.setLeaderState(LeaderState.USED);
+			}
 		} else {
 			stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
 		}
