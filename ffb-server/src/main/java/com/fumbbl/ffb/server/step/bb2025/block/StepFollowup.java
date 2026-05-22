@@ -164,13 +164,10 @@ public class StepFollowup extends AbstractStep {
 				&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFollowup)) {
 				publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
 			}
-			PlayerState defenderStateBeforeBlock = oldDefenderState != null ? oldDefenderState : defenderState;
 			Skill skillForcesFollowup = game.getDefender().getSkillWithProperty(NamedProperties.forceOpponentToFollowUp);
-			if (skillForcesFollowup != null && (!defenderStateBeforeBlock.isStanding() || defenderStateBeforeBlock.isDistracted())) {
-				skillForcesFollowup = null;
-			}
+			boolean canUseSkillForcesFollowup = skillForcesFollowup != null && defenderState.isStanding() && !defenderState.isDistracted();
 			boolean cannotFollow = attackerState.isPinned() || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES || actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK;
-			if (skillForcesFollowup != null && followupChoice == null && usingSkillPreventingFollowUp != null && !usingSkillPreventingFollowUp && !cannotFollow) {
+			if (canUseSkillForcesFollowup && followupChoice == null && usingSkillPreventingFollowUp != null && !usingSkillPreventingFollowUp && !cannotFollow) {
 				if (usingSkillForcingFollowUp == null) {
 					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getDefenderId(), skillForcesFollowup, 0), true);
 					return;
