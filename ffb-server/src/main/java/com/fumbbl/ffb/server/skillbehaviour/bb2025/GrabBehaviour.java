@@ -12,6 +12,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -51,9 +53,12 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 				boolean attackerHasConflictingSkill = skill.conflictsWithAnySkill(actingPlayer.getPlayer());
 
 				boolean allowGrabOutsideBlock = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.grabOutsideBlock);
+				boolean grabCanCancelSidestepDuringBlitz = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
+				boolean grabAllowed = !actingPlayer.getPlayerAction().isBlitzing() || grabCanCancelSidestepDuringBlitz;
 
 				if ((state.grabbing == null || state.grabbing)
 					&& state.freeSquareAroundDefender
+					&& grabAllowed
 					&& UtilCards.hasSkill(actingPlayer, skill)
 					&& (attackerCoordinate.isAdjacent(defenderCoordinate) || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES)
 					&& cancellingSkill == null
