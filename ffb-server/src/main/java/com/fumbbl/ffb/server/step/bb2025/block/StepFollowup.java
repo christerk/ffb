@@ -164,7 +164,10 @@ public class StepFollowup extends AbstractStep {
 				&& actingPlayer.getPlayer().hasSkillProperty(NamedProperties.forceFollowup)) {
 				publishParameter(new StepParameter(StepParameterKey.FOLLOWUP_CHOICE, true));
 			}
-			Skill skillForcesFollowup = game.getDefender().getSkillWithProperty(NamedProperties.forceOpponentToFollowUp);
+			PlayerState defenderStateBeforeBlock = oldDefenderState != null ? oldDefenderState : defenderState;
+			Skill skillForcesFollowup = game.getDefender().hasUsableSkillProperty(NamedProperties.forceOpponentToFollowUp, defenderStateBeforeBlock)
+				? game.getDefender().getSkillWithProperty(NamedProperties.forceOpponentToFollowUp)
+				: null;
 			boolean cannotFollow = attackerState.isPinned() || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES || actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK;
 			if (skillForcesFollowup != null && followupChoice == null && usingSkillPreventingFollowUp != null && !usingSkillPreventingFollowUp && !cannotFollow) {
 				if (usingSkillForcingFollowUp == null) {
