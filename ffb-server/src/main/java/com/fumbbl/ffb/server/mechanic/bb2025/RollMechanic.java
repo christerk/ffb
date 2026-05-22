@@ -416,19 +416,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		boolean successful, GameState gameState) {
 
 		boolean rrSaved = checkTeamCaptain(stepResult, gameState);
+		ReRollSource usedReRollSource = findUsedTeamReRollSource(turnData, reRollSource);
 
-		ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData, !rrSaved);
+		updateTurnDataAfterReRollUsage(turnData, usedReRollSource, !rrSaved);
 
-		if (usedAdditionalReRollSource != null) {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
-		} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
-			if (!rrSaved) {
-				turnData.setLeaderState(LeaderState.USED);
-			}
-		} else {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
-		}
+		stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedReRollSource, successful, 0));
 
 		successful = checkForLoner(pPlayer, gameState, stepResult);
 		return successful;
@@ -446,30 +438,59 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	private ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData, boolean rrActuallyUsed) {
-		if (rrActuallyUsed) {
-			turnData.setReRolls(turnData.getReRolls() - 1);
+	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
+		if (ReRollSources.BRILLIANT_COACHING == selectedSource && turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+			return ReRollSources.BRILLIANT_COACHING;
 		}
+		if (ReRollSources.PUMP_UP_THE_CROWD == selectedSource && turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+			return ReRollSources.PUMP_UP_THE_CROWD;
+		}
+		if (ReRollSources.SHOW_STAR == selectedSource && turnData.getReRollShowStarOneDrive() > 0) {
+			return ReRollSources.SHOW_STAR;
+		}
+		if (ReRollSources.LEADER == selectedSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			return ReRollSources.LEADER;
+		}
+
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			}
 			return ReRollSources.BRILLIANT_COACHING;
 		}
 		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
-			}
 			return ReRollSources.PUMP_UP_THE_CROWD;
 		}
 		if (turnData.getReRollShowStarOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
-			}
 			return ReRollSources.SHOW_STAR;
 		}
+		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			return ReRollSources.LEADER;
+		}
 
-		return null;
+		return ReRollSources.TEAM_RE_ROLL;
+	}
+
+	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource, boolean rrActuallyUsed) {
+		if (!rrActuallyUsed) {
+			return;
+		}
+
+		turnData.setReRolls(turnData.getReRolls() - 1);
+		if (ReRollSources.BRILLIANT_COACHING == usedReRollSource &&
+			turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
+			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+			return;
+		}
+		if (ReRollSources.PUMP_UP_THE_CROWD == usedReRollSource &&
+			turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+			return;
+		}
+		if (ReRollSources.SHOW_STAR == usedReRollSource && turnData.getReRollShowStarOneDrive() > 0) {
+			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+			return;
+		}
+		if (ReRollSources.LEADER == usedReRollSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			turnData.setLeaderState(LeaderState.USED);
+		}
 	}
 
 	@Override
