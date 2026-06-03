@@ -394,6 +394,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Animal Savagery lash out ends activation")
 					.setMessageFalse("Animal Savagery lash out does not end activation");
+			case CARRIED_PLAYER_BOUNCES_FROM_CARRIER:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageFalse("Carried players are placed by the coach when the carrier falls or no adjacent square is available")
+					.setMessageTrue("Carried players bounce from the carrier's square when the carrier falls or no adjacent square is available");
 			case ALLOW_SPECIAL_ACTIONS_FROM_PRONE:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Special actions can be declared when prone")

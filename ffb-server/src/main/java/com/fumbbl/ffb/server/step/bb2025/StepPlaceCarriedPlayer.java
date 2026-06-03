@@ -25,6 +25,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandFieldCoordinate;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.mixed.ReportPlayerEvent;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -45,7 +46,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
-import com.fumbbl.ffb.server.step.generator.CarriedPlayerOccupiedSquare;
+import com.fumbbl.ffb.server.step.generator.CarriedPlayerScatter;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -123,8 +124,19 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
 
+		boolean bouncesFromCarrier =
+			UtilGameOption.isOptionEnabled(game, GameOptionId.CARRIED_PLAYER_BOUNCES_FROM_CARRIER);
+
 		if (eligibleSquares.isEmpty()) {
 			List<FieldCoordinate> emptySquares = findEmptySquares(game, carrierCoordinate);
+
+			PlayerState carrierState = game.getFieldModel().getPlayerState(carrier);
+			if (bouncesFromCarrier && (!carrierState.isStanding() || emptySquares.isEmpty())) {
+				scatterCarriedPlayer(game, carriedPlayer, carrierCoordinate);
+				leave(game, carrier);
+				return;
+			}
+
 			if (!emptySquares.isEmpty()) {
 				eligibleSquares.addAll(emptySquares);
 			} else if (FieldCoordinateBounds.ENDZONE_HOME.isInBounds(carrierCoordinate)
@@ -211,31 +223,11 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		}
 		commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
 
-		CarriedPlayer carriedPlayerState = getGameState().getCarriedPlayer();
-		PlayerState oldState = carriedPlayerState.getOldState();
-		PlayerState thrownPlayerState = oldState.changeBase(PlayerState.PICKED_UP);
-		boolean carriedPlayerHasBall = carriedPlayerState.hasBall();
-
-		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
-		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
-
-		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
-		((CarriedPlayerOccupiedSquare) factory.forName(SequenceGenerator.Type.CarriedPlayerOccupiedSquare.name()))
-			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+		scatterCarriedPlayer(game, carriedPlayer, coordinate);
 
 		getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
 		publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
 			new SteadyFootingContext(injuryResultHitPlayer, commands)));
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, coordinate));
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, carriedPlayer.getId()));
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
-		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, carriedPlayerHasBall));
-		
-		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
-			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), thrownPlayerState,
-				carriedPlayerHasBall, coordinate, false, false, false, false));
-		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
-		publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, true));
 
 		leave(game, carrier);
 	}
@@ -252,7 +244,33 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		}
 
 		publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-	}	
+	}
+
+	private void scatterCarriedPlayer(Game game, Player<?> carriedPlayer, FieldCoordinate coordinate) {
+		CarriedPlayer carriedPlayerState = getGameState().getCarriedPlayer();
+		PlayerState oldState = carriedPlayerState.getOldState();
+		PlayerState thrownPlayerState = oldState.changeBase(PlayerState.PICKED_UP);
+		boolean carriedPlayerHasBall = carriedPlayerState.hasBall();
+
+		game.getFieldModel().setPlayerCoordinate(carriedPlayer, coordinate);
+		game.getFieldModel().setPlayerState(carriedPlayer, oldState);
+
+		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		((CarriedPlayerScatter) factory.forName(SequenceGenerator.Type.CarriedPlayerScatter.name()))
+			.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, coordinate));
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, carriedPlayer.getId()));
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
+		publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, carriedPlayerHasBall));
+
+		((ScatterPlayer) factory.forName(SequenceGenerator.Type.ScatterPlayer.name()))
+			.pushSequence(new ScatterPlayer.SequenceParams(getGameState(), carriedPlayer.getId(), thrownPlayerState,
+				carriedPlayerHasBall, coordinate, false, false, false, false));
+
+		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldState));
+		publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, true));
+	}
 
 	private void leave(Game game, Player<?> carrier) {
 		UtilServerDialog.hideDialog(getGameState());
