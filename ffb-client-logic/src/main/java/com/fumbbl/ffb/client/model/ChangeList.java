@@ -9,7 +9,9 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
-		versions.add(new VersionChangeList("3.3.0"));
+		versions.add(new VersionChangeList("3.3.0")
+			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
+		);
 
 		versions.add(new VersionChangeList("3.2.3")
 			.addBugfix("Weather Mage effect only lasted until end of drive/opponents next turn")
@@ -26,7 +28,6 @@ public class ChangeList {
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")
 			.addBugfix("Bloodlust: When opting to move instead of fouling directly due to failed Bloodlust the game crashed")
 			.addBugfix("Missing Zoat and Spite keywords caused Hatred/Getting Even to show Unknown")
-			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 		);
 
 		versions.add(new VersionChangeList("3.2.2")
