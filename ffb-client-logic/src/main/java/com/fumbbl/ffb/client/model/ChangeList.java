@@ -9,6 +9,8 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("3.3.0"));
+
 		versions.add(new VersionChangeList("3.2.3")
 			.addBugfix("Weather Mage effect only lasted until end of drive/opponents next turn")
 			.addBugfix(
