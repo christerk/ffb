@@ -11,6 +11,7 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.3.0")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
+			.addImprovement("Updated db connector to most current mariadb client")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
