@@ -60,6 +60,7 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
 	private JRadioButtonMenuItem layoutWideMenuItem;
+	private JRadioButtonMenuItem layoutWide1920x1080MenuItem;
 
 	private JRadioButtonMenuItem logOnMenuItem;
 	private JRadioButtonMenuItem logOffMenuItem;
@@ -186,6 +187,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		}
 		if (source == layoutWideMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
+			client.saveUserSettings(true);
+		}
+		if (source == layoutWide1920x1080MenuItem) {
+			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080);
 			client.saveUserSettings(true);
 		}
 
@@ -430,6 +435,11 @@ public class ClientSettingsMenu extends FfbMenu {
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
+
+		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080");
+		layoutWide1920x1080MenuItem.addActionListener(this);
+		orientationGroup.add(layoutWide1920x1080MenuItem);
+		orientationMenu.add(layoutWide1920x1080MenuItem);
 	}
 
 	private boolean updateOrientation() {
@@ -448,6 +458,9 @@ public class ClientSettingsMenu extends FfbMenu {
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
 					layout = ClientLayout.WIDE;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080:
+					layout = ClientLayout.WIDE_1920x1080;
 					break;
 				default:
 					break;
