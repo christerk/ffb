@@ -42,7 +42,7 @@ public enum ServerMode {
 				if (pArguments.length < 2) {
 					return ServerMode.STANDALONE;
 				}
-					if ("initdb".equalsIgnoreCase(pArguments[1])) {
+				if ("initdb".equalsIgnoreCase(pArguments[1])) {
 					return ServerMode.STANDALONE_INIT_DB;
 				}
 			}

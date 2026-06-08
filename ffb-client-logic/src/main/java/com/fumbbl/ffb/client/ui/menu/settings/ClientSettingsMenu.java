@@ -109,6 +109,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
+		layoutWide1920x1080MenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080.equals(orientationSetting));
 
 		String logModeSetting = client.getProperty(SETTING_LOG_MODE);
 		logOnMenuItem.setSelected(true);
