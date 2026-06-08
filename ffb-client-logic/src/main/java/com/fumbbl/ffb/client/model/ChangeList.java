@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.3.0")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")
+			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
@@ -29,7 +30,6 @@ public class ChangeList {
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")
 			.addBugfix("Bloodlust: When opting to move instead of fouling directly due to failed Bloodlust the game crashed")
 			.addBugfix("Missing Zoat and Spite keywords caused Hatred/Getting Even to show Unknown")
-			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")
 		);
 
 		versions.add(new VersionChangeList("3.2.2")
