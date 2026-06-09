@@ -234,6 +234,11 @@ public class StepDwarfenWisdom extends AbstractStep {
 			if (FieldCoordinateBounds.FIELD.isInBounds(fieldCoordinate)) {
 				eligiblePlayers.add(player);
 				playersAtCoordinates.put(player.getId(), fieldCoordinate);
+			}  else {
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				if (playerState.getBase() == PlayerState.RESERVE) {
+					game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE));
+				}
 			}
 		}
 
