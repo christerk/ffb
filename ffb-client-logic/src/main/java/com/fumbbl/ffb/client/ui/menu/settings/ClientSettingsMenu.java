@@ -461,7 +461,7 @@ public class ClientSettingsMenu extends FfbMenu {
 					layout = ClientLayout.WIDE;
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080:
-					layout = ClientLayout.WIDE_1920x1080;
+					layout = ClientLayout.WIDE_FL_1920x1080;
 					break;
 				default:
 					break;
