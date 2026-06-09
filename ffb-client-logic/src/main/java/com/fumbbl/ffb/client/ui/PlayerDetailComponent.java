@@ -37,12 +37,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -197,7 +192,7 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.setFont(positionFont);
 			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
-			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
+			BufferedImage playerPortrait = iconCache.getPlayersPortraitIconByUrl(portraitUrl, dimensionProvider);
 			BufferedImage portraitBackground =
 				iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
 			if (playerPortrait != null) {
