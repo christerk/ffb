@@ -647,9 +647,9 @@ public final class StepBuyInducements extends AbstractStep {
 			InducementType bugmansXXXXXXType = inducementType(inducementTypeFactory, Usage.ADD_TO_KO_RECOVERY);
 			InducementType dwarfenWisdomType = inducementType(inducementTypeFactory, Usage.RESETUP_D3_PLAYERS);
 
-			replaceInducement(game.getTurnDataHome(), Usage.BUGMAN, new Inducement(bugmansXXXXXXType, 1),
+			replaceBugmanInducement(game.getTurnDataHome(), new Inducement(bugmansXXXXXXType, 1),
 				new Inducement(dwarfenWisdomType, 1));
-			replaceInducement(game.getTurnDataAway(), Usage.BUGMAN, new Inducement(bugmansXXXXXXType, 1),
+			replaceBugmanInducement(game.getTurnDataAway(), new Inducement(bugmansXXXXXXType, 1),
 				new Inducement(dwarfenWisdomType, 1));
 
 		getResult().setNextAction(StepAction.NEXT_STEP);
@@ -695,12 +695,12 @@ public final class StepBuyInducements extends AbstractStep {
 	private InducementType inducementType(InducementTypeFactory factory, Usage usage) {
 		return factory.allTypes().stream()
 			.filter(type -> type.hasUsage(usage))
-			.findFirst().get();
+			.findFirst().orElse(null);
 	}
 
-	private void replaceInducement(TurnData turnData, Usage usage, Inducement... replacements) {
+	private void replaceBugmanInducement(TurnData turnData, Inducement... replacements) {
 		Inducement source = turnData.getInducementSet().getInducementMapping().entrySet().stream()
-			.filter(entry -> entry.getKey().hasUsage(usage))
+			.filter(entry -> entry.getKey().hasUsage(Usage.BUGMAN))
 			.map(Map.Entry::getValue)
 			.findFirst().orElse(null);
 
