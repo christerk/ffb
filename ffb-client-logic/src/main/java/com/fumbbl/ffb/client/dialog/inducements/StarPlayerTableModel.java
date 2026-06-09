@@ -102,7 +102,7 @@ public class StarPlayerTableModel extends AbstractTableModel {
 							fDialog.recalculateGold();
 							fNrOfCheckedRows = getCheckedRows();
 						}
-					} else {
+					} else if ((Boolean) fRowData[pRowIndex][pColumnIndex]) {
 						fRowData[pRowIndex][pColumnIndex] = false;
 						fireTableCellUpdated(pRowIndex, pColumnIndex);
 						fRowData[partnerRowId][pColumnIndex] = false;
