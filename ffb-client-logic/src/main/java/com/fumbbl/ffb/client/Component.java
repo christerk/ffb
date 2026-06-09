@@ -71,10 +71,12 @@ public enum Component {
 		this(landscape, landscape, landscape, landscape, landscape);
 	}
 
-	private static int sidebarHeight(ClientLayout layout) {
-		return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
-			.map(comp -> comp.dimension(layout)).mapToDouble(Dimension::getHeight).sum();
-	}
+    private static int sidebarHeight(ClientLayout layout) {
+        return (int) Arrays.stream(new Component[]{Component.TURN_DICE_STATUS, Component.RESOURCE, Component.BOX, Component.BUTTON_BOX})
+                .map(comp -> comp.dimension(layout))
+                .mapToDouble(Dimension::getHeight)
+                .sum();
+    }
 
 	private static int fieldLongSide(ClientLayout layout) {
 		return (int) (FIELD_SQUARE.dimension(layout).width * 26 * layout.getPitchScale() + 2);
