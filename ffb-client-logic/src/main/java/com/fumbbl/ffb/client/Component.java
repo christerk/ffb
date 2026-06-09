@@ -28,7 +28,7 @@ public enum Component {
 	PLAYER_SPP_OFFSET(new Dimension(8, 222), new Dimension(10, 245), new Dimension(8, 222), new Dimension(8, 222)),
 	PLAYER_SKILL_OFFSET(new Dimension(8, 246), new Dimension(10, 270), new Dimension(8, 246), new Dimension(8, 246)),
 	BOX_BUTTON(new Dimension(72, 22), new Dimension(82, 22), new Dimension(72, 22), new Dimension(72, 22)),
-	END_TURN_BUTTON(new Dimension(143, 31), new Dimension(163, 34), new Dimension(143, 31), new Dimension(143, 31)),
+    END_TURN_BUTTON(new Dimension(143, 31), new Dimension(163, 34), new Dimension(143, 31), new Dimension(SIDEBAR_WIDTH_L_FS_1920x1080, 31)),
 	SCORE_BOARD(new Dimension(782, 32), new Dimension(782, 32), new Dimension(260, 96), new Dimension(1486, 32), new Dimension(1486, 32)),
 	REPLAY_ICON_GAP(new Dimension(10, 0), new Dimension(10, 0), new Dimension(0, 0), new Dimension(10, 0), new Dimension(10, 0)),
 	REPLAY_ICON(new Dimension(36, 0), new Dimension(36, 0), new Dimension(30, 0), new Dimension(36, 0), new Dimension(36, 0)),
