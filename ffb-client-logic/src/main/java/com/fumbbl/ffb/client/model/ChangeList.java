@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")
 			.addBugfix("Selecting Fumblerooskie during a foul action could foul the active player instead")
 			.addFeature("Infamous Staff - Josef Bugman")
+			.addBugfix("Reset button could block hiring star players")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
@@ -32,7 +33,6 @@ public class ChangeList {
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")
 			.addBugfix("Bloodlust: When opting to move instead of fouling directly due to failed Bloodlust the game crashed")
 			.addBugfix("Missing Zoat and Spite keywords caused Hatred/Getting Even to show Unknown")
-			.addBugfix("Reset button could block hiring star players")
 		);
 
 		versions.add(new VersionChangeList("3.2.2")
