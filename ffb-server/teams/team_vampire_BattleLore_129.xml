@@ -41,49 +41,49 @@
   </player>
 
   <player nr="4" id="teamVampireBattleLore4">
-  	<name>Vampire4</name>
+  	<name>Vampire4 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.vampire</positionId>
   	<skillList></skillList>
   </player>
 
   <player nr="5" id="teamVampireBattleLore5">
-  	<name>Thrall1</name>
+  	<name>Thrall1 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
   </player>
 	
   <player nr="6" id="teamVampireBattleLore6">
-  	<name>Thrall2</name>
+  	<name>Thrall2 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
   </player>
 
   <player nr="7" id="teamVampireBattleLore7">
-  	<name>Thrall3</name>
+  	<name>Thrall3 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
   </player>
 
   <player nr="8" id="teamVampireBattleLore8">
-  	<name>Thrall4</name>
+  	<name>Thrall4 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
   </player>
 
   <player nr="9" id="teamVampireBattleLore9">
-  	<name>Thrall5</name>
+  	<name>Thrall5 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
   </player>
 
   <player nr="10" id="teamVampireBattleLore10">
-  	<name>Thrall6</name>
+  	<name>Thrall6  Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
@@ -97,7 +97,7 @@
   </player>
 
   <player nr="12" id="teamVampireBattleLore12">
-  	<name>Thrall8</name>
+  	<name>Thrall8 Name Should Be On two Lines Hopefully For Sure It WIll Be</name>
   	<gender>male</gender>
   	<positionId>vampire.thrall</positionId>
   	<skillList></skillList>
