@@ -16,8 +16,11 @@ import com.fumbbl.ffb.client.state.logic.LogicModule;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.UIManager;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -72,6 +75,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setClientStateFactory();
 
 		pathSketchOverlay = new PathSketchOverlay(this);
+        configureFullScreenShortcut(fUserInterface);
 	}
 
 	@Override
@@ -82,6 +86,75 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	public UserInterface getUserInterface() {
 		return fUserInterface;
 	}
+
+    public void configureFullScreenShortcut(JFrame frame) {
+        JRootPane rootPane = frame.getRootPane();
+        String os = System.getProperty("os.name").toLowerCase();
+        String toggleFullScreen = "toggleFullScreen";
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        if (os.contains("mac")) {
+            // macOS Native Standard: Command + Enter
+            // (Swing text parser handles the Apple Command key via the "meta" keyword)
+            inputMap.put(KeyStroke.getKeyStroke("meta ENTER"), toggleFullScreen);
+
+            // Optional Mac Fallback: Command + F (Very common for fullscreen)
+            inputMap.put(KeyStroke.getKeyStroke("meta F"), toggleFullScreen);
+        } else {
+            // Windows & Linux Standard: Left Alt + Enter & Right Alt (AltGr) + Enter
+            inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), toggleFullScreen);
+            inputMap.put(KeyStroke.getKeyStroke("altGraph ENTER"), toggleFullScreen);
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
+                    InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK), toggleFullScreen);
+
+        }
+
+// Bind the single action string to your existing execution logic
+        rootPane.getActionMap().put(toggleFullScreen, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FantasyFootballClientAwt.this.toggleFullScreen();
+            }
+        });
+    }
+
+    public void toggleFullScreen() {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        UserInterface userInterface = getUserInterface();
+        boolean isFullScreenSupported = gd.isFullScreenSupported();
+
+        if (!isFullScreenSupported)
+            return;
+
+        // 1. Check if we are currently in fullscreen mode
+        boolean isFullScreen = (gd.getFullScreenWindow() == userInterface);
+
+        // 2. Tear down the native OS peer resources safely
+        userInterface.dispose();
+
+        if (isFullScreen) {
+            // Switching back to Windowed Mode
+            gd.setFullScreenWindow(null);
+            userInterface.setUndecorated(false); // Put the title bar and borders back
+
+            // Optional: Restore standard maximized or normal window bounds
+            userInterface.pack();
+            userInterface.setVisible(true);
+        } else {
+            // Switching to Fullscreen Mode
+            userInterface.setUndecorated(true); // Strip borders safely now that the frame is undisplayable
+
+            if (gd.isFullScreenSupported()) {
+                // This natively rebuilds the frame structure and displays it full screen
+                gd.setFullScreenWindow(userInterface);
+            } else {
+                // Fallback for hardware environments that don't support FSEM
+                userInterface.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                userInterface.setVisible(true);
+            }
+        }
+    }
 
 	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
