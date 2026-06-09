@@ -16,6 +16,7 @@ public class ChangeList {
 			.addBugfix("Selecting Fumblerooskie during a foul action could foul the active player instead")
 			.addFeature("Infamous Staff - Josef Bugman")
 			.addBugfix("Reset button could block hiring star players")
+			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
@@ -142,7 +143,6 @@ public class ChangeList {
 			.addBugfix("Support multiple cheering fans assist per team")
 			.addBugfix("Ensure only players in reserves can be selected for prayers")
 			.addFeature("Support icon set index for player icons")
-			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 		);
 
 		versions.add(new VersionChangeList("3.0.0")
