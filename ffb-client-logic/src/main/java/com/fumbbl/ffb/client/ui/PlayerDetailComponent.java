@@ -10,14 +10,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SkillMechanic;
@@ -193,14 +187,18 @@ public class PlayerDetailComponent extends JPanel {
 			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
 			BufferedImage playerPortrait = iconCache.getPlayersPortraitIconByUrl(portraitUrl, dimensionProvider);
-			BufferedImage portraitBackground =
-				iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
-			if (playerPortrait != null) {
+
+            if (playerPortrait != null) {
 				drawPortrait(x, y, g2d, playerPortrait);
 			} else {
-				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
+                BufferedImage portraitBackground =
+                        iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
+                BufferedImage resizedBackground = resizeBackgroundToSizeOfPortrait(playerPortrait.getWidth(),
+                        playerPortrait.getHeight(),
+                        portraitBackground);
+                drawPortrait(x - 1, y + 1, g2d, resizedBackground);
 			}
-			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
+            Dimension portraitDimension = new Dimension(playerPortrait.getWidth(), playerPortrait.getHeight());
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + x);
@@ -213,6 +211,27 @@ public class PlayerDetailComponent extends JPanel {
 			g2d.dispose();
 		}
 	}
+
+    @SuppressWarnings("DuplicatedCode")
+    private BufferedImage resizeBackgroundToSizeOfPortrait(int targetWidth, int targetHeight, BufferedImage originalBackground) {
+        // 1. Create the new blank canvas
+        BufferedImage resizedBackground = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+
+        // 2. Get the graphics context
+        Graphics2D g2d = resizedBackground.createGraphics();
+
+        try {
+            // 3. Set rendering hints for bilinear scaling quality
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+            // 4. Draw the original image stretched to the target width and height
+            g2d.drawImage(originalBackground, 0, 0, targetWidth, targetHeight, null);
+        } finally {
+            g2d.dispose();
+        }
+
+        return resizedBackground;
+    }
 
 	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
 		Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
@@ -582,12 +601,28 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void refresh() {
-		nameFont = fontCache.font(Font.PLAIN, 12, dimensionProvider);
-		statFont = fontCache.font(Font.BOLD, 13, dimensionProvider);
-		positionFont = fontCache.font(Font.PLAIN, 11, dimensionProvider);
-		sppFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
-		skillFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
-		skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, 11, dimensionProvider);
+        int nameFontSize = 12;
+        int statFontSize = 13;
+        int positionFontSIze = 11;
+        int sppFontSize = 11;
+        int skillFontSize = 11;
+        int skillUsedFontSize = 11;
+
+        if (ClientLayout.WIDE_FL_1920x1080.equals(dimensionProvider.getLayoutSettings().getLayout())) {
+            nameFontSize = 16;
+            statFontSize = 17;
+            positionFontSIze = 15;
+            sppFontSize = 15;
+            skillFontSize = 15;
+            skillUsedFontSize = 15;
+        }
+
+        nameFont = fontCache.font(Font.PLAIN, nameFontSize, dimensionProvider);
+        statFont = fontCache.font(Font.BOLD, statFontSize, dimensionProvider);
+        positionFont = fontCache.font(Font.PLAIN, positionFontSIze, dimensionProvider);
+        sppFont = fontCache.font(Font.BOLD, sppFontSize, dimensionProvider);
+        skillFont = fontCache.font(Font.BOLD, skillFontSize, dimensionProvider);
+        skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, skillUsedFontSize, dimensionProvider);
 
 		ClientData clientData = getSideBar().getClient().getClientData();
 		int displayMode = findDisplayMode();
