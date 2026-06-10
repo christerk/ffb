@@ -198,7 +198,7 @@ public class PlayerDetailComponent extends JPanel {
                         portraitBackground);
                 drawPortrait(x - 1, y + 1, g2d, resizedBackground);
 			}
-            Dimension portraitDimension = new Dimension(playerPortrait.getWidth(), playerPortrait.getHeight());
+            Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + x);
