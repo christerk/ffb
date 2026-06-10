@@ -193,10 +193,7 @@ public class PlayerDetailComponent extends JPanel {
 			} else {
                 BufferedImage portraitBackground =
                         iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
-                BufferedImage resizedBackground = resizeBackgroundToSizeOfPortrait(playerPortrait.getWidth(),
-                        playerPortrait.getHeight(),
-                        portraitBackground);
-                drawPortrait(x - 1, y + 1, g2d, resizedBackground);
+                drawPortrait(x - 1, y + 1, g2d, portraitBackground);
 			}
             Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 			g2d.rotate(-Math.PI / 2.0);
@@ -611,7 +608,7 @@ public class PlayerDetailComponent extends JPanel {
         if (ClientLayout.WIDE_FL_1920x1080.equals(dimensionProvider.getLayoutSettings().getLayout())) {
             nameFontSize = 16;
             statFontSize = 17;
-            positionFontSIze = 15;
+            positionFontSIze = 16;
             sppFontSize = 15;
             skillFontSize = 15;
             skillUsedFontSize = 15;
