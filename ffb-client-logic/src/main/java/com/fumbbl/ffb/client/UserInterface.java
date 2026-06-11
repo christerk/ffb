@@ -46,6 +46,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final SideBarComponent fSideBarAway;
 	private final IconCache fIconCache;
 	private final FontCache fontCache;
+    private final FontConfigRegistry fontConfigRegistry;
 	private final SoundEngine fSoundEngine;
 	private final ScoreBarComponent fScoreBar;
 	private final LogComponent fLog;
@@ -91,6 +92,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
 		fontCache = new FontCache();
+        fontConfigRegistry = new FontConfigRegistry();
 		fSoundEngine = new SoundEngine(getClient());
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
@@ -112,8 +114,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
-		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
-		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
+        fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
+        fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
 
 		initComponents(false);
 
