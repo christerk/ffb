@@ -205,10 +205,9 @@ public class PlayerDetailComponent extends JPanel {
 			}
             Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 
-            //Real portrait dimensions after rescaling.
-            Dimension rPD = new Dimension(portraitDimension.width - marginsAfterRescaling.width * 2,
-                    portraitDimension.height - marginsAfterRescaling.height / 2);
-
+			//Real portrait dimensions after rescaling.
+			Dimension rPD = new Dimension(portraitDimension.width - marginsAfterRescaling.width * 2,
+					portraitDimension.height - marginsAfterRescaling.height * 2);
             //real portrait X coordinate
             int rX = x + marginsAfterRescaling.width;
             //real portrait Y coordinate
