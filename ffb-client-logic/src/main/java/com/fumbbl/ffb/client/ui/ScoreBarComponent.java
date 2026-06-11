@@ -24,8 +24,11 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.fumbbl.ffb.client.ClientLayout.*;
 
 /**
  * @author Kalimar
@@ -81,7 +84,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		if (styleProvider.getFrameBackground() == null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
 			String scorebarBackground = layoutSettings.getLayout() ==
-				ClientLayout.SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
+				SQUARE ? IIconProperty.SCOREBAR_BACKGROUND_SQUARE : IIconProperty.SCOREBAR_BACKGROUND;
 			BufferedImage background = iconCache.getIconByProperty(scorebarBackground, dimensionProvider);
 			g2d.drawImage(background, 0, 0, fImage.getWidth(), fImage.getHeight(), null);
 		} else {
@@ -107,7 +110,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		int x;
 		x = ((getPreferredSize().width - (int) boundsHome.getWidth()) / 2) - dimensionProvider.scale(40);
 		int y = ((lineHeight() + fontMetrics.getHeight()) / 2) - fontMetrics.getDescent() - 1;
-		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == SQUARE) {
 			y += lineHeight();
 		}
 		UtilClientGraphics.drawShadowedText(g2d, scoreHome, x, y, styleProvider);
@@ -147,7 +150,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		Rectangle2D halfBounds = metricsText.getStringBounds(half, g2d);
 
 		int x;
-		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == SQUARE) {
 			int length = (int) (turnPrefixBounds.getWidth() + turnBounds.getWidth() + halfBounds.getWidth() + dimensionProvider.scale(20));
 			x = (getWidth() - length) / 2;
 		} else {
@@ -249,12 +252,18 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 
 		int unscaledWidth = dimensionProvider.unscaledDimension(Component.SCORE_BOARD).width;
 
-		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
+		if (layoutSettings.getLayout() == SQUARE) {
 			weatherLocation = dimensionProvider.scale(new Rectangle(159, 64, 100, 32));
 			spectatorLocation = dimensionProvider.scale(new Rectangle(1, 64, 130, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle(1, 0, 36, 32));
 			coachBannedAway = dimensionProvider.scale(new Rectangle(unscaledWidth - 37, 0, 36, 32));
-		} else {
+		}
+        else if (Arrays.asList(WIDE, WIDE_FL_1920x1080).contains(layoutSettings.getLayout())) {
+            coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 315), 0, 32, 32));
+            coachBannedAway = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 247), 0, 32, 32));
+            spectatorLocation = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 407), 0, 66, 32));
+            weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 101, 0, 100, 32));
+        } else {
 			weatherLocation = dimensionProvider.scale(new Rectangle(unscaledWidth - 101, 0, 100, 32));
 			spectatorLocation = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 + 160), 0, 130, 32));
 			coachBannedHome = dimensionProvider.scale(new Rectangle((unscaledWidth / 2 - 130 - 36), 0, 36, 32));
