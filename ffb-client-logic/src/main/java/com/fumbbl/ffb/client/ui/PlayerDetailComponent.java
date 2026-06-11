@@ -283,7 +283,6 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	private void drawPlayerStats() {
-
 		if (fPlayer != null) {
 
 			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET);
@@ -634,7 +633,7 @@ public class PlayerDetailComponent extends JPanel {
 
         if (ClientLayout.WIDE_FL_1920x1080.equals(dimensionProvider.getLayoutSettings().getLayout())) {
             nameFontSize = 16;
-            statFontSize = 17;
+            statFontSize = 19;
             positionFontSIze = 16;
             sppFontSize = 15;
             skillFontSize = 15;
