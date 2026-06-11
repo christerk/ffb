@@ -5,11 +5,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.util.UtilClientGraphics;
 import com.fumbbl.ffb.model.FieldModel;
 
@@ -31,6 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.SMALL;
+
 /**
  * @author Kalimar
  */
@@ -47,11 +45,13 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	private final StyleProvider styleProvider;
 	private Font buttonFont;
 	private Dimension size;
+    private final FontConfigRegistry fontConfigRegistry;
 
 	public BoxButtonComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider,
-	                          FontCache fontCache) {
+                              FontCache fontCache, FontConfigRegistry fontConfigRegistry) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		fButtonLocations = new HashMap<>();
 		fOpenBox = null;
 		addMouseListener(this);
@@ -160,7 +160,9 @@ public class BoxButtonComponent extends JPanel implements MouseListener, MouseMo
 	}
 
 	public void refresh() {
-		buttonFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+
+        buttonFont = fontCache.font(Font.BOLD, fc.getSize(SMALL), dimensionProvider);
 
 		drawBackground();
 		drawButton(BoxType.RESERVES);

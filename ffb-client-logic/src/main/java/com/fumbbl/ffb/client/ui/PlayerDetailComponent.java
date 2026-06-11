@@ -56,7 +56,7 @@ import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
 public class PlayerDetailComponent extends JPanel {
 
 	private final FontCache fontCache;
-    private FontConfigRegistry fontConfigRegistry;
+    private final FontConfigRegistry fontConfigRegistry;
 	private Font nameFont;
 	private Font statFont;
 	private Font positionFont;
