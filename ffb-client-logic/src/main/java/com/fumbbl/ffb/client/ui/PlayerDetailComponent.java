@@ -635,8 +635,8 @@ public class PlayerDetailComponent extends JPanel {
             nameFontSize = 16;
             statFontSize = 19;
             positionFontSIze = 16;
-            sppFontSize = 15;
-            skillFontSize = 15;
+            sppFontSize = 18;
+            skillFontSize = 18;
             skillUsedFontSize = 15;
         }
 
