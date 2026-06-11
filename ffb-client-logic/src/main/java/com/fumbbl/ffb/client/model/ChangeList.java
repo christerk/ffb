@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Infamous Staff - Josef Bugman")
 			.addBugfix("Reset button could block hiring star players")
 			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
+			.addBugfix("Grab no longer cancels Sidestep during a Blitz, matching the 2025 FAQ")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
