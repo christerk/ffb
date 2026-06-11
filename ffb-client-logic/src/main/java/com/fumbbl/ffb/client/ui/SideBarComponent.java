@@ -36,7 +36,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fBoxComponent = new BoxComponent(this, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 		fBoxButtons = new BoxButtonComponent(this, uiDimensionProvider, styleProvider, fontCache, fontRegistry);
 		fResourceComponent = new ResourceComponent(this, uiDimensionProvider, styleProvider);
-		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, uiDimensionProvider, styleProvider);
+		fTurnDiceStatusComponent = new TurnDiceStatusComponent(this, uiDimensionProvider, styleProvider, fontRegistry);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		addComponents();
 		fPlayerDetail.addMouseMotionListener(this);
