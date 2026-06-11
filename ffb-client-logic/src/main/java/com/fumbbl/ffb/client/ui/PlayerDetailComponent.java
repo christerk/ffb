@@ -194,15 +194,16 @@ public class PlayerDetailComponent extends JPanel {
 			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
             BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
-            Dimension marginsAfterRescaling;
+            Dimension marginsAfterRescaling = new Dimension(0, 0);
 
             if (playerPortrait != null) {
                 marginsAfterRescaling = rescaleAndDrawPortrait(x, y, g2d, playerPortrait);
-			} else {
+            } else {
                 BufferedImage portraitBackground =
                         iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
-                marginsAfterRescaling = rescaleAndDrawPortrait(x - 1, y + 1, g2d, portraitBackground);
-			}
+                if (portraitBackground != null)
+                    marginsAfterRescaling = rescaleAndDrawPortrait(x - 1, y + 1, g2d, portraitBackground);
+            }
             Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 
 			//Real portrait dimensions after rescaling.
