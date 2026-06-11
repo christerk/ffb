@@ -17,6 +17,7 @@ public class ChangeList {
 			.addFeature("Infamous Staff - Josef Bugman")
 			.addBugfix("Reset button could block hiring star players")
 			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
+			.addFeature("Dwarfen Grit (Star Josef Bugman)")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
@@ -34,7 +35,6 @@ public class ChangeList {
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")
 			.addBugfix("Bloodlust: When opting to move instead of fouling directly due to failed Bloodlust the game crashed")
 			.addBugfix("Missing Zoat and Spite keywords caused Hatred/Getting Even to show Unknown")
-			.addFeature("Dwarfen Grit (Star Josef Bugman)")
 		);
 
 		versions.add(new VersionChangeList("3.2.2")
