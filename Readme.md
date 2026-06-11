@@ -59,11 +59,11 @@ Small utility classes needed to e.g. rebuild the icon folder of [ffb-resources](
 
 The main class is `com.fumbbl.ffb.server.FantasyFootballServer`
 
-| Arguments            | Description                                                                                                                                                                                                                |
-|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [mode]               | * standalone - you usually want this <br/> * fumbbl - used in test and live environments on fumbbl<br/> * standalone initdb - used to setup the database schema </br> * fumbbl initdb - used to setup the database schema |
-| -inifile [filepath]  | Path to server config file, [server.ini](ffb-server/server.ini) can be used as a template                                                                                                                                  |
-| -override [filepath] | Path to an override file supporting the same syntax and values as `inifile`. This allows to use a base ini file and apply environment specific overrides                                                                   |
+| Arguments            | Description                                                                                                                                                                   |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [mode]               | * standalone - you usually want this <br/> * fumbbl - used in test and live environments on fumbbl<br/> * standalone initDb/fumbbl initDb - used to setup the database schema |
+| -inifile [filepath]  | Path to server config file, [server.ini](ffb-server/server.ini) can be used as a template                                                                                     |
+| -override [filepath] | Path to an override file supporting the same syntax and values as `inifile`. This allows to use a base ini file and apply environment specific overrides                      |
 
 The server requires a database (connection data has to be defined in ini files), currently mysql up to 5.6 or mariadb up to 10.4. are supported by the used mysql-connector lib (5.1.27).
 
