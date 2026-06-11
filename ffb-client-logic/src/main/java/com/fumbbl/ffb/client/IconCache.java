@@ -279,19 +279,6 @@ public class IconCache {
 		}
 	}
 
-    public BufferedImage getPlayersPortraitIconByUrl(String pUrl, DimensionProvider dimensionProvider) {
-        String key = pUrl + "_" + dimensionProvider.cacheKey();
-        BufferedImage bufferedImage = scaledIcons.get(key);
-        if (bufferedImage == null) {
-            bufferedImage = fIconByKey.get(pUrl);
-            if (bufferedImage != null) {
-                bufferedImage = dimensionProvider.scaleImageForPlayerPortrait(bufferedImage);
-                scaledIcons.put(key, bufferedImage);
-            }
-        }
-        return bufferedImage;
-    }
-
 	public BufferedImage getIconByUrl(String pUrl, DimensionProvider dimensionProvider) {
 		String key = pUrl + "_" + dimensionProvider.cacheKey();
 		BufferedImage bufferedImage = scaledIcons.get(key);

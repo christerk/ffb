@@ -79,35 +79,6 @@ public abstract class DimensionProvider {
 		return new Rectangle(scale(rectangle.x), scale(rectangle.y), scale(rectangle.width), scale(rectangle.height));
 	}
 
-    public BufferedImage scaleImageForPlayerPortrait(BufferedImage pImage) {
-        if (WIDE_FL_1920x1080.equals(layoutSettings.getLayout())) {
-            Dimension portraitDimensions = Component.PLAYER_PORTRAIT.dimension(layoutSettings.getLayout());
-            int targetWidth = portraitDimensions.width;
-            int targetHeight = portraitDimensions.height;
-
-            // 1. Create the new blank canvas
-            BufferedImage scaledImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-
-            // 2. Get the graphics context
-            Graphics2D g2d = scaledImage.createGraphics();
-
-            try {
-                // 3. Set rendering hints for bilinear scaling quality
-                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-                // 4. Draw the original image stretched to the target width and height
-                g2d.drawImage(pImage, 0, 0, targetWidth, targetHeight, null);
-            } finally {
-                g2d.dispose();
-            }
-
-            return scaleImage(scaledImage);
-        }
-
-        return scaleImage(pImage);
-    }
-
-
 	public BufferedImage scaleImage(BufferedImage pImage) {
 		double effectiveScale = effectiveScale();
 		if (effectiveScale == 1.0) {
