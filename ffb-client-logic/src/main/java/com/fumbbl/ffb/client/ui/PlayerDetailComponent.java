@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
 import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
 
 /**
@@ -55,6 +56,7 @@ import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
 public class PlayerDetailComponent extends JPanel {
 
 	private final FontCache fontCache;
+    private FontConfigRegistry fontConfigRegistry;
 	private Font nameFont;
 	private Font statFont;
 	private Font positionFont;
@@ -77,9 +79,10 @@ public class PlayerDetailComponent extends JPanel {
 	private final StyleProvider styleProvider;
 	private Font skillUsedFont;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+    public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, FontConfigRegistry fontConfigRegistry) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
@@ -624,28 +627,14 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void refresh() {
-        int nameFontSize = 12;
-        int statFontSize = 13;
-        int positionFontSIze = 11;
-        int sppFontSize = 11;
-        int skillFontSize = 11;
-        int skillUsedFontSize = 11;
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
-        if (ClientLayout.WIDE_FL_1920x1080.equals(dimensionProvider.getLayoutSettings().getLayout())) {
-            nameFontSize = 16;
-            statFontSize = 19;
-            positionFontSIze = 16;
-            sppFontSize = 18;
-            skillFontSize = 18;
-            skillUsedFontSize = 15;
-        }
-
-        nameFont = fontCache.font(Font.PLAIN, nameFontSize, dimensionProvider);
-        statFont = fontCache.font(Font.BOLD, statFontSize, dimensionProvider);
-        positionFont = fontCache.font(Font.PLAIN, positionFontSIze, dimensionProvider);
-        sppFont = fontCache.font(Font.BOLD, sppFontSize, dimensionProvider);
-        skillFont = fontCache.font(Font.BOLD, skillFontSize, dimensionProvider);
-        skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, skillUsedFontSize, dimensionProvider);
+        nameFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+        statFont = fontCache.font(Font.BOLD, fc.getSize(LARGEST), dimensionProvider);
+        positionFont = fontCache.font(Font.PLAIN, fc.getSize(SMALL), dimensionProvider);
+        sppFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);
+        skillFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);
+        skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, fc.getSize(SMALL), dimensionProvider);
 
 		ClientData clientData = getSideBar().getClient().getClientData();
 		int displayMode = findDisplayMode();
