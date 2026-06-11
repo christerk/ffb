@@ -229,27 +229,6 @@ public class PlayerDetailComponent extends JPanel {
 		}
 	}
 
-    @SuppressWarnings("DuplicatedCode")
-    private BufferedImage resizeBackgroundToSizeOfPortrait(int targetWidth, int targetHeight, BufferedImage originalBackground) {
-        // 1. Create the new blank canvas
-        BufferedImage resizedBackground = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-
-        // 2. Get the graphics context
-        Graphics2D g2d = resizedBackground.createGraphics();
-
-        try {
-            // 3. Set rendering hints for bilinear scaling quality
-            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-            // 4. Draw the original image stretched to the target width and height
-            g2d.drawImage(originalBackground, 0, 0, targetWidth, targetHeight, null);
-        } finally {
-            g2d.dispose();
-        }
-
-        return resizedBackground;
-    }
-
     /**
      * Rescales portrait for center
      *
