@@ -21,7 +21,7 @@ public enum Component {
 	PLAYER_DETAIL(new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_P, 472), new Dimension(SIDEBAR_WIDTH_L, 430), new Dimension(SIDEBAR_WIDTH_L_FS_1920x1080, 700)),
 	SIDEBAR(new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.LANDSCAPE)), new Dimension(SIDEBAR_WIDTH_P, sidebarHeight(ClientLayout.PORTRAIT)), new Dimension(SIDEBAR_WIDTH_L, sidebarHeight(ClientLayout.WIDE)), new Dimension(SIDEBAR_WIDTH_L_FS_1920x1080, sidebarHeight(ClientLayout.WIDE_FL_1920x1080))),
 	PLAYER_PORTRAIT(new Dimension(121, 147), new Dimension(133, 162), new Dimension(121, 147), new Dimension(160, 248)),
-	PLAYER_PORTRAIT_OFFSET(new Dimension(3, 32), new Dimension(11, 32), new Dimension(3, 32), new Dimension(13, 42)),
+	PLAYER_PORTRAIT_OFFSET(new Dimension(3, 32), new Dimension(11, 32), new Dimension(3, 32), new Dimension(13, 45)),
 	PLAYER_STAT_OFFSET(new Dimension(3, 179), new Dimension(4, 198), new Dimension(3, 179), new Dimension(7, 307)),
 	PLAYER_STAT_BOX(new Dimension(28, 29), new Dimension(31, 30), new Dimension(28, 29), new Dimension(41, 29)),
 	PLAYER_STAT_BOX_MISC(new Dimension(0, 14), new Dimension(0, 15), new Dimension(0, 14), new Dimension(0, 14)),
