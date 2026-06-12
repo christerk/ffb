@@ -99,8 +99,16 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
 		clickStrategyRegistry = new ClickStrategyRegistry();
-		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager, clickStrategyRegistry));
-		setGameTitle(new GameTitle());
+        GameTitle pGameTitle = new GameTitle();
+        setGameMenuBar(new GameMenuBar(getClient(),
+                uiDimensionProvider,
+                styleProvider,
+                fontCache,
+                fontConfigRegistry,
+                sketchManager,
+                clickStrategyRegistry,
+                pGameTitle));
+        setGameTitle(pGameTitle);
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
