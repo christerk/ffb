@@ -46,6 +46,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
 	private final PathSketchOverlay pathSketchOverlay;
+    private boolean isInFullScreenMode = false;
 
 	private transient int currentMouseButton;
 
@@ -118,6 +119,10 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
         });
     }
 
+    public boolean isFullScreen() {
+        return isInFullScreenMode;
+    }
+
     public void toggleFullScreen() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
@@ -127,32 +132,27 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
         if (!isFullScreenSupported)
             return;
 
-        // 1. Check if we are currently in fullscreen mode
-        boolean isFullScreen = (gd.getFullScreenWindow() == userInterface);
-
         // 2. Tear down the native OS peer resources safely
         userInterface.dispose();
 
-        if (isFullScreen) {
+        if (isFullScreen()) {
             // Switching back to Windowed Mode
             gd.setFullScreenWindow(null);
             userInterface.setUndecorated(false); // Put the title bar and borders back
+            userInterface.getGameMenuBar().setGameInfoVisible(false);
 
             // Optional: Restore standard maximized or normal window bounds
             userInterface.pack();
             userInterface.setVisible(true);
+            isInFullScreenMode = false;
         } else {
             // Switching to Fullscreen Mode
             userInterface.setUndecorated(true); // Strip borders safely now that the frame is undisplayable
 
-            if (gd.isFullScreenSupported()) {
-                // This natively rebuilds the frame structure and displays it full screen
-                gd.setFullScreenWindow(userInterface);
-            } else {
-                // Fallback for hardware environments that don't support FSEM
-                userInterface.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                userInterface.setVisible(true);
-            }
+            // This natively rebuilds the frame structure and displays it full screen
+            gd.setFullScreenWindow(userInterface);
+            userInterface.getGameMenuBar().setGameInfoVisible(true);
+            isInFullScreenMode = true;
         }
     }
 
