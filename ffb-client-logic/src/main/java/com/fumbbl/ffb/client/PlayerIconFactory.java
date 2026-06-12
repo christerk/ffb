@@ -352,13 +352,19 @@ public class PlayerIconFactory {
 
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
-			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
-				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
-				pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				String decoration = pPlayer.getId().equals(game.getTurnData().getBlitzingPlayerId())
-					? IIconProperty.DECORATION_CHECK_ICON_BLITZ
-					: IIconProperty.DECORATION_CHECK_ICON_GREEN;
-				icon = decorateIcon(icon, iconCache.getIconByProperty(decoration, dimensionProvider), maxIconSize);
+			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch) {
+				boolean markBlitzingPlayer = IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
+					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER));
+				boolean markUsedPlayers = IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
+					pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS));
+
+				if (markBlitzingPlayer && pPlayer.getId().equals(game.getTurnData().getBlitzingPlayerId())) {
+					icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_BLITZ, dimensionProvider),
+						maxIconSize);
+				} else if (markUsedPlayers) {
+					icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider),
+						maxIconSize);
+				}
 			}
 		}
 
