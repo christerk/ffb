@@ -106,8 +106,8 @@ public class ClientSettingsMenu extends FfbMenu {
 		fSoundOffMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_OFF.equals(soundSetting));
 
 		String spectatorCaptionSetting = client.getProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS);
-		fSpectatorCaptionsOnMenuItem.setSelected(true);
-		fSpectatorCaptionsOffMenuItem.setSelected("false".equals(spectatorCaptionSetting));
+		fSpectatorCaptionsOffMenuItem.setSelected(true);
+		fSpectatorCaptionsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_ON.equals(spectatorCaptionSetting));
 
 		String orientationSetting = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
 		pitchLandscapeMenuItem.setSelected(true);
@@ -174,11 +174,11 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.saveUserSettings(false);
 		}
 		if (source == fSpectatorCaptionsOnMenuItem) {
-			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, Boolean.toString(true));
+			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_ON);
 			client.saveUserSettings(false);
 		}
 		if (source == fSpectatorCaptionsOffMenuItem) {
-			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, Boolean.toString(false));
+			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_OFF);
 			client.saveUserSettings(false);
 		}
 

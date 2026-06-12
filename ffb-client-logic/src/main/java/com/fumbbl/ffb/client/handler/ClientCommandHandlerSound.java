@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.handler;
 
 import com.fumbbl.ffb.ChatCommand;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.TextStyle;
@@ -33,7 +34,8 @@ public class ClientCommandHandlerSound extends ClientCommandHandler {
 	private void renderSpectatorCaption(SoundId soundId) {
 		ChatCommand chatCommand = ChatCommand.fromSoundId(soundId);
 		if (chatCommand != null
-				&& Boolean.parseBoolean(getClient().getProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS))) {
+				&& IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_ON.equals(
+				getClient().getProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS))) {
 			getClient().getUserInterface().getChat().append(TextStyle.EXPLANATION, chatCommand.getCaption());
 		}
 	}
