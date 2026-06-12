@@ -132,7 +132,18 @@ public class InducementCollection extends com.fumbbl.ffb.inducement.InducementCo
 
 		add(new InducementType("infamousStaff", "Infamous Coaching Staff", "Infamous Coaching Staff", "Infamous Coaching Staff", GameOptionId.INDUCEMENT_STAFF_MAX, null, Usage.STAFF));
 
-		add(new InducementType("bugmansXXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", GameOptionId.INDUCEMENT_STAFF_MAX, null, null, true, IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.REROLL_ONES_ON_KOS));
+		add(new InducementType("josefBugman", "Infamous Staff - Josef Bugman", "Josef Bugman", "Josef Bugman",
+			GameOptionId.INDUCEMENT_JOSEF_BUGMAN_MAX, GameOptionId.INDUCEMENT_JOSEF_BUGMAN_COST, null, false,
+			null, Usage.BUGMAN));
+
+		add(new InducementType("bugmansXXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX", "Bugman's XXXXXX",
+			GameOptionId.INDUCEMENT_DUMMY, GameOptionId.INDUCEMENT_DUMMY, null, true,
+			IIconProperty.RESOURCE_BLOODWEISER_KEG, Usage.ADD_TO_KO_RECOVERY));
+
+		add(new InducementType("dwarfenWisdom", "Dwarfen Wisdom", "Dwarfen Wisdom", "Dwarfen Wisdom",
+			GameOptionId.INDUCEMENT_DUMMY, GameOptionId.INDUCEMENT_DUMMY, null, false,
+			null, Usage.RESETUP_D3_PLAYERS));
+
 	}};
 
 	protected Set<InducementType> getSubTypes() {

@@ -213,6 +213,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			}
 		} else {
 			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+			game.getTurnData().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getActingTeam().getId()));
 			publishParameter(new StepParameter(StepParameterKey.NR_OF_DICE, fNrOfDice));
 			publishParameter(new StepParameter(StepParameterKey.BLOCK_ROLL, fBlockRoll));
 			publishParameter(new StepParameter(StepParameterKey.DICE_INDEX, fDiceIndex));

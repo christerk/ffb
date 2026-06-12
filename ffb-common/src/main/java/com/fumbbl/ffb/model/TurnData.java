@@ -42,6 +42,7 @@ public class TurnData implements IJsonSerializable {
 	private boolean puntUsed;
 	private InducementSet fInducementSet;
 	private LeaderState fLeaderState;
+	private int cheeringFansBlockAssist;
 	private String fBlitzingPlayerId;
 
 	private transient Game fGame;
@@ -375,6 +376,19 @@ public class TurnData implements IJsonSerializable {
 		fLeaderState = pLeaderState;
 	}
 
+	public int getCheeringFansBlockAssist() {
+		return cheeringFansBlockAssist;
+	}
+
+	public void setCheeringFansBlockAssist(int cheeringFansBlockAssist) {
+		if (cheeringFansBlockAssist == this.cheeringFansBlockAssist) {
+			return;
+		}
+
+		this.cheeringFansBlockAssist = cheeringFansBlockAssist;
+		notifyObservers(ModelChangeId.TURN_DATA_SET_CHEERING_FANS_BLOCK_ASSIST, cheeringFansBlockAssist);
+	}
+
 	public void startTurn() {
 		setBlitzUsed(false);
 		setBlitzingPlayerId(null);
@@ -411,6 +425,7 @@ public class TurnData implements IJsonSerializable {
 			secureTheBallUsed = pTurnData.isSecureTheBallUsed();
 			ttmUsed = pTurnData.isTtmUsed();
 			puntUsed = pTurnData.isPuntUsed();
+			cheeringFansBlockAssist = pTurnData.getCheeringFansBlockAssist();
 		}
 	}
 
@@ -454,6 +469,7 @@ public class TurnData implements IJsonSerializable {
 		IJsonOption.PLAGUE_DOCTORS.addTo(jsonObject, plagueDoctors);
 		IJsonOption.TTM_USED.addTo(jsonObject, ttmUsed);
 		IJsonOption.PUNT_USED.addTo(jsonObject, puntUsed);
+		IJsonOption.CHEERING_FANS_BLOCK_ASSIST.addTo(jsonObject, cheeringFansBlockAssist);
 		IJsonOption.BLITZING_PLAYER_ID.addTo(jsonObject, fBlitzingPlayerId);
 		return jsonObject;
 	}
@@ -468,6 +484,7 @@ public class TurnData implements IJsonSerializable {
 		reRollsBrilliantCoachingOneDrive = IJsonOption.RE_ROLLS_BRILLIANT_COACHING_ONE_DRIVE.getFrom(source, jsonObject);
 		reRollsPumpUpTheCrowdOneDrive = IJsonOption.RE_ROLLS_PUMP_UP_THE_CROWD_ONE_DRIVE.getFrom(source, jsonObject);
 		fApothecaries = IJsonOption.APOTHECARIES.getFrom(source, jsonObject);
+		cheeringFansBlockAssist = IJsonOption.CHEERING_FANS_BLOCK_ASSIST.getFrom(source, jsonObject);
 		fBlitzUsed = IJsonOption.BLITZ_USED.getFrom(source, jsonObject);
 		fFoulUsed = IJsonOption.FOUL_USED.getFrom(source, jsonObject);
 		fReRollUsed = IJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);

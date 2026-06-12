@@ -35,26 +35,39 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 
 		Optional<IInjuryContextModification> modification = Optional.empty();
 		if (pAttacker != null) {
-			modification = pAttacker.getUnusedInjuryModification(injuryType);
+			modification = pAttacker.getUnusedInjuryModification(injuryType).filter(mod -> !mod.appliesToDefender());
 		} else if (injuryType.isChainsaw() || injuryType.isVomitLike()) {
-			modification = pDefender.getUnusedInjuryModification(injuryType);
+			modification = pDefender.getUnusedInjuryModification(injuryType).filter(mod -> !mod.appliesToDefender());
 		}
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
 		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, injuryContext, true);
 
+		boolean modified = false;
+
 		if (modification.isPresent()) {
-			boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyArmour(gameState, injuryContext, injuryType);
+			modified = ((InjuryContextModification<? extends ModificationParams>) modification.get())
+				.modifyArmour(gameState, injuryContext, injuryType);
+		}
 
-			if (modified) {
-				ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
-				alternateInjuryContext.setArmorBroken(false);
-				armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext, false);
+		if (!modified && injuryContext.isArmorBroken()) {
+			Optional<IInjuryContextModification> defenderModification = pDefender.getUnusedInjuryModification(injuryType)
+				.filter(mod -> mod.appliesToDefender());
 
-				injury(game, gameState, diceRoller, pAttacker, pDefender, Optional.empty(), alternateInjuryContext);
-
+			if (defenderModification.isPresent()) {
+				modification = defenderModification;
+				modified = ((InjuryContextModification<? extends ModificationParams>) modification.get())
+					.modifyArmour(gameState, injuryContext, injuryType);
 			}
+		}
+
+		if (modified) {
+			ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
+			alternateInjuryContext.setArmorBroken(false);
+			armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext, false);
+
+			injury(game, gameState, diceRoller, pAttacker, pDefender, Optional.empty(), alternateInjuryContext);
 		}
 
 		injury(game, gameState, diceRoller, pAttacker, pDefender, modification, injuryContext);

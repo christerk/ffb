@@ -232,6 +232,7 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 				getResult().setSound(SoundId.BLOCK);
 				getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+				game.getTurnData().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getActingTeam().getId()));
 				UtilServerGame.syncGameModel(this);
 			});
 
