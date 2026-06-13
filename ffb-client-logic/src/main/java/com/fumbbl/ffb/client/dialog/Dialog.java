@@ -11,20 +11,15 @@ import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JDialog;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
+import javax.swing.*;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.Map;
 
 /**
@@ -69,7 +64,31 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		if (fChatInputFocus) {
 			userInterface.getChat().requestChatInputFocus();
 		}
+
+        //Increasing speed of scrolling.
+        SwingUtilities.invokeLater(() -> {
+            for (java.awt.Component c : this.getComponents()) {
+                speedUpScrollingForAllJScrollPanes(c);
+            }
+        });
 	}
+
+    private void speedUpScrollingForAllJScrollPanes(java.awt.Component comp) {
+        if (comp instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) comp;
+
+            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        }
+
+        // Keep digging down the component tree
+        if (comp instanceof Container) {
+            for (java.awt.Component child : ((Container) comp).getComponents()) {
+                speedUpScrollingForAllJScrollPanes(child);
+            }
+        }
+    }
+
 
 	public void hideDialog() {
 		if (isVisible()) {
