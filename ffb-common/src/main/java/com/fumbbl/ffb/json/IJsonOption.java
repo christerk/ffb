@@ -78,6 +78,7 @@ public interface IJsonOption {
 	JsonBooleanOption BOMB_USED = new JsonBooleanOption("bombUsed");
 	JsonFieldCoordinateOption BOTTOM_RIGHT = new JsonFieldCoordinateOption("bottomRight");
 	JsonBooleanOption BRAWLER_OPTION = new JsonBooleanOption("brawlerOption");
+	JsonIntOption BUGMANS_XXXXXX_MODIFIER = new JsonIntOption("bugmansXXXXXXModifier");
 	JsonStringOption BRIBERY_AND_CORRUPTION_ACTION = new JsonStringOption("briberyAncCorruptionAction");
 	JsonBooleanOption CAN_BUY_CARDS = new JsonBooleanOption("canBuyCards");
 	JsonEnumWithNameOption CARD = new JsonEnumWithNameOption("card", Factory.CARD);
@@ -107,6 +108,7 @@ public interface IJsonOption {
 	JsonStringOption CHALLENGE = new JsonStringOption("challenge");
 	JsonBooleanOption CHANGE_TO_MOVE = new JsonBooleanOption("changeToMove");
 	JsonIntOption CHEERLEADERS = new JsonIntOption("cheerleaders");
+	JsonIntOption CHEERING_FANS_BLOCK_ASSIST = new JsonIntOption("cheeringFansBlockAssist");
 	JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
 	JsonBooleanOption CHOICE_PICK_UP = new JsonBooleanOption("choicePickUp");

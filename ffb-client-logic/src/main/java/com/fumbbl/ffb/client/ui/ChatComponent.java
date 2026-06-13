@@ -48,6 +48,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	private Autocomplete autocomplete;
 	private final IconCache iconCache;
 	private final ChatButtonComponent fChatButtonComponent;
+	private final JComponent fChatInputPanel;
 
 	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, IconCache iconCache) {
 
@@ -141,7 +142,8 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		add(fChatScrollPane, BorderLayout.CENTER);
 		
 		fChatButtonComponent = new ChatButtonComponent(fClient, fChatInputField, dimensionProvider, iconCache);
-		add(buildChatInputPanel(), BorderLayout.SOUTH);
+		fChatInputPanel = buildChatInputPanel();
+		add(fChatInputPanel, BorderLayout.SOUTH);
 
 		fChatTextPane.addMouseMotionListener(this);
 		fChatScrollPane.addMouseMotionListener(this);
@@ -202,7 +204,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 			add(fReplayControl, BorderLayout.NORTH);
 		}
 		add(fChatScrollPane, BorderLayout.CENTER);
-		add(fChatInputField, BorderLayout.SOUTH);
+		add(fChatInputPanel, BorderLayout.SOUTH);
 		revalidate();
 		repaint();
 		fReplayShown = pShowReplay;

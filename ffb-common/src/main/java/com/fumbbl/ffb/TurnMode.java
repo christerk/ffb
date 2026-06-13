@@ -8,7 +8,7 @@ import java.util.Arrays;
 public enum TurnMode implements INamedObject {
 
 	REGULAR("regular", true), SETUP("setup"), KICKOFF("kickoff"),
-	PERFECT_DEFENCE("perfectDefence"), SOLID_DEFENCE("solidDefence"),
+	PERFECT_DEFENCE("perfectDefence"), SOLID_DEFENCE("solidDefence"), DWARFEN_WISDOM("dwarfenWisdom"),
 	QUICK_SNAP("quickSnap"), HIGH_KICK("highKick"), START_GAME("startGame"), BLITZ("blitz", true),
 	TOUCHBACK("touchback"), INTERCEPTION("interception"), END_GAME("endGame"),
 	SWARMING("swarming"), KICKOFF_RETURN("kickoffReturn"), WIZARD("wizard"),

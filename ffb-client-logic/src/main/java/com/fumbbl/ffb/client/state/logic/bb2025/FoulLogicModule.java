@@ -96,6 +96,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.BLACK_INK);
       add(ClientAction.AUTO_GAZE_ZOAT);
       add(ClientAction.INCORPOREAL);
+      add(ClientAction.FUMBLEROOSKIE);
       add(ClientAction.ILL_CARRY_YOU);
     }};
   }
@@ -184,6 +185,11 @@ public class FoulLogicModule extends MoveLogicModule {
             Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAvoidDodging);
             boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
             communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
+          }
+          break;
+        case FUMBLEROOSKIE:
+          if (isFumblerooskieAvailable()) {
+            communication.sendUseFumblerooskie();
           }
           break;
         case ILL_CARRY_YOU:

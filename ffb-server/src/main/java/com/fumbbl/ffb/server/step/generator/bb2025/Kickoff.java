@@ -32,6 +32,8 @@ public class Kickoff extends com.fumbbl.ffb.server.step.generator.Kickoff {
 		sequence.add(StepId.SETUP);
 		// inserts inducement sequence at this point
 		sequence.add(StepId.SETUP);
+		sequence.add(StepId.DWARFEN_WISDOM, from(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
+		sequence.add(StepId.DWARFEN_WISDOM, from(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, false));
 		sequence.add(StepId.SWARMING, from(StepParameterKey.HANDLE_RECEIVING_TEAM, true));
 		sequence.add(StepId.MASTER_CHEF);
