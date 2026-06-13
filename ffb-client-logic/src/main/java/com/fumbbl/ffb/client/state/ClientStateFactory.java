@@ -344,6 +344,13 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 						clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					}
 					break;
+				case DWARFEN_WISDOM:
+					if (game.isHomePlaying()) {
+						clientStateId = ClientStateId.DWARFEN_WISDOM;
+					} else {
+						clientStateId = ClientStateId.WAIT_FOR_SETUP;
+					}
+					break;
 				case END_GAME:
 					clientStateId = ClientStateId.WAIT_FOR_OPPONENT;
 					break;

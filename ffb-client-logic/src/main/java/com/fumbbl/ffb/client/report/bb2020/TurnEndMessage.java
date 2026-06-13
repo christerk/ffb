@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.HeatExhaustion;
 import com.fumbbl.ffb.KnockoutRecovery;
@@ -19,7 +19,6 @@ import java.util.List;
 
 @ReportMessageType(ReportId.TURN_END)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class TurnEndMessage extends ReportMessageBase<ReportTurnEnd> {
 
 	@Override
