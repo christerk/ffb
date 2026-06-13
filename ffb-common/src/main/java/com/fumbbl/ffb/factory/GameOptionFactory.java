@@ -382,6 +382,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
 					.setMessageTrue("Overdog can spend treasury");
+			case INDUCEMENTS_ALLOW_UNDERDOG_SPENDING:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Underdog can not spend treasury")
+					.setMessageTrue("Underdog can spend up to 50k treasury");
 			case ENABLE_TACKLEZONE_OVERLAYS:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
