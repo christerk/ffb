@@ -67,6 +67,7 @@ public enum CommonProperty {
 	SETTING_SCALE_FACTOR("setting.scaleFactor", "Client Size", "Configuration"),
 	// usually this should now be called differently, but changing the key would reset the setting
 	SETTING_UI_LAYOUT("setting.pitch.orientation", "Client Layout", "Configuration"),
+    SETTING_UI_FULLSCREEN("setting.ui.fullscreen", "Full Screen", "Configuration"),
 	SETTING_UI("setting.ui", "Client UI", "Configuration"),
 	SETTING_LOG("setting.log", "Client Logging", "Configuration"),
 	SETTING_LOG_DIR("setting.log.dir", "Logging Folder", "Configuration"),
@@ -103,7 +104,7 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_OVERLAP,
 		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR, SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY,
 		SETTING_CLICK_START_SKETCH, SETTING_CLICK_ADD_POINT, SETTING_CLICK_END_SKETCH, SETTING_BACKGROUND_MENTION,
-		SETTING_FONT_COLOR_MENTION, SETTING_AUTOCOMPLETE
+		SETTING_FONT_COLOR_MENTION, SETTING_AUTOCOMPLETE, SETTING_UI_FULLSCREEN
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {

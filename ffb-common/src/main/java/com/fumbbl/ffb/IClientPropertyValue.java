@@ -47,6 +47,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_LAYOUT_PORTRAIT = "pitchPortrait";
 	String SETTING_LAYOUT_SQUARE = "layoutSquare";
 	String SETTING_LAYOUT_WIDE = "layoutWide";
+	String SETTING_LAYOUT_WIDE_1920x1080 = "layoutWide1920x1080";
 
 	String SETTING_TEAM_LOGOS_BOTH = "teamLogosBoth";
 	String SETTING_TEAM_LOGOS_OWN = "teamLogosOwn";
@@ -105,5 +106,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_AUTOCOMPLETE_ON = "on";
 	String SETTING_AUTOCOMPLETE_OFF = "off";
+    String SETTING_UI_FULLSCREEN_ON = "fullScreenOn";
+    String SETTING_UI_FULLSCREEN_OFF = "fullScreenOff";
 
 }

@@ -10,14 +10,8 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.SkillCategory;
-import com.fumbbl.ffb.client.ClientData;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.IconCache;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SkillMechanic;
@@ -37,12 +31,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -58,12 +47,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
+import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
+
 /**
  * @author Kalimar
  */
 public class PlayerDetailComponent extends JPanel {
 
 	private final FontCache fontCache;
+    private final FontConfigRegistry fontConfigRegistry;
 	private Font nameFont;
 	private Font statFont;
 	private Font positionFont;
@@ -86,9 +79,10 @@ public class PlayerDetailComponent extends JPanel {
 	private final StyleProvider styleProvider;
 	private Font skillUsedFont;
 
-	public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache) {
+    public PlayerDetailComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, FontConfigRegistry fontConfigRegistry) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
@@ -192,34 +186,59 @@ public class PlayerDetailComponent extends JPanel {
 				positionName.append(" #").append(getPlayer().getNr());
 			}
 			String positionNameString = positionName.toString();
-			String keywords = "(" + getPlayer().getPosition().getKeywords().stream()
+            String keywords = getPlayer().getPosition().getKeywords().isEmpty() ?
+                    "" :
+                    "(" + getPlayer().getPosition().getKeywords().stream()
 				.map(Keyword::getName).sorted().collect(Collectors.joining(", ")) + ")";
 			g2d.setFont(positionFont);
 			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();
-			BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
-			BufferedImage portraitBackground =
-				iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
-			if (playerPortrait != null) {
-				drawPortrait(x, y, g2d, playerPortrait);
-			} else {
-				drawPortrait(x - 1, y + 1, g2d, portraitBackground);
-			}
-			Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
-			g2d.rotate(-Math.PI / 2.0);
+            BufferedImage playerPortrait = iconCache.getIconByUrl(portraitUrl, dimensionProvider);
+            Dimension marginsAfterRescaling = new Dimension(0, 0);
+
+            if (playerPortrait != null) {
+                marginsAfterRescaling = rescaleAndDrawPortrait(x, y, g2d, playerPortrait);
+            } else {
+                BufferedImage portraitBackground =
+                        iconCache.getIconByProperty(IIconProperty.SIDEBAR_BACKGROUND_PLAYER_PORTRAIT, dimensionProvider);
+                if (portraitBackground != null)
+                    marginsAfterRescaling = rescaleAndDrawPortrait(x - 1, y + 1, g2d, portraitBackground);
+            }
+            Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
+
+			//Real portrait dimensions after rescaling.
+			Dimension rPD = new Dimension(portraitDimension.width - marginsAfterRescaling.width * 2,
+					portraitDimension.height - marginsAfterRescaling.height * 2);
+            //real portrait X coordinate
+            int rX = x + marginsAfterRescaling.width;
+            //real portrait Y coordinate
+            int rY = y + marginsAfterRescaling.height;
+
+            g2d.rotate(-Math.PI / 2.0);
+
+            int fontHeight = metrics.getHeight();
 			g2d.setColor(Color.BLACK);
-			g2d.drawString(positionNameString, -(y + portraitDimension.height - 4), portraitDimension.width + x);
-			g2d.drawString(keywords, -(y + portraitDimension.height - 4),
-				portraitDimension.width + metrics.getHeight() + x);
+            g2d.drawString(positionNameString, -(rY + rPD.height - 4), rPD.width + rX + fontHeight - 2);
+            g2d.drawString(keywords, -(rY + rPD.height - 4), rPD.width + fontHeight * 2 + rX - 2);
+
 			g2d.setColor(Color.WHITE);
-			g2d.drawString(positionNameString, -(y + portraitDimension.height - 5), portraitDimension.width + x - 1);
-			g2d.drawString(keywords, -(y + portraitDimension.height - 5),
-				portraitDimension.width + metrics.getHeight() + x - 1);
+            g2d.drawString(positionNameString, -(rY + rPD.height - 5), rPD.width + rX + fontHeight - 1 - 2);
+            g2d.drawString(keywords, -(rY + rPD.height - 5),
+                    rPD.width + fontHeight * 2 + rX - 1 - 2);
 			g2d.dispose();
 		}
 	}
 
-	private void drawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
+    /**
+     * Rescales portrait for center
+     *
+     * @param x
+     * @param y
+     * @param g2d
+     * @param playerPortrait
+     * @return rescaled margins.
+     */
+    private Dimension rescaleAndDrawPortrait(int x, int y, Graphics2D g2d, BufferedImage playerPortrait) {
 		Dimension portraitDimension = dimensionProvider.dimension(Component.PLAYER_PORTRAIT);
 		int canvasWidth = portraitDimension.width;
 		int canvasHeight = portraitDimension.height;
@@ -242,10 +261,10 @@ public class PlayerDetailComponent extends JPanel {
 		int originY = (canvasHeight - portraitHeight) / 2;
 
 		g2d.drawImage(playerPortrait, x + originX, y + originY, portraitWidth, portraitHeight, null);
+        return new Dimension(originX, originY);
 	}
 
 	private void drawPlayerStats() {
-
 		if (fPlayer != null) {
 
 			Dimension offset = dimensionProvider.dimension(Component.PLAYER_STAT_OFFSET);
@@ -587,12 +606,14 @@ public class PlayerDetailComponent extends JPanel {
 	}
 
 	public void refresh() {
-		nameFont = fontCache.font(Font.PLAIN, 12, dimensionProvider);
-		statFont = fontCache.font(Font.BOLD, 13, dimensionProvider);
-		positionFont = fontCache.font(Font.PLAIN, 11, dimensionProvider);
-		sppFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
-		skillFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
-		skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, 11, dimensionProvider);
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+
+        nameFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+        statFont = fontCache.font(Font.BOLD, fc.getSize(LARGEST), dimensionProvider);
+        positionFont = fontCache.font(Font.PLAIN, fc.getSize(SMALL), dimensionProvider);
+        sppFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);
+        skillFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);
+        skillUsedFont = fontCache.font(Font.ITALIC + Font.BOLD, fc.getSize(SMALL), dimensionProvider);
 
 		ClientData clientData = getSideBar().getClient().getClientData();
 		int displayMode = findDisplayMode();

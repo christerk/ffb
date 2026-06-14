@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
+
 /**
  * 
  * @author Kalimar
@@ -95,15 +97,17 @@ public class TurnDiceStatusComponent extends JPanel
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
 	private Rectangle buttonArea;
+    private final FontConfigRegistry fontConfigRegistry;
 
 
-	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider) {
+	public TurnDiceStatusComponent(SideBarComponent pSideBar, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontConfigRegistry fontConfigRegistry) {
 		fSideBar = pSideBar;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		fRefreshNecessary = true;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
+        this.fontConfigRegistry = fontConfigRegistry;
 	}
 
 	public void initLayout() {
@@ -334,11 +338,13 @@ public class TurnDiceStatusComponent extends JPanel
 
 		FontCache fontCache = client.getUserInterface().getFontCache();
 
-		buttonFont = fontCache.font(Font.BOLD, 14, dimensionProvider);
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
-		diceFont = fontCache.font(Font.BOLD, 11, dimensionProvider);
-		statusTitleFont = fontCache.font(Font.BOLD, 12, dimensionProvider);
-		statusMessageFont = fontCache.font(Font.PLAIN, 12, dimensionProvider);
+		buttonFont = fontCache.font(Font.BOLD, fc.getSize(LARGEST), dimensionProvider);
+
+		diceFont = fontCache.font(Font.BOLD, fc.getSize(SMALL), dimensionProvider);
+		statusTitleFont = fontCache.font(Font.BOLD, fc.getSize(MEDIUM), dimensionProvider);
+		statusMessageFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
 
 		if (!fRefreshNecessary) {
 			fRefreshNecessary = (!StringTool.isEqual(fStatusTitle, clientData.getStatusTitle())

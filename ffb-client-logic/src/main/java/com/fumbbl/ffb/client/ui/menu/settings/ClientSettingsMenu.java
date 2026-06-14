@@ -21,9 +21,7 @@ import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
 import com.fumbbl.ffb.marking.SortMode;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
+import javax.swing.*;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -31,16 +29,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_DIR;
-import static com.fumbbl.ffb.CommonProperty.SETTING_LOG_MODE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_PLAYER_MARKING_TYPE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SCALE_FACTOR;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_MODE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_SOUND_VOLUME;
-import static com.fumbbl.ffb.CommonProperty.SETTING_UI_LAYOUT;
+import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
 
 public class ClientSettingsMenu extends FfbMenu {
 
@@ -60,6 +51,8 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
 	private JRadioButtonMenuItem layoutWideMenuItem;
+	private JRadioButtonMenuItem layoutWide1920x1080MenuItem;
+    private JCheckBoxMenuItem toggleFullScreenMode;
 
 	private JRadioButtonMenuItem logOnMenuItem;
 	private JRadioButtonMenuItem logOffMenuItem;
@@ -108,6 +101,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		pitchPortraitMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(orientationSetting));
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
+		layoutWide1920x1080MenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080.equals(orientationSetting));
 
 		String logModeSetting = client.getProperty(SETTING_LOG_MODE);
 		logOnMenuItem.setSelected(true);
@@ -188,6 +182,10 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
 			client.saveUserSettings(true);
 		}
+		if (source == layoutWide1920x1080MenuItem) {
+			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080);
+			client.saveUserSettings(true);
+		}
 
 		if (source == logOffMenuItem) {
 			client.setProperty(SETTING_LOG_MODE, IClientPropertyValue.SETTING_LOG_OFF);
@@ -263,6 +261,16 @@ public class ClientSettingsMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_AUTOCOMPLETE, IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF);
 			client.saveUserSettings(true);
 		}
+        if (source == toggleFullScreenMode) {
+            //noinspection DataFlowIssue
+            client.setProperty(SETTING_UI_FULLSCREEN,
+                    toggleFullScreenMode.isSelected()
+                            ? SETTING_UI_FULLSCREEN_ON
+                            : SETTING_UI_FULLSCREEN_OFF);
+            client.saveUserSettings(true);
+            client.getUserInterface().updateFullScreenMode();
+        }
+
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -430,6 +438,20 @@ public class ClientSettingsMenu extends FfbMenu {
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
+
+		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080");
+		layoutWide1920x1080MenuItem.addActionListener(this);
+		orientationGroup.add(layoutWide1920x1080MenuItem);
+		orientationMenu.add(layoutWide1920x1080MenuItem);
+
+        orientationMenu.add(new JSeparator(HORIZONTAL));
+
+        String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
+        boolean fullScreen = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
+        toggleFullScreenMode = new JCheckBoxMenuItem("Full screen (Alt + Enter)",
+                fullScreen);
+        toggleFullScreenMode.addActionListener(this);
+        orientationMenu.add(toggleFullScreenMode);
 	}
 
 	private boolean updateOrientation() {
@@ -448,6 +470,9 @@ public class ClientSettingsMenu extends FfbMenu {
 					break;
 				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
 					layout = ClientLayout.WIDE;
+					break;
+				case IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080:
+					layout = ClientLayout.WIDE_FL_1920x1080;
 					break;
 				default:
 					break;

@@ -33,6 +33,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
+
 /**
  * @author Kalimar
  */
@@ -53,11 +55,13 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	private final StyleProvider styleProvider;
 	private Font boxFont;
 	private final MarkerService markerService;
+    private final FontConfigRegistry fontConfigRegistry;
 
 	public BoxComponent(SideBarComponent pSideBar, UiDimensionProvider uiDimensionProvider, DugoutDimensionProvider dugoutDimensionProvider,
-											StyleProvider styleProvider, FontCache fontCache, MarkerService markerService) {
+                        StyleProvider styleProvider, FontCache fontCache, FontConfigRegistry fontConfigRegistry, MarkerService markerService) {
 		fSideBar = pSideBar;
 		this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		this.markerService = markerService;
 		fBoxSlots = new ArrayList<>();
 		fOpenBox = null;
@@ -105,7 +109,9 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 	}
 
 	public void refresh() {
-		boxFont = fontCache.font(Font.BOLD, 12, uiDimensionProvider);
+        FontConfig fc = fontConfigRegistry.getConfig(uiDimensionProvider.getLayoutSettings().getLayout());
+
+        boxFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), uiDimensionProvider);
 
 		drawBackground();
 		drawPlayers();
