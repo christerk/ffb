@@ -165,18 +165,19 @@ public class LoginLogicModule extends LogicModule {
 		return versionCheck;
 	}
 
-	private VersionCheck checkVersion(String pServerVersion, String pClientVersion) {
+    private VersionCheck checkVersion(String pServerVersion, String pClientVersion) {
+        if (!client.getParameters().ignoreVersionConflict()) {
+            if (checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
+                return VersionCheck.CLIENT_FAIL;
+            }
 
-		if (checkVersionConflict(pClientVersion, FantasyFootballConstants.VERSION)) {
-			return VersionCheck.CLIENT_FAIL;
-		}
+            if (checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
+                return VersionCheck.SERVER_FAIL;
+            }
+        }
 
-		if (checkVersionConflict(FantasyFootballConstants.VERSION, pServerVersion)) {
-			return VersionCheck.SERVER_FAIL;
-		}
-
-		return VersionCheck.SUCCESS;
-	}
+        return VersionCheck.SUCCESS;
+    }
 
 	@Override
 	protected ActionContext actionContext(ActingPlayer actingPlayer) {

@@ -31,6 +31,7 @@ public class ClientParameters {
 	private static final String _ARGUMENT_PORT = "-port";
 	private static final String _ARGUMENT_SERVER = "-server";
 	private static final String _ARGUMENT_BUILD = "-build";
+    private static final String _ARGUMENT_IGNORE_VERSION_CONFLICT = "-ignoreVersionConflict";
 
 	private static final String _ARGUMENT_LAYOUT = "-layout";
 
@@ -46,6 +47,7 @@ public class ClientParameters {
 	private String fServer;
 	private String fBuild;
 	private ClientLayout layout = ClientLayout.LANDSCAPE;
+    private boolean ignoreVersionConflict = false;
 
 	public ClientMode getMode() {
 		return fMode;
@@ -99,6 +101,10 @@ public class ClientParameters {
 		return layout;
 	}
 
+    public boolean ignoreVersionConflict() {
+        return ignoreVersionConflict;
+    }
+
 	private ClientParameters(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();
@@ -137,7 +143,9 @@ public class ClientParameters {
 					fBuild = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_LAYOUT.equalsIgnoreCase(argument)) {
 					layout = ClientLayout.valueOf(fetchArgument(pArguments, pos++));
-				} else {
+                } else if (_ARGUMENT_IGNORE_VERSION_CONFLICT.equalsIgnoreCase(argument))
+                    ignoreVersionConflict = true;
+                else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}
 			}
