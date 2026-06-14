@@ -71,8 +71,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 		fCommunicationThread.start();
 	}
 
-    public abstract boolean isFullScreen();
-
 	public long gameId() {
 		if (fGame != null) {
 			return fGame.getId();
