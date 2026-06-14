@@ -106,5 +106,7 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_AUTOCOMPLETE_ON = "on";
 	String SETTING_AUTOCOMPLETE_OFF = "off";
+    String SETTING_UI_FULLSCREEN_ON = "fullScreenOn";
+    String SETTING_UI_FULLSCREEN_OFF = "fullScreenOff";
 
 }

@@ -46,8 +46,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
 	private final PathSketchOverlay pathSketchOverlay;
-    private boolean isInFullScreenMode = false;
-
 	private transient int currentMouseButton;
 
 	private Preferences prefs;
@@ -76,7 +74,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		setClientStateFactory();
 
 		pathSketchOverlay = new PathSketchOverlay(this);
-        configureFullScreenShortcut(fUserInterface);
 	}
 
 	@Override
@@ -87,74 +84,6 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	public UserInterface getUserInterface() {
 		return fUserInterface;
 	}
-
-    public void configureFullScreenShortcut(JFrame frame) {
-        JRootPane rootPane = frame.getRootPane();
-        String os = System.getProperty("os.name").toLowerCase();
-        String toggleFullScreen = "toggleFullScreen";
-        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-
-        if (os.contains("mac")) {
-            // macOS Native Standard: Command + Enter
-            // (Swing text parser handles the Apple Command key via the "meta" keyword)
-            inputMap.put(KeyStroke.getKeyStroke("meta ENTER"), toggleFullScreen);
-
-            // Optional Mac Fallback: Command + F (Very common for fullscreen)
-            inputMap.put(KeyStroke.getKeyStroke("meta F"), toggleFullScreen);
-        } else {
-            // Windows & Linux Standard: Left Alt + Enter & Right Alt (AltGr) + Enter
-            inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), toggleFullScreen);
-            inputMap.put(KeyStroke.getKeyStroke("altGraph ENTER"), toggleFullScreen);
-            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
-                    InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK), toggleFullScreen);
-
-        }
-
-// Bind the single action string to your existing execution logic
-        rootPane.getActionMap().put(toggleFullScreen, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FantasyFootballClientAwt.this.toggleFullScreen();
-            }
-        });
-    }
-
-    public boolean isFullScreen() {
-        return isInFullScreenMode;
-    }
-
-    public void toggleFullScreen() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        UserInterface userInterface = getUserInterface();
-        boolean isFullScreenSupported = gd.isFullScreenSupported();
-
-        if (!isFullScreenSupported)
-            return;
-
-        // 2. Tear down the native OS peer resources safely
-        userInterface.dispose();
-
-        if (isFullScreen()) {
-            // Switching back to Windowed Mode
-            gd.setFullScreenWindow(null);
-            userInterface.setUndecorated(false); // Put the title bar and borders back
-            userInterface.getGameMenuBar().setGameInfoVisible(false);
-
-            // Optional: Restore standard maximized or normal window bounds
-            userInterface.pack();
-            userInterface.setVisible(true);
-            isInFullScreenMode = false;
-        } else {
-            // Switching to Fullscreen Mode
-            userInterface.setUndecorated(true); // Strip borders safely now that the frame is undisplayable
-
-            // This natively rebuilds the frame structure and displays it full screen
-            gd.setFullScreenWindow(userInterface);
-            userInterface.getGameMenuBar().setGameInfoVisible(true);
-            isInFullScreenMode = true;
-        }
-    }
 
 	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
