@@ -78,7 +78,8 @@ public class UserSettingsMenu extends FfbMenu {
 	}
 
 	private void createLocalPropertiesItem() {
-		localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue());
+        localPropertiesItem = new JMenuItem(dimensionProvider, SETTING_LOCAL_SETTINGS.getValue());
+        localPropertiesItem.setFont(getDefaultFont());
 		localPropertiesItem.setMnemonic(KeyEvent.VK_L);
 		localPropertiesItem.addActionListener(this);
 		add(localPropertiesItem);

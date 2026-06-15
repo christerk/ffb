@@ -12,8 +12,6 @@ import java.awt.event.ActionEvent;
 public abstract class GameModeMenu extends FfbMenu {
     protected JMenuItem gameStatisticsMenuItem;
     protected ClientCommunication communication;
-    private final FontCache fontCache;
-    private final FontConfigRegistry fontConfigRegistry;
 
     protected GameModeMenu(String text,
                            FantasyFootballClient client,
@@ -24,8 +22,6 @@ public abstract class GameModeMenu extends FfbMenu {
                            FontCache fontCache,
                            FontConfigRegistry fontConfigRegistry) {
         super(text, client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
-        this.fontCache = fontCache;
-        this.fontConfigRegistry = fontConfigRegistry;
         this.communication = communication;
     }
 
@@ -53,6 +49,7 @@ public abstract class GameModeMenu extends FfbMenu {
         gameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
         gameStatisticsMenuItem.addActionListener(this);
         gameStatisticsMenuItem.setEnabled(false);
+        gameStatisticsMenuItem.setFont(getDefaultFont());
         add(gameStatisticsMenuItem);
     }
 

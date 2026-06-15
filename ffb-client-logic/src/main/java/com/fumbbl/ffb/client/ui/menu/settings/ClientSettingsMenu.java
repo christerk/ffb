@@ -387,17 +387,17 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup soundGroup = new ButtonGroup();
 
-		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on");
+		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on", fontCache, fontConfigRegistry);
 		fSoundOnMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOnMenuItem);
 		fSoundMenu.add(fSoundOnMenuItem);
 
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators");
+		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators", fontCache, fontConfigRegistry);
 		fSoundMuteSpectatorsMenuItem.addActionListener(this);
 		soundGroup.add(fSoundMuteSpectatorsMenuItem);
 		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
 
-		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off");
+		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off", fontCache, fontConfigRegistry);
 		fSoundOffMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
@@ -438,27 +438,27 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup orientationGroup = new ButtonGroup();
 
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape", fontCache, fontConfigRegistry);
 		pitchLandscapeMenuItem.addActionListener(this);
 		orientationGroup.add(pitchLandscapeMenuItem);
 		orientationMenu.add(pitchLandscapeMenuItem);
 
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
+		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait", fontCache, fontConfigRegistry);
 		pitchPortraitMenuItem.addActionListener(this);
 		orientationGroup.add(pitchPortraitMenuItem);
 		orientationMenu.add(pitchPortraitMenuItem);
 
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
+		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square", fontCache, fontConfigRegistry);
 		layoutSquareMenuItem.addActionListener(this);
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide", fontCache, fontConfigRegistry);
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
 
-		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080");
+		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080", fontCache, fontConfigRegistry);
 		layoutWide1920x1080MenuItem.addActionListener(this);
 		orientationGroup.add(layoutWide1920x1080MenuItem);
 		orientationMenu.add(layoutWide1920x1080MenuItem);
@@ -524,12 +524,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup logGroup = new ButtonGroup();
 
-		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		logOnMenuItem.addActionListener(this);
 		logGroup.add(logOnMenuItem);
 		logMenu.add(logOnMenuItem);
 
-		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		logOffMenuItem.addActionListener(this);
 		logGroup.add(logOffMenuItem);
 		logMenu.add(logOffMenuItem);
@@ -552,13 +552,13 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup localIconCacheGroup = new ButtonGroup();
 
-		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		localIconCacheOffMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOffMenuItem);
 		localIconCacheMenu.add(localIconCacheOffMenuItem);
 
-		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		localIconCacheOnMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOnMenuItem);
@@ -577,17 +577,17 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Alphabetical Order)");
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Alphabetical Order)", fontCache, fontConfigRegistry);
 		playersMarkingAutoMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoMenuItem);
 
-		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Site Order)");
+		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Site Order)", fontCache, fontConfigRegistry);
 		playersMarkingAutoNoSortMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoNoSortMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoNoSortMenuItem);
 
-		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual");
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual", fontCache, fontConfigRegistry);
 		playersMarkingManualMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingManualMenuItem);
 		playerMarkingMenu.add(playersMarkingManualMenuItem);
@@ -600,12 +600,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup group = new ButtonGroup();
 
-		autocompleteOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		autocompleteOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		autocompleteOnMenuItem.addActionListener(this);
 		group.add(autocompleteOnMenuItem);
 		autocompleteMenu.add(autocompleteOnMenuItem);
 
-		autocompleteOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		autocompleteOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		autocompleteOffMenuItem.addActionListener(this);
 		group.add(autocompleteOffMenuItem);
 		autocompleteMenu.add(autocompleteOffMenuItem);

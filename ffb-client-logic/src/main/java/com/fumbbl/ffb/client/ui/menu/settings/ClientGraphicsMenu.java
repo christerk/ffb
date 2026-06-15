@@ -573,30 +573,34 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private void createIconsMenu() {
 		JMenu fIconsMenu = new JMenu(dimensionProvider, SETTING_ICONS);
+        fIconsMenu.setFont(getDefaultFont());
 		fIconsMenu.setMnemonic(KeyEvent.VK_I);
 		add(fIconsMenu);
 
 		ButtonGroup iconsGroup = new ButtonGroup();
 
-		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons");
+		fIconsTeam = new JRadioButtonMenuItem(dimensionProvider, "Team icons", fontCache, fontConfigRegistry);
+        fIconsTeam.setFont(getDefaultFont());
 		fIconsTeam.setMnemonic(KeyEvent.VK_T);
 		fIconsTeam.addActionListener(this);
 		iconsGroup.add(fIconsTeam);
 		fIconsMenu.add(fIconsTeam);
 
-		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)");
+		fIconsRosterOpponent = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Opponent)", fontCache, fontConfigRegistry);
+        fIconsRosterOpponent.setFont(getDefaultFont());
 		fIconsRosterOpponent.setMnemonic(KeyEvent.VK_O);
 		fIconsRosterOpponent.addActionListener(this);
 		iconsGroup.add(fIconsRosterOpponent);
 		fIconsMenu.add(fIconsRosterOpponent);
 
-		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)");
+		fIconsRosterBoth = new JRadioButtonMenuItem(dimensionProvider, "Roster icons (Both)", fontCache, fontConfigRegistry);
+        fIconsRosterBoth.setFont(getDefaultFont());
 		fIconsRosterBoth.setMnemonic(KeyEvent.VK_B);
 		fIconsRosterBoth.addActionListener(this);
 		iconsGroup.add(fIconsRosterBoth);
 		fIconsMenu.add(fIconsRosterBoth);
 
-		fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons");
+        fIconsAbstract = new JRadioButtonMenuItem(dimensionProvider, "Abstract icons", fontCache, fontConfigRegistry);
 		fIconsAbstract.setMnemonic(KeyEvent.VK_A);
 		fIconsAbstract.addActionListener(this);
 		iconsGroup.add(fIconsAbstract);
@@ -605,18 +609,19 @@ public class ClientGraphicsMenu extends FfbMenu {
 		fIconsMenu.addSeparator();
 
 		JMenu swapTeamColorsMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_SWAP_TEAM_COLORS);
+        swapTeamColorsMenu.setFont(getDefaultFont());
 		swapTeamColorsMenu.setMnemonic(KeyEvent.VK_S);
 		fIconsMenu.add(swapTeamColorsMenu);
 
 		ButtonGroup swapTeamColorsGroup = new ButtonGroup();
 
-		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		swapTeamColorsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		swapTeamColorsOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		swapTeamColorsOffMenuItem.addActionListener(this);
 		swapTeamColorsGroup.add(swapTeamColorsOffMenuItem);
 		swapTeamColorsMenu.add(swapTeamColorsOffMenuItem);
 
-		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		swapTeamColorsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		swapTeamColorsOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		swapTeamColorsOnMenuItem.addActionListener(this);
 		swapTeamColorsGroup.add(swapTeamColorsOnMenuItem);
@@ -625,132 +630,140 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private void createPitchMenu() {
 		JMenu fPitchMenu = new JMenu(dimensionProvider, "Pitch");
+        fPitchMenu.setFont(getDefaultFont());
 		fPitchMenu.setMnemonic(KeyEvent.VK_P);
 		add(fPitchMenu);
 
 		JMenu fPitchCustomizationMenu = new JMenu(dimensionProvider, SETTING_PITCH_CUSTOMIZATION);
+        fPitchCustomizationMenu.setFont(getDefaultFont());
 		fPitchCustomizationMenu.setMnemonic(KeyEvent.VK_C);
 		fPitchMenu.add(fPitchCustomizationMenu);
 
 		ButtonGroup pitchCustomGroup = new ButtonGroup();
 
-		fCustomPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Custom Pitch");
+		fCustomPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Custom Pitch", fontCache, fontConfigRegistry);
 		fCustomPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fCustomPitchMenuItem);
 		fPitchCustomizationMenu.add(fCustomPitchMenuItem);
 
-		fDefaultPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Default Pitch");
+		fDefaultPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Default Pitch", fontCache, fontConfigRegistry);
 		fDefaultPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fDefaultPitchMenuItem);
 		fPitchCustomizationMenu.add(fDefaultPitchMenuItem);
 
-		fBasicPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Basic Pitch");
+		fBasicPitchMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Use Basic Pitch", fontCache, fontConfigRegistry);
 		fBasicPitchMenuItem.addActionListener(this);
 		pitchCustomGroup.add(fBasicPitchMenuItem);
 		fPitchCustomizationMenu.add(fBasicPitchMenuItem);
 
 		JMenu fPitchMarkingsMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS);
+        fPitchMarkingsMenu.setFont(getDefaultFont());
 		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_M);
 		fPitchMenu.add(fPitchMarkingsMenu);
 
 		ButtonGroup tdDistanceGroup = new ButtonGroup();
 
-		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings on");
+		fPitchMarkingsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings on", fontCache, fontConfigRegistry);
 		fPitchMarkingsOnMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOnMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOnMenuItem);
 
-		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings off");
+		fPitchMarkingsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Distance Markings off", fontCache, fontConfigRegistry);
 		fPitchMarkingsOffMenuItem.addActionListener(this);
 		tdDistanceGroup.add(fPitchMarkingsOffMenuItem);
 		fPitchMarkingsMenu.add(fPitchMarkingsOffMenuItem);
 
 		JMenu fPitchMarkingsRowMenu = new JMenu(dimensionProvider, SETTING_PITCH_MARKINGS_ROW);
+        fPitchMarkingsRowMenu.setFont(getDefaultFont());
 		fPitchMarkingsMenu.setMnemonic(KeyEvent.VK_R);
 		fPitchMenu.add(fPitchMarkingsRowMenu);
 
 		ButtonGroup rowMarkingsGroup = new ButtonGroup();
 
-		fPitchMarkingsRowOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings on");
+		fPitchMarkingsRowOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings on", fontCache, fontConfigRegistry);
 		fPitchMarkingsRowOnMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOnMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOnMenuItem);
 
-		fPitchMarkingsRowOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings off");
+		fPitchMarkingsRowOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Row Markings off", fontCache, fontConfigRegistry);
 		fPitchMarkingsRowOffMenuItem.addActionListener(this);
 		rowMarkingsGroup.add(fPitchMarkingsRowOffMenuItem);
 		fPitchMarkingsRowMenu.add(fPitchMarkingsRowOffMenuItem);
 
 		JMenu cratersAndBloodspotsMenu = new JMenu(dimensionProvider, SETTING_SHOW_CRATERS_AND_BLOODSPOTS);
+        cratersAndBloodspotsMenu.setFont(getDefaultFont());
 		cratersAndBloodspotsMenu.setMnemonic(KeyEvent.VK_B);
 		fPitchMenu.add(cratersAndBloodspotsMenu);
 
 		ButtonGroup cratersAndBloodspotsGroup = new ButtonGroup();
 
-		showCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show");
+		showCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show", fontCache, fontConfigRegistry);
 		showCratersAndBloodsptsMenuItem.addActionListener(this);
 		cratersAndBloodspotsGroup.add(showCratersAndBloodsptsMenuItem);
 		cratersAndBloodspotsMenu.add(showCratersAndBloodsptsMenuItem);
 
-		hideCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Hide");
+		hideCratersAndBloodsptsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Hide", fontCache, fontConfigRegistry);
 		hideCratersAndBloodsptsMenuItem.addActionListener(this);
 		cratersAndBloodspotsGroup.add(hideCratersAndBloodsptsMenuItem);
 		cratersAndBloodspotsMenu.add(hideCratersAndBloodsptsMenuItem);
 
 		JMenu sweetSpotMenu = new JMenu(dimensionProvider, SETTING_SWEET_SPOT);
+        sweetSpotMenu.setFont(getDefaultFont());
 		sweetSpotMenu.setMnemonic(KeyEvent.VK_S);
 		fPitchMenu.add(sweetSpotMenu);
 
 		ButtonGroup sweetSpotGroup = new ButtonGroup();
 
-		sweetSpotOff = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		sweetSpotOff = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		sweetSpotOff.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotOff);
 		sweetSpotMenu.add(sweetSpotOff);
 
-		sweetSpotBlack = new JRadioButtonMenuItem(dimensionProvider, "Black");
+		sweetSpotBlack = new JRadioButtonMenuItem(dimensionProvider, "Black", fontCache, fontConfigRegistry);
 		sweetSpotBlack.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotBlack);
 		sweetSpotMenu.add(sweetSpotBlack);
 
-		sweetSpotWhite = new JRadioButtonMenuItem(dimensionProvider, "White");
+		sweetSpotWhite = new JRadioButtonMenuItem(dimensionProvider, "White", fontCache, fontConfigRegistry);
 		sweetSpotWhite.addActionListener(this);
 		sweetSpotGroup.add(sweetSpotWhite);
 		sweetSpotMenu.add(sweetSpotWhite);
 
 		JMenu fTeamLogoMenu = new JMenu(dimensionProvider, SETTING_TEAM_LOGOS);
+        fTeamLogoMenu.setFont(getDefaultFont());
 		fTeamLogoMenu.setMnemonic(KeyEvent.VK_T);
 		fPitchMenu.add(fTeamLogoMenu);
 
 		ButtonGroup teamLogoGroup = new ButtonGroup();
 
-		fTeamLogoBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show both Team-Logos");
+		fTeamLogoBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show both Team-Logos", fontCache, fontConfigRegistry);
 		fTeamLogoBothMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoBothMenuItem);
 		fTeamLogoMenu.add(fTeamLogoBothMenuItem);
 
-		fTeamLogoOwnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show my Team-Logo only");
+		fTeamLogoOwnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show my Team-Logo only", fontCache, fontConfigRegistry);
 		fTeamLogoOwnMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoOwnMenuItem);
 		fTeamLogoMenu.add(fTeamLogoOwnMenuItem);
 
-		fTeamLogoNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show no Team-Logos");
+		fTeamLogoNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Show no Team-Logos", fontCache, fontConfigRegistry);
 		fTeamLogoNoneMenuItem.addActionListener(this);
 		teamLogoGroup.add(fTeamLogoNoneMenuItem);
 		fTeamLogoMenu.add(fTeamLogoNoneMenuItem);
 
 		JMenu fPitchWeatherMenu = new JMenu(dimensionProvider, SETTING_PITCH_WEATHER);
+        fPitchWeatherMenu.setFont(getDefaultFont());
 		fPitchWeatherMenu.setMnemonic(KeyEvent.VK_W);
 		fPitchMenu.add(fPitchWeatherMenu);
 
 		ButtonGroup pitchWeatherGroup = new ButtonGroup();
 
-		fPitchWeatherOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Change pitch with weather");
+		fPitchWeatherOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Change pitch with weather", fontCache, fontConfigRegistry);
 		fPitchWeatherOnMenuItem.addActionListener(this);
 		pitchWeatherGroup.add(fPitchWeatherOnMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOnMenuItem);
 
-		fPitchWeatherOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always show nice weather pitch");
+		fPitchWeatherOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always show nice weather pitch", fontCache, fontConfigRegistry);
 		fPitchWeatherOffMenuItem.addActionListener(this);
 		pitchWeatherGroup.add(fPitchWeatherOffMenuItem);
 		fPitchWeatherMenu.add(fPitchWeatherOffMenuItem);
@@ -758,6 +771,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private void createBackgroundMenu() {
 		JMenu backgroundStyles = new JMenu(dimensionProvider, "Background styles");
+        backgroundStyles.setFont(getDefaultFont());
 		backgroundStyles.setMnemonic(KeyEvent.VK_B);
 		add(backgroundStyles);
 		addColorItem(SETTING_BACKGROUND_CHAT, styleProvider.getChatBackground(), backgroundStyles, (item) -> chatBackground = item);
@@ -768,6 +782,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private void createColorsMenu() {
 		JMenu colors = new JMenu(dimensionProvider, "Colors");
+        colors.setFont(getDefaultFont());
 		colors.setMnemonic(KeyEvent.VK_F);
 		add(colors);
 		addColorItem(SETTING_FONT_COLOR_TEXT, styleProvider.getText(), colors, (item) -> textFontColor = item);
@@ -796,19 +811,20 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	private void addColorItem(CommonProperty title, Color color, JMenu parent, Consumer<JMenuItem> setter) {
 		JMenuItem item = new JMenuItem(dimensionProvider, title.getValue(), createColorIcon(color));
+        item.setFont(getDefaultFont());
 		item.addActionListener(this);
 		parent.add(item);
 		setter.accept(item);
 	}
 
 	private JMenu createFrameBackgroundMenu() {
-
 		JMenu menu = new JMenu(dimensionProvider, SETTING_BACKGROUND_FRAME);
+        menu.setFont(getDefaultFont());
 		ButtonGroup group = new ButtonGroup();
-		frameBackgroundIcons = new JRadioButtonMenuItem(dimensionProvider, "Graphics");
+		frameBackgroundIcons = new JRadioButtonMenuItem(dimensionProvider, "Graphics", fontCache, fontConfigRegistry);
 		frameBackgroundIcons.addActionListener(this);
 
-		frameBackgroundColor = new JRadioButtonMenuItem(dimensionProvider, "Color", createColorIcon(styleProvider.getFrameBackground()));
+		frameBackgroundColor = new JRadioButtonMenuItem(dimensionProvider, "Color", createColorIcon(styleProvider.getFrameBackground()), fontCache, fontConfigRegistry);
 		frameBackgroundColor.addActionListener(this);
 
 		menu.add(frameBackgroundIcons);
@@ -869,16 +885,19 @@ public class ClientGraphicsMenu extends FfbMenu {
 	private void createRestoreMenu() {
 
 		resetColors = new JMenuItem(dimensionProvider, "Reset all colors");
+        resetColors.setFont(getDefaultFont());
 		resetColors.addActionListener(this);
 		resetColors.setEnabled(true);
 		add(resetColors);
 
 		resetBackgroundColors = new JMenuItem(dimensionProvider, "Reset background styles");
+        resetBackgroundColors.setFont(getDefaultFont());
 		resetBackgroundColors.addActionListener(this);
 		resetBackgroundColors.setEnabled(true);
 		add(resetBackgroundColors);
 
 		resetFontColors = new JMenuItem(dimensionProvider, "Reset colors");
+        resetFontColors.setFont(getDefaultFont());
 		resetFontColors.addActionListener(this);
 		resetFontColors.setEnabled(true);
 		add(resetFontColors);

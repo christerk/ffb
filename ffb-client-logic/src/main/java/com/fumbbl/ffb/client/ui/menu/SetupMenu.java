@@ -34,6 +34,7 @@ public class SetupMenu extends FfbMenu {
 	@Override
 	public void init() {
 		fLoadSetupMenuItem = new JMenuItem(dimensionProvider, "Load Setup", KeyEvent.VK_L);
+        fLoadSetupMenuItem.setFont(getDefaultFont());
 		String menuSetupLoad = client.getProperty(IClientProperty.KEY_MENU_SETUP_LOAD);
 		if (StringTool.isProvided(menuSetupLoad)) {
 			fLoadSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupLoad));
@@ -42,6 +43,7 @@ public class SetupMenu extends FfbMenu {
 		add(fLoadSetupMenuItem);
 
 		fSaveSetupMenuItem = new JMenuItem(dimensionProvider, "Save Setup", KeyEvent.VK_S);
+        fSaveSetupMenuItem.setFont(getDefaultFont());
 		String menuSetupSave = client.getProperty(IClientProperty.KEY_MENU_SETUP_SAVE);
 		if (StringTool.isProvided(menuSetupSave)) {
 			fSaveSetupMenuItem.setAccelerator(KeyStroke.getKeyStroke(menuSetupSave));

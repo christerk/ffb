@@ -40,16 +40,19 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
         this.styleProvider = styleProvider;
         this.layoutSettings = layoutSettings;
 
-        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
-        setFont(fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider));
+        setFont(getDefaultFont());
     }
 
     public abstract void init();
 
     public boolean refresh(){
-        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
-        setFont(fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider));
+        setFont(getDefaultFont());
         return false;
+    }
+
+    public Font getDefaultFont() {
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+        return fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
     }
 
     public void showDialog(IDialog dialog) {
