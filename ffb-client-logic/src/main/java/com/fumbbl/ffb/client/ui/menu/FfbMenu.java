@@ -22,7 +22,7 @@ public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCl
     protected final DimensionProvider dimensionProvider;
     protected final StyleProvider styleProvider;
     protected final LayoutSettings layoutSettings;
-    private final FontCache fontCache;
+    protected final FontCache fontCache;
     protected final FontConfigRegistry fontConfigRegistry;
 
     protected FfbMenu(String text,

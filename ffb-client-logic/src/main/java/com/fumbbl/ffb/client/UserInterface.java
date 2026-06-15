@@ -35,6 +35,8 @@ import java.lang.reflect.InvocationTargetException;
 import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static java.awt.Font.PLAIN;
 
 /**
  * @author Kalimar
@@ -132,6 +134,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		getChat().requestChatInputFocus();
         configureFullScreenShortcut(this);
+
+        FontConfig fc = fontConfigRegistry.getConfig(uiDimensionProvider.getLayoutSettings().getLayout());
+        Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), uiDimensionProvider);
+        updateFontForTitles(titleFont);
+
         updateFullScreenMode();
 	}
 
@@ -544,5 +551,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
             pack();
             setVisible(true);
         }
+    }
+
+    public void updateFontForTitles(Font font) {
+        UIManager.put("InternalFrame.titleFont", font);
+        SwingUtilities.updateComponentTreeUI(this);
     }
 }

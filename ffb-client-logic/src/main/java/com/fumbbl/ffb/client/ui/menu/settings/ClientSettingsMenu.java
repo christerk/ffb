@@ -27,6 +27,9 @@ import java.io.IOException;
 import static com.fumbbl.ffb.CommonProperty.*;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static java.awt.Font.PLAIN;
 
 public class ClientSettingsMenu extends FfbMenu {
 
@@ -170,22 +173,37 @@ public class ClientSettingsMenu extends FfbMenu {
 		if (source == pitchLandscapeMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == pitchPortraitMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_PORTRAIT);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutSquareMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutWideMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutWide1920x1080MenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(LARGE), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 
 		if (source == logOffMenuItem) {
@@ -402,7 +420,7 @@ public class ClientSettingsMenu extends FfbMenu {
 					client.getUserInterface().getIconCache().clear();
 					FontCache fontCache = client.getUserInterface().getFontCache();
 					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+                    UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
 					return true;
 				}
 			} catch (Exception ignored) {
@@ -486,7 +504,7 @@ public class ClientSettingsMenu extends FfbMenu {
 				client.getUserInterface().getIconCache().clear();
 				FontCache fontCache = client.getUserInterface().getFontCache();
 				fontCache.clear();
-				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+                UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
 			}
 			return true;
 		}
