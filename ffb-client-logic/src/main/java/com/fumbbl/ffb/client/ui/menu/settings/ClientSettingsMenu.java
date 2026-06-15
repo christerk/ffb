@@ -3,12 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.ClientLayout;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
@@ -66,8 +61,13 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem autocompleteOnMenuItem;
 	private JRadioButtonMenuItem autocompleteOffMenuItem;
 	
-	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
+	protected ClientSettingsMenu(FantasyFootballClient client,
+                                 DimensionProvider dimensionProvider,
+                                 StyleProvider styleProvider,
+                                 LayoutSettings layoutSettings,
+                                 FontCache fontCache,
+                                 FontConfigRegistry fontConfigRegistry) {
+		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_S);
 	}
 
@@ -84,6 +84,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		playerMarkingMenu.setEnabled(ClientMode.REPLAY != client.getMode());
 		
 		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);

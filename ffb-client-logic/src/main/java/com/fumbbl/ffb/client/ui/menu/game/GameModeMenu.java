@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu.game;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
@@ -15,10 +12,20 @@ import java.awt.event.ActionEvent;
 public abstract class GameModeMenu extends FfbMenu {
     protected JMenuItem gameStatisticsMenuItem;
     protected ClientCommunication communication;
+    private final FontCache fontCache;
+    private final FontConfigRegistry fontConfigRegistry;
 
-    protected GameModeMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
-                           StyleProvider styleProvider, LayoutSettings layoutSettings) {
-        super(text, client, dimensionProvider, styleProvider, layoutSettings);
+    protected GameModeMenu(String text,
+                           FantasyFootballClient client,
+                           DimensionProvider dimensionProvider,
+                           ClientCommunication communication,
+                           StyleProvider styleProvider,
+                           LayoutSettings layoutSettings,
+                           FontCache fontCache,
+                           FontConfigRegistry fontConfigRegistry) {
+        super(text, client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
+        this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
         this.communication = communication;
     }
 
@@ -32,6 +39,7 @@ public abstract class GameModeMenu extends FfbMenu {
 
     @Override
     public final boolean refresh() {
+        super.refresh();
         boolean gameStarted = client.getGame() != null && client.getGame().getStarted() != null;
         gameStatisticsMenuItem.setEnabled(gameStarted);
 

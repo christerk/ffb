@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.game;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ConcedeGameStatus;
 import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.option.GameOptionBoolean;
@@ -25,9 +21,14 @@ public class StandardGameMenu extends GameModeMenu {
     private JMenuItem gameReplayMenuItem;
     private JMenuItem gameConcessionMenuItem;
 
-    public StandardGameMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
-                            StyleProvider styleProvider, LayoutSettings layoutSettings) {
-        super("Game", client, dimensionProvider, communication, styleProvider, layoutSettings);
+    public StandardGameMenu(FantasyFootballClient client,
+                            DimensionProvider dimensionProvider,
+                            ClientCommunication communication,
+                            StyleProvider styleProvider,
+                            LayoutSettings layoutSettings,
+                            FontCache fontCache,
+                            FontConfigRegistry fontConfigRegistry) {
+        super("Game", client, dimensionProvider, communication, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		}
 
     @Override 

@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerType;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.inducement.Card;
@@ -37,8 +33,13 @@ public class InducementsMenu extends FfbMenu {
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 
-	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Inducements", client, dimensionProvider, styleProvider, layoutSettings);
+    protected InducementsMenu(FantasyFootballClient client,
+                              DimensionProvider dimensionProvider,
+                              StyleProvider styleProvider,
+                              LayoutSettings layoutSettings,
+                              FontCache fontCache,
+                              FontConfigRegistry fontConfigRegistry) {
+        super("Inducements", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_I);
 		setEnabled(false);
 	}
@@ -53,6 +54,7 @@ public class InducementsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
 

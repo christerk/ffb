@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.IGameOption;
@@ -15,8 +12,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class OptionsMenu extends FfbMenu {
-	protected OptionsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Game Options", client, dimensionProvider, styleProvider, layoutSettings);
+	protected OptionsMenu(FantasyFootballClient client,
+                          DimensionProvider dimensionProvider,
+                          StyleProvider styleProvider,
+                          LayoutSettings layoutSettings,
+                          FontCache fontCache,
+                          FontConfigRegistry fontConfigRegistry) {
+		super("Game Options", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_O);
 		setEnabled(false);
 	}
@@ -28,6 +30,7 @@ public class OptionsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		removeAll();
 		IGameOption[] gameOptions = client.getGame().getOptions().getOptions();
 		Arrays.sort(gameOptions, Comparator.comparing(pO -> pO.getId().getName()));

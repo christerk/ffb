@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.game;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategy;
@@ -49,10 +45,16 @@ public class ReplayMenu extends GameModeMenu {
 	private Set<ClickStrategyMenuItem> addPointItems;
 	private Set<ClickStrategyMenuItem> endSketchItems;
 
-	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
-										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager,
-										ClickStrategyRegistry clickStrategyRegistry) {
-		super("Replay", client, dimensionProvider, communication, styleProvider, layoutSettings);
+    public ReplayMenu(FantasyFootballClient client,
+                      DimensionProvider dimensionProvider,
+                      ClientCommunication communication,
+                      StyleProvider styleProvider,
+                      LayoutSettings layoutSettings,
+                      ClientSketchManager sketchManager,
+                      ClickStrategyRegistry clickStrategyRegistry,
+                      FontCache fontCache,
+                      FontConfigRegistry fontConfigRegistry) {
+		super("Replay", client, dimensionProvider, communication, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_R);
 		this.sketchManager = sketchManager;
 		this.clickStrategyRegistry = clickStrategyRegistry;

@@ -2,11 +2,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.ColorIcon;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
@@ -117,8 +113,13 @@ public class ClientGraphicsMenu extends FfbMenu {
 	private JMenuItem resetBackgroundColors;
 	private JMenuItem resetFontColors;
 
-	protected ClientGraphicsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Client Graphics", client, dimensionProvider, styleProvider, layoutSettings);
+    protected ClientGraphicsMenu(FantasyFootballClient client,
+                                 DimensionProvider dimensionProvider,
+                                 StyleProvider styleProvider,
+                                 LayoutSettings layoutSettings,
+                                 FontCache fontCache,
+                                 FontConfigRegistry fontConfigRegistry) {
+		super("Client Graphics", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_C);
 	}
 
@@ -135,6 +136,7 @@ public class ClientGraphicsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 
 		String pitchCustomizationSetting = client.getProperty(CommonProperty.SETTING_PITCH_CUSTOMIZATION);
 		fCustomPitchMenuItem.setSelected(true);

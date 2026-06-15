@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogAbout;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogChangeList;
@@ -23,8 +20,13 @@ public class HelpMenu extends FfbMenu {
     private JMenuItem autoMarkingItem;
     private JMenuItem creditsItem;
 
-    public HelpMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-        super("Help", client, dimensionProvider, styleProvider, layoutSettings);
+    public HelpMenu(FantasyFootballClient client,
+                    DimensionProvider dimensionProvider,
+                    StyleProvider styleProvider,
+                    LayoutSettings layoutSettings,
+                    FontCache fontCache,
+                    FontConfigRegistry fontConfigRegistry) {
+        super("Help", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
         setMnemonic(KeyEvent.VK_H);
     }
 
@@ -57,7 +59,7 @@ public class HelpMenu extends FfbMenu {
 
     @Override
     public boolean refresh() {
-        return false;
+        return super.refresh();
     }
 
     @Override

@@ -3,10 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -84,8 +81,13 @@ public class GamePlayMenu extends FfbMenu {
 
 	private Map<CommonProperty, JMenu> exposedMenus;
 
-	protected GamePlayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Game Play", client, dimensionProvider, styleProvider, layoutSettings);
+    protected GamePlayMenu(FantasyFootballClient client,
+                           DimensionProvider dimensionProvider,
+                           StyleProvider styleProvider,
+                           LayoutSettings layoutSettings,
+                           FontCache fontCache,
+                           FontConfigRegistry fontConfigRegistry) {
+        super("Game Play", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_G);
 	}
 
@@ -105,6 +107,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		String automoveSetting = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));

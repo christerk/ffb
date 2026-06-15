@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.ui.menu.settings;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogSelectLocalStoredProperties;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
@@ -22,9 +19,18 @@ public class UserSettingsMenu extends FfbMenu {
 	private GamePlayMenu gamePlayMenu;
 	private JMenuItem localPropertiesItem;
 	private Set<FfbMenu> subMenus;
+    private final FontCache fontCache;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	public UserSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("User Settings", client, dimensionProvider, styleProvider, layoutSettings);
+    public UserSettingsMenu(FantasyFootballClient client,
+                            DimensionProvider dimensionProvider,
+                            StyleProvider styleProvider,
+                            LayoutSettings layoutSettings,
+                            FontCache fontCache,
+                            FontConfigRegistry fontConfigRegistry) {
+        super("User Settings", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
+        this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		setMnemonic(KeyEvent.VK_U);
 	}
 
@@ -40,13 +46,13 @@ public class UserSettingsMenu extends FfbMenu {
 	public void init() {
 		subMenus = new HashSet<>();
 
-		ClientGraphicsMenu clientGraphicsMenu = new ClientGraphicsMenu(client, dimensionProvider, styleProvider, layoutSettings);
+		ClientGraphicsMenu clientGraphicsMenu = new ClientGraphicsMenu(client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(clientGraphicsMenu);
 
-		ClientSettingsMenu clientSettingsMenu = new ClientSettingsMenu(client, dimensionProvider, styleProvider, layoutSettings);
+		ClientSettingsMenu clientSettingsMenu = new ClientSettingsMenu(client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(clientSettingsMenu);
 
-		gamePlayMenu = new GamePlayMenu(client, dimensionProvider, styleProvider, layoutSettings);
+		gamePlayMenu = new GamePlayMenu(client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(gamePlayMenu);
 
 		createLocalPropertiesItem();
@@ -56,6 +62,7 @@ public class UserSettingsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		return subMenus.stream().map(FfbMenu::refresh).reduce((a, b) -> a || b).orElse(false);
 	}
 

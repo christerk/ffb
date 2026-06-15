@@ -1,12 +1,7 @@
 package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.BoxComponent;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.model.Game;
@@ -20,8 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 public class MissingPlayersMenu extends FfbMenu {
-	protected MissingPlayersMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Missing Players", client, dimensionProvider, styleProvider, layoutSettings);
+	protected MissingPlayersMenu(FantasyFootballClient client,
+                                 DimensionProvider dimensionProvider,
+                                 StyleProvider styleProvider,
+                                 LayoutSettings layoutSettings,
+                                 FontCache fontCache,
+                                 FontConfigRegistry fontConfigRegistry) {
+		super("Missing Players", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_M);
 		setEnabled(false);
 	}
@@ -33,6 +33,7 @@ public class MissingPlayersMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		Game game = client.getGame();
 		removeAll();
 		int nrOfEntries = 0;

@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.IClientProperty;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.client.ActionKey;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
@@ -20,9 +16,18 @@ public class SetupMenu extends FfbMenu {
 
 	private JMenuItem fLoadSetupMenuItem;
 	private JMenuItem fSaveSetupMenuItem;
+    private final FontCache fontCache;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	protected SetupMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Team Setup", client, dimensionProvider, styleProvider, layoutSettings);
+    protected SetupMenu(FantasyFootballClient client,
+                        DimensionProvider dimensionProvider,
+                        StyleProvider styleProvider,
+                        LayoutSettings layoutSettings,
+                        FontCache fontCache,
+                        FontConfigRegistry fontConfigRegistry) {
+        super("Team Setup", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
+        this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
 		setMnemonic(KeyEvent.VK_T);
 	}
 
@@ -47,7 +52,7 @@ public class SetupMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
-		return false;
+		return super.refresh();
 	}
 
 	@Override
