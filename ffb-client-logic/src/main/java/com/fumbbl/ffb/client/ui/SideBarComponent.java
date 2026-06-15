@@ -106,7 +106,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		} else {
 			fBoxComponent.closeBox();
 		}
-		fPlayerDetail.refresh();
+		fPlayerDetail.refreshUi();
 	}
 
 	private void addComponents() {
@@ -129,7 +129,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		if (isBoxOpen()) {
 			fBoxComponent.refresh();
 		} else {
-			fPlayerDetail.refresh();
+			fPlayerDetail.refreshUi();
 		}
 		fBoxComponent.initObserver();
 		fResourceComponent.init();
@@ -141,7 +141,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		if (isBoxOpen()) {
 			fBoxComponent.refresh();
 		} else {
-			fPlayerDetail.refresh();
+			fPlayerDetail.refreshUi();
 		}
 		fResourceComponent.refresh();
 		fTurnDiceStatusComponent.refresh();

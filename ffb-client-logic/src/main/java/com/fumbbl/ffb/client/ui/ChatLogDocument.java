@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * DefaultDocument subclass that supports batching inserts.
  */
-public class ChatLogDocument extends DefaultStyledDocument {
+public class ChatLogDocument extends DefaultStyledDocument implements Refreshable {
 
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
@@ -28,18 +28,19 @@ public class ChatLogDocument extends DefaultStyledDocument {
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
 
-	public ChatLogDocument(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
+    private final FontConfigRegistry fontRegistry;
+
+	public ChatLogDocument(StyleProvider styleProvider, DimensionProvider dimensionProvider, FontConfigRegistry fontRegistry) {
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
+        this.fontRegistry = fontRegistry;
 
 		defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
-		setStyles();
-
+        refreshUi();
 	}
 
-	public void setStyles() {
-
+	public void refreshUi() {
 		Enumeration<?> styles = getStyleNames();
 
 		List<String> names = new ArrayList<>();

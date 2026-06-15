@@ -6,6 +6,7 @@ import java.util.Set;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontConfigRegistry;
 import com.fumbbl.ffb.client.dialog.DialogHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.dialog.DialogBuyCardsParameter;
@@ -16,9 +17,11 @@ import com.fumbbl.ffb.model.Game;
 public class DialogBuyCardsHandler extends DialogHandler {
 
 	private Set<Card> fCardsDrawn;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	public DialogBuyCardsHandler(FantasyFootballClient pClient) {
+	public DialogBuyCardsHandler(FantasyFootballClient pClient, FontConfigRegistry fontConfigRegistry) {
 		super(pClient);
+        this.fontConfigRegistry = fontConfigRegistry;
 	}
 
 	@Override
@@ -29,7 +32,7 @@ public class DialogBuyCardsHandler extends DialogHandler {
 		if (dialogParameter != null) {
 			if ((ClientMode.PLAYER == getClient().getMode())
 					&& (game.getTeamHome().getId().equals(dialogParameter.getTeamId()))) {
-				setDialog(new DialogBuyCards(getClient(), dialogParameter));
+				setDialog(new DialogBuyCards(getClient(), dialogParameter, fontConfigRegistry));
 				getDialog().showDialog(this);
 			} else {
 				showStatus("Buy Cards", "Waiting for coach to buy Cards.", StatusType.WAITING);

@@ -99,7 +99,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSoundEngine = new SoundEngine(getClient());
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
-		fDialogManager = new DialogManager(getClient());
+        fDialogManager = new DialogManager(getClient(), fontConfigRegistry);
 		styleProvider = new StyleProvider();
 		clickStrategyRegistry = new ClickStrategyRegistry();
         GameTitle pGameTitle = new GameTitle();
@@ -123,8 +123,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
-		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
-		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
+        fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider, fontConfigRegistry);
+        fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fontConfigRegistry, fIconCache);
         fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
         fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
 

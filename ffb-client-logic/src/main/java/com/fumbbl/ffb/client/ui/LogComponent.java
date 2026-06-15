@@ -23,15 +23,17 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	private CommandHighlightArea fCurrentCommandHighlight;
 	private int fMinimumCommandNr;
 	private final DimensionProvider dimensionProvider;
+    private final FontConfigRegistry fontConfigRegistry;
 	private final StyleProvider styleProvider;
 
 	private final FantasyFootballClient fClient;
 
-	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider, DimensionProvider dimensionProvider) {
+	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider, DimensionProvider dimensionProvider, FontConfigRegistry fontConfigRegistry) {
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
-		fLogTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
+        this.fontConfigRegistry = fontConfigRegistry;
+		fLogTextPane = new ChatLogTextPane(styleProvider, dimensionProvider, fontConfigRegistry);
 		fLogScrollPane = new ChatLogScrollPane(fLogTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fLogScrollPane, ActionKeyGroup.ALL);
 		setLayout(new BorderLayout());
