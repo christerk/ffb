@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Kalimar
  */
-public class ChatLogTextPane extends JTextPane {
+public class ChatLogTextPane extends JTextPane implements RefreshableUi {
 
 	private ChatLogDocument fChatLogDocument;
 	private IReplayMouseListener fReplayMouseListener;
@@ -163,4 +163,8 @@ public class ChatLogTextPane extends JTextPane {
 		}
 	}
 
+    @Override
+    public void refreshUi() {
+        fChatLogDocument.refreshUi();
+    }
 }

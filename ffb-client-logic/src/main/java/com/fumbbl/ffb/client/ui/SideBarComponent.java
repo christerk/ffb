@@ -14,7 +14,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * @author Kalimar
  */
-public class SideBarComponent extends JPanel implements MouseMotionListener {
+public class SideBarComponent extends JPanel implements MouseMotionListener, RefreshableUi {
 
 	private final FantasyFootballClient fClient;
 	private final boolean fHomeSide;
@@ -136,7 +136,7 @@ public class SideBarComponent extends JPanel implements MouseMotionListener {
 		fTurnDiceStatusComponent.init();
 	}
 
-	public void refresh() {
+	public void refreshUi() {
 		fBoxButtons.refresh();
 		if (isBoxOpen()) {
 			fBoxComponent.refresh();

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
-public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener {
+public class LogComponent extends JPanel implements MouseMotionListener, IReplayMouseListener, RefreshableUi {
 
 	private final ChatLogScrollPane fLogScrollPane;
 	private final ChatLogTextPane fLogTextPane;
@@ -168,4 +168,9 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	public ChatLogScrollPane getLogScrollPane() {
 		return fLogScrollPane;
 	}
+
+    @Override
+    public void refreshUi() {
+        fLogTextPane.refreshUi();
+    }
 }

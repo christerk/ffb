@@ -60,7 +60,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 			case HANDLED:
 				fShowRangeRuler = false;
 				markThrowablePlayers();
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				super.evaluateClick(result, player);
@@ -78,7 +78,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 				break;
 			case HANDLED:
 				fShowRangeRuler = false;
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -133,7 +133,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 				UtilClientCursor.setDefaultCursor(userInterface);
 			}
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
-			fieldComponent.refresh();
+			fieldComponent.refreshUi();
 		}
 	}
 
@@ -149,7 +149,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		} else {
 			userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		}
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class ClientStateThrowTeamMate extends AbstractClientStateMove<ThrowTeamM
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 

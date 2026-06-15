@@ -54,7 +54,7 @@ public abstract class AbstractClientStateBlitz<T extends BlitzLogicModule> exten
 
 	@Override
 	protected void postPerform(int menuKey) {
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 	}
 
 }

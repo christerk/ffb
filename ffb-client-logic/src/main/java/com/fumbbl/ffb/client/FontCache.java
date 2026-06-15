@@ -9,7 +9,11 @@ public class FontCache {
 
 	private final Map<Key, Font> fonts = new HashMap<>();
 
-    private final FontConfigRegistry fontConfigRegistry = new FontConfigRegistry();
+    private final FontConfigRegistry fontConfigRegistry;
+
+    public FontCache(FontConfigRegistry fontConfigRegistry) {
+        this.fontConfigRegistry = fontConfigRegistry;
+    }
 
 	public Font font(int style, int size, DimensionProvider dimensionProvider) {
 		Key key = new Key(style, size, dimensionProvider.getRenderContext());

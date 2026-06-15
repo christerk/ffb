@@ -340,7 +340,7 @@ public class TurnDiceStatusComponent extends JPanel
 
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
-		buttonFont = fontCache.font(Font.BOLD, fc.getSize(LARGEST), dimensionProvider);
+		buttonFont = fontCache.font(Font.BOLD, fc.getSize(EXTRA_LARGE), dimensionProvider);
 
 		diceFont = fontCache.font(Font.BOLD, fc.getSize(SMALL), dimensionProvider);
 		statusTitleFont = fontCache.font(Font.BOLD, fc.getSize(MEDIUM), dimensionProvider);

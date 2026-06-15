@@ -33,7 +33,7 @@ import static com.fumbbl.ffb.client.ClientLayout.*;
 /**
  * @author Kalimar
  */
-public class ScoreBarComponent extends JPanel implements MouseMotionListener {
+public class ScoreBarComponent extends JPanel implements MouseMotionListener, RefreshableUi {
 
 	private static final String _TURN = "Turn";
 
@@ -240,7 +240,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		fWeather = null;
 		fRefreshNecessary = true;
 		spectators.clear();
-		refresh();
+		refreshUi();
 	}
 
 	public void initLayout() {
@@ -271,7 +271,7 @@ public class ScoreBarComponent extends JPanel implements MouseMotionListener {
 		}
 	}
 
-	public void refresh() {
+	public void refreshUi() {
 		scoreFont = fontCache.font(Font.BOLD, 24, dimensionProvider);
 		turnNumberFont = fontCache.font(Font.BOLD, 22, dimensionProvider);
 		turnTextFont = fontCache.font(Font.BOLD, 14, dimensionProvider);

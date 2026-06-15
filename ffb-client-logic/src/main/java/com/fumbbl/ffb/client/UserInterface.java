@@ -94,8 +94,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
-		fontCache = new FontCache();
         fontConfigRegistry = new FontConfigRegistry();
+        fontCache = new FontCache(fontConfigRegistry);
 		fSoundEngine = new SoundEngine(getClient());
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
@@ -331,15 +331,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	public void refreshSideBars() {
-		getSideBarHome().refresh();
-		getSideBarAway().refresh();
-		getScoreBar().refresh();
+		getSideBarHome().refreshUi();
+		getSideBarAway().refreshUi();
+		getScoreBar().refreshUi();
 	}
 
 	public void refresh() {
 		refreshSideBars();
-		getFieldComponent().refresh();
-		getGameMenuBar().refresh();
+		getFieldComponent().refreshUi();
+		getGameMenuBar().refreshUi();
 	}
 
 	public synchronized void init(GameOptions gameOptions) {

@@ -43,7 +43,7 @@ public class ClientStatePushback extends ClientStateAwt<PushbackLogicModule> {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		FieldLayerOverPlayers layerOverPlayers = fieldComponent.getLayerOverPlayers();
 		result.getPushbackSquares().forEach(layerOverPlayers::drawPushbackSquare);
-		fieldComponent.refresh();
+		fieldComponent.refreshUi();
 	}
 
 	public boolean mouseOverField(FieldCoordinate pCoordinate) {

@@ -78,7 +78,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 				fieldComponent.getLayerOverPlayers().drawFireballMarker(pCoordinate, !logicModule.isValidFireballTarget(pCoordinate));
 				break;
 		}
-		fieldComponent.refresh();
+		fieldComponent.refreshUi();
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 		} else {
 			fieldComponent.getLayerOverPlayers().clearSpellMarker();
 		}
-		fieldComponent.refresh();
+		fieldComponent.refreshUi();
 	}
 
 	@Override

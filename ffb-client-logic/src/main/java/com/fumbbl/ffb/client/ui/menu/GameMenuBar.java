@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
+import com.fumbbl.ffb.client.ui.RefreshableUi;
 import com.fumbbl.ffb.client.ui.menu.game.GameModeMenu;
 import com.fumbbl.ffb.client.ui.menu.game.ReplayMenu;
 import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
@@ -30,7 +31,7 @@ import static javax.swing.SwingConstants.VERTICAL;
 /**
  * @author Kalimar
  */
-public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener {
+public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener, RefreshableUi {
 
 	private final FantasyFootballClient fClient;
 	private GameModeMenu gameModeMenu; // Menu for current game mode (StandardGame or Replay)
@@ -148,14 +149,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
         add(gameInfoSeparator);
         add(gameInfo);
 
-		refresh();
+		refreshUi();
 	}
 
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}
 
-	public void refresh() {
+	public void refreshUi() {
 		boolean reInit = subMenus.stream().map(FfbMenu::refresh).reduce((a, b) -> a || b).orElse(false);
 
 		if (fClient.getUserInterface() != null && reInit) {

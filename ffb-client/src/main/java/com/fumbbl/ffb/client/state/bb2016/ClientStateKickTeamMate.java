@@ -58,7 +58,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		if (logicModule.fieldInteraction(pCoordinate).getKind() == InteractionResult.Kind.PERFORM) {
 			super.clickOnField(pCoordinate);
 			markKickablePlayers();
-			userInterface.getFieldComponent().refresh();
+			userInterface.getFieldComponent().refreshUi();
 		}
 	}
 
@@ -87,7 +87,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		} else {
 			userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
 		}
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class ClientStateKickTeamMate extends AbstractClientStateMove<KtmLogicMod
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 

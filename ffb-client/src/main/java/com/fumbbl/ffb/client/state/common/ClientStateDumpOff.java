@@ -32,7 +32,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		if (result.getKind() == InteractionResult.Kind.PERFORM) {
 			UserInterface userInterface = getClient().getUserInterface();
-			userInterface.getFieldComponent().refresh();
+			userInterface.getFieldComponent().refreshUi();
 		}
 	}
 
@@ -48,7 +48,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 			default:
 				break;
 		}
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 		return selectable;
 	}
 
@@ -69,7 +69,7 @@ public class ClientStateDumpOff extends AbstractClientStateMove<DumpOffLogicModu
 	@Override
 	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 }

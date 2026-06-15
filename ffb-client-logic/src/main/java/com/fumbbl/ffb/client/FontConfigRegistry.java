@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class FontConfigRegistry {
 
-    private static final FontConfig REGULAR = new FontConfig(11, 12, 13, 14);
-    private static final FontConfig LARGER = new FontConfig(16, 17, 18, 19);
+    private static final FontConfig REGULAR = new FontConfig(11, 12, 13, 14, 15);
+    private static final FontConfig LARGER = new FontConfig(16, 17, 18, 19, 20);
 
     private final Map<ClientLayout, FontConfig> fontConfigs = new EnumMap<>(ClientLayout.class);
 

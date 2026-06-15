@@ -31,14 +31,14 @@ public class ClientStateThrowKeg extends ClientStateAwt<ThrowKegLogicModule> {
 	@Override
 	public void setUp() {
 		super.setUp();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 	}
 
 	@Override
 	public void tearDown() {
 		FieldModel fieldModel = getClient().getGame().getFieldModel();
 		fieldModel.clearMoveSquares();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 

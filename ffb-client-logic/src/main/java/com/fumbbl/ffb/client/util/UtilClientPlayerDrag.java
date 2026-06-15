@@ -100,10 +100,10 @@ public class UtilClientPlayerDrag {
 			clientData.setDragEndPosition(pCoordinate);
 			game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.BEING_DRAGGED));
 			if (pBoxMode) {
-				userInterface.getSideBarHome().refresh();
+				userInterface.getSideBarHome().refreshUi();
 			} else {
 				pClient.getClientState().hideSelectSquare();
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 			}
 		} else {
 			clientData.setDragStartPosition(null);
@@ -122,8 +122,8 @@ public class UtilClientPlayerDrag {
 				if (!coordinate.equals(clientData.getDragEndPosition())) {
 					game.getFieldModel().setPlayerCoordinate(clientData.getSelectedPlayer(), coordinate);
 					clientData.setDragEndPosition(coordinate);
-					userInterface.getSideBarHome().refresh();
-					userInterface.getFieldComponent().refresh();
+					userInterface.getSideBarHome().refreshUi();
+					userInterface.getFieldComponent().refreshUi();
 				}
 			}
 		}
@@ -161,8 +161,8 @@ public class UtilClientPlayerDrag {
 			}
 		}
 		UserInterface userInterface = pClient.getUserInterface();
-		userInterface.getSideBarHome().refresh();
-		userInterface.getFieldComponent().refresh();
+		userInterface.getSideBarHome().refreshUi();
+		userInterface.getFieldComponent().refreshUi();
 	}
 
 }

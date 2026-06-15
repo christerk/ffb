@@ -96,7 +96,7 @@ public class DialogInterceptionHandler extends DialogHandler {
 
 						layerRangeRuler.clearMarkedCoordinates();
 						layerRangeRuler.markPlayers(interceptorsWithSkill.toArray(new Player<?>[0]), FieldLayerRangeRuler.COLOR_INTERCEPTION);
-						getClient().getUserInterface().getFieldComponent().refresh();
+						getClient().getUserInterface().getFieldComponent().refreshUi();
 
 					}
 				} else {

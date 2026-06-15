@@ -114,7 +114,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 			actionHandled = true;
 			getClient().getReplayer().stop();
 			getClient().updateClientState();
-			getClient().getUserInterface().getGameMenuBar().refresh();
+			getClient().getUserInterface().getGameMenuBar().refreshUi();
 		} else {
 			actionHandled = handleResize(pActionKey);
 		}

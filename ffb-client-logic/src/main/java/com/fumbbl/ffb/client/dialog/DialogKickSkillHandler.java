@@ -51,7 +51,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 					SQUARE_COLOR, BORDER_COLOR);
 				kickMarker = new FieldMarker(dialogKickSkillParameter.getBallCoordinateWithKick(), "K", "");
 				userInterface.getFieldComponent().getLayerMarker().drawFieldMarker(kickMarker, true);
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 
 				setDialog(
 						new DialogSkillUse(getClient(), new DialogSkillUseParameter(player.getId(), skillReduceKickDistance, 0)));
@@ -75,7 +75,7 @@ public class DialogKickSkillHandler extends DialogHandler {
 			if (kickMarker != null) {
 				userInterface.getFieldComponent().getLayerMarker().removeFieldMarker(kickMarker);
 			}
-			userInterface.getFieldComponent().refresh();
+			userInterface.getFieldComponent().refreshUi();
 			DialogSkillUse skillUseDialog = (DialogSkillUse) pDialog;
 			String playerId = ((DialogKickSkillParameter) getClient().getGame().getDialogParameter()).getPlayerId();
 			getClient().getCommunication().sendUseSkill(skillUseDialog.getSkill(), skillUseDialog.isChoiceYes(), playerId);

@@ -29,14 +29,14 @@ public class ClientStateStab extends AbstractClientStateBlock<StabLogicModule> {
 	public void tearDown() {
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 
 	private void markTargets() {
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().markPlayers(targets, FieldLayerRangeRuler.COLOR_THROWABLE_PLAYER);
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 	}
 
 	@Override

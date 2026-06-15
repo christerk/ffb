@@ -48,7 +48,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 					Game game = getClient().getGame();
 					ActingPlayer actingPlayer = game.getActingPlayer();
 					fieldComponent.getLayerUnderPlayers().drawMovePath(result.getPath(), actingPlayer.getCurrentMove());
-					fieldComponent.refresh();
+					fieldComponent.refreshUi();
 				}
 				break;
 			case RESET:
@@ -90,7 +90,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 			if (fieldComponent.getLayerUnderPlayers().clearMovePath()) {
-				fieldComponent.refresh();
+				fieldComponent.refreshUi();
 			}
 		}
 		return super.mouseOverPlayer(pPlayer);
@@ -102,7 +102,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 			case HANDLED:
 				FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 				if (fieldComponent.getLayerUnderPlayers().clearMovePath()) {
-					fieldComponent.refresh();
+					fieldComponent.refreshUi();
 				}
 				playerWasMoved();
 				break;
@@ -301,12 +301,12 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 	public void postEndTurn() {
 		getClient().getClientData().setEndTurnButtonHidden(true);
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-		sideBarHome.refresh();
+		sideBarHome.refreshUi();
 	}
 
 	protected void playerWasMoved() {
 		getClient().getGame().getFieldModel().clearMoveSquares();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 	}
 
 	protected void showShortestPath(FieldCoordinate pCoordinate, FieldComponent fieldComponent,
@@ -314,7 +314,7 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		FieldCoordinate[] shortestPath = logicModule.findShortestPath(pCoordinate);
 		if (ArrayTool.isProvided(shortestPath)) {
 			fieldComponent.getLayerUnderPlayers().drawMovePath(shortestPath, actingPlayer.getCurrentMove());
-			fieldComponent.refresh();
+			fieldComponent.refreshUi();
 		}
 	}
 }

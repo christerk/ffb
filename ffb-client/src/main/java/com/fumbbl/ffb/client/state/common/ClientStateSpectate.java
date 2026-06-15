@@ -32,7 +32,7 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 			GameTitle gameTitle = userInterface.getGameTitle();
 			gameTitle.setClientMode(ClientMode.SPECTATOR);
 			userInterface.setGameTitle(gameTitle);
-			userInterface.getGameMenuBar().refresh();
+			userInterface.getGameMenuBar().refreshUi();
 		}
 
 	}

@@ -66,8 +66,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
-		fUserInterface.getScoreBar().refresh();
-		fUserInterface.getGameMenuBar().refresh();
+		fUserInterface.getScoreBar().refreshUi();
+		fUserInterface.getGameMenuBar().refreshUi();
 
 		setClientStateFactory();
 
@@ -85,7 +85,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
-		getUserInterface().getFieldComponent().refresh();
+		getUserInterface().getFieldComponent().refreshUi();
 		getUserInterface().setVisible(true);
 
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);

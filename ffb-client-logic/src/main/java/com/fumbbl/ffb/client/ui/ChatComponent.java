@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author Kalimar
  */
-public class ChatComponent extends JPanel implements MouseMotionListener {
+public class ChatComponent extends JPanel implements MouseMotionListener, RefreshableUi {
 
 	private static final int _MAX_CHAT_LENGTH = 512;
 	private static final int _MAX_INPUT_LOG_SIZE = 100;
@@ -268,4 +268,8 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		return outer;
 	}
 
+    @Override
+    public void refreshUi() {
+        fChatTextPane.refreshUi();
+    }
 }

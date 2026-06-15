@@ -62,7 +62,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -87,7 +87,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		InteractionResult result = logicModule.fieldPeek(pCoordinate);
 		switch (result.getKind()) {
 			case PERFORM:
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				selectable = true;
 				UtilClientCursor.setCustomCursor(userInterface, IIconProperty.CURSOR_BOMB);
 				break;
@@ -109,7 +109,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 			UtilClientCursor.setDefaultCursor(userInterface);
 		}
 		fieldComponent.getLayerUnderPlayers().clearMovePath();
-		fieldComponent.refresh();
+		fieldComponent.refreshUi();
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 	@Override
 	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 		super.tearDown();

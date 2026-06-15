@@ -29,7 +29,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
 		switch (result.getKind()) {
 			case HANDLED:
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -40,7 +40,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 		InteractionResult result = logicModule.playerInteraction(pPlayer);
 		switch (result.getKind()) {
 			case HANDLED:
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -52,7 +52,7 @@ public class ClientStateKickoff extends ClientStateAwt<KickoffLogicModule> {
 	public void postEndTurn() {
 		if (logicModule.turnIsEnding()) {
 			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-			sideBarHome.refresh();
+			sideBarHome.refreshUi();
 			UtilClientCursor.setDefaultCursor(getClient().getUserInterface());
 		}
 	}

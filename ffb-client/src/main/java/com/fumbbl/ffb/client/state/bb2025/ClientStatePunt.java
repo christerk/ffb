@@ -34,7 +34,7 @@ public class ClientStatePunt extends AbstractClientStateMove<PuntLogicModule> {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case HANDLED:
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				evaluateClick(result, player);
@@ -50,7 +50,7 @@ public class ClientStatePunt extends AbstractClientStateMove<PuntLogicModule> {
 				getDelegate(result).clickOnField(pCoordinate);
 				break;
 			case HANDLED:
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -71,7 +71,7 @@ public class ClientStatePunt extends AbstractClientStateMove<PuntLogicModule> {
 		switch (result.getKind()) {
 			case DELEGATE:
 				selectable = getDelegate(result).mouseOverField(pCoordinate);
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
