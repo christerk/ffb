@@ -63,6 +63,6 @@ public class ClientStateHighKick extends ClientStateAwt<HighKickLogicModule> {
 			sideBarHome.closeBox();
 		}
 		getClient().getClientData().setEndTurnButtonHidden(true);
-		sideBarHome.refresh();
+		sideBarHome.refreshUi();
 	}
 }

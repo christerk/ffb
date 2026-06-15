@@ -20,6 +20,7 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+import java.awt.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
@@ -323,5 +324,4 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	public abstract List<Overlay> getOverlays();
 
 	public abstract void initRulesDependentMembers();
-
 }

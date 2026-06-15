@@ -11,35 +11,36 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import static com.fumbbl.ffb.client.FontConfig.Size.EXTRA_LARGE;
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+
 /**
  * DefaultDocument subclass that supports batching inserts.
  */
-public class ChatLogDocument extends DefaultStyledDocument {
+public class ChatLogDocument extends DefaultStyledDocument implements RefreshableUi {
 
 	public static String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
 
 	public static final String DEFAULT_FONT_FAMILY = "Arial";
-
-	public static final int CHAT_FONT_BASE_SIZE = 12;
-	public static final int CHAT_FONT_BASE_SIZE_LARGE = 14;
 
 	private final Style defaultStyle;
 
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
 
-	public ChatLogDocument(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
+    private final FontConfigRegistry fontRegistry;
+
+	public ChatLogDocument(StyleProvider styleProvider, DimensionProvider dimensionProvider, FontConfigRegistry fontRegistry) {
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
+        this.fontRegistry = fontRegistry;
 
 		defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
-		setStyles();
-
+        refreshUi();
 	}
 
-	public void setStyles() {
-
+	public void refreshUi() {
 		Enumeration<?> styles = getStyleNames();
 
 		List<String> names = new ArrayList<>();
@@ -54,9 +55,10 @@ public class ChatLogDocument extends DefaultStyledDocument {
 		names.forEach(this::removeStyle);
 
 		// initStyles
+        FontConfig fc = fontRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
-		int defaultFontSize = dimensionProvider.scale(CHAT_FONT_BASE_SIZE);
-		int largerSize = dimensionProvider.scale(CHAT_FONT_BASE_SIZE_LARGE);
+        int defaultFontSize = dimensionProvider.scale(fc.getSize(MEDIUM));
+        int largerSize = dimensionProvider.scale(fc.getSize(EXTRA_LARGE));
 
 		StyleConstants.setFontFamily(defaultStyle, DEFAULT_FONT_FAMILY);
 

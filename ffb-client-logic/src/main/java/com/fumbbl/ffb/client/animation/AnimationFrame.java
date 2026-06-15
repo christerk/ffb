@@ -146,7 +146,7 @@ public class AnimationFrame {
 		if (fIcon2 != null) {
 			addUpdatedArea(fFieldLayer.drawCenteredAndScaled(fIcon2, dimension.width, dimension.height, fAlpha2, scale, scale));
 		}
-		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+		fFieldLayer.getClient().getUserInterface().getFieldComponent().refreshUi();
 	}
 
 	public void clear() {

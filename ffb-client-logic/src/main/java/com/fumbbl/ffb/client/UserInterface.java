@@ -35,6 +35,8 @@ import java.lang.reflect.InvocationTargetException;
 import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static java.awt.Font.PLAIN;
 
 /**
  * @author Kalimar
@@ -94,12 +96,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
-		fontCache = new FontCache();
         fontConfigRegistry = new FontConfigRegistry();
+        fontCache = new FontCache(fontConfigRegistry);
 		fSoundEngine = new SoundEngine(getClient());
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
 		fSoundEngine.init();
-		fDialogManager = new DialogManager(getClient());
+        fDialogManager = new DialogManager(getClient(), fontConfigRegistry);
 		styleProvider = new StyleProvider();
 		clickStrategyRegistry = new ClickStrategyRegistry();
         GameTitle pGameTitle = new GameTitle();
@@ -123,8 +125,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
-		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
-		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
+        fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider, fontConfigRegistry);
+        fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fontConfigRegistry, fIconCache);
         fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
         fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
 
@@ -132,6 +134,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		getChat().requestChatInputFocus();
         configureFullScreenShortcut(this);
+
+        FontConfig fc = fontConfigRegistry.getConfig(uiDimensionProvider.getLayoutSettings().getLayout());
+        Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), uiDimensionProvider);
+        updateFontForTitles(titleFont);
+
         updateFullScreenMode();
 	}
 
@@ -331,15 +338,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	public void refreshSideBars() {
-		getSideBarHome().refresh();
-		getSideBarAway().refresh();
-		getScoreBar().refresh();
+		getSideBarHome().refreshUi();
+		getSideBarAway().refreshUi();
+		getScoreBar().refreshUi();
 	}
 
 	public void refresh() {
 		refreshSideBars();
-		getFieldComponent().refresh();
-		getGameMenuBar().refresh();
+		getFieldComponent().refreshUi();
+		getGameMenuBar().refreshUi();
 	}
 
 	public synchronized void init(GameOptions gameOptions) {
@@ -544,5 +551,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
             pack();
             setVisible(true);
         }
+    }
+
+    public void updateFontForTitles(Font font) {
+        UIManager.put("InternalFrame.titleFont", font);
+        SwingUtilities.updateComponentTreeUI(this);
     }
 }

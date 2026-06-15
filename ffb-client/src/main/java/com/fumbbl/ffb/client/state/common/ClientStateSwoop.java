@@ -40,7 +40,7 @@ public class ClientStateSwoop extends AbstractClientStateMove<SwoopLogicModule> 
 		// clear marked players
 		UserInterface userInterface = getClient().getUserInterface();
 		userInterface.getFieldComponent().getLayerRangeRuler().clearMarkedCoordinates();
-		userInterface.getFieldComponent().refresh();
+		userInterface.getFieldComponent().refreshUi();
 		super.tearDown();
 	}
 }

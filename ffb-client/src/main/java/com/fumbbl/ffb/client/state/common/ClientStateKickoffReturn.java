@@ -51,7 +51,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 		switch (result.getKind()) {
 			case HANDLED:
 				getClient().getGame().getFieldModel().clearMoveSquares();
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -130,7 +130,7 @@ public class ClientStateKickoffReturn extends AbstractClientStateMove<KickoffRet
 	@Override
 	public void postEndTurn() {
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-		sideBarHome.refresh();
+		sideBarHome.refreshUi();
 	}
 
 }

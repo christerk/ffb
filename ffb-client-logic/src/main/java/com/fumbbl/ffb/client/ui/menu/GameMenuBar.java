@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
+import com.fumbbl.ffb.client.ui.RefreshableUi;
 import com.fumbbl.ffb.client.ui.menu.game.GameModeMenu;
 import com.fumbbl.ffb.client.ui.menu.game.ReplayMenu;
 import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
@@ -30,7 +31,7 @@ import static javax.swing.SwingConstants.VERTICAL;
 /**
  * @author Kalimar
  */
-public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener {
+public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener, RefreshableUi {
 
 	private final FantasyFootballClient fClient;
 	private GameModeMenu gameModeMenu; // Menu for current game mode (StandardGame or Replay)
@@ -112,35 +113,35 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
-			gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry);
+            gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry, fontCache, fontConfigRegistry);
 		} else {
-			gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings);
+            gameModeMenu = new StandardGameMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		}
 
 		add(gameModeMenu);
 
-		setupMenu = new SetupMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        setupMenu = new SetupMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(setupMenu);
 
-		userSettingsMenu = new UserSettingsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        userSettingsMenu = new UserSettingsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(userSettingsMenu);
 
-		missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        missingPlayersMenu = new MissingPlayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(missingPlayersMenu);
 
-		inducementsMenu = new InducementsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        inducementsMenu = new InducementsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(inducementsMenu);
 
-		CardsMenu cardsMenu = new CardsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        CardsMenu cardsMenu = new CardsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(cardsMenu);
 
-		PrayersMenu prayersMenu = new PrayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        PrayersMenu prayersMenu = new PrayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(prayersMenu);
 
-		OptionsMenu optionsMenu = new OptionsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        OptionsMenu optionsMenu = new OptionsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(optionsMenu);
 
-		HelpMenu helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
+        HelpMenu helpMenu = new HelpMenu(getClient(), dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		add(helpMenu);
 
 		subMenus.forEach(FfbMenu::init);
@@ -148,14 +149,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
         add(gameInfoSeparator);
         add(gameInfo);
 
-		refresh();
+		refreshUi();
 	}
 
 	public FantasyFootballClient getClient() {
 		return fClient;
 	}
 
-	public void refresh() {
+	public void refreshUi() {
 		boolean reInit = subMenus.stream().map(FfbMenu::refresh).reduce((a, b) -> a || b).orElse(false);
 
 		if (fClient.getUserInterface() != null && reInit) {

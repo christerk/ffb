@@ -200,7 +200,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 					if (logicModule.getActingPlayer().getPlayer() != null && pMouseEvent.getButton() == MouseEvent.BUTTON3 &&
 						IClientPropertyValue.SETTING_RIGHT_CLICK_END_ACTION_ON.equals(rightClickProperty)) {
 						if (logicModule.endPlayerActivation()) {
-							getClient().getUserInterface().getFieldComponent().refresh();
+							getClient().getUserInterface().getFieldComponent().refreshUi();
 						}
 						menuOpen = false;
 					} else if (player.isPresent() && (pMouseEvent.getButton() != MouseEvent.BUTTON3 ||

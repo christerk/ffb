@@ -53,7 +53,7 @@ import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
 /**
  * @author Kalimar
  */
-public class PlayerDetailComponent extends JPanel {
+public class PlayerDetailComponent extends JPanel implements RefreshableUi {
 
 	private final FontCache fontCache;
     private final FontConfigRegistry fontConfigRegistry;
@@ -605,11 +605,11 @@ public class PlayerDetailComponent extends JPanel {
 		pTextLayout.draw(pG2d, pX, pY);
 	}
 
-	public void refresh() {
+	public void refreshUi() {
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
         nameFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
-        statFont = fontCache.font(Font.BOLD, fc.getSize(LARGEST), dimensionProvider);
+        statFont = fontCache.font(Font.BOLD, fc.getSize(EXTRA_LARGE), dimensionProvider);
         positionFont = fontCache.font(Font.PLAIN, fc.getSize(SMALL), dimensionProvider);
         sppFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);
         skillFont = fontCache.font(Font.BOLD, fc.getSize(LARGE), dimensionProvider);

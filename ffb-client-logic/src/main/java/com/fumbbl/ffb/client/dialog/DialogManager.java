@@ -4,6 +4,7 @@ import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontConfigRegistry;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsAndInducementsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyCardsHandler;
 import com.fumbbl.ffb.client.dialog.inducements.DialogBuyInducementsHandler;
@@ -20,9 +21,11 @@ public class DialogManager {
 
 	private DialogHandler fDialogHandler;
 	private IDialogParameter fShownDialogParameter;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	public DialogManager(FantasyFootballClient pClient) {
+	public DialogManager(FantasyFootballClient pClient, FontConfigRegistry fontConfigRegistry) {
 		fClient = pClient;
+        this.fontConfigRegistry = fontConfigRegistry;
 	}
 
 	public void updateDialog() {
@@ -142,7 +145,7 @@ public class DialogManager {
 						setDialogHandler(new DialogPassBlockHandler(getClient()));
 						break;
 					case BUY_CARDS:
-						setDialogHandler(new DialogBuyCardsHandler(getClient()));
+						setDialogHandler(new DialogBuyCardsHandler(getClient(), fontConfigRegistry));
 						break;
 					case ARGUE_THE_CALL:
 						setDialogHandler(new DialogArgueTheCallHandler(getClient()));

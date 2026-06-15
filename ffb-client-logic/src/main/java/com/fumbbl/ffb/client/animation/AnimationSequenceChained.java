@@ -143,7 +143,7 @@ public class AnimationSequenceChained implements IAnimationSequence, ActionListe
 			timer.stop();
 			dataPosition = -1;
 		}
-		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+		fFieldLayer.getClient().getUserInterface().getFieldComponent().refreshUi();
 		if ((dataPosition < 0) && (fListener != null)) {
 			fListener.animationFinished();
 		}

@@ -56,7 +56,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 		switch (result.getKind()) {
 			case HANDLED:
 				getClient().getGame().getFieldModel().clearMoveSquares();
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -150,7 +150,7 @@ public class ClientStatePassBlock extends AbstractClientStateMove<PassBlockLogic
 
 		if (logicModule.isTurnEnding()) {
 			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-			sideBarHome.refresh();
+			sideBarHome.refreshUi();
 		} else {
 			fInfoDialog = new DialogInformation(getClient(), "End Turn not possible",
 				new String[]{"You cannot end the turn before the acting player has reached a valid destination!"},

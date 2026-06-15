@@ -3,13 +3,10 @@ package com.fumbbl.ffb.client.ui.menu.game;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
+import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategy;
 import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
@@ -49,10 +46,16 @@ public class ReplayMenu extends GameModeMenu {
 	private Set<ClickStrategyMenuItem> addPointItems;
 	private Set<ClickStrategyMenuItem> endSketchItems;
 
-	public ReplayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
-										StyleProvider styleProvider, LayoutSettings layoutSettings, ClientSketchManager sketchManager,
-										ClickStrategyRegistry clickStrategyRegistry) {
-		super("Replay", client, dimensionProvider, communication, styleProvider, layoutSettings);
+    public ReplayMenu(FantasyFootballClient client,
+                      DimensionProvider dimensionProvider,
+                      ClientCommunication communication,
+                      StyleProvider styleProvider,
+                      LayoutSettings layoutSettings,
+                      ClientSketchManager sketchManager,
+                      ClickStrategyRegistry clickStrategyRegistry,
+                      FontCache fontCache,
+                      FontConfigRegistry fontConfigRegistry) {
+		super("Replay", client, dimensionProvider, communication, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_R);
 		this.sketchManager = sketchManager;
 		this.clickStrategyRegistry = clickStrategyRegistry;
@@ -90,19 +93,19 @@ public class ReplayMenu extends GameModeMenu {
 		ButtonGroup endSketchGroup = new ButtonGroup();
 
 		for (ClickStrategy strategy : clickStrategyRegistry.getStrategies()) {
-			ClickStrategyMenuItem startItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			ClickStrategyMenuItem startItem = new ClickStrategyMenuItem(dimensionProvider, strategy, fontCache, fontConfigRegistry);
 			startItem.addActionListener(this);
 			startSketchMenu.add(startItem);
 			startSketchItems.add(startItem);
 			startSketchGroup.add(startItem);
 
-			ClickStrategyMenuItem addItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			ClickStrategyMenuItem addItem = new ClickStrategyMenuItem(dimensionProvider, strategy, fontCache, fontConfigRegistry);
 			addItem.addActionListener(this);
 			addPointMenu.add(addItem);
 			addPointItems.add(addItem);
 			addPointGroup.add(addItem);
 
-			ClickStrategyMenuItem endItem = new ClickStrategyMenuItem(dimensionProvider, strategy);
+			ClickStrategyMenuItem endItem = new ClickStrategyMenuItem(dimensionProvider, strategy, fontCache, fontConfigRegistry);
 			endItem.addActionListener(this);
 			endSketchMenu.add(endItem);
 			endSketchItems.add(endItem);
@@ -270,6 +273,7 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void createJoinedCoachesMenu() {
 		joinedCoachesMenu = new JMenu(dimensionProvider, "Joined Coaches");
+        joinedCoachesMenu.setFont(getDefaultFont());
 		joinedCoachesMenu.setMnemonic(KeyEvent.VK_J);
 		add(joinedCoachesMenu);
 	}
@@ -278,12 +282,12 @@ public class ReplayMenu extends GameModeMenu {
 		JMenu cursorMenu = new JMenu(dimensionProvider, "Cursor");
 		ButtonGroup cursorGroup = new ButtonGroup();
 
-		customSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "Pen");
+        customSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "Pen", fontCache, fontConfigRegistry);
 		customSketchCursor.addActionListener(this);
 		cursorMenu.add(customSketchCursor);
 		cursorGroup.add(customSketchCursor);
 
-		defaultSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "System Default");
+        defaultSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "System Default", fontCache, fontConfigRegistry);
 		defaultSketchCursor.addActionListener(this);
 		cursorMenu.add(defaultSketchCursor);
 		cursorGroup.add(defaultSketchCursor);
@@ -350,7 +354,7 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void addSketchMenuItem(JMenu menu, ButtonGroup group, String label, String coach,
 																 Set<JRadioButtonMenuItem> items, boolean enabled, boolean selected) {
-		JRadioButtonMenuItem item = new JRadioButtonMenuItem(dimensionProvider, label);
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(dimensionProvider, label, fontCache, fontConfigRegistry);
 		menu.add(item);
 		group.add(item);
 		item.setEnabled(enabled);
@@ -388,8 +392,11 @@ public class ReplayMenu extends GameModeMenu {
 	private static class ClickStrategyMenuItem extends JRadioButtonMenuItem {
 		private final ClickStrategy strategy;
 
-		public ClickStrategyMenuItem(DimensionProvider dimensionProvider, ClickStrategy strategy) {
-			super(dimensionProvider, strategy.getMenuLabel());
+        public ClickStrategyMenuItem(DimensionProvider dimensionProvider,
+                                     ClickStrategy strategy,
+                                     FontCache fontCache,
+                                     FontConfigRegistry fontConfigRegistry) {
+            super(dimensionProvider, strategy.getMenuLabel(), fontCache, fontConfigRegistry);
 			this.strategy = strategy;
 		}
 

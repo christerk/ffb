@@ -1,9 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu.game;
 
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogGameStatistics;
 import com.fumbbl.ffb.client.net.ClientCommunication;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
@@ -16,9 +13,15 @@ public abstract class GameModeMenu extends FfbMenu {
     protected JMenuItem gameStatisticsMenuItem;
     protected ClientCommunication communication;
 
-    protected GameModeMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, ClientCommunication communication,
-                           StyleProvider styleProvider, LayoutSettings layoutSettings) {
-        super(text, client, dimensionProvider, styleProvider, layoutSettings);
+    protected GameModeMenu(String text,
+                           FantasyFootballClient client,
+                           DimensionProvider dimensionProvider,
+                           ClientCommunication communication,
+                           StyleProvider styleProvider,
+                           LayoutSettings layoutSettings,
+                           FontCache fontCache,
+                           FontConfigRegistry fontConfigRegistry) {
+        super(text, client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
         this.communication = communication;
     }
 
@@ -32,6 +35,7 @@ public abstract class GameModeMenu extends FfbMenu {
 
     @Override
     public final boolean refresh() {
+        super.refresh();
         boolean gameStarted = client.getGame() != null && client.getGame().getStarted() != null;
         gameStatisticsMenuItem.setEnabled(gameStarted);
 
@@ -45,6 +49,7 @@ public abstract class GameModeMenu extends FfbMenu {
         gameStatisticsMenuItem = new JMenuItem(dimensionProvider, "Game Statistics", KeyEvent.VK_S);
         gameStatisticsMenuItem.addActionListener(this);
         gameStatisticsMenuItem.setEnabled(false);
+        gameStatisticsMenuItem.setFont(getDefaultFont());
         add(gameStatisticsMenuItem);
     }
 

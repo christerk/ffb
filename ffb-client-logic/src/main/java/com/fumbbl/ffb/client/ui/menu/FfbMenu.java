@@ -1,12 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu;
 
-import com.fumbbl.ffb.client.ClientData;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.PlayerIconFactory;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.UserInterface;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
@@ -16,27 +10,50 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
 
 public abstract class FfbMenu extends JMenu implements ActionListener, IDialogCloseListener {
     protected final FantasyFootballClient client;
     protected final DimensionProvider dimensionProvider;
     protected final StyleProvider styleProvider;
     protected final LayoutSettings layoutSettings;
+    protected final FontCache fontCache;
+    protected final FontConfigRegistry fontConfigRegistry;
 
-    protected FfbMenu(String text, FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
+    protected FfbMenu(String text,
+                      FantasyFootballClient client,
+                      DimensionProvider dimensionProvider,
+                      StyleProvider styleProvider,
+                      LayoutSettings layoutSettings,
+                      FontCache fontCache,
+                      FontConfigRegistry fontConfigRegistry) {
         super(dimensionProvider, text);
+        this.fontCache = fontCache;
+        this.fontConfigRegistry = fontConfigRegistry;
         this.client = client;
         this.dimensionProvider = dimensionProvider;
         this.styleProvider = styleProvider;
         this.layoutSettings = layoutSettings;
+
+        setFont(getDefaultFont());
     }
 
     public abstract void init();
 
-    public abstract boolean refresh();
+    public boolean refresh(){
+        setFont(getDefaultFont());
+        return false;
+    }
+
+    public Font getDefaultFont() {
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+        return fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+    }
 
     public void showDialog(IDialog dialog) {
         client.getUserInterface().showDialog(dialog, this);

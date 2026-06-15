@@ -61,7 +61,7 @@ public abstract class ClientCommandHandler {
 	protected void refreshFieldComponent() {
 		getClient().getUserInterface().invokeAndWait(new Runnable() {
 			public void run() {
-				getClient().getUserInterface().getFieldComponent().refresh();
+				getClient().getUserInterface().getFieldComponent().refreshUi();
 			}
 		});
 	}
@@ -77,7 +77,7 @@ public abstract class ClientCommandHandler {
 	protected void refreshGameMenuBar() {
 		getClient().getUserInterface().invokeAndWait(new Runnable() {
 			public void run() {
-				getClient().getUserInterface().getGameMenuBar().refresh();
+				getClient().getUserInterface().getGameMenuBar().refreshUi();
 			}
 		});
 	}

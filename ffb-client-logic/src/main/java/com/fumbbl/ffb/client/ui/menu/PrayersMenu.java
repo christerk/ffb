@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.factory.PrayerFactory;
@@ -22,8 +19,13 @@ public class PrayersMenu extends FfbMenu {
 	private final List<Prayer> currentPrayersHome = new ArrayList<>();
 	private final List<Prayer> currentPrayersAway = new ArrayList<>();
 
-	protected PrayersMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Prayers", client, dimensionProvider, styleProvider, layoutSettings);
+	protected PrayersMenu(FantasyFootballClient client,
+                          DimensionProvider dimensionProvider,
+                          StyleProvider styleProvider,
+                          LayoutSettings layoutSettings,
+                          FontCache fontCache,
+                          FontConfigRegistry fontConfigRegistry) {
+		super("Prayers", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_P);
 		setEnabled(false);
 	}
@@ -35,6 +37,7 @@ public class PrayersMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
 

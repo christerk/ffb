@@ -34,12 +34,12 @@ public class RangeGridHandler {
 		switch (result.getKind()) {
 			case PERFORM:
 				if (userInterface.getFieldComponent().getLayerRangeGrid().drawRangeGrid(result.getCoordinate(), fThrowTeamMate)) {
-					userInterface.getFieldComponent().refresh();
+					userInterface.getFieldComponent().refreshUi();
 				}
 				break;
 			case RESET:
 				if (userInterface.getFieldComponent().getLayerRangeGrid().clearRangeGrid()) {
-					userInterface.getFieldComponent().refresh();
+					userInterface.getFieldComponent().refreshUi();
 				}
 				break;
 			default:

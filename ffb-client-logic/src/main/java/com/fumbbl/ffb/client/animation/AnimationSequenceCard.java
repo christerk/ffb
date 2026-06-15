@@ -134,7 +134,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 			fTimer.stop();
 			fPosition = -1;
 		}
-		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+		fFieldLayer.getClient().getUserInterface().getFieldComponent().refreshUi();
 		if ((fPosition < 0) && (fListener != null)) {
 			fListener.animationFinished();
 		}

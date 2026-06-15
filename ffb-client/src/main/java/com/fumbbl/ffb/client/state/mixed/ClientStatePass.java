@@ -55,7 +55,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		InteractionResult result = logicModule.playerInteraction(player);
 		switch (result.getKind()) {
 			case HANDLED:
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				evaluateClick(result, player);
@@ -71,7 +71,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				getDelegate(result).clickOnField(pCoordinate);
 				break;
 			case HANDLED:
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			default:
 				break;
@@ -90,7 +90,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				selectable = true;
 				FieldComponent fieldComponent = userInterface.getFieldComponent();
 				fieldComponent.getLayerUnderPlayers().clearMovePath();
-				fieldComponent.refresh();
+				fieldComponent.refreshUi();
 				getClient().getClientData().setSelectedPlayer(pPlayer);
 				userInterface.refreshSideBars();
 				determineCursor(result);
@@ -116,12 +116,12 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 		switch (result.getKind()) {
 			case PERFORM:
 				userInterface.getFieldComponent().getLayerUnderPlayers().clearMovePath();
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				selectable = true;
 				break;
 			case DELEGATE:
 				selectable = getDelegate(result).mouseOverField(pCoordinate);
-				userInterface.getFieldComponent().refresh();
+				userInterface.getFieldComponent().refreshUi();
 				break;
 			case PREVIEW_THROW:
 				drawRangeRuler(pCoordinate);
@@ -148,7 +148,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 				UtilClientCursor.setDefaultCursor(userInterface);
 			}
 			fieldComponent.getLayerUnderPlayers().clearMovePath();
-			fieldComponent.refresh();
+			fieldComponent.refreshUi();
 		}
 	}
 
@@ -161,7 +161,7 @@ public class ClientStatePass extends AbstractClientStateMove<PassLogicModule> {
 	@Override
 	public void tearDown() {
 		getClient().getUserInterface().getFieldComponent().getLayerRangeRuler().removeRangeRuler();
-		getClient().getUserInterface().getFieldComponent().refresh();
+		getClient().getUserInterface().getFieldComponent().refreshUi();
 		fRangeGridHandler.setShowRangeGrid(false);
 		fRangeGridHandler.refreshRangeGrid();
 		super.tearDown();

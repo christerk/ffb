@@ -24,6 +24,7 @@ import com.fumbbl.ffb.client.overlay.Overlay;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.state.ClientState;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.ui.RefreshableUi;
 import com.fumbbl.ffb.marking.FieldMarker;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
@@ -50,7 +51,7 @@ import java.util.Optional;
 /**
  * @author j129340
  */
-public class FieldComponent extends JPanel implements IModelChangeObserver, MouseInputListener {
+public class FieldComponent extends JPanel implements IModelChangeObserver, MouseInputListener, RefreshableUi {
 
 	private final FantasyFootballClient fClient;
 
@@ -101,7 +102,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 		ToolTipManager.sharedInstance().registerComponent(this);
 
-		refresh();
+		refreshUi();
 
 	}
 
@@ -177,7 +178,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
     return layerTackleZones;
   }
 
-	public synchronized void refresh() {
+	public synchronized void refreshUi() {
 
 		Rectangle updatedArea = combineRectangles(new Rectangle[]{getLayerField().fetchUpdatedArea(),
 			getLayerTeamLogo().fetchUpdatedArea(), getLayerEnhancements().fetchUpdatedArea(),
@@ -343,7 +344,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 				break;
 			case SKETCH_UPDATE:
 				getLayerSketches().draw((SketchState) pModelChange.getValue());
-				refresh();
+				refreshUi();
 				break;
 			default:
 				break;
@@ -366,7 +367,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		getLayerRangeRuler().init();
 		getLayerSketches().init();
 		getLayerTackleZones().init();
-		refresh();
+		refreshUi();
 
 	}
 

@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.FontConfigRegistry;
 import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.dialog.Dialog;
@@ -52,10 +53,14 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 	private final ChatLogTextPane fCardLogTextPane;
 
 	private final JButton fButtonContinue;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	public DialogBuyCards(FantasyFootballClient pClient, DialogBuyCardsParameter pParameter) {
+    public DialogBuyCards(FantasyFootballClient pClient,
+                          DialogBuyCardsParameter pParameter,
+                          FontConfigRegistry fontConfigRegistry) {
 
 		super(pClient, "Buy Cards", false);
+        this.fontConfigRegistry = fontConfigRegistry;
 
 		JPanel panelMain = new JPanel();
 		panelMain.setLayout(new BoxLayout(panelMain, BoxLayout.Y_AXIS));
@@ -114,7 +119,9 @@ public class DialogBuyCards extends Dialog implements ActionListener, KeyListene
 			panelMain.add(Box.createVerticalStrut(5));
 		}
 
-		fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(), pClient.getUserInterface().getPitchDimensionProvider());
+        fCardLogTextPane = new ChatLogTextPane(pClient.getUserInterface().getStyleProvider(),
+                pClient.getUserInterface().getPitchDimensionProvider(),
+                fontConfigRegistry);
 		ChatLogScrollPane fCardLogScrollPane = new ChatLogScrollPane(fCardLogTextPane);
 
 		JPanel panelCardLog = new JPanel();

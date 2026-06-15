@@ -95,7 +95,7 @@ public class AnimationSequenceMovingEffect implements IAnimationSequence, Action
       animationProjector.updateCurrentDimension();
 
       frames[framePos].draw(fFieldLayer, animationProjector.getCurrentDimension(), scale);
-      fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+      fFieldLayer.getClient().getUserInterface().getFieldComponent().refreshUi();
     }
 
     if (!framesLeft) {

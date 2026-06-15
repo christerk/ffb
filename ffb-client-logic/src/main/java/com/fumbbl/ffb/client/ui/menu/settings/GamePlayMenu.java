@@ -3,10 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -84,8 +81,13 @@ public class GamePlayMenu extends FfbMenu {
 
 	private Map<CommonProperty, JMenu> exposedMenus;
 
-	protected GamePlayMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Game Play", client, dimensionProvider, styleProvider, layoutSettings);
+    protected GamePlayMenu(FantasyFootballClient client,
+                           DimensionProvider dimensionProvider,
+                           StyleProvider styleProvider,
+                           LayoutSettings layoutSettings,
+                           FontCache fontCache,
+                           FontConfigRegistry fontConfigRegistry) {
+        super("Game Play", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_G);
 	}
 
@@ -105,6 +107,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		String automoveSetting = client.getProperty(CommonProperty.SETTING_AUTOMOVE);
 		fAutomoveOnMenuItem.setSelected(true);
 		fAutomoveOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveSetting));
@@ -333,12 +336,12 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup markUsedPlayersGroup = new ButtonGroup();
 
-		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Fade only");
+		markUsedPlayersDefaultMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Fade only", fontCache, fontConfigRegistry);
 		markUsedPlayersDefaultMenuItem.addActionListener(this);
 		markUsedPlayersGroup.add(markUsedPlayersDefaultMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersDefaultMenuItem);
 
-		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Green check mark");
+		markUsedPlayersCheckIconGreenMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Green check mark", fontCache, fontConfigRegistry);
 		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
 		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
@@ -351,12 +354,12 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup rangeGridGroup = new ButtonGroup();
 
-		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid always on");
+		fRangeGridAlwaysOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid always on", fontCache, fontConfigRegistry);
 		fRangeGridAlwaysOnMenuItem.addActionListener(this);
 		rangeGridGroup.add(fRangeGridAlwaysOnMenuItem);
 		fRangeGridMenu.add(fRangeGridAlwaysOnMenuItem);
 
-		fRangeGridToggleMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid toggle");
+		fRangeGridToggleMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Range Grid toggle", fontCache, fontConfigRegistry);
 		fRangeGridToggleMenuItem.addActionListener(this);
 		rangeGridGroup.add(fRangeGridToggleMenuItem);
 		fRangeGridMenu.add(fRangeGridToggleMenuItem);
@@ -369,25 +372,25 @@ public class GamePlayMenu extends FfbMenu {
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		add(reRollBallAndChainPanelMenu);
 
-		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always");
+		reRollBallAndChainAlwaysMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Always", fontCache, fontConfigRegistry);
 		reRollBallAndChainAlwaysMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_ALWAYS);
 		reRollBallAndChainAlwaysMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainAlwaysMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainAlwaysMenuItem);
 
-		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent");
+		reRollBallAndChainNoOpponentMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When not hitting an opponent", fontCache, fontConfigRegistry);
 		reRollBallAndChainNoOpponentMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NO_OPPONENT);
 		reRollBallAndChainNoOpponentMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNoOpponentMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainNoOpponentMenuItem);
 
-		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate");
+		reRollBallAndChainTeamMateMenuItem = new JRadioButtonMenuItem(dimensionProvider, "When hitting Team-mate", fontCache, fontConfigRegistry);
 		reRollBallAndChainTeamMateMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_TEAM_MATE);
 		reRollBallAndChainTeamMateMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainTeamMateMenuItem);
 		reRollBallAndChainPanelMenu.add(reRollBallAndChainTeamMateMenuItem);
 
-		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never");
+		reRollBallAndChainNeverMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Never", fontCache, fontConfigRegistry);
 		reRollBallAndChainNeverMenuItem.setName(IClientPropertyValue.SETTING_RE_ROLL_BALL_AND_CHAIN_NEVER);
 		reRollBallAndChainNeverMenuItem.addActionListener(this);
 		reRollBallAndChainPanelGroup.add(reRollBallAndChainNeverMenuItem);
@@ -400,22 +403,22 @@ public class GamePlayMenu extends FfbMenu {
 		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
 		add(rightClickEndActionPanelMenu);
 
-		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Ends Action/Selection");
+		rightClickEndActionOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Ends Action/Selection", fontCache, fontConfigRegistry);
 		rightClickEndActionOnMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOnMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOnMenuItem);
 
-		rightClickLegacyModeItem = new JRadioButtonMenuItem(dimensionProvider, "Works like Left Click (Legacy)");
+		rightClickLegacyModeItem = new JRadioButtonMenuItem(dimensionProvider, "Works like Left Click (Legacy)", fontCache, fontConfigRegistry);
 		rightClickLegacyModeItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickLegacyModeItem);
 		rightClickEndActionPanelMenu.add(rightClickLegacyModeItem);
 
-		rightClickOpensContextMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Selects Player/Opens Context Menu");
+		rightClickOpensContextMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Selects Player/Opens Context Menu", fontCache, fontConfigRegistry);
 		rightClickOpensContextMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickOpensContextMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickOpensContextMenuItem);
 
-		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disabled");
+		rightClickEndActionOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disabled", fontCache, fontConfigRegistry);
 		rightClickEndActionOffMenuItem.addActionListener(this);
 		rightClickEndActionPanelGroup.add(rightClickEndActionOffMenuItem);
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
@@ -427,12 +430,12 @@ public class GamePlayMenu extends FfbMenu {
 		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
 		add(gazeTargetPanelMenu);
 
-		gazePanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+		gazePanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", fontCache, fontConfigRegistry);
 		gazePanelOnMenuItem.addActionListener(this);
 		gazeTargetPanelGroup.add(gazePanelOnMenuItem);
 		gazeTargetPanelMenu.add(gazePanelOnMenuItem);
 
-		gazePanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+		gazePanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", fontCache, fontConfigRegistry);
 		gazePanelOffMenuItem.addActionListener(this);
 		gazeTargetPanelGroup.add(gazePanelOffMenuItem);
 		gazeTargetPanelMenu.add(gazePanelOffMenuItem);
@@ -444,12 +447,12 @@ public class GamePlayMenu extends FfbMenu {
 		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
 		add(blitzTargetPanelMenu);
 
-		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+		fBlitzPanelOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", fontCache, fontConfigRegistry);
 		fBlitzPanelOnMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOnMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOnMenuItem);
 
-		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+		fBlitzPanelOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", fontCache, fontConfigRegistry);
 		fBlitzPanelOffMenuItem.addActionListener(this);
 		blitzTargetPanelGroup.add(fBlitzPanelOffMenuItem);
 		blitzTargetPanelMenu.add(fBlitzPanelOffMenuItem);
@@ -462,12 +465,12 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup automoveGroup = new ButtonGroup();
 
-		fAutomoveOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+		fAutomoveOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", fontCache, fontConfigRegistry);
 		fAutomoveOnMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOnMenuItem);
 		fAutomoveMenu.add(fAutomoveOnMenuItem);
 
-		fAutomoveOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+		fAutomoveOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", fontCache, fontConfigRegistry);
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
@@ -488,37 +491,37 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup playerModeGroup = new ButtonGroup();
 
-		tzPlayerNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		tzPlayerNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None", fontCache, fontConfigRegistry);
 		tzPlayerNoneMenuItem.setMnemonic(KeyEvent.VK_N);
 		tzPlayerNoneMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerNoneMenuItem);
 		playerModeMenu.add(tzPlayerNoneMenuItem);
 
-		tzPlayerHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		tzPlayerHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home", fontCache, fontConfigRegistry);
 		tzPlayerHomeMenuItem.setMnemonic(KeyEvent.VK_H);
 		tzPlayerHomeMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerHomeMenuItem);
 		playerModeMenu.add(tzPlayerHomeMenuItem);
 
-		tzPlayerAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		tzPlayerAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away", fontCache, fontConfigRegistry);
 		tzPlayerAwayMenuItem.setMnemonic(KeyEvent.VK_A);
 		tzPlayerAwayMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerAwayMenuItem);
 		playerModeMenu.add(tzPlayerAwayMenuItem);
 
-		tzPlayerBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		tzPlayerBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both", fontCache, fontConfigRegistry);
 		tzPlayerBothMenuItem.setMnemonic(KeyEvent.VK_B);
 		tzPlayerBothMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerBothMenuItem);
 		playerModeMenu.add(tzPlayerBothMenuItem);
 
-		tzPlayerPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		tzPlayerPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive", fontCache, fontConfigRegistry);
 		tzPlayerPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
 		tzPlayerPassiveMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerPassiveMenuItem);
 		playerModeMenu.add(tzPlayerPassiveMenuItem);
 
-		tzPlayerPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)");
+		tzPlayerPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)", fontCache, fontConfigRegistry);
 		tzPlayerPassiveBothOnSetupMenuItem.setMnemonic(KeyEvent.VK_S);
 		tzPlayerPassiveBothOnSetupMenuItem.addActionListener(this);
 		playerModeGroup.add(tzPlayerPassiveBothOnSetupMenuItem);
@@ -531,37 +534,37 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup spectatorModeGroup = new ButtonGroup();
 
-		tzSpectatorNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None");
+		tzSpectatorNoneMenuItem = new JRadioButtonMenuItem(dimensionProvider, "None", fontCache, fontConfigRegistry);
 		tzSpectatorNoneMenuItem.setMnemonic(KeyEvent.VK_N);
 		tzSpectatorNoneMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorNoneMenuItem);
 		spectatorModeMenu.add(tzSpectatorNoneMenuItem);
 
-		tzSpectatorHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home");
+		tzSpectatorHomeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Home", fontCache, fontConfigRegistry);
 		tzSpectatorHomeMenuItem.setMnemonic(KeyEvent.VK_H);
 		tzSpectatorHomeMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorHomeMenuItem);
 		spectatorModeMenu.add(tzSpectatorHomeMenuItem);
 
-		tzSpectatorAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away");
+		tzSpectatorAwayMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Away", fontCache, fontConfigRegistry);
 		tzSpectatorAwayMenuItem.setMnemonic(KeyEvent.VK_A);
 		tzSpectatorAwayMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorAwayMenuItem);
 		spectatorModeMenu.add(tzSpectatorAwayMenuItem);
 
-		tzSpectatorBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both");
+		tzSpectatorBothMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Both", fontCache, fontConfigRegistry);
 		tzSpectatorBothMenuItem.setMnemonic(KeyEvent.VK_B);
 		tzSpectatorBothMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorBothMenuItem);
 		spectatorModeMenu.add(tzSpectatorBothMenuItem);
 
-		tzSpectatorPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive");
+		tzSpectatorPassiveMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive", fontCache, fontConfigRegistry);
 		tzSpectatorPassiveMenuItem.setMnemonic(KeyEvent.VK_P);
 		tzSpectatorPassiveMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorPassiveMenuItem);
 		spectatorModeMenu.add(tzSpectatorPassiveMenuItem);
 
-		tzSpectatorPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)");
+		tzSpectatorPassiveBothOnSetupMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Passive (both on setup)", fontCache, fontConfigRegistry);
 		tzSpectatorPassiveBothOnSetupMenuItem.setMnemonic(KeyEvent.VK_S);
 		tzSpectatorPassiveBothOnSetupMenuItem.addActionListener(this);
 		spectatorModeGroup.add(tzSpectatorPassiveBothOnSetupMenuItem);
@@ -576,13 +579,13 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup noOverlapGroup = new ButtonGroup();
 
-		tzOverlapOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		tzOverlapOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		tzOverlapOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		tzOverlapOffMenuItem.addActionListener(this);
 		noOverlapGroup.add(tzOverlapOffMenuItem);
 		tzNoOverlapMenu.add(tzOverlapOffMenuItem);
 
-		tzOverlapOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		tzOverlapOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		tzOverlapOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		tzOverlapOnMenuItem.addActionListener(this);
 		noOverlapGroup.add(tzOverlapOnMenuItem);
@@ -595,13 +598,13 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup contourGroup = new ButtonGroup();
 
-		tzContourOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		tzContourOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		tzContourOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		tzContourOffMenuItem.addActionListener(this);
 		contourGroup.add(tzContourOffMenuItem);
 		tzContourMenu.add(tzContourOffMenuItem);
 
-		tzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		tzContourOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		tzContourOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		tzContourOnMenuItem.addActionListener(this);
 		contourGroup.add(tzContourOnMenuItem);

@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.IIconProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
 import com.fumbbl.ffb.inducement.Card;
@@ -24,8 +21,13 @@ public class CardsMenu extends FfbMenu {
 	private Card[] fCurrentActiveCardsHome;
 	private Card[] fCurrentActiveCardsAway;
 
-	protected CardsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Active Cards", client, dimensionProvider, styleProvider, layoutSettings);
+	protected CardsMenu(FantasyFootballClient client,
+                        DimensionProvider dimensionProvider,
+                        StyleProvider styleProvider,
+                        LayoutSettings layoutSettings,
+                        FontCache fontCache,
+                        FontConfigRegistry fontConfigRegistry) {
+		super("Active Cards", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_C);
 		setEnabled(false);
 	}
@@ -39,6 +41,7 @@ public class CardsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		boolean refreshNecessary = false;
 
 		Game game = client.getGame();

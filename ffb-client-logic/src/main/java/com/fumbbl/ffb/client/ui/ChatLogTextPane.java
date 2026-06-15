@@ -1,10 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.ParagraphStyle;
-import com.fumbbl.ffb.client.StyleProvider;
-import com.fumbbl.ffb.client.TextStyle;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.ui.chat.ChatSegment;
 
 import javax.swing.JTextPane;
@@ -19,16 +16,18 @@ import java.util.List;
 /**
  * @author Kalimar
  */
-public class ChatLogTextPane extends JTextPane {
+public class ChatLogTextPane extends JTextPane implements RefreshableUi {
 
 	private ChatLogDocument fChatLogDocument;
 	private IReplayMouseListener fReplayMouseListener;
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
+    private final FontConfigRegistry fontConfigRegistry;
 
-	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
+	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider, FontConfigRegistry fontConfigRegistry) {
 		this.styleProvider = styleProvider;
 		this.dimensionProvider = dimensionProvider;
+        this.fontConfigRegistry = fontConfigRegistry;
 		setEditable(false);
 		((DefaultCaret) getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 		detachDocument();
@@ -59,7 +58,7 @@ public class ChatLogTextPane extends JTextPane {
 	}
 
 	public void detachDocument() {
-		fChatLogDocument = new ChatLogDocument(styleProvider, dimensionProvider);
+		fChatLogDocument = new ChatLogDocument(styleProvider, dimensionProvider, fontConfigRegistry);
 	}
 
 	public void attachDocument() {
@@ -114,7 +113,7 @@ public class ChatLogTextPane extends JTextPane {
 	}
 
 	public void update() {
-		fChatLogDocument.setStyles();
+		fChatLogDocument.refreshUi();
 	}
 
 	/**
@@ -164,4 +163,8 @@ public class ChatLogTextPane extends JTextPane {
 		}
 	}
 
+    @Override
+    public void refreshUi() {
+        fChatLogDocument.refreshUi();
+    }
 }

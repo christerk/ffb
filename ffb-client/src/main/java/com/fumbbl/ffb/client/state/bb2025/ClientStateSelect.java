@@ -231,7 +231,7 @@ public class ClientStateSelect extends ClientStateAwt<SelectLogicModule> {
 	@Override
 	public void postEndTurn() {
 		SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
-		sideBarHome.refresh();
+		sideBarHome.refreshUi();
 	}
 
 	@Override

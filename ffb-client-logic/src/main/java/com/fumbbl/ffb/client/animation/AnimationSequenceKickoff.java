@@ -84,7 +84,7 @@ public class AnimationSequenceKickoff implements IAnimationSequence, ActionListe
 			fTimer.stop();
 			fPosition = -1;
 		}
-		fFieldLayer.getClient().getUserInterface().getFieldComponent().refresh();
+		fFieldLayer.getClient().getUserInterface().getFieldComponent().refreshUi();
 		if ((fPosition < 0) && (fListener != null)) {
 			fListener.animationFinished();
 		}

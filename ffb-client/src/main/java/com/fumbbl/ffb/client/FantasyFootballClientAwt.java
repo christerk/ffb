@@ -18,9 +18,6 @@ import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -46,6 +43,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
 	private final PathSketchOverlay pathSketchOverlay;
+
 	private transient int currentMouseButton;
 
 	private Preferences prefs;
@@ -68,8 +66,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 		fUserInterface = new UserInterface(this);
 		fUserInterface.refreshSideBars();
-		fUserInterface.getScoreBar().refresh();
-		fUserInterface.getGameMenuBar().refresh();
+		fUserInterface.getScoreBar().refreshUi();
+		fUserInterface.getGameMenuBar().refreshUi();
 
 		setClientStateFactory();
 
@@ -87,7 +85,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	public void showUserInterface() {
 		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
-		getUserInterface().getFieldComponent().refresh();
+		getUserInterface().getFieldComponent().refreshUi();
 		getUserInterface().setVisible(true);
 
 		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);

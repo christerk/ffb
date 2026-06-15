@@ -3,12 +3,7 @@ package com.fumbbl.ffb.client.ui.menu.settings;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.client.ClientLayout;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.DialogAutoMarking;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogScalingFactor;
@@ -32,6 +27,9 @@ import java.io.IOException;
 import static com.fumbbl.ffb.CommonProperty.*;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
+import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static java.awt.Font.PLAIN;
 
 public class ClientSettingsMenu extends FfbMenu {
 
@@ -66,8 +64,13 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem autocompleteOnMenuItem;
 	private JRadioButtonMenuItem autocompleteOffMenuItem;
 	
-	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
-		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
+	protected ClientSettingsMenu(FantasyFootballClient client,
+                                 DimensionProvider dimensionProvider,
+                                 StyleProvider styleProvider,
+                                 LayoutSettings layoutSettings,
+                                 FontCache fontCache,
+                                 FontConfigRegistry fontConfigRegistry) {
+		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings, fontCache, fontConfigRegistry);
 		setMnemonic(KeyEvent.VK_S);
 	}
 
@@ -84,6 +87,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	@Override
 	public boolean refresh() {
+        super.refresh();
 		playerMarkingMenu.setEnabled(ClientMode.REPLAY != client.getMode());
 		
 		String playerMarkingSetting = client.getProperty(CommonProperty.SETTING_PLAYER_MARKING_TYPE);
@@ -169,22 +173,37 @@ public class ClientSettingsMenu extends FfbMenu {
 		if (source == pitchLandscapeMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == pitchPortraitMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_PORTRAIT);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutSquareMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_SQUARE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutWideMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 		if (source == layoutWide1920x1080MenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080);
 			client.saveUserSettings(true);
+            FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+            Font titleFont = fontCache.font(PLAIN, fc.getSize(LARGE), dimensionProvider);
+            client.getUserInterface().updateFontForTitles(titleFont);
 		}
 
 		if (source == logOffMenuItem) {
@@ -368,17 +387,17 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup soundGroup = new ButtonGroup();
 
-		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on");
+		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on", fontCache, fontConfigRegistry);
 		fSoundOnMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOnMenuItem);
 		fSoundMenu.add(fSoundOnMenuItem);
 
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators");
+		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators", fontCache, fontConfigRegistry);
 		fSoundMuteSpectatorsMenuItem.addActionListener(this);
 		soundGroup.add(fSoundMuteSpectatorsMenuItem);
 		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
 
-		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off");
+		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off", fontCache, fontConfigRegistry);
 		fSoundOffMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
@@ -401,7 +420,7 @@ public class ClientSettingsMenu extends FfbMenu {
 					client.getUserInterface().getIconCache().clear();
 					FontCache fontCache = client.getUserInterface().getFontCache();
 					fontCache.clear();
-					UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+                    UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
 					return true;
 				}
 			} catch (Exception ignored) {
@@ -419,27 +438,27 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup orientationGroup = new ButtonGroup();
 
-		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape");
+		pitchLandscapeMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Landscape", fontCache, fontConfigRegistry);
 		pitchLandscapeMenuItem.addActionListener(this);
 		orientationGroup.add(pitchLandscapeMenuItem);
 		orientationMenu.add(pitchLandscapeMenuItem);
 
-		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait");
+		pitchPortraitMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Portrait", fontCache, fontConfigRegistry);
 		pitchPortraitMenuItem.addActionListener(this);
 		orientationGroup.add(pitchPortraitMenuItem);
 		orientationMenu.add(pitchPortraitMenuItem);
 
-		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square");
+		layoutSquareMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Square", fontCache, fontConfigRegistry);
 		layoutSquareMenuItem.addActionListener(this);
 		orientationGroup.add(layoutSquareMenuItem);
 		orientationMenu.add(layoutSquareMenuItem);
 
-		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide");
+		layoutWideMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide", fontCache, fontConfigRegistry);
 		layoutWideMenuItem.addActionListener(this);
 		orientationGroup.add(layoutWideMenuItem);
 		orientationMenu.add(layoutWideMenuItem);
 
-		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080");
+		layoutWide1920x1080MenuItem = new JRadioButtonMenuItem(dimensionProvider, "Wide 1920x1080", fontCache, fontConfigRegistry);
 		layoutWide1920x1080MenuItem.addActionListener(this);
 		orientationGroup.add(layoutWide1920x1080MenuItem);
 		orientationMenu.add(layoutWide1920x1080MenuItem);
@@ -485,7 +504,7 @@ public class ClientSettingsMenu extends FfbMenu {
 				client.getUserInterface().getIconCache().clear();
 				FontCache fontCache = client.getUserInterface().getFontCache();
 				fontCache.clear();
-				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
+                UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
 			}
 			return true;
 		}
@@ -505,12 +524,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup logGroup = new ButtonGroup();
 
-		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		logOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		logOnMenuItem.addActionListener(this);
 		logGroup.add(logOnMenuItem);
 		logMenu.add(logOnMenuItem);
 
-		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		logOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		logOffMenuItem.addActionListener(this);
 		logGroup.add(logOffMenuItem);
 		logMenu.add(logOffMenuItem);
@@ -533,13 +552,13 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup localIconCacheGroup = new ButtonGroup();
 
-		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		localIconCacheOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		localIconCacheOffMenuItem.setMnemonic(KeyEvent.VK_F);
 		localIconCacheOffMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOffMenuItem);
 		localIconCacheMenu.add(localIconCacheOffMenuItem);
 
-		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		localIconCacheOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		localIconCacheOnMenuItem.setMnemonic(KeyEvent.VK_N);
 		localIconCacheOnMenuItem.addActionListener(this);
 		localIconCacheGroup.add(localIconCacheOnMenuItem);
@@ -558,17 +577,17 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup playerMarkingGroup = new ButtonGroup();
 
-		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Alphabetical Order)");
+		playersMarkingAutoMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Alphabetical Order)", fontCache, fontConfigRegistry);
 		playersMarkingAutoMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoMenuItem);
 
-		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Site Order)");
+		playersMarkingAutoNoSortMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Automatic (Site Order)", fontCache, fontConfigRegistry);
 		playersMarkingAutoNoSortMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingAutoNoSortMenuItem);
 		playerMarkingMenu.add(playersMarkingAutoNoSortMenuItem);
 
-		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual");
+		playersMarkingManualMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Manual", fontCache, fontConfigRegistry);
 		playersMarkingManualMenuItem.addActionListener(this);
 		playerMarkingGroup.add(playersMarkingManualMenuItem);
 		playerMarkingMenu.add(playersMarkingManualMenuItem);
@@ -581,12 +600,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup group = new ButtonGroup();
 
-		autocompleteOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		autocompleteOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On", fontCache, fontConfigRegistry);
 		autocompleteOnMenuItem.addActionListener(this);
 		group.add(autocompleteOnMenuItem);
 		autocompleteMenu.add(autocompleteOnMenuItem);
 
-		autocompleteOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		autocompleteOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off", fontCache, fontConfigRegistry);
 		autocompleteOffMenuItem.addActionListener(this);
 		group.add(autocompleteOffMenuItem);
 		autocompleteMenu.add(autocompleteOffMenuItem);

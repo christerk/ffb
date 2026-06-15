@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author Kalimar
  */
-public class ChatComponent extends JPanel implements MouseMotionListener {
+public class ChatComponent extends JPanel implements MouseMotionListener, RefreshableUi {
 
 	private static final int _MAX_CHAT_LENGTH = 512;
 	private static final int _MAX_INPUT_LOG_SIZE = 100;
@@ -44,22 +44,24 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	private int fInputLogPosition;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+    private final FontConfigRegistry fontConfigRegistry;
 	private final FantasyFootballClient fClient;
 	private Autocomplete autocomplete;
 	private final IconCache iconCache;
 	private final ChatButtonComponent fChatButtonComponent;
 	private final JComponent fChatInputPanel;
 
-	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, IconCache iconCache) {
+	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, FontConfigRegistry fontConfigRegistry, IconCache iconCache) {
 
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
+        this.fontConfigRegistry = fontConfigRegistry;
 		this.iconCache = iconCache;
 		fInputLog = new LinkedList<>();
 		fInputLogPosition = -1;
 
-		fChatTextPane = new ChatLogTextPane(styleProvider, dimensionProvider);
+		fChatTextPane = new ChatLogTextPane(styleProvider, dimensionProvider, fontConfigRegistry);
 		fChatScrollPane = new ChatLogScrollPane(fChatTextPane);
 		getClient().getActionKeyBindings().addKeyBindings(fChatScrollPane, ActionKeyGroup.ALL);
 
@@ -268,4 +270,8 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 		return outer;
 	}
 
+    @Override
+    public void refreshUi() {
+        fChatTextPane.refreshUi();
+    }
 }

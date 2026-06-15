@@ -64,7 +64,7 @@ public class ClientStateSelectBlockKind extends ClientStateAwt<BlockKindLogicMod
 	protected void prePerform(int menuKey) {
 		Game game = getClient().getGame();
 		if (game.isHomePlaying()) {
-			getClient().getUserInterface().getFieldComponent().refresh();
+			getClient().getUserInterface().getFieldComponent().refreshUi();
 		}
 	}
 
