@@ -16,16 +16,25 @@ import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.fumbbl.ffb.client.FantasyFootballClient.NO_COACH_NO_CONNECTION;
+import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
 import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static com.fumbbl.ffb.client.util.JnlpToStringArrayParser.parseJnlpArguments;
+import static java.awt.Font.BOLD;
 import static javax.swing.SwingConstants.VERTICAL;
 
 /**
@@ -111,6 +120,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Arrays.stream(this.getComponents()).forEach(this::remove);
 
+        if (NO_COACH_NO_CONNECTION.equals(getClient().getParameters().getCoach()))
+            add(createOpenJnlpButton());
+
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
             gameModeMenu = new ReplayMenu(getClient(), dimensionProvider, getClient().getCommunication(), styleProvider, layoutSettings, sketchManager, clickStrategyRegistry, fontCache, fontConfigRegistry);
@@ -151,6 +163,61 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		refreshUi();
 	}
+
+    private JMenu createOpenJnlpButton() {
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+        Font font = fontCache.font(BOLD, fc.getSize(LARGE), dimensionProvider);
+        // 1. Create a direct JButton
+        JMenu startGameUsingJnlpFile = new JMenu("Start game/spectate using JNLP file");
+        startGameUsingJnlpFile.setFont(font);
+
+        // 2. Use a MenuListener to hijack the click event
+        startGameUsingJnlpFile.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                // Instantly deselect it so the dropdown look clears away
+                SwingUtilities.invokeLater(() -> startGameUsingJnlpFile.setSelected(false));
+
+                // Trigger your File Chooser logic
+                JFileChooser fileChooser = new JFileChooser();
+
+                // 1. Create a filter specifically for .jnlp files
+                // The first argument is the description shown to the user, the second is the extension
+                FileNameExtensionFilter jnlpFilter = new FileNameExtensionFilter("JNLP Files (*.jnlp)", "jnlp");
+
+                // 2. Apply the filter to the file chooser
+                fileChooser.setFileFilter(jnlpFilter);
+
+                // 3. Optional: Disable the "All Files" option so they can ONLY see JNLP files
+                fileChooser.setAcceptAllFileFilterUsed(false);
+
+                // 4. Show the dialog
+                int response = fileChooser.showOpenDialog(getClient().getUserInterface());
+
+                if (response == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String[] clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
+                    //Destroying current instance of userinterface before creating a new one.
+                    getClient().getUserInterface().dispose();
+                    try {
+                        getClient().runClientAnew(clientArgumentsFromJnlpFile);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
+
+        return startGameUsingJnlpFile;
+    }
 
 	public FantasyFootballClient getClient() {
 		return fClient;

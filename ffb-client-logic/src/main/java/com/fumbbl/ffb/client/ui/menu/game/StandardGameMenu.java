@@ -14,6 +14,8 @@ import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import static com.fumbbl.ffb.client.FantasyFootballClient.NO_COACH_NO_CONNECTION;
+
 public class StandardGameMenu extends GameModeMenu {
     private static final String REPLAY_MODE_ON = "Replay Mode";
     private static final String REPLAY_MODE_OFF = "Spectator Mode";
