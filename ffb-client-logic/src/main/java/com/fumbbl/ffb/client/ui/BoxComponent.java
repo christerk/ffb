@@ -129,7 +129,10 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 					Graphics2D g2d = fImage.createGraphics();
 					int x = pBoxSlot.getLocation().x + ((pBoxSlot.getLocation().width - icon.getWidth()) / 2);
 					int y = pBoxSlot.getLocation().y + ((pBoxSlot.getLocation().height - icon.getHeight()) / 2);
-					g2d.drawImage(icon, x, y, null);
+                    g2d.drawImage(icon, x, y,
+                            (int) pBoxSlot.getLocation().getWidth(),
+                            (int) pBoxSlot.getLocation().getHeight(),
+                            null);
 					g2d.dispose();
 				}
 			}

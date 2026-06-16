@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.ui.chat.Autocomplete;
 import com.fumbbl.ffb.client.ui.chat.ChatSegment;
 import com.fumbbl.ffb.client.ui.chat.MessageParser;
@@ -15,9 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -25,6 +24,9 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.fumbbl.ffb.client.FontConfig.Size.SMALL;
+import static java.awt.Font.PLAIN;
 
 /**
  * @author Kalimar
@@ -44,6 +46,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener, Refres
 	private int fInputLogPosition;
 	private final DimensionProvider dimensionProvider;
 	private final StyleProvider styleProvider;
+    private final FontCache fontCache;
     private final FontConfigRegistry fontConfigRegistry;
 	private final FantasyFootballClient fClient;
 	private Autocomplete autocomplete;
@@ -51,11 +54,17 @@ public class ChatComponent extends JPanel implements MouseMotionListener, Refres
 	private final ChatButtonComponent fChatButtonComponent;
 	private final JComponent fChatInputPanel;
 
-	public ChatComponent(FantasyFootballClient pClient, UiDimensionProvider dimensionProvider, StyleProvider styleProvider, FontConfigRegistry fontConfigRegistry, IconCache iconCache) {
+    public ChatComponent(FantasyFootballClient pClient,
+                         UiDimensionProvider dimensionProvider,
+                         StyleProvider styleProvider,
+                         FontCache fontCache,
+                         FontConfigRegistry fontConfigRegistry,
+                         IconCache iconCache) {
 
 		fClient = pClient;
 		this.dimensionProvider = dimensionProvider;
 		this.styleProvider = styleProvider;
+        this.fontCache = fontCache;
         this.fontConfigRegistry = fontConfigRegistry;
 		this.iconCache = iconCache;
 		fInputLog = new LinkedList<>();
@@ -169,8 +178,10 @@ public class ChatComponent extends JPanel implements MouseMotionListener, Refres
 		fChatInputField.setBackground(styleProvider.getChatBackground());
 		fChatInputField.setForeground(styleProvider.getInput());
 
-		// maybe a hacky solution but couldnt get fChatInputField to resize after client rescale.
-		fChatInputField.setFont(UIManager.getFont("TextField.font"));
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+        Font inputFieldFont = fontCache.font(PLAIN, fc.getSize(SMALL), dimensionProvider);
+        // maybe a hacky solution but couldnt get fChatInputField to resize after client rescale.
+		fChatInputField.setFont(inputFieldFont);
 		dimensionProvider.scaleFont(fChatInputField);
 	  
 		fChatTextPane.setEditorKit(new WrappingEditorKit());
@@ -273,5 +284,8 @@ public class ChatComponent extends JPanel implements MouseMotionListener, Refres
     @Override
     public void refreshUi() {
         fChatTextPane.refreshUi();
+        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
+        Font inputFieldFont = fontCache.font(PLAIN, fc.getSize(SMALL), dimensionProvider);
+        fChatInputField.setFont(inputFieldFont);
     }
 }

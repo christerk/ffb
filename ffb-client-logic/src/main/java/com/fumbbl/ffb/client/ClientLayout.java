@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.client;
 
+import com.fumbbl.ffb.IClientPropertyValue;
+
 public enum ClientLayout {
 	LANDSCAPE(false), PORTRAIT(true), SQUARE(true),
 	WIDE(false, (double) 57 / 30, 1.25),
@@ -30,4 +32,21 @@ public enum ClientLayout {
 	public double getDugoutScale() {
 		return dugoutScale;
 	}
+
+    public static ClientLayout getClientLayoutForProperty(String layoutPropertyValue) {
+        if (IClientPropertyValue.SETTING_LAYOUT_PORTRAIT.equals(layoutPropertyValue))
+            return ClientLayout.PORTRAIT;
+
+        if (IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(layoutPropertyValue))
+            return ClientLayout.SQUARE;
+
+        if (IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(layoutPropertyValue))
+            return ClientLayout.WIDE;
+
+        if (IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080.equals(layoutPropertyValue))
+            return ClientLayout.WIDE_FL_1920x1080;
+
+        throw new IllegalArgumentException("Only one of layout properties are allowed in this methos.");
+    }
+
 }

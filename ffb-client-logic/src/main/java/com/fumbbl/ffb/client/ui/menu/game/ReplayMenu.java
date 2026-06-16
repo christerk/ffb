@@ -79,9 +79,13 @@ public class ReplayMenu extends GameModeMenu {
 	private void createClickBehaviorMenu() {
 		// Create Click Behavior menu and submenus
 		JMenu clickBehaviorMenu = new JMenu(dimensionProvider, "Click Behavior");
+        clickBehaviorMenu.setFont(getDefaultFont());
 		JMenu startSketchMenu = new JMenu(dimensionProvider, "Start Sketch");
+        startSketchMenu.setFont(getDefaultFont());
 		JMenu addPointMenu = new JMenu(dimensionProvider, "Add Point");
+        addPointMenu.setFont(getDefaultFont());
 		JMenu endSketchMenu = new JMenu(dimensionProvider, "End Sketch");
+        endSketchMenu.setFont(getDefaultFont());
 
 		startSketchItems = new HashSet<>();
 		addPointItems = new HashSet<>();
@@ -173,6 +177,7 @@ public class ReplayMenu extends GameModeMenu {
 
 		if (transferMenuItems.contains(source)) {
 			JMenuItem item = (JMenuItem) source;
+            item.setFont(getDefaultFont());
 			client.getCommunication().sendTransferReplayControl(item.getName());
 		} else if (sketchAllowedMenuItems.contains(source)) {
 			JRadioButtonMenuItem item = (JRadioButtonMenuItem) source;
@@ -268,6 +273,7 @@ public class ReplayMenu extends GameModeMenu {
 		ImageIcon icon = determineCoachIcon(clientCoach, clientHasControl, ballIcon,
 			hiddenIcon, preventedIcon, allowedIcon);
 		JMenuItem joinedSelf = new JMenuItem(dimensionProvider, clientCoach, icon);
+        joinedSelf.setFont(getDefaultFont());
 		joinedCoachesMenu.add(joinedSelf);
 	}
 
@@ -280,6 +286,7 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void createCursorMenu() {
 		JMenu cursorMenu = new JMenu(dimensionProvider, "Cursor");
+        cursorMenu.setFont(getDefaultFont());
 		ButtonGroup cursorGroup = new ButtonGroup();
 
         customSketchCursor = new JRadioButtonMenuItem(dimensionProvider, "Pen", fontCache, fontConfigRegistry);
@@ -297,10 +304,12 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void createCoachMenu(String coach, ImageIcon icon, boolean clientHasControl) {
 		JMenu coachMenu = new JMenu(dimensionProvider, coach, icon);
+        coachMenu.setFont(getDefaultFont());
 		ButtonGroup group = new ButtonGroup();
 
 		if (clientHasControl) {
 			JMenuItem transferItem = new JMenuItem(dimensionProvider, "Transfer Control");
+            transferItem.setFont(getDefaultFont());
 			coachMenu.add(transferItem);
 			transferItem.setName(coach);
 			group.add(transferItem);
@@ -314,6 +323,7 @@ public class ReplayMenu extends GameModeMenu {
 
 	private void createSketchingSubmenu(JMenu coachMenu, String coach, ButtonGroup group, boolean clientHasControl) {
 		JMenu sketchMenu = new JMenu(dimensionProvider, "Sketching");
+        sketchMenu.setFont(getDefaultFont());
 		coachMenu.add(sketchMenu);
 		group.add(sketchMenu);
 

@@ -27,8 +27,8 @@ import java.io.IOException;
 import static com.fumbbl.ffb.CommonProperty.*;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
-import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
-import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static com.fumbbl.ffb.client.ClientLayout.getClientLayoutForProperty;
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
 import static java.awt.Font.PLAIN;
 
 public class ClientSettingsMenu extends FfbMenu {
@@ -375,10 +375,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createSoundMenu() {
 		JMenu fSoundMenu = new JMenu(dimensionProvider, SETTING_SOUND_MODE);
+        fSoundMenu.setFont(getDefaultFont());
 		fSoundMenu.setMnemonic(KeyEvent.VK_S);
 		add(fSoundMenu);
 
 		fSoundVolumeItem = new JMenuItem(dimensionProvider, SETTING_SOUND_VOLUME.getValue());
+        fSoundVolumeItem.setFont(getDefaultFont());
 		fSoundVolumeItem.setMnemonic(KeyEvent.VK_V);
 		fSoundVolumeItem.addActionListener(this);
 		fSoundMenu.add(fSoundVolumeItem);
@@ -388,16 +390,19 @@ public class ClientSettingsMenu extends FfbMenu {
 		ButtonGroup soundGroup = new ButtonGroup();
 
 		fSoundOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound on", fontCache, fontConfigRegistry);
+        fSoundOnMenuItem.setFont(getDefaultFont());
 		fSoundOnMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOnMenuItem);
 		fSoundMenu.add(fSoundOnMenuItem);
 
-		fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators", fontCache, fontConfigRegistry);
+        fSoundMuteSpectatorsMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Mute spectators", fontCache, fontConfigRegistry);
+        fSoundMuteSpectatorsMenuItem.setFont(getDefaultFont());
 		fSoundMuteSpectatorsMenuItem.addActionListener(this);
 		soundGroup.add(fSoundMuteSpectatorsMenuItem);
 		fSoundMenu.add(fSoundMuteSpectatorsMenuItem);
 
 		fSoundOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Sound off", fontCache, fontConfigRegistry);
+        fSoundOffMenuItem.setFont(getDefaultFont());
 		fSoundOffMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
@@ -405,6 +410,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createScaleItem() {
 		scalingItem = new JMenuItem(dimensionProvider, SETTING_SCALE_FACTOR.getValue());
+        scalingItem.setFont(getDefaultFont());
 		scalingItem.setMnemonic(KeyEvent.VK_E);
 		scalingItem.addActionListener(this);
 		add(scalingItem);
@@ -431,8 +437,8 @@ public class ClientSettingsMenu extends FfbMenu {
 	}
 
 	private void createClientUiMenu() {
-
 		JMenu orientationMenu = new JMenu(dimensionProvider, SETTING_UI_LAYOUT);
+        orientationMenu.setFont(getDefaultFont());
 		orientationMenu.setMnemonic(KeyEvent.VK_O);
 		add(orientationMenu);
 
@@ -469,34 +475,18 @@ public class ClientSettingsMenu extends FfbMenu {
         boolean fullScreen = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
         toggleFullScreenMode = new JCheckBoxMenuItem("Full screen (Alt + Enter)",
                 fullScreen);
+        toggleFullScreenMode.setFont(getDefaultFont());
         toggleFullScreenMode.addActionListener(this);
         orientationMenu.add(toggleFullScreenMode);
 	}
 
 	private boolean updateOrientation() {
-
 		ClientLayout layout = ClientLayout.LANDSCAPE;
 
-		String orientation = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
+        String layoutProperty = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
 
-		if (orientation != null) {
-			switch (orientation) {
-				case IClientPropertyValue.SETTING_LAYOUT_PORTRAIT:
-					layout = ClientLayout.PORTRAIT;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-					layout = ClientLayout.SQUARE;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
-					layout = ClientLayout.WIDE;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080:
-					layout = ClientLayout.WIDE_FL_1920x1080;
-					break;
-				default:
-					break;
-			}
-		}
+        if (layoutProperty != null)
+            layout = getClientLayoutForProperty(layoutProperty);
 
 		if (layout != layoutSettings.getLayout()) {
 			layoutSettings.setLayout(layout);
@@ -504,7 +494,8 @@ public class ClientSettingsMenu extends FfbMenu {
 				client.getUserInterface().getIconCache().clear();
 				FontCache fontCache = client.getUserInterface().getFontCache();
 				fontCache.clear();
-                UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
+                FontConfig fc = fontConfigRegistry.getConfig(layout);
+                UIManager.put("ToolTip.font", fontCache.font(PLAIN, fc.getSize(EXTRA_LARGE), dimensionProvider));
 			}
 			return true;
 		}
@@ -519,6 +510,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createLogMenu() {
 		JMenu logMenu = new JMenu(dimensionProvider, SETTING_LOG);
+        logMenu.setFont(getDefaultFont());
 		logMenu.setMnemonic(KeyEvent.VK_L);
 		add(logMenu);
 
@@ -535,11 +527,13 @@ public class ClientSettingsMenu extends FfbMenu {
 		logMenu.add(logOffMenuItem);
 
 		logSelectMenuItem = new JMenuItem(dimensionProvider, "Select log folder");
+        logSelectMenuItem.setFont(getDefaultFont());
 		logSelectMenuItem.setMnemonic(KeyEvent.VK_S);
 		logSelectMenuItem.addActionListener(this);
 		logMenu.add(logSelectMenuItem);
 
 		openLogFolderMenuItem = new JMenuItem(dimensionProvider, "Open log folder");
+        openLogFolderMenuItem.setFont(getDefaultFont());
 		openLogFolderMenuItem.setMnemonic(KeyEvent.VK_O);
 		openLogFolderMenuItem.addActionListener(this);
 		logMenu.add(openLogFolderMenuItem);
@@ -547,6 +541,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createLocalIconCacheMenu() {
 		JMenu localIconCacheMenu = new JMenu(dimensionProvider, SETTING_LOCAL_ICON_CACHE);
+        localIconCacheMenu.setFont(getDefaultFont());
 		localIconCacheMenu.setMnemonic(KeyEvent.VK_L);
 		add(localIconCacheMenu);
 
@@ -565,6 +560,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		localIconCacheMenu.add(localIconCacheOnMenuItem);
 
 		localIconCacheSelectMenuItem = new JMenuItem(dimensionProvider, "Select folder");
+        localIconCacheSelectMenuItem.setFont(getDefaultFont());
 		localIconCacheSelectMenuItem.setMnemonic(KeyEvent.VK_S);
 		localIconCacheSelectMenuItem.addActionListener(this);
 		localIconCacheMenu.add(localIconCacheSelectMenuItem);
@@ -572,6 +568,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createMarkingMenu() {
 		playerMarkingMenu = new JMenu(dimensionProvider, SETTING_PLAYER_MARKING_TYPE);
+        playerMarkingMenu.setFont(getDefaultFont());
 		playerMarkingMenu.setMnemonic(KeyEvent.VK_L);
 		add(playerMarkingMenu);
 
@@ -595,6 +592,7 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private void createAutocompleteMenu() {
 		JMenu autocompleteMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_AUTOCOMPLETE);
+        autocompleteMenu.setFont(getDefaultFont());
 		autocompleteMenu.setMnemonic(KeyEvent.VK_A);
 		add(autocompleteMenu);
 

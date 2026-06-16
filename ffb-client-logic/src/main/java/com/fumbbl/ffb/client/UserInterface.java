@@ -35,6 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.ClientLayout.getClientLayoutForProperty;
 import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
 import static java.awt.Font.PLAIN;
 
@@ -88,7 +89,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			} catch (Exception ignored) {
 			}
 		}
-		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+        String layoutProperty = pClient.getProperty(CommonProperty.SETTING_UI_LAYOUT);
+        pClient.getParameters().setLayout(getClientLayoutForProperty(layoutProperty));
+        layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
 		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
@@ -126,7 +129,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
         fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider, fontConfigRegistry);
-        fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fontConfigRegistry, fIconCache);
+        fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fontCache, fontConfigRegistry, fIconCache);
         fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
         fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, fontConfigRegistry, markerService);
 

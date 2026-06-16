@@ -57,6 +57,7 @@ public class StandardGameMenu extends GameModeMenu {
     private void createReplayMenuItem() {
         boolean replaying = client.getReplayer() != null && client.getReplayer().isReplaying();
         gameReplayMenuItem = new JMenuItem(dimensionProvider, replaying ? REPLAY_MODE_OFF : REPLAY_MODE_ON, KeyEvent.VK_R);
+        gameReplayMenuItem.setFont(getDefaultFont());
         String keyMenuReplay = client.getProperty(IClientProperty.KEY_MENU_REPLAY);
         if (StringTool.isProvided(keyMenuReplay)) {
             gameReplayMenuItem.setAccelerator(KeyStroke.getKeyStroke(keyMenuReplay));
@@ -67,6 +68,7 @@ public class StandardGameMenu extends GameModeMenu {
 
     private void createConcessionMenuItem() {
         gameConcessionMenuItem = new JMenuItem(dimensionProvider, "Concede Game", KeyEvent.VK_C);
+        gameConcessionMenuItem.setFont(getDefaultFont());
         gameConcessionMenuItem.addActionListener(this);
         gameConcessionMenuItem.setEnabled(false);
         add(gameConcessionMenuItem);
@@ -74,6 +76,7 @@ public class StandardGameMenu extends GameModeMenu {
 
     private void updateReplayMenuItem() {
         gameReplayMenuItem.setEnabled(ClientMode.SPECTATOR == client.getMode());
+        gameReplayMenuItem.setFont(getDefaultFont());
     }
 
     private void updateConcessionMenuItem() {
@@ -84,5 +87,6 @@ public class StandardGameMenu extends GameModeMenu {
         gameConcessionMenuItem.setEnabled(allowConcessions && gameStarted &&
             client.getGame().isHomePlaying() && (ClientMode.PLAYER == client.getMode()) &&
             client.getGame().isConcessionPossible());
+        gameConcessionMenuItem.setFont(getDefaultFont());
     }
 }
