@@ -13,6 +13,7 @@ public class ChangeList {
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")
 			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")
+			.addBugfix("Master Assassin (BB2025) re-rolled the Armour roll instead of the Injury roll")
 			.addBugfix("Selecting Fumblerooskie during a foul action could foul the active player instead")
 			.addFeature("Infamous Staff - Josef Bugman")
 			.addBugfix("Reset button could block hiring star players")

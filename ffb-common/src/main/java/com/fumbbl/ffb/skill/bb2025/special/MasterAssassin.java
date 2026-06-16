@@ -7,8 +7,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 /**
- * Once per game, when Skitter performs a Stab Special Action,
- * he may choose to re-roll the Armour Roll.
+ * Once per game, when Skitter successfully breaks an opposition player's armour
+ * as a result of a Stab Special Action, he may choose to re-roll the Injury roll.
  */
 
 @RulesCollection(Rules.BB2025)
