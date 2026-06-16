@@ -110,6 +110,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private CatchScatterThrowInMode fCatchScatterThrowInMode;
 	private FieldCoordinate fThrowInCoordinate;
 	private boolean fBombMode, evaluate;
+	private boolean puntInProgress;
 	private DivingCatchPhase phase = DivingCatchPhase.ASK_HOME;
 	private final List<String> divingCatchers = new ArrayList<>();
 	private String divingCatchControlTeam;
@@ -252,6 +253,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Player<?> playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
 		boolean deflectedBomb = false;
 		boolean deflectedPass = false;
+		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_PUNT) {
+			puntInProgress = true;
+		}
 		switch (fCatchScatterThrowInMode) {
 			case DEFLECTED_BOMB:
 				deflectedBomb = true;
@@ -547,7 +551,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				setReRolledAction(null);
 				if (((fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF)
 					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_ACCURATE_PASS)
-					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_PUNT))
+					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_PUNT)
+					|| (puntInProgress && (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER)))
 					&& (game.getTurnMode() != TurnMode.DUMP_OFF)
 					&& ((game.isHomePlaying() && game.getTeamAway().hasPlayer(state.catcher))
 					|| (!game.isHomePlaying() && game.getTeamHome().hasPlayer(state.catcher)))) {
@@ -713,6 +718,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			game.getFieldModel().setOutOfBounds(true);
 			if (fScatterBounds.equals(FieldCoordinateBounds.FIELD)) {
 				fThrowInCoordinate = lastValidCoordinate;
+				if (puntInProgress) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}
 				return CatchScatterThrowInMode.THROW_IN;
 			} else {
 				publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
@@ -830,6 +838,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.CATCH_SCATTER_THROW_IN_MODE.addTo(jsonObject, fCatchScatterThrowInMode);
 		IServerJsonOption.THROW_IN_COORDINATE.addTo(jsonObject, fThrowInCoordinate);
 		IServerJsonOption.BOMB_MODE.addTo(jsonObject, fBombMode);
+		IServerJsonOption.PUNT_IN_PROGRESS.addTo(jsonObject, puntInProgress);
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
 		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
@@ -854,6 +863,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			.getFrom(source, jsonObject);
 		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(source, jsonObject);
 		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(source, jsonObject);
+		puntInProgress = toPrimitive(IServerJsonOption.PUNT_IN_PROGRESS.getFrom(source, jsonObject));
 		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
 		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList()));

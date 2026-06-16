@@ -160,6 +160,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption PRE_REGENERATION = new JsonBooleanOption("preRegeneration");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
+    JsonBooleanOption PUNT_IN_PROGRESS = new JsonBooleanOption("puntInProgress");
     JsonBooleanOption REMOVE_CATCH_MODE = new JsonBooleanOption("removeCatchMode");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");
     JsonBooleanOption REPORTED_AWAY = new JsonBooleanOption("reportedAway");
