@@ -227,13 +227,22 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					failDodge();
 					return;
 				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					AgilityMechanic mechanic =
-						(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers) ||
-						!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
-						failDodge();
+					if (dtRerollAsked) {
+						// The re-roll was offered pre-emptively because diving tackle could turn the
+						// already successful dodge into a failure. The chosen re-roll source (e.g. a mascot,
+						// loner or pro) did not actually grant a re-roll, so the original successful dodge
+						// stands and the diving tackle decision is handed to the opponent instead of
+						// dropping the dodging player here.
+						setReRollSource(null);
+					} else {
+						AgilityMechanic mechanic =
+							(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+						if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers) ||
+							!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+							failDodge();
+						}
+						return;
 					}
-					return;
 				} else {
 					fReRollUsed = true;
 				}
