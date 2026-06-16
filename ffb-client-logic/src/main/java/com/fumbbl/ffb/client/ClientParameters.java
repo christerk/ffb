@@ -99,6 +99,11 @@ public class ClientParameters {
 		return layout;
 	}
 
+    public ClientParameters setLayout(ClientLayout layout) {
+        this.layout = layout;
+        return this;
+    }
+
 	private ClientParameters(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();

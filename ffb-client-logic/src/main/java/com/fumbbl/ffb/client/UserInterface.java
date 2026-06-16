@@ -35,6 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.ClientLayout.getClientLayoutForProperty;
 import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
 import static java.awt.Font.PLAIN;
 
@@ -88,7 +89,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			} catch (Exception ignored) {
 			}
 		}
-		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+        String layoutProperty = pClient.getProperty(CommonProperty.SETTING_UI_LAYOUT);
+        pClient.getParameters().setLayout(getClientLayoutForProperty(layoutProperty));
+        layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
 		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);

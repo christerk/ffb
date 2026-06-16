@@ -27,8 +27,8 @@ import java.io.IOException;
 import static com.fumbbl.ffb.CommonProperty.*;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
-import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
-import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
+import static com.fumbbl.ffb.client.ClientLayout.getClientLayoutForProperty;
+import static com.fumbbl.ffb.client.FontConfig.Size.*;
 import static java.awt.Font.PLAIN;
 
 public class ClientSettingsMenu extends FfbMenu {
@@ -474,29 +474,12 @@ public class ClientSettingsMenu extends FfbMenu {
 	}
 
 	private boolean updateOrientation() {
-
 		ClientLayout layout = ClientLayout.LANDSCAPE;
 
-		String orientation = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
+        String layoutProperty = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
 
-		if (orientation != null) {
-			switch (orientation) {
-				case IClientPropertyValue.SETTING_LAYOUT_PORTRAIT:
-					layout = ClientLayout.PORTRAIT;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_SQUARE:
-					layout = ClientLayout.SQUARE;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_WIDE:
-					layout = ClientLayout.WIDE;
-					break;
-				case IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080:
-					layout = ClientLayout.WIDE_FL_1920x1080;
-					break;
-				default:
-					break;
-			}
-		}
+        if (layoutProperty != null)
+            layout = getClientLayoutForProperty(layoutProperty);
 
 		if (layout != layoutSettings.getLayout()) {
 			layoutSettings.setLayout(layout);
@@ -504,7 +487,8 @@ public class ClientSettingsMenu extends FfbMenu {
 				client.getUserInterface().getIconCache().clear();
 				FontCache fontCache = client.getUserInterface().getFontCache();
 				fontCache.clear();
-                UIManager.put("ToolTip.font", fontCache.font(PLAIN, 14, dimensionProvider));
+                FontConfig fc = fontConfigRegistry.getConfig(layout);
+                UIManager.put("ToolTip.font", fontCache.font(PLAIN, fc.getSize(EXTRA_LARGE), dimensionProvider));
 			}
 			return true;
 		}
