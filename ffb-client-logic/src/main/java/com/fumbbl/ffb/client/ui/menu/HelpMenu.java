@@ -33,26 +33,32 @@ public class HelpMenu extends FfbMenu {
     @Override
     public void init() {
         aboutMenuItem = new JMenuItem(dimensionProvider, "About", KeyEvent.VK_A);
+        aboutMenuItem.setFont(getDefaultFont());
         aboutMenuItem.addActionListener(this);
         add(aboutMenuItem);
 
         chatCommandsMenuItem = new JMenuItem(dimensionProvider, "Chat Commands", KeyEvent.VK_C);
+        chatCommandsMenuItem.setFont(getDefaultFont());
         chatCommandsMenuItem.addActionListener(this);
         add(chatCommandsMenuItem);
 
         changeListItem = new JMenuItem(dimensionProvider, "What's new?", KeyEvent.VK_W);
+        changeListItem.setFont(getDefaultFont());
         changeListItem.addActionListener(this);
         add(changeListItem);
 
         autoMarkingItem = new JMenuItem(dimensionProvider, "Automarking Panel", KeyEvent.VK_M);
+        autoMarkingItem.setFont(getDefaultFont());
         autoMarkingItem.addActionListener(this);
         add(autoMarkingItem);
 
         keyBindingsMenuItem = new JMenuItem(dimensionProvider, "Key Bindings", KeyEvent.VK_K);
+        keyBindingsMenuItem.setFont(getDefaultFont());
         keyBindingsMenuItem.addActionListener(this);
         add(keyBindingsMenuItem);
 
         creditsItem = new JMenuItem(dimensionProvider, "Credits", KeyEvent.VK_R);
+        creditsItem.setFont(getDefaultFont());
         creditsItem.addActionListener(this);
         add(creditsItem);
     }

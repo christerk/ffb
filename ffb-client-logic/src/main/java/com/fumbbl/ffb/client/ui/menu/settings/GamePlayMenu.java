@@ -331,6 +331,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	private void createMarkUsedPlayerMenu() {
 		JMenu markUsedPlayersMenu = new JMenu(dimensionProvider, SETTING_MARK_USED_PLAYERS);
+        markUsedPlayersMenu.setFont(getDefaultFont());
 		markUsedPlayersMenu.setMnemonic(KeyEvent.VK_M);
 		add(markUsedPlayersMenu);
 
@@ -349,6 +350,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	private void createRangegridMenu() {
 		JMenu fRangeGridMenu = new JMenu(dimensionProvider, SETTING_RANGEGRID);
+        fRangeGridMenu.setFont(getDefaultFont());
 		fRangeGridMenu.setMnemonic(KeyEvent.VK_R);
 		add(fRangeGridMenu);
 
@@ -368,6 +370,7 @@ public class GamePlayMenu extends FfbMenu {
 	private void createBallAndChainMenu() {
 		ButtonGroup reRollBallAndChainPanelGroup = new ButtonGroup();
 		reRollBallAndChainPanelMenu = new JMenu(dimensionProvider, SETTING_RE_ROLL_BALL_AND_CHAIN);
+        reRollBallAndChainPanelMenu.setFont(getDefaultFont());
 		exposedMenus.put(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, reRollBallAndChainPanelMenu);
 		reRollBallAndChainPanelMenu.setMnemonic(KeyEvent.VK_B);
 		add(reRollBallAndChainPanelMenu);
@@ -400,6 +403,7 @@ public class GamePlayMenu extends FfbMenu {
 	private void createRightClickMenu() {
 		ButtonGroup rightClickEndActionPanelGroup = new ButtonGroup();
 		JMenu rightClickEndActionPanelMenu = new JMenu(dimensionProvider, SETTING_RIGHT_CLICK_END_ACTION);
+        rightClickEndActionPanelMenu.setFont(getDefaultFont());
 		rightClickEndActionPanelMenu.setMnemonic(KeyEvent.VK_R);
 		add(rightClickEndActionPanelMenu);
 
@@ -424,9 +428,11 @@ public class GamePlayMenu extends FfbMenu {
 		rightClickEndActionPanelMenu.add(rightClickEndActionOffMenuItem);
 	}
 
-	private void createGazePanelMenu() {
+    @SuppressWarnings("DuplicatedCode")
+    private void createGazePanelMenu() {
 		ButtonGroup gazeTargetPanelGroup = new ButtonGroup();
 		JMenu gazeTargetPanelMenu = new JMenu(dimensionProvider, SETTING_GAZE_TARGET_PANEL);
+        gazeTargetPanelMenu.setFont(getDefaultFont());
 		gazeTargetPanelMenu.setMnemonic(KeyEvent.VK_G);
 		add(gazeTargetPanelMenu);
 
@@ -444,6 +450,7 @@ public class GamePlayMenu extends FfbMenu {
 	private void createBlitzPanelMenu() {
 		ButtonGroup blitzTargetPanelGroup = new ButtonGroup();
 		JMenu blitzTargetPanelMenu = new JMenu(dimensionProvider, SETTING_BLITZ_TARGET_PANEL);
+        blitzTargetPanelMenu.setFont(getDefaultFont());
 		blitzTargetPanelMenu.setMnemonic(KeyEvent.VK_B);
 		add(blitzTargetPanelMenu);
 
@@ -460,6 +467,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	private void createAutomoveMenu() {
 		JMenu fAutomoveMenu = new JMenu(dimensionProvider, SETTING_AUTOMOVE);
+        fAutomoveMenu.setFont(getDefaultFont());
 		fAutomoveMenu.setMnemonic(KeyEvent.VK_A);
 		add(fAutomoveMenu);
 
@@ -478,6 +486,7 @@ public class GamePlayMenu extends FfbMenu {
 
 	private void createTacklezonesMenu() {
 		JMenu tacklezonesMenu = new JMenu(dimensionProvider, "Tacklezones");
+        tacklezonesMenu.setFont(getDefaultFont());
 		tacklezonesMenu.setMnemonic(KeyEvent.VK_T);
 		if (UtilGameOption.isOptionEnabled(client.getGame(), GameOptionId.ENABLE_TACKLEZONE_OVERLAYS)
 			|| client.getMode() != ClientMode.PLAYER) {
@@ -486,6 +495,7 @@ public class GamePlayMenu extends FfbMenu {
 
 		// --- Player Mode ---
 		JMenu playerModeMenu = new JMenu(dimensionProvider, "Player Mode");
+        playerModeMenu.setFont(getDefaultFont());
 		playerModeMenu.setMnemonic(KeyEvent.VK_P);
 		tacklezonesMenu.add(playerModeMenu);
 
@@ -529,6 +539,7 @@ public class GamePlayMenu extends FfbMenu {
 
 		// --- Spectator Mode ---
 		JMenu spectatorModeMenu = new JMenu(dimensionProvider, "Spectator Mode");
+        spectatorModeMenu.setFont(getDefaultFont());
 		spectatorModeMenu.setMnemonic(KeyEvent.VK_S);
 		tacklezonesMenu.add(spectatorModeMenu);
 
@@ -574,6 +585,7 @@ public class GamePlayMenu extends FfbMenu {
 
 		// --- No Overlap (global) ---
 		JMenu tzNoOverlapMenu = new JMenu(dimensionProvider, "Overlap");
+        tzNoOverlapMenu.setFont(getDefaultFont());
 		tzNoOverlapMenu.setMnemonic(KeyEvent.VK_V);
 		tacklezonesMenu.add(tzNoOverlapMenu);
 
@@ -593,6 +605,7 @@ public class GamePlayMenu extends FfbMenu {
 
 		// --- Contour (global) ---
 		JMenu tzContourMenu = new JMenu(dimensionProvider, "Contour");
+        tzContourMenu.setFont(getDefaultFont());
 		tzContourMenu.setMnemonic(KeyEvent.VK_C);
 		tacklezonesMenu.add(tzContourMenu);
 
