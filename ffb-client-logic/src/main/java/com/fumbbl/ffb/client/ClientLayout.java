@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.IClientPropertyValue;
 
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_LAYOUT_LANDSCAPE;
+
 public enum ClientLayout {
 	LANDSCAPE(false), PORTRAIT(true), SQUARE(true),
 	WIDE(false, (double) 57 / 30, 1.25),
@@ -46,7 +48,7 @@ public enum ClientLayout {
         if (IClientPropertyValue.SETTING_LAYOUT_WIDE_1920x1080.equals(layoutPropertyValue))
             return ClientLayout.WIDE_FL_1920x1080;
 
-        throw new IllegalArgumentException("Only one of layout properties are allowed in this methos.");
+        return LANDSCAPE;
     }
 
 }
