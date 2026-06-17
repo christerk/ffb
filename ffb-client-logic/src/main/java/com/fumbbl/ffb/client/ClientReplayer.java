@@ -490,7 +490,7 @@ public class ClientReplayer implements ActionListener {
 
 	private void refreshUserInterface() {
 		UserInterface userInterface = getClient().getUserInterface();
-		userInterface.refresh();
+		userInterface.refreshUi();
 		getClient().updateClientState();
 		userInterface.getDialogManager().updateDialog();
 	}

@@ -125,6 +125,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 
 	protected void initUI() {
 		getUserInterface().init(getGame().getOptions());
+        getUserInterface().refreshUi();
 	}
 
 	protected void clearPrefs() {
