@@ -113,16 +113,17 @@
                                     <winShortcut>true</winShortcut>
                                     <winConsole>false</winConsole>
                                     <winDirChooser>true</winDirChooser>
-                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>
+<!--                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>-->
 
-                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>
+<!--                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>-->
 
                                     <javaOptions>
                                         <option>-Dsun.java2d.uiScale.enabled=false</option>
                                     </javaOptions>
 
                                     <arguments>
-                                        <argument>-noCoachNoConnection -build programmer-underworlds.dev</argument>
+                                        <argument>-noCoachNoConnection</argument>
+                                        <argument>-build programmer-underworlds.dev</argument>
                                     </arguments>
 
                                     <addModules>
