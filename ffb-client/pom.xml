@@ -121,6 +121,10 @@
                                         <option>-Dsun.java2d.uiScale.enabled=false</option>
                                     </javaOptions>
 
+                                    <arguments>
+                                        <argument>-noCoachNoConnection -build programmer-underworlds.dev</argument>
+                                    </arguments>
+
                                     <addModules>
                                         <module>java.desktop</module>
                                         <module>java.logging</module>

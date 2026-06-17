@@ -380,4 +380,8 @@ public interface IIconProperty {
 	String PENALTY_DIE_5 = "game.penalty.die.5";
 	String PENALTY_DIE_6 = "game.penalty.die.6";
 
+    //programmer-underworlds logo
+    String PROGRAMMER_UNDERWORLDS_LOGO = "programmer-underworlds-logo";
+    String FUMBBL_LOGO= "programmer-underworlds-logo";
+
 }

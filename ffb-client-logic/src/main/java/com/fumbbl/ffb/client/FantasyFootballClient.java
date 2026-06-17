@@ -32,6 +32,8 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+
 public abstract class FantasyFootballClient implements IConnectionListener, IDialogCloseListener, IFactorySource {
 
 	private Session fSession;
@@ -49,7 +51,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	private final FactoryManager factoryManager;
 	@SuppressWarnings("rawtypes")
 	private final Map<FactoryType.Factory, INamedObjectFactory> factories;
-    public static final String NO_COACH_NO_CONNECTION = "noCoachNoConnection";
 
 	public FantasyFootballClient(ClientParameters parameters) throws IOException {
 		loadProperties();
@@ -101,7 +102,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	public abstract void dialogClosed(IDialog pDialog);
 
 	public void startClient() {
-        if (NO_COACH_NO_CONNECTION.equals(parameters.getCoach()))
+        if (NO_COACH_NO_CONNECTION.equals(parameters.getMode()))
             return;
 
 		preConnect();

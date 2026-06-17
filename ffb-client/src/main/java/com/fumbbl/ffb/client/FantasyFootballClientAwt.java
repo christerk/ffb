@@ -145,11 +145,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 			ClientParameters parameters = ClientParameters.createValidParams(args);
 			if (parameters == null) {
 				System.out.println(ClientParameters.USAGE);
-                System.out.println("Running in " + NO_COACH_NO_CONNECTION + " mode.");
-                parameters = new ClientParameters(new String[0]);
-                parameters.setLayout(ClientLayout.LANDSCAPE)
-                        .setMode(ClientMode.PLAYER)
-                        .setCoach(NO_COACH_NO_CONNECTION);
+                return;
 			}
             FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
             client.showUserInterface();

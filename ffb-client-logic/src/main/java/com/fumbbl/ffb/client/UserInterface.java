@@ -115,7 +115,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
                 fontConfigRegistry,
                 sketchManager,
                 clickStrategyRegistry,
-                pGameTitle));
+                pGameTitle,
+                fIconCache));
         setGameTitle(pGameTitle);
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
