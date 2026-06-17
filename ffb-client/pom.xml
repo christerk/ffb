@@ -15,6 +15,7 @@
 
     <repositories>
         <repository>
+            <!-- DO NOT set id to "local" because it is reserved by Maven -->
             <id>internal</id>
             <url>file://${project.basedir}/repo</url>
         </repository>
@@ -48,7 +49,7 @@
         </profile>
 
         <profile>
-            <id>package-exe</id>
+            <id>package-installation-msi</id>
             <build>
                 <plugins>
                     <plugin>
@@ -99,7 +100,7 @@
                                 </goals>
                                 <configuration>
                                     <name>FantasyFootballClient</name>
-                                    <appVersion>1.0.0</appVersion>
+                                    <appVersion>${project.version}</appVersion>
                                     <temp>${project.build.directory}/jpackage-temp</temp>
                                     <vendor>pasha@programmer-underworlds.dev</vendor>
                                     <destination>${project.build.directory}/jpackage</destination>

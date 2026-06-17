@@ -25,7 +25,8 @@ The project maintains a custom WiX source file located at `src/main/jpackage/res
 The build pipeline manages this asset through a specific three-phase lifecycle:
 
 ### 1. Resource Redirection and Preprocessing
-When running `mvn clean verify -Ppackage-exe`, the `jpackage-maven-plugin` reads the `<resourceDir>` element pointing to `src/main/jpackage/resources`. This explicit mapping instructs the `jpackage` tool to skip its stock internal installer blueprints and copy our custom `main.wxs` configuration sheet into the intermediate build directory (`target/jpackage-temp/config/`).
+When running `mvn clean verify -Ppackage-installation-msi`, the `jpackage-maven-plugin` reads the `<resourceDir>` element pointing to `src/main/jpackage/resources`. This explicit mapping instructs the `jpackage` tool to skip its stock internal installer blueprints and copy our custom `main.wxs` configuration sheet into the intermediate build directory (`target/jpackage-temp/config/`).
+The `mvn clean verify -Ppackage-installation-msi` command produces msi installer at `ffb-client\target\jpackage` path.
 
 ### 2. Macro Substitution via the POM Configuration
 The `jpackage` engine functions as a preprocessor for the WiX file. It scans the XML content for predefined project macros formatted as `$(var.Jp...)` and text-substitutes them with the static configurations defined in the `pom.xml` plugin block:
@@ -49,7 +50,7 @@ The project maintains a custom WiX source file located at `src/main/jpackage/res
 The build pipeline manages this asset through a specific three-phase lifecycle:
 
 ### 1. Resource Redirection and Preprocessing
-When running `mvn clean verify -Ppackage-exe`, the `jpackage-maven-plugin` reads the `<resourceDir>` element pointing to `src/main/jpackage/resources`. This explicit mapping instructs the `jpackage` tool to skip its stock internal installer blueprints and copy our custom `main.wxs` configuration sheet into the intermediate build directory (`target/jpackage-temp/config/`).
+When running `mvn clean verify -Ppackage-installation-msi`, the `jpackage-maven-plugin` reads the `<resourceDir>` element pointing to `src/main/jpackage/resources`. This explicit mapping instructs the `jpackage` tool to skip its stock internal installer blueprints and copy our custom `main.wxs` configuration sheet into the intermediate build directory (`target/jpackage-temp/config/`).
 
 ### 2. Macro Substitution via the POM Configuration
 The `jpackage` engine functions as a preprocessor for the WiX file. It scans the XML content for predefined project macros formatted as `$(var.Jp...)` and text-substitutes them with the static configurations defined in the `pom.xml` plugin block:
@@ -86,4 +87,4 @@ The project's custom `main.wxs` template resolves this iteration bottleneck by e
 2. **Aggressive Force-Overwrite Logic**: The template modifies the stock `<UpgradeVersion>` criteria to use `IncludeMaximum="yes"` and `OnlyDetect="no"`. This explicit instruction forces the installer engine to actively scan the host registry for existing deployments that are less than *or exactly identical to* the current package runtime version.
 3. **Pre-Execution Eviction (`RemoveExistingProducts`)**: By positioning the `RemoveExistingProducts` directive before `CostInitialize` in the `<InstallExecuteSequence>`, the installer engine identifies the previous installation footprint and cleanly purges its files and registry tracking records *before* it begins evaluating disk space or writing new application data.
 
-Consequently, the custom `main.wxs` transforms the installer into an idempotent pipeline tool. Developers can execute `mvn clean verify -Ppackage-exe` and launch the resulting MSI repeatedly; the installer will automatically tear down the stale local development footprint and deploy the fresh state smoothly without requiring manual intervention.
+Consequently, the custom `main.wxs` transforms the installer into an idempotent pipeline tool. Developers can execute `mvn clean verify -Ppackage-installation-msi` and launch the resulting MSI repeatedly; the installer will automatically tear down the stale local development footprint and deploy the fresh state smoothly without requiring manual intervention.
