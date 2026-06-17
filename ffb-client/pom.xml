@@ -15,7 +15,6 @@
 
     <repositories>
         <repository>
-            <!-- DO NOT set id to "local" because it is reserved by Maven -->
             <id>internal</id>
             <url>file://${project.basedir}/repo</url>
         </repository>
@@ -28,7 +27,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-
     </repositories>
 
     <properties>
@@ -47,6 +45,96 @@
             <properties>
                 <resources.dir>src/main/resources-testenv</resources.dir>
             </properties>
+        </profile>
+
+        <profile>
+            <id>package-exe</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>shade-jpackage</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <finalName>FantasyFootballClient</finalName>
+                                    <outputDirectory>${project.build.directory}/jpackage-input</outputDirectory>
+                                    <transformers>
+                                        <transformer
+                                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
+                                        </transformer>
+                                    </transformers>
+                                    <filters>
+                                        <filter>
+                                            <artifact>*:*</artifact>
+                                            <excludes>
+                                                <exclude>META-INF/*.SF</exclude>
+                                                <exclude>META-INF/*.DSA</exclude>
+                                                <exclude>META-INF/*.RSA</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.panteleyev</groupId>
+                        <artifactId>jpackage-maven-plugin</artifactId>
+                        <version>1.7.4</version>
+                        <executions>
+                            <execution>
+                                <id>jpackage</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jpackage</goal>
+                                </goals>
+                                <configuration>
+                                    <name>FantasyFootballClient</name>
+                                    <appVersion>1.0.0</appVersion>
+                                    <temp>${project.build.directory}/jpackage-temp</temp>
+                                    <vendor>pasha@programmer-underworlds.dev</vendor>
+                                    <destination>${project.build.directory}/jpackage</destination>
+                                    <input>${project.build.directory}/jpackage-input</input>
+                                    <mainJar>FantasyFootballClient.jar</mainJar>
+                                    <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
+                                    <type>MSI</type>
+
+                                    <winPerUserInstall>true</winPerUserInstall>
+                                    <winShortcut>true</winShortcut>
+                                    <winConsole>false</winConsole>
+                                    <winDirChooser>true</winDirChooser>
+                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>
+
+                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>
+
+                                    <javaOptions>
+                                        <option>-Dsun.java2d.uiScale.enabled=false</option>
+                                    </javaOptions>
+
+                                    <addModules>
+                                        <module>java.desktop</module>
+                                        <module>java.logging</module>
+                                        <module>java.management</module>
+                                        <module>java.naming</module>
+                                        <module>java.sql</module>
+                                        <module>java.xml</module>
+                                        <module>jdk.unsupported</module>
+                                    </addModules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -69,7 +157,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -85,12 +173,14 @@
                     </archive>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.5.1</version>
                 <executions>
                     <execution>
+                        <id>standard-shade</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
@@ -166,9 +256,6 @@
             <artifactId>tritonus_share</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <!-- Including these two libs as a workaround as otherwise the assembly
-         does not pick them up even though they are transitive dependencies via
-         ffb-common -->
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
