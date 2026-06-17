@@ -51,12 +51,18 @@ public class ClientParameters {
 		return fMode;
 	}
 
+    public ClientParameters setMode(ClientMode mode){
+        fMode = mode;
+        return this;
+    }
+
 	public String getCoach() {
 		return fCoach;
 	}
 
-	private void setCoach(String pCoach) {
+	public ClientParameters setCoach(String pCoach) {
 		fCoach = pCoach;
+        return this;
 	}
 
 	public long getGameId() {
@@ -104,7 +110,7 @@ public class ClientParameters {
         return this;
     }
 
-	private ClientParameters(String[] pArguments) {
+    public ClientParameters(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();
 			int pos = 0;

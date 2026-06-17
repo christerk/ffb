@@ -1,11 +1,6 @@
 package com.fumbbl.ffb.client;
 
-import com.fumbbl.ffb.ClientStateId;
-import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FantasyFootballException;
-import com.fumbbl.ffb.IClientProperty;
-import com.fumbbl.ffb.IClientPropertyValue;
-import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.dialog.DialogAboutHandler;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.overlay.Overlay;
@@ -150,15 +145,25 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 			ClientParameters parameters = ClientParameters.createValidParams(args);
 			if (parameters == null) {
 				System.out.println(ClientParameters.USAGE);
-				return;
+                System.out.println("Running in " + NO_COACH_NO_CONNECTION + " mode.");
+                parameters = new ClientParameters(new String[0]);
+                parameters.setLayout(ClientLayout.LANDSCAPE)
+                        .setMode(ClientMode.PLAYER)
+                        .setCoach(NO_COACH_NO_CONNECTION);
 			}
-			FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
-			client.showUserInterface();
+            FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
+            client.showUserInterface();
 		} catch (Exception all) {
 			all.printStackTrace(System.err);
 		}
 
 	}
+
+    public void runClientAnew(String[] args) throws IOException {
+        ClientParameters parameters = ClientParameters.createValidParams(args);
+        FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
+        client.showUserInterface();
+    }
 
 	public ActionKeyBindings getActionKeyBindings() {
 		return fActionKeyBindings;

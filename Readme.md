@@ -81,3 +81,5 @@ The main class is `com.fumbbl.ffb.client.FantasyFootballClientAwt`
 | -teamName [teamName] | Name of the team defined by -teamId, can also be taken from the xml                                                                                                                                                                   |
 | -auth [hexstring]    | Log in information, optional. If ommitted you can log in via the client dialog but we recommend to use auth data. For ease of development you can simply add a string into the coach table in the database and use that as auth info. |
 | -gameId [gameId]     | Numeric game id as stored in the data base - only required for replay mode                                                                                                                                                            |
+
+You also have ability to run client without arguments, that way it will start in `NO_COACH_NO_CONNECTION` mode and will allow you to load JNLP file to reinitialize itself to connect to server.

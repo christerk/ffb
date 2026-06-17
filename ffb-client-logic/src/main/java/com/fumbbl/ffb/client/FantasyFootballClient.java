@@ -20,7 +20,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
-import java.awt.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
@@ -50,6 +49,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	private final FactoryManager factoryManager;
 	@SuppressWarnings("rawtypes")
 	private final Map<FactoryType.Factory, INamedObjectFactory> factories;
+    public static final String NO_COACH_NO_CONNECTION = "noCoachNoConnection";
 
 	public FantasyFootballClient(ClientParameters parameters) throws IOException {
 		loadProperties();
@@ -83,6 +83,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public abstract UserInterface getUserInterface();
 
+    public abstract void runClientAnew(String[] arg) throws IOException;
+
 	public ClientCommunication getCommunication() {
 		return fCommunication;
 	}
@@ -99,6 +101,8 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 	public abstract void dialogClosed(IDialog pDialog);
 
 	public void startClient() {
+        if (NO_COACH_NO_CONNECTION.equals(parameters.getCoach()))
+            return;
 
 		preConnect();
 
