@@ -232,20 +232,16 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
         buildLogo.setIcon(buildIcon);
     }
 
-    private JMenu createOpenJnlpButton() {
+    private JButton createOpenJnlpButton() {
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
         Font font = fontCache.font(BOLD, fc.getSize(LARGE), dimensionProvider);
         // 1. Create a direct JButton
-        JMenu startGameUsingJnlpFile = new JMenu("Start game/spectate using JNLP file");
+        JButton startGameUsingJnlpFile = new JButton("Start game/spectate using JNLP file");
         startGameUsingJnlpFile.setFont(font);
 
-        // 2. Use a MenuListener to hijack the click event
-        startGameUsingJnlpFile.addMenuListener(new MenuListener() {
+        startGameUsingJnlpFile.addActionListener(new ActionListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                // Instantly deselect it so the dropdown look clears away
-                SwingUtilities.invokeLater(() -> startGameUsingJnlpFile.setSelected(false));
-
+            public void actionPerformed(ActionEvent e) {
                 // Trigger your File Chooser logic
                 JFileChooser fileChooser = new JFileChooser();
 
@@ -255,7 +251,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
                 // 2. Apply the filter to the file chooser
                 fileChooser.setFileFilter(jnlpFilter);
-
                 // 3. Optional: Disable the "All Files" option so they can ONLY see JNLP files
                 fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -277,14 +272,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
                         throw new RuntimeException(ex);
                     }
                 }
-            }
-
-            @Override
-            public void menuDeselected(MenuEvent e) {
-            }
-
-            @Override
-            public void menuCanceled(MenuEvent e) {
             }
         });
 
