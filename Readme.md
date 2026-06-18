@@ -86,7 +86,7 @@ You also have ability to run client without arguments, that way it will start in
 
 ## Building executable app-image.
 `ffb-client` project has `jpackage-maven-plugin` configuration for creation executable version of client.
-To build that execute `mvn clean verify -Ppackage-image-app` command from inside of `ffb-client` folder.
+To build that execute `mvn clean verify -Ppackage-app-image` command from inside of `ffb-client` folder.
 Up on completion it will produce `ffb-client\target\jpackage\FantasyFootballClient`folder with `app` folder,
 `runtime` folder and `FantasyFootballClient.exe` file inside. This could be simply double clicked to run the client.
 The `ffb-client\target\jpackage\FantasyFootballClient` will include JVM and all dependencies for client to run on 
