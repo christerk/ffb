@@ -32,7 +32,7 @@
 
     <properties>
         <resources.dir>src/main/resources</resources.dir>
-        <is-package-image-app>false</is-package-image-app>
+        <is-package-app-image>false</is-package-app-image>
     </properties>
 
     <profiles>
@@ -50,9 +50,9 @@
         </profile>
 
         <profile>
-            <id>package-image-app</id>
+            <id>package-app-image</id>
             <properties>
-                <is-package-image-app>true</is-package-image-app>
+                <package-app-image>true</package-app-image>
             </properties>
             <build>
                 <plugins>
@@ -192,7 +192,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <skip>${is-package-image-app}</skip>
+                            <skip>${is-package-app-image}</skip>
                             <artifactSet>
                                 <includes>
                                     <include>com.fumbbl.ffb:ffb-client-logic</include>
@@ -208,7 +208,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <skipAssembly>${is-package-image-app}</skipAssembly>
+                    <skipAssembly>${is-package-app-image}</skipAssembly>
                     <descriptors>
                         <descriptor>src/assembly/assembly.xml</descriptor>
                     </descriptors>
