@@ -32,6 +32,7 @@
 
     <properties>
         <resources.dir>src/main/resources</resources.dir>
+        <is-package-installation-msi>false</is-package-installation-msi>
     </properties>
 
     <profiles>
@@ -50,6 +51,9 @@
 
         <profile>
             <id>package-installation-msi</id>
+            <properties>
+                <is-package-installation-msi>true</is-package-installation-msi>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -113,9 +117,9 @@
                                     <winShortcut>true</winShortcut>
                                     <winConsole>false</winConsole>
                                     <winDirChooser>true</winDirChooser>
-<!--                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>-->
+                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>
 
-<!--                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>-->
+                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>
 
                                     <javaOptions>
                                         <option>-Dsun.java2d.uiScale.enabled=false</option>
@@ -193,6 +197,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <skip>${is-package-installation-msi}</skip>
                             <artifactSet>
                                 <includes>
                                     <include>com.fumbbl.ffb:ffb-client-logic</include>
@@ -208,6 +213,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
+                    <skipAssembly>${is-package-installation-msi}</skipAssembly>
                     <descriptors>
                         <descriptor>src/assembly/assembly.xml</descriptor>
                     </descriptors>
