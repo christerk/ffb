@@ -123,7 +123,8 @@
 
                                     <arguments>
                                         <argument>-noCoachNoConnection</argument>
-                                        <argument>-build programmer-underworlds.dev</argument>
+                                        <argument>-build</argument>
+                                        <argument>programmer-underworlds.dev</argument>
                                     </arguments>
 
                                     <addModules>
