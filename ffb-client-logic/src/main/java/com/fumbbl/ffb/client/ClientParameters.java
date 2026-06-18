@@ -6,6 +6,8 @@ import com.fumbbl.ffb.factory.ClientModeFactory;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+
 /**
  * 
  * @author Kalimar
@@ -30,7 +32,7 @@ public class ClientParameters {
 	private static final String _ARGUMENT_AUTHENTICATION = "-auth";
 	private static final String _ARGUMENT_PORT = "-port";
 	private static final String _ARGUMENT_SERVER = "-server";
-	private static final String _ARGUMENT_BUILD = "-build";
+	public static final String _ARGUMENT_BUILD = "-build";
 
 	private static final String _ARGUMENT_LAYOUT = "-layout";
 
@@ -50,11 +52,6 @@ public class ClientParameters {
 	public ClientMode getMode() {
 		return fMode;
 	}
-
-    public ClientParameters setMode(ClientMode mode){
-        fMode = mode;
-        return this;
-    }
 
 	public String getCoach() {
 		return fCoach;
@@ -184,6 +181,10 @@ public class ClientParameters {
 				return StringTool.isProvided(getCoach());
 			case REPLAY:
 				return (getGameId() > 0);
+            case NO_COACH_NO_CONNECTION:
+                setLayout(ClientLayout.LANDSCAPE);
+                setCoach(NO_COACH_NO_CONNECTION.getName());
+                return true;
 			default:
 				return false;
 		}
@@ -201,4 +202,24 @@ public class ClientParameters {
 		ClientParameters parameters = new ClientParameters(args);
 		return parameters.validate() ? parameters : null;
 	}
+
+    public enum Build {
+        FUMBBL("fumbbl.com"), PROGRAMMER_UNDERWORLDS("programmer-underworlds.dev");
+        final String name;
+
+        Build(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static Build getBuildForString(String build) {
+            if (PROGRAMMER_UNDERWORLDS.name.equalsIgnoreCase(build))
+                return PROGRAMMER_UNDERWORLDS;
+
+            return FUMBBL;
+        }
+    }
 }

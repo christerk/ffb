@@ -5,7 +5,10 @@ package com.fumbbl.ffb;
  */
 public enum ClientMode implements INamedObject {
 
-	PLAYER("player", "-player"), SPECTATOR("spectator", "-spectator"), REPLAY("replay", "-replay");
+    NO_COACH_NO_CONNECTION("noCoachNoConnection", "-noCoachNoConnection"),
+    PLAYER("player", "-player"),
+    SPECTATOR("spectator", "-spectator"),
+    REPLAY("replay", "-replay");
 
 	private final String fName;
 	private final String fArgument;

@@ -33,7 +33,7 @@ public class ClientCommandHandlerUpdateLocalPlayerMarkers extends ClientCommandH
 			getClient().getGame().notifyObservers(ModelChangeId.FIELD_MODEL_ADD_PLAYER_MARKER, null, marker);
 		});
 
-		getClient().getUserInterface().refresh();
+		getClient().getUserInterface().refreshUi();
 		return true;
 	}
 }

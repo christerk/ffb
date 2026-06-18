@@ -32,6 +32,7 @@
 
     <properties>
         <resources.dir>src/main/resources</resources.dir>
+        <is-package-image-app>false</is-package-image-app>
     </properties>
 
     <profiles>
@@ -49,7 +50,10 @@
         </profile>
 
         <profile>
-            <id>package-installation-msi</id>
+            <id>package-image-app</id>
+            <properties>
+                <is-package-image-app>true</is-package-image-app>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -107,19 +111,20 @@
                                     <input>${project.build.directory}/jpackage-input</input>
                                     <mainJar>FantasyFootballClient.jar</mainJar>
                                     <mainClass>com.fumbbl.ffb.client.FantasyFootballClientAwt</mainClass>
-                                    <type>MSI</type>
 
-                                    <winPerUserInstall>true</winPerUserInstall>
-                                    <winShortcut>true</winShortcut>
-                                    <winConsole>false</winConsole>
-                                    <winDirChooser>true</winDirChooser>
-                                    <winUpgradeUuid>7e4b91c0-2b15-463a-ba62-f19876543210</winUpgradeUuid>
+                                    <type>APP_IMAGE</type>
 
                                     <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>
 
                                     <javaOptions>
                                         <option>-Dsun.java2d.uiScale.enabled=false</option>
                                     </javaOptions>
+
+                                    <arguments>
+                                        <argument>-noCoachNoConnection</argument>
+                                        <argument>-build</argument>
+                                        <argument>programmer-underworlds.dev</argument>
+                                    </arguments>
 
                                     <addModules>
                                         <module>java.desktop</module>
@@ -187,6 +192,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <skip>${is-package-image-app}</skip>
                             <artifactSet>
                                 <includes>
                                     <include>com.fumbbl.ffb:ffb-client-logic</include>
@@ -202,6 +208,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
+                    <skipAssembly>${is-package-image-app}</skipAssembly>
                     <descriptors>
                         <descriptor>src/assembly/assembly.xml</descriptor>
                     </descriptors>

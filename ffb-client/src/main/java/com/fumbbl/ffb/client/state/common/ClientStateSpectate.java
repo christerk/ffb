@@ -42,7 +42,7 @@ public class ClientStateSpectate extends ClientStateAwt<SpectateLogicModule> {
 		if (pActionKey == ActionKey.MENU_REPLAY) {
 			actionHandled = true;
 			logicModule.startReplay();
-			getClient().getUserInterface().refresh();
+			getClient().getUserInterface().refreshUi();
 		} else {
 			actionHandled = handleResize(pActionKey);
 		}

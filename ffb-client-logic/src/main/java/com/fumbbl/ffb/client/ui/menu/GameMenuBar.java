@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -23,6 +24,7 @@ import java.awt.*;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,7 +32,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fumbbl.ffb.client.FantasyFootballClient.NO_COACH_NO_CONNECTION;
+import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
+import static com.fumbbl.ffb.client.ClientParameters.Build.PROGRAMMER_UNDERWORLDS;
+import static com.fumbbl.ffb.client.ClientParameters.Build.getBuildForString;
+import static com.fumbbl.ffb.client.ClientParameters._ARGUMENT_BUILD;
 import static com.fumbbl.ffb.client.FontConfig.Size.LARGE;
 import static com.fumbbl.ffb.client.FontConfig.Size.MEDIUM;
 import static com.fumbbl.ffb.client.util.JnlpToStringArrayParser.parseJnlpArguments;
@@ -38,7 +46,7 @@ import static java.awt.Font.BOLD;
 import static javax.swing.SwingConstants.VERTICAL;
 
 /**
- * @author Kalimar
+ IconCache iconCache * @author Kalimar
  */
 public class GameMenuBar extends JMenuBar implements ActionListener, IDialogCloseListener, RefreshableUi {
 
@@ -57,9 +65,13 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final ClickStrategyRegistry clickStrategyRegistry;
     private final JLabel gameInfo;
     private final JSeparator gameInfoSeparator;
+    private final JSeparator buildIconSeparator;
     private final FontCache fontCache;
     private final FontConfigRegistry fontConfigRegistry;
+    private final IconCache iconCache;
     private final GameTitle gameTitle;
+    private JMenu buildLogo;
+    private Font menuFont;
 
 	private final Set<FfbMenu> subMenus = new HashSet<>();
 
@@ -70,12 +82,15 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
                        FontConfigRegistry fontConfigRegistry,
                        ClientSketchManager sketchManager,
                        ClickStrategyRegistry clickStrategyRegistry,
-                       GameTitle gameTitle) {
+                       GameTitle gameTitle,
+                       IconCache iconCache) {
 
         this.fontCache = fontCache;
         this.fontConfigRegistry = fontConfigRegistry;
+        this.iconCache = iconCache;
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
-        setFont(fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider));
+        menuFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+        setFont(menuFont);
 
 		fClient = client;
 		this.sketchManager = sketchManager;
@@ -86,10 +101,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
         gameInfo = new JLabel(dimensionProvider, "");
         gameInfo.setVisible(false);
+
         gameInfoSeparator = new JSeparator(VERTICAL);
         gameInfoSeparator.setMaximumSize(new Dimension(10, 100));
         gameInfoSeparator.setVisible(false);
+
         this.gameTitle = gameTitle;
+
+        buildIconSeparator = new JSeparator(VERTICAL);
+        buildIconSeparator.setMaximumSize(new Dimension(10, 100));
+        buildIconSeparator.setVisible(false);
+
+        buildLogo = new JMenu();
+        buildLogo.setVisible(false);
 
 		init();
 	}
@@ -120,7 +144,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		Arrays.stream(this.getComponents()).forEach(this::remove);
 
-        if (NO_COACH_NO_CONNECTION.equals(getClient().getParameters().getCoach()))
+        if (NO_COACH_NO_CONNECTION.equals(getClient().getParameters().getMode()))
             add(createOpenJnlpButton());
 
 		// Create and store the appropriate game mode menu
@@ -159,26 +183,71 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		subMenus.forEach(FfbMenu::init);
 
         add(gameInfoSeparator);
+        add(Box.createHorizontalStrut(4));
         add(gameInfo);
 
-		refreshUi();
+        add(buildIconSeparator);
+
+        if (PROGRAMMER_UNDERWORLDS.equals(getBuildForString(getClient().getParameters().getBuild())))
+            initBuildLogo();
+
+        refreshUi();
 	}
 
-    private JMenu createOpenJnlpButton() {
+    private void initBuildLogo() {
+        BufferedImage programmerUnderworldsLogo =
+                iconCache.getIconByProperty(IIconProperty.PROGRAMMER_UNDERWORLDS_LOGO, dimensionProvider);
+
+        FontMetrics fm = this.getFontMetrics(menuFont);
+        int targetHeight = fm.getHeight();
+
+        int originalWidth = programmerUnderworldsLogo.getWidth(null);
+        int originalHeight = programmerUnderworldsLogo.getHeight(null);
+
+        int newWidth = (int) Math.round(((double) targetHeight / originalHeight) * originalWidth);
+
+        Image puLogoScaled = programmerUnderworldsLogo.getScaledInstance(newWidth, targetHeight, Image.SCALE_SMOOTH);
+        ImageIcon buildIcon = new ImageIcon(puLogoScaled);
+
+        buildLogo.setIcon(buildIcon);
+        add(Box.createHorizontalStrut(4));
+        add(buildIconSeparator);
+        add(Box.createHorizontalGlue());
+        add(buildLogo);
+        add(Box.createHorizontalStrut(4));
+        buildIconSeparator.setVisible(true);
+        buildLogo.setVisible(true);
+    }
+
+    private void rescaleBuildLogoToNewFontHeight() {
+        if (!buildLogo.isVisible())
+            return;
+
+        FontMetrics fm = this.getFontMetrics(menuFont);
+        BufferedImage programmerUnderworldsLogo =
+                iconCache.getIconByProperty(IIconProperty.PROGRAMMER_UNDERWORLDS_LOGO, dimensionProvider);
+        int originalWidth = programmerUnderworldsLogo.getWidth(null);
+        int originalHeight = programmerUnderworldsLogo.getHeight(null);
+        int targetHeight = fm.getHeight();
+        int newWidth = (int) Math.round(((double) targetHeight / originalHeight) * originalWidth);
+        Image puLogoScaled = programmerUnderworldsLogo.getScaledInstance(newWidth, targetHeight, Image.SCALE_SMOOTH);
+        ImageIcon buildIcon = new ImageIcon(puLogoScaled);
+        buildLogo.setIcon(buildIcon);
+    }
+
+    private JButton createOpenJnlpButton() {
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
         Font font = fontCache.font(BOLD, fc.getSize(LARGE), dimensionProvider);
         // 1. Create a direct JButton
-        JMenu startGameUsingJnlpFile = new JMenu("Start game/spectate using JNLP file");
+        JButton startGameUsingJnlpFile = new JButton("Start game/spectate using JNLP file");
         startGameUsingJnlpFile.setFont(font);
 
-        // 2. Use a MenuListener to hijack the click event
-        startGameUsingJnlpFile.addMenuListener(new MenuListener() {
+        startGameUsingJnlpFile.addActionListener(new ActionListener() {
             @Override
-            public void menuSelected(MenuEvent e) {
-                // Instantly deselect it so the dropdown look clears away
-                SwingUtilities.invokeLater(() -> startGameUsingJnlpFile.setSelected(false));
+            public void actionPerformed(ActionEvent e) {
+                UserInterface userInterface = getClient().getUserInterface();
+                userInterface.setUiManagerPropertiesForFileChooserFontsBeforeShowingFileChooser();
 
-                // Trigger your File Chooser logic
                 JFileChooser fileChooser = new JFileChooser();
 
                 // 1. Create a filter specifically for .jnlp files
@@ -187,32 +256,51 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
                 // 2. Apply the filter to the file chooser
                 fileChooser.setFileFilter(jnlpFilter);
-
                 // 3. Optional: Disable the "All Files" option so they can ONLY see JNLP files
                 fileChooser.setAcceptAllFileFilterUsed(false);
 
-                // 4. Show the dialog
-                int response = fileChooser.showOpenDialog(getClient().getUserInterface());
+                //We have to exit fullscreen mode before opening FileChooser because FileChooser is a native OS dialog
+                //and it can not be shown on top of full screened java app. We return full screen after dialog was closed
+                //by clicking cancel button, and if user opens jnlp file then app will be reloaded any way with his coaches
+                //full screen configuration.
 
-                if (response == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String[] clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
-                    //Destroying current instance of userinterface before creating a new one.
-                    getClient().getUserInterface().dispose();
-                    try {
-                        getClient().runClientAnew(clientArgumentsFromJnlpFile);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                FantasyFootballClient client = getClient();
+                String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
+                boolean isInFullScreenBeforeOpeningFileChooserDialogue = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
+
+                if (isInFullScreenBeforeOpeningFileChooserDialogue) {
+                    client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_OFF);
+                    userInterface.updateFullScreenMode();
                 }
-            }
 
-            @Override
-            public void menuDeselected(MenuEvent e) {
-            }
 
-            @Override
-            public void menuCanceled(MenuEvent e) {
+
+                    // 4. Show the dialog
+                    int response = fileChooser.showOpenDialog(userInterface);
+
+                    if (response == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        java.util.List<String> clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
+                        if (PROGRAMMER_UNDERWORLDS.equals(getBuildForString(getClient().getParameters().getBuild()))) {
+                            clientArgumentsFromJnlpFile.add(_ARGUMENT_BUILD);
+                            clientArgumentsFromJnlpFile.add(PROGRAMMER_UNDERWORLDS.getName());
+                        }
+                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
+                        //Destroying current instance of userinterface before creating a new one.
+                        userInterface.dispose();
+                        try {
+                            getClient().runClientAnew(clientArgumentsFromJnlpFile.toArray(new String[]{}));
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
+                        //return to the fullscreen mode if client was in fullscreen mode before opening filechooser
+                        if (isInFullScreenBeforeOpeningFileChooserDialogue) {
+                            client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_ON);
+                            userInterface.updateFullScreenMode();
+                        }
+                    }
             }
         });
 
@@ -231,9 +319,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		}
         FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
 
-        Font font = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
-        setFont(font);
-        gameInfo.setFont(font);
+        menuFont = fontCache.font(Font.PLAIN, fc.getSize(MEDIUM), dimensionProvider);
+        setFont(menuFont);
+        gameInfo.setFont(menuFont);
+        rescaleBuildLogoToNewFontHeight();
 	}
 
     public void setGameInfoVisible(boolean isVisible) {

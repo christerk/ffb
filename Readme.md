@@ -83,3 +83,11 @@ The main class is `com.fumbbl.ffb.client.FantasyFootballClientAwt`
 | -gameId [gameId]     | Numeric game id as stored in the data base - only required for replay mode                                                                                                                                                            |
 
 You also have ability to run client without arguments, that way it will start in `NO_COACH_NO_CONNECTION` mode and will allow you to load JNLP file to reinitialize itself to connect to server.
+
+## Building executable app-image.
+`ffb-client` project has `jpackage-maven-plugin` configuration for creation executable version of client.
+To build that execute `mvn clean verify -Ppackage-image-app` command from inside of `ffb-client` folder.
+Up on completion it will produce `ffb-client\target\jpackage\FantasyFootballClient`folder with `app` folder,
+`runtime` folder and `FantasyFootballClient.exe` file inside. This could be simply double clicked to run the client.
+The `ffb-client\target\jpackage\FantasyFootballClient` will include JVM and all dependencies for client to run on 
+machine without additional steps like downloading java.

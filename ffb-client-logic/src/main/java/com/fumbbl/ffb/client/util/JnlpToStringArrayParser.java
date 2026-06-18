@@ -8,11 +8,14 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class JnlpToStringArrayParser {
 
-    public static String[] parseJnlpArguments(File jnlpFile) {
+    public static List<String> parseJnlpArguments(File jnlpFile) {
         try {
             // 1. Initialize standard JDK XML DOM Parser
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -35,13 +38,13 @@ public class JnlpToStringArrayParser {
                         .filter(node -> node.getNodeType() == Node.ELEMENT_NODE)
                         .map(Node::getTextContent)
                         .map(String::trim)
-                        .toArray(String[]::new);
+                        .collect(Collectors.toList());
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not parse the jnlp file.");
         }
 
         // Return an empty array instead of null if something goes wrong
-        return new String[0];
+        return Collections.emptyList();
     }
 }

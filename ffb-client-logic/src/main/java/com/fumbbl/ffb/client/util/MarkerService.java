@@ -53,7 +53,7 @@ public class MarkerService {
 						pClient.getGame().getFieldModel().removeTransient((TransientPlayerMarker) playerMarker);
 						pClient.getUserInterface().getFieldComponent().getLayerPlayers().updatePlayerMarker(playerMarker);
 					}
-					pClient.getUserInterface().refresh();
+					pClient.getUserInterface().refreshUi();
 				}
 			});
 		}
