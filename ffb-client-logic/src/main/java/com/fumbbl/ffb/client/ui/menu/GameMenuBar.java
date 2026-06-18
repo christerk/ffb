@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
 import static com.fumbbl.ffb.client.ClientParameters.Build.PROGRAMMER_UNDERWORLDS;
 import static com.fumbbl.ffb.client.ClientParameters.Build.getBuildForString;
 import static com.fumbbl.ffb.client.ClientParameters._ARGUMENT_BUILD;
@@ -242,7 +245,9 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
         startGameUsingJnlpFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Trigger your File Chooser logic
+                UserInterface userInterface = getClient().getUserInterface();
+                userInterface.setUiManagerPropertiesForFileChooserFontsBeforeShowingFileChooser();
+
                 JFileChooser fileChooser = new JFileChooser();
 
                 // 1. Create a filter specifically for .jnlp files
@@ -254,24 +259,48 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
                 // 3. Optional: Disable the "All Files" option so they can ONLY see JNLP files
                 fileChooser.setAcceptAllFileFilterUsed(false);
 
-                // 4. Show the dialog
-                int response = fileChooser.showOpenDialog(getClient().getUserInterface());
+                //We have to exit fullscreen mode before opening FileChooser because FileChooser is a native OS dialog
+                //and it can not be shown on top of full screened java app. We return full screen after dialog was closed
+                //by clicking cancel button, and if user opens jnlp file then app will be reloaded any way with his coaches
+                //full screen configuration.
 
-                if (response == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    java.util.List<String> clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
-                    if (PROGRAMMER_UNDERWORLDS.equals(getBuildForString(getClient().getParameters().getBuild()))) {
-                        clientArgumentsFromJnlpFile.add(_ARGUMENT_BUILD);
-                        clientArgumentsFromJnlpFile.add(PROGRAMMER_UNDERWORLDS.getName());
-                    }
-                    //Destroying current instance of userinterface before creating a new one.
-                    getClient().getUserInterface().dispose();
-                    try {
-                        getClient().runClientAnew(clientArgumentsFromJnlpFile.toArray(new String[]{}));
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                FantasyFootballClient client = getClient();
+                String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
+                boolean isInFullScreenBeforeOpeningFileChooserDialogue = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
+
+                if (isInFullScreenBeforeOpeningFileChooserDialogue) {
+                    client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_OFF);
+                    userInterface.updateFullScreenMode();
                 }
+
+
+
+                    // 4. Show the dialog
+                    int response = fileChooser.showOpenDialog(userInterface);
+
+                    if (response == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        java.util.List<String> clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
+                        if (PROGRAMMER_UNDERWORLDS.equals(getBuildForString(getClient().getParameters().getBuild()))) {
+                            clientArgumentsFromJnlpFile.add(_ARGUMENT_BUILD);
+                            clientArgumentsFromJnlpFile.add(PROGRAMMER_UNDERWORLDS.getName());
+                        }
+                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
+                        //Destroying current instance of userinterface before creating a new one.
+                        userInterface.dispose();
+                        try {
+                            getClient().runClientAnew(clientArgumentsFromJnlpFile.toArray(new String[]{}));
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
+                        //return to the fullscreen mode if client was in fullscreen mode before opening filechooser
+                        if (isInFullScreenBeforeOpeningFileChooserDialogue) {
+                            client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_ON);
+                            userInterface.updateFullScreenMode();
+                        }
+                    }
             }
         });
 

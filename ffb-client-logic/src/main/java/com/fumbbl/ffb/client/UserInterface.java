@@ -28,6 +28,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
 import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
@@ -70,6 +73,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
+    private final Map<String, Font> originalFontConfigurations;
+    private final String[] fileChooserDialogKeysForFonts;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -100,7 +105,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
         fontCache = new FontCache(fontConfigRegistry);
 		fSoundEngine = new SoundEngine(getClient());
 		UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, uiDimensionProvider));
-        updateFileChooserFonts();
 		fSoundEngine.init();
         fDialogManager = new DialogManager(getClient(), fontConfigRegistry);
 		styleProvider = new StyleProvider();
@@ -141,11 +145,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
         Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), uiDimensionProvider);
         updateFontForTitles(titleFont);
 
-        updateFullScreenMode();
-	}
-
-    private void updateFileChooserFonts() {
-        String[] fileChooserDialogKeys = {
+        fileChooserDialogKeysForFonts = new String[]{
                 "FileChooser.font",
                 "FileChooser.listFont",
                 "FileChooser.labelFont",
@@ -156,9 +156,33 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
                 "TextField.font",         // Used for the file name input box
                 "ComboBox.font"
         };
+
+        originalFontConfigurations = new HashMap<>();
+
+        for (String prop : fileChooserDialogKeysForFonts)
+            originalFontConfigurations.put(prop, (Font) UIManager.get(prop));
+
+        updateFullScreenMode();
+    }
+
+    public void setUiManagerPropertiesForFileChooserFontsBeforeShowingFileChooser() {
+        FontConfig fc = fontConfigRegistry.getConfig(uiDimensionProvider.getLayoutSettings().getLayout());
+        Font font = fontCache.font(PLAIN, fc.getSize(LARGE), uiDimensionProvider);
+        for (String key : fileChooserDialogKeysForFonts)
+            UIManager.put(key, font);
+    }
+
+    public void restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed() {
+        Set<Map.Entry<String, Font>> entries = originalFontConfigurations.entrySet();
+        for (Map.Entry<String, Font> entry : entries)
+            UIManager.put(entry.getKey(), entry.getValue());
+
+    }
+
+    private void setFileChooserFontsBeforeShowingFileChooser() {
         FontConfig fc = fontConfigRegistry.getConfig(dugoutDimensionProvider.getLayoutSettings().getLayout());
         Font font = fontCache.font(PLAIN, fc.getSize(LARGE), uiDimensionProvider);
-        for (String key : fileChooserDialogKeys) {
+        for (String key : fileChooserDialogKeysForFonts) {
             UIManager.put(key, font);
         }
     }
@@ -368,7 +392,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		refreshSideBars();
 		getFieldComponent().refreshUi();
 		getGameMenuBar().refreshUi();
-        updateFileChooserFonts();
 	}
 
 	public synchronized void init(GameOptions gameOptions) {
