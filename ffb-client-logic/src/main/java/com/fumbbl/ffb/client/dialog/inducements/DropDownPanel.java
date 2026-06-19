@@ -119,4 +119,8 @@ public class DropDownPanel extends JPanel implements ActionListener {
 			fActionListener.actionPerformed(e);
 		}
 	}
+
+	public void setSelectionEnabled(boolean enabled) {
+		fBox.setEnabled(enabled);
+	}
 }

@@ -17,6 +17,7 @@ public class KnockoutRecovery implements IJsonSerializable {
 	private boolean fRecovering;
 	private int fRoll;
 	private int fBloodweiserBabes;
+	private int fBugmansXXXXXXModifier;
 	private String reRollReason;
 
 	public KnockoutRecovery() {
@@ -29,6 +30,12 @@ public class KnockoutRecovery implements IJsonSerializable {
 		fRoll = pRoll;
 		fBloodweiserBabes = pBloodweiserBabes;
 		this.reRollReason = reRollReason;
+	}
+
+	public KnockoutRecovery(String pPlayerId, boolean pRecovering, int pRoll, int pBloodweiserBabes,
+			int pBugmansXXXXXXModifier, String reRollReason) {
+		this(pPlayerId, pRecovering, pRoll, pBloodweiserBabes, reRollReason);
+		fBugmansXXXXXXModifier = pBugmansXXXXXXModifier;
 	}
 
 	public String getPlayerId() {
@@ -47,6 +54,10 @@ public class KnockoutRecovery implements IJsonSerializable {
 		return fBloodweiserBabes;
 	}
 
+	public int getBugmansXXXXXXModifier() {
+		return fBugmansXXXXXXModifier;
+	}
+
 	public String getReRollReason() {
 		return reRollReason;
 	}
@@ -58,6 +69,7 @@ public class KnockoutRecovery implements IJsonSerializable {
 		IJsonOption.RECOVERING.addTo(jsonObject, fRecovering);
 		IJsonOption.ROLL.addTo(jsonObject, fRoll);
 		IJsonOption.BLOODWEISER_KEGS.addTo(jsonObject, fBloodweiserBabes);
+		IJsonOption.BUGMANS_XXXXXX_MODIFIER.addTo(jsonObject, fBugmansXXXXXXModifier);
 		IJsonOption.REASON.addTo(jsonObject, reRollReason);
 		return jsonObject;
 	}
@@ -68,6 +80,7 @@ public class KnockoutRecovery implements IJsonSerializable {
 		fRecovering = IJsonOption.RECOVERING.getFrom(source, jsonObject);
 		fRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		fBloodweiserBabes = IJsonOption.BLOODWEISER_KEGS.getFrom(source, jsonObject);
+		fBugmansXXXXXXModifier = IJsonOption.BUGMANS_XXXXXX_MODIFIER.getFrom(source, jsonObject);
 		reRollReason = IJsonOption.REASON.getFrom(source, jsonObject);
 		return this;
 	}
