@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.fumbbl.ffb.inducement.Usage.LONER;
-import static com.fumbbl.ffb.inducement.Usage.REROLL_ONES_ON_KOS;
 import static com.fumbbl.ffb.inducement.Usage.STAFF;
 import static com.fumbbl.ffb.inducement.Usage.STAR;
 
@@ -219,7 +218,6 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			add(LONER);
 			add(STAR);
 			add(STAFF);
-			add(REROLL_ONES_ON_KOS);
 		}};
 	}
 
