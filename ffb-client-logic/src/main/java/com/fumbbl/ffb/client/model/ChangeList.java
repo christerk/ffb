@@ -23,6 +23,7 @@ public class ChangeList {
 			.addBugfix("Projectile Vomit did not end Blitz activation")
 			.addFeature("Add game option to toggle grab vs sidestep on blitz behavior")
 			.addBugfix("FA triggered after Quick Foul")
+			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
