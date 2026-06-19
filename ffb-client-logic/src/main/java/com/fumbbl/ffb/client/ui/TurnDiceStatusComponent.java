@@ -8,6 +8,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.dialog.DialogEndTurn;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
@@ -23,15 +24,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import javax.swing.JPanel;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -47,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.fumbbl.ffb.client.FontConfig.Size.*;
+import static com.fumbbl.ffb.client.util.UtilClientGraphics.drawInsideBorder;
 
 /**
  * 
@@ -279,13 +273,14 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private void drawBlockDice() {
-		int lineHeight = dimensionProvider.scale(38);
-		int x, y = blockRolls.size() > 1 ? 0 : lineHeight;
+        IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
+        int diceHeight = iconCache.getDiceIcon(1, dimensionProvider).getHeight();
+        int buttonAreaHeight = buttonArea.height + 2;
+        int x, y = blockRolls.size() > 1 ? 0 : buttonAreaHeight;
 		for (BlockRoll blockRoll : blockRolls) {
 			Graphics2D g2d = fImage.createGraphics();
 			GraphicsEnhancer.applyAAHints(g2d);
 			Composite oldComposite = g2d.getComposite();
-			IconCache iconCache = getSideBar().getClient().getUserInterface().getIconCache();
 			int length = blockRoll.getBlockRoll().length;
 			for (int i = 0; i < length; i++) {
 				g2d.setComposite(oldComposite);
@@ -308,11 +303,11 @@ public class TurnDiceStatusComponent extends JPanel
 				g2d.setComposite(oldComposite);
 				FontMetrics fontMetrics = g2d.getFontMetrics();
 				String opponentsChoice = "Opponent's choice";
-				y += lineHeight + fontMetrics.getAscent();
+                y += diceHeight + fontMetrics.getAscent();
 				x = UtilClientGraphics.findCenteredX(g2d, opponentsChoice, size.width);
 				UtilClientGraphics.drawShadowedText(g2d, opponentsChoice, x, y, styleProvider);
 			} else {
-				y += lineHeight;
+                y += diceHeight;
 			}
 			g2d.dispose();
 		}
