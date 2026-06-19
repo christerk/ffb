@@ -189,6 +189,12 @@ public class GameOptionFactory {
 			case INDUCEMENTS_ALWAYS_USE_TREASURY:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Teams will always use treasury instead of petty cash for inducements");
+			case INDUCEMENT_JOSEF_BUGMAN_COST:
+				return new GameOptionInt(pOptionId).setDefault(100000)
+					.setMessage("Josef Bugman can be purchased for $1 gps.");
+			case INDUCEMENT_JOSEF_BUGMAN_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Josef Bugman inducement(s).");
 			case MAX_NR_OF_CARDS:
 				return new GameOptionInt(pOptionId).setDefault(5).setMessage("A maximum of $1 cards can be bought.");
 			case MAX_PLAYERS_IN_WIDE_ZONE:
@@ -376,6 +382,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
 					.setMessageTrue("Overdog can spend treasury");
+			case INDUCEMENTS_ALLOW_UNDERDOG_SPENDING:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Underdog can not spend treasury")
+					.setMessageTrue("Underdog can spend up to 50k treasury");
 			case ENABLE_TACKLEZONE_OVERLAYS:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
