@@ -20,6 +20,7 @@ public class ChangeList {
 			.addFeature("Dwarfen Grit (Star Josef Bugman)")
 			.addFeature("Added game option to disable underdog treasury spending on inducements")
 			.addBugfix("Taunt was available while distracted")
+			.addBugfix("Projectile Vomit did not end Blitz activation")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
