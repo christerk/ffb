@@ -382,6 +382,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageFalse("Overdog can not spend treasury")
 					.setMessageTrue("Overdog can spend treasury");
+			case INDUCEMENTS_ALLOW_UNDERDOG_SPENDING:
+				return new GameOptionBoolean(pOptionId).setDefault(true)
+					.setMessageFalse("Underdog can not spend treasury")
+					.setMessageTrue("Underdog can spend up to 50k treasury");
 			case ENABLE_TACKLEZONE_OVERLAYS:
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Tacklezone overlays are enabled.")
@@ -412,6 +416,10 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(false)
 					.setMessageTrue("Kick use is decided after the roll")
 					.setMessageFalse("Kick use has to be decided before the roll");
+			case GRAB_CANCELS_SIDESTEP_DURING_BLITZ:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Grab can cancel Sidestep during Blitz actions")
+					.setMessageFalse("Grab cannot be used during Blitz actions");
 			case BOMB_TEAM_MATE_KNOCK_DOWN_CAUSES_TURNOVER:
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Bombs knocking down team-mates cause turnovers")

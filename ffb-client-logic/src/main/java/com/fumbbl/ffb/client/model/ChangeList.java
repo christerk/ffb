@@ -18,6 +18,12 @@ public class ChangeList {
 			.addBugfix("Reset button could block hiring star players")
 			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 			.addFeature("Dwarfen Grit (Star Josef Bugman)")
+			.addFeature("Added game option to disable underdog treasury spending on inducements")
+			.addBugfix("Taunt was available while distracted")
+			.addBugfix("Projectile Vomit did not end Blitz activation")
+			.addFeature("Add game option to toggle grab vs sidestep on blitz behavior")
+			.addBugfix("FA triggered after Quick Foul")
+			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 		);
 
