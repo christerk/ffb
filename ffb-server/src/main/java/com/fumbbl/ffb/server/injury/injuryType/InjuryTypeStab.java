@@ -44,7 +44,7 @@ public class InjuryTypeStab extends ModificationAwareInjuryTypeServer<Stab> {
 				pDefender, isStab(), isFoul(), isVomitLike());
 			injuryContext.addInjuryModifiers(injuryModifiers);
 		}
-		setInjury(pDefender, gameState, diceRoller);
+		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 
 	@Override

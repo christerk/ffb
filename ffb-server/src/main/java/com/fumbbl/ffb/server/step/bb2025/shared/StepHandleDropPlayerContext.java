@@ -129,8 +129,14 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 			if (injuryResult.injuryContext().getModifiedInjuryContext() != null && !injuryResult.isAlreadyReported()) {
 				injuryResult.report(this);
 				ModifiedInjuryContext injuryContext = injuryResult.injuryContext().getModifiedInjuryContext();
-				playerId = game.getActingPlayer().getPlayerId();
 				skill = injuryContext.getUsedSkill();
+
+				if (skill.getSkillBehaviour().getInjuryContextModification().appliesToDefender()) {
+					playerId = game.getPlayerById(injuryContext.fDefenderId).getId();
+				} else {
+					playerId = game.getActingPlayer().getPlayerId();
+				}
+
 				UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(playerId, skill, 0), true);
 				getResult().setNextAction(StepAction.CONTINUE);
 			} else {

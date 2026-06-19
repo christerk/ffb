@@ -9,6 +9,22 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("3.3.0")
+			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
+			.addImprovement("Updated db connector to most current mariadb client")
+			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")
+			.addBugfix("Selecting Fumblerooskie during a foul action could foul the active player instead")
+			.addFeature("Infamous Staff - Josef Bugman")
+			.addBugfix("Reset button could block hiring star players")
+			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
+			.addFeature("Dwarfen Grit (Star Josef Bugman)")
+			.addFeature("Added game option to disable underdog treasury spending on inducements")
+			.addBugfix("Taunt was available while distracted")
+			.addBugfix("Projectile Vomit did not end Blitz activation")
+			.addFeature("Add game option to toggle grab vs sidestep on blitz behavior")
+			.addBugfix("FA triggered after Quick Foul")
+		);
+
 		versions.add(new VersionChangeList("3.2.3")
 			.addBugfix("Weather Mage effect only lasted until end of drive/opponents next turn")
 			.addBugfix(

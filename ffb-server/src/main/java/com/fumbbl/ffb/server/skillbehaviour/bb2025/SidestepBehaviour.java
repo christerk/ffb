@@ -8,6 +8,8 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
@@ -19,6 +21,7 @@ import com.fumbbl.ffb.server.step.bb2025.block.StepPushback.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPushback;
 import com.fumbbl.ffb.server.util.UtilServerTimer;
+import com.fumbbl.ffb.skill.mixed.Grab;
 import com.fumbbl.ffb.skill.bb2025.Sidestep;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -43,6 +46,10 @@ public class SidestepBehaviour extends SkillBehaviour<Sidestep> {
 				Skill cancellingSkill = null;
 				if (state.defender.getId().equals(game.getDefenderId())) {
 					cancellingSkill = UtilCards.getSkillCancelling(actingPlayer.getPlayer(), skill);
+					boolean blitzGrabEnabled = UtilGameOption.isOptionEnabled(game, GameOptionId.GRAB_CANCELS_SIDESTEP_DURING_BLITZ);
+					if (!blitzGrabEnabled && actingPlayer.getPlayerAction().isBlitzing() && cancellingSkill instanceof Grab) {
+						cancellingSkill = null;
+					}
 				}
 				boolean attackerHasConflictingSkill = cancellingSkill != null && cancellingSkill.conflictsWithAnySkill(actingPlayer.getPlayer());
 

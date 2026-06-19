@@ -591,6 +591,9 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_PLAGUE_DOCTORS:
 				getTurnData(pGame, isHomeData(pModelChange)).setPlagueDoctors((Integer) pModelChange.getValue());
 				return true;
+			case TURN_DATA_SET_CHEERING_FANS_BLOCK_ASSIST:
+				getTurnData(pGame, isHomeData(pModelChange)).setCheeringFansBlockAssist((Integer) pModelChange.getValue());
+				return true;
 		}
 
 		return false;
@@ -724,6 +727,7 @@ public class ModelChangeProcessor {
 			case TURN_DATA_SET_TURN_NR:
 			case TURN_DATA_SET_TURN_STARTED:
 			case TURN_DATA_SET_COACH_BANNED:
+			case TURN_DATA_SET_CHEERING_FANS_BLOCK_ASSIST:
 				return new ModelChange(pModelChange.getChangeId(),
 					isHomeData(pModelChange) ? ModelChange.AWAY : ModelChange.HOME, pModelChange.getValue());
 
