@@ -21,7 +21,8 @@ public class ChangeList {
 			.addFeature("Added game option to disable underdog treasury spending on inducements")
 			.addBugfix("Taunt was available while distracted")
 			.addBugfix("Projectile Vomit did not end Blitz activation")
-			.addBugfix("Add game option to toggle grab vs sidestep on blitz behavior")
+			.addFeature("Add game option to toggle grab vs sidestep on blitz behavior")
+			.addBugfix("FA triggered after Quick Foul")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
