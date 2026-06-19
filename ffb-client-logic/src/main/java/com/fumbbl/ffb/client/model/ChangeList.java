@@ -19,6 +19,7 @@ public class ChangeList {
 			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 			.addFeature("Dwarfen Grit (Star Josef Bugman)")
 			.addFeature("Added game option to disable underdog treasury spending on inducements")
+			.addBugfix("Taunt was available while distracted")
 			.addBugfix("Projectile Vomit did not end Blitz activation")
 		);
 
