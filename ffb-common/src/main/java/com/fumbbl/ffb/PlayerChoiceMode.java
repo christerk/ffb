@@ -14,7 +14,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
 	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
-	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat");
+	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat"), DWARFEN_WISDOM("dwarfenWisdom", false);
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -132,6 +132,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case AUTO_GAZE_ZOAT:
 				header.append("Select a player to Distract");
 				break;
+			case DWARFEN_WISDOM:
+				header.append("Select players to setup again");
+				break;
 			default:
 				break;
 		}
@@ -225,6 +228,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case AUTO_GAZE_ZOAT:
 				title.append("\"Excuse Me, Are You a Zoat?\"");
 				break;
+			case DWARFEN_WISDOM:
+				title.append("Dwarfen Wisdom");
+				break;
 			default:
 				break;
 		}
@@ -317,6 +323,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case AUTO_GAZE_ZOAT:
 				message.append("Waiting for coach to choose a player to Distract.");
+				break;
+			case DWARFEN_WISDOM:
+				message.append("Waiting for coach to select players to setup again");
 				break;
 			default:
 				break;

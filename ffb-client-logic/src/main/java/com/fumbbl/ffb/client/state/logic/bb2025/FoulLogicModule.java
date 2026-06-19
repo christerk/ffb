@@ -96,6 +96,7 @@ public class FoulLogicModule extends MoveLogicModule {
       add(ClientAction.BLACK_INK);
       add(ClientAction.AUTO_GAZE_ZOAT);
       add(ClientAction.INCORPOREAL);
+      add(ClientAction.FUMBLEROOSKIE);
     }};
   }
 
@@ -184,7 +185,12 @@ public class FoulLogicModule extends MoveLogicModule {
             boolean incorporealActive = actingPlayer.getPlayer().hasActiveEnhancement(skill);
             communication.sendUseSkill(skill, !incorporealActive, actingPlayer.getPlayer().getId());
           }
-          break;  
+          break;
+        case FUMBLEROOSKIE:
+          if (isFumblerooskieAvailable()) {
+            communication.sendUseFumblerooskie();
+          }
+          break;
         default:
           break;
       }

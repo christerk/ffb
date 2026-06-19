@@ -117,6 +117,10 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return false;
 	}
 
+	public boolean appliesToDefender() {
+		return false;
+	}
+
 	protected abstract SkillUse skillUse();
 
 	public boolean isValidType(InjuryType injuryType) {
