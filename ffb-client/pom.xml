@@ -114,8 +114,6 @@
 
                                     <type>APP_IMAGE</type>
 
-                                    <resourceDir>${project.basedir}/src/main/jpackage/resources</resourceDir>
-
                                     <javaOptions>
                                         <option>-Dsun.java2d.uiScale.enabled=false</option>
                                     </javaOptions>
@@ -125,6 +123,7 @@
                                         <argument>-build</argument>
                                         <argument>programmer-underworlds.dev</argument>
                                     </arguments>
+                                    <winConsole>false</winConsole>
 
                                     <addModules>
                                         <module>java.desktop</module>
@@ -134,6 +133,16 @@
                                         <module>java.sql</module>
                                         <module>java.xml</module>
                                         <module>jdk.unsupported</module>
+                                        <module>java.desktop</module>
+                                        <module>java.logging</module>
+                                        <module>java.management</module>
+                                        <module>java.naming</module>
+                                        <module>java.sql</module>
+                                        <module>java.xml</module>
+                                        <module>jdk.unsupported</module>
+                                        <module>jdk.crypto.ec</module>
+                                        <module>jdk.crypto.cryptoki</module>
+                                        <module>java.net.http</module>
                                     </addModules>
                                 </configuration>
                             </execution>
