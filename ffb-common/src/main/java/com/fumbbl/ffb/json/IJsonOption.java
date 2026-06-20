@@ -519,7 +519,7 @@ public interface IJsonOption {
 	JsonBooleanOption SKIP = new JsonBooleanOption("skip");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
-	JsonBooleanOption STARTED_ADJACENT_TO_PARTNER = new JsonBooleanOption("startedAdjacentToPartner");
+	JsonStringArrayOption STARTED_ADJACENT_TO_PARTNERS = new JsonStringArrayOption("startedAdjacentToPartners");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonStringOption SORT_MODE = new JsonStringOption("sortMode");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);

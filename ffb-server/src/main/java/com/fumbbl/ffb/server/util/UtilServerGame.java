@@ -235,12 +235,11 @@ public class UtilServerGame {
 		UtilServerGame.closeGame(gameState);
 	}
 
-	public static boolean pickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
+	public static boolean pickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill, Player<?> carriedPlayer) {
 		Game game = gameState.getGame();
 		Player<?> carrier = actingPlayer.getPlayer();
-		Player<?> carriedPlayer = UtilPlayer.findAdjacentCarriedPartner(game, carrier);
 
-		if (!actingPlayer.isStartedAdjacentToPartner() || carriedPlayer == null) {
+		if (carrier == null || carriedPlayer == null || gameState.getCarriedPlayer() != null) {
 			return false;
 		}
 
@@ -259,7 +258,6 @@ public class UtilServerGame {
 			game.getFieldModel().setBallMoving(false);
 		}
 		game.getFieldModel().addSkillEnhancements(carrier, skill);
-		carrier.markUsed(skill, game);
 		return true;
 	}
 
@@ -276,7 +274,6 @@ public class UtilServerGame {
 			game.getFieldModel().setBallMoving(false);
 		}
 		game.getFieldModel().removeSkillEnhancements(carrier, skill);
-		carrier.markUnused(skill, game);
 		gameState.clearCarriedPlayer();
 	}
 }

@@ -27,7 +27,7 @@ public enum ModelChangeId implements INamedObject {
 	ACTING_PLAYER_SET_PLAYER_ACTION("actingPlayerSetPlayerAction", ModelChangeDataType.PLAYER_ACTION),
 	ACTING_PLAYER_SET_PLAYER_ID("actingPlayerSetPlayerId", ModelChangeDataType.STRING),
 	ACTING_PLAYER_SET_STANDING_UP("actingPlayerSetStandingUp", ModelChangeDataType.BOOLEAN),
-	ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNER("actingPlayerSetStartedAdjacentToPartner", ModelChangeDataType.BOOLEAN),
+	ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNERS("actingPlayerSetStartedAdjacentToPartners", ModelChangeDataType.STRING_ARRAY),
 	ACTING_PLAYER_SET_STRENGTH("actingPlayerSetStrength", ModelChangeDataType.INTEGER),
 	ACTING_PLAYER_SET_SUFFERING_ANIMOSITY("actingPlayerSetSufferingAnimosity", ModelChangeDataType.BOOLEAN),
 	ACTING_PLAYER_SET_SUFFERING_BLOOD_LUST("actingPlayerSetSufferingBloodLust", ModelChangeDataType.BOOLEAN),

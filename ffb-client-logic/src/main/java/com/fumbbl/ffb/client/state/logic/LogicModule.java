@@ -752,9 +752,19 @@ public abstract class LogicModule {
 	}
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
+		if (isIllCarryYouActive(actingPlayer)) {
+			return false;
+		}
+
 		Game game = client.getGame();
-		return actingPlayer.isStartedAdjacentToPartner()
-			&& UtilPlayer.findAdjacentCarriedPartner(game, actingPlayer.getPlayer()) != null;
+		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
+			.anyMatch(actingPlayer::startedAdjacentToPartner);
+	}
+
+	public boolean isIllCarryYouActive(ActingPlayer actingPlayer) {
+		return actingPlayer != null
+			&& actingPlayer.getPlayer() != null
+			&& actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner);
 	}
 
 	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {

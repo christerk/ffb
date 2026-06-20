@@ -282,6 +282,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 
 		Skill skill = carrier.getSkillWithProperty(NamedProperties.canCarryPartner);
 		if (skill != null) {
+			game.getActingPlayer().markSkillUsed(skill);
 			game.getFieldModel().removeSkillEnhancements(carrier, skill);
 		}
 

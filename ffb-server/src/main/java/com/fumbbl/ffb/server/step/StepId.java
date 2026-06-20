@@ -94,6 +94,7 @@ public enum StepId implements INamedObject {
 	HIT_AND_RUN("hitAndRun"), // action.block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
+	ILL_CARRY_YOU("illCarryYou"), // action.special
 	INIT_ACTIVATION("initActivation", "recoverFromGaze"),
 	INIT_BLOCKING("initBlocking"), // action.block
 	INIT_BOMB("initBomb"), // phase.special

@@ -40,6 +40,7 @@ import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.IllCarryYou;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
@@ -151,11 +152,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 							generator.pushSequence(new CatchOfTheDay.SequenceParams(getGameState(), gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
-							if (UtilServerGame.pickUpPartner(getGameState(), getGameState().getGame().getActingPlayer(), commandUseSkill.getSkill())) {
-								getResult().addReport(new ReportSkillUse(getGameState().getGame().getActingPlayer().getPlayerId(),
-										commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
-							}
-							status = StepCommandStatus.EXECUTE_STEP;
+							getGameState().pushCurrentStepOnStack();
+							IllCarryYou generator = (IllCarryYou) getGameState().getGame()
+								.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.IllCarryYou.name());
+							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							usedSkill = commandUseSkill.getSkill();
 						}

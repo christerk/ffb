@@ -714,23 +714,27 @@ public class UtilPlayer {
 		return defenderChooses ? anyKnockDown : allKnockDown;
 	}
 
-	public static boolean canPickUpPartner(Game game, Player<?> selectedPlayer) {
+	public static String[] findPickUpPartners(Game game, Player<?> selectedPlayer) {
 		Skill illCarryYou = selectedPlayer.getSkillWithProperty(NamedProperties.canCarryPartner);
-		return illCarryYou != null
-			&& !selectedPlayer.isUsed(illCarryYou)
-			&& IllCarryYou.VARIANT_CARRIER.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))
-			&& findAdjacentCarriedPartner(game, selectedPlayer) != null;
+		if (illCarryYou == null
+			|| selectedPlayer.isUsed(illCarryYou)
+			|| !IllCarryYou.VARIANT_CARRIER.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))) {
+			return new String[0];
+		}
+
+		return Arrays.stream(findAdjacentCarriedPartners(game, selectedPlayer))
+			.map(Player::getId)
+			.toArray(String[]::new);
 	}
 
-	public static Player<?> findAdjacentCarriedPartner(Game game, Player<?> player) {
+	public static Player<?>[] findAdjacentCarriedPartners(Game game, Player<?> player) {
 		return Arrays.stream(findAdjacentPlayers(game, player.getTeam(), game.getFieldModel().getPlayerCoordinate(player)))
 			.filter(teamMate -> {
 				Skill partnerSkill = teamMate.getSkillWithProperty(NamedProperties.canCarryPartner);
 				return partnerSkill != null
 					&& IllCarryYou.VARIANT_CARRIED.equalsIgnoreCase(teamMate.getSkillValueExcludingTemporaryOnes(partnerSkill));
 			})
-			.findFirst()
-			.orElse(null);
+			.toArray(Player<?>[]::new);
 	}
 
 }

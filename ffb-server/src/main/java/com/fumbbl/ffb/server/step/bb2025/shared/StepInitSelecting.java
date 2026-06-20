@@ -20,6 +20,8 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.*;
+import com.fumbbl.ffb.server.step.generator.IllCarryYou;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
@@ -138,7 +140,7 @@ public final class StepInitSelecting extends AbstractStep {
 								playerAction, actingPlayerCommand.isJumping());
 
 						}
-						game.getActingPlayer().setStartedAdjacentToPartner(UtilPlayer.canPickUpPartner(game, selectedPlayer));
+						game.getActingPlayer().setStartedAdjacentToPartners(UtilPlayer.findPickUpPartners(game, selectedPlayer));
 						checkForStaller();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
@@ -426,15 +428,21 @@ public final class StepInitSelecting extends AbstractStep {
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
-							if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill())) {
-								getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.ILL_CARRY_YOU));
-							}
+							getGameState().pushCurrentStepOnStack();
+							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.IllCarryYou.name());
+							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+							getResult().setNextAction(StepAction.NEXT_STEP);
 						}
 					} else {
 						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)
+							&& getGameState().getCarriedPlayer() != null) {
+							UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill());
+							getGameState().resetStalling();
 						}
 					}
 					break;

@@ -19,6 +19,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.modifiers.StatBasedRollModifierFactory;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.*;
@@ -54,7 +55,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean hasTriggeredEffect;
 	private boolean forgone;
 	private PlayerState oldPlayerState;
-	private boolean startedAdjacentToPartner;
+	private final Set<String> startedAdjacentToPartners = new HashSet<>();
 	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
 	private final transient Game fGame;
@@ -97,7 +98,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fellFromRush = false;
 		hasTriggeredEffect = false;
 		forgone = false;
-		startedAdjacentToPartner = false;
+		startedAdjacentToPartners.clear();
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
 		skillsGrantedBy.clear();
@@ -509,16 +510,20 @@ public class ActingPlayer implements IJsonSerializable {
 		return skillsGrantedBy;
 	}
 
-	public boolean isStartedAdjacentToPartner() {
-		return startedAdjacentToPartner;
+	public boolean startedAdjacentToPartner(String playerId) {
+		return startedAdjacentToPartners.contains(playerId);
 	}
 
-	public void setStartedAdjacentToPartner(boolean startedAdjacentToPartner) {
-		if (this.startedAdjacentToPartner == startedAdjacentToPartner) {
-			return;
+	public String[] getStartedAdjacentToPartners() {
+		return startedAdjacentToPartners.toArray(new String[0]);
+	}
+
+	public void setStartedAdjacentToPartners(String[] playerIds) {
+		startedAdjacentToPartners.clear();
+		if (ArrayTool.isProvided(playerIds)) {
+			Collections.addAll(startedAdjacentToPartners, playerIds);
 		}
-		this.startedAdjacentToPartner = startedAdjacentToPartner;
-		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNER, startedAdjacentToPartner);
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNERS, getStartedAdjacentToPartners());
 	}
 
 	// change tracking
@@ -559,7 +564,7 @@ public class ActingPlayer implements IJsonSerializable {
 		IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
 		IJsonOption.FELL_FROM_RUSH.addTo(jsonObject, fellFromRush);
 		IJsonOption.HAS_TRIGGERED_EFFECT.addTo(jsonObject, hasTriggeredEffect);
-		IJsonOption.STARTED_ADJACENT_TO_PARTNER.addTo(jsonObject, startedAdjacentToPartner);
+		IJsonOption.STARTED_ADJACENT_TO_PARTNERS.addTo(jsonObject, startedAdjacentToPartners);
 		return jsonObject;
 	}
 
@@ -606,8 +611,9 @@ public class ActingPlayer implements IJsonSerializable {
 		if (IJsonOption.HAS_TRIGGERED_EFFECT.isDefinedIn(jsonObject)) {
 			hasTriggeredEffect = IJsonOption.HAS_TRIGGERED_EFFECT.getFrom(source, jsonObject);
 		}
-		if (IJsonOption.STARTED_ADJACENT_TO_PARTNER.isDefinedIn(jsonObject)) {
-			startedAdjacentToPartner = IJsonOption.STARTED_ADJACENT_TO_PARTNER.getFrom(source, jsonObject);
+		if (IJsonOption.STARTED_ADJACENT_TO_PARTNERS.isDefinedIn(jsonObject)) {
+			startedAdjacentToPartners.clear();
+			startedAdjacentToPartners.addAll(Arrays.asList(IJsonOption.STARTED_ADJACENT_TO_PARTNERS.getFrom(source, jsonObject)));
 		}
 		return this;
 	}
