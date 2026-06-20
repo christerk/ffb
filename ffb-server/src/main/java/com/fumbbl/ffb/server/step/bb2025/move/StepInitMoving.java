@@ -323,7 +323,7 @@ public class StepInitMoving extends AbstractStep {
 								.forName(SequenceGenerator.Type.IllCarryYou.name());
 							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
 							getResult().setNextAction(StepAction.NEXT_STEP);
-						} else if (getGameState().getCarriedPlayer() != null) {
+						} else if (getGameState().getCarriedPlayer() != null && !actingPlayer.hasActed()) {
 							UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, skill);
 							getGameState().resetStalling();
 						}

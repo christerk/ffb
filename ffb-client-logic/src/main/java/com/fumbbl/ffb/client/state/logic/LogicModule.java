@@ -752,26 +752,22 @@ public abstract class LogicModule {
 	}
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
-		if (isIllCarryYouActive(actingPlayer)) {
-			return true;
+		if (mustPlaceCarriedPlayer(actingPlayer)) {
+			return false;
 		}
 
 		Game game = client.getGame();
-		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
-			.anyMatch(actingPlayer::startedAdjacentToPartner);
+		return isIllCarryYouActive(actingPlayer)
+			|| Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
+				.anyMatch(actingPlayer::startedAdjacentToPartner);
 	}
 
 	public boolean isIllCarryYouActive(ActingPlayer actingPlayer) {
-		return actingPlayer != null
-			&& actingPlayer.getPlayer() != null
-			&& actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner);
+		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner);
 	}
 
 	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {
-		return actingPlayer != null
-			&& actingPlayer.getPlayer() != null
-			&& actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
-			&& actingPlayer.hasActed();
+		return isIllCarryYouActive(actingPlayer) && actingPlayer.hasActed();
 	}
 
 }

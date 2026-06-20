@@ -443,7 +443,7 @@ public final class StepInitSelecting extends AbstractStep {
 							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
-							if (getGameState().getCarriedPlayer() != null) {
+							if (getGameState().getCarriedPlayer() != null && !actingPlayer.hasActed()) {
 								UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill());
 								getGameState().resetStalling();
 							}
