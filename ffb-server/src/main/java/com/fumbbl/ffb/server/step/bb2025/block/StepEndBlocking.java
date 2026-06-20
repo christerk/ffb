@@ -385,7 +385,7 @@ public class StepEndBlocking extends AbstractStep {
 					if (flashesBlade) {
 						actingPlayer.markSkillUsed(NamedProperties.canStabAndMoveAfterwards);
 					}
-					boolean canMoveOn = !fUsingStab && !usingChainsaw && !usingBreatheFire;
+					boolean canMoveOn = !fUsingStab && !usingChainsaw && !usingVomit && !usingBreatheFire;
 					if (((isBlitz && canMoveOn) || flashesBlade)
 						&& attackerState.hasTacklezones() && UtilPlayer.isNextMovePossible(game, false)) {
 						String actingPlayerId = activePlayer.getId();

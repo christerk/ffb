@@ -88,6 +88,7 @@ public class StepEndFouling extends AbstractStep {
 		Player<?> player = actingPlayer.getPlayer();
 		boolean isOnPitch = FieldCoordinateBounds.FIELD.isInBounds(game.getFieldModel().getPlayerCoordinate(player));
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		game.setDefenderId(null);
 
 		if (actingPlayer.isSufferingBloodLust() && bloodlustAction != null) {
 			UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), bloodlustAction, false);
