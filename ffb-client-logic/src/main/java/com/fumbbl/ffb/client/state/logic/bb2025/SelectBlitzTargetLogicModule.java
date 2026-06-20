@@ -189,7 +189,8 @@ public class SelectBlitzTargetLogicModule extends MoveLogicModule {
 				case ILL_CARRY_YOU:
 					if (isIllCarryYouAvailable(client.getGame().getActingPlayer())) {
 						Skill skill = player.getSkillWithProperty(NamedProperties.canCarryPartner);
-						communication.sendUseSkill(skill, true, player.getId());
+						boolean active = isIllCarryYouActive(client.getGame().getActingPlayer());
+						communication.sendUseSkill(skill, !active, player.getId());
 					}
 					break;
 				default:

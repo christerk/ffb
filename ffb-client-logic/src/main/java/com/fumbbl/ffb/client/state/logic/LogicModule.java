@@ -753,7 +753,7 @@ public abstract class LogicModule {
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
 		if (isIllCarryYouActive(actingPlayer)) {
-			return false;
+			return true;
 		}
 
 		Game game = client.getGame();

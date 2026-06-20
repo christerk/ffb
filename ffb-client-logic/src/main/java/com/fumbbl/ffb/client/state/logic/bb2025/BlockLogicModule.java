@@ -156,7 +156,8 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			case ILL_CARRY_YOU:
 				if (isIllCarryYouAvailable(actingPlayer)) {
 					Skill illCarryYou = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-					communication.sendUseSkill(illCarryYou, true, actingPlayer.getPlayer().getId());
+					boolean active = isIllCarryYouActive(actingPlayer);
+					communication.sendUseSkill(illCarryYou, !active, actingPlayer.getPlayer().getId());
 				}
 				break;
 			default:

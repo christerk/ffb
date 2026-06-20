@@ -50,7 +50,8 @@ public class MoveLogicPlugin extends com.fumbbl.ffb.client.state.logic.plugin.Mo
 			case ILL_CARRY_YOU:
 				if (logicModule.isIllCarryYouAvailable(actingPlayer)) {
 					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-					communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
+					boolean active = logicModule.isIllCarryYouActive(actingPlayer);
+					communication.sendUseSkill(skill, !active, actingPlayer.getPlayer().getId());
 				}
 				break;
 			default:

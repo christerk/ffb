@@ -22,8 +22,6 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
-import com.fumbbl.ffb.server.step.StepParameter;
-import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -37,7 +35,7 @@ import java.util.Arrays;
 public class StepIllCarryYou extends AbstractStep {
 
 	private String playerId;
-	private boolean endPlayerAction, endTurn;
+	private boolean endTurn;
 
 	public StepIllCarryYou(GameState pGameState) {
 		super(pGameState);
@@ -54,23 +52,19 @@ public class StepIllCarryYou extends AbstractStep {
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
-        case CLIENT_PLAYER_CHOICE:
-          ClientCommandPlayerChoice playerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
-          if (playerChoice.getPlayerChoiceMode() == PlayerChoiceMode.ILL_CARRY_YOU) {
-            if (StringTool.isProvided(playerChoice.getPlayerId())) {
-              playerId = playerChoice.getPlayerId();
-              commandStatus = StepCommandStatus.EXECUTE_STEP;
-            } else {
-              commandStatus = StepCommandStatus.SKIP_STEP;
-              Game game = getGameState().getGame();
-              ActingPlayer actingPlayer = game.getActingPlayer();
-              getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
-                actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner),
-                false, SkillUse.ILL_CARRY_YOU));
-              getResult().setNextAction(StepAction.NEXT_STEP);
-            }
-          }
-          break;
+				case CLIENT_PLAYER_CHOICE:
+					ClientCommandPlayerChoice playerChoice = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
+					if (playerChoice.getPlayerChoiceMode() == PlayerChoiceMode.ILL_CARRY_YOU) {
+						if (StringTool.isProvided(playerChoice.getPlayerId())) {
+							playerId = playerChoice.getPlayerId();
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						} else {
+							reportSkillUse(false);
+							getResult().setNextAction(StepAction.NEXT_STEP);
+							commandStatus = StepCommandStatus.SKIP_STEP;
+						}
+					}
+					break;
 				case CLIENT_END_TURN:
 					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
 						endTurn = true;
@@ -90,24 +84,6 @@ public class StepIllCarryYou extends AbstractStep {
 	}
 
 	@Override
-	public boolean setParameter(StepParameter parameter) {
-		if (parameter != null) {
-			switch (parameter.getKey()) {
-				case END_TURN:
-					endTurn = toPrimitive((Boolean) parameter.getValue());
-					return true;
-				case END_PLAYER_ACTION:
-					endPlayerAction = toPrimitive((Boolean) parameter.getValue());
-					return true;
-				default:
-					break;
-			}
-		}
-
-		return super.setParameter(parameter);
-	}
-
-	@Override
 	public void start() {
 		super.start();
 		executeStep();
@@ -117,12 +93,6 @@ public class StepIllCarryYou extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 
 		if (endTurn) {
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			return;
-		}
-
-		if (endPlayerAction) {
-			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 			return;
 		}
 
@@ -130,7 +100,7 @@ public class StepIllCarryYou extends AbstractStep {
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canCarryPartner);
 
-		if (skill == null) {
+		if (skill == null || getGameState().getCarriedPlayer() != null) {
 			return;
 		}
 
@@ -161,6 +131,13 @@ public class StepIllCarryYou extends AbstractStep {
 		}
 	}
 
+	private void reportSkillUse(boolean used) {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(),
+			actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner), used, SkillUse.ILL_CARRY_YOU));
+	}
+
 	private Player<?>[] findCandidates(Game game, ActingPlayer actingPlayer) {
 		if (actingPlayer == null || actingPlayer.getPlayer() == null) {
 			return new Player[0];
@@ -177,7 +154,6 @@ public class StepIllCarryYou extends AbstractStep {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
-		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, endPlayerAction);
 		IServerJsonOption.END_TURN.addTo(jsonObject, endTurn);
 		return jsonObject;
 	}
@@ -187,7 +163,6 @@ public class StepIllCarryYou extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
-		endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		return this;
 	}

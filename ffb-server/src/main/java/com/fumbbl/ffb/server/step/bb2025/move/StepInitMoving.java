@@ -44,6 +44,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.IllCarryYou;
+import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -315,8 +316,9 @@ public class StepInitMoving extends AbstractStep {
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
 						if (clientCommandUseSkill.isSkillUsed()) {
-							getResult().setNextAction(StepAction.CONTINUE);
-							getGameState().pushCurrentStepOnStack();
+							Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.Move.name());
+							moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
 							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.IllCarryYou.name());
 							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));

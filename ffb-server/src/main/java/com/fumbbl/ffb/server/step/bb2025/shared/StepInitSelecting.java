@@ -21,6 +21,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.*;
 import com.fumbbl.ffb.server.step.generator.IllCarryYou;
+import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
@@ -428,7 +429,9 @@ public final class StepInitSelecting extends AbstractStep {
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
-							getGameState().pushCurrentStepOnStack();
+							Select selectGenerator = (Select) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.Select.name());
+							selectGenerator.pushSequence(new Select.SequenceParams(getGameState(), true));
 							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
 								.forName(SequenceGenerator.Type.IllCarryYou.name());
 							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
@@ -439,10 +442,11 @@ public final class StepInitSelecting extends AbstractStep {
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
-						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)
-							&& getGameState().getCarriedPlayer() != null) {
-							UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill());
-							getGameState().resetStalling();
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
+							if (getGameState().getCarriedPlayer() != null) {
+								UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, commandUseSkill.getSkill());
+								getGameState().resetStalling();
+							}
 						}
 					}
 					break;
