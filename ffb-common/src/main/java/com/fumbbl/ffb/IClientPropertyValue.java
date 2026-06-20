@@ -12,6 +12,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_SOUND_ON = "soundOn";
 	String SETTING_SOUND_MUTE_SPECTATORS = "muteSpectators";
 	String SETTING_SOUND_OFF = "soundOff";
+	String SETTING_SOUND_SPECTATOR_CAPTIONS_ON = "captionOn";
+	String SETTING_SOUND_SPECTATOR_CAPTIONS_OFF = "captionOff";
 
 	String SETTING_ICONS_TEAM = "iconsTeam";
 	String SETTING_ICONS_ROSTER_OPPONENT = "iconsRosterOpponent";

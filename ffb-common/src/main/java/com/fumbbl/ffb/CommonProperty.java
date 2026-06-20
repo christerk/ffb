@@ -19,6 +19,7 @@ public enum CommonProperty {
 	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking", "Configuration"),
 
 	SETTING_SOUND_MODE("setting.sound.mode", "Sound", "Configuration", "Sound On/Mute Specs/Off"),
+	SETTING_SOUND_SPECTATOR_CAPTIONS("setting.sound.spectatorCaptions", "Spectator Sound Captions", "Configuration"),
 	SETTING_SOUND_VOLUME("setting.sound.volume", "Sound Volume", "Configuration"),
 	SETTING_ICONS("setting.icons", "Icons", "Graphics"),
 	SETTING_AUTOMOVE("setting.automove", "Automove", "Gameplay"),
@@ -103,7 +104,7 @@ public enum CommonProperty {
 		SETTING_FONT_COLOR_ADDITIONAL_PLAYER_MARKER_AWAY, SETTING_TACKLEZONES_PLAYER_MODE, SETTING_TACKLEZONES_OVERLAP,
 		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR, SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY,
 		SETTING_CLICK_START_SKETCH, SETTING_CLICK_ADD_POINT, SETTING_CLICK_END_SKETCH, SETTING_BACKGROUND_MENTION,
-		SETTING_FONT_COLOR_MENTION, SETTING_AUTOCOMPLETE
+		SETTING_FONT_COLOR_MENTION, SETTING_AUTOCOMPLETE, SETTING_SOUND_SPECTATOR_CAPTIONS
 	};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {

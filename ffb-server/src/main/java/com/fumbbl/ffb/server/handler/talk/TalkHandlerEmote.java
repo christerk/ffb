@@ -23,39 +23,6 @@ public class TalkHandlerEmote extends TalkHandler {
 			return;
 		}
 
-		switch (chatCommand) {
-			case AAH:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_AAH);
-				break;
-			case BOO:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_BOO);
-				break;
-			case CHEER:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CHEER);
-				break;
-			case CLAP:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CLAP);
-				break;
-			case CRICKETS:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_CRICKETS);
-				break;
-			case HURT:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_HURT);
-				break;
-			case LAUGH:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_LAUGH);
-				break;
-			case OOH:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_OOH);
-				break;
-			case SHOCK:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_SHOCK);
-				break;
-			case STOMP:
-				playSoundAfterCooldown(server, gameState, coach, SoundId.SPEC_STOMP);
-				break;
-			default:
-				break;
-		}
+		playSoundAfterCooldown(server, gameState, coach, chatCommand.getSoundId());
 	}
 }

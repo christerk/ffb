@@ -18,6 +18,7 @@ public class ChangeList {
 			.addBugfix("Reset button could block hiring star players")
 			.addBugfix("Emoji picker disappeared after switching between spectator and replay mode")
 			.addFeature("Dwarfen Grit (Star Josef Bugman)")
+			.addFeature("Optional client-side captions for spectator-triggered sounds")
 			.addFeature("Added game option to disable underdog treasury spending on inducements")
 			.addBugfix("Taunt was available while distracted")
 			.addBugfix("Projectile Vomit did not end Blitz activation")
