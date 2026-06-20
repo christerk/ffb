@@ -340,7 +340,8 @@ public class PlayerIconFactory {
 		}
 
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		if ((actingPlayer.getPlayer() == pPlayer) && (playerAction != null) && playerAction.isBlitzing()
+		if ((actingPlayer.getPlayer() == pPlayer) && (playerState.getBase() == PlayerState.MOVING)
+				&& (playerAction != null) && playerAction.isBlitzing()
 				&& IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
 					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER))) {
 			decorationProperty4 = IIconProperty.DECORATION_CHECK_ICON_BLITZ;
