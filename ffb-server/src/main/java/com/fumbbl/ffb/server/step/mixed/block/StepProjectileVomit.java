@@ -135,7 +135,7 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 			}
 			if (dropSelf) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(), null,
+				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(), actingPlayer.getPlayer(),
 					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 					new DropPlayerContext(injuryResultAttacker, false, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
