@@ -73,8 +73,6 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
-    private final Map<String, Font> originalFontConfigurations;
-    private final String[] fileChooserDialogKeysForFonts;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -145,46 +143,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
         Font titleFont = fontCache.font(PLAIN, fc.getSize(MEDIUM), uiDimensionProvider);
         updateFontForTitles(titleFont);
 
-        fileChooserDialogKeysForFonts = new String[]{
-                "FileChooser.font",
-                "FileChooser.listFont",
-                "FileChooser.labelFont",
-                "FileChooser.titleFont",
-                "Button.font",           // Used for Open/Cancel buttons
-                "ToggleButton.font",     // Used for some sidebar toggle elements
-                "Label.font",            // Used for various labels
-                "TextField.font",         // Used for the file name input box
-                "ComboBox.font"
-        };
-
-        originalFontConfigurations = new HashMap<>();
-
-        for (String prop : fileChooserDialogKeysForFonts)
-            originalFontConfigurations.put(prop, (Font) UIManager.get(prop));
-
         updateFullScreenMode();
-    }
-
-    public void setUiManagerPropertiesForFileChooserFontsBeforeShowingFileChooser() {
-        FontConfig fc = fontConfigRegistry.getConfig(uiDimensionProvider.getLayoutSettings().getLayout());
-        Font font = fontCache.font(PLAIN, fc.getSize(LARGE), uiDimensionProvider);
-        for (String key : fileChooserDialogKeysForFonts)
-            UIManager.put(key, font);
-    }
-
-    public void restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed() {
-        Set<Map.Entry<String, Font>> entries = originalFontConfigurations.entrySet();
-        for (Map.Entry<String, Font> entry : entries)
-            UIManager.put(entry.getKey(), entry.getValue());
-
-    }
-
-    private void setFileChooserFontsBeforeShowingFileChooser() {
-        FontConfig fc = fontConfigRegistry.getConfig(dugoutDimensionProvider.getLayoutSettings().getLayout());
-        Font font = fontCache.font(PLAIN, fc.getSize(LARGE), uiDimensionProvider);
-        for (String key : fileChooserDialogKeysForFonts) {
-            UIManager.put(key, font);
-        }
     }
 
 	public void initComponents(boolean callInit) {

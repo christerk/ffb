@@ -27,6 +27,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
+import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+
 /**
  * @author Kalimar
  */
@@ -140,24 +142,43 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 		prefs.put(key, value);
 	}
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		try {
-			ClientParameters parameters = ClientParameters.createValidParams(args);
-			if (parameters == null) {
-				System.out.println(ClientParameters.USAGE);
+        try {
+            ClientParameters parameters = ClientParameters.createValidParams(args);
+            if (parameters == null) {
+                System.out.println(ClientParameters.USAGE);
                 return;
-			}
-            FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
-            client.showUserInterface();
-		} catch (Exception all) {
-			all.printStackTrace(System.err);
-		}
+            }
 
-	}
+            if (NO_COACH_NO_CONNECTION.equals(parameters.getMode())) {
+                LoadJnlpFileWindow loadJnlpFileWindow = new LoadJnlpFileWindow(new LoadJnlpFileWindow.RunClientWithArguments() {
+                    @Override
+                    public void run() {
+                        try {
+                            runClient(this.args);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
 
-    public void runClientAnew(String[] args) throws IOException {
+                loadJnlpFileWindow.setVisible(true);
+            } else
+                runClient(parameters);
+
+        } catch (Exception all) {
+            all.printStackTrace(System.err);
+        }
+
+    }
+
+    public static void runClient(String[] args) throws IOException {
         ClientParameters parameters = ClientParameters.createValidParams(args);
+        runClient(parameters);
+    }
+
+    public static void runClient(ClientParameters parameters) throws IOException {
         FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
         client.showUserInterface();
     }
