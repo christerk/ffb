@@ -63,6 +63,9 @@ public class InjuryResult implements IJsonSerializable {
 		injuryContext = context;
 	}
 
+	/**
+	 * Secret weapon send-off handling applies only to players who can still be sent to the banned box.
+	 */
 	static boolean shouldTrackSecretWeaponSendOff(Player<?> defender, InjuryContext injuryContext) {
 		return defender.hasSkillProperty(NamedProperties.getsSentOffAtEndOfDrive)
 			&& (injuryContext.isKnockedOut() || injuryContext.isReserve());
