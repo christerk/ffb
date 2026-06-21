@@ -63,6 +63,11 @@ public class InjuryResult implements IJsonSerializable {
 		injuryContext = context;
 	}
 
+	static boolean shouldTrackSecretWeaponSendOff(Player<?> defender, InjuryContext injuryContext) {
+		return defender.hasSkillProperty(NamedProperties.getsSentOffAtEndOfDrive)
+			&& (injuryContext.isKnockedOut() || injuryContext.isReserve());
+	}
+
 	public void setAlreadyReported(boolean alreadyReported) {
 		this.alreadyReported = alreadyReported;
 	}
@@ -85,7 +90,7 @@ public class InjuryResult implements IJsonSerializable {
 		Player<?> defender = game.getPlayerById(injuryContext.getDefenderId());
 
 		PlayerResult playerResult = gameResult.getPlayerResult(defender);
-		if (defender.hasSkillProperty(NamedProperties.getsSentOffAtEndOfDrive)) {
+		if (shouldTrackSecretWeaponSendOff(defender, injuryContext)) {
 			playerResult.setHasUsedSecretWeapon(true);
 		}
 
