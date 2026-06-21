@@ -25,6 +25,7 @@ public class ChangeList {
 			.addFeature("Add game option to toggle grab vs sidestep on blitz behavior")
 			.addBugfix("FA triggered after Quick Foul")
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
+			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
