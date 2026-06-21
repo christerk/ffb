@@ -697,8 +697,10 @@ public class StepEndTurn extends AbstractStep {
 		Game game = getGameState().getGame();
 		for (Player<?> player : game.getPlayers()) {
 			PlayerResult playerResult = game.getGameResult().getPlayerResult(player);
+			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			Skill skillRequiringPlayerToBeSentOff = player.getSkillWithProperty(NamedProperties.getsSentOffAtEndOfDrive);
-			if (playerResult.hasUsedSecretWeapon() && skillRequiringPlayerToBeSentOff != null) {
+			if (playerResult.hasUsedSecretWeapon() && skillRequiringPlayerToBeSentOff != null
+				&& !PlayerState.REMOVED_FROM_PLAY.contains(playerState.getBase())) {
 				// special for stunty leeg -> roll for secret weapon ban
 				int penalty = player.getSkillIntValue(skillRequiringPlayerToBeSentOff);
 				if (penalty > 0) {
