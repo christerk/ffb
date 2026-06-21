@@ -50,9 +50,9 @@ class InjuryResultTest {
 		return player;
 	}
 
-	private InjuryContext injuryContext(int playerState) {
+	private InjuryContext injuryContext(int playerStateId) {
 		InjuryContext context = new InjuryContext();
-		context.setInjury(new PlayerState(playerState));
+		context.setInjury(new PlayerState(playerStateId));
 		return context;
 	}
 
