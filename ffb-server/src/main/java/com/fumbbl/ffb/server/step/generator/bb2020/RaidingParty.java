@@ -12,7 +12,7 @@ import com.fumbbl.ffb.server.step.generator.Sequence;
 import static com.fumbbl.ffb.server.step.StepParameter.from;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-public class RaidingParty extends com.fumbbl.ffb.server.step.generator.RadingParty {
+public class RaidingParty extends com.fumbbl.ffb.server.step.generator.RaidingParty {
 
 	@Override
 	public void pushSequence(SequenceParams params) {

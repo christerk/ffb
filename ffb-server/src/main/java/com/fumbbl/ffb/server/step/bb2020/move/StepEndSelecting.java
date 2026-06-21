@@ -363,8 +363,8 @@ public final class StepEndSelecting extends AbstractStep {
         break;
       case RAIDING_PARTY:
         selectGenerator.pushSequence(selectParams);
-        RadingParty.SequenceParams raidingParams = new RadingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING, null);
-        RadingParty raidingGenerator = (RadingParty) factory.forName(SequenceGenerator.Type.RaidingParty.name());
+        RaidingParty.SequenceParams raidingParams = new RaidingParty.SequenceParams(getGameState(), IStepLabel.END_SELECTING, null);
+        RaidingParty raidingGenerator = (RaidingParty) factory.forName(SequenceGenerator.Type.RaidingParty.name());
         raidingGenerator.pushSequence(raidingParams);
         break;
       case WISDOM_OF_THE_WHITE_DWARF:
