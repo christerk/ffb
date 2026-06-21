@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.block;
+package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -33,7 +33,6 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepProjectileVomit extends AbstractStepWithReRoll {
 
 	private String fGotoLabelOnSuccess;
@@ -135,7 +134,7 @@ public class StepProjectileVomit extends AbstractStepWithReRoll {
 			}
 			if (dropSelf) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(), actingPlayer.getPlayer(),
+				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeProjectileVomit(), null,
 					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 				publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 					new DropPlayerContext(injuryResultAttacker, false, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
