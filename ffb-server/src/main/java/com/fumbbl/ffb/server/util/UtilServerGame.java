@@ -235,32 +235,6 @@ public class UtilServerGame {
 		UtilServerGame.closeGame(gameState);
 	}
 
-	public static boolean pickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill, Player<?> carriedPlayer) {
-		Game game = gameState.getGame();
-		Player<?> carrier = actingPlayer.getPlayer();
-
-		if (carrier == null || carriedPlayer == null || gameState.getCarriedPlayer() != null) {
-			return false;
-		}
-
-		boolean carriedPlayerHasBall = UtilPlayer.hasBall(game, carriedPlayer);
-
-		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
-			game.getFieldModel().getPlayerCoordinate(carriedPlayer), carriedPlayerHasBall);
-
-		game.getFieldModel().setPlayerState(carriedPlayer,
-			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP));
-
-		game.getFieldModel().remove(carriedPlayer);
-
-		if (carriedPlayerHasBall) {
-			game.getFieldModel().setBallCoordinate(null);
-			game.getFieldModel().setBallMoving(false);
-		}
-		game.getFieldModel().addSkillEnhancements(carrier, skill);
-		return true;
-	}
-
 	public static void undoPickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
 		Game game = gameState.getGame();
 		Player<?> carrier = actingPlayer.getPlayer();

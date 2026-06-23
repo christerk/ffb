@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2025;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
@@ -24,7 +25,6 @@ import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -122,7 +122,7 @@ public class StepIllCarryYou extends AbstractStep {
 			.findFirst()
 			.orElse(null);
 
-		if (UtilServerGame.pickUpPartner(getGameState(), actingPlayer, skill, carriedPlayer)) {
+		if (pickUpPartner(getGameState(), actingPlayer, skill, carriedPlayer)) {
 			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ILL_CARRY_YOU));
 		}
 	}
@@ -144,6 +144,32 @@ public class StepIllCarryYou extends AbstractStep {
 			.map(game::getPlayerById)
 			.filter(player -> player != null)
 			.toArray(Player<?>[]::new);
+	}
+
+	private boolean pickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill, Player<?> carriedPlayer) {
+		Game game = gameState.getGame();
+		Player<?> carrier = actingPlayer.getPlayer();
+
+		if (carrier == null || carriedPlayer == null || gameState.getCarriedPlayer() != null) {
+			return false;
+		}
+
+		boolean carriedPlayerHasBall = UtilPlayer.hasBall(game, carriedPlayer);
+
+		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
+			game.getFieldModel().getPlayerCoordinate(carriedPlayer), carriedPlayerHasBall);
+
+		game.getFieldModel().setPlayerState(carriedPlayer,
+			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP));
+
+		game.getFieldModel().remove(carriedPlayer);
+
+		if (carriedPlayerHasBall) {
+			game.getFieldModel().setBallCoordinate(null);
+			game.getFieldModel().setBallMoving(false);
+		}
+		game.getFieldModel().addSkillEnhancements(carrier, skill);
+		return true;
 	}
 
 	@Override
