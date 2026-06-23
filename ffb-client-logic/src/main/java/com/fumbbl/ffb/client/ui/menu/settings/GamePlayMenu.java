@@ -374,12 +374,12 @@ public class GamePlayMenu extends FfbMenu {
 
 		ButtonGroup markBlitzingPlayerGroup = new ButtonGroup();
 
-		markBlitzingPlayerOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+        markBlitzingPlayerOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable", fontCache, fontConfigRegistry);
 		markBlitzingPlayerOnMenuItem.addActionListener(this);
 		markBlitzingPlayerGroup.add(markBlitzingPlayerOnMenuItem);
 		markBlitzingPlayerMenu.add(markBlitzingPlayerOnMenuItem);
 
-		markBlitzingPlayerOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+        markBlitzingPlayerOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable", fontCache, fontConfigRegistry);
 		markBlitzingPlayerOffMenuItem.addActionListener(this);
 		markBlitzingPlayerGroup.add(markBlitzingPlayerOffMenuItem);
 		markBlitzingPlayerMenu.add(markBlitzingPlayerOffMenuItem);

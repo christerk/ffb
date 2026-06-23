@@ -425,12 +425,12 @@ public class ClientSettingsMenu extends FfbMenu {
 
 		ButtonGroup spectatorCaptionGroup = new ButtonGroup();
 
-		fSpectatorCaptionsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions on");
+		fSpectatorCaptionsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions on", fontCache, fontConfigRegistry);
 		fSpectatorCaptionsOnMenuItem.addActionListener(this);
 		spectatorCaptionGroup.add(fSpectatorCaptionsOnMenuItem);
 		fSoundMenu.add(fSpectatorCaptionsOnMenuItem);
 
-		fSpectatorCaptionsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions off");
+		fSpectatorCaptionsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions off", fontCache, fontConfigRegistry);
 		fSpectatorCaptionsOffMenuItem.addActionListener(this);
 		spectatorCaptionGroup.add(fSpectatorCaptionsOffMenuItem);
 		fSoundMenu.add(fSpectatorCaptionsOffMenuItem);
