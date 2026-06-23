@@ -111,14 +111,10 @@ public class StepIllCarryYou extends AbstractStep {
 				return;
 			}
 
-			if (candidates.length == 1) {
-				playerId = candidates[0].getId();
-			} else {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(
-					actingPlayer.getPlayer().getTeam().getId(), PlayerChoiceMode.ILL_CARRY_YOU, candidates, null, 1), false);
-				getResult().setNextAction(StepAction.CONTINUE);
-				return;
-			}
+			UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(
+				actingPlayer.getPlayer().getTeam().getId(), PlayerChoiceMode.ILL_CARRY_YOU, candidates, null, 1), false);
+			getResult().setNextAction(StepAction.CONTINUE);
+			return;
 		}
 
 		Player<?> carriedPlayer = Arrays.stream(candidates)

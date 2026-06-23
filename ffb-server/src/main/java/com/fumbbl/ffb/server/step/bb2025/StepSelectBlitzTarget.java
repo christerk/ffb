@@ -161,6 +161,12 @@ public class StepSelectBlitzTarget extends AbstractStep {
 						} else {
 							usedSkill = commandUseSkill.getSkill();
 						}
+					} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)
+						&& getGameState().getCarriedPlayer() != null
+						&& !getGameState().getGame().getActingPlayer().hasActed()) {
+						UtilServerGame.undoPickUpPartner(getGameState(), getGameState().getGame().getActingPlayer(), commandUseSkill.getSkill());
+						getGameState().resetStalling();
+						status = StepCommandStatus.SKIP_STEP;
 					}
 					break;
 				case CLIENT_USE_TEAM_MATES_WISDOM:
