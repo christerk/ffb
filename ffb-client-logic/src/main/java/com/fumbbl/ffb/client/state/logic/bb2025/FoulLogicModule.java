@@ -195,8 +195,7 @@ public class FoulLogicModule extends MoveLogicModule {
         case ILL_CARRY_YOU:
           if (isIllCarryYouAvailable(actingPlayer)) {
             Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-            boolean active = isIllCarryYouActive(actingPlayer);
-            communication.sendUseSkill(skill, !active, actingPlayer.getPlayer().getId());
+            communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
           }
           break;
         default:

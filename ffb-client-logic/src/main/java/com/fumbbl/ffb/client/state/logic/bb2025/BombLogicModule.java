@@ -173,8 +173,7 @@ public class BombLogicModule extends LogicModule {
 			case ILL_CARRY_YOU:
 				if (isIllCarryYouAvailable(actingPlayer)) {
 					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
-					boolean active = isIllCarryYouActive(actingPlayer);
-					client.getCommunication().sendUseSkill(skill, !active, actingPlayer.getPlayer().getId());
+					client.getCommunication().sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
 				}
 				break;
 			default:

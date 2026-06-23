@@ -752,14 +752,13 @@ public abstract class LogicModule {
 	}
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
-		if (mustPlaceCarriedPlayer(actingPlayer)) {
+		if (isIllCarryYouActive(actingPlayer)) {
 			return false;
 		}
 
 		Game game = client.getGame();
-		return isIllCarryYouActive(actingPlayer)
-			|| Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
-				.anyMatch(actingPlayer::startedAdjacentToPartner);
+		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
+			.anyMatch(actingPlayer::startedAdjacentToPartner);
 	}
 
 	public boolean isIllCarryYouActive(ActingPlayer actingPlayer) {

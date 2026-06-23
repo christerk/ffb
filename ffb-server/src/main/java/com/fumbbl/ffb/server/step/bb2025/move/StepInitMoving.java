@@ -47,7 +47,6 @@ import com.fumbbl.ffb.server.step.generator.IllCarryYou;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
@@ -315,18 +314,13 @@ public class StepInitMoving extends AbstractStep {
 						actingPlayer.setJumpsWithoutModifiers(true);
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
-						if (clientCommandUseSkill.isSkillUsed()) {
-							Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-								.forName(SequenceGenerator.Type.Move.name());
-							moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-								.forName(SequenceGenerator.Type.IllCarryYou.name());
-							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-							getResult().setNextAction(StepAction.NEXT_STEP);
-						} else if (getGameState().getCarriedPlayer() != null && !actingPlayer.hasActed()) {
-							UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, skill);
-							getGameState().resetStalling();
-						}
+						Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.Move.name());
+						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+						IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.IllCarryYou.name());
+						generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+						getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 
 					break;
