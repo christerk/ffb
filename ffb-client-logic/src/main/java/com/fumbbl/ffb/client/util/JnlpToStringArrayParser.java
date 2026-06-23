@@ -15,6 +15,12 @@ import java.util.stream.IntStream;
 
 public class JnlpToStringArrayParser {
 
+
+    public static List<String> parseJnlpArguments(String pathToJnlpFile) {
+        File jnlpFile = new File(pathToJnlpFile);
+        return parseJnlpArguments(jnlpFile);
+    }
+
     public static List<String> parseJnlpArguments(File jnlpFile) {
         try {
             // 1. Initialize standard JDK XML DOM Parser

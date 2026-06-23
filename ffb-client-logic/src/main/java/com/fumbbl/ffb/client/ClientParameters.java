@@ -6,7 +6,11 @@ import com.fumbbl.ffb.factory.ClientModeFactory;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.List;
+
 import static com.fumbbl.ffb.ClientMode.NO_COACH_NO_CONNECTION;
+import static com.fumbbl.ffb.client.ClientParameters.Build.PROGRAMMER_UNDERWORLDS;
+import static com.fumbbl.ffb.client.util.JnlpToStringArrayParser.parseJnlpArguments;
 
 /**
  * 
@@ -21,7 +25,8 @@ public class ClientParameters {
 			+ "-player -coach <coach> -teamId <teamId> -teamName <teamName>\n"
 			+ "-spectator -coach <coach>\n"
 			+ "-spectator -coach <coach> -gameId <gameId>\n"
-			+ "-replay -gameId <gameId>";
+            + "-replay -gameId <gameId>"
+            + "-jnlpOnInput \"path-to-jnlp-file\"";
 
 	private static final String _ARGUMENT_COACH = "-coach";
 	private static final String _ARGUMENT_GAME_ID = "-gameId";
@@ -33,6 +38,7 @@ public class ClientParameters {
 	private static final String _ARGUMENT_PORT = "-port";
 	private static final String _ARGUMENT_SERVER = "-server";
 	public static final String _ARGUMENT_BUILD = "-build";
+    public static final String _ARGUMENT_JNLP_ON_INPUT = "-jnlpOnInput";
 
 	private static final String _ARGUMENT_LAYOUT = "-layout";
 
@@ -48,6 +54,7 @@ public class ClientParameters {
 	private String fServer;
 	private String fBuild;
 	private ClientLayout layout = ClientLayout.LANDSCAPE;
+    private String fPathToJnlpFile;
 
 	public ClientMode getMode() {
 		return fMode;
@@ -107,13 +114,27 @@ public class ClientParameters {
         return this;
     }
 
-    public ClientParameters(String[] pArguments) {
+    private ClientParameters() {
+
+    }
+
+    private void initWithParams(String[] pArguments) {
 		if (ArrayTool.isProvided(pArguments)) {
 			ClientModeFactory clientModeFactory = new ClientModeFactory();
 			int pos = 0;
 			while (pos < pArguments.length) {
 				String argument = fetchArgument(pArguments, pos++);
-				if (clientModeFactory.forArgument(argument) != null) {
+                //If -jnlpOnInput argument is passed on input then it overrides further initialisation
+                //with content of jnlp file.
+                if (_ARGUMENT_JNLP_ON_INPUT.equalsIgnoreCase(argument)) {
+                    List<String> jnlpParsedParams = parseJnlpArguments(fetchArgument(pArguments, pos));
+                    //Since so far this supported only by my build -
+                    //adding this parameter to arguments.
+                    jnlpParsedParams.add(_ARGUMENT_BUILD);
+                    jnlpParsedParams.add(PROGRAMMER_UNDERWORLDS.getName());
+                    initWithParams(jnlpParsedParams.toArray(new String[]{}));
+                    return;
+                } else if (clientModeFactory.forArgument(argument) != null) {
 					fMode = clientModeFactory.forArgument(argument);
 				} else if (_ARGUMENT_COACH.equalsIgnoreCase(argument)) {
 					setCoach(fetchArgument(pArguments, pos++));
@@ -145,7 +166,7 @@ public class ClientParameters {
 					fBuild = fetchArgument(pArguments, pos++);
 				} else if (_ARGUMENT_LAYOUT.equalsIgnoreCase(argument)) {
 					layout = ClientLayout.valueOf(fetchArgument(pArguments, pos++));
-				} else {
+                } else {
 					throw new FantasyFootballException("Unknown argument " + argument);
 				}
 			}
@@ -153,7 +174,7 @@ public class ClientParameters {
 	}
 
 	private boolean validate() {
-		if (getMode() == null) {
+        if (getMode() == null && fPathToJnlpFile == null) {
 			return false;
 		}
 		switch (getMode()) {
@@ -199,7 +220,8 @@ public class ClientParameters {
 	}
 
 	public static ClientParameters createValidParams(String[] args) {
-		ClientParameters parameters = new ClientParameters(args);
+        ClientParameters parameters = new ClientParameters();
+        parameters.initWithParams(args);
 		return parameters.validate() ? parameters : null;
 	}
 

@@ -70,7 +70,7 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
     private final FontConfigRegistry fontConfigRegistry;
     private final IconCache iconCache;
     private final GameTitle gameTitle;
-    private JMenu buildLogo;
+    private final JMenu buildLogo;
     private Font menuFont;
 
 	private final Set<FfbMenu> subMenus = new HashSet<>();
@@ -143,9 +143,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	public void init() {
 
 		Arrays.stream(this.getComponents()).forEach(this::remove);
-
-        if (NO_COACH_NO_CONNECTION.equals(getClient().getParameters().getMode()))
-            add(createOpenJnlpButton());
 
 		// Create and store the appropriate game mode menu
 		if (getClient().getMode() == ClientMode.REPLAY) {
@@ -233,78 +230,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
         Image puLogoScaled = programmerUnderworldsLogo.getScaledInstance(newWidth, targetHeight, Image.SCALE_SMOOTH);
         ImageIcon buildIcon = new ImageIcon(puLogoScaled);
         buildLogo.setIcon(buildIcon);
-    }
-
-    private JButton createOpenJnlpButton() {
-        FontConfig fc = fontConfigRegistry.getConfig(dimensionProvider.getLayoutSettings().getLayout());
-        Font font = fontCache.font(BOLD, fc.getSize(LARGE), dimensionProvider);
-        // 1. Create a direct JButton
-        JButton startGameUsingJnlpFile = new JButton("Start game/spectate using JNLP file");
-        startGameUsingJnlpFile.setFont(font);
-
-        startGameUsingJnlpFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                UserInterface userInterface = getClient().getUserInterface();
-                userInterface.setUiManagerPropertiesForFileChooserFontsBeforeShowingFileChooser();
-
-                JFileChooser fileChooser = new JFileChooser();
-
-                // 1. Create a filter specifically for .jnlp files
-                // The first argument is the description shown to the user, the second is the extension
-                FileNameExtensionFilter jnlpFilter = new FileNameExtensionFilter("JNLP Files (*.jnlp)", "jnlp");
-
-                // 2. Apply the filter to the file chooser
-                fileChooser.setFileFilter(jnlpFilter);
-                // 3. Optional: Disable the "All Files" option so they can ONLY see JNLP files
-                fileChooser.setAcceptAllFileFilterUsed(false);
-
-                //We have to exit fullscreen mode before opening FileChooser because FileChooser is a native OS dialog
-                //and it can not be shown on top of full screened java app. We return full screen after dialog was closed
-                //by clicking cancel button, and if user opens jnlp file then app will be reloaded any way with his coaches
-                //full screen configuration.
-
-                FantasyFootballClient client = getClient();
-                String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
-                boolean isInFullScreenBeforeOpeningFileChooserDialogue = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
-
-                if (isInFullScreenBeforeOpeningFileChooserDialogue) {
-                    client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_OFF);
-                    userInterface.updateFullScreenMode();
-                }
-
-
-
-                    // 4. Show the dialog
-                    int response = fileChooser.showOpenDialog(userInterface);
-
-                    if (response == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        java.util.List<String> clientArgumentsFromJnlpFile = parseJnlpArguments(selectedFile);
-                        if (PROGRAMMER_UNDERWORLDS.equals(getBuildForString(getClient().getParameters().getBuild()))) {
-                            clientArgumentsFromJnlpFile.add(_ARGUMENT_BUILD);
-                            clientArgumentsFromJnlpFile.add(PROGRAMMER_UNDERWORLDS.getName());
-                        }
-                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
-                        //Destroying current instance of userinterface before creating a new one.
-                        userInterface.dispose();
-                        try {
-                            getClient().runClientAnew(clientArgumentsFromJnlpFile.toArray(new String[]{}));
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else {
-                        userInterface.restoreUiManagerPropertiesForFileChooserFontsToOriginalAfterShowingFileChooserWasClosed();
-                        //return to the fullscreen mode if client was in fullscreen mode before opening filechooser
-                        if (isInFullScreenBeforeOpeningFileChooserDialogue) {
-                            client.setProperty(SETTING_UI_FULLSCREEN, SETTING_UI_FULLSCREEN_ON);
-                            userInterface.updateFullScreenMode();
-                        }
-                    }
-            }
-        });
-
-        return startGameUsingJnlpFile;
     }
 
 	public FantasyFootballClient getClient() {

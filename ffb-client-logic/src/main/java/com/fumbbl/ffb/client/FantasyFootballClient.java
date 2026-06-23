@@ -84,8 +84,6 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public abstract UserInterface getUserInterface();
 
-    public abstract void runClientAnew(String[] arg) throws IOException;
-
 	public ClientCommunication getCommunication() {
 		return fCommunication;
 	}
