@@ -2,8 +2,8 @@ package com.fumbbl.ffb.server.step.generator;
 
 import com.fumbbl.ffb.server.GameState;
 
-public abstract class RadingParty extends SequenceGenerator<RadingParty.SequenceParams> {
-	public RadingParty() {
+public abstract class RaidingParty extends SequenceGenerator<RaidingParty.SequenceParams> {
+	public RaidingParty() {
 		super(Type.RaidingParty);
 	}
 

@@ -1,6 +1,8 @@
 package com.fumbbl.ffb.server.step.bb2025.start;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -51,8 +53,13 @@ public class StepMasterChef extends AbstractStep {
 	}
 
 	private void setLeaders(Team team) {
+		FieldModel fieldModel = getGameState().getGame().getFieldModel();
 		Arrays.stream(team.getPlayers())
 			.filter(player -> player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch))
+			.filter(player -> {
+				FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
+				return playerCoordinate != null && !playerCoordinate.isBoxCoordinate();
+			})
 			.forEach(player -> getGameState().addLeader(player));
 	}
 
