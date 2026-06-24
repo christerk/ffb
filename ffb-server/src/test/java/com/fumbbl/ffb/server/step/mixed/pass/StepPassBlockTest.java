@@ -61,6 +61,8 @@ class StepPassBlockTest {
 			.add("stepResult", stepResult)
 			.add("goingForIt", false)
 			.add("hasMoved", hasMoved)
+			.add("endTurn", false)
+			.add("endPlayerAction", false)
 			.add("passBlockThrowerState", state.getId());
 		return new StepPassBlock(null).initFrom(source, jsonObject);
 	}
