@@ -227,13 +227,17 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					failDodge();
 					return;
 				} else if (!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer())) {
-					AgilityMechanic mechanic =
-						(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
-					if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers) ||
-						!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
-						failDodge();
+					if (dtRerollAsked) {
+						setReRollSource(null);
+					} else {
+						AgilityMechanic mechanic =
+							(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+						if (usingModifyingSkill != null || !showUseModifyingSkillDialog(mechanic, dodgeModifiers) ||
+							!Boolean.TRUE.equals(usingModifierIgnoringSkill)) {
+							failDodge();
+						}
+						return;
 					}
-					return;
 				} else {
 					fReRollUsed = true;
 				}
