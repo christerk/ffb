@@ -17,6 +17,7 @@ public class ActiveEffects implements IJsonSerializable {
 
 	private Weather oldWeather;
 	private boolean skipRestoreWeather, stalling;
+	// half numbers are 1-based, so 0 means no half has been processed yet
 	private int processedKickoffHalf;
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
