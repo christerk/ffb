@@ -159,7 +159,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringOption PLAYER_ON_BALL_ID = new JsonStringOption("playerOnBallId");
     JsonObjectOption PRAYER_STATE = new JsonObjectOption("prayerState");
     JsonBooleanOption PRE_REGENERATION = new JsonBooleanOption("preRegeneration");
-    JsonIntOption PROCESSED_KICKOFF_HALF = new JsonIntOption("processedKickoffHalf");
     JsonBooleanOption PUBLISH_DEFENDER = new JsonBooleanOption("publishDefender");
     JsonBooleanOption REMOVE_CATCH_MODE = new JsonBooleanOption("removeCatchMode");
     JsonBooleanOption REMOVE_USED_SECRET_WEAPONS = new JsonBooleanOption("removeUsedSecretWeapons");

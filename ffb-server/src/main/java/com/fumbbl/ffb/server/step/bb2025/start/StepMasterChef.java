@@ -44,7 +44,7 @@ public class StepMasterChef extends AbstractStep {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		if (game.getHalf() < 3 && getGameState().markKickoffHalfProcessed(game.getHalf())) {
+		if (game.getHalf() < 3 && game.firstTurnOfHalf()) {
 			UtilServerGame.handleChefRolls(this, game);
 			setLeaders(game.getTeamHome());
 			setLeaders(game.getTeamAway());

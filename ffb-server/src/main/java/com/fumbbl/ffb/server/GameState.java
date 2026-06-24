@@ -412,14 +412,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		activeEffects.clearLeaders();
 	}
 
-	public boolean markKickoffHalfProcessed(int half) {
-		if (activeEffects.getProcessedKickoffHalf() == half) {
-			return false;
-		}
-		activeEffects.setProcessedKickoffHalf(half);
-		return true;
-	}
-
 // JSON serialization
 
 	public JsonObject toJsonValue() {

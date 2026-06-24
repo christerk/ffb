@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 class StepMasterChefTest {
 
 	@Test
-	void startProcessesKickoffOnlyOncePerHalf() {
+	void startProcessesKickoffAtStartOfHalf() {
 		GameState gameState = mock(GameState.class);
 		Game game = mock(Game.class);
 		Team home = mock(Team.class);
@@ -33,7 +33,7 @@ class StepMasterChefTest {
 
 		when(gameState.getGame()).thenReturn(game);
 		when(game.getHalf()).thenReturn(1);
-		when(gameState.markKickoffHalfProcessed(1)).thenReturn(true, false);
+		when(game.firstTurnOfHalf()).thenReturn(true);
 		when(game.getTeamHome()).thenReturn(home);
 		when(game.getTeamAway()).thenReturn(away);
 		when(game.getFieldModel()).thenReturn(fieldModel);
@@ -46,22 +46,20 @@ class StepMasterChefTest {
 			StepMasterChef step = new StepMasterChef(gameState);
 
 			step.start();
-			step.start();
 
 			utilServerGame.verify(() -> UtilServerGame.handleChefRolls(step, game), times(1));
 			verify(gameState, times(1)).addLeader(leader);
-			verify(gameState, times(2)).markKickoffHalfProcessed(1);
 		}
 	}
 
 	@Test
-	void startSkipsProcessedHalf() {
+	void startSkipsWhenNotFirstTurnOfHalf() {
 		GameState gameState = mock(GameState.class);
 		Game game = mock(Game.class);
 
 		when(gameState.getGame()).thenReturn(game);
 		when(game.getHalf()).thenReturn(1);
-		when(gameState.markKickoffHalfProcessed(1)).thenReturn(false);
+		when(game.firstTurnOfHalf()).thenReturn(false);
 
 		try (MockedStatic<UtilServerGame> utilServerGame = mockStatic(UtilServerGame.class)) {
 			new StepMasterChef(gameState).start();
