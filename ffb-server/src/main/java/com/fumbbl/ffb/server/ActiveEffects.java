@@ -17,6 +17,7 @@ public class ActiveEffects implements IJsonSerializable {
 
 	private Weather oldWeather;
 	private boolean skipRestoreWeather, stalling;
+	private int processedKickoffHalf;
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
 	private final Set<String> leaders = new HashSet<>();
@@ -55,6 +56,14 @@ public class ActiveEffects implements IJsonSerializable {
 
 	public void setStalling(boolean stalling) {
 		this.stalling = stalling;
+	}
+
+	public int getProcessedKickoffHalf() {
+		return processedKickoffHalf;
+	}
+
+	public void setProcessedKickoffHalf(int processedKickoffHalf) {
+		this.processedKickoffHalf = processedKickoffHalf;
 	}
 
 	public void clearShadowers() {
@@ -96,6 +105,10 @@ public class ActiveEffects implements IJsonSerializable {
 			stalling = IServerJsonOption.STALLING.getFrom(source, jsonObject);
 		}
 
+		if (IServerJsonOption.PROCESSED_KICKOFF_HALF.isDefinedIn(jsonObject)) {
+			processedKickoffHalf = IServerJsonOption.PROCESSED_KICKOFF_HALF.getFrom(source, jsonObject);
+		}
+
 		if (IServerJsonOption.PLAYER_IDS.isDefinedIn(jsonObject)) {
 			shadowers.addAll(Arrays.asList(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)));
 		}
@@ -114,6 +127,7 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.SKIP_RESTORE_WEATHER.addTo(jsonObject, skipRestoreWeather);
 		IServerJsonOption.TEAM_IDS_ADDITIONAL_ASSIST.addTo(jsonObject, teamIdsAdditionalAssist);
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
+		IServerJsonOption.PROCESSED_KICKOFF_HALF.addTo(jsonObject, processedKickoffHalf);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
 		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
 		return jsonObject;
