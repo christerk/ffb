@@ -63,12 +63,6 @@ public class StepPassBlock extends AbstractStep {
 		super(pGameState);
 	}
 
-	StepPassBlock(GameState gameState, boolean hasMoved, PlayerState oldActingPlayerCurrentState) {
-		this(gameState);
-		this.hasMoved = hasMoved;
-		fOldActingPlayerCurrentState = oldActingPlayerCurrentState;
-	}
-
 	public StepId getId() {
 		return StepId.PASS_BLOCK;
 	}
@@ -328,12 +322,12 @@ public class StepPassBlock extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		currentMove = IServerJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
-		isGoingForIt = IServerJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);
+		isGoingForIt = toPrimitive(IServerJsonOption.GOING_FOR_IT.getFrom(source, jsonObject));
 		hasMoved = toPrimitive(IServerJsonOption.HAS_MOVED.getFrom(source, jsonObject));
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
-		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
-		fEndPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
+		fEndTurn = toPrimitive(IServerJsonOption.END_TURN.getFrom(source, jsonObject));
+		fEndPlayerAction = toPrimitive(IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject));
 		fOldPlayerStates = null;
 		int[] playerStateIds = IServerJsonOption.OLD_PLAYER_STATES.getFrom(source, jsonObject);
 		if (ArrayTool.isProvided(playerStateIds)) {
