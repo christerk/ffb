@@ -53,7 +53,7 @@ public class StepPassBlock extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
 	private TurnMode fOldTurnMode;
-	private boolean fEndTurn, fEndPlayerAction, isGoingForIt;
+	private boolean fEndTurn, fEndPlayerAction, isGoingForIt, hasMoved;
 	private PlayerState[] fOldPlayerStates;
 	private PlayerState fOldActingPlayerState;
 	private int currentMove = -1;
@@ -191,6 +191,7 @@ public class StepPassBlock extends AbstractStep {
 				actingPlayer.setOldPlayerState(fOldActingPlayerState);
 				actingPlayer.setPlayerAction(game.getThrowerAction());
 				actingPlayer.setHasPassed(true);
+				actingPlayer.setHasMoved(hasMoved);
 				if (currentMove >= 0) {
 					actingPlayer.setCurrentMove(currentMove);
 					actingPlayer.setGoingForIt(isGoingForIt);
@@ -231,6 +232,7 @@ public class StepPassBlock extends AbstractStep {
 				game.setHomePlaying(!game.isHomePlaying());
 				currentMove = game.getActingPlayer().getCurrentMove();
 				isGoingForIt = game.getActingPlayer().isGoingForIt();
+				hasMoved = game.getActingPlayer().hasMoved();
 				fOldActingPlayerState = game.getActingPlayer().getOldPlayerState();
 				game.getActingPlayer().setPlayerId(null);
 
@@ -289,6 +291,7 @@ public class StepPassBlock extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.CURRENT_MOVE.addTo(jsonObject, currentMove);
 		IServerJsonOption.GOING_FOR_IT.addTo(jsonObject, isGoingForIt);
+		IServerJsonOption.HAS_MOVED.addTo(jsonObject, hasMoved);
 		IServerJsonOption.GOTO_LABEL_ON_END.addTo(jsonObject, fGotoLabelOnEnd);
 		IServerJsonOption.OLD_TURN_MODE.addTo(jsonObject, fOldTurnMode);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
@@ -314,6 +317,7 @@ public class StepPassBlock extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		currentMove = IServerJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
 		isGoingForIt = IServerJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);
+		hasMoved = IServerJsonOption.HAS_MOVED.getFrom(source, jsonObject);
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
