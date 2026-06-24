@@ -329,8 +329,7 @@ public class StepPassBlock extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		currentMove = IServerJsonOption.CURRENT_MOVE.getFrom(source, jsonObject);
 		isGoingForIt = IServerJsonOption.GOING_FOR_IT.getFrom(source, jsonObject);
-		Boolean oldHasMoved = IServerJsonOption.HAS_MOVED.getFrom(source, jsonObject);
-		hasMoved = oldHasMoved != null && oldHasMoved;
+		hasMoved = toPrimitive(IServerJsonOption.HAS_MOVED.getFrom(source, jsonObject));
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		fOldTurnMode = (TurnMode) IServerJsonOption.OLD_TURN_MODE.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
