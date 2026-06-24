@@ -116,7 +116,6 @@ public class ClientStateFoul extends AbstractClientStateMove<FoulLogicModule> {
       put(IPlayerPopupMenuKeys.KEY_INCORPOREAL, ClientAction.INCORPOREAL);
       put(IPlayerPopupMenuKeys.KEY_FUMBLEROOSKIE, ClientAction.FUMBLEROOSKIE);
       put(IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU, ClientAction.ILL_CARRY_YOU);
-      
     }};
   }
 

@@ -163,7 +163,7 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 				placePlayerOnOccupiedSquare(game, carrier, carriedPlayer, playerLandedUpon, selectedCoordinate);
 			} else {
 				placePlayerOnEmptySquare(game, carrier, carriedPlayer, selectedCoordinate);
-			}			
+			}
 			return;
 		}
 

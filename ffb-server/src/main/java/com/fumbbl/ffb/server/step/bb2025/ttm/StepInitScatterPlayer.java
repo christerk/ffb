@@ -83,7 +83,6 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye, usingSwoop, isCarriedPlayer;
 	private Direction swoopDirection;
 	private UtilThrowTeamMateSequence.ScatterResult scatterResult;
-	
 
 	public StepInitScatterPlayer(GameState pGameState) {
 		super(pGameState);

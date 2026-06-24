@@ -62,4 +62,3 @@ public class CarriedPlayer implements IJsonSerializable {
 		return jsonObject;
 	}
 }
-
