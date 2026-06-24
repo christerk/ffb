@@ -153,6 +153,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption PASS_FUMBLE = new JsonBooleanOption("passFumble");
     JsonBooleanOption PASS_SKILL_USED = new JsonBooleanOption("passSkillUsed");
     JsonObjectOption PASS_STATE = new JsonObjectOption("passState");
+    JsonPlayerStateOption PASS_BLOCK_THROWER_STATE = new JsonPlayerStateOption("passBlockThrowerState");
     JsonBooleanOption PETTY_CASH_SELECTED_AWAY = new JsonBooleanOption("pettyCashSelectedAway");
     JsonBooleanOption PETTY_CASH_SELECTED_HOME = new JsonBooleanOption("pettyCashSelectedHome");
     JsonBooleanOption PICK_UP_OPTIONAL = new JsonBooleanOption("pickUpOptional");
