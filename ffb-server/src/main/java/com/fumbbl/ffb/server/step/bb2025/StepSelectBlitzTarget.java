@@ -42,11 +42,11 @@ import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.IllCarryYou;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
+import com.fumbbl.ffb.server.step.generator.RaidingParty;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
-import com.fumbbl.ffb.server.step.generator.bb2020.RaidingParty;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 

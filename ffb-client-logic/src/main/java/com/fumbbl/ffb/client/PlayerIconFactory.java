@@ -263,6 +263,7 @@ public class PlayerIconFactory {
 		String decorationProperty1 = null;
 		String decorationProperty2 = null;
 		String decorationProperty3 = null;
+		String decorationProperty4 = null;
 
 		if (icon != null) {
 			switch (playerState.getBase()) {
@@ -338,6 +339,14 @@ public class PlayerIconFactory {
 			decorationProperty3 = IIconProperty.DECORATION_CHOMPED;
 		}
 
+		PlayerAction playerAction = actingPlayer.getPlayerAction();
+		if ((actingPlayer.getPlayer() == pPlayer) && (playerState.getBase() == PlayerState.MOVING)
+				&& (playerAction != null) && playerAction.isBlitzing()
+				&& IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
+					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER))) {
+			decorationProperty4 = IIconProperty.DECORATION_CHECK_ICON_BLITZ;
+		}
+
 		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
 		if (decorationProperty1 != null) {
@@ -349,15 +358,23 @@ public class PlayerIconFactory {
 		if (decorationProperty3 != null) {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty3, dimensionProvider), maxIconSize);
 		}
+		if (decorationProperty4 != null) {
+			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty4, dimensionProvider), maxIconSize);
+		}
 
 		if (fadeIcon) {
 			icon = fadeIcon(icon);
-			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch
-				&& IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
-				pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
-				icon =
-					decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider),
+			if (!playerState.isActive() && playerState.getBase() != PlayerState.BEING_DRAGGED && playerOnPitch) {
+				if (IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
+					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER)) 
+					&& pPlayer.getId().equals(game.getTurnData().getBlitzingPlayerId())) {
+					icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_BLITZ, dimensionProvider),
 						maxIconSize);
+				} else if (IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(
+					pClient.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS))) {
+					icon = decorateIcon(icon, iconCache.getIconByProperty(IIconProperty.DECORATION_CHECK_ICON_GREEN, dimensionProvider),
+						maxIconSize);
+				}
 			}
 		}
 

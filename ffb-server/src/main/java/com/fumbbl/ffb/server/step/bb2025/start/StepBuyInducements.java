@@ -273,6 +273,9 @@ public final class StepBuyInducements extends AbstractStep {
 	private int getAvailableGold(int freeCash, boolean useUnlimitedTreasury, boolean allowSpending) {
 		Game game = getGameState().getGame();
 		int availableGold;
+		int maxUnderdogAllowance = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALLOW_UNDERDOG_SPENDING)
+			? MAX_UNDERDOG_ALLOWANCE
+			: 0;
 		if (phase == Phase.HOME) {
 			if (allowSpending) {
 				if (useUnlimitedTreasury) {
@@ -281,7 +284,7 @@ public final class StepBuyInducements extends AbstractStep {
 				} else {
 					pettyCash = Math.max(usedInducementGoldAway - freeCash, 0) +
 						game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff() + freeCash;
-					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamHome().getTreasury());
+					treasury = Math.min(maxUnderdogAllowance, game.getTeamHome().getTreasury());
 					availableInducementGoldHome = pettyCash + treasury;
 				}
 			} else {
@@ -298,7 +301,7 @@ public final class StepBuyInducements extends AbstractStep {
 				} else {
 					pettyCash = Math.max(usedInducementGoldHome - freeCash, 0) +
 						game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff() + freeCash;
-					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamAway().getTreasury());
+					treasury = Math.min(maxUnderdogAllowance, game.getTeamAway().getTreasury());
 					availableInducementGoldAway = pettyCash + treasury;
 				}
 			} else {
