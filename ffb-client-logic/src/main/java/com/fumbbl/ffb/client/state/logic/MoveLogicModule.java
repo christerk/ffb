@@ -431,9 +431,13 @@ public class MoveLogicModule extends LogicModule {
 				context.add(Influences.HAS_ACTED);
 			}
 			if (mustPlaceCarriedPlayer(actingPlayer)) {
-				context.add(Influences.CARRYING_TEAM_MATE);
+				context.add(Influences.MUST_PLACE_CARRIED_PLAYER);
 			}
 			context.add(ClientAction.END_MOVE);
+		}
+		if (canPlaceCarriedPlayer(actingPlayer)) {
+			context.add(Influences.CAN_PLACE_CARRIED_PLAYER);
+			context.add(ClientAction.ILL_CARRY_YOU);
 		}
 		if (isTreacherousAvailable(actingPlayer)) {
 			context.add(ClientAction.TREACHEROUS);

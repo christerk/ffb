@@ -168,9 +168,13 @@ public abstract class AbstractClientStateMove<T extends MoveLogicModule> extends
 		influences.put(Influences.HAS_ACTED, hasActed);
 		hasActed.put(ClientAction.END_MOVE, new MenuItemConfig("End Action", IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		Map<ClientAction, MenuItemConfig> putrid = new HashMap<>();
-		Map<ClientAction, MenuItemConfig> carryingTeamMate = new HashMap<>();
-		influences.put(Influences.CARRYING_TEAM_MATE, carryingTeamMate);
-		carryingTeamMate.put(ClientAction.END_MOVE, new MenuItemConfig("Place Carried Player And End Action",
+		Map<ClientAction, MenuItemConfig> canPlaceCarriedPlayer = new HashMap<>();
+		influences.put(Influences.CAN_PLACE_CARRIED_PLAYER, canPlaceCarriedPlayer);
+		canPlaceCarriedPlayer.put(ClientAction.ILL_CARRY_YOU, new MenuItemConfig("Place Carried Player And End Action",
+			IIconProperty.ACTION_ILL_CARRY_YOU, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU));
+		Map<ClientAction, MenuItemConfig> mustPlaceCarriedPlayer = new HashMap<>();
+		influences.put(Influences.MUST_PLACE_CARRIED_PLAYER, mustPlaceCarriedPlayer);
+		mustPlaceCarriedPlayer.put(ClientAction.END_MOVE, new MenuItemConfig("Place Carried Player And End Action",
 			IIconProperty.ACTION_END_MOVE, IPlayerPopupMenuKeys.KEY_END_MOVE));
 		influences.put(Influences.VOMIT_DUE_TO_PUTRID_REGURGITATION, putrid);
 		putrid.put(ClientAction.PROJECTILE_VOMIT, new MenuItemConfig("Putrid Regurgitation", IIconProperty.ACTION_VOMIT, IPlayerPopupMenuKeys.KEY_PROJECTILE_VOMIT));

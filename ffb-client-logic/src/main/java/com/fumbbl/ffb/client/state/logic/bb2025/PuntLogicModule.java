@@ -166,7 +166,7 @@ public class PuntLogicModule extends MoveLogicModule {
 			actionContext.add(Influences.HAS_ACTED);
 		}
 		if (mustPlaceCarriedPlayer(actingPlayer)) {
-			actionContext.add(Influences.CARRYING_TEAM_MATE);
+			actionContext.add(Influences.MUST_PLACE_CARRIED_PLAYER);
 		}
 		if (isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);

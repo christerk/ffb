@@ -752,7 +752,7 @@ public abstract class LogicModule {
 	}
 
 	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
-		if (isIllCarryYouActive(actingPlayer)) {
+		if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)) {
 			return false;
 		}
 
@@ -761,12 +761,14 @@ public abstract class LogicModule {
 			.anyMatch(actingPlayer::startedAdjacentToPartner);
 	}
 
-	public boolean isIllCarryYouActive(ActingPlayer actingPlayer) {
-		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner);
+	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
+			&& actingPlayer.hasActed();
 	}
 
-	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {
-		return isIllCarryYouActive(actingPlayer) && actingPlayer.hasActed();
+	public boolean canPlaceCarriedPlayer(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
+			&& !actingPlayer.hasActed();
 	}
 
 }
