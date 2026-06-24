@@ -63,6 +63,12 @@ public class StepPassBlock extends AbstractStep {
 		super(pGameState);
 	}
 
+	StepPassBlock(GameState gameState, boolean hasMoved, PlayerState oldActingPlayerCurrentState) {
+		this(gameState);
+		this.hasMoved = hasMoved;
+		fOldActingPlayerCurrentState = oldActingPlayerCurrentState;
+	}
+
 	public StepId getId() {
 		return StepId.PASS_BLOCK;
 	}
