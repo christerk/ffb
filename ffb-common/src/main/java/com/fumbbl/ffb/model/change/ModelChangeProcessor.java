@@ -128,8 +128,8 @@ public class ModelChangeProcessor {
 			case ACTING_PLAYER_SET_FELL_FROM_RUSH:
 				pGame.getActingPlayer().setFellFromRush((Boolean) pModelChange.getValue());
 				return true;
-			case ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNERS:
-				pGame.getActingPlayer().setStartedAdjacentToPartners((String[]) pModelChange.getValue());
+			case ACTING_PLAYER_SET_INITIAL_ADJACENT_PARTNER_IDS:
+				pGame.getActingPlayer().setInitialAdjacentPartnerIds((String[]) pModelChange.getValue());
 				return true;
 			case FIELD_MODEL_ADD_BLOOD_SPOT:
 				pGame.getFieldModel().add((BloodSpot) pModelChange.getValue());

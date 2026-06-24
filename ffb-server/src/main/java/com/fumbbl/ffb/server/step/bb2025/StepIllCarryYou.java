@@ -140,7 +140,7 @@ public class StepIllCarryYou extends AbstractStep {
 		}
 
 		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
-			.filter(actingPlayer::startedAdjacentToPartner)
+			.filter(actingPlayer::isInitialAdjacentPartner)
 			.map(game::getPlayerById)
 			.filter(player -> player != null)
 			.toArray(Player<?>[]::new);

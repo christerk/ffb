@@ -758,7 +758,7 @@ public abstract class LogicModule {
 
 		Game game = client.getGame();
 		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
-			.anyMatch(actingPlayer::startedAdjacentToPartner);
+			.anyMatch(actingPlayer::isInitialAdjacentPartner);
 	}
 
 	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {

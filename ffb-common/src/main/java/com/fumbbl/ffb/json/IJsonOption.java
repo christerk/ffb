@@ -248,6 +248,7 @@ public interface IJsonOption {
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
 	JsonStringArrayOption INDUCEMENT_TYPE_ARRAY = new JsonStringArrayOption("inducementTypeArray");
+	JsonStringArrayOption INITIAL_ADJACENT_PARTNER_IDS = new JsonStringArrayOption("initialAdjacentPartnerIds");
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
 	JsonStringArrayOption INJURY_ATTRIBUTES = new JsonStringArrayOption("injuryAttributes");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");
@@ -520,7 +521,6 @@ public interface IJsonOption {
 	JsonBooleanOption SKIP = new JsonBooleanOption("skip");
 	JsonStringOption SKIP_INJURY_PARTS = new JsonStringOption("skipInjuryParts");
 	JsonBooleanOption SKIP_RESTORE_WEATHER = new JsonBooleanOption("skipRestoreWeather");
-	JsonStringArrayOption STARTED_ADJACENT_TO_PARTNERS = new JsonStringArrayOption("startedAdjacentToPartners");
 	JsonIntArrayOption SLOTS = new JsonIntArrayOption("slots");
 	JsonStringOption SORT_MODE = new JsonStringOption("sortMode");
 	JsonEnumWithNameOption SOUND = new JsonEnumWithNameOption("sound", Factory.SOUND_ID);

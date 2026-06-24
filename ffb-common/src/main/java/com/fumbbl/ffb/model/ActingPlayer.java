@@ -55,7 +55,7 @@ public class ActingPlayer implements IJsonSerializable {
 	private boolean hasTriggeredEffect;
 	private boolean forgone;
 	private PlayerState oldPlayerState;
-	private final Set<String> startedAdjacentToPartners = new HashSet<>();
+	private final Set<String> initialAdjacentPartnerIds = new HashSet<>();
 	private final Map<String, List<String>> skillsGrantedBy = new HashMap<>();
 
 	private final transient Game fGame;
@@ -98,7 +98,7 @@ public class ActingPlayer implements IJsonSerializable {
 		fellFromRush = false;
 		hasTriggeredEffect = false;
 		forgone = false;
-		startedAdjacentToPartners.clear();
+		initialAdjacentPartnerIds.clear();
 		Player<?> player = getGame().getPlayerById(getPlayerId());
 		setStrength((player != null) ? player.getStrengthWithModifiers() : 0);
 		skillsGrantedBy.clear();
@@ -510,20 +510,20 @@ public class ActingPlayer implements IJsonSerializable {
 		return skillsGrantedBy;
 	}
 
-	public boolean startedAdjacentToPartner(String playerId) {
-		return startedAdjacentToPartners.contains(playerId);
+	public boolean isInitialAdjacentPartner(String playerId) {
+		return initialAdjacentPartnerIds.contains(playerId);
 	}
 
-	public String[] getStartedAdjacentToPartners() {
-		return startedAdjacentToPartners.toArray(new String[0]);
+	public String[] getInitialAdjacentPartnerIds() {
+		return initialAdjacentPartnerIds.toArray(new String[0]);
 	}
 
-	public void setStartedAdjacentToPartners(String[] playerIds) {
-		startedAdjacentToPartners.clear();
+	public void setInitialAdjacentPartnerIds(String[] playerIds) {
+		initialAdjacentPartnerIds.clear();
 		if (ArrayTool.isProvided(playerIds)) {
-			Collections.addAll(startedAdjacentToPartners, playerIds);
+			Collections.addAll(initialAdjacentPartnerIds, playerIds);
 		}
-		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_STARTED_ADJACENT_TO_PARTNERS, getStartedAdjacentToPartners());
+		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_INITIAL_ADJACENT_PARTNER_IDS, getInitialAdjacentPartnerIds());
 	}
 
 	// change tracking
@@ -564,7 +564,7 @@ public class ActingPlayer implements IJsonSerializable {
 		IJsonOption.MUST_COMPLETE_ACTION.addTo(jsonObject, mustCompleteAction);
 		IJsonOption.FELL_FROM_RUSH.addTo(jsonObject, fellFromRush);
 		IJsonOption.HAS_TRIGGERED_EFFECT.addTo(jsonObject, hasTriggeredEffect);
-		IJsonOption.STARTED_ADJACENT_TO_PARTNERS.addTo(jsonObject, startedAdjacentToPartners);
+		IJsonOption.INITIAL_ADJACENT_PARTNER_IDS.addTo(jsonObject, initialAdjacentPartnerIds);
 		return jsonObject;
 	}
 
@@ -611,9 +611,9 @@ public class ActingPlayer implements IJsonSerializable {
 		if (IJsonOption.HAS_TRIGGERED_EFFECT.isDefinedIn(jsonObject)) {
 			hasTriggeredEffect = IJsonOption.HAS_TRIGGERED_EFFECT.getFrom(source, jsonObject);
 		}
-		if (IJsonOption.STARTED_ADJACENT_TO_PARTNERS.isDefinedIn(jsonObject)) {
-			startedAdjacentToPartners.clear();
-			startedAdjacentToPartners.addAll(Arrays.asList(IJsonOption.STARTED_ADJACENT_TO_PARTNERS.getFrom(source, jsonObject)));
+		if (IJsonOption.INITIAL_ADJACENT_PARTNER_IDS.isDefinedIn(jsonObject)) {
+			initialAdjacentPartnerIds.clear();
+			initialAdjacentPartnerIds.addAll(Arrays.asList(IJsonOption.INITIAL_ADJACENT_PARTNER_IDS.getFrom(source, jsonObject)));
 		}
 		return this;
 	}
