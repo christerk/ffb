@@ -56,15 +56,16 @@ public class DodgeModifierFactory extends GenerifiedModifierFactory<DodgeContext
 	public Set<DodgeModifier> findModifiers(DodgeContext context) {
 		Set<DodgeModifier> dodgeModifiers = super.findModifiers(context);
 
-		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getSourceCoordinate()))
+		prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getActingPlayer(), context.getSourceCoordinate()))
 			.ifPresent(dodgeModifiers::add);
 
 		return dodgeModifiers;
 	}
 
-	private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {
-		ActingPlayer actingPlayer = pGame.getActingPlayer();
-		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayer.getPlayer());
+	private int findNumberOfPrehensileTails(Game pGame, ActingPlayer actingPlayer, FieldCoordinate pCoordinateFrom) {
+		Player<?> actingPlayerRef = (actingPlayer != null) ? actingPlayer.getPlayer() : null;
+		if (actingPlayerRef == null) return 0;
+		Team otherTeam = UtilPlayer.findOtherTeam(pGame, actingPlayerRef);
 		int nrOfPrehensileTails = 0;
 		Player<?>[] opponents = UtilPlayer.findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinateFrom, true);
 		for (Player<?> opponent : opponents) {
