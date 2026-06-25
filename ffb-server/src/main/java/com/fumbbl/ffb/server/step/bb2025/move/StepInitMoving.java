@@ -314,20 +314,13 @@ public class StepInitMoving extends AbstractStep {
 						actingPlayer.setJumpsWithoutModifiers(true);
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
 					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
-						if (getGameState().getCarriedPlayer() != null) {
-							System.out.println("ICY DEBUG: place carried player branch in StepInitMoving");
-							publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-							getResult().setNextAction(StepAction.NEXT_STEP);
-						} else {
-							System.out.println("ICY DEBUG: pickup/selection branch in StepInitMoving");
-							Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-								.forName(SequenceGenerator.Type.Move.name());
-							moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
-							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-								.forName(SequenceGenerator.Type.IllCarryYou.name());
-							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-							getResult().setNextAction(StepAction.NEXT_STEP);
-						}
+						Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.Move.name());
+						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+						IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.IllCarryYou.name());
+						generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+						getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 					break;
 				default:
