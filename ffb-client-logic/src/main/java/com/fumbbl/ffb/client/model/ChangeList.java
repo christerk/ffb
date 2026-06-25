@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 			.addBugfix("Self inflicted injuries never triggered Getting Even")
+			.addImprovement("Added chat command to reset used skills for selected players")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
