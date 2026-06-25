@@ -44,7 +44,7 @@ import java.util.Set;
  * - Otherwise, Crumbleberry is dropped onto a chosen square with a player, and
  *    this is resolved as if Crumbleberry landed in an occupied square according
  *    to the rules listed in the Throw Team-Mate section.
- * 
+ *
  * If Grak is removed from the pitch during an activation where he is carrying Crumbleberry,
  * resolve the placement of Crumbleberry before taking Grak off of the pitch.
  */
