@@ -2,10 +2,14 @@ package com.fumbbl.ffb.server;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.IJsonSerializable;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +24,7 @@ public class ActiveEffects implements IJsonSerializable {
 	private final List<String> teamIdsAdditionalAssist = new ArrayList<>();
 	private final List<String> shadowers = new ArrayList<>();
 	private final Set<String> leaders = new HashSet<>();
+	private CarriedPlayer carriedPlayer;
 
 	public Weather getOldWeather() {
 		return oldWeather;
@@ -81,6 +86,20 @@ public class ActiveEffects implements IJsonSerializable {
 		leaders.clear();
 	}
 
+	public CarriedPlayer getCarriedPlayer() {
+		return carriedPlayer;
+	}
+
+	public void clearCarriedPlayer() {
+		carriedPlayer = null;
+	}
+
+	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
+		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall) {
+		this.carriedPlayer =
+			new CarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate, carriedPlayerHasBall);
+	}
+
 	@Override
 	public ActiveEffects initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -104,6 +123,10 @@ public class ActiveEffects implements IJsonSerializable {
 			leaders.addAll(Arrays.asList(IServerJsonOption.LEADERS.getFrom(source, jsonObject)));
 		}
 
+		if (IServerJsonOption.CARRIED_PLAYER_ID.isDefinedIn(jsonObject)) {
+			carriedPlayer = new CarriedPlayer().initFrom(source, jsonObject);
+		}
+
 		return this;
 	}
 
@@ -116,6 +139,12 @@ public class ActiveEffects implements IJsonSerializable {
 		IServerJsonOption.STALLING.addTo(jsonObject, stalling);
 		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, shadowers);
 		IServerJsonOption.LEADERS.addTo(jsonObject, leaders);
+		if (carriedPlayer != null) {
+			IServerJsonOption.CARRIED_PLAYER_ID.addTo(jsonObject, carriedPlayer.getPlayerId());
+			IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, carriedPlayer.getOldState());
+			IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, carriedPlayer.getOldCoordinate());
+			IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, carriedPlayer.hasBall());
+		}
 		return jsonObject;
 	}
 }

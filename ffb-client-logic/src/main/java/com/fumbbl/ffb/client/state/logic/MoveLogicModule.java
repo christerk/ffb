@@ -360,6 +360,7 @@ public class MoveLogicModule extends LogicModule {
 		FieldCoordinate position) {
 		return actingPlayer.hasActed() || mechanic.canJump(game, player, position)
 			|| player.hasSkillProperty(NamedProperties.canGazeDuringMove)
+			|| canPlaceCarriedPlayer(actingPlayer)
 			|| isSpecialAbilityAvailable(actingPlayer)
 			|| (player.hasSkillProperty(NamedProperties.canDropBall) && UtilPlayer.hasBall(game, player))
 			|| ((actingPlayer.getPlayerAction() == PlayerAction.PASS_MOVE) && UtilPlayer.hasBall(game, player))
@@ -430,7 +431,14 @@ public class MoveLogicModule extends LogicModule {
 			if (playerActivationUsed()) {
 				context.add(Influences.HAS_ACTED);
 			}
+			if (mustPlaceCarriedPlayer(actingPlayer)) {
+				context.add(Influences.MUST_PLACE_CARRIED_PLAYER);
+			}
 			context.add(ClientAction.END_MOVE);
+		}
+		if (canPlaceCarriedPlayer(actingPlayer)) {
+			context.add(Influences.CAN_PLACE_CARRIED_PLAYER);
+			context.add(ClientAction.ILL_CARRY_YOU);
 		}
 		if (isTreacherousAvailable(actingPlayer)) {
 			context.add(ClientAction.TREACHEROUS);

@@ -44,6 +44,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 	private PlayerState fThrownPlayerState, oldPlayerState;
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private boolean fIsKickedPlayer;
+	private boolean isCarriedPlayer;
 
 	public StepEndScatterPlayer(GameState pGameState) {
 		super(pGameState);
@@ -82,6 +83,9 @@ public final class StepEndScatterPlayer extends AbstractStep {
 				case OLD_DEFENDER_STATE:
 					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
+				case IS_CARRIED_PLAYER:
+					isCarriedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					return true;
 				default:
 					break;
 			}
@@ -116,6 +120,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 				publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, true));
 			}
 			publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
+			publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, isCarriedPlayer));
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -131,6 +136,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 		IServerJsonOption.THROWN_PLAYER_COORDINATE.addTo(jsonObject, fThrownPlayerCoordinate);
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, fIsKickedPlayer);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
+		IServerJsonOption.IS_CARRIED_PLAYER.addTo(jsonObject, isCarriedPlayer);
 		return jsonObject;
 	}
 
@@ -144,6 +150,7 @@ public final class StepEndScatterPlayer extends AbstractStep {
 		fThrownPlayerCoordinate = IServerJsonOption.THROWN_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		fIsKickedPlayer = IServerJsonOption.IS_KICKED_PLAYER.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
+		isCarriedPlayer = IServerJsonOption.IS_CARRIED_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 

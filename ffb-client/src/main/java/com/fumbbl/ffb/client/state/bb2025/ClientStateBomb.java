@@ -156,6 +156,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 		itemConfigs.put(ClientAction.BLACK_INK, new MenuItemConfig("Black Ink", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_BLACK_INK));
 		itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
 		itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
+		itemConfigs.put(ClientAction.ILL_CARRY_YOU, new MenuItemConfig("I'll Carry You", IIconProperty.ACTION_ILL_CARRY_YOU, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU));
 
 		return itemConfigs;
 	}
@@ -173,6 +174,7 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 			put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
 			put(IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY, ClientAction.CATCH_OF_THE_DAY);
 			put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+			put(IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU, ClientAction.ILL_CARRY_YOU);
 		}};
 	}
 
@@ -214,6 +216,9 @@ public class ClientStateBomb extends ClientStateAwt<BombLogicModule> {
 				return true;
 			case PLAYER_ACTION_AUTO_GAZE_ZOAT:
 				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT);
+				return true;
+			case PLAYER_ACTION_ILL_CARRY_YOU:
+				menuItemSelected(player, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU);
 				return true;
 			default:
 				return super.actionKeyPressed(pActionKey, menuIndex);
