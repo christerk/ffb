@@ -38,7 +38,7 @@ public class TurnEndMessage extends ReportMessageBase<ReportTurnEnd> {
 					status.append(" + ").append(knockoutRecovery.getBloodweiserBabes()).append("  Blitzer's Best Kegs");
 				}
 				if (knockoutRecovery.getBugmansXXXXXXModifier() > 0) {
-					status.append(" + Bugman's XXXXXX");
+					status.append(" + 1 Bugman's XXXXXX");
 				}
 				println(getIndent(), TextStyle.ROLL, status.toString());
 				Player<?> player = game.getPlayerById(knockoutRecovery.getPlayerId());
