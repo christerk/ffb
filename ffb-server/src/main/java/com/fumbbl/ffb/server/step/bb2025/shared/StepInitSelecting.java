@@ -429,24 +429,22 @@ public final class StepInitSelecting extends AbstractStep {
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 							getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), true, SkillUse.AVOID_DODGING));
 						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
-							if (getGameState().getCarriedPlayer() != null) {
-								publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
-								getResult().setNextAction(StepAction.NEXT_STEP);
-							} else {
-								Select selectGenerator = (Select) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-									.forName(SequenceGenerator.Type.Select.name());
-								selectGenerator.pushSequence(new Select.SequenceParams(getGameState(), true));
-								IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
-									.forName(SequenceGenerator.Type.IllCarryYou.name());
-								generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-								getResult().setNextAction(StepAction.NEXT_STEP);
-							}
+							Select selectGenerator = (Select) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.Select.name());
+							selectGenerator.pushSequence(new Select.SequenceParams(getGameState(), true));
+							IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.IllCarryYou.name());
+							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+							getResult().setNextAction(StepAction.NEXT_STEP);
 						}
 					} else {
 						if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canAvoidDodging)) {
 							game.getFieldModel().removeSkillEnhancements(actingPlayer.getPlayer(), commandUseSkill.getSkill());
 							actingPlayer.markSkillUnused(commandUseSkill.getSkill());
 							UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
+							publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
+							getResult().setNextAction(StepAction.NEXT_STEP);
 						}
 					}
 					break;

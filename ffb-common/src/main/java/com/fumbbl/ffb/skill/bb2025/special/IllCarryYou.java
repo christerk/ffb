@@ -56,7 +56,7 @@ public class IllCarryYou extends Skill {
 	public static final String VARIANT_CARRIED = "carried";
 
 	public IllCarryYou() {
-		super("I'll Carry You", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_TURN);
+		super("I'll Carry You", SkillCategory.TRAIT, SkillUsageType.ONCE_PER_HALF);
 		Set<SkillClassWithValue> skills = new HashSet<>();
 		skills.add(new SkillClassWithValue(BreakTackle.class));
 		skills.add(new SkillClassWithValue(Dodge.class));
