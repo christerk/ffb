@@ -126,7 +126,8 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
 		PlayerState carrierState = game.getFieldModel().getPlayerState(carrier);
 
-		if (carrierState.isConfused()) {
+		if (!actingPlayer.hasActedIgnoringNegativeTraits()
+			&& (carrierState.isConfused() || !carrierState.isActive())) {
 			Skill skill = carrier.getSkillWithProperty(NamedProperties.canCarryPartner);
 			if (skill != null) {
 				UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, skill);
