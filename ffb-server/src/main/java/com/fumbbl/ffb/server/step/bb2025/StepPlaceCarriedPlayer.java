@@ -50,6 +50,7 @@ import com.fumbbl.ffb.server.step.generator.CarriedPlayerScatter;
 import com.fumbbl.ffb.server.step.generator.ScatterPlayer;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -123,6 +124,16 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		Player<?> carrier = actingPlayer.getPlayer();
 		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
+		PlayerState carrierState = game.getFieldModel().getPlayerState(carrier);
+
+		if (carrierState.isConfused()) {
+			Skill skill = carrier.getSkillWithProperty(NamedProperties.canCarryPartner);
+			if (skill != null) {
+				UtilServerGame.undoPickUpPartner(getGameState(), actingPlayer, skill);
+			}
+			getResult().setNextAction(StepAction.NEXT_STEP);
+			return;
+		}
 
 		boolean bouncesFromCarrier =
 			UtilGameOption.isOptionEnabled(game, GameOptionId.CARRIED_PLAYER_BOUNCES_FROM_CARRIER);
@@ -130,7 +141,6 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		if (eligibleSquares.isEmpty()) {
 			List<FieldCoordinate> emptySquares = findEmptySquares(game, carrierCoordinate);
 
-			PlayerState carrierState = game.getFieldModel().getPlayerState(carrier);
 			if (bouncesFromCarrier && (!carrierState.isStanding() || emptySquares.isEmpty())) {
 				scatterCarriedPlayer(game, carriedPlayer, carrierCoordinate);
 				leave(game, carrier);
