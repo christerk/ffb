@@ -86,6 +86,7 @@ public class BlitzBlock extends com.fumbbl.ffb.server.step.generator.BlitzBlock 
 		sequence.add(StepId.PICK_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.DROP_FALLING_PLAYERS));
 		sequence.jump(IStepLabel.DROP_FALLING_PLAYERS);
 		sequence.add(StepId.FALL_DOWN, IStepLabel.FALL_DOWN);
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.jump(IStepLabel.ATTACKER_DROPPED);
 
 		// on blockChoice = SKULL
