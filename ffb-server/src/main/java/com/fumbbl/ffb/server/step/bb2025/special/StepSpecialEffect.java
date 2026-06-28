@@ -28,6 +28,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBombWithModifier;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBombWithModifierForSpp;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFireball;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -37,7 +38,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.bb2025.shared.StepCatchScatterThrowIn;
-import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerFromBombCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.UtilCards;
@@ -154,10 +154,11 @@ public final class StepSpecialEffect extends AbstractStep {
 					}
 				}
 				if (fSpecialEffect == SpecialEffect.FIREBALL) {
-					DropPlayerCommand dropPlayerCommand = new DropPlayerCommand(player.getId(), ApothecaryMode.SPECIAL_EFFECT, true);
 					InjuryResult injuryResult = UtilServerInjury.handleInjury(this,
 						new InjuryTypeFireball(), null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT);
-					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResult, Collections.singletonList(dropPlayerCommand))));
+					DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResult, false, true,
+						null, player.getId(), ApothecaryMode.SPECIAL_EFFECT, false);
+					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
 					boolean bombFromHome = game.getTurnMode() == TurnMode.BOMB_HOME || game.getTurnMode() == TurnMode.BOMB_HOME_BLITZ;
