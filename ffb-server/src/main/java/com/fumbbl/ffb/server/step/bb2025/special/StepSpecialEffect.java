@@ -180,7 +180,8 @@ public final class StepSpecialEffect extends AbstractStep {
 					InjuryResult injuryResult = UtilServerInjury.handleInjury(this,
 						bombardierGetsSpp ? new InjuryTypeBombWithModifierForSpp() : new InjuryTypeBombWithModifier(), 
 						bombardierGetsSpp ? bombardier : null, player, playerCoordinate, null, null, ApothecaryMode.SPECIAL_EFFECT);
-					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResult, Collections.singletonList(command))));
+					DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResult, player.getId(), ApothecaryMode.SPECIAL_EFFECT, true);
+					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext, Collections.singletonList(command))));
 				}
 
 				// check end turn
