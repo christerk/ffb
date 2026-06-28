@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.db.delete.DbTeamSetupsDeleteParameter;
 import com.fumbbl.ffb.server.db.insert.DbTeamSetupsInsertParameter;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsQuery;
+import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
@@ -43,20 +44,25 @@ public class UtilServerSetup {
 				}
 
 			} else {
-				replyToClientWithTeamSetups(server, game, team);
+				replyToClientWithTeamSetups(
+						server.getCommunication(),
+						(DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
+								.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM),
+						game.isHomePlaying() ?
+								server.getSessionManager().getSessionOfHomeCoach(game.getId()) :
+								server.getSessionManager().getSessionOfAwayCoach(game.getId()),
+						team);
 			}
 
 		}
 
 	}
 
-	private static void replyToClientWithTeamSetups(FantasyFootballServer server, Game game, Team team) {
-		DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-				.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
+	private static void replyToClientWithTeamSetups(ServerCommunication communication,
+	                                                DbTeamSetupsForTeamQuery allSetupNamesQuery,
+	                                                Session session, Team team) {
 		String[] setupNames = allSetupNamesQuery.execute(team);
-		Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-				: server.getSessionManager().getSessionOfAwayCoach(game.getId());
-		server.getCommunication().sendTeamSetupList(session, setupNames);
+		communication.sendTeamSetupList(session, setupNames);
 	}
 
 	public static void saveTeamSetup(GameState gameState, String pSetupName, int[] pPlayerNumbers,
@@ -90,16 +96,21 @@ public class UtilServerSetup {
 	}
 
 	public static void deleteTeamSetup(GameState gameState, String pSetupName) {
-
 		if (gameState != null) {
 			FantasyFootballServer server = gameState.getServer();
 			Game game = gameState.getGame();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 
 			if (StringTool.isProvided(pSetupName)) {
-				DbTransaction dbTransaction = new DbTransaction(() -> {
-					replyToClientWithTeamSetups(server, game, team);
-				});
+				DbTransaction dbTransaction = new DbTransaction(() ->
+						replyToClientWithTeamSetups(
+								server.getCommunication(),
+								(DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
+										.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM),
+								game.isHomePlaying() ?
+										server.getSessionManager().getSessionOfHomeCoach(game.getId()) :
+										server.getSessionManager().getSessionOfAwayCoach(game.getId()),
+								team));
 				dbTransaction.add(new DbTeamSetupsDeleteParameter(team.getId(), pSetupName));
 				server.getDbUpdater().add(dbTransaction);
 			}
