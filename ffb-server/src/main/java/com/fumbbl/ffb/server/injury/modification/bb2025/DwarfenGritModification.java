@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.server.injury.modification.bb2025;
 
+import com.fumbbl.ffb.injury.context.InjuryContext;
+import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
 
@@ -17,6 +19,11 @@ public class DwarfenGritModification extends RerollArmourModification {
 
 	@Override
 	public boolean appliesToDefender() {
+		return true;
+	}
+
+	@Override
+	protected boolean allowedForAttackerAndDefenderTeams(Game game, InjuryContext injuryContext) {
 		return true;
 	}
 }
