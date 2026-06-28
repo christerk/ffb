@@ -104,14 +104,22 @@ public class DbTransaction implements IDbUpdateParameter {
 	@Override
 	public void doAfterCommit(FantasyFootballServer pServer) {
 		if (afterCommitCallback != null) {
-			afterCommitCallback.run();
+			try {
+				afterCommitCallback.run();
+			} catch (Exception e) {
+				pServer.getDebugLog().logWithOutGameId(e);
+			}
 		}
 	}
 
 	@Override
 	public void doAfterRollback(FantasyFootballServer pServer) {
 		if (afterRollbackCallback != null) {
-			afterRollbackCallback.run();
+			try {
+				afterRollbackCallback.run();
+			} catch (Exception e) {
+				pServer.getDebugLog().logWithOutGameId(e);
+			}
 		}
 	}
 
