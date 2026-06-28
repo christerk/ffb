@@ -15,9 +15,23 @@ public class DbTransaction implements IDbUpdateParameter {
 
 	private int fUpdatedRows;
 	private final List<IDbUpdateParameter> fDbUpdateParameters;
+	private Runnable afterCommitCallback;
+	private Runnable afterRollbackCallback;
 
 	public DbTransaction() {
 		fDbUpdateParameters = new ArrayList<>();
+	}
+
+	public DbTransaction(Runnable afterCommitCallback, Runnable afterRollBackCallback) {
+		this();
+		this.afterCommitCallback = afterCommitCallback;
+		this.afterRollbackCallback = afterRollBackCallback;
+	}
+
+	public DbTransaction(Runnable afterCommitOrAfterRollbackCallback) {
+		this();
+		this.afterCommitCallback = afterCommitOrAfterRollbackCallback;
+		this.afterRollbackCallback = afterCommitOrAfterRollbackCallback;
 	}
 
 	public void add(IDbUpdateParameter pDbUpdateParameter) {
@@ -68,9 +82,11 @@ public class DbTransaction implements IDbUpdateParameter {
 		try {
 			if (doCommit) {
 				pServer.getDbUpdateFactory().commit();
+				doAfterCommit(pServer);
 			} else {
 				fUpdatedRows = 0;
 				pServer.getDbUpdateFactory().rollback();
+				doAfterRollback(pServer);
 			}
 		} catch (SQLException pCommitException) {
 			pServer.getDebugLog().logWithOutGameId(pCommitException);
@@ -83,6 +99,20 @@ public class DbTransaction implements IDbUpdateParameter {
 
 	public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer) {
 		return null;
+	}
+
+	@Override
+	public void doAfterCommit(FantasyFootballServer pServer) {
+		if (afterCommitCallback != null) {
+			afterCommitCallback.run();
+		}
+	}
+
+	@Override
+	public void doAfterRollback(FantasyFootballServer pServer) {
+		if (afterRollbackCallback != null) {
+			afterRollbackCallback.run();
+		}
 	}
 
 	public IDbUpdateParameter[] getParameters() {

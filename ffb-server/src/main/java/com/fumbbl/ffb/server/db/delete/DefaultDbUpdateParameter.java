@@ -21,12 +21,4 @@ public abstract class DefaultDbUpdateParameter implements IDbUpdateParameter {
 		return fUpdatedRows;
 	}
 
-	public void doAfterCommit(FantasyFootballServer pServer) {
-		// implemented in subclasses if necessary
-	}
-
-	public void doAfterRollback(FantasyFootballServer pServer) {
-		// implemented in subclasses if necessary
-	}
-
 }
