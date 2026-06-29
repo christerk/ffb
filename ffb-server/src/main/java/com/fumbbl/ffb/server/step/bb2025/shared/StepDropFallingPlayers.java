@@ -210,8 +210,10 @@ public class StepDropFallingPlayers extends AbstractStep {
 				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,dropPlayerContext));
 				publishParameter(StepParameter.from(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
 			} else {
+				DropPlayerContext dropPlayerContext =
+					new DropPlayerContext(injuryResultAttacker, actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true);
 				publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-					new SteadyFootingContext(injuryResultAttacker, deferredCommands)));
+					new SteadyFootingContext(dropPlayerContext, deferredCommands)));
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
