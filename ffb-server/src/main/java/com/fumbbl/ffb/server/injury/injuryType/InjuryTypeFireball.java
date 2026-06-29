@@ -58,4 +58,3 @@ public class InjuryTypeFireball extends ModificationAwareInjuryTypeServer<Fireba
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 }
-

@@ -111,4 +111,3 @@ public class InjuryTypeDropJump extends ModificationAwareInjuryTypeServer<DropJu
 		return null;
 	}
 }
-
