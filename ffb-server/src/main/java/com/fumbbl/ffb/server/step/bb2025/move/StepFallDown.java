@@ -14,6 +14,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -85,11 +86,11 @@ public class StepFallDown extends AbstractStep {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(),
 			playerCoordinate, fCoordinateFrom, null, ApothecaryMode.ATTACKER);
-		publishParameters(UtilServerInjury.dropPlayer(this, actingPlayer.getPlayer(), ApothecaryMode.ATTACKER, true));
-		publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultAttacker));
-		if (fInjuryType.fallingDownCausesTurnover() && (game.getTurnMode() != TurnMode.PASS_BLOCK)) {
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-		}
+		boolean endTurn = fInjuryType.fallingDownCausesTurnover() && (game.getTurnMode() != TurnMode.PASS_BLOCK);
+
+		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
+			new DropPlayerContext(injuryResultAttacker, endTurn, true, null, actingPlayer.getPlayerId(),
+				ApothecaryMode.ATTACKER, false, false, null, endTurn, false, null)));
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 

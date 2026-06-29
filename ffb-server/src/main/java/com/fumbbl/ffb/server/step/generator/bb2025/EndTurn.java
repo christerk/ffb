@@ -23,6 +23,7 @@ public class EndTurn extends com.fumbbl.ffb.server.step.generator.EndTurn {
 
 		sequence.add(StepId.FORGONE_STALLING, from(StepParameterKey.CHECK_FORGO, params.isCheckForgo()));
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
