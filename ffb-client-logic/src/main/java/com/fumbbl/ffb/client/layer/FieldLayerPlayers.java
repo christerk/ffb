@@ -36,7 +36,7 @@ public class FieldLayerPlayers extends FieldLayer {
 	public void updateBallAndPlayers(FieldCoordinate pCoordinate, boolean pPlayerOverBall) {
 		if ((pCoordinate != null) && !pCoordinate.isBoxCoordinate()) {
 			Game game = getClient().getGame();
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate, true);
 			Dimension maxIconSize = pitchDimensionProvider.dimension(Component.MAX_ICON);
 			int x = dimension.width - (maxIconSize.width / 2);
 			int y = dimension.height - (maxIconSize.height / 2);
