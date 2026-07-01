@@ -20,8 +20,9 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+													 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void refresh(FieldCoordinateBounds pBounds) {

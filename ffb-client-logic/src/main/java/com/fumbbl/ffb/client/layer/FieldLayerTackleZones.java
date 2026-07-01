@@ -25,6 +25,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.model.FieldModel;
@@ -54,8 +55,9 @@ public class FieldLayerTackleZones extends FieldLayer {
 	private final StyleProvider styleProvider;
 
 	public FieldLayerTackleZones(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
-															 PitchDimensionProvider pitchDimensionProvider, FontCache fontCache, StyleProvider styleProvider) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+															 PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport,
+															 FontCache fontCache, StyleProvider styleProvider) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		this.styleProvider = styleProvider;
 	}
 

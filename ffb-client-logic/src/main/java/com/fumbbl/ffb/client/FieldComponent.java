@@ -76,23 +76,24 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final UiDimensionProvider uiDimensionProvider;
 
 	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
-												PitchDimensionProvider pitchDimensionProvider, FontCache fontCache,
-												ClientSketchManager sketchManager, StyleProvider styleProvider) {
+												PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport,
+												FontCache fontCache, ClientSketchManager sketchManager,
+												StyleProvider styleProvider) {
 
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
-		fLayerField = new FieldLayerPitch(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerBloodspots = new FieldLayerBloodspots(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerMarker = new FieldLayerMarker(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerPlayers = new FieldLayerPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
-		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager);
-		layerTackleZones = new FieldLayerTackleZones(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache, styleProvider);
+		fLayerField = new FieldLayerPitch(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerBloodspots = new FieldLayerBloodspots(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerRangeGrid = new FieldLayerRangeGrid(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerMarker = new FieldLayerMarker(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerUnderPlayers = new FieldLayerUnderPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerPlayers = new FieldLayerPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerOverPlayers = new FieldLayerOverPlayers(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		fLayerRangeRuler = new FieldLayerRangeRuler(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		layerEnhancements = new FieldLayerEnhancements(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
+		layerSketches = new FieldLayerSketches(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache, sketchManager);
+		layerTackleZones = new FieldLayerTackleZones(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache, styleProvider);
 
 		fCoordinateByPlayerId = new HashMap<>();
 

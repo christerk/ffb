@@ -25,8 +25,9 @@ public class FieldLayerMarker extends FieldLayer {
 
 	private final Map<FieldCoordinate, Rectangle> fFieldMarkerBounds;
 
-	public FieldLayerMarker(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerMarker(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+													PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		fFieldMarkerBounds = new HashMap<>();
 	}
 

@@ -20,8 +20,9 @@ public class FieldLayerRangeGrid extends FieldLayer {
 
 	private FieldCoordinate fCenterCoordinate;
 
-	public FieldLayerRangeGrid(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerRangeGrid(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+														 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public boolean drawRangeGrid(FieldCoordinate pCenterCoordinate, boolean pThrowTeamMate) {

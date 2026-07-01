@@ -57,8 +57,9 @@ public class FieldLayerRangeRuler extends FieldLayer {
 	private FieldCoordinate fSelectSquareCoordinate;
 	private FieldCoordinate[] fMarkedCoordinates;
 
-	public FieldLayerRangeRuler(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerRangeRuler(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+															PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawRangeRuler(RangeRuler pRangeRuler) {

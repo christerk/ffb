@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.IconCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.ui.GraphicsEnhancer;
 import com.fumbbl.ffb.model.FieldModel;
@@ -24,8 +25,10 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerPitch extends FieldLayer {
 
-	public FieldLayerPitch(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerPitch(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+												 PitchDimensionProvider pitchDimensionProvider,
+												 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawWeather(Weather pWeather) {

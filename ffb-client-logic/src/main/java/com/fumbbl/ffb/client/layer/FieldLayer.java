@@ -25,13 +25,17 @@ public abstract class FieldLayer {
 
 	protected final UiDimensionProvider uiDimensionProvider;
 	protected final PitchDimensionProvider pitchDimensionProvider;
+	protected final PitchViewport pitchViewport;
 
 	protected final FontCache fontCache;
 
-	public FieldLayer(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+	public FieldLayer(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+										PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport,
+										FontCache fontCache) {
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
 		this.pitchDimensionProvider = pitchDimensionProvider;
+		this.pitchViewport = pitchViewport;
 		this.fontCache = fontCache;
 	}
 
@@ -114,12 +118,12 @@ public abstract class FieldLayer {
 	}
 
 	protected int findCenteredIconUpperLeftX(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
+		Dimension dimension = pitchViewport.toLocal(pCoordinate, true);
 		return dimension.width - (pImage.getWidth() / 2);
 	}
 
 	protected int findCenteredIconUpperLeftY(BufferedImage pImage, FieldCoordinate pCoordinate) {
-		Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
+		Dimension dimension = pitchViewport.toLocal(pCoordinate, true);
 		return dimension.height - (pImage.getHeight() / 2);
 	}
 
@@ -129,10 +133,10 @@ public abstract class FieldLayer {
 
 	public void clear(FieldCoordinate pCoordinate, boolean pUpdateArea) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate);
 			int fieldX = dimension.width;
 			int fieldY = dimension.height;
-			clear(fieldX, fieldY, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize(), pUpdateArea);
+			clear(fieldX, fieldY, pitchViewport.squareSize(), pitchViewport.squareSize(), pUpdateArea);
 		}
 	}
 

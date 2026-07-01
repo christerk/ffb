@@ -28,8 +28,9 @@ public class FieldLayerUnderPlayers extends FieldLayer {
 
 	private FieldCoordinate[] fMovePath;
 
-	public FieldLayerUnderPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerUnderPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+																PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawTrackNumber(TrackNumber pTrackNumber) {

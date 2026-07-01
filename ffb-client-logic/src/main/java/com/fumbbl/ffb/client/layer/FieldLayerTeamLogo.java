@@ -25,8 +25,9 @@ public class FieldLayerTeamLogo extends FieldLayer {
   private static final String[] LETTERS =
     new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"};
 
-  public FieldLayerTeamLogo(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-    super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+  public FieldLayerTeamLogo(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+                            PitchViewport pitchViewport, FontCache fontCache) {
+    super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
   }
 
   public void drawDistanceMarkers() {

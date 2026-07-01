@@ -38,8 +38,9 @@ public class FieldLayerOverPlayers extends FieldLayer {
 	private FieldCoordinate fThrownPlayerCoordinate;
 	private FieldCoordinate fMarkerCoordinate;
 
-	public FieldLayerOverPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerOverPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+															 PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void removeThrownPlayer() {

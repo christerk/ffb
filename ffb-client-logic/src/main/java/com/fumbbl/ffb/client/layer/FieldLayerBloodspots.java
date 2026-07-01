@@ -13,8 +13,9 @@ import java.awt.image.BufferedImage;
  */
 public class FieldLayerBloodspots extends FieldLayer {
 
-	public FieldLayerBloodspots(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerBloodspots(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+															PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void drawBloodspot(BloodSpot pBloodspot) {
