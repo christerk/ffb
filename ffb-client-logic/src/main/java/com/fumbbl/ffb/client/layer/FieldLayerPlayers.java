@@ -6,6 +6,7 @@ import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.Component;
+import com.fumbbl.ffb.client.animation.ActivePlayerHighlighter;
 import com.fumbbl.ffb.marking.PlayerMarker;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
@@ -20,9 +21,21 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
+    private ActivePlayerHighlighter activePlayerHighlighter;
+
+    public void setActivePlayer(Player<?> activePlayer) {
+	    activePlayerHighlighter.setActivePlayer(activePlayer);
+    }
+
 	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
 		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
+
+    public void initLayout() {
+        super.initLayout();
+	    activePlayerHighlighter = ActivePlayerHighlighter.getInstance();
+	    activePlayerHighlighter.initialize(getClient(), pitchDimensionProvider, getImage().createGraphics());
+    }
 
 	public void refresh(FieldCoordinateBounds pBounds) {
 		if (pBounds != null) {
