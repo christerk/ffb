@@ -40,7 +40,6 @@ public class PitchViewport {
 		return pitchDimensionProvider.mapToLocal(x, y, center);
 	}
 
-  // From CoordinateConverter
 	public FieldCoordinate toFieldCoordinate(Point localPoint) {
 		FieldCoordinate coordinate = null;
 		int x = localPoint.x;

@@ -66,6 +66,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
+	private final PitchViewport pitchViewport;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -85,7 +86,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
-		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
+		pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		coordinateConverter = new CoordinateConverter(pitchViewport);
 		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
@@ -301,6 +303,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public GameTitle getGameTitle() {
 		return fGameTitle;
+	}
+
+	public PitchViewport getPitchViewport() {
+		return pitchViewport;
 	}
 
 	public void setGameTitle(GameTitle pGameTitle) {
