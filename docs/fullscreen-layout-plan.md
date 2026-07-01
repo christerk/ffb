@@ -15,7 +15,7 @@ The dynamic layout should separate pitch scaling from GUI scaling.
 
 This allows users on large high-resolution screens to make the GUI larger without forcing the pitch transform to use the same scale. The pitch should still fit the available area while preserving its aspect ratio.
 
-The current `LayoutSettings.scale` behaves like a broad client scale. During the refactor, it may need to become more explicit, for example:
+The current `LayoutSettings.scale` is applied by `DimensionProvider` across UI, pitch, and dugout render contexts. Pitch and dugout sizing also apply layout-specific multipliers via `ClientLayout.getPitchScale()` and `ClientLayout.getDugoutScale()`. During the refactor, this may need to become more explicit, for example:
 
 - `guiScale` for non-pitch components
 - viewport-derived pitch scale for the pitch/world transform
@@ -24,9 +24,10 @@ Existing scale behavior should be preserved first, then split once the layout/vi
 
 ## Current Foundation
 
-- `FieldCoordinate` already represents pitch/world coordinates.
+- `FieldCoordinate` already represents field grid coordinates, and also encodes box/dugout positions through sentinel x values.
 - `PitchDimensionProvider` already handles much of the field-to-pixel mapping.
-- `CoordinateConverter` already handles mouse-to-field conversion.
+- `CoordinateConverter` already handles normal field mouse-to-field conversion.
+- Setup drag/drop has additional coordinate conversion in `UtilClientPlayerDrag` because it spans the field and box/dugout UI.
 - `FieldLayer` and several field layer subclasses use `PitchDimensionProvider.mapToLocal(...)` for rendering.
 - `UserInterface` currently builds fixed layouts using `ClientLayout`, `Component`, `LayoutSettings`, `BoxLayout`, and `pack()`.
 
@@ -66,6 +67,8 @@ public class PitchViewport {
   public double getScale();
 }
 ```
+
+This API is illustrative. The real implementation may need separate methods for square origin, square center, and square bounds to avoid ambiguous rounding behavior.
 
 At this stage it can still use existing `LayoutSettings`, `ClientLayout`, and fixed component sizes internally. The purpose is to move responsibility first, not change behavior.
 
@@ -110,6 +113,8 @@ public class ClientLayoutResult {
 }
 ```
 
+This example is not exhaustive. It should include whatever component bounds the current client needs, including any replay/status/menu areas that remain outside the pitch.
+
 Initially this result can reproduce the current fixed `LANDSCAPE`, `PORTRAIT`, `SQUARE`, and `WIDE` layouts.
 
 The layout pass should take GUI scale into account when calculating non-pitch component sizes. The pitch viewport should then be calculated from whatever space remains.
@@ -122,7 +127,7 @@ Refactor `UserInterface.initComponents(...)` so it consumes `ClientLayoutResult`
 
 Initial behavior should remain visually identical:
 
-- same fixed window size
+- same packed window size
 - same component sizes
 - same layout variants
 - same `pack()` behavior
