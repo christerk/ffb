@@ -50,7 +50,7 @@ public class FieldLayerMarker extends FieldLayer {
 			}
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D textBounds = metrics.getStringBounds(pFieldMarker.getHomeText(), g2d);
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pFieldMarker.getCoordinate(), true);
+			Dimension dimension = pitchViewport.toLocal(pFieldMarker.getCoordinate(), true);
 			int x = dimension.width - (int) (textBounds.getWidth() / 2) + 1;
 			int y = dimension.height + (int) (textBounds.getHeight() / 2) - 2;
 			g2d.drawString(pFieldMarker.getHomeText(), x, y);
