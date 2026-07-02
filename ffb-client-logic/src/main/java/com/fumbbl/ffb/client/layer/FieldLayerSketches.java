@@ -62,7 +62,7 @@ public class FieldLayerSketches extends FieldLayer {
 			int[] yPoints = new int[nPoints];
 			for (int i = 0; i < nPoints; i++) {
 				FieldCoordinate coordinate = sketch.getPath().get(i);
-				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate, true);
+				Dimension dimension = pitchViewport.toLocal(coordinate, true);
 				xPoints[i] = dimension.width;
 				yPoints[i] = dimension.height;
 			}
@@ -88,7 +88,7 @@ public class FieldLayerSketches extends FieldLayer {
 
 			FieldCoordinate previewCoordinate = sketchState.getPreviewCoordinate();
 			if (sketch.getId().equals(sketchState.getActiveSketchId())  && previewCoordinate != sketch.getPath().getLast() && previewCoordinate != null) {
-				Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
+				Dimension dimension = pitchViewport.toLocal(previewCoordinate, true);
 				graphics2D.setPaint(highlightPaint);
 				graphics2D.drawLine(
 					xPoints[nPoints - 1], yPoints[nPoints - 1],

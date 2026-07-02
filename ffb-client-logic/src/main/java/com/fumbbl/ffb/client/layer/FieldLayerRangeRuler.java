@@ -78,9 +78,9 @@ public class FieldLayerRangeRuler extends FieldLayer {
 			PassingDistance passingDistance = mechanic.findPassingDistance(game, throwerCoordinate,
 				pRangeRuler.getTargetCoordinate(), false);
 			if (passingDistance != null) {
-				Dimension startDimension = pitchDimensionProvider.mapToLocal(throwerCoordinate, true);
+				Dimension startDimension = pitchViewport.toLocal(throwerCoordinate, true);
 				Point startCenter = new Point(startDimension.width, startDimension.height);
-				Dimension endDimension = pitchDimensionProvider.mapToLocal(pRangeRuler.getTargetCoordinate(), true);
+				Dimension endDimension = pitchViewport.toLocal(pRangeRuler.getTargetCoordinate(), true);
 				Point endCenter = new Point(endDimension.width, endDimension.height);
 
 				int lengthY = startCenter.y - endCenter.y;
@@ -167,7 +167,7 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 		if (pMaxLength > 0) {
 
-			int halfRulerWidth = (int) (pitchDimensionProvider.fieldSquareSize() * UtilPassing.RULER_WIDTH / 2);
+			int halfRulerWidth = (int) (pitchViewport.squareSize() * UtilPassing.RULER_WIDTH / 2);
 			Point point1 = new Point(pStartCenter.x, pStartCenter.y - halfRulerWidth);
 			point1 = rotate(point1, pStartCenter, pSinPhi, pCosPhi);
 			Point point2 = new Point(pStartCenter.x, pStartCenter.y + halfRulerWidth);
@@ -199,8 +199,8 @@ public class FieldLayerRangeRuler extends FieldLayer {
 
 	private void drawSelectSquare(FieldCoordinate pCoordinate, Color pColor, Color border) {
 		if ((pCoordinate != null) && FieldCoordinateBounds.FIELD.isInBounds(pCoordinate)) {
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
-			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
+			Dimension dimension = pitchViewport.toLocal(pCoordinate);
+			Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchViewport.squareSize(), pitchViewport.squareSize());
 			Graphics2D g2d = getImage().createGraphics();
 			g2d.setPaint(pColor);
 			g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
