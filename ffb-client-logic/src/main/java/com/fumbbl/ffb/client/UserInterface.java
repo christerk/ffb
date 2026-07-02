@@ -29,9 +29,12 @@ import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
+
+import static com.fumbbl.ffb.CommonProperty.SETTING_UI_FULLSCREEN;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_OFF;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_UI_FULLSCREEN_ON;
 
 /**
  * @author Kalimar
@@ -97,8 +100,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDialogManager = new DialogManager(getClient());
 		styleProvider = new StyleProvider();
 		clickStrategyRegistry = new ClickStrategyRegistry();
-		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager, clickStrategyRegistry));
-		setGameTitle(new GameTitle());
+		GameTitle pGameTitle = new GameTitle();
+		setGameMenuBar(new GameMenuBar(getClient(), uiDimensionProvider, styleProvider, fontCache, sketchManager, clickStrategyRegistry, pGameTitle));
+		setGameTitle(pGameTitle);
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
@@ -118,7 +122,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		initComponents(false);
 
 		getChat().requestChatInputFocus();
-
+		configureFullScreenShortcut(this);
+		updateFullScreenMode();
 	}
 
 	public void initComponents(boolean callInit) {
@@ -460,4 +465,76 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	public ClickStrategyRegistry getClickStrategyRegistry() {
 		return clickStrategyRegistry;
 	}
+
+    public void configureFullScreenShortcut(JFrame frame) {
+        JRootPane rootPane = frame.getRootPane();
+        String os = System.getProperty("os.name").toLowerCase();
+        String toggleFullScreen = "toggleFullScreen";
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        if (os.contains("mac")) {
+            // macOS Native Standard: Command + Enter
+            // (Swing text parser handles the Apple Command key via the "meta" keyword)
+            inputMap.put(KeyStroke.getKeyStroke("meta ENTER"), toggleFullScreen);
+
+            // Optional Mac Fallback: Command + F (Very common for fullscreen)
+            inputMap.put(KeyStroke.getKeyStroke("meta F"), toggleFullScreen);
+        } else {
+            // Windows & Linux Standard: Left Alt + Enter & Right Alt (AltGr) + Enter
+            inputMap.put(KeyStroke.getKeyStroke("alt ENTER"), toggleFullScreen);
+            inputMap.put(KeyStroke.getKeyStroke("altGraph ENTER"), toggleFullScreen);
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,
+                    InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK), toggleFullScreen);
+
+        }
+
+// Bind the single action string to your existing execution logic
+        rootPane.getActionMap().put(toggleFullScreen, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FantasyFootballClient client = getClient();
+                String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
+                boolean fullScreen = !SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
+                client.setProperty(SETTING_UI_FULLSCREEN,
+                        !fullScreen ? SETTING_UI_FULLSCREEN_OFF : SETTING_UI_FULLSCREEN_ON);
+                client.saveUserSettings(true);
+                updateFullScreenMode();
+            }
+        });
+    }
+
+    public void updateFullScreenMode() {
+        FantasyFootballClient client = getClient();
+        String fullScreenProperty = client.getProperty(SETTING_UI_FULLSCREEN);
+        boolean fullScreen = SETTING_UI_FULLSCREEN_ON.equals(fullScreenProperty);
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        boolean isFullScreenSupported = gd.isFullScreenSupported();
+
+        if (!isFullScreenSupported)
+            return;
+
+        // 2. Tear down the native OS peer resources safely
+        dispose();
+
+        if (fullScreen) {
+            // Switching to Fullscreen Mode
+            setUndecorated(true); // Strip borders safely now that the frame is undisplayable
+
+            // This natively rebuilds the frame structure and displays it full screen
+            gd.setFullScreenWindow(this);
+            getGameMenuBar().setGameInfoVisible(true);
+        } else {
+            // Switching back to Windowed Mode
+            gd.setFullScreenWindow(null);
+            setUndecorated(false); // Put the title bar and borders back
+            getGameMenuBar().setGameInfoVisible(false);
+
+            // Optional: Restore standard maximized or normal window bounds
+            pack();
+            setVisible(true);
+        }
+    }
+
 }

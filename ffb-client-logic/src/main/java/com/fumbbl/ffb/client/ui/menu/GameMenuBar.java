@@ -3,11 +3,7 @@ package com.fumbbl.ffb.client.ui.menu;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.client.DimensionProvider;
-import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.client.FontCache;
-import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.*;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
@@ -17,16 +13,17 @@ import com.fumbbl.ffb.client.ui.menu.game.StandardGameMenu;
 import com.fumbbl.ffb.client.ui.menu.settings.UserSettingsMenu;
 import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static javax.swing.SwingConstants.VERTICAL;
 
 /**
  * @author Kalimar
@@ -46,10 +43,18 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 	private final LayoutSettings layoutSettings;
 	private final ClientSketchManager sketchManager;
 	private final ClickStrategyRegistry clickStrategyRegistry;
-
+	private final JSeparator gameInfoSeparator;
+	private final com.fumbbl.ffb.client.ui.swing.JLabel gameInfo;
+	private final GameTitle gameTitle;
 	private final Set<FfbMenu> subMenus = new HashSet<>();
 
-	public GameMenuBar(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, FontCache fontCache, ClientSketchManager sketchManager, ClickStrategyRegistry clickStrategyRegistry) {
+	public GameMenuBar(FantasyFootballClient client,
+	                   DimensionProvider dimensionProvider,
+	                   StyleProvider styleProvider,
+	                   FontCache fontCache,
+	                   ClientSketchManager sketchManager,
+	                   ClickStrategyRegistry clickStrategyRegistry,
+	                   GameTitle gameTitle) {
 
 		setFont(fontCache.font(Font.PLAIN, 12, dimensionProvider));
 
@@ -60,6 +65,14 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		this.layoutSettings = dimensionProvider.getLayoutSettings();
 		this.clickStrategyRegistry = clickStrategyRegistry;
 
+		gameInfo = new com.fumbbl.ffb.client.ui.swing.JLabel(dimensionProvider, "");
+		gameInfo.setVisible(false);
+
+		gameInfoSeparator = new JSeparator(VERTICAL);
+		gameInfoSeparator.setMaximumSize(new Dimension(10, 100));
+		gameInfoSeparator.setVisible(false);
+
+		this.gameTitle = gameTitle;
 		init();
 
 	}
@@ -125,6 +138,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 
 		subMenus.forEach(FfbMenu::init);
 
+		add(gameInfoSeparator);
+		add(Box.createHorizontalStrut(4));
+		add(gameInfo);
+
 		refresh();
 	}
 
@@ -139,6 +156,19 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 			fClient.getUserInterface().initComponents(true);
 		}
 	}
+
+    public void setGameInfoVisible(boolean isVisible) {
+        gameInfoSeparator.setVisible(isVisible);
+        gameInfo.setVisible(isVisible);
+    }
+
+    public void updateGameInfo(GameTitle fGameTitle) {
+        if (gameInfo.isVisible()) {
+            this.gameTitle.update(fGameTitle);
+            String gameInfoText = gameTitle.toString();
+            gameInfo.setText(gameInfoText);
+        }
+    }
 
 	public void changeState(ClientStateId pStateId) {
 		setupMenu.changeState(pStateId);

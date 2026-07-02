@@ -18,6 +18,7 @@ public class GameTitleUpdateTask implements Runnable {
 		UserInterface userInterface = fClient.getUserInterface();
 		userInterface.getGameTitle().update(fGameTitle);
 		userInterface.refreshTitle();
+        userInterface.getGameMenuBar().updateGameInfo(fGameTitle);
 	}
 
 }
