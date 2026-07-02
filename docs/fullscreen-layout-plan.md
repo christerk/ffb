@@ -35,7 +35,7 @@ The main issue is that transform logic exists, but it is spread across multiple 
 
 ## Proposed Direction
 
-Introduce a pitch viewport/transform abstraction that owns:
+Introduce a pitch viewport/transform abstraction that initially centralizes current field-local coordinate behavior, and later owns:
 
 - the pitch viewport rectangle in UI/screen space
 - world-to-screen conversion
@@ -59,16 +59,17 @@ Add a new client-side abstraction that reproduces the current behavior:
 
 ```java
 public class PitchViewport {
-  public Rectangle getBounds();
-  public Point2D worldToScreen(FieldCoordinate coordinate);
-  public FieldCoordinate screenToWorld(Point point);
-  public Rectangle2D worldSquareToScreen(FieldCoordinate coordinate);
-  public Direction worldToScreen(Direction direction);
-  public double getScale();
+  public Dimension fieldSize();
+  public int squareSize();
+  public int imageOffset();
+  public Dimension toLocal(FieldCoordinate coordinate);
+  public Dimension toLocal(FieldCoordinate coordinate, boolean center);
+  public FieldCoordinate toFieldCoordinate(Point localPoint);
+  public Direction toLocal(Direction direction);
 }
 ```
 
-This API is illustrative. The real implementation may need separate methods for square origin, square center, and square bounds to avoid ambiguous rounding behavior.
+This first API should use current-code terminology and preserve existing behavior. Do not introduce `worldToScreen` / `screenToWorld` yet because the viewport does not own screen bounds at this stage.
 
 At this stage it can still use existing `LayoutSettings`, `ClientLayout`, and fixed component sizes internally. The purpose is to move responsibility first, not change behavior.
 
@@ -86,7 +87,7 @@ These tests should lock down existing behavior so later dynamic layout changes a
 
 ## Phase 3: Route Input Through The Viewport
 
-Update `CoordinateConverter` so it delegates to `PitchViewport.screenToWorld(...)`.
+Update `CoordinateConverter` so it delegates to `PitchViewport.toFieldCoordinate(...)`.
 
 This is a low-risk first migration because normal field mouse handling already goes through `CoordinateConverter`.
 
@@ -94,7 +95,7 @@ Special drag/drop behavior in `UtilClientPlayerDrag` can stay as-is initially, t
 
 ## Phase 4: Route Common Rendering Through The Viewport
 
-Update common `FieldLayer` helpers to use `PitchViewport.worldToScreen(...)` and `PitchViewport.worldSquareToScreen(...)`.
+Update common `FieldLayer` helpers to use `PitchViewport.toLocal(...)` and `PitchViewport.squareSize()`.
 
 Then gradually migrate direct `pitchDimensionProvider.mapToLocal(...)` calls in individual field layers, states, animations, sketches, range rulers, and marker popup placement.
 
@@ -134,7 +135,18 @@ Initial behavior should remain visually identical:
 
 This creates a bridge from the current fixed model to a dynamic layout pass.
 
-## Phase 7: Split GUI Scale From Pitch Scale
+## Phase 7: Promote Local Mapping To Viewport Transforms
+
+After the layout result exists and `PitchViewport` owns the calculated pitch bounds, introduce viewport terminology:
+
+- `worldToScreen(FieldCoordinate)`
+- `screenToWorld(Point)`
+
+Until then, keep `toLocal(...)` and `toFieldCoordinate(...)` because current methods return field-component-local coordinates.
+
+At this point, decide whether to keep the old methods as compatibility wrappers or migrate callers to the new names.
+
+## Phase 8: Split GUI Scale From Pitch Scale
 
 Separate the existing broad `LayoutSettings.scale` behavior into clearer concepts:
 
@@ -145,7 +157,7 @@ Initially, preserve current behavior by applying the existing scale value as GUI
 
 Once dynamic layout is active, GUI scale should affect how much space non-pitch UI components request. Pitch scale should be calculated from the remaining pitch viewport and should preserve the pitch aspect ratio.
 
-## Phase 8: Make The Window Resizable
+## Phase 9: Make The Window Resizable
 
 Once the viewport and layout result exist, allow the frame to resize.
 
@@ -159,7 +171,7 @@ On resize:
 
 This is the first point where the new architecture is tested against real changing window sizes.
 
-## Phase 9: Fit Pitch To Available Space
+## Phase 10: Fit Pitch To Available Space
 
 Implement the dynamic pitch sizing logic:
 
@@ -176,11 +188,11 @@ The pitch viewport should generate `AffineTransform` instances for:
 - `worldToScreen`
 - `screenToWorld`
 
-Tile boundaries should come from the transform rather than repeated integer square-size calculations.
+The pitch viewport should update these transforms from the calculated field bounds. Tile boundaries should come from the transform rather than repeated integer square-size calculations.
 
 This pitch scale should be independent from GUI scale. GUI scale affects how much space the non-pitch components need; pitch scale is then derived from the remaining viewport.
 
-## Phase 10: Move GUI To Rule-Based Placement
+## Phase 11: Move GUI To Rule-Based Placement
 
 Move non-pitch GUI components toward rule-based placement:
 
@@ -191,7 +203,7 @@ Move non-pitch GUI components toward rule-based placement:
 
 This is where the client starts moving away from fixed `ClientLayout` variants.
 
-## Phase 11: Fullscreen
+## Phase 12: Fullscreen
 
 Once resizing works, fullscreen should mostly be:
 
