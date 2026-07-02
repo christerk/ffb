@@ -28,7 +28,6 @@ import com.fumbbl.ffb.model.SpecialRule;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.TurnData;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandBuyInducements;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -274,6 +273,9 @@ public final class StepBuyInducements extends AbstractStep {
 	private int getAvailableGold(int freeCash, boolean useUnlimitedTreasury, boolean allowSpending) {
 		Game game = getGameState().getGame();
 		int availableGold;
+		int maxUnderdogAllowance = UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS_ALLOW_UNDERDOG_SPENDING)
+			? MAX_UNDERDOG_ALLOWANCE
+			: 0;
 		if (phase == Phase.HOME) {
 			if (allowSpending) {
 				if (useUnlimitedTreasury) {
@@ -282,7 +284,7 @@ public final class StepBuyInducements extends AbstractStep {
 				} else {
 					pettyCash = Math.max(usedInducementGoldAway - freeCash, 0) +
 						game.getGameResult().getTeamResultHome().getPettyCashFromTvDiff() + freeCash;
-					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamHome().getTreasury());
+					treasury = Math.min(maxUnderdogAllowance, game.getTeamHome().getTreasury());
 					availableInducementGoldHome = pettyCash + treasury;
 				}
 			} else {
@@ -299,7 +301,7 @@ public final class StepBuyInducements extends AbstractStep {
 				} else {
 					pettyCash = Math.max(usedInducementGoldHome - freeCash, 0) +
 						game.getGameResult().getTeamResultAway().getPettyCashFromTvDiff() + freeCash;
-					treasury = Math.min(MAX_UNDERDOG_ALLOWANCE, game.getTeamAway().getTreasury());
+					treasury = Math.min(maxUnderdogAllowance, game.getTeamAway().getTreasury());
 					availableInducementGoldAway = pettyCash + treasury;
 				}
 			} else {
@@ -645,20 +647,14 @@ public final class StepBuyInducements extends AbstractStep {
 
 			});
 
-		inducementTypeFactory.allTypes().stream().filter(type -> type.hasUsage(Usage.REROLL_ONES_ON_KOS)).findFirst()
-			.ifPresent(inducementType -> {
+			InducementType bugmansXXXXXXType = inducementType(inducementTypeFactory, Usage.ADD_TO_KO_RECOVERY);
+			InducementType dwarfenWisdomType = inducementType(inducementTypeFactory, Usage.RESETUP_D3_PLAYERS);
 
-				if (Arrays.stream(game.getTeamHome().getPlayers())
-					.anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
-					game.getTurnDataHome().getInducementSet().addInducement(new Inducement(inducementType, 1));
-				}
+			replaceBugmanInducement(game.getTurnDataHome(), new Inducement(bugmansXXXXXXType, 1),
+				new Inducement(dwarfenWisdomType, 1));
+			replaceBugmanInducement(game.getTurnDataAway(), new Inducement(bugmansXXXXXXType, 1),
+				new Inducement(dwarfenWisdomType, 1));
 
-				if (Arrays.stream(game.getTeamAway().getPlayers())
-					.anyMatch(player -> player.hasSkillProperty(NamedProperties.canReRollOnesOnKORecovery))) {
-					game.getTurnDataAway().getInducementSet().addInducement(new Inducement(inducementType, 1));
-				}
-
-			});
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
@@ -697,6 +693,26 @@ public final class StepBuyInducements extends AbstractStep {
 		}
 		return new ReportPrayersAndInducementsBought(pTeam.getId(), nrOfInducements, nrOfStars, nrOfMercenaries, gold,
 			newTv);
+	}
+
+	private InducementType inducementType(InducementTypeFactory factory, Usage usage) {
+		return factory.allTypes().stream()
+			.filter(type -> type.hasUsage(usage))
+			.findFirst().orElse(null);
+	}
+
+	private void replaceBugmanInducement(TurnData turnData, Inducement... replacements) {
+		Inducement source = turnData.getInducementSet().getInducementMapping().entrySet().stream()
+			.filter(entry -> entry.getKey().hasUsage(Usage.BUGMAN))
+			.map(Map.Entry::getValue)
+			.findFirst().orElse(null);
+
+		if (source != null) {
+			turnData.getInducementSet().removeInducement(source);
+			for (Inducement replacement : replacements) {
+				turnData.getInducementSet().addInducement(replacement);
+			}
+		}
 	}
 
 	// JSON serialization

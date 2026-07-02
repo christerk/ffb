@@ -24,6 +24,7 @@ import java.util.Map;
 import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
 import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_BLITZING_PLAYER;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
 import static com.fumbbl.ffb.CommonProperty.SETTING_RANGEGRID;
 import static com.fumbbl.ffb.CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN;
@@ -50,6 +51,9 @@ public class GamePlayMenu extends FfbMenu {
 
 	private JRadioButtonMenuItem markUsedPlayersDefaultMenuItem;
 	private JRadioButtonMenuItem markUsedPlayersCheckIconGreenMenuItem;
+
+	private JRadioButtonMenuItem markBlitzingPlayerOnMenuItem;
+	private JRadioButtonMenuItem markBlitzingPlayerOffMenuItem;
 
 	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
 	private JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
@@ -100,6 +104,7 @@ public class GamePlayMenu extends FfbMenu {
 		createBallAndChainMenu();
 		createRangegridMenu();
 		createMarkUsedPlayerMenu();
+		createMarkBlitzingPlayerMenu();
 		createTacklezonesMenu();
 	}
 
@@ -136,6 +141,10 @@ public class GamePlayMenu extends FfbMenu {
 		String markUsedPlayersSetting = client.getProperty(CommonProperty.SETTING_MARK_USED_PLAYERS);
 		markUsedPlayersDefaultMenuItem.setSelected(true);
 		markUsedPlayersCheckIconGreenMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN.equals(markUsedPlayersSetting));
+
+		String markBlitzingPlayerSetting = client.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER);
+		markBlitzingPlayerOffMenuItem.setSelected(true);
+		markBlitzingPlayerOnMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(markBlitzingPlayerSetting));
 
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
@@ -253,6 +262,16 @@ public class GamePlayMenu extends FfbMenu {
 			client.saveUserSettings(true);
 		}
 
+		if (source == markBlitzingPlayerOnMenuItem) {
+			client.setProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER, IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON);
+			client.saveUserSettings(true);
+		}
+
+		if (source == markBlitzingPlayerOffMenuItem) {
+			client.setProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER, IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_OFF);
+			client.saveUserSettings(true);
+		}
+
 		// Tacklezones Player Mode Menu Item Handlers
 		if (source == tzPlayerNoneMenuItem) {
 			client.setProperty(CommonProperty.SETTING_TACKLEZONES_PLAYER_MODE, IClientPropertyValue.SETTING_TACKLEZONES_NONE);
@@ -342,6 +361,24 @@ public class GamePlayMenu extends FfbMenu {
 		markUsedPlayersCheckIconGreenMenuItem.addActionListener(this);
 		markUsedPlayersGroup.add(markUsedPlayersCheckIconGreenMenuItem);
 		markUsedPlayersMenu.add(markUsedPlayersCheckIconGreenMenuItem);
+	}
+
+	private void createMarkBlitzingPlayerMenu() {
+		JMenu markBlitzingPlayerMenu = new JMenu(dimensionProvider, SETTING_MARK_BLITZING_PLAYER);
+		markBlitzingPlayerMenu.setMnemonic(KeyEvent.VK_B);
+		add(markBlitzingPlayerMenu);
+
+		ButtonGroup markBlitzingPlayerGroup = new ButtonGroup();
+
+		markBlitzingPlayerOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+		markBlitzingPlayerOnMenuItem.addActionListener(this);
+		markBlitzingPlayerGroup.add(markBlitzingPlayerOnMenuItem);
+		markBlitzingPlayerMenu.add(markBlitzingPlayerOnMenuItem);
+
+		markBlitzingPlayerOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+		markBlitzingPlayerOffMenuItem.addActionListener(this);
+		markBlitzingPlayerGroup.add(markBlitzingPlayerOffMenuItem);
+		markBlitzingPlayerMenu.add(markBlitzingPlayerOffMenuItem);
 	}
 
 	private void createRangegridMenu() {

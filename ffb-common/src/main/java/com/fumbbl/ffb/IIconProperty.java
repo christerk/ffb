@@ -36,6 +36,7 @@ public interface IIconProperty {
 	String DECORATION_OUT_OF_BOUNDS = "decoration.out.of.bounds";
 	String DECORATION_EYE_GOUGED = "decoration.eye.gouged";
 	String DECORATION_CHOMPED = "decoration.chomped";
+	String DECORATION_CHECK_ICON_BLITZ = "decoration.activated.checkIcon.blitz";
 
 	// Game icons
 	String GAME_COIN_HEADS = "game.coin.heads";
@@ -120,6 +121,12 @@ public interface IIconProperty {
 	String SCOREBAR_SPECTATORS = "scorebar.spectators";
 	String SCOREBAR_COACH_BANNED_HOME = "scorebar.coachBanned.home";
 	String SCOREBAR_COACH_BANNED_AWAY = "scorebar.coachBanned.away";
+	String SCOREBAR_CHEERING_FANS_HOME_1 = "scorebar.cheeringFans.home.1";
+	String SCOREBAR_CHEERING_FANS_HOME_2 = "scorebar.cheeringFans.home.2";
+	String SCOREBAR_CHEERING_FANS_HOME_3 = "scorebar.cheeringFans.home.3";
+	String SCOREBAR_CHEERING_FANS_AWAY_1 = "scorebar.cheeringFans.away.1";
+	String SCOREBAR_CHEERING_FANS_AWAY_2 = "scorebar.cheeringFans.away.2";
+	String SCOREBAR_CHEERING_FANS_AWAY_3 = "scorebar.cheeringFans.away.3";
 
 	// Weather
 	String WEATHER_BLIZZARD = "weather.blizzard";

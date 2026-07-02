@@ -12,6 +12,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_SOUND_ON = "soundOn";
 	String SETTING_SOUND_MUTE_SPECTATORS = "muteSpectators";
 	String SETTING_SOUND_OFF = "soundOff";
+	String SETTING_SOUND_SPECTATOR_CAPTIONS_ON = "captionOn";
+	String SETTING_SOUND_SPECTATOR_CAPTIONS_OFF = "captionOff";
 
 	String SETTING_ICONS_TEAM = "iconsTeam";
 	String SETTING_ICONS_ROSTER_OPPONENT = "iconsRosterOpponent";
@@ -60,6 +62,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 
 	String SETTING_MARK_USED_PLAYERS_DEFAULT = "markUsedPlayersDefault";
 	String SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN = "markUsedPlayersCheckIconGreen";
+	String SETTING_MARK_BLITZING_PLAYER_ON = "markBlitzingPlayerOn";
+	String SETTING_MARK_BLITZING_PLAYER_OFF = "markBlitzingPlayerOff";
 	String SETTING_HIDE_AUTO_MARKING_DIALOG = "hideAutoMarkingDialog";
 
 	String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";

@@ -235,6 +235,7 @@ public class StepEndTurn extends AbstractStep {
 		getGameState().getPassState().reset();
 		if (game.getTurnMode() == TurnMode.REGULAR || game.getTurnMode() == TurnMode.BLITZ) {
 			getGameState().removeAdditionalAssist(game.getActingTeam().getId());
+			game.getTurnData().setCheeringFansBlockAssist(getGameState().getAdditionalAssist(game.getActingTeam().getId()));
 			getGameState().resetStalling();
 		}
 
@@ -590,11 +591,8 @@ public class StepEndTurn extends AbstractStep {
 				}
 				PlayerState playerState = game.getFieldModel().getPlayerState(player);
 				if (playerState.getBase() == PlayerState.KNOCKED_OUT) {
-					InducementType reRollKOsInducement =
-						(team == game.getTeamHome() ? game.getTurnDataHome() : game.getTurnDataAway()).getInducementSet()
-							.forUsage(Usage.REROLL_ONES_ON_KOS);
 					List<KnockoutRecovery> playerRecoveries = new ArrayList<>();
-					recoverKnockout(player, reRollKOsInducement, playerRecoveries);
+					recoverKnockout(player, playerRecoveries);
 					if (!playerRecoveries.isEmpty()) {
 						knockoutRecoveries.addAll(playerRecoveries);
 						if (playerRecoveries.stream().anyMatch(KnockoutRecovery::isRecovering)) {
@@ -743,8 +741,7 @@ public class StepEndTurn extends AbstractStep {
 		}
 	}
 
-	private void recoverKnockout(Player<?> pPlayer, InducementType reRollKOsInducement,
-	                             List<KnockoutRecovery> playerRecoveries) {
+	private void recoverKnockout(Player<?> pPlayer, List<KnockoutRecovery> playerRecoveries) {
 		if (pPlayer != null) {
 			String playerId = pPlayer.getId();
 			int recoveryRoll = getGameState().getDiceRoller().rollKnockoutRecovery();
@@ -755,13 +752,11 @@ public class StepEndTurn extends AbstractStep {
 			int bloodweiserKegValue = inducementSet.getInducementMapping().entrySet().stream()
 				.filter(entry -> entry.getKey().hasUsage(Usage.KNOCKOUT_RECOVERY)).map(entry -> entry.getValue().getValue())
 				.findFirst().orElse(0);
-			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, bloodweiserKegValue);
-			boolean willBeReRolled = recoveryRoll == 1 && reRollKOsInducement != null;
-			playerRecoveries.add(new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue,
-				willBeReRolled ? reRollKOsInducement.getDescription() : null));
-			if (willBeReRolled) {
-				recoverKnockout(pPlayer, null, playerRecoveries);
-			}
+			int bugmansXXXXXXValue = inducementSet.value(Usage.ADD_TO_KO_RECOVERY);
+			int knockoutRecoveryModifier = bloodweiserKegValue + bugmansXXXXXXValue;
+			boolean isRecovering = DiceInterpreter.getInstance().isRecoveringFromKnockout(recoveryRoll, knockoutRecoveryModifier);
+
+			playerRecoveries.add(new KnockoutRecovery(playerId, isRecovering, recoveryRoll, bloodweiserKegValue, bugmansXXXXXXValue, null));
 		}
 	}
 

@@ -176,7 +176,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 			}
 			if (dropChainsawPlayer) {
 				FieldCoordinate attackerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
-				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), null,
+				InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeChainsaw(), actingPlayer.getPlayer(),
 					actingPlayer.getPlayer(), attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 
 				boolean causesTurnOver = causesTurnOver(UtilPlayer.hasBall(game, actingPlayer.getPlayer()), chainsawOption, injuryResultAttacker.injuryContext());

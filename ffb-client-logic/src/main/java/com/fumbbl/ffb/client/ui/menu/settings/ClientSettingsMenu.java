@@ -49,6 +49,8 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem fSoundOnMenuItem;
 	private JRadioButtonMenuItem fSoundMuteSpectatorsMenuItem;
 	private JRadioButtonMenuItem fSoundOffMenuItem;
+	private JRadioButtonMenuItem fSpectatorCaptionsOnMenuItem;
+	private JRadioButtonMenuItem fSpectatorCaptionsOffMenuItem;
 
 	private JMenu playerMarkingMenu;
 	private JRadioButtonMenuItem playersMarkingManualMenuItem;
@@ -104,6 +106,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		fSoundOnMenuItem.setSelected(true);
 		fSoundMuteSpectatorsMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_MUTE_SPECTATORS.equals(soundSetting));
 		fSoundOffMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_OFF.equals(soundSetting));
+
+		String spectatorCaptionSetting = client.getProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS);
+		fSpectatorCaptionsOffMenuItem.setSelected(true);
+		fSpectatorCaptionsOnMenuItem.setSelected(IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_ON.equals(spectatorCaptionSetting));
 
 		String orientationSetting = client.getProperty(CommonProperty.SETTING_UI_LAYOUT);
 		pitchLandscapeMenuItem.setSelected(true);
@@ -167,6 +173,14 @@ public class ClientSettingsMenu extends FfbMenu {
 		}
 		if (source == fSoundOnMenuItem) {
 			client.setProperty(CommonProperty.SETTING_SOUND_MODE, IClientPropertyValue.SETTING_SOUND_ON);
+			client.saveUserSettings(false);
+		}
+		if (source == fSpectatorCaptionsOnMenuItem) {
+			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_ON);
+			client.saveUserSettings(false);
+		}
+		if (source == fSpectatorCaptionsOffMenuItem) {
+			client.setProperty(CommonProperty.SETTING_SOUND_SPECTATOR_CAPTIONS, IClientPropertyValue.SETTING_SOUND_SPECTATOR_CAPTIONS_OFF);
 			client.saveUserSettings(false);
 		}
 
@@ -386,6 +400,20 @@ public class ClientSettingsMenu extends FfbMenu {
 		fSoundOffMenuItem.addActionListener(this);
 		soundGroup.add(fSoundOffMenuItem);
 		fSoundMenu.add(fSoundOffMenuItem);
+
+		fSoundMenu.addSeparator();
+
+		ButtonGroup spectatorCaptionGroup = new ButtonGroup();
+
+		fSpectatorCaptionsOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions on");
+		fSpectatorCaptionsOnMenuItem.addActionListener(this);
+		spectatorCaptionGroup.add(fSpectatorCaptionsOnMenuItem);
+		fSoundMenu.add(fSpectatorCaptionsOnMenuItem);
+
+		fSpectatorCaptionsOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Spectator captions off");
+		fSpectatorCaptionsOffMenuItem.addActionListener(this);
+		spectatorCaptionGroup.add(fSpectatorCaptionsOffMenuItem);
+		fSoundMenu.add(fSpectatorCaptionsOffMenuItem);
 	}
 
 	private void createScaleItem() {
