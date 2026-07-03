@@ -88,7 +88,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
 		pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
 		coordinateConverter = new CoordinateConverter(pitchViewport);
-		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
+		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider, pitchViewport);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
