@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ActivePlayerHighlighter {
 
@@ -48,14 +47,16 @@ public class ActivePlayerHighlighter {
 		this.g2d = g2d;
 		if (animationTimer == null) {
 			animationTimer = new javax.swing.Timer(40, e -> {
-				// Update brightness (Ping-pong logic)
-				brightness += delta;
-				if (brightness > 1.5f || brightness < 0.8f) {
-					delta = -delta; // Reverse direction
-				}
-
 				if (isHighlightingOn) {
-					repaint();
+					// Update brightness (Ping-pong logic)
+					brightness += delta;
+					if (brightness > 1.5f || brightness < 0.8f) {
+						delta = -delta; // Reverse direction
+					}
+					repaint(brightness,
+							g2d,
+							activePlayerIcon,
+							client.getGame().getFieldModel().getPlayerCoordinate(activePlayer));
 				} else {
 					animationTimer.stop();
 				}
@@ -93,13 +94,11 @@ public class ActivePlayerHighlighter {
 		brightness = 1.0f;
 	}
 
-	private void repaint() {
+	private void repaint(float brightness, Graphics2D g2d, BufferedImage activePlayerIcon, FieldCoordinate playerCoordinate) {
 		// 1.0 is original brightness, > 1.0 is brighter, < 1.0 is darker
 		float[] scales = {brightness, brightness, brightness, 1.0f};
 		float[] offsets = {0, 0, 0, 0};
 		RescaleOp rescale = new RescaleOp(scales, offsets, null);
-
-		FieldCoordinate playerCoordinate = client.getGame().getFieldModel().getPlayerCoordinate(activePlayer);
 
 		int upperLeftX = findCenteredIconUpperLeftX(activePlayerIcon, playerCoordinate);
 		int upperLeftY = findCenteredIconUpperLeftY(activePlayerIcon, playerCoordinate);
