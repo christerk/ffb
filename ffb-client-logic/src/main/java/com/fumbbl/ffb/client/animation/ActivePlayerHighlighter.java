@@ -14,6 +14,7 @@ public class ActivePlayerHighlighter {
 	private FantasyFootballClient client;
 	private PitchDimensionProvider pitchDimensionProvider;
 	private BufferedImage activePlayerIcon;
+	private BufferedImage fieldLayerPlayers;
 	private Graphics2D g2d;
 
 	private static ActivePlayerHighlighter instance;
@@ -39,12 +40,12 @@ public class ActivePlayerHighlighter {
 
 	public void initialize(FantasyFootballClient client,
 	                       PitchDimensionProvider pitchDimensionProvider,
-	                       Graphics2D g2d
+	                       BufferedImage fieldLayerPlayers
 
 	) {
 		this.client = client;
 		this.pitchDimensionProvider = pitchDimensionProvider;
-		this.g2d = g2d;
+		this.fieldLayerPlayers = fieldLayerPlayers;
 		if (animationTimer == null) {
 			animationTimer = new javax.swing.Timer(40, e -> {
 				if (isHighlightingOn) {
@@ -71,26 +72,30 @@ public class ActivePlayerHighlighter {
 	 *
 	 * @param activePlayer
 	 */
-	public void setActivePlayer(Player<?> activePlayer) {
+	public synchronized void setActivePlayer(Player<?> activePlayer) {
 		if (activePlayer == null) {
 			stopHighlighting();
 		} else {
-			this.activePlayer = activePlayer;
 			stopHighlighting();
+			this.activePlayer = activePlayer;
+			PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
+			activePlayerIcon = playerIconFactory.getIcon(client, activePlayer, pitchDimensionProvider);
+			g2d = fieldLayerPlayers.createGraphics();
+
 			startHighlighting();
 		}
 	}
 
 	private void startHighlighting() {
 		isHighlightingOn = true;
-
-		PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
-		activePlayerIcon = playerIconFactory.getIcon(client, activePlayer, pitchDimensionProvider);
 		animationTimer.start();
 	}
 
 	private void stopHighlighting() {
 		isHighlightingOn = false;
+		if (g2d != null) {
+			g2d.dispose();
+		}
 		brightness = 1.0f;
 	}
 

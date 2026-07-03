@@ -34,7 +34,7 @@ public class FieldLayerPlayers extends FieldLayer {
     public void initLayout() {
         super.initLayout();
 	    activePlayerHighlighter = ActivePlayerHighlighter.getInstance();
-	    activePlayerHighlighter.initialize(getClient(), pitchDimensionProvider, getImage().createGraphics());
+	    activePlayerHighlighter.initialize(getClient(), pitchDimensionProvider, getImage());
     }
 
 	public void refresh(FieldCoordinateBounds pBounds) {
