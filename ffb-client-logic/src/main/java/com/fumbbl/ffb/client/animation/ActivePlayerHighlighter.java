@@ -149,7 +149,7 @@ public class ActivePlayerHighlighter {
 		return dimension.height - (activePlayerIcon.getHeight() / 2);
 	}
 
-	public static class AnimationDependentData {
+	static class AnimationDependentData {
 		public AnimationDependentData(BufferedImage activePlayerIcon, Graphics2D g2d) {
 			this.activePlayerIcon = activePlayerIcon;
 			this.g2d = g2d;
