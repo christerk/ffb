@@ -121,13 +121,32 @@ public class ActivePlayerHighlighter {
 
 		int upperLeftX = findCenteredIconUpperLeftX(activePlayerIcon, playerCoordinate);
 		int upperLeftY = findCenteredIconUpperLeftY(activePlayerIcon, playerCoordinate);
-		Graphics2D g2d = animationData.g2d;
-		g2d.setClip(upperLeftX, upperLeftY, activePlayerIcon.getWidth(), activePlayerIcon.getHeight());
-		g2d.drawImage(activePlayerIcon, rescale, upperLeftX, upperLeftY);
+		//It is possible that animationData.g2d object will be disposed by the time of execution here,
+		//but it should not cause errors. Atleast that is what chat Gemini says about behavior of disposed
+		// java.awt.Graphics2D objects:
+//		When you call dispose() on a Graphics2D object, you are explicitly telling the Java runtime that you are finished
+//		with that graphics context and that it should release any system resources (such as native memory or window handles)
+//		associated with it.
+//
+//		Internally, many implementations (such as the standard sun.java2d.SunGraphics2D used in most OpenJDK/Oracle
+//		JDK environments) perform a "sabotage" action:
+//
+//		State Invalidation: The surfaceData—the internal pointer to the memory or component being drawn upon—is set to
+//		a NullSurfaceData instance.
+//
+//		Pipeline Invalidation: The rendering pipe (the mechanism that actually processes drawing commands) is invalidated.
+//
+//		Because the graphics object no longer points to a valid destination surface, any subsequent calls to drawImage or setClip are ignored by the graphics pipeline. The system intentionally prevents further use to ensure that developers do not rely on "dead" objects, which might otherwise cause memory leaks or unpredictable behavior if the underlying native resources were freed.
+		animationData.g2d.setClip(upperLeftX, upperLeftY, activePlayerIcon.getWidth(), activePlayerIcon.getHeight());
+		animationData.g2d.drawImage(activePlayerIcon, rescale, upperLeftX, upperLeftY);
 	}
 
 	private void refreshPlayerSquare() {
 		AnimationDependentData currentData = animationDependentData;
+		if (currentData == null) {
+			return;
+		}
+
 		BufferedImage activePlayerIcon = currentData.activePlayerIcon;
 		Player<?> currentlyActivePlayer = activePlayer;
 
