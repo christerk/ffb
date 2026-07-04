@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.model.Animation;
 
 import java.awt.*;
@@ -138,7 +139,8 @@ public class AnimationSequenceFactory {
 			case PRAYER_BLESSED_STATUE_OF_NUFFLE:
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_BLESSED_STATUE_OF_NUFFLE, dimensionProvider.isPitchPortrait());
 			case BREATHE_FIRE:
-				return AnimationSequenceMovingEffect.createAnimationSequenceBreatheFire(pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), dimensionProvider);
+				PitchViewport pitchViewport = pClient.getUserInterface().getPitchViewport();
+				return AnimationSequenceMovingEffect.createAnimationSequenceBreatheFire(pAnimation.getStartCoordinate(), pAnimation.getEndCoordinate(), dimensionProvider, pitchViewport);
 			case PRAYER_DAZZLING_CATCHING:
 				return AnimationSequenceKickoff.createAnimationSequence(fieldDimension, IIconProperty.ANIMATION_PRAYER_DAZZLING_CATCHING, dimensionProvider.isPitchPortrait());
 			default:

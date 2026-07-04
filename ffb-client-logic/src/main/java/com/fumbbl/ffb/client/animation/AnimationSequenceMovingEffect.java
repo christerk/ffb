@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.*;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.layer.FieldLayer;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 
@@ -12,8 +13,9 @@ import java.util.Arrays;
 
 public class AnimationSequenceMovingEffect implements IAnimationSequence, ActionListener {
 
-  public static AnimationSequenceMovingEffect createAnimationSequenceBreatheFire(FieldCoordinate start, FieldCoordinate end, PitchDimensionProvider dimensionProvider) {
-    return new AnimationSequenceMovingEffect(start, end, dimensionProvider, 1000, new AnimationFrame[]{
+  public static AnimationSequenceMovingEffect createAnimationSequenceBreatheFire(FieldCoordinate start,
+      FieldCoordinate end, PitchDimensionProvider dimensionProvider, PitchViewport pitchViewport) {
+    return new AnimationSequenceMovingEffect(start, end, dimensionProvider, pitchViewport, 1000, new AnimationFrame[]{
       new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_1, 1.0f, 500, SoundId.FIREBALL),
       new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_2, 1.0f, 500),
       new AnimationFrame(IIconProperty.ANIMATION_FIREBALL_EXPLOSION_3, 1.0f, 500),
@@ -47,15 +49,16 @@ public class AnimationSequenceMovingEffect implements IAnimationSequence, Action
   private IAnimationListener fListener;
 
   protected AnimationSequenceMovingEffect(FieldCoordinate pStartCoordinate, FieldCoordinate pEndCoordinate,
-                                          PitchDimensionProvider dimensionProvider, long duration, AnimationFrame[] frames) {
+                                          PitchDimensionProvider dimensionProvider, PitchViewport pitchViewport,
+                                          long duration, AnimationFrame[] frames) {
     timerDelay = (int) (20 / (dimensionProvider.getLayoutSettings().getScale() * dimensionProvider.getLayoutSettings().getLayout().getPitchScale()));
     fTimer = new Timer(timerDelay, this);
     this.frames = frames;
     this.duration = duration;
     this.totalDurationWeight = Arrays.stream(frames).mapToLong(AnimationFrame::getTime).sum();
-    this.animationProjector = new AnimationProjector(pStartCoordinate, pEndCoordinate, null, dimensionProvider,
-      new TimerBasedSteppingStrategy(dimensionProvider.mapToLocal(pStartCoordinate),
-        dimensionProvider.mapToLocal(pEndCoordinate), duration, timerDelay));
+    this.animationProjector = new AnimationProjector(pStartCoordinate, pEndCoordinate, null, pitchViewport,
+      new TimerBasedSteppingStrategy(pitchViewport.toLocal(pStartCoordinate),
+        pitchViewport.toLocal(pEndCoordinate), duration, timerDelay));
   }
 
   public void play(FieldLayer pFieldLayer, IAnimationListener pListener) {
