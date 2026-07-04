@@ -1,15 +1,15 @@
 package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-
-import static java.util.Optional.ofNullable;
 
 public class ActivePlayerHighlighter {
 
@@ -52,16 +52,18 @@ public class ActivePlayerHighlighter {
 				if (isHighlightingOn) {
 					AnimationDependentData currentData = animationDependentData;
 					// Update brightness (Ping-pong logic)
-					brightness += delta;
-					if (brightness > 1.5f || brightness < 0.8f) {
-						delta = -delta; // Reverse direction
-					}
-					FieldCoordinate playerCoordinate = client
-							.getGame()
-							.getFieldModel()
-							.getPlayerCoordinate(activePlayer);
+					if (currentData != null) {
+						brightness += delta;
+						if (brightness > 1.5f || brightness < 0.8f) {
+							delta = -delta; // Reverse direction
+						}
+						FieldCoordinate playerCoordinate = client
+								.getGame()
+								.getFieldModel()
+								.getPlayerCoordinate(activePlayer);
 
-					repaint(brightness, currentData, playerCoordinate);
+						repaint(brightness, currentData, playerCoordinate);
+					}
 				} else {
 					animationTimer.stop();
 				}
@@ -102,7 +104,10 @@ public class ActivePlayerHighlighter {
 
 	private void stopHighlighting() {
 		isHighlightingOn = false;
-		ofNullable(animationDependentData).map(add -> add.g2d).ifPresent(Graphics::dispose);
+		if (animationDependentData != null) {
+			animationDependentData.g2d.dispose();
+			animationDependentData = null;
+		}
 		brightness = 1.0f;
 	}
 
@@ -149,7 +154,7 @@ public class ActivePlayerHighlighter {
 		return dimension.height - (activePlayerIcon.getHeight() / 2);
 	}
 
-	public static class AnimationDependentData {
+	static class AnimationDependentData {
 		public AnimationDependentData(BufferedImage activePlayerIcon, Graphics2D g2d) {
 			this.activePlayerIcon = activePlayerIcon;
 			this.g2d = g2d;
