@@ -91,7 +91,7 @@ Update `CoordinateConverter` so it delegates to `PitchViewport.toFieldCoordinate
 
 This is a low-risk first migration because normal field mouse handling already goes through `CoordinateConverter`.
 
-Special drag/drop behavior in `UtilClientPlayerDrag` can stay as-is initially, then be migrated after normal pitch input is stable.
+Special drag/drop behavior in `UtilClientPlayerDrag` is intentionally excluded from this initial input migration. It has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates. It is handled separately in Phase 5.
 
 ## Phase 4: Route Common Rendering Through The Viewport
 
@@ -99,7 +99,23 @@ Update common `FieldLayer` helpers to use `PitchViewport.toLocal(...)` and `Pitc
 
 Then gradually migrate direct `pitchDimensionProvider.mapToLocal(...)` calls in individual field layers, states, animations, sketches, range rulers, and marker popup placement.
 
-## Phase 5: Introduce A Layout Result
+This phase covers rendering and UI placement coordinate mapping. It does not include setup drag/drop input, which is handled separately in Phase 5.
+
+## Phase 5: Handle Setup Drag/Drop Coordinate Mapping
+
+Evaluate `UtilClientPlayerDrag` separately from normal field input. Setup drag/drop has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates.
+
+Before changing it, add tests that pin current behavior for:
+
+- field edge coordinates
+- portrait conversion
+- box-to-field dragging
+- field-to-box dragging
+- reserve/box sentinel coordinates
+
+Then decide whether this belongs in `PitchViewport` as a dedicated drag method or in a separate drag/drop coordinate mapper.
+
+## Phase 6: Introduce A Layout Result
 
 Add a small object that represents the result of a client layout pass:
 
@@ -122,7 +138,7 @@ The layout pass should take GUI scale into account when calculating non-pitch co
 
 The important shift is that layout becomes data calculated by one component, instead of being implicit in nested Swing panels.
 
-## Phase 6: Make UserInterface Consume The Layout Result
+## Phase 7: Make UserInterface Consume The Layout Result
 
 Refactor `UserInterface.initComponents(...)` so it consumes `ClientLayoutResult`.
 
@@ -135,7 +151,7 @@ Initial behavior should remain visually identical:
 
 This creates a bridge from the current fixed model to a dynamic layout pass.
 
-## Phase 7: Promote Local Mapping To Viewport Transforms
+## Phase 8: Promote Local Mapping To Viewport Transforms
 
 After the layout result exists and `PitchViewport` owns the calculated pitch bounds, introduce viewport terminology:
 
@@ -146,7 +162,7 @@ Until then, keep `toLocal(...)` and `toFieldCoordinate(...)` because current met
 
 At this point, decide whether to keep the old methods as compatibility wrappers or migrate callers to the new names.
 
-## Phase 8: Split GUI Scale From Pitch Scale
+## Phase 9: Split GUI Scale From Pitch Scale
 
 Separate the existing broad `LayoutSettings.scale` behavior into clearer concepts:
 
@@ -157,7 +173,7 @@ Initially, preserve current behavior by applying the existing scale value as GUI
 
 Once dynamic layout is active, GUI scale should affect how much space non-pitch UI components request. Pitch scale should be calculated from the remaining pitch viewport and should preserve the pitch aspect ratio.
 
-## Phase 9: Make The Window Resizable
+## Phase 10: Make The Window Resizable
 
 Once the viewport and layout result exist, allow the frame to resize.
 
@@ -171,7 +187,7 @@ On resize:
 
 This is the first point where the new architecture is tested against real changing window sizes.
 
-## Phase 10: Fit Pitch To Available Space
+## Phase 11: Fit Pitch To Available Space
 
 Implement the dynamic pitch sizing logic:
 
@@ -192,7 +208,7 @@ The pitch viewport should update these transforms from the calculated field boun
 
 This pitch scale should be independent from GUI scale. GUI scale affects how much space the non-pitch components need; pitch scale is then derived from the remaining viewport.
 
-## Phase 11: Move GUI To Rule-Based Placement
+## Phase 12: Move GUI To Rule-Based Placement
 
 Move non-pitch GUI components toward rule-based placement:
 
@@ -203,7 +219,7 @@ Move non-pitch GUI components toward rule-based placement:
 
 This is where the client starts moving away from fixed `ClientLayout` variants.
 
-## Phase 12: Fullscreen
+## Phase 13: Fullscreen
 
 Once resizing works, fullscreen should mostly be:
 
