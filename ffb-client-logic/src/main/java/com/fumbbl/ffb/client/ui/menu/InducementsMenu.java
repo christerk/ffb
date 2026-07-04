@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.ClientMode;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -11,7 +10,6 @@ import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
-import com.fumbbl.ffb.factory.CardTypeFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
