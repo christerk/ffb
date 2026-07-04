@@ -16,6 +16,8 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
@@ -60,8 +62,8 @@ public class InducementsMenu extends FfbMenu {
 	public boolean refresh() {
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
-		boolean hasCardTypes = hasCardTypes(game);
-		if (hasCardTypes) {
+		boolean supportsCards = supportsCards(game);
+		if (supportsCards) {
 			cardsMenu.refresh();
 		}
 
@@ -125,7 +127,7 @@ public class InducementsMenu extends FfbMenu {
 				setEnabled(false);
 			}
 
-			if (hasCardTypes) {
+			if (supportsCards) {
 				add(cardsMenu);
 			}
 
@@ -261,13 +263,13 @@ public class InducementsMenu extends FfbMenu {
 		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
 	}
 
-	private boolean hasCardTypes(Game game) {
+	private boolean supportsCards(Game game) {
 		if (game == null || !game.getRules().isInitialized()) {
 			return false;
 		}
 
-		CardTypeFactory cardTypeFactory = game.getFactory(FactoryType.Factory.CARD_TYPE);
-		return cardTypeFactory != null && !cardTypeFactory.getCardTypes().isEmpty();
+		GameMechanic mechanic = game.getMechanic(Mechanic.Type.GAME);
+		return mechanic.supportsCards();
 	}
 
 	@Override
