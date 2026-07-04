@@ -41,6 +41,15 @@ class PitchViewportTest {
 	}
 
 	@Test
+	void squareSizeWithFactorUsesCurrentPitchSquareSizeRounding() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+
+		assertEquals(15, viewport.squareSize(0.5));
+		assertEquals(750, viewport.squareSize(25));
+		assertEquals(765, viewport.squareSize(25.5));
+	}
+
+	@Test
 	void imageOffsetUsesCurrentPitchImageOffset() {
 		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
 

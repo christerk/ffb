@@ -24,6 +24,10 @@ public class PitchViewport {
 		return pitchDimensionProvider.fieldSquareSize();
 	}
 
+	public int squareSize(double factor) {
+		return pitchDimensionProvider.fieldSquareSize(factor);
+	}
+
 	public int imageOffset() {
 		return pitchDimensionProvider.imageOffset();
 	}
