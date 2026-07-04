@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.ui.menu;
 
 import com.fumbbl.ffb.ClientMode;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.client.DimensionProvider;
@@ -10,6 +11,7 @@ import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenuItem;
+import com.fumbbl.ffb.factory.CardTypeFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
@@ -36,9 +38,12 @@ public class InducementsMenu extends FfbMenu {
 	private int fCurrentUsedCardsHome;
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
+	private final CardsMenu cardsMenu;
+	private boolean fCurrentHasCardTypes;
 
 	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Inducements", client, dimensionProvider, styleProvider, layoutSettings);
+		cardsMenu = new CardsMenu(client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_I);
 		setEnabled(false);
 	}
@@ -49,12 +54,18 @@ public class InducementsMenu extends FfbMenu {
 		fCurrentUsedCardsHome = 0;
 		fCurrentInducementTotalAway = -1;
 		fCurrentUsedCardsAway = 0;
+		cardsMenu.init();
+		fCurrentHasCardTypes = false;
 	}
 
 	@Override
 	public boolean refresh() {
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
+		boolean hasCardTypes = hasCardTypes(game);
+		if (hasCardTypes) {
+			cardsMenu.refresh();
+		}
 
 		InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
 		int totalInducementHome = inducementSetHome.totalInducements();
@@ -114,6 +125,10 @@ public class InducementsMenu extends FfbMenu {
 			} else {
 				setText("No Inducements");
 				setEnabled(false);
+			}
+
+			if (hasCardTypes) {
+				add(cardsMenu);
 			}
 
 		}
@@ -246,6 +261,15 @@ public class InducementsMenu extends FfbMenu {
 		Card[] allCards = pInducementSet.getAllCards();
 
 		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
+	}
+
+	private boolean hasCardTypes(Game game) {
+		if (game == null || !game.getRules().isInitialized()) {
+			return false;
+		}
+
+		CardTypeFactory cardTypeFactory = game.getFactory(FactoryType.Factory.CARD_TYPE);
+		return cardTypeFactory != null && !cardTypeFactory.getCardTypes().isEmpty();
 	}
 
 	@Override
