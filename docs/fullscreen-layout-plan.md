@@ -91,7 +91,7 @@ Update `CoordinateConverter` so it delegates to `PitchViewport.toFieldCoordinate
 
 This is a low-risk first migration because normal field mouse handling already goes through `CoordinateConverter`.
 
-Special drag/drop behavior in `UtilClientPlayerDrag` is intentionally excluded from this initial input migration. It has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates. It is handled separately in Phase 5.
+Special drag/drop behavior in `UtilClientPlayerDrag` is intentionally excluded from this initial input migration. It has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates. It is handled separately after the layout result and viewport bounds exist.
 
 ## Phase 4: Route Common Rendering Through The Viewport
 
@@ -99,23 +99,9 @@ Update common `FieldLayer` helpers to use `PitchViewport.toLocal(...)` and `Pitc
 
 Then gradually migrate direct `pitchDimensionProvider.mapToLocal(...)` calls in individual field layers, states, animations, sketches, range rulers, and marker popup placement.
 
-This phase covers rendering and UI placement coordinate mapping. It does not include setup drag/drop input, which is handled separately in Phase 5.
+This phase covers rendering and UI placement coordinate mapping. It does not include setup drag/drop input, which is handled separately after layout bounds exist.
 
-## Phase 5: Handle Setup Drag/Drop Coordinate Mapping
-
-Evaluate `UtilClientPlayerDrag` separately from normal field input. Setup drag/drop has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates.
-
-Before changing it, add tests that pin current behavior for:
-
-- field edge coordinates
-- portrait conversion
-- box-to-field dragging
-- field-to-box dragging
-- reserve/box sentinel coordinates
-
-Then decide whether this belongs in `PitchViewport` as a dedicated drag method or in a separate drag/drop coordinate mapper.
-
-## Phase 6: Introduce A Layout Result
+## Phase 5: Introduce A Layout Result
 
 Add a small object that represents the result of a client layout pass:
 
@@ -138,7 +124,7 @@ The layout pass should take GUI scale into account when calculating non-pitch co
 
 The important shift is that layout becomes data calculated by one component, instead of being implicit in nested Swing panels.
 
-## Phase 7: Make UserInterface Consume The Layout Result
+## Phase 6: Make UserInterface Consume The Layout Result
 
 Refactor `UserInterface.initComponents(...)` so it consumes `ClientLayoutResult`.
 
@@ -151,7 +137,7 @@ Initial behavior should remain visually identical:
 
 This creates a bridge from the current fixed model to a dynamic layout pass.
 
-## Phase 8: Promote Local Mapping To Viewport Transforms
+## Phase 7: Promote Local Mapping To Viewport Transforms
 
 After the layout result exists and `PitchViewport` owns the calculated pitch bounds, introduce viewport terminology:
 
@@ -161,6 +147,20 @@ After the layout result exists and `PitchViewport` owns the calculated pitch bou
 Until then, keep `toLocal(...)` and `toFieldCoordinate(...)` because current methods return field-component-local coordinates.
 
 At this point, decide whether to keep the old methods as compatibility wrappers or migrate callers to the new names.
+
+## Phase 8: Handle Setup Drag/Drop Coordinate Mapping
+
+Evaluate `UtilClientPlayerDrag` after the layout result exists and `PitchViewport` owns calculated pitch bounds. Setup drag/drop has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates.
+
+Before changing it, add or maintain tests that pin current behavior for:
+
+- field edge coordinates
+- portrait conversion
+- box-to-field dragging
+- field-to-box dragging
+- reserve/box sentinel coordinates
+
+Then design a layout-aware setup drag/drop mapper. This should probably be separate from `PitchViewport`: the viewport should own pitch coordinate transforms, while setup drag/drop hit testing should interpret pitch, box, and crossing behavior for the current interaction mode.
 
 ## Phase 9: Split GUI Scale From Pitch Scale
 
