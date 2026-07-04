@@ -53,7 +53,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
     Color heightColor = HOME_COLOR;
     FieldCoordinate homeZone = new FieldCoordinate(1, pY);
     clear(homeZone, true); // marks square as updated
-    Dimension dimension = pitchDimensionProvider.mapToLocal(homeZone, true);
+    Dimension dimension = pitchViewport.toLocal(homeZone, true);
     int x = dimension.width;
     int y = dimension.height;
 
@@ -75,7 +75,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
     FieldCoordinate lowerLine = new FieldCoordinate(24, pY);
     clear(lowerLine, true); // marks square as updated
-    dimension = pitchDimensionProvider.mapToLocal(lowerLine, true);
+    dimension = pitchViewport.toLocal(lowerLine, true);
     x = dimension.width;
     y = dimension.height;
 
@@ -114,7 +114,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
     FieldCoordinate upperLine = new FieldCoordinate(pX, 0);
     clear(upperLine, true); // marks square as updated
-    Dimension dimension = pitchDimensionProvider.mapToLocal(upperLine, true);
+    Dimension dimension = pitchViewport.toLocal(upperLine, true);
     int x = dimension.width;
     int y = dimension.height;
 
@@ -132,7 +132,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
     g2d.drawString(distanceString, x, y);
     FieldCoordinate lowerLine = new FieldCoordinate(pX, 14);
     clear(lowerLine, true); // marks square as updated
-    dimension = pitchDimensionProvider.mapToLocal(lowerLine, true);
+    dimension = pitchViewport.toLocal(lowerLine, true);
     x = dimension.width;
     y = dimension.height;
 
@@ -162,22 +162,22 @@ public class FieldLayerTeamLogo extends FieldLayer {
         int x, y;
         if (pitchDimensionProvider.isPitchPortrait()) {
           if (pHomeTeam) {
-            y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - pitchDimensionProvider.imageOffset();
+            y = (3 * (fieldDimension.height / 4)) - (teamLogo.getHeight() / 2) - pitchViewport.imageOffset();
           } else {
-            y = (fieldDimension.height / 4) - (teamLogo.getHeight() / 2) + pitchDimensionProvider.imageOffset();
+            y = (fieldDimension.height / 4) - (teamLogo.getHeight() / 2) + pitchViewport.imageOffset();
           }
           x = (fieldDimension.width / 2) - (teamLogo.getWidth() / 2);
-          g2d.setClip(0, pHomeTeam ? fieldDimension.height / 2 : pitchDimensionProvider.fieldSquareSize(),
-            fieldDimension.width, (fieldDimension.height / 2) - pitchDimensionProvider.fieldSquareSize());
+          g2d.setClip(0, pHomeTeam ? fieldDimension.height / 2 : pitchViewport.squareSize(),
+            fieldDimension.width, (fieldDimension.height / 2) - pitchViewport.squareSize());
         } else {
           if (pHomeTeam) {
-            x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + pitchDimensionProvider.imageOffset();
+            x = (fieldDimension.width / 4) - (teamLogo.getWidth() / 2) + pitchViewport.imageOffset();
           } else {
-            x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - pitchDimensionProvider.imageOffset();
+            x = (3 * (fieldDimension.width / 4)) - (teamLogo.getWidth() / 2) - pitchViewport.imageOffset();
           }
           y = (fieldDimension.height / 2) - (teamLogo.getHeight() / 2);
-          g2d.setClip(pHomeTeam ? pitchDimensionProvider.fieldSquareSize() : fieldDimension.width / 2, 0,
-            (fieldDimension.width / 2) - pitchDimensionProvider.fieldSquareSize(), fieldDimension.height);
+          g2d.setClip(pHomeTeam ? pitchViewport.squareSize() : fieldDimension.width / 2, 0,
+            (fieldDimension.width / 2) - pitchViewport.squareSize(), fieldDimension.height);
         }
         g2d.drawImage(teamLogo, x, y, null);
         g2d.dispose();
