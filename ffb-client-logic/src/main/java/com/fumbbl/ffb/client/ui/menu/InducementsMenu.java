@@ -39,7 +39,6 @@ public class InducementsMenu extends FfbMenu {
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
 	private final CardsMenu cardsMenu;
-	private boolean fCurrentHasCardTypes;
 
 	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Inducements", client, dimensionProvider, styleProvider, layoutSettings);
@@ -55,7 +54,6 @@ public class InducementsMenu extends FfbMenu {
 		fCurrentInducementTotalAway = -1;
 		fCurrentUsedCardsAway = 0;
 		cardsMenu.init();
-		fCurrentHasCardTypes = false;
 	}
 
 	@Override
