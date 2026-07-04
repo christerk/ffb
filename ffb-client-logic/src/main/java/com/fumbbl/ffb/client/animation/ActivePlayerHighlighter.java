@@ -9,16 +9,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import static java.util.Optional.ofNullable;
+
 public class ActivePlayerHighlighter {
 
 	private FantasyFootballClient client;
 	private PitchDimensionProvider pitchDimensionProvider;
-	private BufferedImage activePlayerIcon;
 	private BufferedImage fieldLayerPlayers;
-	private Graphics2D g2d;
 
 	private static ActivePlayerHighlighter instance;
 	private volatile boolean isHighlightingOn;
+	private volatile AnimationDependentData animationDependentData;
 	private Player<?> activePlayer;
 
 	private float brightness = 1.0f;
@@ -49,15 +50,18 @@ public class ActivePlayerHighlighter {
 		if (animationTimer == null) {
 			animationTimer = new javax.swing.Timer(40, e -> {
 				if (isHighlightingOn) {
+					AnimationDependentData currentData = animationDependentData;
 					// Update brightness (Ping-pong logic)
 					brightness += delta;
 					if (brightness > 1.5f || brightness < 0.8f) {
 						delta = -delta; // Reverse direction
 					}
-					repaint(brightness,
-							g2d,
-							activePlayerIcon,
-							client.getGame().getFieldModel().getPlayerCoordinate(activePlayer));
+					FieldCoordinate playerCoordinate = client
+							.getGame()
+							.getFieldModel()
+							.getPlayerCoordinate(activePlayer);
+
+					repaint(brightness, currentData, playerCoordinate);
 				} else {
 					animationTimer.stop();
 				}
@@ -70,21 +74,26 @@ public class ActivePlayerHighlighter {
 	 * When we want to start highlighting animation for active player then we set FieldCoordinate for active player,
 	 * when we want to stop highlighting we set null as input.
 	 *
-	 * @param activePlayer
+	 * @param newActivePlayer
 	 */
-	public synchronized void setActivePlayer(Player<?> activePlayer) {
-		if (activePlayer == null) {
+	public synchronized void setActivePlayer(Player<?> newActivePlayer) {
+		if (newActivePlayer == null) {
 			stopHighlighting();
+			this.activePlayer = null;
+		} else if (this.activePlayer != null && this.activePlayer.equals(newActivePlayer)) {
+			//If the new active player is the same player as it already was then just do nothing.
+			return;
 		} else {
+			//If the new active player is not null and different player that was active previously,
+			// then reinitialize highlighting.
 			stopHighlighting();
-			this.activePlayer = activePlayer;
+			this.activePlayer = newActivePlayer;
 			PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
-			activePlayerIcon = playerIconFactory.getIcon(client, activePlayer, pitchDimensionProvider);
-			g2d = fieldLayerPlayers.createGraphics();
-
+			animationDependentData = new AnimationDependentData(playerIconFactory.getIcon(client, newActivePlayer, pitchDimensionProvider), fieldLayerPlayers.createGraphics());
 			startHighlighting();
 		}
 	}
+
 
 	private void startHighlighting() {
 		isHighlightingOn = true;
@@ -93,30 +102,35 @@ public class ActivePlayerHighlighter {
 
 	private void stopHighlighting() {
 		isHighlightingOn = false;
-		if (g2d != null) {
-			g2d.dispose();
-		}
+		ofNullable(animationDependentData).map(add -> add.g2d).ifPresent(Graphics::dispose);
 		brightness = 1.0f;
 	}
 
-	private void repaint(float brightness, Graphics2D g2d, BufferedImage activePlayerIcon, FieldCoordinate playerCoordinate) {
+	private void repaint(float brightness, AnimationDependentData animationData, FieldCoordinate playerCoordinate) {
 		// 1.0 is original brightness, > 1.0 is brighter, < 1.0 is darker
 		float[] scales = {brightness, brightness, brightness, 1.0f};
 		float[] offsets = {0, 0, 0, 0};
 		RescaleOp rescale = new RescaleOp(scales, offsets, null);
 
+		BufferedImage activePlayerIcon = animationData.activePlayerIcon;
+
 		int upperLeftX = findCenteredIconUpperLeftX(activePlayerIcon, playerCoordinate);
 		int upperLeftY = findCenteredIconUpperLeftY(activePlayerIcon, playerCoordinate);
+		Graphics2D g2d = animationData.g2d;
 		g2d.setClip(upperLeftX, upperLeftY, activePlayerIcon.getWidth(), activePlayerIcon.getHeight());
 		g2d.drawImage(activePlayerIcon, rescale, upperLeftX, upperLeftY);
 	}
 
 	private void refreshPlayerSquare() {
-		if (activePlayer == null || activePlayerIcon == null) {
+		AnimationDependentData currentData = animationDependentData;
+		BufferedImage activePlayerIcon = currentData.activePlayerIcon;
+		Player<?> currentlyActivePlayer = activePlayer;
+
+		if (currentlyActivePlayer == null || activePlayerIcon == null) {
 			return;
 		}
 
-		FieldCoordinate playerCoordinate = client.getGame().getFieldModel().getPlayerCoordinate(activePlayer);
+		FieldCoordinate playerCoordinate = client.getGame().getFieldModel().getPlayerCoordinate(currentlyActivePlayer);
 
 		int upperLeftX = findCenteredIconUpperLeftX(activePlayerIcon, playerCoordinate);
 		int upperLeftY = findCenteredIconUpperLeftY(activePlayerIcon, playerCoordinate);
@@ -133,5 +147,15 @@ public class ActivePlayerHighlighter {
 	protected int findCenteredIconUpperLeftY(BufferedImage activePlayerIcon, FieldCoordinate pCoordinate) {
 		Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate, true);
 		return dimension.height - (activePlayerIcon.getHeight() / 2);
+	}
+
+	public static class AnimationDependentData {
+		public AnimationDependentData(BufferedImage activePlayerIcon, Graphics2D g2d) {
+			this.activePlayerIcon = activePlayerIcon;
+			this.g2d = g2d;
+		}
+
+		final BufferedImage activePlayerIcon;
+		final Graphics2D g2d;
 	}
 }
