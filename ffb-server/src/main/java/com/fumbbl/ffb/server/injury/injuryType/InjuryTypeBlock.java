@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.factory.ArmorModifierFactory;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.Block;
@@ -42,7 +43,7 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 
 	@Override
 	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
-		Player<?> pDefender, InjuryContext injuryContext) {
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext) {
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		factory.getNigglingInjuryModifier(pDefender).ifPresent(injuryContext::addInjuryModifier);
@@ -64,7 +65,8 @@ public class InjuryTypeBlock extends ModificationAwareInjuryTypeServer<Block> {
 
 	@Override
 	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
-		Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		if (!injuryContext.isArmorBroken()) {
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);

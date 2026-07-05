@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMLanding;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeFumbledKtmApoKo;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -45,12 +46,10 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
-import com.fumbbl.ffb.server.step.bb2025.command.RightStuffCommand;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -253,8 +252,11 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		if (!doRoll) {
 			InjuryResult injuryResultThrownPlayer = UtilServerInjury.handleInjury(this, fumbledKtm ? new InjuryTypeFumbledKtmApoKo() : new InjuryTypeTTMLanding(),
 				game.getActingPlayer().getPlayer(), thrownPlayer, playerCoordinate, null, null, ApothecaryMode.THROWN_PLAYER);
-			RightStuffCommand command = new RightStuffCommand(thrownPlayer.getId(), fThrownPlayerHasBall);
-			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(injuryResultThrownPlayer, Collections.singletonList(command))));
+			DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResultThrownPlayer, fThrownPlayerHasBall, false,
+				null, thrownPlayer.getId(), ApothecaryMode.THROWN_PLAYER, false, false, null, fThrownPlayerHasBall, false,
+				null);
+			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
+			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
 	}
