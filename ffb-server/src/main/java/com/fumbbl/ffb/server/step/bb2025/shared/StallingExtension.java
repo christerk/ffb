@@ -15,18 +15,17 @@ import com.fumbbl.ffb.report.mixed.ReportThrowAtStallingPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARockStalling;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -98,9 +97,10 @@ public class StallingExtension {
 
 			InjuryResult injuryResult = UtilServerInjury.handleInjury(step,
 				new InjuryTypeThrowARockStalling(), null, player, playerCoordinate, null, null, ApothecaryMode.HIT_PLAYER);
+			DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResult, false, true,
+				null, player.getId(), ApothecaryMode.HIT_PLAYER, false);
 			step.publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-				new SteadyFootingContext(injuryResult, Collections.singletonList(new DropPlayerCommand(player.getId(),
-					ApothecaryMode.HIT_PLAYER, true)))));
+				new SteadyFootingContext(dropPlayerContext)));
 		}
 	}
 }
