@@ -57,13 +57,40 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
+	void calculatesCurrentSquareBounds() {
+		ClientLayoutResult result = layout(ClientLayout.SQUARE);
+
+		assertEquals(new Rectangle(0, 0, 165, 782), result.homeSidebarBounds());
+		assertEquals(new Rectangle(165, 0, 452, 782), result.fieldBounds());
+		assertEquals(new Rectangle(617, 0, 165, 782), result.awaySidebarBounds());
+		assertEquals(new Rectangle(783, 344, 260, 96), result.scoreBarBounds());
+		assertEquals(new Rectangle(783, 1, 260, 343), result.logBounds());
+		assertEquals(new Rectangle(783, 440, 260, 343), result.chatBounds());
+	}
+
+	@Test
+	void calculatesCurrentWideBounds() {
+		ClientLayoutResult result = layout(ClientLayout.WIDE);
+
+		assertEquals(new Rectangle(0, 0, 145, 1030), result.homeSidebarBounds());
+		assertEquals(new Rectangle(145, 0, 1484, 857), result.fieldBounds());
+		assertEquals(new Rectangle(1631, 0, 145, 1030), result.awaySidebarBounds());
+		assertEquals(new Rectangle(145, 857, 1486, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(146, 890, 741, 139), result.logBounds());
+		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());		
+	}
+
+	@Test
 	void returnsDefensiveCopies() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE);
 
 		Dimension preferredSize = result.preferredSize();
 		preferredSize.width = 1;
+		Rectangle fieldBounds = result.fieldBounds();
+		fieldBounds.x = 1;
 
 		assertEquals(new Dimension(1072, 712), result.preferredSize());
+		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
 	}
 
 	private ClientLayoutResult layout(ClientLayout layout) {
