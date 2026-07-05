@@ -1,0 +1,55 @@
+package com.fumbbl.ffb.client.layout;
+
+import java.awt.Dimension;
+import java.awt.Rectangle;
+
+public class ClientLayoutResult {
+
+	private final Dimension preferredSize;
+	private final Rectangle fieldBounds;
+	private final Rectangle homeSidebarBounds;
+	private final Rectangle awaySidebarBounds;
+	private final Rectangle scoreBarBounds;
+	private final Rectangle logBounds;
+	private final Rectangle chatBounds;
+
+	public ClientLayoutResult(Dimension preferredSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
+														Rectangle awaySidebarBounds, Rectangle scoreBarBounds, Rectangle logBounds,
+														Rectangle chatBounds) {
+		this.preferredSize = new Dimension(preferredSize);
+		this.fieldBounds = new Rectangle(fieldBounds);
+		this.homeSidebarBounds = new Rectangle(homeSidebarBounds);
+		this.awaySidebarBounds = new Rectangle(awaySidebarBounds);
+		this.scoreBarBounds = new Rectangle(scoreBarBounds);
+		this.logBounds = new Rectangle(logBounds);
+		this.chatBounds = new Rectangle(chatBounds);
+	}
+
+	public Dimension preferredSize() {
+		return new Dimension(preferredSize);
+	}
+
+	public Rectangle fieldBounds() {
+		return new Rectangle(fieldBounds);
+	}
+
+	public Rectangle homeSidebarBounds() {
+		return new Rectangle(homeSidebarBounds);
+	}
+
+	public Rectangle awaySidebarBounds() {
+		return new Rectangle(awaySidebarBounds);
+	}
+
+	public Rectangle scoreBarBounds() {
+		return new Rectangle(scoreBarBounds);
+	}
+
+	public Rectangle logBounds() {
+		return new Rectangle(logBounds);
+	}
+
+	public Rectangle chatBounds() {
+		return new Rectangle(chatBounds);
+	}
+}
