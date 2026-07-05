@@ -103,6 +103,24 @@ This phase covers rendering and UI placement coordinate mapping. It does not inc
 
 ## Phase 5: Introduce A Layout Result
 
+The layout responsibilities should be split like this:
+
+```text
+Component enum / UiDimensionProvider
+  gives fixed component sizes
+
+ClientLayoutCalculator
+  places those sizes into a window layout
+
+ClientLayoutResult
+  stores the resulting bounds
+
+UserInterface / PitchViewport
+  consume those bounds
+```
+
+At first the calculator should reproduce the current fixed layout. Later phases can change the calculator to use the available window size, GUI scale, and pitch aspect ratio without spreading that logic through `UserInterface`.
+
 Add a small object that represents the result of a client layout pass:
 
 ```java
