@@ -113,10 +113,13 @@ ClientLayoutCalculator
   places those sizes into a window layout
 
 ClientLayoutResult
-  stores the resulting bounds
+  stores the resulting final component bounds
+
+ClientLayoutPanel
+  applies those bounds to Swing components
 
 UserInterface / PitchViewport
-  consume those bounds
+  consume the layout result at their own boundaries
 ```
 
 At first the calculator should reproduce the current fixed layout. Later phases can change the calculator to use the available window size, GUI scale, and pitch aspect ratio without spreading that logic through `UserInterface`.
@@ -134,7 +137,16 @@ public class ClientLayoutResult {
 }
 ```
 
-This example is not exhaustive. It should include whatever component bounds the current client needs, including any replay/status/menu areas that remain outside the pitch.
+This example is not exhaustive. It should initially include the fixed content preferred size and final bounds for the real client components:
+
+- field
+- home sidebar
+- away sidebar
+- score bar
+- log
+- chat
+
+It should include any additional replay/status/menu areas later if they become part of the content layout.
 
 Initially this result can reproduce the current fixed `LANDSCAPE`, `PORTRAIT`, `SQUARE`, and `WIDE` layouts.
 
@@ -142,18 +154,23 @@ The layout pass should take GUI scale into account when calculating non-pitch co
 
 The important shift is that layout becomes data calculated by one component, instead of being implicit in nested Swing panels.
 
-## Phase 6: Make UserInterface Consume The Layout Result
+## Phase 6: Make UserInterface Use The Layout Panel
 
-Refactor `UserInterface.initComponents(...)` so it consumes `ClientLayoutResult`.
+Refactor `UserInterface.initComponents(...)` so it calculates a `ClientLayoutResult` and uses `ClientLayoutPanel` as the fixed content panel.
 
 Initial behavior should remain visually identical:
 
 - same packed window size
 - same component sizes
 - same layout variants
+- same non-resizable behavior
 - same `pack()` behavior
 
+`ClientLayoutPanel` owns applying the calculated bounds to Swing components. `UserInterface` should orchestrate component initialization, layout calculation, adding the content panel to the desktop, and `pack()`.
+
 This creates a bridge from the current fixed model to a dynamic layout pass.
+
+This phase should not yet update `PitchViewport` with bounds, introduce resizing, or rename coordinate methods to `worldToScreen` / `screenToWorld`.
 
 ## Phase 7: Promote Local Mapping To Viewport Transforms
 
