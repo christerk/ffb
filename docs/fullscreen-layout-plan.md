@@ -197,9 +197,21 @@ The current behavior should be pinned with tests before changing it:
 - field-to-box dragging
 - reserve/box sentinel coordinates
 
-Then design a layout-aware setup drag/drop mapper. This should probably be separate from `PitchViewport`: the viewport should own pitch coordinate transforms, while setup drag/drop hit testing should interpret pitch, box, and crossing behavior for the current interaction mode.
+Then move setup drag/drop toward explicit region hit testing. The target model is:
 
-Setup drag/drop spans more than one region. `PitchViewport` can represent the pitch area, but reserve/box interaction has its own grid, title offset, edge behavior, and sentinel `FieldCoordinate` values. A future box/dugout viewport may make sense once those bounds are represented explicitly. Until then, setup drag/drop should keep that interpretation in a setup-specific mapper rather than adding reserve/box rules to `PitchViewport`.
+```text
+mouse event
+  -> client content coordinates
+  -> setup drag hit tester
+  -> pitch or reserve-box viewport
+  -> FieldCoordinate
+```
+
+`PitchViewport` should remain focused on pitch/world transforms. Reserve/box mapping should be represented separately, likely by a `ReserveBoxViewport` or equivalent object that owns reserve box bounds, box square size, title offset, slot mapping, and reserve sentinel coordinate creation.
+
+A setup-specific hit tester can then compose the pitch and reserve-box viewports. It should decide which setup region contains a client-content point and return the corresponding `FieldCoordinate`, while drag state, selected-player handling, refresh logic, and setup commands remain outside the hit tester.
+
+Setup drag/drop spans more than one region. `PitchViewport` can represent the pitch area, but reserve/box interaction has its own grid, title offset, edge behavior, and sentinel `FieldCoordinate` values. Those concepts should be modeled as part of the setup drag hit-testing design rather than added to `PitchViewport`.
 
 ## Phase 9: Split GUI Scale From Pitch Scale
 
