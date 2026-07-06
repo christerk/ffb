@@ -5,15 +5,18 @@ import com.fumbbl.ffb.FieldCoordinate;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 public class PitchViewport {
 
 	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	private Rectangle viewportBounds;
 
 	public PitchViewport(UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider) {
 		this.uiDimensionProvider = uiDimensionProvider;
 		this.pitchDimensionProvider = pitchDimensionProvider;
+		this.viewportBounds = new Rectangle(0, 0, fieldSize().width, fieldSize().height);
 	}
 
 	public Dimension fieldSize() {
@@ -44,6 +47,19 @@ public class PitchViewport {
 		return pitchDimensionProvider.mapToLocal(x, y, center);
 	}
 
+	public Point worldToScreen(FieldCoordinate coordinate) {
+		return worldToScreen(coordinate, false);
+	}
+
+	public Point worldToScreen(FieldCoordinate coordinate, boolean center) {
+		return worldToScreen(coordinate.getX(), coordinate.getY(), center);
+	}
+
+	public Point worldToScreen(int x, int y, boolean center) {
+		Dimension local = toLocal(x, y, center);
+		return new Point(viewportBounds.x + local.width, viewportBounds.y + local.height);
+	}
+
 	public FieldCoordinate toFieldCoordinate(Point localPoint) {
 		FieldCoordinate coordinate = null;
 		int x = localPoint.x;
@@ -64,11 +80,25 @@ public class PitchViewport {
 		return coordinate;
 	}
 
+	// Screen coordinates are currently client content coordinates, not OS/global monitor coordinates.
+	public FieldCoordinate screenToWorld(Point screenPoint) {
+		Point localPoint = new Point(screenPoint.x - viewportBounds.x, screenPoint.y - viewportBounds.y);
+		return toFieldCoordinate(localPoint);
+	}
+
 	public Direction toLocal(Direction direction) {
 		return pitchDimensionProvider.mapToLocal(direction);
 	}
 
 	public Direction getLocalDirection(FieldCoordinate from, FieldCoordinate to) {
 		return pitchDimensionProvider.getDirection(from, to);
+	}
+
+	public Rectangle viewportBounds() {
+		return new Rectangle(viewportBounds);
+	}
+
+	public void setViewportBounds(Rectangle viewportBounds) {
+		this.viewportBounds = new Rectangle(viewportBounds);
 	}
 }

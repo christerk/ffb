@@ -69,7 +69,7 @@ public class PitchViewport {
 }
 ```
 
-This first API should use current-code terminology and preserve existing behavior. Do not introduce `worldToScreen` / `screenToWorld` yet because the viewport does not own screen bounds at this stage.
+This first API should use current-code terminology and preserve existing behavior. `worldToScreen` / `screenToWorld` terminology comes later, once the viewport owns screen bounds.
 
 At this stage it can still use existing `LayoutSettings`, `ClientLayout`, and fixed component sizes internally. The purpose is to move responsibility first, not change behavior.
 
@@ -99,7 +99,7 @@ Update common `FieldLayer` helpers to use `PitchViewport.toLocal(...)` and `Pitc
 
 Then gradually migrate direct `pitchDimensionProvider.mapToLocal(...)` calls in individual field layers, states, animations, sketches, range rulers, and marker popup placement.
 
-This phase covers rendering and UI placement coordinate mapping. It does not include setup drag/drop input, which is handled separately after layout bounds exist.
+This phase covers rendering and UI placement coordinate mapping. Setup drag/drop input is handled separately after layout bounds exist.
 
 ## Phase 5: Introduce A Layout Result
 
@@ -170,7 +170,7 @@ Initial behavior should remain visually identical:
 
 This creates a bridge from the current fixed model to a dynamic layout pass.
 
-This phase should not yet update `PitchViewport` with bounds, introduce resizing, or rename coordinate methods to `worldToScreen` / `screenToWorld`.
+`PitchViewport` bounds, resizing, and `worldToScreen` / `screenToWorld` terminology remain outside this phase.
 
 ## Phase 7: Promote Local Mapping To Viewport Transforms
 
@@ -179,15 +179,17 @@ After the layout result exists and `PitchViewport` owns the calculated pitch bou
 - `worldToScreen(FieldCoordinate)`
 - `screenToWorld(Point)`
 
-Until then, keep `toLocal(...)` and `toFieldCoordinate(...)` because current methods return field-component-local coordinates.
+Keep `toLocal(...)` and `toFieldCoordinate(...)` as field-component-local methods. They remain correct for rendering and input code whose coordinate parent is the `FieldComponent` or a field layer buffer.
 
-At this point, decide whether to keep the old methods as compatibility wrappers or migrate callers to the new names.
+Use `worldToScreen(...)` and `screenToWorld(...)` for coordinates in the client content / viewport space, where the pitch position inside `ClientLayoutPanel` matters. In this plan, "screen" means the client content coordinate space, not OS/global monitor coordinates.
+
+Caller migration should follow the coordinate space involved. Code that works in client content coordinates can use the viewport transform methods, while field-local rendering can continue to use the local methods.
 
 ## Phase 8: Handle Setup Drag/Drop Coordinate Mapping
 
 Evaluate `UtilClientPlayerDrag` after the layout result exists and `PitchViewport` owns calculated pitch bounds. Setup drag/drop has different edge behavior from `CoordinateConverter`, handles field/box crossing, and can produce reserve/box sentinel coordinates.
 
-Before changing it, add or maintain tests that pin current behavior for:
+The current behavior should be pinned with tests before changing it:
 
 - field edge coordinates
 - portrait conversion
