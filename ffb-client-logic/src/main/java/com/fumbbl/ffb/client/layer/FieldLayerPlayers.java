@@ -21,20 +21,14 @@ import java.util.List;
  */
 public class FieldLayerPlayers extends FieldLayer {
 
-    private ActivePlayerHighlighter activePlayerHighlighter;
-
-    public void setActivePlayer(Player<?> activePlayer) {
-	    activePlayerHighlighter.setActivePlayer(activePlayer);
-    }
-
-	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
+	public FieldLayerPlayers(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
+	                         PitchDimensionProvider pitchDimensionProvider,
+	                         FontCache fontCache) {
 		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
 	}
 
     public void initLayout() {
         super.initLayout();
-	    activePlayerHighlighter = ActivePlayerHighlighter.getInstance();
-	    activePlayerHighlighter.initialize(getClient(), pitchDimensionProvider, getImage());
     }
 
 	public void refresh(FieldCoordinateBounds pBounds) {
