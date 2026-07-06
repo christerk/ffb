@@ -189,4 +189,62 @@ class PitchViewportTest {
 
 		assertEquals(new Rectangle(145, 0, 782, 452), viewport.viewportBounds());
 	}
+
+	@Test
+	void landscapeWorldCoordinateMapsToScreenPointUsingViewportOffset() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
+
+		assertEquals(new Point(145, 0), viewport.worldToScreen(new FieldCoordinate(0, 0)));
+		assertEquals(new Point(895, 420), viewport.worldToScreen(new FieldCoordinate(25, 14)));
+	}
+
+	@Test
+	void landscapeWorldCoordinateMapsToCenteredScreenPointUsingViewportOffset() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
+
+		assertEquals(new Point(160, 15), viewport.worldToScreen(new FieldCoordinate(0, 0), true));
+		assertEquals(new Point(910, 435), viewport.worldToScreen(new FieldCoordinate(25, 14), true));
+	}
+
+	@Test
+	void portraitWorldCoordinateMapsToScreenPointUsingViewportOffset() {
+		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
+		viewport.setViewportBounds(new Rectangle(165, 0, 452, 782));
+
+		assertEquals(new Point(165, 750), viewport.worldToScreen(new FieldCoordinate(0, 0)));
+		assertEquals(new Point(585, 0), viewport.worldToScreen(new FieldCoordinate(25, 14)));
+	}
+
+	@Test
+	void landscapeScreenPointMapsToWorldCoordinateUsingViewportOffset() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
+
+		assertEquals(new FieldCoordinate(0, 0), viewport.screenToWorld(new Point(146, 1)));
+		assertEquals(new FieldCoordinate(1, 0), viewport.screenToWorld(new Point(175, 1)));
+		assertEquals(new FieldCoordinate(25, 14), viewport.screenToWorld(new Point(895, 420)));
+	}
+
+	@Test
+	void portraitScreenPointMapsToWorldCoordinateUsingViewportOffset() {
+		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
+		viewport.setViewportBounds(new Rectangle(165, 0, 452, 782));
+
+		assertEquals(new FieldCoordinate(25, 0), viewport.screenToWorld(new Point(166, 1)));
+		assertEquals(new FieldCoordinate(24, 0), viewport.screenToWorld(new Point(166, 30)));
+		assertEquals(new FieldCoordinate(11, 14), viewport.screenToWorld(new Point(585, 420)));
+	}
+
+	@Test
+	void screenPointOutsideViewportMapsToNullUsingCurrentLocalBounds() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
+
+		assertNull(viewport.screenToWorld(new Point(145, 1)));
+		assertNull(viewport.screenToWorld(new Point(146, 0)));
+		assertNull(viewport.screenToWorld(new Point(927, 1)));
+		assertNull(viewport.screenToWorld(new Point(146, 452)));
+	}
 }
