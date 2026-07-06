@@ -18,9 +18,12 @@ public class ActivePlayerHighlighter {
 	private BufferedImage fieldLayerPlayers;
 
 	private static ActivePlayerHighlighter instance;
+
 	private volatile boolean isHighlightingOn;
-	private volatile AnimationDependentData animationDependentData;
-	private Player<?> activePlayer;
+	private volatile Player<?> activePlayer;
+	private volatile Graphics2D g2d;
+
+	private PlayerIconFactory playerIconFactory;
 
 	private float brightness = 1.0f;
 	private float delta = 0.05f; // How fast the brightness changes
@@ -41,18 +44,20 @@ public class ActivePlayerHighlighter {
 
 	public void initialize(FantasyFootballClient client,
 	                       PitchDimensionProvider pitchDimensionProvider,
-	                       BufferedImage fieldLayerPlayers
-
+	                       BufferedImage fieldLayerPlayers,
+	                       PlayerIconFactory playerIconFactory
 	) {
 		this.client = client;
 		this.pitchDimensionProvider = pitchDimensionProvider;
 		this.fieldLayerPlayers = fieldLayerPlayers;
+		this.playerIconFactory = playerIconFactory;
 		if (animationTimer == null) {
 			animationTimer = new javax.swing.Timer(40, e -> {
 				if (isHighlightingOn) {
-					AnimationDependentData currentData = animationDependentData;
 					// Update brightness (Ping-pong logic)
-					if (currentData != null) {
+					Player<?> currentlyActivePlayer = activePlayer;
+					Graphics2D g2d = this.g2d;
+					if (currentlyActivePlayer != null && g2d != null) {
 						brightness += delta;
 						if (brightness > 1.5f || brightness < 0.8f) {
 							delta = -delta; // Reverse direction
@@ -60,9 +65,10 @@ public class ActivePlayerHighlighter {
 						FieldCoordinate playerCoordinate = client
 								.getGame()
 								.getFieldModel()
-								.getPlayerCoordinate(activePlayer);
+								.getPlayerCoordinate(currentlyActivePlayer);
 
-						repaint(brightness, currentData, playerCoordinate);
+						BufferedImage activePlayerIcon = playerIconFactory.getIcon(client, currentlyActivePlayer, pitchDimensionProvider);
+						repaint(brightness, activePlayerIcon, playerCoordinate, g2d);
 					}
 				} else {
 					animationTimer.stop();
@@ -90,8 +96,7 @@ public class ActivePlayerHighlighter {
 			// then reinitialize highlighting.
 			stopHighlighting();
 			this.activePlayer = newActivePlayer;
-			PlayerIconFactory playerIconFactory = client.getUserInterface().getPlayerIconFactory();
-			animationDependentData = new AnimationDependentData(playerIconFactory.getIcon(client, newActivePlayer, pitchDimensionProvider), fieldLayerPlayers.createGraphics());
+			this.g2d = fieldLayerPlayers.createGraphics();
 			startHighlighting();
 		}
 	}
@@ -104,20 +109,19 @@ public class ActivePlayerHighlighter {
 
 	private void stopHighlighting() {
 		isHighlightingOn = false;
-		if (animationDependentData != null) {
-			animationDependentData.g2d.dispose();
-			animationDependentData = null;
+		Graphics g2d = this.g2d;
+		if (g2d != null) {
+			this.g2d = null;
+			g2d.dispose();
 		}
 		brightness = 1.0f;
 	}
 
-	private void repaint(float brightness, AnimationDependentData animationData, FieldCoordinate playerCoordinate) {
+	private void repaint(float brightness, BufferedImage activePlayerIcon, FieldCoordinate playerCoordinate, Graphics2D g2d) {
 		// 1.0 is original brightness, > 1.0 is brighter, < 1.0 is darker
 		float[] scales = {brightness, brightness, brightness, 1.0f};
 		float[] offsets = {0, 0, 0, 0};
 		RescaleOp rescale = new RescaleOp(scales, offsets, null);
-
-		BufferedImage activePlayerIcon = animationData.activePlayerIcon;
 
 		int upperLeftX = findCenteredIconUpperLeftX(activePlayerIcon, playerCoordinate);
 		int upperLeftY = findCenteredIconUpperLeftY(activePlayerIcon, playerCoordinate);
@@ -137,20 +141,19 @@ public class ActivePlayerHighlighter {
 //		Pipeline Invalidation: The rendering pipe (the mechanism that actually processes drawing commands) is invalidated.
 //
 //		Because the graphics object no longer points to a valid destination surface, any subsequent calls to drawImage or setClip are ignored by the graphics pipeline. The system intentionally prevents further use to ensure that developers do not rely on "dead" objects, which might otherwise cause memory leaks or unpredictable behavior if the underlying native resources were freed.
-		animationData.g2d.setClip(upperLeftX, upperLeftY, activePlayerIcon.getWidth(), activePlayerIcon.getHeight());
-		animationData.g2d.drawImage(activePlayerIcon, rescale, upperLeftX, upperLeftY);
+		g2d.setClip(upperLeftX, upperLeftY, activePlayerIcon.getWidth(), activePlayerIcon.getHeight());
+		g2d.drawImage(activePlayerIcon, rescale, upperLeftX, upperLeftY);
 	}
 
 	private void refreshPlayerSquare() {
-		AnimationDependentData currentData = animationDependentData;
-		if (currentData == null) {
+		Player<?> currentlyActivePlayer = activePlayer;
+		if (currentlyActivePlayer == null) {
 			return;
 		}
 
-		BufferedImage activePlayerIcon = currentData.activePlayerIcon;
-		Player<?> currentlyActivePlayer = activePlayer;
+		BufferedImage activePlayerIcon = playerIconFactory.getIcon(client, currentlyActivePlayer, pitchDimensionProvider);
 
-		if (currentlyActivePlayer == null || activePlayerIcon == null) {
+		if (activePlayerIcon == null) {
 			return;
 		}
 
@@ -173,13 +176,4 @@ public class ActivePlayerHighlighter {
 		return dimension.height - (activePlayerIcon.getHeight() / 2);
 	}
 
-	static class AnimationDependentData {
-		public AnimationDependentData(BufferedImage activePlayerIcon, Graphics2D g2d) {
-			this.activePlayerIcon = activePlayerIcon;
-			this.g2d = g2d;
-		}
-
-		final BufferedImage activePlayerIcon;
-		final Graphics2D g2d;
-	}
 }
