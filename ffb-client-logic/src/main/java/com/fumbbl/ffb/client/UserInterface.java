@@ -70,6 +70,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
 	private final PitchViewport pitchViewport;
+	private final ReserveBoxViewport reserveBoxViewport;
+	private final SetupDragHitTester setupDragHitTester;
 	private final ClientLayoutCalculator layoutCalculator;
 	private final ClientLayoutPanel layoutPanel;
 
@@ -92,6 +94,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
 		pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
+		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
 		coordinateConverter = new CoordinateConverter(pitchViewport);
 		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider, pitchViewport);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
@@ -147,6 +151,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider);
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
+		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		if (layoutPanel.getParent() != null) {
 			layoutPanel.getParent().remove(layoutPanel);
 		}
@@ -237,6 +242,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public PitchViewport getPitchViewport() {
 		return pitchViewport;
+	}
+
+	public SetupDragHitTester getSetupDragHitTester() {
+		return setupDragHitTester;
 	}
 
 	public void setGameTitle(GameTitle pGameTitle) {
@@ -344,6 +353,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
 			leaveGameQuestion.showDialog(this);
 		}
+	}
+
+	public Point toClientContentPoint(java.awt.Component source, Point point) {
+		return SwingUtilities.convertPoint(source, point, layoutPanel);
 	}
 
 	public void windowActivated(WindowEvent pE) {
