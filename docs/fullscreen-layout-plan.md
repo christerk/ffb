@@ -199,6 +199,8 @@ The current behavior should be pinned with tests before changing it:
 
 Then design a layout-aware setup drag/drop mapper. This should probably be separate from `PitchViewport`: the viewport should own pitch coordinate transforms, while setup drag/drop hit testing should interpret pitch, box, and crossing behavior for the current interaction mode.
 
+Setup drag/drop spans more than one region. `PitchViewport` can represent the pitch area, but reserve/box interaction has its own grid, title offset, edge behavior, and sentinel `FieldCoordinate` values. A future box/dugout viewport may make sense once those bounds are represented explicitly. Until then, setup drag/drop should keep that interpretation in a setup-specific mapper rather than adding reserve/box rules to `PitchViewport`.
+
 ## Phase 9: Split GUI Scale From Pitch Scale
 
 Separate the existing broad `LayoutSettings.scale` behavior into clearer concepts:
