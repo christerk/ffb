@@ -12,10 +12,11 @@ public class ClientLayoutResult {
 	private final Rectangle scoreBarBounds;
 	private final Rectangle logBounds;
 	private final Rectangle chatBounds;
+	private final Rectangle homeReserveBoxBounds;
 
 	public ClientLayoutResult(Dimension preferredSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
-														Rectangle awaySidebarBounds, Rectangle scoreBarBounds, Rectangle logBounds,
-														Rectangle chatBounds) {
+														Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
+														Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds) {
 		this.preferredSize = new Dimension(preferredSize);
 		this.fieldBounds = new Rectangle(fieldBounds);
 		this.homeSidebarBounds = new Rectangle(homeSidebarBounds);
@@ -23,6 +24,7 @@ public class ClientLayoutResult {
 		this.scoreBarBounds = new Rectangle(scoreBarBounds);
 		this.logBounds = new Rectangle(logBounds);
 		this.chatBounds = new Rectangle(chatBounds);
+		this.homeReserveBoxBounds = new Rectangle(homeReserveBoxBounds);
 	}
 
 	public Dimension preferredSize() {
@@ -51,5 +53,9 @@ public class ClientLayoutResult {
 
 	public Rectangle chatBounds() {
 		return new Rectangle(chatBounds);
+	}
+
+	public Rectangle homeReserveBoxBounds() {
+		return new Rectangle(homeReserveBoxBounds);
 	}
 }

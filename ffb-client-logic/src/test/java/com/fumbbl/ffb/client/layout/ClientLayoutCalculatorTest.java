@@ -42,6 +42,7 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(146, 485, 389, 226), result.logBounds());
 		assertEquals(new Rectangle(537, 485, 389, 226), result.chatBounds());
 		assertEquals(new Rectangle(927, 0, 145, 712), result.awaySidebarBounds());
+		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 	}
 
 	@Test
@@ -54,6 +55,7 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(0, 782, 782, 32), result.scoreBarBounds());
 		assertEquals(new Rectangle(1, 815, 389, 153), result.logBounds());
 		assertEquals(new Rectangle(392, 815, 389, 153), result.chatBounds());
+		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
 	}
 
 	@Test
@@ -66,6 +68,7 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(783, 344, 260, 96), result.scoreBarBounds());
 		assertEquals(new Rectangle(783, 1, 260, 343), result.logBounds());
 		assertEquals(new Rectangle(783, 440, 260, 343), result.chatBounds());
+		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
 	}
 
 	@Test
@@ -77,7 +80,8 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(1631, 0, 145, 1030), result.awaySidebarBounds());
 		assertEquals(new Rectangle(145, 857, 1486, 32), result.scoreBarBounds());
 		assertEquals(new Rectangle(146, 890, 741, 139), result.logBounds());
-		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());		
+		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());
+		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 	}
 
 	@Test
@@ -88,9 +92,12 @@ class ClientLayoutCalculatorTest {
 		preferredSize.width = 1;
 		Rectangle fieldBounds = result.fieldBounds();
 		fieldBounds.x = 1;
+		Rectangle homeReserveBoxBounds = result.homeReserveBoxBounds();
+		homeReserveBoxBounds.x = 1;
 
 		assertEquals(new Dimension(1072, 712), result.preferredSize());
 		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
+		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 	}
 
 	private ClientLayoutResult layout(ClientLayout layout) {

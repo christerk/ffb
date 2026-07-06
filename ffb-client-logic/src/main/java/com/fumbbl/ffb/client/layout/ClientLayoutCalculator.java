@@ -18,19 +18,21 @@ public class ClientLayoutCalculator {
 		Dimension score = uiDimensionProvider.dimension(Component.SCORE_BOARD);
 		Dimension log = uiDimensionProvider.dimension(Component.LOG);
 		Dimension chat = uiDimensionProvider.dimension(Component.CHAT);
+		Dimension box = uiDimensionProvider.dimension(Component.BOX);
 
 		ClientLayout layout = uiDimensionProvider.getLayoutSettings().getLayout();
 		switch (layout) {
 			case PORTRAIT:
-				return portrait(field, sidebar, score, log, chat);
+				return portrait(field, sidebar, box, score, log, chat);
 			case SQUARE:
-				return square(field, sidebar, score, log, chat);
+				return square(field, sidebar, box, score, log, chat);
 			default:
-				return landscape(field, sidebar, score, log, chat);
+				return landscape(field, sidebar, box, score, log, chat);
 		}
 	}
 
-	private ClientLayoutResult landscape(Dimension field, Dimension sidebar, Dimension score, Dimension log, Dimension chat) {
+	private ClientLayoutResult landscape(Dimension field, Dimension sidebar, Dimension box, Dimension score,
+			Dimension log, Dimension chat) {
 		int logChatPanelWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
 		int logChatPanelHeight = Math.max(log.height, chat.height) + (2 * PANEL_BORDER);
 		int centerWidth = Math.max(field.width, Math.max(score.width, logChatPanelWidth));
@@ -49,6 +51,7 @@ public class ClientLayoutCalculator {
 			preferredSize,
 			new Rectangle(centerX, 0, field.width, field.height),
 			new Rectangle(0, 0, sidebar.width, preferredSize.height),
+			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(centerX + centerWidth, 0, sidebar.width, preferredSize.height),
 			new Rectangle(centerX, field.height, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
@@ -56,7 +59,8 @@ public class ClientLayoutCalculator {
 		);
 	}
 
-	private ClientLayoutResult portrait(Dimension field, Dimension sidebar, Dimension score, Dimension log, Dimension chat) {
+	private ClientLayoutResult portrait(Dimension field, Dimension sidebar, Dimension box, Dimension score,
+			Dimension log, Dimension chat) {
 		int mainWidth = sidebar.width + field.width + sidebar.width;
 		int mainHeight = Math.max(sidebar.height, field.height);
 		int logChatPanelWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
@@ -75,6 +79,7 @@ public class ClientLayoutCalculator {
 			preferredSize,
 			new Rectangle(sidebar.width, 0, field.width, field.height),
 			new Rectangle(0, 0, sidebar.width, mainHeight),
+			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(sidebar.width + field.width, 0, sidebar.width, mainHeight),
 			new Rectangle(0, scoreY, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
@@ -82,7 +87,8 @@ public class ClientLayoutCalculator {
 		);
 	}
 
-	private ClientLayoutResult square(Dimension field, Dimension sidebar, Dimension score, Dimension log, Dimension chat) {
+	private ClientLayoutResult square(Dimension field, Dimension sidebar, Dimension box, Dimension score,
+			Dimension log, Dimension chat) {
 		int mainWidth = sidebar.width + field.width + sidebar.width;
 		int mainHeight = Math.max(sidebar.height, field.height);
 		int logChatScoreWidth = Math.max(log.width, Math.max(score.width, chat.width)) + (2 * PANEL_BORDER);
@@ -97,6 +103,7 @@ public class ClientLayoutCalculator {
 			preferredSize,
 			new Rectangle(sidebar.width, 0, field.width, field.height),
 			new Rectangle(0, 0, sidebar.width, mainHeight),
+			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(sidebar.width + field.width, 0, sidebar.width, mainHeight),
 			new Rectangle(rightX, log.height + PANEL_BORDER, score.width, score.height),
 			new Rectangle(rightX, PANEL_BORDER, log.width, log.height),
