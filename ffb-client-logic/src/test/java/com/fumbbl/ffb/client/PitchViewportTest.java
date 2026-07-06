@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -148,5 +149,44 @@ class PitchViewportTest {
 			new FieldCoordinate(0, 0),
 			new FieldCoordinate(1, 0)
 		));
+	}
+
+	@Test
+	void viewportBoundsDefaultsToCurrentLandscapeFieldSizeAtOrigin() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+
+		assertEquals(new Rectangle(0, 0, 782, 452), viewport.viewportBounds());
+	}
+
+	@Test
+	void viewportBoundsDefaultsToCurrentPortraitFieldSizeAtOrigin() {
+		PitchViewport viewport = viewport(ClientLayout.PORTRAIT);
+
+		assertEquals(new Rectangle(0, 0, 452, 782), viewport.viewportBounds());
+	}
+
+	@Test
+	void viewportBoundsCanBeUpdatedFromLayoutResult() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+
+		viewport.setViewportBounds(new Rectangle(145, 0, 782, 452));
+
+		assertEquals(new Rectangle(145, 0, 782, 452), viewport.viewportBounds());
+	}
+
+	@Test
+	void viewportBoundsUsesDefensiveCopies() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+		Rectangle bounds = new Rectangle(145, 0, 782, 452);
+
+		viewport.setViewportBounds(bounds);
+		bounds.x = 999;
+
+		assertEquals(new Rectangle(145, 0, 782, 452), viewport.viewportBounds());
+
+		Rectangle returned = viewport.viewportBounds();
+		returned.x = 999;
+
+		assertEquals(new Rectangle(145, 0, 782, 452), viewport.viewportBounds());
 	}
 }

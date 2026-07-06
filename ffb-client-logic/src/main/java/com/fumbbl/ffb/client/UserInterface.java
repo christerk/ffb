@@ -146,7 +146,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fScoreBar.initLayout();
 
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider);
-
+		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		if (layoutPanel.getParent() != null) {
 			layoutPanel.getParent().remove(layoutPanel);
 		}

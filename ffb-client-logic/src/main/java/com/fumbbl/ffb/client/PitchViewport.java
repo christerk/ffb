@@ -5,15 +5,18 @@ import com.fumbbl.ffb.FieldCoordinate;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 public class PitchViewport {
 
 	private final UiDimensionProvider uiDimensionProvider;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	private Rectangle viewportBounds;
 
 	public PitchViewport(UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider) {
 		this.uiDimensionProvider = uiDimensionProvider;
 		this.pitchDimensionProvider = pitchDimensionProvider;
+		this.viewportBounds = new Rectangle(0, 0, fieldSize().width, fieldSize().height);
 	}
 
 	public Dimension fieldSize() {
@@ -70,5 +73,13 @@ public class PitchViewport {
 
 	public Direction getLocalDirection(FieldCoordinate from, FieldCoordinate to) {
 		return pitchDimensionProvider.getDirection(from, to);
+	}
+
+	public Rectangle viewportBounds() {
+		return new Rectangle(viewportBounds);
+	}
+
+	public void setViewportBounds(Rectangle viewportBounds) {
+		this.viewportBounds = new Rectangle(viewportBounds);
 	}
 }
