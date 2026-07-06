@@ -16,8 +16,7 @@ import java.awt.event.MouseEvent;
  */
 public class UtilClientPlayerDrag {
 
-	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent,
-			boolean pBoxMode) {
+	public static FieldCoordinate getFieldCoordinate(FantasyFootballClient pClient, MouseEvent pMouseEvent) {
 		UserInterface userInterface = pClient.getUserInterface();
 		Point contentPoint = userInterface.toClientContentPoint(
 			(java.awt.Component) pMouseEvent.getSource(),
@@ -29,7 +28,7 @@ public class UtilClientPlayerDrag {
 	}
 
 	public static void mousePressed(FantasyFootballClient pClient, MouseEvent pMouseEvent, boolean pBoxMode) {
-		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent, pBoxMode);
+		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent);
 		initPlayerDragging(pClient, coordinate, pBoxMode);
 	}
 
@@ -71,7 +70,7 @@ public class UtilClientPlayerDrag {
 		Game game = pClient.getGame();
 		ClientData clientData = pClient.getClientData();
 		UserInterface userInterface = pClient.getUserInterface();
-		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent, pBoxMode);
+		FieldCoordinate coordinate = getFieldCoordinate(pClient, pMouseEvent);
 		if ((coordinate != null) && pClient.getClientState().isDragAllowed(coordinate)) {
 			if (clientData.getDragStartPosition() == null) {
 				initPlayerDragging(pClient, coordinate, pBoxMode);

@@ -79,7 +79,7 @@ class UtilClientPlayerDragTest {
 	}
 
 	private FieldCoordinate getFieldCoordinate(ClientLayout layout, int x, int y, boolean boxMode) {
-		return UtilClientPlayerDrag.getFieldCoordinate(client(layout, 0), mouseEventAt(x, y, boxMode), boxMode);
+		return UtilClientPlayerDrag.getFieldCoordinate(client(layout, 0), mouseEventAt(x, y, boxMode));
 	}
 
 	private FantasyFootballClient client(ClientLayout layout, int boxTitleOffset) {
