@@ -24,9 +24,15 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 
 	private Skill skill;
 	private final Set<Class<? extends InjuryType>> validInjuryTypes;
+	private final boolean validForAllInjuryTypes;
 
 	public InjuryContextModification(Set<Class<? extends InjuryType>> validInjuryTypes) {
+		this(validInjuryTypes, false);
+	}
+
+	public InjuryContextModification(Set<Class<? extends InjuryType>> validInjuryTypes, boolean validForAllInjuryTypes) {
 		this.validInjuryTypes = validInjuryTypes;
+		this.validForAllInjuryTypes = validForAllInjuryTypes;
 	}
 
 	protected abstract T params(GameState gameState, ModifiedInjuryContext newContext, InjuryType injuryType);
@@ -117,10 +123,14 @@ public abstract class InjuryContextModification<T extends ModificationParams> im
 		return false;
 	}
 
+	public boolean appliesToDefender() {
+		return false;
+	}
+
 	protected abstract SkillUse skillUse();
 
 	public boolean isValidType(InjuryType injuryType) {
-		return validInjuryTypes.contains(injuryType.getClass());
+		return validForAllInjuryTypes || validInjuryTypes.contains(injuryType.getClass());
 	}
 
 	public Skill getSkill() {

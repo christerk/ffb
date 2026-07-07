@@ -55,6 +55,7 @@ public class StepPassBlock extends AbstractStep {
 	private TurnMode fOldTurnMode;
 	private boolean fEndTurn, fEndPlayerAction, isGoingForIt;
 	private PlayerState[] fOldPlayerStates;
+	private PlayerState fOldActingPlayerState;
 	private int currentMove = -1;
 
 	public StepPassBlock(GameState pGameState) {
@@ -187,6 +188,7 @@ public class StepPassBlock extends AbstractStep {
 				}
 
 				actingPlayer.setPlayer(game.getThrower());
+				actingPlayer.setOldPlayerState(fOldActingPlayerState);
 				actingPlayer.setPlayerAction(game.getThrowerAction());
 				actingPlayer.setHasPassed(true);
 				if (currentMove >= 0) {
@@ -229,6 +231,7 @@ public class StepPassBlock extends AbstractStep {
 				game.setHomePlaying(!game.isHomePlaying());
 				currentMove = game.getActingPlayer().getCurrentMove();
 				isGoingForIt = game.getActingPlayer().isGoingForIt();
+				fOldActingPlayerState = game.getActingPlayer().getOldPlayerState();
 				game.getActingPlayer().setPlayerId(null);
 
 				Player<?>[] players = opposingTeam.getPlayers();
@@ -301,6 +304,7 @@ public class StepPassBlock extends AbstractStep {
 			}
 			IServerJsonOption.OLD_PLAYER_STATES.addTo(jsonObject, playerStateIds);
 		}
+		IServerJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, fOldActingPlayerState);
 		return jsonObject;
 	}
 
@@ -326,6 +330,7 @@ public class StepPassBlock extends AbstractStep {
 				}
 			}
 		}
+		fOldActingPlayerState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
 		return this;
 	}
 

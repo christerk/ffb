@@ -1,9 +1,7 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
-import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.factory.InjuryModifierFactory;
 import com.fumbbl.ffb.injury.KegHit;
 import com.fumbbl.ffb.injury.context.InjuryContext;
@@ -13,25 +11,24 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Optional;
 
-public class InjuryTypeKegHit extends InjuryTypeServer<KegHit> {
+public class InjuryTypeKegHit extends ModificationAwareInjuryTypeServer<KegHit> {
 	public InjuryTypeKegHit() {
 		super(new KegHit());
 	}
 
 	@Override
-	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
-													 Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
-													 ApothecaryMode pApothecaryMode) {
-
-		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
 		if (!injuryContext.isArmorBroken()) {
-			injuryContext.setArmorRoll(diceRoller.rollArmour());
+			if (roll) {
+				injuryContext.setArmorRoll(diceRoller.rollArmour());
+			}
 			if (UtilCards.hasUnusedSkillWithProperty(pDefender, NamedProperties.ignoresArmourModifiersFromSkills)) {
 				injuryContext.addArmorModifiers(pDefender.getSkillWithProperty(NamedProperties.ignoresArmourModifiersFromSkills).getArmorModifiers());
 			} else {
@@ -40,17 +37,18 @@ public class InjuryTypeKegHit extends InjuryTypeServer<KegHit> {
 			}
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 		}
+	}
 
-		if (injuryContext.isArmorBroken()) {
-			injuryContext.setInjuryRoll(diceRoller.rollInjury());
-			InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-			factory.findInjuryModifiers(game, injuryContext, null,
-				pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
+	@Override
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+		InjuryContext injuryContext) {
 
-			setInjury(pDefender, gameState, diceRoller);
+		injuryContext.setInjuryRoll(diceRoller.rollInjury());
+		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
+		factory.findInjuryModifiers(game, injuryContext, null,
+			pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 
-		} else {
-			injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
-		}
+		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 }

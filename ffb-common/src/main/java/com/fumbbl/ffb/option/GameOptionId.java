@@ -33,7 +33,7 @@ public enum GameOptionId implements INamedObject {
 	SNEAKY_GIT_BAN_TO_KO("sneakyGitBanToKo"), STAND_FIRM_NO_DROP_ON_FAILED_DODGE("standFirmNoDropOnFailedDodge"),
 	SPIKED_BALL("spikedBall"), DIVING_TACKLE_LEAVING_TZ_ONLY("divingTackleLeavingTzOnly"),
 	ALLOW_SPECIAL_ACTIONS_FROM_PRONE("allowSpecialActionsFromProne"), ALLOW_BRAWLER_ON_BOTH_BLOCKS("allowBrawlerOnBothBlocks"),
-	ASK_FOR_KICK_AFTER_ROLL("askForKickAfterRoll"),
+	ASK_FOR_KICK_AFTER_ROLL("askForKickAfterRoll"), GRAB_CANCELS_SIDESTEP_DURING_BLITZ("grabCancelsSidestepDuringBlitz"),
 
 	ARGUE_THE_CALL("argueTheCall"), MVP_NOMINATIONS("mvpNominations"), PETTY_CASH_AFFECTS_TV("pettyCashAffectsTv"),
 	WIZARD_AVAILABLE("wizardAvailable"),
@@ -75,7 +75,8 @@ public enum GameOptionId implements INamedObject {
 	INDUCEMENT_WEATHER_MAGE_MAX("inducementWeatherMageMax"), INDUCEMENT_WEATHER_MAGE_COST("inducementWeatherMageCost"),
 	INDUCEMENTS_ALLOW_SPENDING_TREASURY_ON_EQUAL_CTV("inducementsAllowSpendingTreasuryOnEqualCTV"),
 	INDUCEMENTS_ALWAYS_USE_TREASURY("inducementsAlwaysUseTreasury"), INDUCEMENTS_ALLOW_OVERDOG_SPENDING("inducementsAllowOverdogSpending"),
-	INDUCEMENT_DUMMY("inducementDummy"),
+	INDUCEMENTS_ALLOW_UNDERDOG_SPENDING("inducementsAllowUnderdogSpending"), INDUCEMENT_DUMMY("inducementDummy"), 
+	INDUCEMENT_JOSEF_BUGMAN_COST("inducementJosefBugmanCost"), INDUCEMENT_JOSEF_BUGMAN_MAX("inducementJosefBugmanMax"),
 
 	ENABLE_STALLING_CHECK("enableStallingCheck"), ALLOW_BALL_AND_CHAIN_RE_ROLL("allowBallAndChainReRoll"),
 	END_TURN_WHEN_HITTING_ANY_PLAYER_WITH_TTM("endTurnWhenHittingAnyPlayerWithTtm"), SWOOP_DISTANCE("swoopDistance"),

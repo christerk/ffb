@@ -159,7 +159,7 @@ public class StepBreatheFire extends AbstractStepWithReRoll {
 			PlayerState defenderState = game.getFieldModel().getPlayerState(game.getDefender());
 			switch (result) {
 				case FAILURE: {
-					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), null,
+					InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, new InjuryTypeBreatheFire(), actingPlayer.getPlayer(),
 						actingPlayer.getPlayer(), playerCoordinate, null, null, ApothecaryMode.ATTACKER);
 					DropPlayerContext dropPlayerContext =
 						new DropPlayerContext(injuryResultAttacker, true, true, fGotoLabelOnFailure, actingPlayer.getPlayerId(),

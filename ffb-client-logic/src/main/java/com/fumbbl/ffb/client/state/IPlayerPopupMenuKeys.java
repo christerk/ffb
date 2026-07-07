@@ -25,8 +25,7 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_FORGO = KeyEvent.VK_F;
 	int KEY_FOUL = KeyEvent.VK_F;
-	int KEY_FUMBLEROOSKIE = KeyEvent.VK_F;
-
+	
 	int KEY_GAZE = KeyEvent.VK_G;
 
 	int KEY_HAIL_MARY_PASS = KeyEvent.VK_H;
@@ -92,4 +91,8 @@ public interface IPlayerPopupMenuKeys {
 	int KEY_CHOMP = KeyEvent.VK_1;
 
 	int KEY_RAIDING_PARTY = KeyEvent.VK_2;
+
+
+
+	int KEY_FUMBLEROOSKIE = KeyEvent.VK_4;
 }
