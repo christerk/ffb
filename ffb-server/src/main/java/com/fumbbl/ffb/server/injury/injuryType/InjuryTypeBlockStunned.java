@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.injury.injuryType;
 
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.injury.BlockStunned;
 import com.fumbbl.ffb.injury.context.InjuryContext;
@@ -19,7 +20,8 @@ public class InjuryTypeBlockStunned extends ModificationAwareInjuryTypeServer<Bl
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext) {
+	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext) {
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		Skill stunty = pDefender.getSkillWithProperty(NamedProperties.isHurtMoreEasily);
 		if (stunty != null) {
@@ -29,7 +31,9 @@ public class InjuryTypeBlockStunned extends ModificationAwareInjuryTypeServer<Bl
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
+	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
 		if (roll) {
 			injuryContext.setArmorRoll(diceRoller.rollArmour());

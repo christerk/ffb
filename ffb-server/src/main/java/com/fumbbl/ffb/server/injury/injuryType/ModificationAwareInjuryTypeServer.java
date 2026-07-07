@@ -42,7 +42,8 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
-		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, injuryContext, true);
+		armourRoll(game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, fromCoordinate, diceInterpreter,
+			injuryContext, true);
 
 		boolean modified = false;
 
@@ -65,20 +66,24 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		if (modified) {
 			ModifiedInjuryContext alternateInjuryContext = injuryContext.getModifiedInjuryContext();
 			alternateInjuryContext.setArmorBroken(false);
-			armourRoll(game, gameState, diceRoller, pAttacker, pDefender, diceInterpreter, alternateInjuryContext, false);
+			armourRoll(game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, fromCoordinate,
+				diceInterpreter, alternateInjuryContext, false);
 
-			injury(game, gameState, diceRoller, pAttacker, pDefender, Optional.empty(), alternateInjuryContext);
+			injury(game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, fromCoordinate, Optional.empty(),
+				alternateInjuryContext);
 		}
 
-		injury(game, gameState, diceRoller, pAttacker, pDefender, modification, injuryContext);
+		injury(game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, fromCoordinate, modification,
+			injuryContext);
 
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private void injury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
-	                    Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
+			FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+			Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
 		if (currentInjuryContext.isArmorBroken()) {
-			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, currentInjuryContext);
+			injuryRoll(game, gameState, diceRoller, pAttacker, pDefender, pDefenderCoordinate, fromCoordinate, currentInjuryContext);
 
 			if (modification.isPresent()) {
 				boolean modified = ((InjuryContextModification<? extends ModificationParams>) modification.get()).modifyInjury(gameState, currentInjuryContext, injuryType);
@@ -96,7 +101,10 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 	}
 
-	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, InjuryContext injuryContext);
+	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext);
 
-	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender, DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll);
+	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
+		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll);
 }
