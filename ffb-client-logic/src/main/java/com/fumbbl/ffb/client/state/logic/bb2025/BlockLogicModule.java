@@ -96,6 +96,9 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 		if (isSufferingBloodLust(actingPlayer)) {
 			actionContext.add(ClientAction.MOVE);
 		}
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
+		}
 		if (!actionContext.getActions().isEmpty() || actingPlayer.hasActed()) {
 			actionContext.add(ClientAction.END_MOVE);
 			if (actingPlayer.hasActed()) {
@@ -104,9 +107,6 @@ public class BlockLogicModule extends AbstractBlockLogicModule {
 			if (mustPlaceCarriedPlayer(actingPlayer)) {
 				actionContext.add(Influences.MUST_PLACE_CARRIED_PLAYER);
 			}
-		}
-		if (isIllCarryYouAvailable(actingPlayer)) {
-			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
 		return actionContext;
 	}
