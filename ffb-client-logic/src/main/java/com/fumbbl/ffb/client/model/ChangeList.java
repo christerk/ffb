@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("Self inflicted injuries never triggered Getting Even")
 			.addImprovement("Moved active cards into the inducements menu to reduce top-level menu width")
 			.addImprovement("Added chat command to reset used skills for selected players")
+			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
 			.addBugfix("Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
 		);
 

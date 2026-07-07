@@ -73,7 +73,8 @@ public enum SkillUse implements INamedObject {
 	RE_ROLL_PUNT_DIRECTION("reRollPuntDirection", "to re-roll the punt direction"),
 	RE_ROLL_PUNT_DISTANCE("reRollPuntDistance", "to re-roll the punt distance"),
 	AVOID_DODGING("avoidDodging", "to avoid dodge rolls"),
-	GRANT_SKILL_TO_TEAM_MATE("grantSkillToTeamMate", "to grant a team-mate a skill for this turn");
+	GRANT_SKILL_TO_TEAM_MATE("grantSkillToTeamMate", "to grant a team-mate a skill for this turn"),
+	ILL_CARRY_YOU("illCarryYou", "to pick up %g team-mate");
 
 	private final String fName;
 	private final String fDescription;
