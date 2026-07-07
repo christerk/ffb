@@ -123,6 +123,8 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_rerolls_away &lt;amount&gt;", "sets the number of rerolls for the away team."));
 			html.append(commandLine("/skill_home &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on home team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
 			html.append(commandLine("/skill_away &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on away team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/skills_reset_used_home &lt;playerlist&gt;", "resets used skills for players on home team."));
+			html.append(commandLine("/skills_reset_used_away &lt;playerlist&gt;", "resets used skills for players on away team."));
 			html.append(commandLine("/standup_home &lt;playerlist&gt;", "stands players on the home team up."));
 			html.append(commandLine("/standup_away &lt;playerlist&gt;", "stands players on the away team up."));
 			html.append(commandLine("/stat_home &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on home team to the given value."));
@@ -178,6 +180,7 @@ public class DialogChatCommands extends Dialog {
 			html.append(commandLine("/set_player &lt;player nr&gt; &lt;x coordinate&gt; &lt;y coordinate&gt;", "sets player on your team on square defined by coordinate."));
 			html.append(commandLine("/set_rerolls &lt;amount&gt;", "sets the number of rerolls for your team."));
 			html.append(commandLine("/skill &lt;add|remove&gt; &lt;skillname&gt; &lt;playerlist&gt;", "adds or removes a skill to players on your team.<br>skill names use underscores instead of blanks (diving_tackle, pass_block)."));
+			html.append(commandLine("/skills_reset_used &lt;playerlist&gt;", "resets used skills for players on your team."));
 			html.append(commandLine("/standup &lt;playerlist&gt;", "stands players on your team up."));
 			html.append(commandLine("/stat &lt;stat&gt; &lt;value&gt; &lt;playerlist&gt;", "sets a stat of players on your team to the given value."));
 			html.append(commandLine("/sound &lt;name&gt;", "plays the given sound."));

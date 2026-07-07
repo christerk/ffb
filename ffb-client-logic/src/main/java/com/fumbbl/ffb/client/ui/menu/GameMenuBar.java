@@ -111,9 +111,6 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		inducementsMenu = new InducementsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(inducementsMenu);
 
-		CardsMenu cardsMenu = new CardsMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
-		add(cardsMenu);
-
 		PrayersMenu prayersMenu = new PrayersMenu(getClient(), dimensionProvider, styleProvider, layoutSettings);
 		add(prayersMenu);
 

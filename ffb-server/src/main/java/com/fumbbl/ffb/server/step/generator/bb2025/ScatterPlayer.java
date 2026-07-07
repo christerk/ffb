@@ -41,6 +41,7 @@ public class ScatterPlayer extends com.fumbbl.ffb.server.step.generator.ScatterP
 
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER),
 			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, IStepLabel.APOTHECARY_HIT_PLAYER,
 			from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));

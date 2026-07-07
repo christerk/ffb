@@ -385,8 +385,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
-		boolean fallback,
-		InducementType mascotType, TurnData turnData) {
+		boolean fallback, InducementType mascotType, TurnData turnData) {
 		stepResult.addReport(
 			new ReportMascotUsed(gameState.getGame().getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
 				fallback));
@@ -416,17 +415,13 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		boolean successful, GameState gameState) {
 
 		boolean rrSaved = checkTeamCaptain(stepResult, gameState);
+		ReRollSource usedReRollSource = findUsedTeamReRollSource(turnData, reRollSource);
 
-		ReRollSource usedAdditionalReRollSource = updateTurnDataAfterReRollUsage(turnData, !rrSaved);
-
-		if (usedAdditionalReRollSource != null) {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedAdditionalReRollSource, successful, 0));
-		} else if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.LEADER, successful, 0));
-			turnData.setLeaderState(LeaderState.USED);
-		} else {
-			stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
+		if (!rrSaved) {
+			updateTurnDataAfterReRollUsage(turnData, usedReRollSource);
 		}
+
+		stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedReRollSource, successful, 0));
 
 		successful = checkForLoner(pPlayer, gameState, stepResult);
 		return successful;
@@ -444,30 +439,72 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	private ReRollSource updateTurnDataAfterReRollUsage(TurnData turnData, boolean rrActuallyUsed) {
-		if (rrActuallyUsed) {
-			turnData.setReRolls(turnData.getReRolls() - 1);
+	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
+		if (isSpecialReRollSourceAvailable(turnData, selectedSource)) {
+			return selectedSource;
 		}
+		if (ReRollSources.LEADER == selectedSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			return ReRollSources.LEADER;
+		}
+
+		ReRollSource fallbackSpecialSource = firstAvailableSpecialReRollSource(turnData);
+		if (fallbackSpecialSource != null) {
+			return fallbackSpecialSource;
+		}
+		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			return ReRollSources.LEADER;
+		}
+
+		return ReRollSources.TEAM_RE_ROLL;
+	}
+
+	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource) {
+		turnData.setReRolls(turnData.getReRolls() - 1);
+		if (isSpecialReRollSourceAvailable(turnData, usedReRollSource)) {
+			consumeSpecialReRoll(turnData, usedReRollSource);
+			return;
+		}
+		if (ReRollSources.LEADER == usedReRollSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			turnData.setLeaderState(LeaderState.USED);
+		}
+	}
+
+	private ReRollSource firstAvailableSpecialReRollSource(TurnData turnData) {
 		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
-			}
 			return ReRollSources.BRILLIANT_COACHING;
 		}
 		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
-			}
 			return ReRollSources.PUMP_UP_THE_CROWD;
 		}
 		if (turnData.getReRollShowStarOneDrive() > 0) {
-			if (rrActuallyUsed) {
-				turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
-			}
 			return ReRollSources.SHOW_STAR;
 		}
 
 		return null;
+	}
+
+	private boolean isSpecialReRollSourceAvailable(TurnData turnData, ReRollSource reRollSource) {
+		if (ReRollSources.BRILLIANT_COACHING == reRollSource) {
+			return turnData.getReRollsBrilliantCoachingOneDrive() > 0;
+		}
+		if (ReRollSources.PUMP_UP_THE_CROWD == reRollSource) {
+			return turnData.getReRollsPumpUpTheCrowdOneDrive() > 0;
+		}
+		if (ReRollSources.SHOW_STAR == reRollSource) {
+			return turnData.getReRollShowStarOneDrive() > 0;
+		}
+
+		return false;
+	}
+
+	private void consumeSpecialReRoll(TurnData turnData, ReRollSource reRollSource) {
+		if (ReRollSources.BRILLIANT_COACHING == reRollSource) {
+			turnData.setReRollsBrilliantCoachingOneDrive(turnData.getReRollsBrilliantCoachingOneDrive() - 1);
+		} else if (ReRollSources.PUMP_UP_THE_CROWD == reRollSource) {
+			turnData.setReRollsPumpUpTheCrowdOneDrive(turnData.getReRollsPumpUpTheCrowdOneDrive() - 1);
+		} else if (ReRollSources.SHOW_STAR == reRollSource) {
+			turnData.setReRollShowStarOneDrive(turnData.getReRollShowStarOneDrive() - 1);
+		}
 	}
 
 	@Override

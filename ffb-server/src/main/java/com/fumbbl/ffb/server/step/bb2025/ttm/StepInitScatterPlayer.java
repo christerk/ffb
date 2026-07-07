@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayerForSpp;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -41,7 +42,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
-import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
 import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -339,11 +339,13 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 				|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
 				commands.add(new HitPlayerTurnOverCommand());
 			}
-			commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
+
+			DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResultHitPlayer, false, true,
+				null, playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, false);
 
 			getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
 			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-				new SteadyFootingContext(injuryResultHitPlayer, commands)));
+				new SteadyFootingContext(dropPlayerContext, commands)));
 
 			// continue loop in end step
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));

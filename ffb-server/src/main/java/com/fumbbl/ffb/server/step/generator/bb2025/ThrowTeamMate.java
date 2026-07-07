@@ -41,6 +41,7 @@ public class ThrowTeamMate extends com.fumbbl.ffb.server.step.generator.ThrowTea
 			from(StepParameterKey.IS_KICKED_PLAYER, params.isKicked()),
 			from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SCATTER_PLAYER));
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SCATTER_PLAYER));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 
 		sequence.jump(IStepLabel.APOTHECARY_THROWN_PLAYER);
 		sequence.add(StepId.EAT_TEAM_MATE, IStepLabel.EAT_TEAM_MATE);
