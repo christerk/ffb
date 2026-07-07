@@ -385,8 +385,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
-		boolean fallback,
-		InducementType mascotType, TurnData turnData) {
+		boolean fallback, InducementType mascotType, TurnData turnData) {
 		stepResult.addReport(
 			new ReportMascotUsed(gameState.getGame().getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
 				fallback));
@@ -418,7 +417,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		boolean rrSaved = checkTeamCaptain(stepResult, gameState);
 		ReRollSource usedReRollSource = findUsedTeamReRollSource(turnData, reRollSource);
 
-		updateTurnDataAfterReRollUsage(turnData, usedReRollSource, !rrSaved);
+		if (!rrSaved) {
+			updateTurnDataAfterReRollUsage(turnData, usedReRollSource);
+		}
 
 		stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedReRollSource, successful, 0));
 
@@ -457,11 +458,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return ReRollSources.TEAM_RE_ROLL;
 	}
 
-	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource, boolean rrActuallyUsed) {
-		if (!rrActuallyUsed) {
-			return;
-		}
-
+	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource) {
 		turnData.setReRolls(turnData.getReRolls() - 1);
 		if (isSpecialReRollSourceAvailable(turnData, usedReRollSource)) {
 			consumeSpecialReRoll(turnData, usedReRollSource);
