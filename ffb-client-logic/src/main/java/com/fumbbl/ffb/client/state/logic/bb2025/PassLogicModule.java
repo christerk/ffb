@@ -119,7 +119,7 @@ public class PassLogicModule extends MoveLogicModule {
 	protected boolean isPassTargetInRange(FieldCoordinate targetCoordinate) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return new PassRangeService().isInRange(game, actingPlayer.getPlayer(), targetCoordinate);
+		return PassRangeService.isInRange(game, actingPlayer.getPlayer(), targetCoordinate);
 	}
 
 	public boolean canPlayerGetPass(Player<?> pCatcher) {

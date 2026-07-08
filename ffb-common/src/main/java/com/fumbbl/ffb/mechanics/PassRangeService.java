@@ -13,12 +13,15 @@ import com.fumbbl.ffb.model.Player;
  */
 public class PassRangeService {
 
+	private PassRangeService() {
+	}
+
 	/**
 	 * Determines whether the given target coordinate is a valid, in-range pass
 	 * target for the given thrower. Hail Mary throws are not limited by the
 	 * passing range and are considered in range as long as a target is provided.
 	 */
-	public boolean isInRange(Game game, Player<?> thrower, FieldCoordinate targetCoordinate, PlayerAction throwerAction) {
+	public static boolean isInRange(Game game, Player<?> thrower, FieldCoordinate targetCoordinate, PlayerAction throwerAction) {
 		if ((PlayerAction.HAIL_MARY_PASS == throwerAction) || (PlayerAction.HAIL_MARY_BOMB == throwerAction)) {
 			return targetCoordinate != null;
 		}
@@ -29,7 +32,7 @@ public class PassRangeService {
 	 * Determines whether the given target coordinate is within the thrower's
 	 * passing range, ignoring any Hail Mary handling.
 	 */
-	public boolean isInRange(Game game, Player<?> thrower, FieldCoordinate targetCoordinate) {
+	public static boolean isInRange(Game game, Player<?> thrower, FieldCoordinate targetCoordinate) {
 		if ((game == null) || (thrower == null) || (targetCoordinate == null)) {
 			return false;
 		}
