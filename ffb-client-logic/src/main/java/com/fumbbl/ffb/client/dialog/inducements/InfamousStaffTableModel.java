@@ -64,6 +64,19 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 		return boughtStaff;
 	}
 
+	public boolean canBuyAnother() {
+		return getCheckedRows() < maxStaff;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			if (!(Boolean) getValueAt(i, 0)) {
+				return ((Player<?>) getValueAt(i, 4)).getPosition().getCost();
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		if (pColumnIndex == 0) {
 			Player<?> player = (Player<?>) fRowData[pRowIndex][4];

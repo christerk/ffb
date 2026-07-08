@@ -461,7 +461,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if ((pActionEvent.getSource() == okButton)) {
-			if (getCloseListener() != null) {
+			if (confirmClose() && getCloseListener() != null) {
 				getCloseListener().dialogClosed(this);
 			}
 		} else if (pActionEvent.getSource() == resetButton) {
@@ -469,6 +469,38 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 		} else {
 			recalculateGold();
 		}
+	}
+
+	/**
+	 * Hook that is invoked when the coach presses the buy &amp; close button. Subclasses may override this to ask for
+	 * confirmation before the dialog is actually closed. Returning {@code false} keeps the dialog open.
+	 */
+	protected boolean confirmClose() {
+		return true;
+	}
+
+	/**
+	 * Returns the cost of the cheapest inducement (regular inducement, star player, infamous staff or mercenary) that the
+	 * coach could still add given the current selection, or {@link Integer#MAX_VALUE} if nothing more can be bought.
+	 */
+	protected int cheapestAvailableInducementCost() {
+		int cheapest = Integer.MAX_VALUE;
+		for (DropDownPanel panel : fPanels) {
+			if (panel.canBuyMore()) {
+				cheapest = Math.min(cheapest, panel.getCost());
+			}
+		}
+		boolean rosterHasSpace = getFreeSlotsInRoster() > 0;
+		if (fTableModelStarPlayers != null && rosterHasSpace && fTableModelStarPlayers.canBuyAnother()) {
+			cheapest = Math.min(cheapest, fTableModelStarPlayers.cheapestUnselectedCost());
+		}
+		if (tableModelInfamousStaff != null && tableModelInfamousStaff.canBuyAnother()) {
+			cheapest = Math.min(cheapest, tableModelInfamousStaff.cheapestUnselectedCost());
+		}
+		if (fTableModelMercenaries != null && rosterHasSpace && fTableModelMercenaries.canBuyAnother()) {
+			cheapest = Math.min(cheapest, fTableModelMercenaries.cheapestUnselectedCost());
+		}
+		return cheapest;
 	}
 
 	public boolean inducementSelected(Usage usage) {

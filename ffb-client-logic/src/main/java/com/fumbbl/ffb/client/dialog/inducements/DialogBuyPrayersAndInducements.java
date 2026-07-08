@@ -12,6 +12,7 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -155,6 +156,26 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 
 	public DialogId getId() {
 		return DialogId.BUY_PRAYERS_AND_INDUCEMENTS;
+	}
+
+	@Override
+	protected boolean confirmClose() {
+		if (pettyCash <= 0) {
+			return true;
+		}
+		int remainingPettyCash = Math.max(0, availableGold - treasury);
+		if (remainingPettyCash <= 0) {
+			return true;
+		}
+		int cheapestInducement = cheapestAvailableInducementCost();
+		if (cheapestInducement == Integer.MAX_VALUE || remainingPettyCash < cheapestInducement) {
+			return true;
+		}
+		int choice = JOptionPane.showInternalConfirmDialog(getClient().getUserInterface().getDesktop(),
+			"You still have " + StringTool.formatThousands(remainingPettyCash)
+				+ " gp of petty cash left to spend on inducements.\nAre you sure you don't want to spend it?",
+			"Unspent Petty Cash", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		return choice == JOptionPane.YES_OPTION;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {

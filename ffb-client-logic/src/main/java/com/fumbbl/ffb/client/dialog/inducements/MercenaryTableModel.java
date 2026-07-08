@@ -74,6 +74,19 @@ public class MercenaryTableModel extends AbstractTableModel {
 		return noBoughtMercs;
 	}
 
+	public boolean canBuyAnother() {
+		return getCheckedRows() < maxMercs;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			if (!(Boolean) getValueAt(i, 0)) {
+				return ((Player<?>) getValueAt(i, 5)).getPosition().getCost() + mercExtraCost;
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {
 		Player<?> player = (Player<?>) fRowData[pRowIndex][5];
 		int playerCost = player.getPosition().getCost() + mercExtraCost;

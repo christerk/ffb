@@ -65,6 +65,19 @@ public class StarPlayerTableModel extends AbstractTableModel {
 		return noBoughtStarPlayers;
 	}
 
+	public boolean canBuyAnother() {
+		return getCheckedRows() < fMaxNrOfStars;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			if (!(Boolean) getValueAt(i, 0)) {
+				return ((Player<?>) getValueAt(i, 4)).getPosition().getCost();
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
 	public void setMaxNrOfStars(int amount) {
 		fMaxNrOfStars = amount;
 	}
