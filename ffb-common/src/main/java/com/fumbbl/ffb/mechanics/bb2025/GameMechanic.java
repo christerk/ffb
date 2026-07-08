@@ -54,7 +54,7 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			messages[1] = "You will lose D3 dedicated fans (to a minimum of 1).";
 			messages[2] = "You will lose your player award and all your winnings.";
 			messages[3] = "Some valuable players (3 or more advancements) may decide to leave your team.";
-			messages[4] = "You will loose all SPP earned during this game";
+			messages[4] = "You will lose all SPP earned during this game";
 		}
 		return messages;
 	}
