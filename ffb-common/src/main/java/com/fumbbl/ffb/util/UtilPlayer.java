@@ -24,6 +24,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
+import com.fumbbl.ffb.skill.bb2025.special.IllCarryYou;
 import com.fumbbl.ffb.skill.bb2025.special.WorkingInTandem;
 
 import java.util.ArrayList;
@@ -713,5 +714,27 @@ public class UtilPlayer {
 		return defenderChooses ? anyKnockDown : allKnockDown;
 	}
 
+	public static String[] findPickUpPartners(Game game, Player<?> selectedPlayer) {
+		Skill illCarryYou = selectedPlayer.getSkillWithProperty(NamedProperties.canCarryPartner);
+		if (illCarryYou == null
+			|| selectedPlayer.isUsed(illCarryYou)
+			|| !IllCarryYou.VARIANT_CARRIER.equalsIgnoreCase(selectedPlayer.getSkillValueExcludingTemporaryOnes(illCarryYou))) {
+			return new String[0];
+		}
+
+		return Arrays.stream(findAdjacentCarriedPartners(game, selectedPlayer))
+			.map(Player::getId)
+			.toArray(String[]::new);
+	}
+
+	public static Player<?>[] findAdjacentCarriedPartners(Game game, Player<?> player) {
+		return Arrays.stream(findAdjacentPlayers(game, player.getTeam(), game.getFieldModel().getPlayerCoordinate(player)))
+			.filter(teamMate -> {
+				Skill partnerSkill = teamMate.getSkillWithProperty(NamedProperties.canCarryPartner);
+				return partnerSkill != null
+					&& IllCarryYou.VARIANT_CARRIED.equalsIgnoreCase(teamMate.getSkillValueExcludingTemporaryOnes(partnerSkill));
+			})
+			.toArray(Player<?>[]::new);
+	}
 
 }

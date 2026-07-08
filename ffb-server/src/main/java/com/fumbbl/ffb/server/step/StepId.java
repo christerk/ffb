@@ -94,6 +94,7 @@ public enum StepId implements INamedObject {
 	HIT_AND_RUN("hitAndRun"), // action.block
 	HORNS("horns"), // action.block
 	HYPNOTIC_GAZE("hypnoticGaze"), // action.move
+	ILL_CARRY_YOU("illCarryYou"), // action.special
 	INIT_ACTIVATION("initActivation", "recoverFromGaze"),
 	INIT_BLOCKING("initBlocking"), // action.block
 	INIT_BOMB("initBomb"), // phase.special
@@ -142,6 +143,7 @@ public enum StepId implements INamedObject {
 	PICK_UP("pickUp"), // action.common
 	PILE_DRIVER("pileDriver"), // skill.pileDriver
 	PLACE_BALL("placeBall"), // skill.safePairOfHands
+	PLACE_CARRIED_PLAYER("placeCarriedPlayer"), // action.end
 	PLAY_CARD("playCard"), // phase.inducement
 	PLAYER_LOSS("playerLoss"), // game.end
 	PRAYER("prayer"), // phase.kickoff

@@ -47,6 +47,7 @@ public class BombLogicModule extends LogicModule {
 			add(ClientAction.BLACK_INK);
 			add(ClientAction.CATCH_OF_THE_DAY);
 			add(ClientAction.AUTO_GAZE_ZOAT);
+			add(ClientAction.ILL_CARRY_YOU);
 		}};
 	}
 
@@ -88,6 +89,9 @@ public class BombLogicModule extends LogicModule {
 			}
 			if (isZoatGazeAvailable(actingPlayer)) {
 				actionContext.add(ClientAction.AUTO_GAZE_ZOAT);
+			}
+			if (isIllCarryYouAvailable(actingPlayer)) {
+				actionContext.add(ClientAction.ILL_CARRY_YOU);
 			}
 
 			return actionContext;
@@ -164,6 +168,12 @@ public class BombLogicModule extends LogicModule {
 				if (isZoatGazeAvailable(actingPlayer)) {
 					Skill zoatGazeInkSkill = player.getSkillWithProperty(NamedProperties.canGazeAutomaticallyThreeSquaresAway);
 					client.getCommunication().sendUseSkill(zoatGazeInkSkill, true, player.getId());
+				}
+				break;
+			case ILL_CARRY_YOU:
+				if (isIllCarryYouAvailable(actingPlayer)) {
+					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					client.getCommunication().sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
 				}
 				break;
 			default:

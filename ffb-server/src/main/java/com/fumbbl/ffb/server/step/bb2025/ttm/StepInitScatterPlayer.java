@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeCrowdPush;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayer;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeTTMHitPlayerForSpp;
+import com.fumbbl.ffb.server.model.DropPlayerContext;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -41,7 +42,6 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.action.ttm.UtilThrowTeamMateSequence;
-import com.fumbbl.ffb.server.step.bb2025.command.DropPlayerCommand;
 import com.fumbbl.ffb.server.step.bb2025.command.HitPlayerTurnOverCommand;
 import com.fumbbl.ffb.server.step.mixed.ttm.TtmToCrowdHandler;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -80,7 +80,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 	private String thrownPlayerId;
 	private PlayerState thrownPlayerState, oldPlayerState;
 	private FieldCoordinate thrownPlayerCoordinate;
-	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye, usingSwoop;
+	private boolean thrownPlayerHasBall, throwScatter, isKickedPlayer, usingBullseye, usingSwoop, isCarriedPlayer;
 	private Direction swoopDirection;
 	private UtilThrowTeamMateSequence.ScatterResult scatterResult;
 
@@ -130,6 +130,9 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 					case USING_SWOOP:
 						usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 						break;
+					case IS_CARRIED_PLAYER:
+						isCarriedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						break;
 					default:
 						break;
 				}
@@ -164,6 +167,9 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 					return true;
 				case OLD_DEFENDER_STATE:
 					oldPlayerState = (PlayerState) parameter.getValue();
+					return true;
+				case IS_CARRIED_PLAYER:
+					isCarriedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
 					return true;
 				default:
 					break;
@@ -303,7 +309,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.DROP_THROWN_PLAYER, true));
 			Player<?> thrower = game.getActingPlayer().getPlayer();
 			boolean vsOpponent = thrownPlayer.getTeam() != playerLandedUpon.getTeam();
-			boolean lethalSpp =
+			boolean lethalSpp = !isCarriedPlayer &&
 				thrownPlayer.hasUsableSkillProperty(NamedProperties.grantsSppWhenHittingOpponentOnTtm, oldPlayerState);
 			boolean violentSpp =
 				isKickedPlayer && UtilCards.hasSkillWithProperty(thrower, NamedProperties.grantsSppFromSpecialActionsCas);
@@ -333,11 +339,13 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 				|| (!game.isHomePlaying() && game.getTeamAway().hasPlayer(playerLandedUpon)))) {
 				commands.add(new HitPlayerTurnOverCommand());
 			}
-			commands.add(new DropPlayerCommand(playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, true));
+
+			DropPlayerContext dropPlayerContext = new DropPlayerContext(injuryResultHitPlayer, false, true,
+				null, playerLandedUpon.getId(), ApothecaryMode.HIT_PLAYER, false);
 
 			getResult().addReport(new ReportPlayerEvent(playerLandedUpon.getId(), "was hit"));
 			publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT,
-				new SteadyFootingContext(injuryResultHitPlayer, commands)));
+				new SteadyFootingContext(dropPlayerContext, commands)));
 
 			// continue loop in end step
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, endCoordinate));
@@ -358,6 +366,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 		publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, isKickedPlayer));
 		publishParameter(new StepParameter(StepParameterKey.USING_SWOOP, usingSwoop));
 		publishParameter(new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, oldPlayerState));
+		publishParameter(new StepParameter(StepParameterKey.IS_CARRIED_PLAYER, isCarriedPlayer));
 		game.getFieldModel().setPlayerCoordinate(thrownPlayer, endCoordinate);
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
@@ -380,6 +389,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 		if (scatterResult != null) {
 			IServerJsonOption.SCATTER_RESULT.addTo(jsonObject, scatterResult.toJsonValue());
 		}
+		IServerJsonOption.IS_CARRIED_PLAYER.addTo(jsonObject, isCarriedPlayer);
 		return jsonObject;
 	}
 
@@ -401,6 +411,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 			scatterResult = new UtilThrowTeamMateSequence.ScatterResult(null, false).initFrom(source,
 				IServerJsonOption.SCATTER_RESULT.getFrom(source, jsonObject));
 		}
+		isCarriedPlayer = IServerJsonOption.IS_CARRIED_PLAYER.getFrom(source, jsonObject);
 		return this;
 	}
 

@@ -248,6 +248,7 @@ public interface IJsonOption {
 	JsonObjectOption INDUCEMENT_SET = new JsonObjectOption("inducementSet");
 	JsonEnumWithNameOption INDUCEMENT_TYPE = new JsonEnumWithNameOption("inducementType", Factory.INDUCEMENT_TYPE);
 	JsonStringArrayOption INDUCEMENT_TYPE_ARRAY = new JsonStringArrayOption("inducementTypeArray");
+	JsonStringArrayOption INITIAL_ADJACENT_PARTNER_IDS = new JsonStringArrayOption("initialAdjacentPartnerIds");
 	JsonPlayerStateOption INJURY = new JsonPlayerStateOption("injury");
 	JsonStringArrayOption INJURY_ATTRIBUTES = new JsonStringArrayOption("injuryAttributes");
 	JsonPlayerStateOption INJURY_DECAY = new JsonPlayerStateOption("injuryDecay");

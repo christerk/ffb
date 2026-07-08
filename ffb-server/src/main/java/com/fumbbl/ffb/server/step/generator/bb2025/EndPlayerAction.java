@@ -22,6 +22,9 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 
 		Sequence sequence = new Sequence(gameState);
 
+		sequence.add(StepId.PLACE_CARRIED_PLAYER);
+		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.CROWD_PUSH));
+		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.REMOVE_TARGET_SELECTION_STATE);
 		sequence.add(StepId.RESET_FUMBLEROOSKIE,
 			from(StepParameterKey.RESET_FOR_FAILED_BLOCK, false), from(StepParameterKey.END_PLAYER_ACTION, true));
@@ -32,6 +35,7 @@ public class EndPlayerAction extends com.fumbbl.ffb.server.step.generator.EndPla
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);
 		sequence.add(StepId.STALLING_PLAYER, IStepLabel.END_FEEDING);
 		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
+		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.HIT_PLAYER));
 		sequence.add(StepId.CATCH_SCATTER_THROW_IN);

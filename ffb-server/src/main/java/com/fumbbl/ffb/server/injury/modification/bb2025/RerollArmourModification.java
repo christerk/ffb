@@ -7,12 +7,17 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 
+import java.util.Collections;
 import java.util.Set;
 
 public abstract class RerollArmourModification extends InjuryContextModification<ModificationParams> {
 
 	protected RerollArmourModification(Set<Class<? extends InjuryType>> validTypes) {
 		super(validTypes);
+	}
+
+	protected RerollArmourModification(boolean validForAllInjuryTypes) {
+		super(Collections.<Class<? extends InjuryType>>emptySet(), validForAllInjuryTypes);
 	}
 
 	@Override

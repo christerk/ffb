@@ -49,7 +49,8 @@ public class PuntLogicModule extends MoveLogicModule {
 		FieldCoordinate position) {
 		return actingPlayer.hasActed()
 			|| (actingPlayer.getPlayerAction() == PlayerAction.PUNT_MOVE && UtilPlayer.hasBall(game, player))
-			|| actingPlayer.getPlayerAction() == PlayerAction.PUNT;
+			|| actingPlayer.getPlayerAction() == PlayerAction.PUNT
+			|| isIllCarryYouAvailable(actingPlayer);
 	}
 
 	@Override
@@ -164,11 +165,17 @@ public class PuntLogicModule extends MoveLogicModule {
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);
 		}
+		if (mustPlaceCarriedPlayer(actingPlayer)) {
+			actionContext.add(Influences.MUST_PLACE_CARRIED_PLAYER);
+		}
 		if (isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);
 			if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging)) {
 				actionContext.add(Influences.INCORPOREAL_ACTIVE);
 			}
+		}
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
 		return actionContext;
 	}

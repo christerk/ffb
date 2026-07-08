@@ -26,6 +26,11 @@ public class ChangeList {
 			.addBugfix("FA triggered after Quick Foul")
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
+			.addBugfix("Self inflicted injuries never triggered Getting Even")
+			.addImprovement("Moved active cards into the inducements menu to reduce top-level menu width")
+			.addImprovement("Added chat command to reset used skills for selected players")
+			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
+			.addBugfix("Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")

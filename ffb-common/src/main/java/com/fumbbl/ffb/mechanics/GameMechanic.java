@@ -67,4 +67,6 @@ public abstract class GameMechanic implements Mechanic {
 	public abstract boolean playersForGoActivations(Game game);
 
 	public abstract boolean isWisdomAvailable(Game game, Player<?> player);
+
+	public abstract boolean supportsCards();
 }

@@ -245,4 +245,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			});
 	}
 
+	@Override
+	public boolean supportsCards() {
+		return false;
+	}
+
 }

@@ -144,6 +144,12 @@ public class PassLogicModule extends MoveLogicModule {
 					}
 				}
 				break;
+			case ILL_CARRY_YOU:
+				if (isIllCarryYouAvailable(actingPlayer)) {
+					Skill skill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					communication.sendUseSkill(skill, true, actingPlayer.getPlayer().getId());
+				}
+				break;
 			default:
 				super.performAvailableAction(player, action);
 				break;
@@ -215,11 +221,17 @@ public class PassLogicModule extends MoveLogicModule {
 		if (actingPlayer.hasActed()) {
 			actionContext.add(Influences.HAS_ACTED);
 		}
+		if (mustPlaceCarriedPlayer(actingPlayer)) {
+			actionContext.add(Influences.MUST_PLACE_CARRIED_PLAYER);
+		}
 		if (isIncorporealAvailable(actingPlayer)) {
 			actionContext.add(ClientAction.INCORPOREAL);
 			if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canAvoidDodging)) {
 				actionContext.add(Influences.INCORPOREAL_ACTIVE);
 			}
+		}
+		if (isIllCarryYouAvailable(actingPlayer)) {
+			actionContext.add(ClientAction.ILL_CARRY_YOU);
 		}
 		return actionContext;
 	}
