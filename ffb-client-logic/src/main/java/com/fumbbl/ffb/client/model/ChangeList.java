@@ -31,6 +31,7 @@ public class ChangeList {
 			.addImprovement("Added chat command to reset used skills for selected players")
 			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
 			.addBugfix("Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
+			.addBugfix("Mascot/Loner fail on DT dodge re-roll caused the game to lock up")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
