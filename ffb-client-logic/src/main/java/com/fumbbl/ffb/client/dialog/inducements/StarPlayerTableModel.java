@@ -71,7 +71,8 @@ public class StarPlayerTableModel extends AbstractTableModel {
 
 	public int cheapestUnselectedCost() {
 		for (int i = 0; i < getRowCount(); i++) {
-			if (!(Boolean) getValueAt(i, 0)) {
+			boolean selected = (Boolean) getValueAt(i, 0);
+			if (!selected) {
 				return ((Player<?>) getValueAt(i, 4)).getPosition().getCost();
 			}
 		}
