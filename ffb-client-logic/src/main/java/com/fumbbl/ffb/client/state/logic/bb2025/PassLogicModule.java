@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.state.logic.bb2025;
 
 import com.fumbbl.ffb.ClientStateId;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
@@ -11,6 +12,8 @@ import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.PassMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -44,7 +47,11 @@ public class PassLogicModule extends MoveLogicModule {
 			if (!actingPlayer.hasPassed() && (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()
 				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
 				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(player))))) {
-				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(player));
+				FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+				if (PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction() && !isPassTargetInRange(targetCoordinate)) {
+					return InteractionResult.ignore();
+				}
+				game.setPassCoordinate(targetCoordinate);
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
 				return InteractionResult.handled();
@@ -62,6 +69,9 @@ public class PassLogicModule extends MoveLogicModule {
 		} else {
 			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
 				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+				if (PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction() && !isPassTargetInRange(pCoordinate)) {
+					return InteractionResult.ignore();
+				}
 				game.setPassCoordinate(pCoordinate);
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
@@ -108,8 +118,15 @@ public class PassLogicModule extends MoveLogicModule {
 		}
 	}
 
-	public boolean canPlayerGetPass(Player<?> pCatcher) {
-		boolean canGetPass = false;
+	protected boolean isPassTargetInRange(FieldCoordinate targetCoordinate) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
+		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		return mechanic.findPassingDistance(game, throwerCoordinate, targetCoordinate, false) != null;
+	}
+
+	public boolean canPlayerGetPass(Player<?> pCatcher) {		boolean canGetPass = false;
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
