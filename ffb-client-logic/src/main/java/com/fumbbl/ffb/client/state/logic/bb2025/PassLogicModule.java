@@ -126,7 +126,8 @@ public class PassLogicModule extends MoveLogicModule {
 		return mechanic.findPassingDistance(game, throwerCoordinate, targetCoordinate, false) != null;
 	}
 
-	public boolean canPlayerGetPass(Player<?> pCatcher) {		boolean canGetPass = false;
+	public boolean canPlayerGetPass(Player<?> pCatcher) {
+		boolean canGetPass = false;
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		if ((pCatcher != null) && (actingPlayer.getPlayer() != null)) {
