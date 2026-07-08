@@ -11,6 +11,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
+import com.fumbbl.ffb.mechanics.PassRangeService;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -185,21 +186,8 @@ public final class StepInitPassing extends AbstractStep {
 	}
 
 	private boolean isPassTargetInRange(FieldCoordinate targetCoordinate, String throwerId, PlayerAction throwerAction) {
-		if ((targetCoordinate == null) || (throwerAction == null)) {
-			return false;
-		}
-		// Hail Mary throws are not limited by the passing range.
-		if ((PlayerAction.HAIL_MARY_PASS == throwerAction) || (PlayerAction.HAIL_MARY_BOMB == throwerAction)) {
-			return true;
-		}
 		Game game = getGameState().getGame();
-		Player<?> thrower = game.getPlayerById(throwerId);
-		if (thrower == null) {
-			return false;
-		}
-		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
-		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
-		return mechanic.findPassingDistance(game, throwerCoordinate, targetCoordinate, false) != null;
+		return new PassRangeService().isInRange(game, game.getPlayerById(throwerId), targetCoordinate, throwerAction);
 	}
 
 	private void executeStep() {
