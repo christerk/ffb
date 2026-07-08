@@ -79,14 +79,22 @@ public final class StepInitEndGame extends AbstractStep {
 		}
 		GameResult gameResult = game.getGameResult();
 		if (gameResult.getTeamResultHome().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, awardedTouchdowns(gameResult.getTeamResultAway())));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamAway().getId()));
 			adjustScore(gameResult.getTeamResultAway(), gameResult.getTeamResultHome());
 		} else if (gameResult.getTeamResultAway().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, awardedTouchdowns(gameResult.getTeamResultHome())));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamHome().getId()));
 			adjustScore(gameResult.getTeamResultHome(), gameResult.getTeamResultAway());
 		}
 		game.setTurnMode(TurnMode.END_GAME);
 		game.setConcessionPossible(false);
 		game.setAdminMode(fAdminMode);
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	private int awardedTouchdowns(TeamResult winnerResult) {
+		return Math.max(0, 2 - winnerResult.getScore());
 	}
 
 	private void adjustScore(TeamResult winnerResult, TeamResult concedingResult) {
