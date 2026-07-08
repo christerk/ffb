@@ -121,23 +121,30 @@ public final class StepInitPassing extends AbstractStep {
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)
 						|| (game.getTurnMode() == TurnMode.DUMP_OFF)) {
-						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-							game.setPassCoordinate(passCommand.getTargetCoordinate());
-						} else {
-							game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
-						}
-						Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
-						fCatcherId = ((catcher != null) ? catcher.getId() : null);
+						FieldCoordinate passCoordinate = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)
+							? passCommand.getTargetCoordinate()
+							: passCommand.getTargetCoordinate().transform();
 						TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 						String defenderId = targetSelectionState != null ? targetSelectionState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+						String throwerId;
+						PlayerAction throwerAction;
 						if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-							game.setThrowerId(defenderId);
-							game.setThrowerAction(game.getDefenderAction());
+							throwerId = defenderId;
+							throwerAction = game.getDefenderAction();
 						} else {
-							game.setThrowerId(actingPlayer.getPlayerId());
-							game.setThrowerAction(actingPlayer.getPlayerAction());
+							throwerId = actingPlayer.getPlayerId();
+							throwerAction = actingPlayer.getPlayerAction();
 						}
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
+						// Guard against invalid (out of range) pass attempts from third party clients.
+						// Such attempts are ignored and must not modify the data model.
+						if (isPassTargetInRange(passCoordinate, throwerId, throwerAction)) {
+							game.setPassCoordinate(passCoordinate);
+							Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+							fCatcherId = ((catcher != null) ? catcher.getId() : null);
+							game.setThrowerId(throwerId);
+							game.setThrowerAction(throwerAction);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
 					}
 					break;
 				case CLIENT_HAND_OVER:
@@ -175,6 +182,24 @@ public final class StepInitPassing extends AbstractStep {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private boolean isPassTargetInRange(FieldCoordinate targetCoordinate, String throwerId, PlayerAction throwerAction) {
+		if ((targetCoordinate == null) || (throwerAction == null)) {
+			return false;
+		}
+		// Hail Mary throws are not limited by the passing range.
+		if ((PlayerAction.HAIL_MARY_PASS == throwerAction) || (PlayerAction.HAIL_MARY_BOMB == throwerAction)) {
+			return true;
+		}
+		Game game = getGameState().getGame();
+		Player<?> thrower = game.getPlayerById(throwerId);
+		if (thrower == null) {
+			return false;
+		}
+		FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(thrower);
+		PassMechanic mechanic = (PassMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.PASS.name());
+		return mechanic.findPassingDistance(game, throwerCoordinate, targetCoordinate, false) != null;
 	}
 
 	private void executeStep() {
