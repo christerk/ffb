@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.bb2025.move;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.DiceDecoration;
+import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
@@ -42,6 +43,9 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.step.generator.IllCarryYou;
+import com.fumbbl.ffb.server.step.generator.Move;
+import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
@@ -309,6 +313,14 @@ public class StepInitMoving extends AbstractStep {
 					} else if (skill.hasSkillProperty(NamedProperties.canIgnoreJumpModifiers)) {
 						actingPlayer.setJumpsWithoutModifiers(true);
 						UtilServerPlayerMove.updateMoveSquares(getGameState(), true);
+					} else if (skill.hasSkillProperty(NamedProperties.canCarryPartner)) {
+						Move moveGenerator = (Move) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.Move.name());
+						moveGenerator.pushSequence(new Move.SequenceParams(getGameState()));
+						IllCarryYou generator = (IllCarryYou) game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+							.forName(SequenceGenerator.Type.IllCarryYou.name());
+						generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+						getResult().setNextAction(StepAction.NEXT_STEP);
 					}
 					break;
 				default:

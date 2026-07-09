@@ -20,11 +20,13 @@ import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.mechanic.StateMechanic;
+import com.fumbbl.ffb.server.model.CarriedPlayer;
 import com.fumbbl.ffb.server.net.SessionManager;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilActingPlayer;
 import com.fumbbl.ffb.util.UtilCards;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Arrays;
@@ -230,5 +232,21 @@ public class UtilServerGame {
 		server.getCommunication().sendStatus(gameState, ServerStatus.FUMBBL_ERROR,
 			StringTool.bind("Unable to load Team with id $1.", pTeamId));
 		UtilServerGame.closeGame(gameState);
+	}
+
+	public static void undoPickUpPartner(GameState gameState, ActingPlayer actingPlayer, Skill skill) {
+		Game game = gameState.getGame();
+		Player<?> carrier = actingPlayer.getPlayer();
+		CarriedPlayer carriedPlayerState = gameState.getCarriedPlayer();
+		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
+
+		game.getFieldModel().setPlayerCoordinate(carriedPlayer, carriedPlayerState.getOldCoordinate());
+		game.getFieldModel().setPlayerState(carriedPlayer, carriedPlayerState.getOldState());
+		if (carriedPlayerState.hasBall()) {
+			game.getFieldModel().setBallCoordinate(carriedPlayerState.getOldCoordinate());
+			game.getFieldModel().setBallMoving(false);
+		}
+		game.getFieldModel().removeSkillEnhancements(carrier, skill);
+		gameState.clearCarriedPlayer();
 	}
 }

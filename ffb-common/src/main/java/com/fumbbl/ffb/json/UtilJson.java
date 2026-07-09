@@ -157,4 +157,30 @@ public class UtilJson {
 		return JsonValue.readFrom(in); // no bufferedReader necessary
 	}
 
+	public static String[] toStringArray(JsonValue pJsonValue) {
+		if ((pJsonValue == null) || pJsonValue.isNull()) {
+			return null;
+		}
+		JsonArray jsonArray = pJsonValue.isArray() ? pJsonValue.asArray() : null;
+		if (jsonArray == null) {
+			throw new IllegalArgumentException("JsonValue is not a valid String array.");
+		}
+		String[] stringArray = new String[jsonArray.size()];
+		for (int i = 0; i < stringArray.length; i++) {
+			stringArray[i] = jsonArray.get(i).asString();
+		}
+		return stringArray;
+	}
+
+	public static JsonValue toJsonValue(String[] pStringArray) {
+		if (pStringArray == null) {
+			return JsonValue.NULL;
+		}
+		JsonArray jsonArray = new JsonArray();
+		for (String string : pStringArray) {
+			jsonArray.add(string);
+		}
+		return jsonArray;
+	}
+
 }

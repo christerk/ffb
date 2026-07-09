@@ -195,4 +195,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 	public boolean isWisdomAvailable(Game game, Player<?> player){
 		return false;
 	}
+
+	@Override
+	public boolean supportsCards() {
+		return true;
+	}
 }

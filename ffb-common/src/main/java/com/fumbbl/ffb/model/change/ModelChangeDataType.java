@@ -53,7 +53,7 @@ import java.util.Date;
 @SuppressWarnings("deprecation")
 public enum ModelChangeDataType implements INamedObject {
 
-	NULL("null"), BOOLEAN("boolean"), STRING("string"), PLAYER_ACTION("playerAction"), SKILL("skill"), LONG("long"),
+	NULL("null"), BOOLEAN("boolean"), STRING("string"), STRING_ARRAY("stringArray"), PLAYER_ACTION("playerAction"), SKILL("skill"), LONG("long"),
 	DATE("date"), TURN_MODE("turnMode"), FIELD_COORDINATE("fieldCoordinate"), DIALOG_ID("dialogId"),
 	DIALOG_PARAMETER("dialogParameter"), INTEGER("integer"), PLAYER_STATE("playerState"), SERIOUS_INJURY("seriousInjury"),
 	SEND_TO_BOX_REASON("sendToBoxReason"), BLOOD_SPOT("bloodSpot"), TRACK_NUMBER("trackNumber"),
@@ -146,6 +146,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return UtilJson.toJsonValue((Skill) pValue);
 			case STRING:
 				return JsonValue.valueOf((String) pValue);
+			case STRING_ARRAY:
+				return UtilJson.toJsonValue((String[]) pValue);
 			case TRACK_NUMBER:
 				return ((TrackNumber) pValue).toJsonValue();
 			case TRAP_DOOR:
@@ -225,6 +227,8 @@ public enum ModelChangeDataType implements INamedObject {
 				return UtilJson.toEnumWithName(source.<SkillFactory>getFactory(Factory.SKILL), pJsonValue);
 			case STRING:
 				return pJsonValue.asString();
+			case STRING_ARRAY:
+				return UtilJson.toStringArray(pJsonValue);
 			case TRACK_NUMBER:
 				return new TrackNumber().initFrom(source, pJsonValue);
 			case TRAP_DOOR:

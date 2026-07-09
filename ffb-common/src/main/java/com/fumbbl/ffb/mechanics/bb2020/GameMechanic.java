@@ -239,4 +239,9 @@ public class GameMechanic extends com.fumbbl.ffb.mechanics.GameMechanic {
 			.anyMatch(teamMate -> teamMate.hasSkillProperty(NamedProperties.canGrantSkillsToTeamMates)
 				&& !teamMate.isUsed(NamedProperties.canGrantSkillsToTeamMates));
 	}
+
+	@Override
+	public boolean supportsCards() {
+		return false;
+	}
 }

@@ -44,6 +44,8 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
       put(IPlayerPopupMenuKeys.KEY_BALEFUL_HEX, ClientAction.BALEFUL_HEX);
       put(IPlayerPopupMenuKeys.KEY_BLACK_INK, ClientAction.BLACK_INK);
       put(IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT, ClientAction.AUTO_GAZE_ZOAT);
+      put(IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU, ClientAction.ILL_CARRY_YOU);
+
     }};
   }
 
@@ -127,6 +129,7 @@ public class ClientStateBlock extends AbstractClientStateBlock<BlockLogicModule>
     itemConfigs.put(ClientAction.CATCH_OF_THE_DAY, new MenuItemConfig("Catch of the Day", IIconProperty.ACTION_CATCH_OF_THE_DAY, IPlayerPopupMenuKeys.KEY_CATCH_OF_THE_DAY));
     itemConfigs.put(ClientAction.BLOCK, new MenuItemConfig("Block Opponent", IIconProperty.ACTION_BLOCK, IPlayerPopupMenuKeys.KEY_BLOCK));
     itemConfigs.put(ClientAction.AUTO_GAZE_ZOAT, new MenuItemConfig("\"Excuse Me, Are You a Zoat?\"", IIconProperty.ACTION_GAZE, IPlayerPopupMenuKeys.KEY_AUTO_GAZE_ZOAT));
+    itemConfigs.put(ClientAction.ILL_CARRY_YOU, new MenuItemConfig("I'll Carry You", IIconProperty.ACTION_ILL_CARRY_YOU, IPlayerPopupMenuKeys.KEY_ILL_CARRY_YOU));
 
     return itemConfigs;
 

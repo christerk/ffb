@@ -14,6 +14,8 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.CardType;
 import com.fumbbl.ffb.inducement.Inducement;
 import com.fumbbl.ffb.inducement.Usage;
+import com.fumbbl.ffb.mechanics.GameMechanic;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
@@ -36,9 +38,11 @@ public class InducementsMenu extends FfbMenu {
 	private int fCurrentUsedCardsHome;
 	private int fCurrentInducementTotalAway;
 	private int fCurrentUsedCardsAway;
+	private final CardsMenu cardsMenu;
 
 	protected InducementsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Inducements", client, dimensionProvider, styleProvider, layoutSettings);
+		cardsMenu = new CardsMenu(client, dimensionProvider, styleProvider, layoutSettings);
 		setMnemonic(KeyEvent.VK_I);
 		setEnabled(false);
 	}
@@ -49,12 +53,17 @@ public class InducementsMenu extends FfbMenu {
 		fCurrentUsedCardsHome = 0;
 		fCurrentInducementTotalAway = -1;
 		fCurrentUsedCardsAway = 0;
+		cardsMenu.init();
 	}
 
 	@Override
 	public boolean refresh() {
 		boolean refreshNecessary = false;
 		Game game = client.getGame();
+		boolean supportsCards = supportsCards(game);
+		if (supportsCards) {
+			cardsMenu.refresh();
+		}
 
 		InducementSet inducementSetHome = game.getTurnDataHome().getInducementSet();
 		int totalInducementHome = inducementSetHome.totalInducements();
@@ -114,6 +123,10 @@ public class InducementsMenu extends FfbMenu {
 			} else {
 				setText("No Inducements");
 				setEnabled(false);
+			}
+
+			if (supportsCards) {
+				add(cardsMenu);
 			}
 
 		}
@@ -246,6 +259,15 @@ public class InducementsMenu extends FfbMenu {
 		Card[] allCards = pInducementSet.getAllCards();
 
 		return Arrays.stream(allCards).collect(Collectors.groupingBy(Card::getType));
+	}
+
+	private boolean supportsCards(Game game) {
+		if (game == null || !game.getRules().isInitialized()) {
+			return false;
+		}
+
+		GameMechanic mechanic = game.getMechanic(Mechanic.Type.GAME);
+		return mechanic.supportsCards();
 	}
 
 	@Override
