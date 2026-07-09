@@ -19,20 +19,44 @@ public class ClientLayoutCalculator {
 		Dimension log = uiDimensionProvider.dimension(Component.LOG);
 		Dimension chat = uiDimensionProvider.dimension(Component.CHAT);
 		Dimension box = uiDimensionProvider.dimension(Component.BOX);
+		double pitchScale = uiDimensionProvider.getLayoutSettings().getPitchScale();
 
 		ClientLayout layout = uiDimensionProvider.getLayoutSettings().getLayout();
 		switch (layout) {
 			case PORTRAIT:
-				return portrait(field, sidebar, box, score, log, chat);
+				return portrait(field, sidebar, box, score, log, chat, pitchScale);
 			case SQUARE:
-				return square(field, sidebar, box, score, log, chat);
+				return square(field, sidebar, box, score, log, chat, pitchScale);
 			default:
-				return landscape(field, sidebar, box, score, log, chat);
+				return landscape(field, sidebar, box, score, log, chat, pitchScale);
+		}
+	}
+
+	public ClientLayoutResult calculate(UiDimensionProvider uiDimensionProvider, Dimension availableSize) {
+		if (availableSize == null || availableSize.width <= 0 || availableSize.height <= 0) {
+			return calculate(uiDimensionProvider);
+		}
+
+		Dimension fieldBase = uiDimensionProvider.unscaledDimension(Component.FIELD);
+		Dimension sidebar = uiDimensionProvider.dimension(Component.SIDEBAR);
+		Dimension score = uiDimensionProvider.dimension(Component.SCORE_BOARD);
+		Dimension log = uiDimensionProvider.dimension(Component.LOG);
+		Dimension chat = uiDimensionProvider.dimension(Component.CHAT);
+		Dimension box = uiDimensionProvider.dimension(Component.BOX);
+
+		ClientLayout layout = uiDimensionProvider.getLayoutSettings().getLayout();
+		switch (layout) {
+			case PORTRAIT:
+				return portraitDynamic(availableSize, fieldBase, sidebar, box, score, log, chat);
+			case SQUARE:
+				return squareDynamic(availableSize, fieldBase, sidebar, box, score, log, chat);
+			default:
+				return landscapeDynamic(availableSize, fieldBase, sidebar, box, score, log, chat);
 		}
 	}
 
 	private ClientLayoutResult landscape(Dimension field, Dimension sidebar, Dimension box, Dimension score,
-			Dimension log, Dimension chat) {
+			Dimension log, Dimension chat, double pitchScale) {
 		int logChatPanelWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
 		int logChatPanelHeight = Math.max(log.height, chat.height) + (2 * PANEL_BORDER);
 		int centerWidth = Math.max(field.width, Math.max(score.width, logChatPanelWidth));
@@ -55,12 +79,13 @@ public class ClientLayoutCalculator {
 			new Rectangle(centerX + centerWidth, 0, sidebar.width, preferredSize.height),
 			new Rectangle(centerX, field.height, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
-			new Rectangle(chatX, logY, chat.width, chat.height)
+			new Rectangle(chatX, logY, chat.width, chat.height),
+			pitchScale
 		);
 	}
 
 	private ClientLayoutResult portrait(Dimension field, Dimension sidebar, Dimension box, Dimension score,
-			Dimension log, Dimension chat) {
+			Dimension log, Dimension chat, double pitchScale) {
 		int mainWidth = sidebar.width + field.width + sidebar.width;
 		int mainHeight = Math.max(sidebar.height, field.height);
 		int logChatPanelWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
@@ -83,12 +108,13 @@ public class ClientLayoutCalculator {
 			new Rectangle(sidebar.width + field.width, 0, sidebar.width, mainHeight),
 			new Rectangle(0, scoreY, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
-			new Rectangle(chatX, logY, chat.width, chat.height)
+			new Rectangle(chatX, logY, chat.width, chat.height),
+			pitchScale
 		);
 	}
 
 	private ClientLayoutResult square(Dimension field, Dimension sidebar, Dimension box, Dimension score,
-			Dimension log, Dimension chat) {
+			Dimension log, Dimension chat, double pitchScale) {
 		int mainWidth = sidebar.width + field.width + sidebar.width;
 		int mainHeight = Math.max(sidebar.height, field.height);
 		int logChatScoreWidth = Math.max(log.width, Math.max(score.width, chat.width)) + (2 * PANEL_BORDER);
@@ -107,7 +133,114 @@ public class ClientLayoutCalculator {
 			new Rectangle(sidebar.width + field.width, 0, sidebar.width, mainHeight),
 			new Rectangle(rightX, log.height + PANEL_BORDER, score.width, score.height),
 			new Rectangle(rightX, PANEL_BORDER, log.width, log.height),
-			new Rectangle(rightX, log.height + score.height + PANEL_BORDER, chat.width, chat.height)
+			new Rectangle(rightX, log.height + score.height + PANEL_BORDER, chat.width, chat.height),
+			pitchScale
 		);
+	}
+
+	private ClientLayoutResult landscapeDynamic(Dimension availableSize, Dimension fieldBase, Dimension sidebar,
+																							Dimension box, Dimension score, Dimension log, Dimension chat) {
+		int logChatPanelHeight = Math.max(log.height, chat.height) + (2 * PANEL_BORDER);
+		int bottomHeight = score.height + logChatPanelHeight;
+
+		int centerX = sidebar.width;
+		int centerWidth = Math.max(1, availableSize.width - sidebar.width - sidebar.width);
+		int pitchAreaHeight = Math.max(1, availableSize.height - bottomHeight);
+
+		double pitchScale = pitchScale(new Dimension(centerWidth, pitchAreaHeight), fieldBase);
+
+		int fieldWidth = scaled(fieldBase.width, pitchScale);
+		int fieldHeight = scaled(fieldBase.height, pitchScale);
+		int fieldX = centerX + ((centerWidth - fieldWidth) / 2);
+		int fieldY = (pitchAreaHeight - fieldHeight) / 2;
+
+		int scoreY = pitchAreaHeight;
+		int logY = scoreY + score.height + PANEL_BORDER;
+		int logX = centerX + PANEL_BORDER;
+		int chatX = logX + log.width + LOG_CHAT_GAP;
+
+		return new ClientLayoutResult(
+			new Dimension(availableSize),
+			new Rectangle(fieldX, fieldY, fieldWidth, fieldHeight),
+			new Rectangle(0, 0, sidebar.width, availableSize.height),
+			new Rectangle(0, 0, box.width, box.height),
+			new Rectangle(availableSize.width - sidebar.width, 0, sidebar.width, availableSize.height),
+			new Rectangle(centerX, scoreY, score.width, score.height),
+			new Rectangle(logX, logY, log.width, log.height),
+			new Rectangle(chatX, logY, chat.width, chat.height),
+			pitchScale
+		);
+	}
+
+	private ClientLayoutResult portraitDynamic(Dimension availableSize, Dimension fieldBase, Dimension sidebar,
+																						Dimension box, Dimension score, Dimension log, Dimension chat) {
+		int logChatPanelHeight = Math.max(log.height, chat.height) + (2 * PANEL_BORDER);
+		int bottomHeight = score.height + logChatPanelHeight;
+
+		int mainHeight = Math.max(1, availableSize.height - bottomHeight);
+		int pitchAreaWidth = Math.max(1, availableSize.width - sidebar.width - sidebar.width);
+
+		double pitchScale = pitchScale(new Dimension(pitchAreaWidth, mainHeight), fieldBase);
+
+		int fieldWidth = scaled(fieldBase.width, pitchScale);
+		int fieldHeight = scaled(fieldBase.height, pitchScale);
+		int fieldX = sidebar.width + ((pitchAreaWidth - fieldWidth) / 2);
+		int fieldY = (mainHeight - fieldHeight) / 2;
+
+		int scoreY = mainHeight;
+		int logY = scoreY + score.height + PANEL_BORDER;
+		int logX = PANEL_BORDER;
+		int chatX = logX + log.width + LOG_CHAT_GAP;
+
+		return new ClientLayoutResult(
+			new Dimension(availableSize),
+			new Rectangle(fieldX, fieldY, fieldWidth, fieldHeight),
+			new Rectangle(0, 0, sidebar.width, mainHeight),
+			new Rectangle(0, 0, box.width, box.height),
+			new Rectangle(availableSize.width - sidebar.width, 0, sidebar.width, mainHeight),
+			new Rectangle(0, scoreY, score.width, score.height),
+			new Rectangle(logX, logY, log.width, log.height),
+			new Rectangle(chatX, logY, chat.width, chat.height),
+			pitchScale
+		);
+	}
+
+	private ClientLayoutResult squareDynamic(Dimension availableSize, Dimension fieldBase, Dimension sidebar,
+																					Dimension box, Dimension score, Dimension log, Dimension chat) {
+		int rightColumnWidth = Math.max(log.width, Math.max(score.width, chat.width)) + (2 * PANEL_BORDER);
+		int mainWidth = Math.max(1, availableSize.width - rightColumnWidth);
+		int pitchAreaWidth = Math.max(1, mainWidth - sidebar.width - sidebar.width);
+
+		double pitchScale = pitchScale(new Dimension(pitchAreaWidth, availableSize.height), fieldBase);
+
+		int fieldWidth = scaled(fieldBase.width, pitchScale);
+		int fieldHeight = scaled(fieldBase.height, pitchScale);
+		int fieldX = sidebar.width + ((pitchAreaWidth - fieldWidth) / 2);
+		int fieldY = (availableSize.height - fieldHeight) / 2;
+
+		int rightX = mainWidth + PANEL_BORDER;
+
+		return new ClientLayoutResult(
+			new Dimension(availableSize),
+			new Rectangle(fieldX, fieldY, fieldWidth, fieldHeight),
+			new Rectangle(0, 0, sidebar.width, availableSize.height),
+			new Rectangle(0, 0, box.width, box.height),
+			new Rectangle(mainWidth - sidebar.width, 0, sidebar.width, availableSize.height),
+			new Rectangle(rightX, log.height + PANEL_BORDER, score.width, score.height),
+			new Rectangle(rightX, PANEL_BORDER, log.width, log.height),
+			new Rectangle(rightX, log.height + score.height + PANEL_BORDER, chat.width, chat.height),
+			pitchScale
+		);
+	}
+
+	private double pitchScale(Dimension availablePitchArea, Dimension fieldBase) {
+		return Math.min(
+			(double) availablePitchArea.width / fieldBase.width,
+			(double) availablePitchArea.height / fieldBase.height
+		);
+	}
+
+	private int scaled(int size, double scale) {
+		return (int) (size * scale);
 	}
 }
