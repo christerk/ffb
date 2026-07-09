@@ -190,7 +190,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private ClientLayoutResult relayoutClient() {
-		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider);
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider, availableClientContentSize());
+		layoutSettings.setPitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		layoutPanel.apply(layoutResult);
@@ -201,6 +202,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		return layoutResult;
+	}
+
+	private Dimension availableClientContentSize() {
+		if (fDesktop != null) {
+			return fDesktop.getSize();
+		}
+		return null;
 	}
 
 	public ClientSketchManager getSketchManager() {
