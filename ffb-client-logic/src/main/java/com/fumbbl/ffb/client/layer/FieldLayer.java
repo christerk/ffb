@@ -40,7 +40,7 @@ public abstract class FieldLayer {
 	}
 
 	public void initLayout() {
-		size = uiDimensionProvider.dimension(Component.FIELD);
+		size = pitchViewport.fieldSize();
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 		addUpdatedArea(new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight()));
 	}

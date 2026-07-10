@@ -153,7 +153,7 @@ public class FieldLayerTeamLogo extends FieldLayer {
 
   private void drawTeamLogo(Team pTeam, boolean pHomeTeam) {
     if ((pTeam != null) && StringTool.isProvided(pTeam.getLogoUrl())) {
-      Dimension fieldDimension = uiDimensionProvider.dimension(Component.FIELD);
+      Dimension fieldDimension = pitchViewport.fieldSize();
       IconCache iconCache = getClient().getUserInterface().getIconCache();
       BufferedImage teamLogo = iconCache.getIconByUrl(IconCache.findTeamLogoUrl(pTeam), pitchDimensionProvider);
       if (teamLogo != null) {

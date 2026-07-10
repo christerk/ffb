@@ -32,6 +32,8 @@ import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -74,6 +76,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final SetupDragHitTester setupDragHitTester;
 	private final ClientLayoutCalculator layoutCalculator;
 	private final ClientLayoutPanel layoutPanel;
+	private final Timer resizeRelayoutTimer;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -92,8 +95,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
-		pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 		reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
 		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
 		coordinateConverter = new CoordinateConverter(pitchViewport);
@@ -114,11 +117,14 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 		layoutCalculator = new ClientLayoutCalculator();
+		resizeRelayoutTimer = new Timer(100, e -> resizeClient());
+		resizeRelayoutTimer.setRepeats(false);
 
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
-		setResizable(false);
+		setResizable(true);
+		initResizeRelayout();
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
 		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, pitchViewport,
@@ -149,19 +155,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
-		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider);
-		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
-		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
+		ClientLayoutResult layoutResult = relayoutClient();
 		if (layoutPanel.getParent() != null) {
 			layoutPanel.getParent().remove(layoutPanel);
 		}
-		layoutPanel.apply(layoutResult);
 
 		fDesktop.add(layoutPanel, -1);
 		fDesktop.setPreferredSize(layoutResult.preferredSize());
 
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
+		setMinimumSize(null);
 		pack();
+		setMinimumSize(getSize());
 
 		if (callInit) {
 			init(null);
@@ -174,6 +179,49 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		fDialogManager.setShownDialogParameter(null);
 		fDialogManager.updateDialog();
+	}
+
+	private void initResizeRelayout() {
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				if (fDesktop != null && layoutPanel.getParent() != null) {
+					resizeRelayoutTimer.restart();
+				}
+			}
+		});
+	}
+
+	private ClientLayoutResult relayoutClient() {
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider, availableClientContentSize());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
+		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
+		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
+		layoutPanel.apply(layoutResult);
+
+		if (fDesktop != null) {
+			fDesktop.revalidate();
+			fDesktop.repaint();
+		}
+
+		return layoutResult;
+	}
+
+	private void resizeClient() {
+		relayoutClient();
+		fFieldComponent.resizeFieldIfNeeded();
+		fFieldComponent.refreshField();
+
+		if (fDesktop != null) {
+			fDesktop.revalidate();
+			fDesktop.repaint();
+		}
+	}
+
+	private Dimension availableClientContentSize() {
+		if (fDesktop != null) {
+			return fDesktop.getSize();
+		}
+		return null;
 	}
 
 	public ClientSketchManager getSketchManager() {

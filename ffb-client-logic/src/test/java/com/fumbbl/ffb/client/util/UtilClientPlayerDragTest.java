@@ -85,11 +85,12 @@ class UtilClientPlayerDragTest {
 	private FantasyFootballClient client(ClientLayout layout, int boxTitleOffset) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
+		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
 		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(uiDimensionProvider);
 
-		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 
 		ReserveBoxViewport reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);

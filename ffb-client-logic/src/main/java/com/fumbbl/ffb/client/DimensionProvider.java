@@ -26,7 +26,7 @@ public abstract class DimensionProvider {
 	}
 
 	public String cacheKey() {
-		return renderContext.name();
+		return renderContext.name() + "_" + Math.round(effectiveScale() * 10000);
 	}
 
 	public Dimension dimension(Component component) {
