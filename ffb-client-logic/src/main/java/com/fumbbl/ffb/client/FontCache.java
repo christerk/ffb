@@ -11,7 +11,8 @@ public class FontCache {
 
 
 	public Font font(int style, int size, DimensionProvider dimensionProvider) {
-		Key key = new Key(style, size, dimensionProvider.getRenderContext());
+		// Kept render context explicit so UI, pitch, and dugout fonts stay separated, cacheKey adds the current scale.
+		Key key = new Key(style, size, dimensionProvider.getRenderContext(), dimensionProvider.cacheKey());
 		if (!fonts.containsKey(key)) {
 			//noinspection MagicConstant
 			fonts.put(key, new Font(key.getFace().getName(), key.getStyle(), dimensionProvider.scale(key.getSize())));
@@ -42,12 +43,14 @@ public class FontCache {
 		private final int style;
 		private final int size;
 		private final RenderContext renderContext;
+		private final String dimensionProviderCacheKey;
 
-		public Key(int style, int size, RenderContext renderContext) {
+		public Key(int style, int size, RenderContext renderContext, String dimensionProviderCacheKey) {
 			this.face = FontFace.SANS_SERIF;
 			this.style = style;
 			this.size = size;
 			this.renderContext = renderContext;
+			this.dimensionProviderCacheKey = dimensionProviderCacheKey;
 		}
 
 		public FontFace getFace() {
@@ -67,12 +70,14 @@ public class FontCache {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 			Key key = (Key) o;
-			return style == key.style && size == key.size && face == key.face && renderContext == key.renderContext;
+			return style == key.style && size == key.size && face == key.face
+				&& renderContext == key.renderContext
+				&& Objects.equals(dimensionProviderCacheKey, key.dimensionProviderCacheKey);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(face, style, size, renderContext);
+			return Objects.hash(face, style, size, renderContext, dimensionProviderCacheKey);
 		}
 	}
 }
