@@ -262,10 +262,10 @@ class PitchViewportTest {
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		PitchViewport viewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 
-		viewport.setPitchScale(1.5);
+		viewport.setRuntimePitchScale(1.5);
 
 		assertEquals(1.0, layoutSettings.getPitchScale(), 0.0001);
-		assertEquals(1.5, viewport.pitchScale(), 0.0001);
+		assertEquals(1.5, viewport.runtimePitchScale(), 0.0001);
 		assertEquals(1.5, viewport.effectiveScale(), 0.0001);
 	}
 }

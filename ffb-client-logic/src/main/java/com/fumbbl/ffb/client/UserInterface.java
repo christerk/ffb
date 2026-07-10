@@ -193,7 +193,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private ClientLayoutResult relayoutClient() {
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider, availableClientContentSize());
-		pitchViewport.setPitchScale(layoutResult.pitchScale());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		layoutPanel.apply(layoutResult);

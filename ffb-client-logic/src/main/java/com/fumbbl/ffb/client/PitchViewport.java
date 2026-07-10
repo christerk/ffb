@@ -9,15 +9,13 @@ import java.awt.Rectangle;
 
 public class PitchViewport {
 
-	private final UiDimensionProvider uiDimensionProvider;
 	private final LayoutSettings layoutSettings;
 	private Rectangle viewportBounds;
-	private double pitchScale;
+	private double runtimePitchScale;
 
 	public PitchViewport(UiDimensionProvider uiDimensionProvider, LayoutSettings layoutSettings) {
-		this.uiDimensionProvider = uiDimensionProvider;
 		this.layoutSettings = layoutSettings;
-		this.pitchScale = layoutSettings.getPitchScale();
+		this.runtimePitchScale = layoutSettings.getPitchScale();
 		Dimension fieldSize = uiDimensionProvider.dimension(Component.FIELD);
 		this.viewportBounds = new Rectangle(0, 0, fieldSize.width, fieldSize.height);
 	}
@@ -26,16 +24,16 @@ public class PitchViewport {
 		return new Dimension(viewportBounds.width, viewportBounds.height);
 	}
 
-	public double pitchScale() {
-		return pitchScale;
+	public double runtimePitchScale() {
+		return runtimePitchScale;
 	}
 
-	public void setPitchScale(double pitchScale) {
-		this.pitchScale = pitchScale;
+	public void setRuntimePitchScale(double runtimePitchScale) {
+		this.runtimePitchScale = runtimePitchScale;
 	}
 
 	public double effectiveScale() {
-		return pitchScale * layoutSettings.getLayout().getPitchScale();
+		return runtimePitchScale * layoutSettings.getLayout().getPitchScale();
 	}
 
 	public int squareSize() {

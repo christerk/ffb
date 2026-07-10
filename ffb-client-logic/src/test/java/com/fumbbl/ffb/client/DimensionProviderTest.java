@@ -36,7 +36,7 @@ class DimensionProviderTest {
 		PitchDimensionProvider provider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 		String initialKey = provider.cacheKey();
 
-		pitchViewport.setPitchScale(1.5);
+		pitchViewport.setRuntimePitchScale(1.5);
 
 		assertNotEquals(initialKey, provider.cacheKey());
 	}
@@ -48,7 +48,7 @@ class DimensionProviderTest {
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		PitchDimensionProvider provider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
-		pitchViewport.setPitchScale(1.5);
+		pitchViewport.setRuntimePitchScale(1.5);
 
 		assertEquals(1.5, provider.effectiveScale(), 0.0001);
 		assertEquals(1.0, layoutSettings.getPitchScale(), 0.0001);

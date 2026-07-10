@@ -90,7 +90,7 @@ class UtilClientPlayerDragTest {
 
 		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(uiDimensionProvider);
 
-		pitchViewport.setPitchScale(layoutResult.pitchScale());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 
 		ReserveBoxViewport reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
