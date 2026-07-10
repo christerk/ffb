@@ -33,8 +33,15 @@ public class ClientLayoutCalculator {
 	}
 
 	public ClientLayoutResult calculate(UiDimensionProvider uiDimensionProvider, Dimension availableSize) {
+		ClientLayoutResult fixedLayout = calculate(uiDimensionProvider);
+		Dimension fixedPreferredSize = fixedLayout.preferredSize();
+
 		if (availableSize == null || availableSize.width <= 0 || availableSize.height <= 0) {
-			return calculate(uiDimensionProvider);
+			return fixedLayout;
+		}
+
+		if (availableSize.width <= fixedPreferredSize.width || availableSize.height <= fixedPreferredSize.height) {
+			return fixedLayout;
 		}
 
 		Dimension fieldBase = uiDimensionProvider.unscaledDimension(Component.FIELD);

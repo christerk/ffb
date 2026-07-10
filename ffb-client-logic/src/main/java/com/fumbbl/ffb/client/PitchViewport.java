@@ -10,41 +10,68 @@ import java.awt.Rectangle;
 public class PitchViewport {
 
 	private final UiDimensionProvider uiDimensionProvider;
-	private final PitchDimensionProvider pitchDimensionProvider;
+	private final LayoutSettings layoutSettings;
 	private Rectangle viewportBounds;
+	private double pitchScale;
 
-	public PitchViewport(UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider) {
+	public PitchViewport(UiDimensionProvider uiDimensionProvider, LayoutSettings layoutSettings) {
 		this.uiDimensionProvider = uiDimensionProvider;
-		this.pitchDimensionProvider = pitchDimensionProvider;
-		this.viewportBounds = new Rectangle(0, 0, fieldSize().width, fieldSize().height);
+		this.layoutSettings = layoutSettings;
+		this.pitchScale = layoutSettings.getPitchScale();
+		Dimension fieldSize = uiDimensionProvider.dimension(Component.FIELD);
+		this.viewportBounds = new Rectangle(0, 0, fieldSize.width, fieldSize.height);
 	}
 
 	public Dimension fieldSize() {
-		return uiDimensionProvider.dimension(Component.FIELD);
+		return new Dimension(viewportBounds.width, viewportBounds.height);
+	}
+
+	public double pitchScale() {
+		return pitchScale;
+	}
+
+	public void setPitchScale(double pitchScale) {
+		this.pitchScale = pitchScale;
+	}
+
+	public double effectiveScale() {
+		return pitchScale * layoutSettings.getLayout().getPitchScale();
 	}
 
 	public int squareSize() {
-		return pitchDimensionProvider.fieldSquareSize();
+		return squareSize(1);
 	}
 
 	public int squareSize(double factor) {
-		return pitchDimensionProvider.fieldSquareSize(factor);
+		return (int) (unscaledFieldSquare() * factor * effectiveScale());
 	}
 
 	public int imageOffset() {
-		return pitchDimensionProvider.imageOffset();
+		return squareSize() / 2;
 	}
 
 	public Dimension toLocal(FieldCoordinate coordinate) {
-		return pitchDimensionProvider.mapToLocal(coordinate);
+		return toLocal(coordinate, false);
 	}
 
 	public Dimension toLocal(FieldCoordinate coordinate, boolean center) {
-		return pitchDimensionProvider.mapToLocal(coordinate, center);
+		return toLocal(coordinate.getX(), coordinate.getY(), center);
 	}
 
 	public Dimension toLocal(int x, int y, boolean center) {
-		return pitchDimensionProvider.mapToLocal(x, y, center);
+		int offset = center ? unscaledFieldSquare() / 2 : 0;
+		int localX;
+		int localY;
+
+		if (layoutSettings.getLayout().isPortrait()) {
+			localX = y * unscaledFieldSquare() + offset;
+			localY = (25 - x) * unscaledFieldSquare() + offset;
+		} else {
+			localX = x * unscaledFieldSquare() + offset;
+			localY = y * unscaledFieldSquare() + offset;
+		}
+
+		return new Dimension((int) (localX * effectiveScale()), (int) (localY * effectiveScale()));
 	}
 
 	public Point worldToScreen(FieldCoordinate coordinate) {
@@ -67,13 +94,13 @@ public class PitchViewport {
 		Dimension field = fieldSize();
 
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			double scale = pitchDimensionProvider.effectiveScale();
+			double scale = effectiveScale();
 
 			coordinate = new FieldCoordinate(
-				(int) ((x / scale) / pitchDimensionProvider.unscaledFieldSquare()),
-				(int) ((y / scale) / pitchDimensionProvider.unscaledFieldSquare())
+				(int) ((x / scale) / unscaledFieldSquare()),
+				(int) ((y / scale) / unscaledFieldSquare())
 			);
-			coordinate = pitchDimensionProvider.mapToGlobal(coordinate);
+			coordinate = toGlobal(coordinate);
 		}
 
 		return coordinate;
@@ -86,11 +113,36 @@ public class PitchViewport {
 	}
 
 	public Direction toLocal(Direction direction) {
-		return pitchDimensionProvider.mapToLocal(direction);
+		if (layoutSettings.getLayout().isPortrait()) {
+			switch (direction) {
+				case NORTHEAST:
+					return Direction.NORTHWEST;
+				case EAST:
+					return Direction.NORTH;
+				case SOUTHEAST:
+					return Direction.NORTHEAST;
+				case SOUTHWEST:
+					return Direction.SOUTHEAST;
+				case WEST:
+					return Direction.SOUTH;
+				case NORTHWEST:
+					return Direction.SOUTHWEST;
+				case NORTH:
+					return Direction.WEST;
+				case SOUTH:
+					return Direction.EAST;
+			}
+		}
+
+		return direction;
 	}
 
 	public Direction getLocalDirection(FieldCoordinate from, FieldCoordinate to) {
-		return pitchDimensionProvider.getDirection(from, to);
+		Direction direction = from.getDirection(to);
+		if (layoutSettings.getLayout().isPortrait()) {
+			return toLocal(direction);
+		}
+		return direction;
 	}
 
 	public Rectangle viewportBounds() {
@@ -99,5 +151,16 @@ public class PitchViewport {
 
 	public void setViewportBounds(Rectangle viewportBounds) {
 		this.viewportBounds = new Rectangle(viewportBounds);
+	}
+
+	private int unscaledFieldSquare() {
+		return Component.FIELD_SQUARE.dimension(layoutSettings.getLayout()).width;
+	}
+
+	private FieldCoordinate toGlobal(FieldCoordinate fieldCoordinate) {
+		if (layoutSettings.getLayout().isPortrait()) {
+			return new FieldCoordinate(25 - fieldCoordinate.getY(), fieldCoordinate.getX());
+		}
+		return fieldCoordinate;
 	}
 }

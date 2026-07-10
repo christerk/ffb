@@ -16,8 +16,7 @@ class PitchViewportTest {
 	private PitchViewport viewport(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
-		return new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		return new PitchViewport(uiDimensionProvider, layoutSettings);
 	}
 
 	@Test
@@ -246,5 +245,27 @@ class PitchViewportTest {
 		assertNull(viewport.screenToWorld(new Point(146, 0)));
 		assertNull(viewport.screenToWorld(new Point(927, 1)));
 		assertNull(viewport.screenToWorld(new Point(146, 452)));
+	}
+
+	@Test
+	void fieldSizeUsesCurrentViewportBoundsSize() {
+		PitchViewport viewport = viewport(ClientLayout.LANDSCAPE);
+
+		viewport.setViewportBounds(new Rectangle(158, 0, 955, 552));
+
+		assertEquals(new Dimension(955, 552), viewport.fieldSize());
+	}
+
+	@Test
+	void pitchScaleCanChangeWithoutMutatingLayoutSettings() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
+		PitchViewport viewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+
+		viewport.setPitchScale(1.5);
+
+		assertEquals(1.0, layoutSettings.getPitchScale(), 0.0001);
+		assertEquals(1.5, viewport.pitchScale(), 0.0001);
+		assertEquals(1.5, viewport.effectiveScale(), 0.0001);
 	}
 }

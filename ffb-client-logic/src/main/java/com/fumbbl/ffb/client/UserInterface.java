@@ -95,8 +95,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
-		pitchViewport = new PitchViewport(uiDimensionProvider, pitchDimensionProvider);
+		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 		reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
 		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
 		coordinateConverter = new CoordinateConverter(pitchViewport);
@@ -117,7 +117,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 		layoutCalculator = new ClientLayoutCalculator();
-		resizeRelayoutTimer = new Timer(100, e -> relayoutClient());
+		resizeRelayoutTimer = new Timer(100, e -> resizeClient());
 		resizeRelayoutTimer.setRepeats(false);
 
 
@@ -164,7 +164,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDesktop.setPreferredSize(layoutResult.preferredSize());
 
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
+		setMinimumSize(null);
 		pack();
+		setMinimumSize(getSize());
 
 		if (callInit) {
 			init(null);
@@ -191,7 +193,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private ClientLayoutResult relayoutClient() {
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider, availableClientContentSize());
-		layoutSettings.setPitchScale(layoutResult.pitchScale());
+		pitchViewport.setPitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		layoutPanel.apply(layoutResult);
@@ -202,6 +204,17 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		return layoutResult;
+	}
+
+	private void resizeClient() {
+		relayoutClient();
+		fFieldComponent.resizeFieldIfNeeded();
+		fFieldComponent.refreshField();
+
+		if (fDesktop != null) {
+			fDesktop.revalidate();
+			fDesktop.repaint();
+		}
 	}
 
 	private Dimension availableClientContentSize() {

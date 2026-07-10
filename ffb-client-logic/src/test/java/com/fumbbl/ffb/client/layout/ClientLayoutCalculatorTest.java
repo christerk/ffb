@@ -170,6 +170,25 @@ class ClientLayoutCalculatorTest {
 			layout(ClientLayout.LANDSCAPE, new Dimension(0, 0)).preferredSize());
 	}
 
+	@Test
+	void dynamicLayoutFallsBackToFixedLayoutAtOrBelowFixedPreferredSize() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+
+		ClientLayoutResult fixedLayout = calculator.calculate(uiDimensionProvider);
+
+		ClientLayoutResult sameSize = calculator.calculate(uiDimensionProvider, fixedLayout.preferredSize());
+		ClientLayoutResult narrower = calculator.calculate(uiDimensionProvider,
+			new Dimension(fixedLayout.preferredSize().width - 1, fixedLayout.preferredSize().height + 100));
+		ClientLayoutResult shorter = calculator.calculate(uiDimensionProvider,
+			new Dimension(fixedLayout.preferredSize().width + 100, fixedLayout.preferredSize().height - 1));
+
+		assertFixedLayout(fixedLayout, sameSize);
+		assertFixedLayout(fixedLayout, narrower);
+		assertFixedLayout(fixedLayout, shorter);
+	}
+
 	private ClientLayoutResult layout(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
@@ -180,5 +199,17 @@ class ClientLayoutCalculatorTest {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		return new ClientLayoutCalculator().calculate(uiDimensionProvider, availableSize);
+	}
+
+	private void assertFixedLayout(ClientLayoutResult expected, ClientLayoutResult actual) {
+		assertEquals(expected.preferredSize(), actual.preferredSize());
+		assertEquals(expected.fieldBounds(), actual.fieldBounds());
+		assertEquals(expected.homeSidebarBounds(), actual.homeSidebarBounds());
+		assertEquals(expected.homeReserveBoxBounds(), actual.homeReserveBoxBounds());
+		assertEquals(expected.awaySidebarBounds(), actual.awaySidebarBounds());
+		assertEquals(expected.scoreBarBounds(), actual.scoreBarBounds());
+		assertEquals(expected.logBounds(), actual.logBounds());
+		assertEquals(expected.chatBounds(), actual.chatBounds());
+		assertEquals(expected.pitchScale(), actual.pitchScale(), 0.0001);
 	}
 }

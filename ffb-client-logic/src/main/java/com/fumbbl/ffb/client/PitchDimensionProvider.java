@@ -7,8 +7,16 @@ import java.awt.*;
 
 public class PitchDimensionProvider extends DimensionProvider {
 
-	public PitchDimensionProvider(LayoutSettings layoutSettings) {
+	private final PitchViewport pitchViewport;
+
+	public PitchDimensionProvider(LayoutSettings layoutSettings, PitchViewport pitchViewport) {
 		super(layoutSettings, RenderContext.ON_PITCH);
+		this.pitchViewport = pitchViewport;
+	}
+
+	@Override
+	public double effectiveScale() {
+		return pitchViewport.effectiveScale();
 	}
 
 	public FieldCoordinate mapToGlobal(FieldCoordinate fieldCoordinate) {

@@ -34,7 +34,7 @@ public class FieldLayerPitch extends FieldLayer {
 	public void drawWeather(Weather pWeather) {
 		if (pWeather != null) {
 			IconCache iconCache = getClient().getUserInterface().getIconCache();
-			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather, uiDimensionProvider);
+			BufferedImage fieldImage = iconCache.getPitch(getClient().getGame(), pWeather, pitchDimensionProvider);
 			if (fieldImage != null) {
 				drawPitch(fieldImage);
 			}

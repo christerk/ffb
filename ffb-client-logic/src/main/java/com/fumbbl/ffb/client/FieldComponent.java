@@ -74,6 +74,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	private final Map<String, FieldCoordinate> fCoordinateByPlayerId;
 
 	private final UiDimensionProvider uiDimensionProvider;
+	private final PitchViewport pitchViewport;
 
 	public FieldComponent(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
 												PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport,
@@ -82,6 +83,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 		fClient = pClient;
 		this.uiDimensionProvider = uiDimensionProvider;
+		this.pitchViewport = pitchViewport;
 		fLayerField = new FieldLayerPitch(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		fLayerTeamLogo = new FieldLayerTeamLogo(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		fLayerBloodspots = new FieldLayerBloodspots(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
@@ -121,13 +123,23 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		layerSketches.initLayout();
 		layerTackleZones.initLayout();
 
-		Dimension size = uiDimensionProvider.dimension(Component.FIELD);
+		Dimension size = pitchViewport.fieldSize();
 		fImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
 
 		setMinimumSize(size);
 		setPreferredSize(size);
 		setMaximumSize(size);
 
+	}
+
+	public synchronized boolean resizeFieldIfNeeded() {
+		Dimension size = pitchViewport.fieldSize();
+		if (fImage != null && fImage.getWidth() == size.width && fImage.getHeight() == size.height) {
+			return false;
+		}
+
+		initLayout();
+		return true;
 	}
 
 	public FieldLayerPitch getLayerField() {
@@ -354,6 +366,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	public synchronized void init() {
 		Game game = getClient().getGame();
 		game.addObserver(this);
+		refreshField();
+	}
+
+	public synchronized void refreshField() {
 		initPlayerCoordinates();
 		getLayerField().init();
 		getLayerTeamLogo().init();
@@ -368,10 +384,10 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 		getLayerSketches().init();
 		getLayerTackleZones().init();
 		refresh();
-
 	}
 
 	private void initPlayerCoordinates() {
+		fCoordinateByPlayerId.clear();
 		Game game = getClient().getGame();
 		for (Player<?> player : game.getPlayers()) {
 			fCoordinateByPlayerId.put(player.getId(), game.getFieldModel().getPlayerCoordinate(player));
