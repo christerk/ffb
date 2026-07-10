@@ -92,6 +92,7 @@ public interface IPlayerPopupMenuKeys {
 
 	int KEY_RAIDING_PARTY = KeyEvent.VK_2;
 
+	int KEY_ILL_CARRY_YOU = KeyEvent.VK_3;
 
 
 	int KEY_FUMBLEROOSKIE = KeyEvent.VK_4;

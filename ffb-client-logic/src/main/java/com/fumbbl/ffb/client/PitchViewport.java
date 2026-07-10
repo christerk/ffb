@@ -67,8 +67,7 @@ public class PitchViewport {
 		Dimension field = fieldSize();
 
 		if ((x > 0) && (x < field.width) && (y > 0) && (y < field.height)) {
-			double scale = pitchDimensionProvider.getLayoutSettings().getScale()
-				* pitchDimensionProvider.getLayoutSettings().getLayout().getPitchScale();
+			double scale = pitchDimensionProvider.effectiveScale();
 
 			coordinate = new FieldCoordinate(
 				(int) ((x / scale) / pitchDimensionProvider.unscaledFieldSquare()),

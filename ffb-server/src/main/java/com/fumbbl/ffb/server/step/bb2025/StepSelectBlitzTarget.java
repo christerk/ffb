@@ -40,6 +40,7 @@ import com.fumbbl.ffb.server.step.generator.BalefulHex;
 import com.fumbbl.ffb.server.step.generator.BlackInk;
 import com.fumbbl.ffb.server.step.generator.CatchOfTheDay;
 import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
+import com.fumbbl.ffb.server.step.generator.IllCarryYou;
 import com.fumbbl.ffb.server.step.generator.LookIntoMyEyes;
 import com.fumbbl.ffb.server.step.generator.RaidingParty;
 import com.fumbbl.ffb.server.step.generator.Sequence;
@@ -47,6 +48,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.ThenIStartedBlastin;
 import com.fumbbl.ffb.server.step.generator.Treacherous;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerGame;
 
 import java.util.Arrays;
 
@@ -149,6 +151,13 @@ public class StepSelectBlitzTarget extends AbstractStep {
 								.forName(SequenceGenerator.Type.CatchOfTheDay.name());
 							generator.pushSequence(new CatchOfTheDay.SequenceParams(getGameState(), gotoLabelOnEnd));
 							getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canCarryPartner)) {
+							getGameState().pushCurrentStepOnStack();
+							IllCarryYou generator = (IllCarryYou) getGameState().getGame()
+								.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR)
+								.forName(SequenceGenerator.Type.IllCarryYou.name());
+							generator.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
+							getResult().setNextAction(StepAction.NEXT_STEP);
 						} else {
 							usedSkill = commandUseSkill.getSkill();
 						}
@@ -224,6 +233,10 @@ public class StepSelectBlitzTarget extends AbstractStep {
 				if (game.getActingPlayer().hasActed() && !confirmed) {
 					UtilServerDialog.showDialog(getGameState(), new DialogConfirmEndActionParameter(game.getActingTeam().getId(), game.getActingPlayer().getPlayerAction()), false);
 				} else {
+					Skill carrySkill = game.getActingPlayer().getPlayer().getSkillWithProperty(NamedProperties.canCarryPartner);
+					if (carrySkill != null && getGameState().getCarriedPlayer() != null) {
+						UtilServerGame.undoPickUpPartner(getGameState(), game.getActingPlayer(), carrySkill);
+					}
 					game.setTurnMode(game.getLastTurnMode());
 					game.getFieldModel().setTargetSelectionState(new TargetSelectionState().cancel());
 					getResult().setNextAction(StepAction.GOTO_LABEL, gotoLabelOnEnd);

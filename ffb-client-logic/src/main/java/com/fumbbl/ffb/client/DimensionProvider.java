@@ -46,14 +46,14 @@ public abstract class DimensionProvider {
 		return layoutSettings.getLayout().isPortrait();
 	}
 
-	protected double effectiveScale() {
+	public double effectiveScale() {
 		switch (renderContext) {
 			case ON_PITCH:
-				return layoutSettings.getScale() * layoutSettings.getLayout().getPitchScale();
+				return layoutSettings.effectivePitchScale();
 			case DUGOUT:
-				return layoutSettings.getScale() * layoutSettings.getLayout().getDugoutScale();
+				return layoutSettings.effectiveDugoutScale();
 			default:
-				return layoutSettings.getScale();
+				return layoutSettings.getGuiScale();
 		}
 	}
 

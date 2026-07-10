@@ -14,7 +14,8 @@ public enum PlayerChoiceMode implements INamedObject {
 	LORD_OF_CHAOS("lordOfChaos", false), WISDOM("wisdomOfTheWhiteDwarf"),
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
 	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
-	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat"), DWARFEN_WISDOM("dwarfenWisdom", false);
+	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat"), DWARFEN_WISDOM("dwarfenWisdom", false),
+	ILL_CARRY_YOU("illCarryYou");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -135,6 +136,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case DWARFEN_WISDOM:
 				header.append("Select players to setup again");
 				break;
+			case ILL_CARRY_YOU:
+				header.append("Select player to carry");
+				break;
 			default:
 				break;
 		}
@@ -231,6 +235,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case DWARFEN_WISDOM:
 				title.append("Dwarfen Wisdom");
 				break;
+			case ILL_CARRY_YOU:
+				title.append("I'll Carry You");
+				break;
 			default:
 				break;
 		}
@@ -326,6 +333,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case DWARFEN_WISDOM:
 				message.append("Waiting for coach to select players to setup again");
+				break;
+			case ILL_CARRY_YOU:
+				message.append("Waiting for coach to select player to carry.");
 				break;
 			default:
 				break;

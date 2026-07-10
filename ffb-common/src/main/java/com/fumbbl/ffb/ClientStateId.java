@@ -19,7 +19,7 @@ public enum ClientStateId implements INamedObject {
 	HIT_AND_RUN("hitAndRun"), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz"), TRICKSTER("trickster"),
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock"), KICK_EM_BLOCK("kickEmBlock"), KICK_EM_BLITZ("kickEmBlitz"),
 	THEN_I_STARTED_BLASTIN("thenIStartedBlastin"), STAB("stab"), FURIOUS_OUTBURST("furiousOutburst"), PUNT("punt"),
-	DWARFEN_WISDOM("dwarfenWisdom");
+	DWARFEN_WISDOM("dwarfenWisdom"),	PLACE_CARRIED_PLAYER("placeCarriedPlayer");
 
 	private final String fName;
 

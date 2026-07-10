@@ -600,7 +600,8 @@ public abstract class LogicModule {
 			|| isBlackInkAvailable(actingPlayer)
 			|| isThenIStartedBlastinAvailable(actingPlayer)
 			|| isZoatGazeAvailable(actingPlayer)
-			|| isIncorporealAvailable(actingPlayer);
+			|| isIncorporealAvailable(actingPlayer)
+			|| isIllCarryYouAvailable(actingPlayer);
 	}
 
 	public boolean isBlitzSpecialAbilityAvailable(ActingPlayer actingPlayer) {
@@ -749,5 +750,26 @@ public abstract class LogicModule {
 	private boolean canChomp(Player<?> player) {
 		return player.hasSkillProperty(NamedProperties.canPinPlayers);
 	}
+
+	public boolean isIllCarryYouAvailable(ActingPlayer actingPlayer) {
+		if (actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)) {
+			return false;
+		}
+
+		Game game = client.getGame();
+		return Arrays.stream(UtilPlayer.findPickUpPartners(game, actingPlayer.getPlayer()))
+			.anyMatch(actingPlayer::isInitialAdjacentPartner);
+	}
+
+	public boolean mustPlaceCarriedPlayer(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
+			&& actingPlayer.hasActed();
+	}
+
+	public boolean canPlaceCarriedPlayer(ActingPlayer actingPlayer) {
+		return actingPlayer.getPlayer().hasActiveEnhancement(NamedProperties.canCarryPartner)
+			&& !actingPlayer.hasActed();
+	}
+
 }
 
