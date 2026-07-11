@@ -15,11 +15,13 @@ public class CarriedPlayer implements IJsonSerializable {
 	private PlayerState oldState;
 	private FieldCoordinate oldCoordinate;
 	private boolean hasBall;
+	private FieldCoordinate carrierCoordinate;
 
 	public CarriedPlayer() {
 	}
 
-	public CarriedPlayer(String playerId, PlayerState oldState, FieldCoordinate oldCoordinate, boolean hasBall) {
+	public CarriedPlayer(String playerId, PlayerState oldState, FieldCoordinate oldCoordinate,
+		boolean hasBall) {
 		this.playerId = playerId;
 		this.oldState = oldState;
 		this.oldCoordinate = oldCoordinate;
@@ -42,6 +44,14 @@ public class CarriedPlayer implements IJsonSerializable {
 		return hasBall;
 	}
 
+	public FieldCoordinate getCarrierCoordinate() {
+		return carrierCoordinate;
+	}
+
+	public void setCarrierCoordinate(FieldCoordinate carrierCoordinate) {
+		this.carrierCoordinate = carrierCoordinate;
+	}
+
 	@Override
 	public CarriedPlayer initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
@@ -49,6 +59,7 @@ public class CarriedPlayer implements IJsonSerializable {
 		oldState = IServerJsonOption.OLD_CARRIED_PLAYER_STATE.getFrom(source, jsonObject);
 		oldCoordinate = IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.getFrom(source, jsonObject);
 		hasBall = IServerJsonOption.CARRIED_PLAYER_HAS_BALL.getFrom(source, jsonObject);
+		carrierCoordinate = IServerJsonOption.CARRIER_COORDINATE.getFrom(source, jsonObject);
 		return this;
 	}
 
@@ -59,6 +70,7 @@ public class CarriedPlayer implements IJsonSerializable {
 		IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, oldState);
 		IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, oldCoordinate);
 		IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, hasBall);
+		IServerJsonOption.CARRIER_COORDINATE.addTo(jsonObject, carrierCoordinate);
 		return jsonObject;
 	}
 }

@@ -124,6 +124,9 @@ public class StepPlaceCarriedPlayer extends AbstractStep {
 		Player<?> carrier = actingPlayer.getPlayer();
 		Player<?> carriedPlayer = game.getPlayerById(carriedPlayerState.getPlayerId());
 		FieldCoordinate carrierCoordinate = game.getFieldModel().getPlayerCoordinate(carrier);
+		if (carrierCoordinate.isBoxCoordinate()) {
+			carrierCoordinate = carriedPlayerState.getCarrierCoordinate();
+		}
 		PlayerState carrierState = game.getFieldModel().getPlayerState(carrier);
 
 		if (!actingPlayer.hasActedIgnoringNegativeTraits()
