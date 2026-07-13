@@ -44,6 +44,23 @@ public class PlayerIconFactory {
 		return resultingIcon;
 	}
 
+	private static BufferedImage decorateIconTopRight(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
+		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = resultingIcon.createGraphics();
+		if (pIcon != null) {
+			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
+			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
+			g2d.drawImage(pIcon, x, y, null);
+		}
+		if (pDecoration != null) {
+			int x = maxIconSize.width - pDecoration.getWidth();
+			g2d.drawImage(pDecoration, x, 0, null);
+		}
+
+		g2d.dispose();
+		return resultingIcon;
+	}
+
 	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider,
 		boolean homePlayer, DimensionProvider dimensionProvider, boolean bottom) {
 		if ((pIcon != null) && StringTool.isProvided(pText)) {
@@ -340,12 +357,11 @@ public class PlayerIconFactory {
 		}
 
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		if ((actingPlayer.getPlayer() == pPlayer) && (playerState.getBase() == PlayerState.MOVING)
-				&& (playerAction != null) && playerAction.isBlitzing()
-				&& IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
-					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER))) {
-			decorationProperty4 = IIconProperty.DECORATION_CHECK_ICON_BLITZ;
+		if ((actingPlayer.getPlayer() == pPlayer) && (playerAction != null)
+				&& (playerState.getBase() == PlayerState.MOVING)) {
+			decorationProperty4 = getActionIconProperty(playerAction);
 		}
+		
 
 		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
@@ -359,7 +375,7 @@ public class PlayerIconFactory {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty3, dimensionProvider), maxIconSize);
 		}
 		if (decorationProperty4 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty4, dimensionProvider), maxIconSize);
+			icon = decorateIconTopRight(icon, iconCache.getIconByProperty(decorationProperty4, dimensionProvider), maxIconSize);
 		}
 
 		if (fadeIcon) {
@@ -479,6 +495,44 @@ public class PlayerIconFactory {
 			}
 		}
 		return pRelativeUrl;
+	}
+
+	private String getActionIconProperty(PlayerAction playerAction) {
+		System.out.println("playerAction=" + playerAction);
+		switch (playerAction) {
+			case MOVE:
+				return IIconProperty.ACTION_MOVE;
+			case BLITZ:
+			case BLITZ_MOVE:
+			case BLITZ_SELECT:
+			case STAND_UP_BLITZ:
+				return IIconProperty.ACTION_BLITZ;
+			case FOUL:
+			case FOUL_MOVE:
+				return IIconProperty.ACTION_FOUL;
+			case PASS:
+			case PASS_MOVE:
+			case HAIL_MARY_PASS:
+				return IIconProperty.ACTION_PASS;
+			case HAND_OVER:
+			case HAND_OVER_MOVE:
+				return IIconProperty.ACTION_HAND_OVER;
+			case GAZE:
+			case GAZE_MOVE:
+			case GAZE_SELECT:
+				return IIconProperty.ACTION_GAZE;
+			case THROW_TEAM_MATE:
+			case THROW_TEAM_MATE_MOVE:
+				return IIconProperty.ACTION_PASS;
+			case KICK_TEAM_MATE:
+			case KICK_TEAM_MATE_MOVE:
+				return IIconProperty.ACTION_BLITZ;
+			case THROW_BOMB:
+			case HAIL_MARY_BOMB:
+				return IIconProperty.ACTION_BOMB;
+			default:
+				return null;
+		}
 	}
 
 }
