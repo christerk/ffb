@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 			.addBugfix("Self inflicted injuries never triggered Getting Even")
+			.addBugfix("Star players incorrectly rolled for Getting Even")
 			.addImprovement("Moved active cards into the inducements menu to reduce top-level menu width")
 			.addImprovement("Added chat command to reset used skills for selected players")
 			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
@@ -36,6 +37,7 @@ public class ChangeList {
 			.addBugfix("Conceding in the 2025 ruleset did not let the winning coach assign the awarded touchdowns for SPP")
 			.addImprovement("Buying inducements now prompts before closing if petty cash remains that could still buy an inducement")
 			.addBugfix("Gained Hatred no longer counts as a skill advancement for the player level or the post-concession player loss check")
+			.addFeature("Added game option to disable Getting Even")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
