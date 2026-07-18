@@ -232,6 +232,9 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			}
 			if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
 				publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush()));
+				if (game.getActingTeam().hasPlayer(actingPlayer.getPlayer())) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
 				return;
 			}

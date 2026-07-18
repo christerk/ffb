@@ -25,6 +25,8 @@ public class TtmToCrowdHandler {
 			step.publishParameter(
 				new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 			step.publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, endCoordinate));
+		}
+		if (game.getActingTeam().hasPlayer(thrownPlayer)) {
 			step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		// end loop
