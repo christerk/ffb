@@ -32,6 +32,7 @@ public class Hatred extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollSingleSkull);
 		registerProperty(NamedProperties.canBeGainedByGettingEven);
+		registerProperty(NamedProperties.doesNotCountAsAdvancement);
 		registerRerollSource(ReRolledActions.SINGLE_SKULL, ReRollSources.HATRED);
 	}
 
