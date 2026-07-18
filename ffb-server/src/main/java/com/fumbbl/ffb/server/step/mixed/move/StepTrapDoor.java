@@ -33,7 +33,6 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepTrapDoor extends AbstractStepWithReRoll {
 
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.TRAP_DOOR;
@@ -141,7 +140,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
-		if (game.getActingTeam().hasPlayer(player)) {
+		if (fallCausesTurnover(game, player, hasBall)) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		// we are in ttm context so we need to break the scatter loop
@@ -154,6 +153,14 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		}
 		getResult().setSound(SoundId.TRAPDOOR);
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	/**
+	 * Whether a player falling through the trap door causes a turnover. Overridden
+	 * by ruleset-specific subclasses.
+	 */
+	protected boolean fallCausesTurnover(Game game, Player<?> player, boolean hasBall) {
+		return hasBall && game.getActingTeam().hasPlayer(player);
 	}
 
 

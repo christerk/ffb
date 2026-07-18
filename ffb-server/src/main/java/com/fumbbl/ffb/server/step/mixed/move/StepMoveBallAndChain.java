@@ -69,7 +69,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 
 	private static final ReRolledAction RE_ROLLED_ACTION = ReRolledActions.DIRECTION;
@@ -232,7 +231,7 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			}
 			if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
 				publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush()));
-				if (game.getActingTeam().hasPlayer(actingPlayer.getPlayer())) {
+				if (leavingPitchCausesTurnover(game, actingPlayer)) {
 					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 				}
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
@@ -249,6 +248,14 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
+	}
+
+	/**
+	 * Whether the acting player moving off the pitch (into the crowd) causes a
+	 * turnover. Overridden by ruleset-specific subclasses.
+	 */
+	protected boolean leavingPitchCausesTurnover(Game game, ActingPlayer actingPlayer) {
+		return false;
 	}
 
 	// JSON serialization
