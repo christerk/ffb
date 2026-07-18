@@ -85,8 +85,9 @@ public final class StepPlayerLoss extends AbstractStep {
 	private int countAdvancements(Skill[] skills) {
 		int offset = 0;
 
+		// Team Captain is excluded via doesNotCountAsAdvancement, but it also grants Pro which must not count either
 		if (Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(NamedProperties.canSaveReRolls))) {
-			offset = 2;
+			offset = 1;
 		}
 
 		return (int) Arrays.stream(skills).filter(skill -> skill.getCategory() != SkillCategory.STAT_DECREASE
