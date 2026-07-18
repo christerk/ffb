@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MercenaryTableModel extends AbstractTableModel {
+public class MercenaryTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final int mercExtraCost;
 	private final int mercSkillCost;
@@ -86,6 +86,10 @@ public class MercenaryTableModel extends AbstractTableModel {
 			}
 		}
 		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return true;
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {

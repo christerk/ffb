@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -491,14 +492,12 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 			}
 		}
 		boolean rosterHasSpace = getFreeSlotsInRoster() > 0;
-		if (fTableModelStarPlayers != null && rosterHasSpace && fTableModelStarPlayers.canBuyAnother()) {
-			cheapest = Math.min(cheapest, fTableModelStarPlayers.cheapestUnselectedCost());
-		}
-		if (tableModelInfamousStaff != null && tableModelInfamousStaff.canBuyAnother()) {
-			cheapest = Math.min(cheapest, tableModelInfamousStaff.cheapestUnselectedCost());
-		}
-		if (fTableModelMercenaries != null && rosterHasSpace && fTableModelMercenaries.canBuyAnother()) {
-			cheapest = Math.min(cheapest, fTableModelMercenaries.cheapestUnselectedCost());
+		for (InducementTableModel tableModel : Arrays.asList(fTableModelStarPlayers, tableModelInfamousStaff,
+			fTableModelMercenaries)) {
+			if (tableModel != null && (rosterHasSpace || !tableModel.requiresFreeRosterSlot())
+				&& tableModel.canBuyAnother()) {
+				cheapest = Math.min(cheapest, tableModel.cheapestUnselectedCost());
+			}
 		}
 		return cheapest;
 	}

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InfamousStaffTableModel extends AbstractTableModel {
+public class InfamousStaffTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final String[] fColumnNames;
 	private final Object[][] fRowData;
@@ -76,6 +76,10 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 			}
 		}
 		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return false;
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {

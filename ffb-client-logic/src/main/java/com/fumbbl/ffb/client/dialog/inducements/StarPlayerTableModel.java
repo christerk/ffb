@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StarPlayerTableModel extends AbstractTableModel {
+public class StarPlayerTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final String[] fColumnNames;
 	private final Object[][] fRowData;
@@ -77,6 +77,10 @@ public class StarPlayerTableModel extends AbstractTableModel {
 			}
 		}
 		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return true;
 	}
 
 	public void setMaxNrOfStars(int amount) {
