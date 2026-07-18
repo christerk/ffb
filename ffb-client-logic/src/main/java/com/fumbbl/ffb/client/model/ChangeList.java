@@ -27,6 +27,7 @@ public class ChangeList {
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 			.addBugfix("Self inflicted injuries never triggered Getting Even")
+			.addBugfix("Star players incorrectly rolled for Getting Even")
 			.addImprovement("Moved active cards into the inducements menu to reduce top-level menu width")
 			.addImprovement("Added chat command to reset used skills for selected players")
 			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
