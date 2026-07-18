@@ -25,14 +25,6 @@ public class PassRangeService {
 		if ((PlayerAction.HAIL_MARY_PASS == throwerAction) || (PlayerAction.HAIL_MARY_BOMB == throwerAction)) {
 			return targetCoordinate != null;
 		}
-		return isInRange(game, thrower, targetCoordinate);
-	}
-
-	/**
-	 * Determines whether the given target coordinate is within the thrower's
-	 * passing range, ignoring any Hail Mary handling.
-	 */
-	public static boolean isInRange(Game game, Player<?> thrower, FieldCoordinate targetCoordinate) {
 		if ((game == null) || (thrower == null) || (targetCoordinate == null)) {
 			return false;
 		}

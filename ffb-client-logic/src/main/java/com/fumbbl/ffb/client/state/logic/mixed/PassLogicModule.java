@@ -45,7 +45,7 @@ public class PassLogicModule extends MoveLogicModule {
 				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
 				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(player))))) {
 				FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(player);
-				if (PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction() && !isPassTargetInRange(targetCoordinate)) {
+				if (!isPassTargetInRange(targetCoordinate)) {
 					return InteractionResult.ignore();
 				}
 				game.setPassCoordinate(targetCoordinate);
@@ -66,7 +66,7 @@ public class PassLogicModule extends MoveLogicModule {
 		} else {
 			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
 				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
-				if (PlayerAction.HAIL_MARY_PASS != actingPlayer.getPlayerAction() && !isPassTargetInRange(pCoordinate)) {
+				if (!isPassTargetInRange(pCoordinate)) {
 					return InteractionResult.ignore();
 				}
 				game.setPassCoordinate(pCoordinate);
@@ -118,7 +118,7 @@ public class PassLogicModule extends MoveLogicModule {
 	protected boolean isPassTargetInRange(FieldCoordinate targetCoordinate) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return PassRangeService.isInRange(game, actingPlayer.getPlayer(), targetCoordinate);
+		return PassRangeService.isInRange(game, actingPlayer.getPlayer(), targetCoordinate, actingPlayer.getPlayerAction());
 	}
 
 	public boolean canPlayerGetPass(Player<?> pCatcher) {
