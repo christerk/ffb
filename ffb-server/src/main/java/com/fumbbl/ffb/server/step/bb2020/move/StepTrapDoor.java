@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -140,7 +140,7 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
 		}
-		if (fallCausesTurnover(game, player, hasBall)) {
+		if (hasBall && game.getActingTeam().hasPlayer(player)) {
 			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		// we are in ttm context so we need to break the scatter loop
@@ -153,14 +153,6 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		}
 		getResult().setSound(SoundId.TRAPDOOR);
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-
-	/**
-	 * Whether a player falling through the trap door causes a turnover. Overridden
-	 * by ruleset-specific subclasses.
-	 */
-	protected boolean fallCausesTurnover(Game game, Player<?> player, boolean hasBall) {
-		return hasBall && game.getActingTeam().hasPlayer(player);
 	}
 
 

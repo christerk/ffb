@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2020.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -231,9 +231,6 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			}
 			if (!FieldCoordinateBounds.FIELD.isInBounds(fCoordinateTo)) {
 				publishParameter(new StepParameter(StepParameterKey.INJURY_TYPE, new InjuryTypeCrowdPush()));
-				if (leavingPitchCausesTurnover(game, actingPlayer)) {
-					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-				}
 				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnFallDown);
 				return;
 			}
@@ -248,14 +245,6 @@ public class StepMoveBallAndChain extends AbstractStepWithReRoll {
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-
-	/**
-	 * Whether the acting player moving off the pitch (into the crowd) causes a
-	 * turnover. Overridden by ruleset-specific subclasses.
-	 */
-	protected boolean leavingPitchCausesTurnover(Game game, ActingPlayer actingPlayer) {
-		return false;
 	}
 
 	// JSON serialization
