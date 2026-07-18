@@ -5,48 +5,88 @@ package com.fumbbl.ffb;
  */
 public enum PlayerAction implements INamedObject {
 
-	MOVE("move", 1, "starts a Move Action"), BLOCK("block", 2, "starts a Block Action"), BLITZ("blitz", 3, null),
-	BLITZ_MOVE("blitzMove", 3, "starts a Blitz Action"), BLITZ_SELECT("blitzSelect", 3, null), HAND_OVER("handOver", 5, null),
-	HAND_OVER_MOVE("handOverMove", 5, "starts a Hand Over Action"), PASS("pass", 7, null),
-	PASS_MOVE("passMove", 7, "starts a Pass Action"), FOUL("foul", 9, null),
-	FOUL_MOVE("foulMove", 9, "starts a Foul Action"), STAND_UP("standUp", 11, "stands up"),
-	THROW_TEAM_MATE("throwTeamMate", 12, null), THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, "starts a Throw Team-mate action"),
+	MOVE("move", 1, "starts a Move Action", IIconProperty.ACTION_MOVE),
+	BLOCK("block", 2, "starts a Block Action"),
+	BLITZ("blitz", 3, null),
+	BLITZ_MOVE("blitzMove", 3, "starts a Blitz Action", IIconProperty.ACTION_BLITZ),
+	BLITZ_SELECT("blitzSelect", 3, null),
+	HAND_OVER("handOver", 5, null),
+	HAND_OVER_MOVE("handOverMove", 5, "starts a Hand Over Action"),
+	PASS("pass", 7, null),
+	PASS_MOVE("passMove", 7, "starts a Pass Action", IIconProperty.ACTION_PASS),
+	FOUL("foul", 9, null),
+	FOUL_MOVE("foulMove", 9, "starts a Foul Action"),
+	STAND_UP("standUp", 11, "stands up"),
+	THROW_TEAM_MATE("throwTeamMate", 12, null),
+	THROW_TEAM_MATE_MOVE("throwTeamMateMove", 12, "starts a Throw Team-mate action"),
 	REMOVE_CONFUSION("removeConfusion", 14, null),
-	GAZE("gaze", 15, null), GAZE_SELECT("gazeSelect", 15, null), GAZE_MOVE("gazeMove", 15, "starts a Gaze action"),
-	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Multi-Block Action"), HAIL_MARY_PASS("hailMaryPass", 7, null),
-	DUMP_OFF("dumpOff", 7, null), STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
-	THROW_BOMB("throwBomb", 20, "starts a Bomb Action"), HAIL_MARY_BOMB("hailMaryBomb", 21, null),
-	SWOOP("swoop", 30, null), KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"), KICK_TEAM_MATE("kickTeamMate", 31, null),
-	TREACHEROUS("treacherous", 32, null), WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
-	THROW_KEG("throwKey", 34, "readies a beer keg"), RAIDING_PARTY("raidingParty", 35, null),
-	MAXIMUM_CARNAGE("maximumCarnage", 36, null), LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
-	BALEFUL_HEX("balefulHex", 38, null), ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
-	PUTRID_REGURGITATION_MOVE("putridRegurgitationMove", 40, null), PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz", 40, "performs an additional Projectile Vomit attack"),
+	GAZE("gaze", 15, null),
+	GAZE_SELECT("gazeSelect", 15, null),
+	GAZE_MOVE("gazeMove", 15, "starts a Gaze action"),
+	MULTIPLE_BLOCK("multipleBlock", 16, "starts a Multi-Block Action"),
+	HAIL_MARY_PASS("hailMaryPass", 7, null),
+	DUMP_OFF("dumpOff", 7, null),
+	STAND_UP_BLITZ("standUpBlitz", 3, "stands up with Blitz"),
+	THROW_BOMB("throwBomb", 20, "starts a Bomb Action", IIconProperty.ACTION_BOMB),
+	HAIL_MARY_BOMB("hailMaryBomb", 21, null),
+	SWOOP("swoop", 30, null),
+	KICK_TEAM_MATE_MOVE("kickTeamMateMove", 31, "starts a Kick Team-mate action"),
+	KICK_TEAM_MATE("kickTeamMate", 31, null),
+	TREACHEROUS("treacherous", 32, null),
+	WISDOM_OF_THE_WHITE_DWARF("wisdomOfTheWhiteDwarf", 33, null),
+	THROW_KEG("throwKey", 34, "readies a beer keg"),
+	RAIDING_PARTY("raidingParty", 35, null),
+	MAXIMUM_CARNAGE("maximumCarnage", 36, null),
+	LOOK_INTO_MY_EYES("lookIntoMyEyes", 37, "tries to steal the ball"),
+	BALEFUL_HEX("balefulHex", 38, null),
+	ALL_YOU_CAN_EAT("allYouCanEat", 39, "starts an All You Can Eat action", THROW_BOMB),
+	PUTRID_REGURGITATION_MOVE("putridRegurgitationMove", 40, null),
+	PUTRID_REGURGITATION_BLITZ("putridRegurgitationBlitz", 40, "performs an additional Projectile Vomit attack"),
 	PUTRID_REGURGITATION_BLOCK("putridRegurgitationBlock", 40, "performs an additional Projectile Vomit attack"),
-	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"), KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
-	BLACK_INK("blackInk", 42, "uses Black Ink"), CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
-	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"), THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
-	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"), FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
-	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"), BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
-	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"), STAB("stab", 51, "starts a Stab action"),
-	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"), AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\""),
-	FORGO("forgo", 54, "forgoes the activation."), INCORPOREAL("incorporeal", 55, "becomes incorporeal"), CHOMP("chomp", 56, "starts a Chomp action"),
-	PUNT("punt", 57, null), PUNT_MOVE("puntMove", 57, "starts a Punt action");
+	KICK_EM_BLOCK("kickEmBlock", 41, "targets a downed opponent"),
+	KICK_EM_BLITZ("kickEmBlitz", 41, "targets a downed opponent"),
+	BLACK_INK("blackInk", 42, "uses Black Ink"),
+	CATCH_OF_THE_DAY("catchOfTheDay", 43, "uses Catch of the Day"),
+	THEN_I_STARTED_BLASTIN("thenIStartedBlastin", 44, "starts blastin'"),
+	THE_FLASHING_BLADE("theFlashingBlade", 45, "flashes the blade"),
+	VICIOUS_VINES("viciousVines", 46, "uses Vicious Vines"),
+	FURIOUS_OUTPBURST("furiousOutburst", 47, "has a furious outburst"),
+	SECURE_THE_BALL("secureTheBall", 48, "secures the ball"),
+	BREATHE_FIRE("breatheFire", 49, "starts a Breathe Fire action"),
+	CHAINSAW("chainsaw", 50, "starts a Chainsaw action"),
+	STAB("stab", 51, "starts a Stab action"),
+	PROJECTILE_VOMIT("projectileVomit", 52, "starts a Projectile Vomit action"),
+	AUTO_GAZE_ZOAT("autoGazeZoat", 53, "uses \"Excuse Me, Are You a Zoat?\""),
+	FORGO("forgo", 54, "forgoes the activation."),
+	INCORPOREAL("incorporeal", 55, "becomes incorporeal"),
+	CHOMP("chomp", 56, "starts a Chomp action"),
+	PUNT("punt", 57, null),
+	PUNT_MOVE("puntMove", 57, "starts a Punt action");
 
 	private final String fName;
 	private final int fType;
 	private final String fDescription;
 	private final PlayerAction delegate;
+	private final String iconProperty;
 
 	PlayerAction(String pName, int pType, String pDescription) {
-		this(pName, pType, pDescription, null);
+		this(pName, pType, pDescription, null, null);
 	}
 
 	PlayerAction(String pName, int pType, String pDescription, PlayerAction delegate) {
+		this(pName, pType, pDescription, delegate, null);
+	}
+
+	PlayerAction(String pName, int pType, String pDescription, String iconProperty) {
+		this(pName, pType, pDescription, null, iconProperty);
+	}
+
+	PlayerAction(String pName, int pType, String pDescription, PlayerAction delegate, String iconProperty) {
 		fName = pName;
 		fType = pType;
 		fDescription = pDescription;
 		this.delegate = delegate;
+		this.iconProperty = iconProperty;
 	}
 
 	public String getName() {
@@ -59,6 +99,10 @@ public enum PlayerAction implements INamedObject {
 
 	public String getDescription() {
 		return fDescription;
+	}
+
+	public String getIconProperty() {
+		return iconProperty != null ? iconProperty : delegate != null ? delegate.getIconProperty() : null;
 	}
 
 	public PlayerAction getDelegate() {
