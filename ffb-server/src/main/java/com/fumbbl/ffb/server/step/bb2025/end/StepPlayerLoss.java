@@ -89,7 +89,8 @@ public final class StepPlayerLoss extends AbstractStep {
 			offset = 2;
 		}
 
-		return (int) Arrays.stream(skills).filter(skill -> skill.getCategory() != SkillCategory.STAT_DECREASE).count() - offset;
+		return (int) Arrays.stream(skills).filter(skill -> skill.getCategory() != SkillCategory.STAT_DECREASE
+			&& !skill.hasSkillProperty(NamedProperties.doesNotCountAsAdvancement)).count() - offset;
 	}
 	// JSON serialization
 

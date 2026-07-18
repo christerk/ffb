@@ -35,6 +35,7 @@ public class ChangeList {
 			.addBugfix("A manipulated client could submit an out-of-range pass that stalled the game")
 			.addBugfix("Conceding in the 2025 ruleset did not let the winning coach assign the awarded touchdowns for SPP")
 			.addImprovement("Buying inducements now prompts before closing if petty cash remains that could still buy an inducement")
+			.addBugfix("Gained Hatred no longer counts as a skill advancement for the player level or the post-concession player loss check")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
