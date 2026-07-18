@@ -428,6 +428,9 @@ public class GameOptionFactory {
 				return new GameOptionBoolean(pOptionId).setDefault(true)
 					.setMessageTrue("Bombs knocking down team-mates cause turnovers")
 					.setMessageFalse("Bombs knocking down team-mates do not cause turnovers");
+			case DISABLE_GETTING_EVEN:
+				return new GameOptionBoolean(pOptionId).setDefault(false)
+					.setMessageTrue("Getting Even has been disabled");
 			default:
 				return null;
 		}

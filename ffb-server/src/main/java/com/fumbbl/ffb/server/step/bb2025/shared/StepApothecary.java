@@ -41,6 +41,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
@@ -372,7 +374,8 @@ public class StepApothecary extends AbstractStep {
 		if (playerState != null) {
 			Player<?> defender = game.getPlayerById(defenderId);
 			Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
-			if (playerState.isSi() && attacker != null) {
+			if (playerState.isSi() && attacker != null
+				&& !UtilGameOption.isOptionEnabled(game, GameOptionId.DISABLE_GETTING_EVEN)) {
 				Set<Keyword> availableKeywords =
 					attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith)
 						.collect(Collectors.toSet());
