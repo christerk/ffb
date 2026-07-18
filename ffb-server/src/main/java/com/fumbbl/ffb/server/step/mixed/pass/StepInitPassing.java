@@ -187,7 +187,7 @@ public final class StepInitPassing extends AbstractStep {
 
 	private boolean isPassTargetInRange(FieldCoordinate targetCoordinate, String throwerId, PlayerAction throwerAction) {
 		Game game = getGameState().getGame();
-		return PassRangeService.isInRange(game, game.getPlayerById(throwerId), targetCoordinate, throwerAction);
+		return new PassRangeService().isInRange(game, game.getPlayerById(throwerId), targetCoordinate, throwerAction);
 	}
 
 	private void executeStep() {
