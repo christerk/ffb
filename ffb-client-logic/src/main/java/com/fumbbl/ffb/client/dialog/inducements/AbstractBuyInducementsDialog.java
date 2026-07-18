@@ -462,9 +462,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if ((pActionEvent.getSource() == okButton)) {
-			if (confirmClose() && getCloseListener() != null) {
-				getCloseListener().dialogClosed(this);
-			}
+			onOkButtonPressed();
 		} else if (pActionEvent.getSource() == resetButton) {
 			resetPanels();
 		} else {
@@ -474,10 +472,31 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	/**
 	 * Hook that is invoked when the coach presses the buy &amp; close button. Subclasses may override this to ask for
-	 * confirmation before the dialog is actually closed. Returning {@code false} keeps the dialog open.
+	 * confirmation before the dialog is actually closed and only call {@link #close()} when the coach confirms.
 	 */
-	protected boolean confirmClose() {
-		return true;
+	protected void onOkButtonPressed() {
+		close();
+	}
+
+	/**
+	 * Closes the dialog by notifying the registered close listener.
+	 */
+	protected void close() {
+		if (getCloseListener() != null) {
+			getCloseListener().dialogClosed(this);
+		}
+	}
+
+	/**
+	 * Enables or disables the dialog buttons. Used to keep the buttons inactive while a confirmation dialog is visible.
+	 */
+	protected void setButtonsEnabled(boolean enabled) {
+		if (okButton != null) {
+			okButton.setEnabled(enabled);
+		}
+		if (resetButton != null) {
+			resetButton.setEnabled(enabled);
+		}
 	}
 
 	/**
