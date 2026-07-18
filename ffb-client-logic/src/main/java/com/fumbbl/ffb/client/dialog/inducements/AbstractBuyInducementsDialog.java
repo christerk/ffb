@@ -471,7 +471,7 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 	}
 
 	/**
-	 * Hook that is invoked when the coach presses the buy &amp; close button. Subclasses may override this to ask for
+	 * Hook that is invoked when the coach presses the buy & close button. Subclasses may override this to ask for
 	 * confirmation before the dialog is actually closed and only call {@link #close()} when the coach confirms.
 	 */
 	protected void onOkButtonPressed() {
