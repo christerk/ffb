@@ -24,6 +24,7 @@ public class EndGame extends com.fumbbl.ffb.server.step.generator.EndGame {
 
 		sequence.add(StepId.INIT_END_GAME, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_GAME),
 			from(StepParameterKey.ADMIN_MODE, params.isAdminMode()));
+		sequence.add(StepId.ASSIGN_TOUCHDOWNS);
 		sequence.add(StepId.PENALTY_SHOOTOUT);
 		sequence.add(StepId.MVP);
 		sequence.add(StepId.WINNINGS);
