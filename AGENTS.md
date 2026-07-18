@@ -16,6 +16,7 @@
 - Ruleset-specific changes: when code used by multiple rulesets needs behavior changes for only one ruleset, create or move to a ruleset-specific package and update imports/annotations so unaffected rulesets keep the original behavior. `common` packages are shared by all rulesets; move shared `common` code to `mixed` before applying subset-specific behavior. `mixed` packages are shared by a subset; if modified behavior applies to only one ruleset, move the relevant class to that ruleset package instead.
 - Error handling: Use appropriate exception types, document exceptions in method signatures
 - Services: Prefer instantiable service classes with instance methods over static utility classes/methods; create a service instance at the call site instead of calling static methods.
+- Change list entries: Add a user-facing change list entry for any user-visible change. Entries live in the top (latest) `VersionChangeList` in `ffb-client-logic/src/main/java/com/fumbbl/ffb/client/model/ChangeList.java`, added via `addBugfix`/`addImprovement`/`addFeature`/`addBehaviorChange`.
 - Test style: Test class names end with "Test", use descriptive test method names
 
 ### Import Organization
