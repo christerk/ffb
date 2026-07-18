@@ -33,6 +33,7 @@ public class ChangeList {
 			.addBugfix("Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
 			.addBugfix("Mascot/Loner fail on DT dodge re-roll caused the game to lock up")
 			.addBugfix("A manipulated client could submit an out-of-range pass that stalled the game")
+			.addBugfix("Conceding in the 2025 ruleset did not let the winning coach assign the awarded touchdowns for SPP")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
