@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JTabbedPane;
 import com.fumbbl.ffb.dialog.DialogBuyPrayersAndInducementsParameter;
@@ -12,7 +14,6 @@ import com.fumbbl.ffb.util.StringTool;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,7 +22,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog {
+public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog implements IDialogCloseListener {
 
 	private final Font boldFont;
 	private final JLabel labelAvailableTreasury;
@@ -159,23 +160,43 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 	}
 
 	@Override
-	protected boolean confirmClose() {
+	protected void onOkButtonPressed() {
+		int remainingPettyCash = unspentPettyCash();
+		if (remainingPettyCash <= 0) {
+			close();
+			return;
+		}
+		setButtonsEnabled(false);
+		DialogUnspentPettyCash confirmDialog = new DialogUnspentPettyCash(getClient(), remainingPettyCash);
+		confirmDialog.showDialog(this);
+	}
+
+	@Override
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+		setButtonsEnabled(true);
+		if (pDialog instanceof DialogUnspentPettyCash && ((DialogUnspentPettyCash) pDialog).isChoiceYes()) {
+			close();
+		}
+	}
+
+	/**
+	 * Returns the amount of petty cash the coach could still spend on the cheapest available inducement, or {@code 0}
+	 * if closing the dialog does not need to be confirmed.
+	 */
+	private int unspentPettyCash() {
 		if (pettyCash <= 0) {
-			return true;
+			return 0;
 		}
 		int remainingPettyCash = Math.max(0, availableGold - treasury);
 		if (remainingPettyCash <= 0) {
-			return true;
+			return 0;
 		}
 		int cheapestInducement = cheapestAvailableInducementCost();
 		if (cheapestInducement == Integer.MAX_VALUE || remainingPettyCash < cheapestInducement) {
-			return true;
+			return 0;
 		}
-		int choice = JOptionPane.showInternalConfirmDialog(getClient().getUserInterface().getDesktop(),
-			"You still have " + StringTool.formatThousands(remainingPettyCash)
-				+ " gp of petty cash left to spend on inducements.\nAre you sure you don't want to spend it?",
-			"Unspent Petty Cash", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-		return choice == JOptionPane.YES_OPTION;
+		return remainingPettyCash;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {
