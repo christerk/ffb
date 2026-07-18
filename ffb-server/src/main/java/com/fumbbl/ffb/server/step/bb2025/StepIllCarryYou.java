@@ -157,7 +157,8 @@ public class StepIllCarryYou extends AbstractStep {
 		boolean carriedPlayerHasBall = UtilPlayer.hasBall(game, carriedPlayer);
 
 		gameState.setCarriedPlayer(carriedPlayer.getId(), game.getFieldModel().getPlayerState(carriedPlayer),
-			game.getFieldModel().getPlayerCoordinate(carriedPlayer), carriedPlayerHasBall);
+			game.getFieldModel().getPlayerCoordinate(carriedPlayer), carriedPlayerHasBall,
+			game.getFieldModel().getPlayerCoordinate(carrier));
 
 		game.getFieldModel().setPlayerState(carriedPlayer,
 			game.getFieldModel().getPlayerState(carriedPlayer).changeBase(PlayerState.PICKED_UP));

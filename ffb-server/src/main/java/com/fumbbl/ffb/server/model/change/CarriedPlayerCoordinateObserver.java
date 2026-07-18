@@ -27,7 +27,7 @@ public class CarriedPlayerCoordinateObserver implements ConditionalModelChangeOb
 			case FIELD_MODEL_SET_PLAYER_COORDINATE:
 			case FIELD_MODEL_REMOVE_PLAYER:
 				FieldCoordinate coordinate = (FieldCoordinate) modelChange.getValue();
-				if (!coordinate.isBoxCoordinate()) {
+				if (coordinate != null && !coordinate.isBoxCoordinate()) {
 					carriedPlayer.setCarrierCoordinate(coordinate);
 				}
 				break;

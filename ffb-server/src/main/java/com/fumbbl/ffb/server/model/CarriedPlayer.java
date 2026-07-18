@@ -21,11 +21,12 @@ public class CarriedPlayer implements IJsonSerializable {
 	}
 
 	public CarriedPlayer(String playerId, PlayerState oldState, FieldCoordinate oldCoordinate,
-		boolean hasBall) {
+		boolean hasBall, FieldCoordinate carrierCoordinate) {
 		this.playerId = playerId;
 		this.oldState = oldState;
 		this.oldCoordinate = oldCoordinate;
 		this.hasBall = hasBall;
+		this.carrierCoordinate = carrierCoordinate;
 	}
 
 	public String getPlayerId() {
