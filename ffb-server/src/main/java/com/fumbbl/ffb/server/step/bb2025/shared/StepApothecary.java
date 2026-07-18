@@ -375,7 +375,7 @@ public class StepApothecary extends AbstractStep {
 			Player<?> defender = game.getPlayerById(defenderId);
 			Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
 			if (playerState.isSi() && attacker != null
-				&& !UtilGameOption.isOptionEnabled(game, GameOptionId.DISABLE_GETTING_EVEN)) {
+				&& UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_GETTING_EVEN)) {
 				Set<Keyword> availableKeywords =
 					attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith)
 						.collect(Collectors.toSet());

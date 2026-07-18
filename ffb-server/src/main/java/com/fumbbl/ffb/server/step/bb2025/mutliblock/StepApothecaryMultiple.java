@@ -472,7 +472,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 
 			if (injuryResult.injuryContext().getPlayerState().isSi()
-				&& !UtilGameOption.isOptionEnabled(game, GameOptionId.DISABLE_GETTING_EVEN)) {
+				&& UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_GETTING_EVEN)) {
 				Player<?> defender = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
 				Player<?> attacker = game.getPlayerById(injuryResult.injuryContext().getAttackerId());
 				Set<Keyword> availableKeywords =

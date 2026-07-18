@@ -91,7 +91,7 @@ public enum GameOptionId implements INamedObject {
 	ENABLE_TACKLEZONE_OVERLAYS("enableTacklezoneOverlays"), BOMB_BOUNCES_ON_EMPTY_SQUARES("bombBouncesOnEmptySquares"),
 	ANIMAL_SAVAGERY_LASH_OUT_ENDS_ACTIVATION("animalSavageryLashOutEndsActivation"),
 	CARRIED_PLAYER_BOUNCES_FROM_CARRIER("carriedPlayerBouncesFromCarrier"),
-	DISABLE_GETTING_EVEN("disableGettingEven"),
+	ENABLE_GETTING_EVEN("enableGettingEven"),
 
 	PITCH_URL("pitchUrl");
 
