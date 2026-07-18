@@ -34,6 +34,7 @@ public class ChangeList {
 			.addBugfix("Mascot/Loner fail on DT dodge re-roll caused the game to lock up")
 			.addBugfix("A manipulated client could submit an out-of-range pass that stalled the game")
 			.addBugfix("Conceding in the 2025 ruleset did not let the winning coach assign the awarded touchdowns for SPP")
+			.addImprovement("Buying inducements now prompts before closing if petty cash remains that could still buy an inducement")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
