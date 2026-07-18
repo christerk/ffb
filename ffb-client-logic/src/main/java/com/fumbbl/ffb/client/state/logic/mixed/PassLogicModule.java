@@ -26,6 +26,8 @@ import java.util.Set;
  */
 public class PassLogicModule extends MoveLogicModule {
 
+	private final PassRangeService passRangeService = new PassRangeService();
+
 	public PassLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
 	}
@@ -118,7 +120,7 @@ public class PassLogicModule extends MoveLogicModule {
 	protected boolean isPassTargetInRange(FieldCoordinate targetCoordinate) {
 		Game game = client.getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		return new PassRangeService().isInRange(game, actingPlayer.getPlayer(), targetCoordinate, actingPlayer.getPlayerAction());
+		return passRangeService.isInRange(game, actingPlayer.getPlayer(), targetCoordinate, actingPlayer.getPlayerAction());
 	}
 
 	public boolean canPlayerGetPass(Player<?> pCatcher) {
