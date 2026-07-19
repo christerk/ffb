@@ -42,6 +42,7 @@ public class ChangeList {
 			.addBugfix("Leader re-roll was granted when Leader player was fielded only for a subsequent drive of a half")
 			.addBugfix("Jump up was rolled after Foul Appearance")
 			.addBugfix("Foul Appearance fail on a blitz from prone (when target was adjacent) left the blitzing player prone")
+			.addBugfix("Conceding teams did not lose their spp")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")

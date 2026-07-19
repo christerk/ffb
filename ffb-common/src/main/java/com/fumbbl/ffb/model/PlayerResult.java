@@ -383,6 +383,19 @@ public class PlayerResult implements IJsonSerializable {
 			+ (getLandings() * spp.landingSpp());
 	}
 
+	public void clearSpp() {
+		setTouchdowns(0);
+		setCasualties(0);
+		setCasualtiesWithAdditionalSpp(0);
+		setCatchesWithAdditionalSpp(0);
+		setLandings(0);
+		setCompletions(0);
+		setCompletionsWithAdditionalSpp(0);
+		setPlayerAwards(0);
+		setDeflections(0);
+		setInterceptions(0);
+		setCurrentSpps(0);
+	}
 
 	public Game getGame() {
 		return getTeamResult().getGame();
