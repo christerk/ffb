@@ -40,6 +40,8 @@ public class ChangeList {
 			.addBugfix("Gained Hatred no longer counts as a skill advancement for the player level or the post-concession player loss check")
 			.addFeature("Added game option to disable Getting Even")
 			.addBugfix("Leader re-roll was granted when Leader player was fielded only for a subsequent drive of a half")
+			.addBugfix("Jump up was rolled after Foul Appearance")
+			.addBugfix("Foul Appearance fail on a blitz from prone (when target was adjacent) left the blitzing player prone")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
