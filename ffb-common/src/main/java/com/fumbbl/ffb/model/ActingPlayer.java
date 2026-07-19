@@ -486,7 +486,7 @@ public class ActingPlayer implements IJsonSerializable {
 	public boolean justStoodUp() {
 		Skill jumpUp = getPlayer().getSkillWithProperty(NamedProperties.canStandUpForFree);
 		boolean hasJumpUp = jumpUp != null;
-		boolean jumpUpUsedForBlock = hasJumpUp && isSkillUsed(jumpUp) && fPlayerAction.isBlockAction();
+		boolean jumpUpUsedForBlock = hasJumpUp && isSkillUsed(jumpUp) && fPlayerAction.isBlockOrSpecialAction();
 
 		boolean justStoodUp = (isStandingUp() || wasProne()) && !hasJumpUp &&
 			fCurrentMove == Math.min(Constant.MINIMUM_MOVE_TO_STAND_UP, getPlayer().getMovementWithModifiers());

@@ -44,6 +44,7 @@ public class ChangeList {
 			.addBugfix("Foul Appearance fail on a blitz from prone (when target was adjacent) left the blitzing player prone")
 			.addBugfix("Conceding teams did not lose their spp")
 			.addImprovement("Player choice dialogs now display amount of selected and to be selected players")
+			.addBugfix("Plague Ridden also worked for non-block casualties")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
