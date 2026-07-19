@@ -39,6 +39,7 @@ public class ChangeList {
 			.addBugfix("Active team players ending up in the crowd (crowd push, throw team-mate, ball & chain and trap doors) always cause a turnover")
 			.addBugfix("Gained Hatred no longer counts as a skill advancement for the player level or the post-concession player loss check")
 			.addFeature("Added game option to disable Getting Even")
+			.addBugfix("Leader re-roll was granted when Leader player was fielded only for a subsequent drive of a half")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
