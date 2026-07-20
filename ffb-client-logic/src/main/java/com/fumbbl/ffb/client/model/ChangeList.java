@@ -45,6 +45,7 @@ public class ChangeList {
 			.addBugfix("Conceding teams did not lose their spp")
 			.addImprovement("Player choice dialogs now display amount of selected and to be selected players")
 			.addBugfix("Plague Ridden also worked for non-block casualties")
+			.addBugfix("Bombardier: If the original bomber was cassed by an intercepted bomb they were available for AtC at the end of drive and if successful did return to reserves")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
