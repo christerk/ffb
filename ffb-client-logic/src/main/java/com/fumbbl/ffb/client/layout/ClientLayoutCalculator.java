@@ -2,7 +2,7 @@ package com.fumbbl.ffb.client.layout;
 
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.UiDimensionProvider;
+import com.fumbbl.ffb.client.LayoutSettings;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -12,16 +12,16 @@ public class ClientLayoutCalculator {
 	private static final int LOG_CHAT_GAP = 2;
 	private static final int PANEL_BORDER = 1;
 
-	public ClientLayoutResult calculate(UiDimensionProvider uiDimensionProvider) {
-		Dimension field = uiDimensionProvider.dimension(Component.FIELD);
-		Dimension sidebar = uiDimensionProvider.dimension(Component.SIDEBAR);
-		Dimension score = uiDimensionProvider.dimension(Component.SCORE_BOARD);
-		Dimension log = uiDimensionProvider.dimension(Component.LOG);
-		Dimension chat = uiDimensionProvider.dimension(Component.CHAT);
-		Dimension box = uiDimensionProvider.dimension(Component.BOX);
-		double pitchScale = uiDimensionProvider.getLayoutSettings().getPitchScale();
+	public ClientLayoutResult calculate(LayoutSettings layoutSettings) {
+		Dimension field = dimension(layoutSettings, Component.FIELD);
+		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR);
+		Dimension score = dimension(layoutSettings, Component.SCORE_BOARD);
+		Dimension log = dimension(layoutSettings, Component.LOG);
+		Dimension chat = dimension(layoutSettings, Component.CHAT);
+		Dimension box = dimension(layoutSettings, Component.BOX);
+		double pitchScale = layoutSettings.getPitchScale();
 
-		ClientLayout layout = uiDimensionProvider.getLayoutSettings().getLayout();
+		ClientLayout layout = layoutSettings.getLayout();
 		switch (layout) {
 			case PORTRAIT:
 				return portrait(field, sidebar, box, score, log, chat, pitchScale);
@@ -32,8 +32,8 @@ public class ClientLayoutCalculator {
 		}
 	}
 
-	public ClientLayoutResult calculate(UiDimensionProvider uiDimensionProvider, Dimension availableSize) {
-		ClientLayoutResult fixedLayout = calculate(uiDimensionProvider);
+	public ClientLayoutResult calculate(LayoutSettings layoutSettings, Dimension availableSize) {
+		ClientLayoutResult fixedLayout = calculate(layoutSettings);
 		Dimension fixedPreferredSize = fixedLayout.preferredSize();
 
 		if (availableSize == null || availableSize.width <= 0 || availableSize.height <= 0) {
@@ -44,14 +44,14 @@ public class ClientLayoutCalculator {
 			return fixedLayout;
 		}
 
-		Dimension fieldBase = uiDimensionProvider.unscaledDimension(Component.FIELD);
-		Dimension sidebar = uiDimensionProvider.dimension(Component.SIDEBAR);
-		Dimension score = uiDimensionProvider.dimension(Component.SCORE_BOARD);
-		Dimension log = uiDimensionProvider.dimension(Component.LOG);
-		Dimension chat = uiDimensionProvider.dimension(Component.CHAT);
-		Dimension box = uiDimensionProvider.dimension(Component.BOX);
+		Dimension fieldBase = unscaledDimension(layoutSettings, Component.FIELD);
+		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR);
+		Dimension score = dimension(layoutSettings, Component.SCORE_BOARD);
+		Dimension log = dimension(layoutSettings, Component.LOG);
+		Dimension chat = dimension(layoutSettings, Component.CHAT);
+		Dimension box = dimension(layoutSettings, Component.BOX);
 
-		ClientLayout layout = uiDimensionProvider.getLayoutSettings().getLayout();
+		ClientLayout layout = layoutSettings.getLayout();
 		switch (layout) {
 			case PORTRAIT:
 				return portraitDynamic(availableSize, fieldBase, sidebar, box, score, log, chat);
@@ -249,5 +249,17 @@ public class ClientLayoutCalculator {
 
 	private int scaled(int size, double scale) {
 		return (int) (size * scale);
+	}
+
+	private Dimension dimension(LayoutSettings layoutSettings, Component component) {
+		return scale(unscaledDimension(layoutSettings, component), layoutSettings.getGuiScale());
+	}
+
+	private Dimension unscaledDimension(LayoutSettings layoutSettings, Component component) {
+		return component.dimension(layoutSettings.getLayout());
+	}
+
+	private Dimension scale(Dimension dimension, double scale) {
+		return new Dimension(scaled(dimension.width, scale), scaled(dimension.height, scale));
 	}
 }

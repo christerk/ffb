@@ -88,7 +88,7 @@ class UtilClientPlayerDragTest {
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
-		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(uiDimensionProvider);
+		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings);
 
 		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());

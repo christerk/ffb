@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client.layout;
 
 import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.LayoutSettings;
-import com.fumbbl.ffb.client.UiDimensionProvider;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Dimension;
@@ -173,15 +172,14 @@ class ClientLayoutCalculatorTest {
 	@Test
 	void dynamicLayoutFallsBackToFixedLayoutAtOrBelowFixedPreferredSize() {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
-		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
 
-		ClientLayoutResult fixedLayout = calculator.calculate(uiDimensionProvider);
+		ClientLayoutResult fixedLayout = calculator.calculate(layoutSettings);
 
-		ClientLayoutResult sameSize = calculator.calculate(uiDimensionProvider, fixedLayout.preferredSize());
-		ClientLayoutResult narrower = calculator.calculate(uiDimensionProvider,
+		ClientLayoutResult sameSize = calculator.calculate(layoutSettings, fixedLayout.preferredSize());
+		ClientLayoutResult narrower = calculator.calculate(layoutSettings,
 			new Dimension(fixedLayout.preferredSize().width - 1, fixedLayout.preferredSize().height + 100));
-		ClientLayoutResult shorter = calculator.calculate(uiDimensionProvider,
+		ClientLayoutResult shorter = calculator.calculate(layoutSettings,
 			new Dimension(fixedLayout.preferredSize().width + 100, fixedLayout.preferredSize().height - 1));
 
 		assertFixedLayout(fixedLayout, sameSize);
@@ -191,14 +189,12 @@ class ClientLayoutCalculatorTest {
 
 	private ClientLayoutResult layout(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
-		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		return new ClientLayoutCalculator().calculate(uiDimensionProvider);
+		return new ClientLayoutCalculator().calculate(layoutSettings);
 	}
 
 	private ClientLayoutResult layout(ClientLayout layout, Dimension availableSize) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
-		UiDimensionProvider uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		return new ClientLayoutCalculator().calculate(uiDimensionProvider, availableSize);
+		return new ClientLayoutCalculator().calculate(layoutSettings, availableSize);
 	}
 
 	private void assertFixedLayout(ClientLayoutResult expected, ClientLayoutResult actual) {
