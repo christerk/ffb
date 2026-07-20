@@ -259,33 +259,37 @@ The pitch viewport should update these transforms from the calculated field boun
 
 This pitch scale should be independent from GUI scale. GUI scale affects how much space the non-pitch components need; pitch scale is then derived from the remaining viewport.
 
-## Phase 12: Separate Preferred Metrics From Runtime Layout Policy
+## Phase 12: Redesign Layout Data Flow
 
-Rework the layout foundation so configured component sizes are treated as preferred/original metrics, not runtime geometry.
+Step back from the current layout scaffolding and define the runtime layout flow from first principles.
 
-The current dynamic layout grew out of the old fixed Swing layout. That means some layout math still recreates old wrapper-panel behavior, such as center column widths, log/chat wrapper borders, and packed `BoxLayout` relationships. That was useful for preserving behavior during the transition, but it should not be the foundation for the resizable client.
-
-The target rule is:
+The target flow is:
 
 ```text
-Component / dimension providers
-  define preferred/original sizes
-
-Layout policy
-  decides actual runtime bounds from preferred sizes and current window size
-
-ClientLayoutResult
-  carries the actual runtime bounds
-
-Viewports and components
-  consume the runtime bounds
+settings
+  -> preferred metrics
+  -> layout policy
+  -> pitch fit
+  -> runtime layout result
+  -> apply to viewports and Swing components
 ```
 
-This phase should make the intended layout policy explicit before more behavior is added. For each current layout, define which regions keep preferred size, which regions may grow, where unused space goes, and where the pitch is allowed to fit.
+Responsibilities:
 
-The cleanup should avoid treating old Swing wrapper-panel details as core layout concepts. Fixed behavior can still be reproduced, but it should be expressed as a layout policy that uses preferred sizes, not as a reconstruction of the old panel tree.
+- settings contain user/config choices, such as layout preset, GUI scale, pitch scale, and whether dynamic pitch scaling is enabled
+- preferred metrics contain original UI sizes after configured scale; these are desired/minimum sizes, not actual runtime bounds
+- layout policy takes the current window size and preferred metrics, then decides actual runtime bounds for visible GUI regions and the available pitch area
+- pitch fit takes the available pitch area and base pitch world size, then produces integer pitch bounds and exact pitch scale together
+- runtime layout result carries the actual bounds and pitch fit result for the current layout pass
+- viewports and Swing components consume the runtime layout result
 
-This phase should also prepare the calculator to use one coherent layout model for fixed and fitted behavior, without adding boolean-heavy methods that mix preferred-size math and runtime fitting throughout each layout.
+This flow must be one-way. Runtime layout results must not mutate settings or configured metrics. Viewports must not make layout decisions. Components must not infer runtime layout from preferred sizes.
+
+The pitch fit result is a single coherent concept even if it is represented by separate fields. Integer pitch bounds and exact pitch scale must be produced together by the same fit operation. Exact pitch scale should not be reverse-engineered later from rounded integer bounds.
+
+Existing classes should be evaluated against this flow. Classes that fit the flow can stay. Classes that only exist to preserve old fixed Swing layout behavior can be reshaped or removed. The goal is not to add abstractions; it is to remove circular data flow and old wrapper-panel assumptions from the foundation.
+
+This phase should define the clean flow and then reshape the implementation to match it while preserving current visible behavior.
 
 ## Phase 13: Add Dynamic Pitch Scaling Option
 
