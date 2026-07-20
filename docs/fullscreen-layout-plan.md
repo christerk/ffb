@@ -259,7 +259,63 @@ The pitch viewport should update these transforms from the calculated field boun
 
 This pitch scale should be independent from GUI scale. GUI scale affects how much space the non-pitch components need; pitch scale is then derived from the remaining viewport.
 
-## Phase 12: Move GUI To Rule-Based Placement
+## Phase 12: Refactor Layout Calculator Around One Layout Path
+
+Refactor `ClientLayoutCalculator` so fixed and dynamic behavior are not separate layout implementations.
+
+Each layout should be calculated from the same inputs:
+
+- configured component sizes
+- available client content size
+- whether runtime pitch fitting is enabled
+
+The layout calculator should answer one question:
+
+```text
+Given the current layout type and available area, where do the components go and what runtime pitch scale should be used?
+```
+
+When runtime pitch fitting is disabled, the pitch uses its configured size and the runtime pitch scale is `1.0`. When runtime pitch fitting is enabled, the pitch fits the available pitch area while preserving aspect ratio.
+
+This phase should reduce duplicated fixed/dynamic layout math before adding user-facing control over the behavior.
+
+## Phase 13: Add Dynamic Pitch Scaling Option
+
+Add a client option that controls whether window resizing contributes extra pitch scale.
+
+When enabled:
+
+```text
+GUI scale = configured GUI scale
+Pitch scale = configured pitch scale * runtime fitted scale
+```
+
+When disabled:
+
+```text
+GUI scale = configured GUI scale
+Pitch scale = configured pitch scale
+```
+
+The disabled behavior should still use the new layout, viewport, and rendering architecture. It should not restore the old duplicated coordinate paths. This provides a fixed-size/fixed-scale option while keeping later rendering fixes, such as improved tile boundary mapping, available to both behaviors.
+
+## Phase 14: Fix Fractional Pitch Grid Mapping
+
+Fix the long-standing issue where fractional scaling can produce visibly inconsistent tile sizes because square size is rounded too early.
+
+The target model is that pitch square boundaries come from the exact pitch transform:
+
+```text
+left = round(x * exactSquareSize)
+right = round((x + 1) * exactSquareSize)
+width = right - left
+```
+
+Rendering and input should agree on these boundaries. The fix should avoid assuming every square can use one rounded integer `squareSize()` when the pitch scale is fractional.
+
+This should apply to both dynamic pitch scaling and fixed-size/fixed-scale behavior.
+
+## Phase 15: Move GUI To Rule-Based Placement
 
 Move non-pitch GUI components toward rule-based placement:
 
@@ -270,7 +326,7 @@ Move non-pitch GUI components toward rule-based placement:
 
 This is where the client starts moving away from fixed `ClientLayout` variants.
 
-## Phase 13: Fullscreen
+## Phase 16: Fullscreen
 
 Once resizing works, fullscreen should mostly be:
 
