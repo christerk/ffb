@@ -259,25 +259,33 @@ The pitch viewport should update these transforms from the calculated field boun
 
 This pitch scale should be independent from GUI scale. GUI scale affects how much space the non-pitch components need; pitch scale is then derived from the remaining viewport.
 
-## Phase 12: Refactor Layout Calculator Around One Layout Path
+## Phase 12: Separate Preferred Metrics From Runtime Layout Policy
 
-Refactor `ClientLayoutCalculator` so fixed and dynamic behavior are not separate layout implementations.
+Rework the layout foundation so configured component sizes are treated as preferred/original metrics, not runtime geometry.
 
-Each layout should be calculated from the same inputs:
+The current dynamic layout grew out of the old fixed Swing layout. That means some layout math still recreates old wrapper-panel behavior, such as center column widths, log/chat wrapper borders, and packed `BoxLayout` relationships. That was useful for preserving behavior during the transition, but it should not be the foundation for the resizable client.
 
-- configured component sizes
-- available client content size
-- whether runtime pitch fitting is enabled
-
-The layout calculator should answer one question:
+The target rule is:
 
 ```text
-Given the current layout type and available area, where do the components go and what runtime pitch scale should be used?
+Component / dimension providers
+  define preferred/original sizes
+
+Layout policy
+  decides actual runtime bounds from preferred sizes and current window size
+
+ClientLayoutResult
+  carries the actual runtime bounds
+
+Viewports and components
+  consume the runtime bounds
 ```
 
-When runtime pitch fitting is disabled, the pitch uses its configured size and the runtime pitch scale is `1.0`. When runtime pitch fitting is enabled, the pitch fits the available pitch area while preserving aspect ratio.
+This phase should make the intended layout policy explicit before more behavior is added. For each current layout, define which regions keep preferred size, which regions may grow, where unused space goes, and where the pitch is allowed to fit.
 
-This phase should reduce duplicated fixed/dynamic layout math before adding user-facing control over the behavior.
+The cleanup should avoid treating old Swing wrapper-panel details as core layout concepts. Fixed behavior can still be reproduced, but it should be expressed as a layout policy that uses preferred sizes, not as a reconstruction of the old panel tree.
+
+This phase should also prepare the calculator to use one coherent layout model for fixed and fitted behavior, without adding boolean-heavy methods that mix preferred-size math and runtime fitting throughout each layout.
 
 ## Phase 13: Add Dynamic Pitch Scaling Option
 
