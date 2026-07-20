@@ -126,19 +126,19 @@ public class StepEndBlocking extends AbstractStep {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
 				case DEFENDER_PUSHED:
-					fDefenderPushed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fDefenderPushed = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case END_PLAYER_ACTION:
-					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fEndPlayerAction = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fEndTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case USING_STAB:
-					fUsingStab = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fUsingStab = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case USING_CHAINSAW:
@@ -336,7 +336,7 @@ public class StepEndBlocking extends AbstractStep {
 					useHitAndRun = false;
 				}
 
-				boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction().isBlockAction()
+				boolean canUsePutridRegurgitation = actingPlayer.getPlayerAction().isBlockOrSpecialAction()
 					&& UtilCards.hasUnusedSkillWithProperty(actingPlayer, NamedProperties.canUseVomitAfterBlock)
 					&& ArrayTool.isProvided(UtilPlayer.findAdjacentBlockablePlayers(game, game.getOtherTeam(activePlayer.getTeam()), game.getFieldModel().getPlayerCoordinate(activePlayer)))
 					&& regularBlock;

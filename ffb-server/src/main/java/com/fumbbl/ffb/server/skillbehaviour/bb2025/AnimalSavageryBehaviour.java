@@ -107,7 +107,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 						PlayerAction playerAction = actingPlayer.getPlayerAction();
 						boolean goodConditions =
 							((playerAction == PlayerAction.BLITZ_MOVE) || (playerAction != null && playerAction.isKickingDowned()) ||
-								(playerAction == PlayerAction.BLITZ) || (playerAction != null && playerAction.isBlockAction()) ||
+								(playerAction == PlayerAction.BLITZ) || (playerAction != null && playerAction.isBlockOrSpecialAction()) ||
 								(playerAction == PlayerAction.MULTIPLE_BLOCK) || (playerAction == PlayerAction.STAND_UP_BLITZ));
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
@@ -266,7 +266,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 			PlayerAction action =
 				fallbackAction(step, actingPlayer.getPlayerAction(), injuryResult.injuryContext(), turnData, game,
 					state.blockDefenderId, hitTargetTeamMate);
-			if (action != null && action.isBlockAction() && !lashedOutAgainstOpponent) {
+			if (action != null && action.isBlockOrSpecialAction() && !lashedOutAgainstOpponent) {
 				label = state.goToLabelOnFailure;
 			} else {
 				if (action != null && hitTargetTeamMate) {
@@ -277,7 +277,7 @@ public class AnimalSavageryBehaviour extends SkillBehaviour<AnimalSavagery> {
 				} else if (action == null && player.getId().equals(state.thrownPlayerId)) {
 					playerStateKey = StepParameterKey.THROWN_PLAYER_STATE;
 					additionalStateKeys = new StepParameterKey[]{StepParameterKey.OLD_DEFENDER_STATE};
-				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction().isBlockAction() && action == null)) {
+				} else if (lashedOutAgainstOpponent && !(actingPlayer.getPlayerAction().isBlockOrSpecialAction() && action == null)) {
 					UtilServerPlayerMove.updateMoveSquares(step.getGameState(), false);
 					step.publishParameter(new StepParameter(StepParameterKey.MOVE_STACK, null));
 					step.publishParameter(new StepParameter(StepParameterKey.USE_ALTERNATE_LABEL, true));

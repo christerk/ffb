@@ -21,14 +21,17 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 	private final PlayerCheckList fList;
 	private final JButton fButtonSelect;
 	private final JButton fButtonCancel;
+	private final JLabel countLabel;
 	private Player<?>[] fSelectedPlayers;
 	private final int fMinSelects;
+	private final int maxSelects;
 
 	public DialogPlayerChoice(FantasyFootballClient client, String header, String[] playerIds, String[] descriptions,
 	                          int minSelects, int maxSelects, FieldCoordinate playerCoordinate, boolean preSelected) {
 
 		super(client, "Player Choice", false);
 		fMinSelects = minSelects;
+		this.maxSelects = maxSelects;
 
 		fButtonSelect = new JButton(dimensionProvider(), "Select");
 		fButtonSelect.setToolTipText("Select the checked player(s)");
@@ -41,7 +44,8 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'i');
 
-		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect);
+		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect,
+			this::updateCount);
 		fList.setBackground(Color.LIGHT_GRAY);
 		fList.setVisibleRowCount(Math.min(playerIds.length, 5));
 		fList.addMouseMotionListener(new MouseMotionAdapter() {
@@ -76,6 +80,13 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		listPanel.add(listScroller);
 		listPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
+		JPanel textPanel = new JPanel();
+		countLabel = new JLabel(dimensionProvider());
+		countLabel.setAlignmentX(CENTER_ALIGNMENT);
+		textPanel.add(countLabel);
+		textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+		updateCount(0);
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.add(fButtonSelect);
@@ -89,6 +100,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		centerPane.setLayout(new BoxLayout(centerPane, BoxLayout.Y_AXIS));
 		centerPane.add(headerPanel);
 		centerPane.add(listPanel);
+		centerPane.add(textPanel);
 		centerPane.add(buttonPanel);
 
 		getContentPane().add(centerPane, BorderLayout.CENTER);
@@ -113,6 +125,18 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		fList.setSelectedIndex(0);
 
+	}
+
+	private void updateCount(int count) {
+		StringBuilder text = new StringBuilder("Selected " + count + " of ");
+		if (fMinSelects > 0 && fMinSelects < maxSelects) {
+			text.append(fMinSelects);
+			text.append(" to ");
+		} else if (fMinSelects == 0) {
+			text.append("max. ");
+		}
+		text.append(maxSelects);
+		countLabel.setText(text.toString());
 	}
 
 	public DialogId getId() {

@@ -86,7 +86,7 @@ public class BloodLustBehaviour extends SkillBehaviour<Bloodlust> {
 					boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 						|| (playerAction != null && playerAction.isKickingDowned())
 						|| (playerAction == PlayerAction.BLITZ)
-						|| (playerAction != null && playerAction.isBlockAction())
+						|| (playerAction != null && playerAction.isBlockOrSpecialAction())
 						|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
 						|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 					int roll = step.getGameState().getDiceRoller().rollSkill();

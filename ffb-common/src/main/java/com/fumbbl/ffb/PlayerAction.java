@@ -116,8 +116,12 @@ public enum PlayerAction implements INamedObject {
 		return this == STAND_UP || this == STAND_UP_BLITZ;
 	}
 
-	public boolean isBlockAction() {
+	public boolean isBlockOrSpecialAction() {
 		return this == BLOCK || this == VICIOUS_VINES || this == BREATHE_FIRE || this == CHAINSAW || this == STAB || this == PROJECTILE_VOMIT || this == CHOMP;
+	}
+
+	public boolean isBlock() {
+		return this == BLOCK || this == VICIOUS_VINES || this == BLITZ;
 	}
 
 	public boolean forceDispatch() {

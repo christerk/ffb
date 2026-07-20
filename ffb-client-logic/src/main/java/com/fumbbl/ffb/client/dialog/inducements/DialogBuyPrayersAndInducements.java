@@ -2,6 +2,8 @@ package com.fumbbl.ffb.client.dialog.inducements;
 
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JTabbedPane;
 import com.fumbbl.ffb.dialog.DialogBuyPrayersAndInducementsParameter;
@@ -20,7 +22,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog {
+public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog implements IDialogCloseListener {
 
 	private final Font boldFont;
 	private final JLabel labelAvailableTreasury;
@@ -155,6 +157,46 @@ public class DialogBuyPrayersAndInducements extends AbstractBuyInducementsDialog
 
 	public DialogId getId() {
 		return DialogId.BUY_PRAYERS_AND_INDUCEMENTS;
+	}
+
+	@Override
+	protected void onOkButtonPressed() {
+		int remainingPettyCash = unspentPettyCash();
+		if (remainingPettyCash <= 0) {
+			close();
+			return;
+		}
+		setButtonsEnabled(false);
+		DialogUnspentPettyCash confirmDialog = new DialogUnspentPettyCash(getClient(), remainingPettyCash);
+		confirmDialog.showDialog(this);
+	}
+
+	@Override
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+		setButtonsEnabled(true);
+		if (pDialog instanceof DialogUnspentPettyCash && ((DialogUnspentPettyCash) pDialog).isChoiceYes()) {
+			close();
+		}
+	}
+
+	/**
+	 * Returns the amount of petty cash the coach could still spend on the cheapest available inducement, or {@code 0}
+	 * if closing the dialog does not need to be confirmed.
+	 */
+	private int unspentPettyCash() {
+		if (pettyCash <= 0) {
+			return 0;
+		}
+		int remainingPettyCash = Math.max(0, availableGold - treasury);
+		if (remainingPettyCash <= 0) {
+			return 0;
+		}
+		int cheapestInducement = cheapestAvailableInducementCost();
+		if (cheapestInducement == Integer.MAX_VALUE || remainingPettyCash < cheapestInducement) {
+			return 0;
+		}
+		return remainingPettyCash;
 	}
 
 	public void keyPressed(KeyEvent pKeyEvent) {
