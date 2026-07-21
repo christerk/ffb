@@ -128,9 +128,9 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(0, 0, 165, 913), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
 		assertEquals(new Rectangle(817, 0, 165, 913), result.awaySidebarBounds());
-		assertEquals(new Rectangle(0, 913, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(1, 946, 389, 153), result.logBounds());
-		assertEquals(new Rectangle(392, 946, 389, 153), result.chatBounds());
+		assertEquals(new Rectangle(100, 913, 782, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(101, 946, 389, 153), result.logBounds());
+		assertEquals(new Rectangle(492, 946, 389, 153), result.chatBounds());
 		assertEquals(1.1675, result.pitchScale(), 0.0001);
 	}
 
