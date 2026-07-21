@@ -78,7 +78,7 @@ class ClientLayoutCalculatorTest {
 		ClientLayoutResult result = layout(ClientLayout.WIDE);
 
 		assertEquals(new Rectangle(0, 0, 145, 1030), result.homeSidebarBounds());
-		assertEquals(new Rectangle(145, 0, 1484, 857), result.fieldBounds());
+		assertEquals(new Rectangle(146, 0, 1484, 857), result.fieldBounds());
 		assertEquals(new Rectangle(1631, 0, 145, 1030), result.awaySidebarBounds());
 		assertEquals(new Rectangle(145, 857, 1486, 32), result.scoreBarBounds());
 		assertEquals(new Rectangle(146, 890, 741, 139), result.logBounds());
