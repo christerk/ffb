@@ -83,9 +83,10 @@ public class ClientLayoutCalculator {
 		int fieldX = centerX + ((centerWidth - fieldWidth) / 2);
 		int fieldY = 0;
 
-		int scoreY = pitchAreaHeight;
+		int scoreX = centerX + ((centerWidth - score.width) / 2);
+		int scoreY = fieldY + fieldHeight;
 		int logY = scoreY + score.height + PANEL_BORDER;
-		int logX = centerX + PANEL_BORDER;
+		int logX = centerX + ((centerWidth - logChatPanelWidth) / 2) + PANEL_BORDER;
 		int chatX = logX + log.width + LOG_CHAT_GAP;
 
 		return new ClientLayoutResult(
@@ -94,7 +95,7 @@ public class ClientLayoutCalculator {
 			new Rectangle(0, 0, sidebar.width, layoutSize.height),
 			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(layoutSize.width - sidebar.width, 0, sidebar.width, layoutSize.height),
-			new Rectangle(centerX, scoreY, score.width, score.height),
+			new Rectangle(scoreX, scoreY, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
 			new Rectangle(chatX, logY, chat.width, chat.height),
 			pitchScale
@@ -103,6 +104,7 @@ public class ClientLayoutCalculator {
 
 	private ClientLayoutResult landscapeDynamic(Dimension availableSize, Dimension fieldBase, Dimension sidebar,
 			Dimension box, Dimension score, Dimension log, Dimension chat) {
+		int logChatPanelWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
 		int logChatPanelHeight = Math.max(log.height, chat.height) + (2 * PANEL_BORDER);
 		int bottomHeight = score.height + logChatPanelHeight;
 
@@ -119,9 +121,10 @@ public class ClientLayoutCalculator {
 		int fieldX = centerX + ((centerWidth - fieldWidth) / 2);
 		int fieldY = 0;
 
-		int scoreY = pitchAreaHeight;
+		int scoreX = centerX + ((centerWidth - score.width) / 2);
+		int scoreY = fieldY + fieldHeight;
 		int logY = scoreY + score.height + PANEL_BORDER;
-		int logX = centerX + PANEL_BORDER;
+		int logX = centerX + ((centerWidth - logChatPanelWidth) / 2) + PANEL_BORDER;
 		int chatX = logX + log.width + LOG_CHAT_GAP;
 
 		return new ClientLayoutResult(
@@ -130,7 +133,7 @@ public class ClientLayoutCalculator {
 			new Rectangle(0, 0, sidebar.width, layoutSize.height),
 			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(layoutSize.width - sidebar.width, 0, sidebar.width, layoutSize.height),
-			new Rectangle(centerX, scoreY, score.width, score.height),
+			new Rectangle(scoreX, scoreY, score.width, score.height),
 			new Rectangle(logX, logY, log.width, log.height),
 			new Rectangle(chatX, logY, chat.width, chat.height),
 			pitchScale

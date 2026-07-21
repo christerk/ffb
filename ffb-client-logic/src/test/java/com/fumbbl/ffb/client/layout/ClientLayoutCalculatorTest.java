@@ -113,9 +113,9 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(0, 0, 145, 812), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(new Rectangle(1127, 0, 145, 812), result.awaySidebarBounds());
-		assertEquals(new Rectangle(145, 552, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(146, 585, 389, 226), result.logBounds());
-		assertEquals(new Rectangle(537, 585, 389, 226), result.chatBounds());
+		assertEquals(new Rectangle(245, 552, 782, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(246, 585, 389, 226), result.logBounds());
+		assertEquals(new Rectangle(637, 585, 389, 226), result.chatBounds());
 		assertEquals(1.2212, result.pitchScale(), 0.0001);
 	}
 
@@ -158,9 +158,9 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(0, 0, 145, 1080), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(new Rectangle(1775, 0, 145, 1080), result.awaySidebarBounds());
-		assertEquals(new Rectangle(145, 907, 1486, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(146, 940, 741, 139), result.logBounds());
-		assertEquals(new Rectangle(889, 940, 741, 139), result.chatBounds());
+		assertEquals(new Rectangle(217, 907, 1486, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(218, 940, 741, 139), result.logBounds());
+		assertEquals(new Rectangle(961, 940, 741, 139), result.chatBounds());
 	}
 
 	@Test
