@@ -63,9 +63,9 @@ class ClientLayoutCalculatorTest {
 	void calculatesCurrentSquareBounds() {
 		ClientLayoutResult result = layout(ClientLayout.SQUARE);
 
-		assertEquals(new Rectangle(0, 0, 165, 782), result.homeSidebarBounds());
+		assertEquals(new Rectangle(0, 0, 165, 784), result.homeSidebarBounds());
 		assertEquals(new Rectangle(165, 0, 452, 782), result.fieldBounds());
-		assertEquals(new Rectangle(617, 0, 165, 782), result.awaySidebarBounds());
+		assertEquals(new Rectangle(617, 0, 165, 784), result.awaySidebarBounds());
 		assertEquals(new Rectangle(783, 344, 260, 96), result.scoreBarBounds());
 		assertEquals(new Rectangle(783, 1, 260, 343), result.logBounds());
 		assertEquals(new Rectangle(783, 440, 260, 343), result.chatBounds());
