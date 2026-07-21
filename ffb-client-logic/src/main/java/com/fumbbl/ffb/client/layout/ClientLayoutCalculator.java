@@ -114,25 +114,20 @@ public class ClientLayoutCalculator {
 		int mainWidth = Math.max(1, layoutSize.width - rightColumnWidth);
 		int pitchAreaWidth = Math.max(1, mainWidth - sidebar.width - sidebar.width);
 
-		double pitchScale = pitchScale(new Dimension(pitchAreaWidth, layoutSize.height), fieldBase);
-
-		int fieldWidth = scaled(fieldBase.width, pitchScale);
-		int fieldHeight = scaled(fieldBase.height, pitchScale);
-		int fieldX = sidebar.width + ((pitchAreaWidth - fieldWidth) / 2);
-		int fieldY = 0;
+		PitchPlacement field = fitPitch(new Rectangle(sidebar.width, 0, pitchAreaWidth, layoutSize.height), fieldBase);
 
 		int rightX = mainWidth + PANEL_BORDER;
 
 		return new ClientLayoutResult(
 			layoutSize,
-			new Rectangle(fieldX, fieldY, fieldWidth, fieldHeight),
+			field.bounds,
 			new Rectangle(0, 0, sidebar.width, layoutSize.height),
 			new Rectangle(0, 0, box.width, box.height),
 			new Rectangle(mainWidth - sidebar.width, 0, sidebar.width, layoutSize.height),
 			new Rectangle(rightX, log.height + PANEL_BORDER, score.width, score.height),
 			new Rectangle(rightX, PANEL_BORDER, log.width, log.height),
 			new Rectangle(rightX, log.height + score.height + PANEL_BORDER, chat.width, chat.height),
-			pitchScale
+			field.scale
 		);
 	}
 
