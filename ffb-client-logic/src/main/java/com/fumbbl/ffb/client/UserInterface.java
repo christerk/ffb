@@ -218,10 +218,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private Dimension availableClientContentSize() {
-		if (fDesktop != null) {
+		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
 			return fDesktop.getSize();
 		}
-		return null;
+		return layoutCalculator.initialContentSize(layoutSettings);
 	}
 
 	public ClientSketchManager getSketchManager() {

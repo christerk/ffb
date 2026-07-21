@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.layout.ClientLayoutCalculator;
 import com.fumbbl.ffb.client.layout.ClientLayoutResult;
 import org.junit.jupiter.api.Test;
 
+import java.awt.Dimension;
 import java.awt.Point;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -103,7 +104,7 @@ class SetupDragHitTesterTest {
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
-		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings);
+		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
 
 		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
@@ -112,5 +113,18 @@ class SetupDragHitTesterTest {
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 
 		return new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
+	}
+
+	private Dimension defaultLayoutSize(ClientLayout layout) {
+		switch (layout) {
+			case PORTRAIT:
+				return new Dimension(782, 969);
+			case SQUARE:
+				return new Dimension(1044, 784);
+			case WIDE:
+				return new Dimension(1776, 1030);
+			default:
+				return new Dimension(1072, 712);
+		}
 	}
 }

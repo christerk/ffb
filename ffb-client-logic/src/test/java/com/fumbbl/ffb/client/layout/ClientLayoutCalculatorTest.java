@@ -163,33 +163,22 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(961, 940, 741, 139), result.chatBounds());
 	}
 
-	@Test
-	void dynamicCalculationFallsBackToFixedLayoutForInvalidAvailableSize() {
-		assertEquals(layout(ClientLayout.LANDSCAPE).preferredSize(),
-			layout(ClientLayout.LANDSCAPE, new Dimension(0, 0)).preferredSize());
-	}
-
-	@Test
-	void dynamicLayoutFallsBackToFixedLayoutAtOrBelowFixedPreferredSize() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
-		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-
-		ClientLayoutResult fixedLayout = calculator.calculate(layoutSettings);
-
-		ClientLayoutResult sameSize = calculator.calculate(layoutSettings, fixedLayout.preferredSize());
-		ClientLayoutResult narrower = calculator.calculate(layoutSettings,
-			new Dimension(fixedLayout.preferredSize().width - 1, fixedLayout.preferredSize().height + 100));
-		ClientLayoutResult shorter = calculator.calculate(layoutSettings,
-			new Dimension(fixedLayout.preferredSize().width + 100, fixedLayout.preferredSize().height - 1));
-
-		assertFixedLayout(fixedLayout, sameSize);
-		assertFixedLayout(fixedLayout, narrower);
-		assertFixedLayout(fixedLayout, shorter);
-	}
-
 	private ClientLayoutResult layout(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
-		return new ClientLayoutCalculator().calculate(layoutSettings);
+		return new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
+	}
+
+	private Dimension defaultLayoutSize(ClientLayout layout) {
+		switch (layout) {
+			case PORTRAIT:
+				return new Dimension(782, 969);
+			case SQUARE:
+				return new Dimension(1044, 784);
+			case WIDE:
+				return new Dimension(1776, 1030);
+			default:
+				return new Dimension(1072, 712);
+		}
 	}
 
 	private ClientLayoutResult layout(ClientLayout layout, Dimension availableSize) {
