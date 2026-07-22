@@ -74,7 +74,9 @@ public class StepGettingEven extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> player = game.getPlayerById(playerId);
-		if (player != null && player.getPlayerType() == PlayerType.STAR) {
+		if (player != null &&
+			(player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY ||
+				player.getPlayerType() == PlayerType.INFAMOUS_STAFF)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
 		}

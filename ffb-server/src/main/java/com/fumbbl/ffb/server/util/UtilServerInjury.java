@@ -21,6 +21,7 @@ import com.fumbbl.ffb.model.RosterPlayer;
 import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TeamResult;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportRaiseDead;
 import com.fumbbl.ffb.report.ReportRegenerationRoll;
@@ -37,6 +38,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.util.RaiseType;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -46,9 +48,9 @@ import com.fumbbl.ffb.util.UtilPlayer;
 public class UtilServerInjury {
 
 	public static InjuryResult handleInjury(IStep pStep, InjuryTypeServer<?> pInjuryType, Player<?> pAttacker,
-		Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
-		FieldCoordinate fromCoordinate, InjuryResult pOldInjuryResult,
-		ApothecaryMode pApothecaryMode) {
+	                                        Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
+	                                        FieldCoordinate fromCoordinate, InjuryResult pOldInjuryResult,
+	                                        ApothecaryMode pApothecaryMode) {
 
 		if (pDefender == null) {
 			throw new IllegalArgumentException("Parameter defender must not be null.");
@@ -90,10 +92,10 @@ public class UtilServerInjury {
 		if (injuryResult.handleIgnoringArmourBreaks(pStep, pDefender, game)) {
 			pInjuryType.injuryContext().setModifiedInjuryContext(null);
 		}
-		evaluateInjuryContext(pInjuryType, pDefender, injuryContext, game);
+		evaluateInjuryContext(pInjuryType, pDefender, injuryContext, gameState);
 
 		if (injuryContext.getModifiedInjuryContext() != null) {
-			evaluateInjuryContext(pInjuryType, pDefender, injuryContext.getModifiedInjuryContext(), game);
+			evaluateInjuryContext(pInjuryType, pDefender, injuryContext.getModifiedInjuryContext(), gameState);
 		}
 
 		return injuryResult;
@@ -101,7 +103,9 @@ public class UtilServerInjury {
 	}
 
 	private static void evaluateInjuryContext(InjuryTypeServer<?> pInjuryType, Player<?> pDefender,
-		InjuryContext injuryContext, Game game) {
+	                                          InjuryContext injuryContext, GameState gameState) {
+
+		Game game = gameState.getGame();
 
 		if (injuryContext.isSeriousInjury()) {
 			RollMechanic rollMechanic =
@@ -134,7 +138,21 @@ public class UtilServerInjury {
 		}
 
 		if (injuryContext.isCasualty() || injuryContext.isKnockedOut() || injuryContext.isReserve()) {
-			injuryContext.setSendToBoxTurn(game.getTurnData().getTurnNr());
+
+			TurnData turnData;
+
+			if (game.getTurnMode().isBombTurn() && gameState.getPassState() != null &&
+				StringTool.isProvided(gameState.getPassState().getOriginalBombardier())) {
+				if (game.getTeamHome().hasPlayer(game.getPlayerById(gameState.getPassState().getOriginalBombardier()))) {
+					turnData = game.getTurnDataHome();
+				} else {
+					turnData = game.getTurnDataAway();
+				}
+			} else {
+				turnData = game.getTurnData();
+			}
+
+			injuryContext.setSendToBoxTurn(turnData.getTurnNr());
 			injuryContext.setSendToBoxHalf(game.getHalf());
 
 			injuryContext.setSendToBoxReason(pInjuryType.sendToBoxReason());
@@ -175,7 +193,7 @@ public class UtilServerInjury {
 	}
 
 	public static boolean handleRegeneration(IStep pStep, Player<?> pPlayer, PlayerState givenPlayerState,
-		boolean rerolled) {
+	                                         boolean rerolled) {
 		boolean successful = false;
 		if (pPlayer != null) {
 			GameState gameState = pStep.getGameState();
@@ -258,7 +276,7 @@ public class UtilServerInjury {
 	}
 
 	public static void sendRaisedPlayer(IStep pStep, GameState gameState, Team necroTeam, RosterPlayer raisedPlayer,
-		boolean nurglesRot) {
+	                                    boolean nurglesRot) {
 		// communicate raised player to clients
 		Game game = gameState.getGame();
 		gameState.getServer().getCommunication()
@@ -270,13 +288,14 @@ public class UtilServerInjury {
 	}
 
 	private static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult, String pPlayerName,
-		RaiseType raiseType, String killedId) {
+	                                        RaiseType raiseType, String killedId) {
 		RosterPosition zombiePosition = pNecroTeam.getRoster().getRaisedRosterPosition();
 		return raisePlayer(pGame, pNecroTeam, pNecroTeamResult, pPlayerName, raiseType, killedId, zombiePosition);
 	}
 
 	public static RosterPlayer raisePlayer(Game pGame, Team pNecroTeam, TeamResult pNecroTeamResult,
-		String pPlayerName, RaiseType raiseType, String killedId, RosterPosition zombiePosition) {
+	                                       String pPlayerName, RaiseType raiseType, String killedId,
+	                                       RosterPosition zombiePosition) {
 		RosterPlayer raisedPlayer = null;
 
 		if (zombiePosition != null) {
@@ -321,7 +340,7 @@ public class UtilServerInjury {
 	}
 
 	public static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, ApothecaryMode pApothecaryMode,
-		boolean eligibleForSafePairOfHands) {
+	                                          boolean eligibleForSafePairOfHands) {
 		return dropPlayer(pStep, pPlayer, PlayerState.PRONE, pApothecaryMode, eligibleForSafePairOfHands);
 	}
 
@@ -329,7 +348,7 @@ public class UtilServerInjury {
 	// sets stepParameter END_TURN if player is on acting team and drops the ball
 	// sets StepParameterKey.INJURY_RESULT if player has skill Ball&Chain
 	private static StepParameterSet dropPlayer(IStep pStep, Player<?> pPlayer, int pPlayerBase,
-		ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
+	                                           ApothecaryMode pApothecaryMode, boolean eligibleForSafePairOfHands) {
 		StepParameterSet stepParameters = new StepParameterSet();
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();

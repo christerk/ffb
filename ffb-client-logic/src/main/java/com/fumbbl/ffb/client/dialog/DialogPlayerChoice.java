@@ -85,7 +85,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		countLabel.setAlignmentX(CENTER_ALIGNMENT);
 		textPanel.add(countLabel);
 		textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		updateCount(0);
+		updateCount(preSelected ? maxSelects : 0);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
