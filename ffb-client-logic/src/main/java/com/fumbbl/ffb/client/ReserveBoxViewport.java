@@ -7,6 +7,13 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+/**
+ * Owns runtime reserve box bounds and setup reserve-coordinate mapping.
+ *
+ * This keeps reserve/box hit testing separate from PitchViewport, since the
+ * reserve box has different geometry and sentinel FieldCoordinate values.
+ */
+
 public class ReserveBoxViewport {
 
 	private final UiDimensionProvider uiDimensionProvider;

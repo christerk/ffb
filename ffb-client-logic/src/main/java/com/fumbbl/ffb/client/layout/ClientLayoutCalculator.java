@@ -6,6 +6,14 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Calculates the client layout for one content size.
+ *
+ * This class resolves configured component dimensions, arranges the major
+ * layout areas, fits the pitch into its available area, and returns the bounds
+ * consumed by Swing components and viewports.
+ */
+
 public class ClientLayoutCalculator {
 	private static final int LOG_CHAT_GAP = 2;
 	private static final int PANEL_BORDER = 1;

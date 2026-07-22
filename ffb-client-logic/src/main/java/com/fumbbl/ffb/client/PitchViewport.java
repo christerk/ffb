@@ -7,6 +7,14 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+/**
+ * Owns the runtime pitch viewport and pitch/world coordinate conversion.
+ *
+ * Layout code updates the viewport bounds and runtime pitch scale. Rendering,
+ * input, animation, and overlays use this class so they agree on where the
+ * pitch is and how it is scaled.
+ */
+
 public class PitchViewport {
 
 	private final LayoutSettings layoutSettings;

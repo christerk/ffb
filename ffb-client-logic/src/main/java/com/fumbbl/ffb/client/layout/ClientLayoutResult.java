@@ -3,6 +3,13 @@ package com.fumbbl.ffb.client.layout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Immutable result of one client layout pass.
+ *
+ * Contains the runtime content size, component bounds, and pitch scale that
+ * should be applied to Swing components and viewports.
+ */
+
 public class ClientLayoutResult {
 
 	private final Dimension contentSize;

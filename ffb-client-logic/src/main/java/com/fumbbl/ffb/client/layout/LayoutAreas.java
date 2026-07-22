@@ -5,6 +5,13 @@ import com.fumbbl.ffb.client.ClientLayout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Describes the major regions of a client layout.
+ *
+ * This class owns layout topology: side rails, pitch area, and panel area.
+ * It does not place individual Swing components inside those regions.
+ */
+
 class LayoutAreas {
 
 	private static final int LOG_CHAT_GAP = 2;
