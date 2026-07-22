@@ -69,6 +69,10 @@ public class ClientLayoutCalculator {
 			layoutSettings.getGuiScale());
 	}
 
+	// TODO: Revisit this boundary when resize policies are added. The calculator
+	// currently owns score/log/chat placement, so it needs one topology signal from
+	// LayoutAreas. Avoid moving this into LayoutAreas unless panel placement becomes
+	// part of the topology model.
 	private DockPanels placeDockPanels(LayoutAreas.DockPosition dockPosition, Rectangle dock, Dimension score, Dimension log,
 		Dimension chat) {
 		if (dockPosition == LayoutAreas.DockPosition.RIGHT) {

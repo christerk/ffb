@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.layout;
 
 import com.fumbbl.ffb.client.ClientLayout;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.LayoutSettings;
 import org.junit.jupiter.api.Test;
 
@@ -202,6 +203,35 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(401, 846, 389, 153), result.chatBounds());
 	}
 
+	@Test
+	void naturalContentSizeProducesConfiguredScaleLayout() {
+		for (ClientLayout layout : new ClientLayout[] {
+			ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT, ClientLayout.SQUARE, ClientLayout.WIDE
+		}) {
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.0);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.5, 1.0);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.5);
+		}
+	}
+
+	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale,
+		double pitchScale) {
+		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
+		layoutSettings.setGuiScale(guiScale);
+		layoutSettings.setPitchScale(pitchScale);
+
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+		Dimension naturalContentSize = calculator.naturalContentSize(layoutSettings);
+		ClientLayoutResult result = calculator.calculate(layoutSettings, naturalContentSize);
+
+		assertEquals(layoutSettings.getGuiScale(), result.runtimeGuiScale(), 0.0001);
+		assertEquals(dimension(layoutSettings, Component.SCORE_BOARD), result.scoreBarBounds().getSize());
+		assertEquals(dimension(layoutSettings, Component.LOG), result.logBounds().getSize());
+		assertEquals(dimension(layoutSettings, Component.CHAT), result.chatBounds().getSize());
+		assertEquals(dimension(layoutSettings, Component.SIDEBAR).width, result.homeSidebarBounds().width);
+		assertEquals(dimension(layoutSettings, Component.SIDEBAR).width, result.awaySidebarBounds().width);
+	}
+
 	private ClientLayoutResult layout(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		return new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
@@ -240,5 +270,13 @@ class ClientLayoutCalculatorTest {
 		assertEquals(expected.logBounds(), actual.logBounds());
 		assertEquals(expected.chatBounds(), actual.chatBounds());
 		assertEquals(expected.pitchScale(), actual.pitchScale(), 0.0001);
+	}
+
+	private Dimension dimension(LayoutSettings layoutSettings, Component component) {
+		return scale(component.dimension(layoutSettings.getLayout()), layoutSettings.getGuiScale());
+	}
+
+	private Dimension scale(Dimension dimension, double scale) {
+		return new Dimension((int) (dimension.width * scale), (int) (dimension.height * scale));
 	}
 }
