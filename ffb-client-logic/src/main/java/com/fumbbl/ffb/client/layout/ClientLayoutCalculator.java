@@ -56,9 +56,17 @@ public class ClientLayoutCalculator {
 		Rectangle dock = areas.finalDockBounds(pitchFit.bounds);
 		DockPanels dockPanels = placeDockPanels(areas.dockPosition, dock, score, log, chat);
 
-		return new ClientLayoutResult(new Dimension(availableSize), pitchFit.bounds, areas.homeRail,
-			new Rectangle(areas.homeRail.x, areas.homeRail.y, reserveBox.width, reserveBox.height), areas.awayRail,
-			dockPanels.score, dockPanels.log, dockPanels.chat, pitchFit.scale, layoutSettings.getGuiScale());
+		return new ClientLayoutResult(
+			new Dimension(availableSize),
+			pitchFit.bounds,
+			areas.homeRail,
+			new Rectangle(areas.homeRail.x, areas.homeRail.y, reserveBox.width, reserveBox.height),
+			areas.awayRail,
+			dockPanels.score,
+			dockPanels.log,
+			dockPanels.chat,
+			pitchFit.scale,
+			layoutSettings.getGuiScale());
 	}
 
 	private DockPanels placeDockPanels(LayoutAreas.DockPosition dockPosition, Rectangle dock, Dimension score, Dimension log,
