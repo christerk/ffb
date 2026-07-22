@@ -7,6 +7,9 @@ import java.awt.Rectangle;
 
 class LayoutAreas {
 
+	private static final int LOG_CHAT_GAP = 2;
+	private static final int PANEL_BORDER = 1;
+
 	enum DockPosition {
 		BOTTOM, RIGHT
 	}
@@ -26,8 +29,10 @@ class LayoutAreas {
 		this.dockPosition = dockPosition;
 	}
 
-	static LayoutAreas arrange(ClientLayout layout, Rectangle content, int railWidth, Dimension bottomDockSize,
-		Dimension rightDockSize) {
+	static LayoutAreas arrange(ClientLayout layout, Rectangle content, int railWidth, Dimension score, Dimension log,
+		Dimension chat) {
+		Dimension bottomDockSize = bottomDockSize(score, log, chat);
+		Dimension rightDockSize = rightDockSize(score, log, chat);
 		switch (layout) {
 			case PORTRAIT:
 				return portrait(content, railWidth, bottomDockSize);
@@ -38,8 +43,10 @@ class LayoutAreas {
 		}
 	}
 
-	static Dimension naturalSize(ClientLayout layout, Dimension rail, Dimension pitch, Dimension bottomDock,
-		Dimension rightDock) {
+	static Dimension naturalSize(ClientLayout layout, Dimension rail, Dimension pitch, Dimension score, Dimension log,
+		Dimension chat) {
+		Dimension bottomDock = bottomDockSize(score, log, chat);
+		Dimension rightDock = rightDockSize(score, log, chat);
 		switch (layout) {
 			case PORTRAIT:
 				return portraitNaturalSize(rail, pitch, bottomDock);
@@ -106,5 +113,27 @@ class LayoutAreas {
 		int gameWidth = rail.width + pitch.width + rail.width;
 		int gameHeight = Math.max(rail.height, pitch.height);
 		return new Dimension(gameWidth + dock.width, Math.max(gameHeight, dock.height));
+	}
+
+	Rectangle finalDockBounds(Rectangle pitchBounds) {
+		if (dockPosition == DockPosition.BOTTOM) {
+			return new Rectangle(dock.x, pitchBounds.y + pitchBounds.height, dock.width, dock.height);
+		}
+		return new Rectangle(dock);
+	}
+
+	private static Dimension bottomDockSize(Dimension score, Dimension log, Dimension chat) {
+		Dimension logChat = logChatSize(log, chat);
+		return new Dimension(Math.max(score.width, logChat.width), score.height + logChat.height);
+	}
+
+	private static Dimension rightDockSize(Dimension score, Dimension log, Dimension chat) {
+		return new Dimension(Math.max(log.width, Math.max(score.width, chat.width)) + (2 * PANEL_BORDER),
+			log.height + score.height + chat.height + (2 * PANEL_BORDER));
+	}
+
+	private static Dimension logChatSize(Dimension log, Dimension chat) {
+		return new Dimension(log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER),
+			Math.max(log.height, chat.height) + (2 * PANEL_BORDER));
 	}
 }
