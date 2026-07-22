@@ -47,6 +47,7 @@ public class ChangeList {
 			.addBugfix("Plague Ridden also worked for non-block casualties")
 			.addBugfix("Bombardier: If the original bomber was cassed by an intercepted bomb they were available for AtC at the end of drive and if successful did return to reserves")
 			.addBugfix("Bombardier: If the original bomber was cassed by an intercepted bomb the tooltip when hovering them in the dugout displayed the opponent team's turn number")
+			.addBugfix("Steady Footing: Could be used by prone/stunned players when hit by bombs etc")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")

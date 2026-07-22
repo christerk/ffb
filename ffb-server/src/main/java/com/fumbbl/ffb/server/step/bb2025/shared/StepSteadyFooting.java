@@ -178,7 +178,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
 		// do not use hasTacklezones as blocked players have base FALLING which is not included in that
-		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused() || playerState.getBase() == PlayerState.HIT_ON_GROUND) {
+		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused() || playerState.getBase() == PlayerState.HIT_ON_GROUND || playerState.isProneOrStunned()) {
 			fail();
 			return;
 		}
