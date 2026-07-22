@@ -12,27 +12,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ClientLayoutCalculatorTest {
 
 	@Test
-	void calculatesCurrentLandscapePreferredSize() {
-		assertEquals(new Dimension(1072, 712), layout(ClientLayout.LANDSCAPE).preferredSize());
+	void measuresLandscapeFromTheGameAreaAndBottomDock() {
+		assertEquals(new Dimension(1072, 712), naturalSize(ClientLayout.LANDSCAPE));
 	}
 
 	@Test
-	void calculatesCurrentPortraitPreferredSize() {
-		assertEquals(new Dimension(782, 969), layout(ClientLayout.PORTRAIT).preferredSize());
+	void measuresPortraitFromTheGameAreaAndBottomDock() {
+		assertEquals(new Dimension(782, 969), naturalSize(ClientLayout.PORTRAIT));
 	}
 
 	@Test
-	void calculatesCurrentSquarePreferredSize() {
-		assertEquals(new Dimension(1044, 784), layout(ClientLayout.SQUARE).preferredSize());
+	void measuresSquareFromTheGameAreaAndSideDock() {
+		assertEquals(new Dimension(1044, 784), naturalSize(ClientLayout.SQUARE));
 	}
 
 	@Test
-	void calculatesCurrentWidePreferredSize() {
-		assertEquals(new Dimension(1776, 1030), layout(ClientLayout.WIDE).preferredSize());
+	void measuresWideFromTheGameAreaAndBottomDock() {
+		assertEquals(new Dimension(1776, 1030), naturalSize(ClientLayout.WIDE));
 	}
 
 	@Test
-	void calculatesCurrentLandscapeBounds() {
+	void arrangesLandscapeAsGameAreaAboveBottomDock() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE);
 
 		assertEquals(new Rectangle(0, 0, 145, 712), result.homeSidebarBounds());
@@ -46,7 +46,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void calculatesCurrentPortraitBounds() {
+	void arrangesPortraitAsGameAreaAboveBottomDock() {
 		ClientLayoutResult result = layout(ClientLayout.PORTRAIT);
 
 		assertEquals(new Rectangle(0, 0, 165, 782), result.homeSidebarBounds());
@@ -60,11 +60,11 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void calculatesCurrentSquareBounds() {
+	void arrangesSquareAsGameAreaBesideSideDock() {
 		ClientLayoutResult result = layout(ClientLayout.SQUARE);
 
 		assertEquals(new Rectangle(0, 0, 165, 784), result.homeSidebarBounds());
-		assertEquals(new Rectangle(165, 0, 452, 782), result.fieldBounds());
+		assertEquals(new Rectangle(165, 1, 452, 782), result.fieldBounds());
 		assertEquals(new Rectangle(617, 0, 165, 784), result.awaySidebarBounds());
 		assertEquals(new Rectangle(783, 344, 260, 96), result.scoreBarBounds());
 		assertEquals(new Rectangle(783, 1, 260, 343), result.logBounds());
@@ -74,7 +74,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void calculatesCurrentWideBounds() {
+	void arrangesWideAsGameAreaAboveBottomDock() {
 		ClientLayoutResult result = layout(ClientLayout.WIDE);
 
 		assertEquals(new Rectangle(0, 0, 145, 1030), result.homeSidebarBounds());
@@ -85,20 +85,21 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(1.0, result.pitchScale(), 0.0001);
+		assertEquals(1.0, result.guiScale(), 0.0001);
 	}
 
 	@Test
 	void returnsDefensiveCopies() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE);
 
-		Dimension preferredSize = result.preferredSize();
-		preferredSize.width = 1;
+		Dimension contentSize = result.contentSize();
+		contentSize.width = 1;
 		Rectangle fieldBounds = result.fieldBounds();
 		fieldBounds.x = 1;
 		Rectangle homeReserveBoxBounds = result.homeReserveBoxBounds();
 		homeReserveBoxBounds.x = 1;
 
-		assertEquals(new Dimension(1072, 712), result.preferredSize());
+		assertEquals(new Dimension(1072, 712), result.contentSize());
 		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(1.0, result.pitchScale(), 0.0001);
@@ -108,7 +109,7 @@ class ClientLayoutCalculatorTest {
 	void calculatesDynamicLandscapeBoundsAndPitchScale() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE, new Dimension(1272, 812));
 
-		assertEquals(new Dimension(1272, 812), result.preferredSize());
+		assertEquals(new Dimension(1272, 812), result.contentSize());
 		assertEquals(new Rectangle(158, 0, 955, 552), result.fieldBounds());
 		assertEquals(new Rectangle(0, 0, 145, 812), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
@@ -123,7 +124,7 @@ class ClientLayoutCalculatorTest {
 	void calculatesDynamicPortraitBoundsAndPitchScale() {
 		ClientLayoutResult result = layout(ClientLayout.PORTRAIT, new Dimension(982, 1100));
 
-		assertEquals(new Dimension(982, 1100), result.preferredSize());
+		assertEquals(new Dimension(982, 1100), result.contentSize());
 		assertEquals(new Rectangle(227, 0, 527, 913), result.fieldBounds());
 		assertEquals(new Rectangle(0, 0, 165, 913), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
@@ -138,7 +139,7 @@ class ClientLayoutCalculatorTest {
 	void calculatesDynamicSquareBoundsAndPitchScale() {
 		ClientLayoutResult result = layout(ClientLayout.SQUARE, new Dimension(1244, 900));
 
-		assertEquals(new Dimension(1244, 900), result.preferredSize());
+		assertEquals(new Dimension(1244, 900), result.contentSize());
 		assertEquals(new Rectangle(231, 0, 520, 900), result.fieldBounds());
 		assertEquals(new Rectangle(0, 0, 165, 900), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
@@ -153,7 +154,7 @@ class ClientLayoutCalculatorTest {
 	void calculatesDynamicWideBoundsAndPitchScale() {
 		ClientLayoutResult result = layout(ClientLayout.WIDE, new Dimension(1920, 1080));
 
-		assertEquals(new Dimension(1920, 1080), result.preferredSize());
+		assertEquals(new Dimension(1920, 1080), result.contentSize());
 		assertEquals(new Rectangle(175, 0, 1570, 907), result.fieldBounds());
 		assertEquals(new Rectangle(0, 0, 145, 1080), result.homeSidebarBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
@@ -166,6 +167,11 @@ class ClientLayoutCalculatorTest {
 	private ClientLayoutResult layout(ClientLayout layout) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		return new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
+	}
+
+	private Dimension naturalSize(ClientLayout layout) {
+		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
+		return new ClientLayoutCalculator().naturalContentSize(layoutSettings);
 	}
 
 	private Dimension defaultLayoutSize(ClientLayout layout) {
@@ -187,7 +193,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	private void assertFixedLayout(ClientLayoutResult expected, ClientLayoutResult actual) {
-		assertEquals(expected.preferredSize(), actual.preferredSize());
+		assertEquals(expected.contentSize(), actual.contentSize());
 		assertEquals(expected.fieldBounds(), actual.fieldBounds());
 		assertEquals(expected.homeSidebarBounds(), actual.homeSidebarBounds());
 		assertEquals(expected.homeReserveBoxBounds(), actual.homeReserveBoxBounds());

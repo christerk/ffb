@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 
 public class ClientLayoutResult {
 
-	private final Dimension preferredSize;
+	private final Dimension contentSize;
 	private final Rectangle fieldBounds;
 	private final Rectangle homeSidebarBounds;
 	private final Rectangle awaySidebarBounds;
@@ -14,12 +14,13 @@ public class ClientLayoutResult {
 	private final Rectangle chatBounds;
 	private final Rectangle homeReserveBoxBounds;
 	private final double pitchScale;
+	private final double guiScale;
 
-	public ClientLayoutResult(Dimension preferredSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
-														Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
-														Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds,
-														double pitchScale) {
-		this.preferredSize = new Dimension(preferredSize);
+	public ClientLayoutResult(Dimension contentSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
+																Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
+																Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds,
+																double pitchScale, double guiScale) {
+		this.contentSize = new Dimension(contentSize);
 		this.fieldBounds = new Rectangle(fieldBounds);
 		this.homeSidebarBounds = new Rectangle(homeSidebarBounds);
 		this.awaySidebarBounds = new Rectangle(awaySidebarBounds);
@@ -28,10 +29,11 @@ public class ClientLayoutResult {
 		this.chatBounds = new Rectangle(chatBounds);
 		this.homeReserveBoxBounds = new Rectangle(homeReserveBoxBounds);
 		this.pitchScale = pitchScale;
+		this.guiScale = guiScale;
 	}
 
-	public Dimension preferredSize() {
-		return new Dimension(preferredSize);
+	public Dimension contentSize() {
+		return new Dimension(contentSize);
 	}
 
 	public Rectangle fieldBounds() {
@@ -64,5 +66,9 @@ public class ClientLayoutResult {
 
 	public double pitchScale() {
 		return pitchScale;
+	}
+
+	public double guiScale() {
+		return guiScale;
 	}
 }

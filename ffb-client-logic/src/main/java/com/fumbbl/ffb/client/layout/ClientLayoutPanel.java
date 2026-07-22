@@ -33,11 +33,9 @@ public class ClientLayoutPanel extends JPanel {
 	}
 
 	public void apply(ClientLayoutResult layoutResult) {
-		Dimension preferredSize = layoutResult.preferredSize();
-		setMinimumSize(preferredSize);
-		setPreferredSize(preferredSize);
-		setMaximumSize(preferredSize);
-		setSize(preferredSize);
+		Dimension contentSize = layoutResult.contentSize();
+		setPreferredSize(contentSize);
+		setSize(contentSize);
 
 		applyBounds(fieldComponent, layoutResult.fieldBounds());
 		applyBounds(homeSidebar, layoutResult.homeSidebarBounds());
