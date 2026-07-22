@@ -13,9 +13,9 @@ The requested direction is:
 
 ## Current Status
 
-Phases 1-11 are implemented or partially implemented in earlier PRs. The current branch is no longer about introducing the first viewport/layout pieces; it is about cleaning up the runtime layout data flow and preparing for configurable resize behavior.
+Phases 1-12 are implemented or partially implemented. The current branch completed the runtime layout data-flow cleanup and prepares the codebase for configurable resize behavior.
 
-Current branch focus:
+Phase 12 completed in this branch:
 
 - remove fixed/dynamic layout recipe duplication
 - stop using a temporary layout result as a measurement source
@@ -116,7 +116,7 @@ Status: Done.
 
 `ClientLayoutResult` now represents the output of one runtime layout pass. It carries content size, pitch bounds, GUI component bounds, and pitch scale.
 
-Known rough edge: `runtimeGuiScale()` should only remain if it is consumed by current behavior or by the next resize-policy step. Otherwise it is future leakage.
+Note: `runtimeGuiScale()` is carried for the upcoming resize-policy step, where GUI scale may become runtime policy output.
 
 ## Phase 6: Make UserInterface Use The Layout Panel
 
@@ -166,7 +166,7 @@ This replaces the older wording that simply said to center the pitch inside the 
 
 ## Phase 12: Normalize Layout Data Flow
 
-Status: Current work.
+Status: Done.
 
 The goal of this phase is to make fixed startup layout and dynamic resize layout the same calculation.
 
@@ -178,7 +178,7 @@ There should not be separate fixed and dynamic rectangle recipes.
 
 The old fixed layout is just the result of running the same runtime layout flow with the configured/natural content size.
 
-Current target flow:
+Implemented flow:
 
 ```text
 LayoutSettings + available content size
@@ -204,7 +204,7 @@ LayoutSettings + available content size
 - final result assembly
 - local score/log/chat panel placement
 
-Known rough edge: score/log/chat placement still contains rectangle arithmetic. That is acceptable if it stays local and named by intent.
+Remaining note: score/log/chat placement still contains local rectangle arithmetic. That is acceptable for now because it is contained and named by intent.
 
 ## Phase 13: Add Configurable Resize Scaling Policy
 
@@ -289,7 +289,7 @@ No special pitch coordinate logic should be needed for fullscreen.
 ## Known Rough Edges
 
 - `LayoutSettings` scale naming is still confusing because GUI, pitch, and dugout scale are now separate but the final resize-policy API is not done.
-- `ClientLayoutResult.runtimeGuiScale()` may be unused future leakage.
+- `ClientLayoutResult.runtimeGuiScale()` is present for the upcoming resize-policy work.
 - `PitchViewport` manually implements transform behavior instead of exposing `AffineTransform` objects.
-- `ClientLayoutCalculator` still has local rectangle arithmetic for panel placement.
+- `ClientLayoutCalculator` still has local rectangle arithmetic for score/log/chat placement.
 - The branch is broad because layout, coordinate conversion, rendering, input, animation, dialogs, and setup drag all depend on pitch position/scale.
