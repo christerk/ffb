@@ -5,6 +5,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Swing panel that applies calculated client layout bounds.
+ *
+ * This panel uses absolute positioning because component bounds come from
+ * ClientLayoutCalculator rather than Swing layout managers.
+ */
+
 public class ClientLayoutPanel extends JPanel {
 
 	private final Component fieldComponent;
@@ -33,11 +40,9 @@ public class ClientLayoutPanel extends JPanel {
 	}
 
 	public void apply(ClientLayoutResult layoutResult) {
-		Dimension preferredSize = layoutResult.preferredSize();
-		setMinimumSize(preferredSize);
-		setPreferredSize(preferredSize);
-		setMaximumSize(preferredSize);
-		setSize(preferredSize);
+		Dimension contentSize = layoutResult.contentSize();
+		setPreferredSize(contentSize);
+		setSize(contentSize);
 
 		applyBounds(fieldComponent, layoutResult.fieldBounds());
 		applyBounds(homeSidebar, layoutResult.homeSidebarBounds());

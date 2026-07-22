@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StarPlayerTableModel extends AbstractTableModel {
+public class StarPlayerTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final String[] fColumnNames;
 	private final Object[][] fRowData;
@@ -63,6 +63,24 @@ public class StarPlayerTableModel extends AbstractTableModel {
 			}
 		}
 		return noBoughtStarPlayers;
+	}
+
+	public boolean canBuyAnother() {
+		return getCheckedRows() < fMaxNrOfStars;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			boolean selected = (Boolean) getValueAt(i, 0);
+			if (!selected) {
+				return ((Player<?>) getValueAt(i, 4)).getPosition().getCost();
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return true;
 	}
 
 	public void setMaxNrOfStars(int amount) {

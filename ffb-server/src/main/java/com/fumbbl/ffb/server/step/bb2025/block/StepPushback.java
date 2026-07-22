@@ -195,9 +195,9 @@ public class StepPushback extends AbstractStep {
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.THROW_IN));
 						publishParameter(new StepParameter(StepParameterKey.THROW_IN_COORDINATE, defenderCoordinate));
-						if (sameTeam) {
-							publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-						}
+					}
+					if (sameTeam) {
+						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
 					publishParameter(new StepParameter(StepParameterKey.STARTING_PUSHBACK_SQUARE, null));
 					state.doPush = true;

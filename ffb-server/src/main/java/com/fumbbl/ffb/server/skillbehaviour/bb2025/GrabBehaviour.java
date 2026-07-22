@@ -63,7 +63,7 @@ public class GrabBehaviour extends SkillBehaviour<Grab> {
 					&& (attackerCoordinate.isAdjacent(defenderCoordinate) || actingPlayer.getPlayerAction() == PlayerAction.VICIOUS_VINES)
 					&& cancellingSkill == null
 					&& !attackerHasConflictingSkill
-					&& ((actingPlayer.getPlayerAction().isBlockAction())
+					&& ((actingPlayer.getPlayerAction().isBlockOrSpecialAction())
 					|| (actingPlayer.getPlayerAction() == PlayerAction.MULTIPLE_BLOCK) || allowGrabOutsideBlock)) {
 					if ((state.grabbing == null) && ArrayTool.isProvided(state.pushbackSquares)) {
 						state.grabbing = true;

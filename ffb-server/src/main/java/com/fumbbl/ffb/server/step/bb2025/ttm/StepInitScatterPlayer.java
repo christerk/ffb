@@ -266,6 +266,9 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 		} else {
 			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate, thrownPlayerHasBall,
 				new InjuryTypeCrowdPush());
+			if (game.getActingTeam().hasPlayer(thrownPlayer)) {
+				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+			}
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));

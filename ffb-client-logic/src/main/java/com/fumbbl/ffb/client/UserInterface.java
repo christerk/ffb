@@ -161,7 +161,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		fDesktop.add(layoutPanel, -1);
-		fDesktop.setPreferredSize(layoutResult.preferredSize());
+		fDesktop.setPreferredSize(layoutResult.contentSize());
 
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
 		setMinimumSize(null);
@@ -192,7 +192,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private ClientLayoutResult relayoutClient() {
-		ClientLayoutResult layoutResult = layoutCalculator.calculate(uiDimensionProvider, availableClientContentSize());
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
 		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
@@ -218,10 +218,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private Dimension availableClientContentSize() {
-		if (fDesktop != null) {
+		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
 			return fDesktop.getSize();
 		}
-		return null;
+		return layoutCalculator.naturalContentSize(layoutSettings);
 	}
 
 	public ClientSketchManager getSketchManager() {

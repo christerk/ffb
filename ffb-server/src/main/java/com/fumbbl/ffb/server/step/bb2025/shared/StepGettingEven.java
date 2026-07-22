@@ -2,6 +2,7 @@ package com.fumbbl.ffb.server.step.bb2025.shared;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -73,6 +74,12 @@ public class StepGettingEven extends AbstractStepWithReRoll {
 	private void executeStep() {
 		Game game = getGameState().getGame();
 		Player<?> player = game.getPlayerById(playerId);
+		if (player != null &&
+			(player.getPlayerType() == PlayerType.STAR || player.getPlayerType() == PlayerType.MERCENARY ||
+				player.getPlayerType() == PlayerType.INFAMOUS_STAFF)) {
+			getResult().setNextAction(StepAction.NEXT_STEP);
+			return;
+		}
 		boolean doRoll = true;
 		boolean rerolled = ReRolledActions.GETTING_EVEN == getReRolledAction();
 		if (rerolled) {

@@ -3,9 +3,16 @@ package com.fumbbl.ffb.client.layout;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+/**
+ * Immutable result of one client layout pass.
+ *
+ * Contains the runtime content size, component bounds, and pitch scale that
+ * should be applied to Swing components and viewports.
+ */
+
 public class ClientLayoutResult {
 
-	private final Dimension preferredSize;
+	private final Dimension contentSize;
 	private final Rectangle fieldBounds;
 	private final Rectangle homeSidebarBounds;
 	private final Rectangle awaySidebarBounds;
@@ -14,12 +21,13 @@ public class ClientLayoutResult {
 	private final Rectangle chatBounds;
 	private final Rectangle homeReserveBoxBounds;
 	private final double pitchScale;
+	private final double runtimeGuiScale;
 
-	public ClientLayoutResult(Dimension preferredSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
-														Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
-														Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds,
-														double pitchScale) {
-		this.preferredSize = new Dimension(preferredSize);
+	public ClientLayoutResult(Dimension contentSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
+																Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
+																Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds,
+																double pitchScale, double runtimeGuiScale) {
+		this.contentSize = new Dimension(contentSize);
 		this.fieldBounds = new Rectangle(fieldBounds);
 		this.homeSidebarBounds = new Rectangle(homeSidebarBounds);
 		this.awaySidebarBounds = new Rectangle(awaySidebarBounds);
@@ -28,10 +36,11 @@ public class ClientLayoutResult {
 		this.chatBounds = new Rectangle(chatBounds);
 		this.homeReserveBoxBounds = new Rectangle(homeReserveBoxBounds);
 		this.pitchScale = pitchScale;
+		this.runtimeGuiScale = runtimeGuiScale;
 	}
 
-	public Dimension preferredSize() {
-		return new Dimension(preferredSize);
+	public Dimension contentSize() {
+		return new Dimension(contentSize);
 	}
 
 	public Rectangle fieldBounds() {
@@ -64,5 +73,9 @@ public class ClientLayoutResult {
 
 	public double pitchScale() {
 		return pitchScale;
+	}
+
+	public double runtimeGuiScale() {
+		return runtimeGuiScale;
 	}
 }

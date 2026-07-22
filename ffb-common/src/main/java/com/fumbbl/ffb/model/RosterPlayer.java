@@ -859,6 +859,16 @@ public class RosterPlayer extends Player<RosterPosition> {
 	}
 
 	@Override
+	public void markUsed(ISkillProperty property, Game game) {
+		for (Skill skill : getSkills()) {
+			if (skill.hasSkillProperty(property)) {
+				markUsed(skill, game);
+				return;
+			}
+		}
+	}
+
+	@Override
 	public void markUnused(Skill skill, Game game) {
 		if ((skill == null) || !isUsed(skill)) {
 			return;

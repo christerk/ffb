@@ -15,5 +15,6 @@ public class TeamCaptain extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canSaveReRolls);
 		registerProperty(NamedProperties.needsToBeSetUp);
+		registerProperty(NamedProperties.doesNotCountAsAdvancement);
 	}
 }

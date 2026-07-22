@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -461,14 +462,63 @@ public abstract class AbstractBuyInducementsDialog extends Dialog implements Act
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if ((pActionEvent.getSource() == okButton)) {
-			if (getCloseListener() != null) {
-				getCloseListener().dialogClosed(this);
-			}
+			onOkButtonPressed();
 		} else if (pActionEvent.getSource() == resetButton) {
 			resetPanels();
 		} else {
 			recalculateGold();
 		}
+	}
+
+	/**
+	 * Hook that is invoked when the coach presses the buy & close button. Subclasses may override this to ask for
+	 * confirmation before the dialog is actually closed and only call {@link #close()} when the coach confirms.
+	 */
+	protected void onOkButtonPressed() {
+		close();
+	}
+
+	/**
+	 * Closes the dialog by notifying the registered close listener.
+	 */
+	protected void close() {
+		if (getCloseListener() != null) {
+			getCloseListener().dialogClosed(this);
+		}
+	}
+
+	/**
+	 * Enables or disables the dialog buttons. Used to keep the buttons inactive while a confirmation dialog is visible.
+	 */
+	protected void setButtonsEnabled(boolean enabled) {
+		if (okButton != null) {
+			okButton.setEnabled(enabled);
+		}
+		if (resetButton != null) {
+			resetButton.setEnabled(enabled);
+		}
+	}
+
+	/**
+	 * Returns the cost of the cheapest inducement (regular inducement, star player, infamous staff or mercenary) that the
+	 * coach could still add given the current selection, or {@link Integer#MAX_VALUE} if nothing more can be bought.
+	 */
+	protected int cheapestAvailableInducementCost() {
+		int cheapest = Integer.MAX_VALUE;
+		for (DropDownPanel panel : fPanels) {
+			if (panel.canBuyMore()) {
+				cheapest = Math.min(cheapest, panel.getCost());
+			}
+		}
+		boolean rosterHasSpace = getFreeSlotsInRoster() > 0;
+		for (InducementTableModel tableModel : Arrays.asList(fTableModelStarPlayers, tableModelInfamousStaff,
+			fTableModelMercenaries)) {
+			if (tableModel != null && (rosterHasSpace || !tableModel.requiresFreeRosterSlot())
+				&& tableModel.canBuyAnother()) {
+				cheapest = Math.min(cheapest, tableModel.cheapestUnselectedCost());
+			}
+		}
+		return cheapest;
 	}
 
 	public boolean inducementSelected(Usage usage) {

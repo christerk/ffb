@@ -63,7 +63,8 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 	public String calculatePlayerLevel(Game game, Player<?> player) {
 		int gainedSkills = (int) player.skillInfos().stream()
 			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
-				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE).count();
+				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE
+				&& !info.getSkill().hasSkillProperty(NamedProperties.doesNotCountAsAdvancement)).count();
 
 		switch (gainedSkills) {
 			case 0:

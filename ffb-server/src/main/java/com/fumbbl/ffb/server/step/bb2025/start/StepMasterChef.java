@@ -55,7 +55,8 @@ public class StepMasterChef extends AbstractStep {
 	private void setLeaders(Team team) {
 		FieldModel fieldModel = getGameState().getGame().getFieldModel();
 		Arrays.stream(team.getPlayers())
-			.filter(player -> player.hasSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch))
+			.filter(player -> player.hasUnusedSkillProperty(NamedProperties.grantsTeamReRollWhenOnPitch))
+			.peek(player -> player.markUsed(NamedProperties.grantsTeamReRollWhenOnPitch, getGameState().getGame()))
 			.filter(player -> {
 				FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 				return playerCoordinate != null && !playerCoordinate.isBoxCoordinate();

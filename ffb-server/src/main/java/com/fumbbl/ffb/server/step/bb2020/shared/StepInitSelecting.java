@@ -73,7 +73,7 @@ public final class StepInitSelecting extends AbstractStep {
 						break;
 					// mandatory
 					case UPDATE_PERSISTENCE:
-						fUpdatePersistence = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						fUpdatePersistence = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					default:
 						break;
@@ -456,7 +456,7 @@ public final class StepInitSelecting extends AbstractStep {
 			if ((playerAction == PlayerAction.BLITZ)
 				|| (playerAction == PlayerAction.BLITZ_MOVE)
 				|| (playerAction == PlayerAction.KICK_EM_BLITZ)
-				|| (playerAction.isBlockAction())
+				|| (playerAction.isBlockOrSpecialAction())
 				|| (playerAction == PlayerAction.MULTIPLE_BLOCK)) {
 				ServerUtilBlock.updateDiceDecorations(getGameState());
 			}

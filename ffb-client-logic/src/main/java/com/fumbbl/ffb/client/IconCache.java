@@ -97,6 +97,10 @@ public class IconCache {
 		if (IClientPropertyValue.SETTING_LOCAL_ICON_CACHE_ON
 			.equals(pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE))) {
 			localCacheFolder = pClient.getProperty(CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH);
+			if (localCacheFolder == null) {
+				// fallback in case the path is not stored remotely to avoid crashes
+				localCacheFolder = System.getProperty("java.io.tmpdir");
+			}
 			if (!localCacheFolder.endsWith(File.separator)) {
 				localCacheFolder += File.separator;
 			}

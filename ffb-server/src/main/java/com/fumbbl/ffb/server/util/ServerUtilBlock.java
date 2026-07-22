@@ -35,7 +35,7 @@ public class ServerUtilBlock {
 			PlayerAction.BLITZ_MOVE == playerAction || (PlayerAction.BLITZ == playerAction && decorateForFrenzyBlitz);
 		boolean isCarnage = PlayerAction.MAXIMUM_CARNAGE == playerAction;
 		boolean isPutrid = playerAction != null && playerAction.isPutrid();
-		boolean isBlock = playerAction != null && playerAction.isBlockAction();
+		boolean isBlock = playerAction != null && playerAction.isBlockOrSpecialAction();
 		boolean isMultiBlock = (PlayerAction.MULTIPLE_BLOCK == playerAction);
 		boolean blocksDuringMove = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.blocksDuringMove);
 		boolean canBlockSameTeamPlayer = actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canBlockSameTeamPlayer);

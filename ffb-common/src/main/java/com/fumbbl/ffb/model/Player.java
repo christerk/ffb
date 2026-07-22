@@ -464,6 +464,8 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 
 	public abstract void markUsed(Skill skill, Game game);
 
+	public abstract void markUsed(ISkillProperty property, Game game);
+
 	public abstract void markUnused(Skill skill, Game game);
 
 	public abstract void resetUsedSkills(SkillUsageType type, Game game);

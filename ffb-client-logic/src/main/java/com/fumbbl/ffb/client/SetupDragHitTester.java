@@ -7,8 +7,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * Performs setup drag hit testing: determines which setup coordinate is under a
- * point in client content coordinates.
+ * Converts setup drag points in client-content coordinates to FieldCoordinate values.
+ *
+ * This class chooses between pitch and reserve-box hit testing while keeping
+ * drag state, selected player handling, and setup commands outside the mapper.
  */
 
 public class SetupDragHitTester {

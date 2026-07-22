@@ -2,6 +2,7 @@ package com.fumbbl.ffb.client.util;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.client.ClientLayout;
+import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
@@ -17,6 +18,7 @@ import com.fumbbl.ffb.client.ui.SideBarComponent;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Canvas;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -88,7 +90,7 @@ class UtilClientPlayerDragTest {
 		PitchViewport pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		PitchDimensionProvider pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
 
-		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(uiDimensionProvider);
+		ClientLayoutResult layoutResult = new ClientLayoutCalculator().calculate(layoutSettings, defaultLayoutSize(layout));
 
 		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
@@ -129,5 +131,18 @@ class UtilClientPlayerDragTest {
 
 	private MouseEvent mouseEventAt(int x, int y, boolean boxMode) {
 		return new MouseEvent(boxMode ? boxSource : fieldSource, MouseEvent.MOUSE_MOVED, 0, 0, x, y, 0, false);
+	}
+
+	private Dimension defaultLayoutSize(ClientLayout layout) {
+		switch (layout) {
+			case PORTRAIT:
+				return new Dimension(782, 969);
+			case SQUARE:
+				return new Dimension(1044, 784);
+			case WIDE:
+				return new Dimension(1776, 1030);
+			default:
+				return new Dimension(1072, 712);
+		}
 	}
 }
