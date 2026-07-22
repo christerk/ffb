@@ -1,7 +1,6 @@
 package com.fumbbl.ffb.client.layout;
 
 import com.fumbbl.ffb.client.Component;
-import com.fumbbl.ffb.client.ClientLayout;
 import com.fumbbl.ffb.client.LayoutSettings;
 
 import java.awt.Dimension;
@@ -30,28 +29,21 @@ public class ClientLayoutCalculator {
 		Dimension log = dimension(layoutSettings, Component.LOG);
 		Dimension chat = dimension(layoutSettings, Component.CHAT);
 		Dimension pitch = unscaledDimension(layoutSettings, Component.FIELD);
-		boolean sideDock = layoutSettings.getLayout() == ClientLayout.SQUARE;
-		Dimension dockSize = sideDock ? rightColumnSize(score, log, chat) : bottomPanelSize(score, log, chat);
+		Dimension bottomDockSize = bottomPanelSize(score, log, chat);
+		Dimension rightDockSize = rightColumnSize(score, log, chat);
 
 		Rectangle content = new Rectangle(0, 0, availableSize.width, availableSize.height);
-		LayoutAreas areas = arrange(layoutSettings.getLayout(), content, sidebar.width, dockSize);
+		LayoutAreas areas = LayoutAreas.arrange(layoutSettings.getLayout(), content, sidebar.width, bottomDockSize, rightDockSize);
 		PitchFit pitchFit = fitPitch(areas.pitchArea, pitch);
+		Rectangle dock = areas.dock;
+		if (areas.dockPosition == LayoutAreas.DockPosition.BOTTOM) {
+			dock = new Rectangle(dock.x, pitchFit.bounds.y + pitchFit.bounds.height, dock.width, dock.height);
+		}
 
 		return new ClientLayoutResult(new Dimension(availableSize), pitchFit.bounds, areas.homeRail,
 			new Rectangle(areas.homeRail.x, areas.homeRail.y, reserveBox.width, reserveBox.height), areas.awayRail,
-			scoreBounds(areas.dock, sideDock, score, log), logBounds(areas.dock, sideDock, score, log, chat),
-			chatBounds(areas.dock, sideDock, score, log, chat), pitchFit.scale, layoutSettings.getGuiScale());
-	}
-
-	private LayoutAreas arrange(ClientLayout layout, Rectangle content, int railWidth, Dimension dockSize) {
-		switch (layout) {
-			case PORTRAIT:
-				return PortraitLayout.arrange(content, railWidth, dockSize);
-			case SQUARE:
-				return SquareLayout.arrange(content, railWidth, dockSize);
-			default:
-				return LandscapeLayout.arrange(content, railWidth, dockSize);
-		}
+			scoreBounds(dock, areas.dockPosition, score, log), logBounds(dock, areas.dockPosition, score, log, chat),
+			chatBounds(dock, areas.dockPosition, score, log, chat), pitchFit.scale, layoutSettings.getGuiScale());
 	}
 
 	private PitchFit fitPitch(Rectangle pitchArea, Dimension pitch) {
@@ -59,19 +51,19 @@ public class ClientLayoutCalculator {
 		int pitchWidth = scaled(pitch.width, scale);
 		int pitchHeight = scaled(pitch.height, scale);
 		int pitchX = pitchArea.x + ((pitchArea.width - pitchWidth) / 2);
-		int pitchY = pitchArea.y + ((pitchArea.height - pitchHeight) / 2);
+		int pitchY = pitchArea.y;
 		return new PitchFit(new Rectangle(pitchX, pitchY, pitchWidth, pitchHeight), scale);
 	}
 
-	private Rectangle scoreBounds(Rectangle dock, boolean sideDock, Dimension score, Dimension log) {
-		if (sideDock) {
+	private Rectangle scoreBounds(Rectangle dock, LayoutAreas.DockPosition dockPosition, Dimension score, Dimension log) {
+		if (dockPosition == LayoutAreas.DockPosition.RIGHT) {
 			return new Rectangle(dock.x + PANEL_BORDER, dock.y + log.height + PANEL_BORDER, score.width, score.height);
 		}
 		return new Rectangle(dock.x + ((dock.width - score.width) / 2), dock.y, score.width, score.height);
 	}
 
-	private Rectangle logBounds(Rectangle dock, boolean sideDock, Dimension score, Dimension log, Dimension chat) {
-		if (sideDock) {
+	private Rectangle logBounds(Rectangle dock, LayoutAreas.DockPosition dockPosition, Dimension score, Dimension log, Dimension chat) {
+		if (dockPosition == LayoutAreas.DockPosition.RIGHT) {
 			return new Rectangle(dock.x + PANEL_BORDER, dock.y + PANEL_BORDER, log.width, log.height);
 		}
 		int logChatWidth = logChatPanelSize(log, chat).width;
@@ -79,11 +71,11 @@ public class ClientLayoutCalculator {
 			dock.y + score.height + PANEL_BORDER, log.width, log.height);
 	}
 
-	private Rectangle chatBounds(Rectangle dock, boolean sideDock, Dimension score, Dimension log, Dimension chat) {
-		if (sideDock) {
+	private Rectangle chatBounds(Rectangle dock, LayoutAreas.DockPosition dockPosition, Dimension score, Dimension log, Dimension chat) {
+		if (dockPosition == LayoutAreas.DockPosition.RIGHT) {
 			return new Rectangle(dock.x + PANEL_BORDER, dock.y + log.height + score.height + PANEL_BORDER, chat.width, chat.height);
 		}
-		Rectangle logRectangle = logBounds(dock, false, score, log, chat);
+		Rectangle logRectangle = logBounds(dock, LayoutAreas.DockPosition.BOTTOM, score, log, chat);
 		return new Rectangle(logRectangle.x + logRectangle.width + LOG_CHAT_GAP, logRectangle.y, chat.width, chat.height);
 	}
 
@@ -119,16 +111,8 @@ public class ClientLayoutCalculator {
 		Dimension log = dimension(layoutSettings, Component.LOG);
 		Dimension chat = dimension(layoutSettings, Component.CHAT);
 		Dimension pitch = scale(unscaledDimension(layoutSettings, Component.FIELD), layoutSettings.getPitchScale());
-		if (layoutSettings.getLayout() == ClientLayout.SQUARE) {
-			Dimension dock = rightColumnSize(score, log, chat);
-			return SquareLayout.naturalSize(sidebar, pitch, dock);
-		}
-
-		Dimension dock = bottomPanelSize(score, log, chat);
-		if (layoutSettings.getLayout().isPortrait()) {
-			return PortraitLayout.naturalSize(sidebar, pitch, dock);
-		}
-		return LandscapeLayout.naturalSize(sidebar, pitch, dock);
+		return LayoutAreas.naturalSize(layoutSettings.getLayout(), sidebar, pitch, bottomPanelSize(score, log, chat),
+			rightColumnSize(score, log, chat));
 	}
 
 	private Dimension dimension(LayoutSettings layoutSettings, Component component) {

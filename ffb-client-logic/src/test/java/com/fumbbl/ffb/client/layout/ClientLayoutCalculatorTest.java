@@ -64,7 +64,7 @@ class ClientLayoutCalculatorTest {
 		ClientLayoutResult result = layout(ClientLayout.SQUARE);
 
 		assertEquals(new Rectangle(0, 0, 165, 784), result.homeSidebarBounds());
-		assertEquals(new Rectangle(165, 1, 452, 782), result.fieldBounds());
+		assertEquals(new Rectangle(165, 0, 452, 782), result.fieldBounds());
 		assertEquals(new Rectangle(617, 0, 165, 784), result.awaySidebarBounds());
 		assertEquals(new Rectangle(783, 344, 260, 96), result.scoreBarBounds());
 		assertEquals(new Rectangle(783, 1, 260, 343), result.logBounds());
@@ -85,7 +85,7 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(889, 890, 741, 139), result.chatBounds());
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(1.0, result.pitchScale(), 0.0001);
-		assertEquals(1.0, result.guiScale(), 0.0001);
+		assertEquals(1.0, result.runtimeGuiScale(), 0.0001);
 	}
 
 	@Test
@@ -162,6 +162,44 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(217, 907, 1486, 32), result.scoreBarBounds());
 		assertEquals(new Rectangle(218, 940, 741, 139), result.logBounds());
 		assertEquals(new Rectangle(961, 940, 741, 139), result.chatBounds());
+	}
+
+	@Test
+	void returnsConfiguredGuiScaleAsTheRuntimeGuiScaleForDynamicPitch() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		layoutSettings.setGuiScale(1.5);
+
+		ClientLayoutResult result = new ClientLayoutCalculator().calculate(layoutSettings, new Dimension(1272, 812));
+
+		assertEquals(1.5, result.runtimeGuiScale(), 0.0001);
+	}
+
+	@Test
+	void naturalSquareSizeUsesConfiguredPitchScaleIndependentlyFromGuiScale() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.SQUARE, 1.0);
+		layoutSettings.setPitchScale(0.5);
+
+		assertEquals(new Dimension(818, 784), new ClientLayoutCalculator().naturalContentSize(layoutSettings));
+	}
+
+	@Test
+	void placesLandscapeBottomDockImmediatelyAfterWidthConstrainedPitch() {
+		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE, new Dimension(1072, 1000));
+
+		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
+		assertEquals(new Rectangle(145, 452, 782, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(146, 485, 389, 226), result.logBounds());
+		assertEquals(new Rectangle(537, 485, 389, 226), result.chatBounds());
+	}
+
+	@Test
+	void placesPortraitBottomDockImmediatelyAfterWidthConstrainedPitch() {
+		ClientLayoutResult result = layout(ClientLayout.PORTRAIT, new Dimension(800, 1400));
+
+		assertEquals(new Rectangle(165, 0, 470, 813), result.fieldBounds());
+		assertEquals(new Rectangle(9, 813, 782, 32), result.scoreBarBounds());
+		assertEquals(new Rectangle(10, 846, 389, 153), result.logBounds());
+		assertEquals(new Rectangle(401, 846, 389, 153), result.chatBounds());
 	}
 
 	private ClientLayoutResult layout(ClientLayout layout) {

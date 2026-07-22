@@ -14,12 +14,12 @@ public class ClientLayoutResult {
 	private final Rectangle chatBounds;
 	private final Rectangle homeReserveBoxBounds;
 	private final double pitchScale;
-	private final double guiScale;
+	private final double runtimeGuiScale;
 
 	public ClientLayoutResult(Dimension contentSize, Rectangle fieldBounds, Rectangle homeSidebarBounds,
 																Rectangle homeReserveBoxBounds, Rectangle awaySidebarBounds,
 																Rectangle scoreBarBounds, Rectangle logBounds, Rectangle chatBounds,
-																double pitchScale, double guiScale) {
+																double pitchScale, double runtimeGuiScale) {
 		this.contentSize = new Dimension(contentSize);
 		this.fieldBounds = new Rectangle(fieldBounds);
 		this.homeSidebarBounds = new Rectangle(homeSidebarBounds);
@@ -29,7 +29,7 @@ public class ClientLayoutResult {
 		this.chatBounds = new Rectangle(chatBounds);
 		this.homeReserveBoxBounds = new Rectangle(homeReserveBoxBounds);
 		this.pitchScale = pitchScale;
-		this.guiScale = guiScale;
+		this.runtimeGuiScale = runtimeGuiScale;
 	}
 
 	public Dimension contentSize() {
@@ -68,7 +68,7 @@ public class ClientLayoutResult {
 		return pitchScale;
 	}
 
-	public double guiScale() {
-		return guiScale;
+	public double runtimeGuiScale() {
+		return runtimeGuiScale;
 	}
 }
