@@ -29,13 +29,13 @@ public class ClientLayoutCalculator {
 		}
 	}
 
-	private static class DockPanels {
+	private static class InfoBounds {
 
 		private final Rectangle score;
 		private final Rectangle log;
 		private final Rectangle chat;
 
-		private DockPanels(Rectangle score, Rectangle log, Rectangle chat) {
+		private InfoBounds(Rectangle score, Rectangle log, Rectangle chat) {
 			this.score = score;
 			this.log = log;
 			this.chat = chat;
@@ -53,8 +53,8 @@ public class ClientLayoutCalculator {
 		Rectangle content = new Rectangle(0, 0, availableSize.width, availableSize.height);
 		LayoutAreas areas = LayoutAreas.arrange(layoutSettings.getLayout(), content, sidebar.width, score, log, chat);
 		PitchFit pitchFit = fitPitch(areas.pitchArea, pitch);
-		Rectangle dock = areas.finalDockBounds(pitchFit.bounds);
-		DockPanels dockPanels = placeDockPanels(areas.dockPosition, dock, score, log, chat);
+		Rectangle infoArea = areas.finalInfoArea(pitchFit.bounds);
+		InfoBounds infoBounds = placeInfoComponents(areas.infoPosition, infoArea, score, log, chat);
 
 		return new ClientLayoutResult(
 			new Dimension(availableSize),
@@ -62,9 +62,9 @@ public class ClientLayoutCalculator {
 			areas.homeRail,
 			new Rectangle(areas.homeRail.x, areas.homeRail.y, reserveBox.width, reserveBox.height),
 			areas.awayRail,
-			dockPanels.score,
-			dockPanels.log,
-			dockPanels.chat,
+			infoBounds.score,
+			infoBounds.log,
+			infoBounds.chat,
 			pitchFit.scale,
 			layoutSettings.getGuiScale());
 	}
@@ -73,25 +73,25 @@ public class ClientLayoutCalculator {
 	// currently owns score/log/chat placement, so it needs one topology signal from
 	// LayoutAreas. Avoid moving this into LayoutAreas unless panel placement becomes
 	// part of the topology model.
-	private DockPanels placeDockPanels(LayoutAreas.DockPosition dockPosition, Rectangle dock, Dimension score, Dimension log,
+	private InfoBounds placeInfoComponents(LayoutAreas.InfoPosition infoPosition, Rectangle infoArea, Dimension score, Dimension log,
 		Dimension chat) {
-		if (dockPosition == LayoutAreas.DockPosition.RIGHT) {
-			Rectangle logBounds = new Rectangle(dock.x + PANEL_BORDER, dock.y + PANEL_BORDER, log.width, log.height);
-			Rectangle scoreBounds = new Rectangle(dock.x + PANEL_BORDER, dock.y + log.height + PANEL_BORDER,
+		if (infoPosition == LayoutAreas.InfoPosition.RIGHT) {
+			Rectangle logBounds = new Rectangle(infoArea.x + PANEL_BORDER, infoArea.y + PANEL_BORDER, log.width, log.height);
+			Rectangle scoreBounds = new Rectangle(infoArea.x + PANEL_BORDER, infoArea.y + log.height + PANEL_BORDER,
 				score.width, score.height);
-			Rectangle chatBounds = new Rectangle(dock.x + PANEL_BORDER, dock.y + log.height + score.height + PANEL_BORDER,
+			Rectangle chatBounds = new Rectangle(infoArea.x + PANEL_BORDER, infoArea.y + log.height + score.height + PANEL_BORDER,
 				chat.width, chat.height);
-			return new DockPanels(scoreBounds, logBounds, chatBounds);
+			return new InfoBounds(scoreBounds, logBounds, chatBounds);
 		}
 
-		Rectangle scoreBounds = new Rectangle(dock.x + ((dock.width - score.width) / 2), dock.y, score.width,
+		Rectangle scoreBounds = new Rectangle(infoArea.x + ((infoArea.width - score.width) / 2), infoArea.y, score.width,
 			score.height);
 		int logChatWidth = log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER);
-		Rectangle logBounds = new Rectangle(dock.x + ((dock.width - logChatWidth) / 2) + PANEL_BORDER,
-			dock.y + score.height + PANEL_BORDER, log.width, log.height);
+		Rectangle logBounds = new Rectangle(infoArea.x + ((infoArea.width - logChatWidth) / 2) + PANEL_BORDER,
+			infoArea.y + score.height + PANEL_BORDER, log.width, log.height);
 		Rectangle chatBounds = new Rectangle(logBounds.x + logBounds.width + LOG_CHAT_GAP, logBounds.y, chat.width,
 			chat.height);
-		return new DockPanels(scoreBounds, logBounds, chatBounds);
+		return new InfoBounds(scoreBounds, logBounds, chatBounds);
 	}
 
 	private PitchFit fitPitch(Rectangle pitchArea, Dimension pitch) {

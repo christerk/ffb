@@ -13,27 +13,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ClientLayoutCalculatorTest {
 
 	@Test
-	void measuresLandscapeFromTheGameAreaAndBottomDock() {
+	void measuresLandscapeFromTheGameAreaAndBottomInfoArea() {
 		assertEquals(new Dimension(1072, 712), naturalSize(ClientLayout.LANDSCAPE));
 	}
 
 	@Test
-	void measuresPortraitFromTheGameAreaAndBottomDock() {
+	void measuresPortraitFromTheGameAreaAndBottomInfoArea() {
 		assertEquals(new Dimension(782, 969), naturalSize(ClientLayout.PORTRAIT));
 	}
 
 	@Test
-	void measuresSquareFromTheGameAreaAndSideDock() {
+	void measuresSquareFromTheGameAreaAndSideInfoArea() {
 		assertEquals(new Dimension(1044, 784), naturalSize(ClientLayout.SQUARE));
 	}
 
 	@Test
-	void measuresWideFromTheGameAreaAndBottomDock() {
+	void measuresWideFromTheGameAreaAndBottomInfoArea() {
 		assertEquals(new Dimension(1776, 1030), naturalSize(ClientLayout.WIDE));
 	}
 
 	@Test
-	void arrangesLandscapeAsGameAreaAboveBottomDock() {
+	void arrangesLandscapeAsGameAreaAboveBottomInfoArea() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE);
 
 		assertEquals(new Rectangle(0, 0, 145, 712), result.homeSidebarBounds());
@@ -47,7 +47,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void arrangesPortraitAsGameAreaAboveBottomDock() {
+	void arrangesPortraitAsGameAreaAboveBottomInfoArea() {
 		ClientLayoutResult result = layout(ClientLayout.PORTRAIT);
 
 		assertEquals(new Rectangle(0, 0, 165, 782), result.homeSidebarBounds());
@@ -61,7 +61,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void arrangesSquareAsGameAreaBesideSideDock() {
+	void arrangesSquareAsGameAreaBesideSideInfoArea() {
 		ClientLayoutResult result = layout(ClientLayout.SQUARE);
 
 		assertEquals(new Rectangle(0, 0, 165, 784), result.homeSidebarBounds());
@@ -75,7 +75,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void arrangesWideAsGameAreaAboveBottomDock() {
+	void arrangesWideAsGameAreaAboveBottomInfoArea() {
 		ClientLayoutResult result = layout(ClientLayout.WIDE);
 
 		assertEquals(new Rectangle(0, 0, 145, 1030), result.homeSidebarBounds());
@@ -184,7 +184,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void placesLandscapeBottomDockImmediatelyAfterWidthConstrainedPitch() {
+	void placesLandscapeBottomInfoAreaImmediatelyAfterWidthConstrainedPitch() {
 		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE, new Dimension(1072, 1000));
 
 		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
@@ -194,7 +194,7 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void placesPortraitBottomDockImmediatelyAfterWidthConstrainedPitch() {
+	void placesPortraitBottomInfoAreaImmediatelyAfterWidthConstrainedPitch() {
 		ClientLayoutResult result = layout(ClientLayout.PORTRAIT, new Dimension(800, 1400));
 
 		assertEquals(new Rectangle(165, 0, 470, 813), result.fieldBounds());
