@@ -31,29 +31,25 @@ class LayoutAreas {
 
 	static LayoutAreas arrange(ClientLayout layout, Rectangle content, int railWidth, Dimension score, Dimension log,
 		Dimension chat) {
-		Dimension bottomDockSize = bottomDockSize(score, log, chat);
-		Dimension rightDockSize = rightDockSize(score, log, chat);
 		switch (layout) {
 			case PORTRAIT:
-				return portrait(content, railWidth, bottomDockSize);
+				return portrait(content, railWidth, bottomDockSize(score, log, chat));
 			case SQUARE:
-				return square(content, railWidth, rightDockSize);
+				return square(content, railWidth, rightDockSize(score, log, chat));
 			default:
-				return landscape(content, railWidth, bottomDockSize);
+				return landscape(content, railWidth, bottomDockSize(score, log, chat));
 		}
 	}
 
 	static Dimension naturalSize(ClientLayout layout, Dimension rail, Dimension pitch, Dimension score, Dimension log,
 		Dimension chat) {
-		Dimension bottomDock = bottomDockSize(score, log, chat);
-		Dimension rightDock = rightDockSize(score, log, chat);
 		switch (layout) {
 			case PORTRAIT:
-				return portraitNaturalSize(rail, pitch, bottomDock);
+				return portraitNaturalSize(rail, pitch, bottomDockSize(score, log, chat));
 			case SQUARE:
-				return squareNaturalSize(rail, pitch, rightDock);
+				return squareNaturalSize(rail, pitch, rightDockSize(score, log, chat));
 			default:
-				return landscapeNaturalSize(rail, pitch, bottomDock);
+				return landscapeNaturalSize(rail, pitch, bottomDockSize(score, log, chat));
 		}
 	}
 
