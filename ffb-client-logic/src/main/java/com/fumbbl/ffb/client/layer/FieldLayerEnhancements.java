@@ -6,8 +6,9 @@ import com.fumbbl.ffb.model.stadium.OnPitchEnhancement;
 import java.awt.image.BufferedImage;
 
 public class FieldLayerEnhancements extends FieldLayer {
-	public FieldLayerEnhancements(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerEnhancements(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+																PitchViewport pitchViewport, FontCache fontCache) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 	}
 
 	public void addEnhancement(OnPitchEnhancement enhancement) {

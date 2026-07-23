@@ -9,6 +9,9 @@ import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
 import com.fumbbl.ffb.client.dialog.DialogManager;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.layout.ClientLayoutCalculator;
+import com.fumbbl.ffb.client.layout.ClientLayoutPanel;
+import com.fumbbl.ffb.client.layout.ClientLayoutResult;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.sound.SoundEngine;
 import com.fumbbl.ffb.client.state.ClientState;
@@ -29,6 +32,8 @@ import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -66,6 +71,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
+	private final PitchViewport pitchViewport;
+	private final ReserveBoxViewport reserveBoxViewport;
+	private final SetupDragHitTester setupDragHitTester;
+	private final ClientLayoutCalculator layoutCalculator;
+	private final ClientLayoutPanel layoutPanel;
+	private final Timer resizeRelayoutTimer;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -84,9 +95,12 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
-		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings);
-		coordinateConverter = new CoordinateConverter(uiDimensionProvider, pitchDimensionProvider);
-		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider);
+		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
+		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
+		reserveBoxViewport = new ReserveBoxViewport(uiDimensionProvider);
+		setupDragHitTester = new SetupDragHitTester(pitchViewport, reserveBoxViewport, pitchDimensionProvider);
+		coordinateConverter = new CoordinateConverter(pitchViewport);
+		sketchManager = new ClientSketchManager(pClient.getParameters().getCoach(), pitchDimensionProvider, pitchViewport);
 		dugoutDimensionProvider = new DugoutDimensionProvider(layoutSettings);
 		fIconCache = new IconCache(getClient());
 		fIconCache.init();
@@ -102,18 +116,24 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fPlayerIconFactory = new PlayerIconFactory();
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
+		layoutCalculator = new ClientLayoutCalculator();
+		resizeRelayoutTimer = new Timer(100, e -> resizeClient());
+		resizeRelayoutTimer.setRepeats(false);
 
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(this);
-		setResizable(false);
+		setResizable(true);
+		initResizeRelayout();
 
 		fScoreBar = new ScoreBarComponent(getClient(), uiDimensionProvider, styleProvider, fontCache);
-		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, fontCache, sketchManager, styleProvider);
+		fFieldComponent = new FieldComponent(getClient(), uiDimensionProvider, pitchDimensionProvider, pitchViewport,
+			fontCache, sketchManager, styleProvider);
 		fLog = new LogComponent(getClient(), styleProvider, uiDimensionProvider);
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
 		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
+		layoutPanel = new ClientLayoutPanel(fFieldComponent, fSideBarHome, fSideBarAway, fScoreBar, fLog, fChat);
 
 		initComponents(false);
 
@@ -135,26 +155,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
-		JPanel panelContent;
-		switch (layoutSettings.getLayout()) {
-			case PORTRAIT:
-				panelContent = portraitContent();
-				break;
-			case SQUARE:
-				panelContent = squareContent();
-				break;
-			default:
-				panelContent = landscapeContent();
-				break;
+		ClientLayoutResult layoutResult = relayoutClient();
+		if (layoutPanel.getParent() != null) {
+			layoutPanel.getParent().remove(layoutPanel);
 		}
 
-		panelContent.setSize(panelContent.getPreferredSize());
-
-		fDesktop.add(panelContent, -1);
-		fDesktop.setPreferredSize(panelContent.getPreferredSize());
+		fDesktop.add(layoutPanel, -1);
+		fDesktop.setPreferredSize(layoutResult.contentSize());
 
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
+		setMinimumSize(null);
 		pack();
+		setMinimumSize(getSize());
 
 		if (callInit) {
 			init(null);
@@ -169,74 +181,47 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fDialogManager.updateDialog();
 	}
 
-	private JPanel landscapeContent() {
-		JPanel fieldPanel = fieldPanel();
-
-		JPanel logChatPanel = logChatPanel();
-
-		JPanel panelCenter = wrapperPanel(BoxLayout.Y_AXIS, fieldPanel, getScoreBar(), logChatPanel);
-
-		return wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), panelCenter, createSideBarPanel(fSideBarAway));
+	private void initResizeRelayout() {
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				if (fDesktop != null && layoutPanel.getParent() != null) {
+					resizeRelayoutTimer.restart();
+				}
+			}
+		});
 	}
 
-	private JPanel createSideBarPanel(SideBarComponent fSideBarHome) {
-		JPanel panelHome = new JPanel();
-		panelHome.setLayout(new BoxLayout(panelHome, BoxLayout.Y_AXIS));
-		panelHome.add(fSideBarHome);
-		return panelHome;
+	private ClientLayoutResult relayoutClient() {
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
+		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
+		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
+		layoutPanel.apply(layoutResult);
+
+		if (fDesktop != null) {
+			fDesktop.revalidate();
+			fDesktop.repaint();
+		}
+
+		return layoutResult;
 	}
 
-	private JPanel portraitContent() {
-		JPanel fieldPanel = fieldPanel();
+	private void resizeClient() {
+		relayoutClient();
+		fFieldComponent.resizeFieldIfNeeded();
+		fFieldComponent.refreshField();
 
-		JPanel logChatPanel = logChatPanel();
-
-		JPanel panelMain = wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), fieldPanel, createSideBarPanel(fSideBarAway));
-
-		return wrapperPanel(BoxLayout.Y_AXIS, panelMain, getScoreBar(), logChatPanel);
+		if (fDesktop != null) {
+			fDesktop.revalidate();
+			fDesktop.repaint();
+		}
 	}
 
-	private JPanel logChatPanel() {
-		JPanel logChatPanel = new JPanel();
-		logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
-		logChatPanel.add(getLog());
-		logChatPanel.add(Box.createHorizontalStrut(2));
-		logChatPanel.add(getChat());
-		logChatPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		return logChatPanel;
-	}
-
-	private JPanel fieldPanel() {
-		JPanel fieldPanel = new JPanel();
-		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.X_AXIS));
-		fieldPanel.add(fFieldComponent);
-		return fieldPanel;
-	}
-
-	private JPanel squareContent() {
-		JPanel fieldPanel = fieldPanel();
-
-		JPanel logChatScorePanel = wrapperPanel(BoxLayout.Y_AXIS, getLog(), getScoreBar(), getChat());
-		logChatScorePanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-		JPanel panelMain = wrapperPanel(BoxLayout.X_AXIS, createSideBarPanel(fSideBarHome), fieldPanel, createSideBarPanel(fSideBarAway));
-
-		JPanel panelContent = new JPanel();
-		panelContent.setLayout(new BoxLayout(panelContent, BoxLayout.X_AXIS));
-		panelContent.add(panelMain);
-		panelContent.add(logChatScorePanel);
-
-		return panelContent;
-	}
-
-	private JPanel wrapperPanel(int axis, JPanel fSideBarHome, JPanel fieldPanel, JPanel fSideBarAway) {
-		JPanel panelMain = new JPanel();
-		//noinspection MagicConstant
-		panelMain.setLayout(new BoxLayout(panelMain, axis));
-		panelMain.add(fSideBarHome);
-		panelMain.add(fieldPanel);
-		panelMain.add(fSideBarAway);
-		return panelMain;
+	private Dimension availableClientContentSize() {
+		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
+			return fDesktop.getSize();
+		}
+		return layoutCalculator.naturalContentSize(layoutSettings);
 	}
 
 	public ClientSketchManager getSketchManager() {
@@ -301,6 +286,14 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	public GameTitle getGameTitle() {
 		return fGameTitle;
+	}
+
+	public PitchViewport getPitchViewport() {
+		return pitchViewport;
+	}
+
+	public SetupDragHitTester getSetupDragHitTester() {
+		return setupDragHitTester;
 	}
 
 	public void setGameTitle(GameTitle pGameTitle) {
@@ -408,6 +401,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			DialogLeaveGame leaveGameQuestion = new DialogLeaveGame(getClient());
 			leaveGameQuestion.showDialog(this);
 		}
+	}
+
+	public Point toClientContentPoint(java.awt.Component source, Point point) {
+		return SwingUtilities.convertPoint(source, point, layoutPanel);
 	}
 
 	public void windowActivated(WindowEvent pE) {

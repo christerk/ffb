@@ -5,6 +5,7 @@ import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.overlay.sketch.ClientSketchManager;
 import com.fumbbl.ffb.client.overlay.sketch.TriangleCoords;
@@ -25,8 +26,9 @@ public class FieldLayerSketches extends FieldLayer {
 
 	private final ClientSketchManager sketchManager;
 
-	public FieldLayerSketches(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider, FontCache fontCache, ClientSketchManager sketchManager) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+	public FieldLayerSketches(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider, PitchDimensionProvider pitchDimensionProvider,
+														PitchViewport pitchViewport, FontCache fontCache, ClientSketchManager sketchManager) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		this.sketchManager = sketchManager;
 	}
 
@@ -60,7 +62,7 @@ public class FieldLayerSketches extends FieldLayer {
 			int[] yPoints = new int[nPoints];
 			for (int i = 0; i < nPoints; i++) {
 				FieldCoordinate coordinate = sketch.getPath().get(i);
-				Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate, true);
+				Dimension dimension = pitchViewport.toLocal(coordinate, true);
 				xPoints[i] = dimension.width;
 				yPoints[i] = dimension.height;
 			}
@@ -86,7 +88,7 @@ public class FieldLayerSketches extends FieldLayer {
 
 			FieldCoordinate previewCoordinate = sketchState.getPreviewCoordinate();
 			if (sketch.getId().equals(sketchState.getActiveSketchId())  && previewCoordinate != sketch.getPath().getLast() && previewCoordinate != null) {
-				Dimension dimension = pitchDimensionProvider.mapToLocal(previewCoordinate, true);
+				Dimension dimension = pitchViewport.toLocal(previewCoordinate, true);
 				graphics2D.setPaint(highlightPaint);
 				graphics2D.drawLine(
 					xPoints[nPoints - 1], yPoints[nPoints - 1],

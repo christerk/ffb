@@ -25,6 +25,7 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.model.FieldModel;
@@ -54,8 +55,9 @@ public class FieldLayerTackleZones extends FieldLayer {
 	private final StyleProvider styleProvider;
 
 	public FieldLayerTackleZones(FantasyFootballClient pClient, UiDimensionProvider uiDimensionProvider,
-															 PitchDimensionProvider pitchDimensionProvider, FontCache fontCache, StyleProvider styleProvider) {
-		super(pClient, uiDimensionProvider, pitchDimensionProvider, fontCache);
+															 PitchDimensionProvider pitchDimensionProvider, PitchViewport pitchViewport,
+															 FontCache fontCache, StyleProvider styleProvider) {
+		super(pClient, uiDimensionProvider, pitchDimensionProvider, pitchViewport, fontCache);
 		this.styleProvider = styleProvider;
 	}
 
@@ -150,7 +152,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 
 	private void drawContours(Graphics2D g2d, FieldCoordinate coordinate, Set<FieldCoordinate> processedCoords) {
 		List<Direction> directions = borderDirections(coordinate, processedCoords);
-		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
+		Dimension origin = pitchViewport.toLocal(coordinate);
 		for (Direction direction : directions) {
 			drawContour(g2d, contourOrigin(origin, direction), contourTarget(origin, direction));
 		}
@@ -170,21 +172,21 @@ public class FieldLayerTackleZones extends FieldLayer {
 		if (!processedCoords.contains(new FieldCoordinate(coordinate.getX() + 1, coordinate.getY()))) {
 			directions.add(Direction.EAST);
 		}
-		return directions.stream().map(pitchDimensionProvider::mapToLocal).collect(Collectors.toList());
+		return directions.stream().map(pitchViewport::toLocal).collect(Collectors.toList());
 	}
 
 	private void drawTackleZone(Graphics2D g2d, FieldCoordinate coordinate) {
-		Dimension origin = pitchDimensionProvider.mapToLocal(coordinate);
+		Dimension origin = pitchViewport.toLocal(coordinate);
 		paintZoneRect(g2d, origin.width, origin.height);
 	}
 
 	private Dimension contourOrigin(Dimension upperLeft, Direction fromPlayer) {
 		switch (fromPlayer) {
 			case SOUTH:
-				return new Dimension(upperLeft.width, upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+				return new Dimension(upperLeft.width, upperLeft.height + pitchViewport.squareSize());
 
 			case EAST:
-				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height);
+				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height);
 
 			default:
 				return upperLeft;
@@ -194,14 +196,14 @@ public class FieldLayerTackleZones extends FieldLayer {
 	private Dimension contourTarget(Dimension upperLeft, Direction fromPlayer) {
 		switch (fromPlayer) {
 			case NORTH:
-				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height);
+				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height);
 
 			case WEST:
-				return new Dimension(upperLeft.width, upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+				return new Dimension(upperLeft.width, upperLeft.height + pitchViewport.squareSize());
 
 			case EAST:
 			case SOUTH:
-				return new Dimension(upperLeft.width + pitchDimensionProvider.fieldSquareSize(), upperLeft.height + pitchDimensionProvider.fieldSquareSize());
+				return new Dimension(upperLeft.width + pitchViewport.squareSize(), upperLeft.height + pitchViewport.squareSize());
 			default:
 				return upperLeft;
 		}
@@ -210,7 +212,7 @@ public class FieldLayerTackleZones extends FieldLayer {
 	// Paints a single colored translucent zone square.
 	private void paintZoneRect(Graphics2D g2d, int x, int y) {
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
-		g2d.fillRect(x, y, pitchDimensionProvider.fieldSquareSize(), pitchDimensionProvider.fieldSquareSize());
+		g2d.fillRect(x, y, pitchViewport.squareSize(), pitchViewport.squareSize());
 	}
 
 	//Draws a dashed contour for the given edges list.

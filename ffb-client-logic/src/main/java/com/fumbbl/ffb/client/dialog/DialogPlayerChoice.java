@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -114,12 +114,9 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 				offsetX = -1;
 			}
 
-			Dimension sidebarSize = getClient().getUserInterface().getUiDimensionProvider().dimension(Component.SIDEBAR);
-			Dimension onPitch = dimensionProvider().mapToLocal(playerCoordinate.getX() + offsetX,
-				playerCoordinate.getY() + offsetY, false);
-			int x = sidebarSize.width + onPitch.width;
-			int y = onPitch.height;
-			setLocation(x, y);
+			PitchViewport pitchViewport = getClient().getUserInterface().getPitchViewport();
+			Point onPitch = pitchViewport.worldToScreen(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
+			setLocation(onPitch.x, onPitch.y);
 		} else {
 			setLocationToCenter();
 		}
