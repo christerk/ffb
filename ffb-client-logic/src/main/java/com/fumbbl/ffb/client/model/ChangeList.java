@@ -51,6 +51,7 @@ public class ChangeList {
 			.addBugfix("Chainsaw: Kickback always results in a knock down")
 			.addBugfix("Replays with BT vs DT did not load in some cases")
 			.addBugfix("TTM was only available for players with ST5 or more")
+			.addBugfix("The Ballista: Re-rolls were not offered for TTM/KTM/Pass")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")

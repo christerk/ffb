@@ -111,7 +111,7 @@ public class ThrowTeamMateBehaviour extends SkillBehaviour<ThrowTeamMate> {
 							List<String> messages = buildTtmRerollMessage(thrower, superbTarget, state.passResult);
 
 							if (reRolled || !UtilServerReRoll.askForReRollIfAvailable(step.getGameState(), thrower, rerolledAction,
-									minimumRoll, false, null, null, null, null, messages)) {
+									minimumRoll, false, messages)) {
 								handlePassResult(state.passResult, step);
 							}
 						} else {
