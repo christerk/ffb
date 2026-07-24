@@ -143,7 +143,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					fDodgeRoll = (Integer) parameter.getValue();
 					return true;
 				case USING_BREAK_TACKLE:
-					fUsingBreakTackle = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fUsingBreakTackle = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				case USING_DIVING_TACKLE:
 					fUsingDivingTackle = (Boolean) parameter.getValue();
@@ -152,7 +152,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					usingModifyingSkill = (Boolean) parameter.getValue();
 					return true;
 				case RE_ROLL_USED:
-					fReRollUsed = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fReRollUsed = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -553,7 +553,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		if (successful) {
 			modifyingSkill = actingPlayer.getPlayer().getSkillWithProperty(NamedProperties.canAddStrengthToDodge);
-			if (addReport) {
+			if (addReport && modifyingSkill != null) {
 				getResult().addReport(new ReportModifiedDodgeResultSuccessful(modifyingSkill));
 			}
 		}
