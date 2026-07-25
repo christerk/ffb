@@ -317,7 +317,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					}
 				} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_KICKOFF) {
 					fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
-				}else {
+				} else {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
@@ -713,6 +713,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			game.getFieldModel().setOutOfBounds(true);
 			if (fScatterBounds.equals(FieldCoordinateBounds.FIELD)) {
 				fThrowInCoordinate = lastValidCoordinate;
+				publishParameter(new StepParameter(StepParameterKey.BALL_OUT_OF_BOUNDS, true));
 				return CatchScatterThrowInMode.THROW_IN;
 			} else {
 				publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
