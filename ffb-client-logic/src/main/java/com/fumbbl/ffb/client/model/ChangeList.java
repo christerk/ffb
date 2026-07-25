@@ -55,6 +55,7 @@ public class ChangeList {
 			.addBugfix("Joining a collaborative replay already in progress did cause the joining client to hang after loading the initial state")
 			.addBugfix("Cheering Fans assist was not granted to defensive team in case of a touchback")
 			.addBugfix("Punt: A ball bouncing out off bounds did not cause a turnover")
+			.addBugfix("TTM: When double-clicking while picking up a team-mate the player could vanish upon landing/cancelling")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
