@@ -25,6 +25,7 @@
         <module>ffb-client</module>
         <module>ffb-client-logic</module>
         <module>ffb-resources</module>
+        <module>ffb-statetest</module>
     </modules>
     <dependencyManagement>
         <dependencies>
