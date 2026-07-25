@@ -225,7 +225,7 @@ public class ReplayMenu extends GameModeMenu {
 		coaches.sort(String::compareTo);
 
 		if (coaches.equals(currentCoaches) &&
-			(!StringTool.isProvided(controllingCoach) || currentControllingCoach.equals(controllingCoach)) &&
+			(!StringTool.isProvided(controllingCoach) || controllingCoach.equals(currentControllingCoach)) &&
 			sketchManager.preventedCoaches().equals(preventedCoaches) &&
 			sketchManager.hiddenCoaches().equals(hiddenCoaches)) {
 			return;

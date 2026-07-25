@@ -52,6 +52,7 @@ public class ChangeList {
 			.addBugfix("Replays with BT vs DT did not load in some cases")
 			.addBugfix("TTM was only available for players with ST5 or more")
 			.addBugfix("The Ballista: Re-rolls were not offered for TTM/KTM/Pass")
+			.addBugfix("Joining a collaborative replay already in progress did cause the joining client to hang after loading the initial state")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
