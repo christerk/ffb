@@ -36,7 +36,6 @@ import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.UtilServerGame;
-import com.fumbbl.ffb.util.StringTool;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -58,7 +57,6 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private final GameLog fGameLog;
 	private GameStatus fStatus;
 	private final StepStack fStepStack;
-	private IStep fCurrentStep;
 	private final Set<String> zappedPlayerIds = new HashSet<>();
 	private int kickingSwarmers;
 
@@ -73,8 +71,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	private BlitzTurnState blitzTurnState;
 	private PrayerState prayerState = new PrayerState();
 	private ActiveEffects activeEffects = new ActiveEffects();
+	private final StepExecutor stepExecutor = new StepExecutor(this);
 
-	private enum StepExecutionMode {
+	enum StepExecutionMode {
 		Start, HandleCommand
 	}
 
@@ -195,117 +194,32 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 
 	public IStep getCurrentStep() {
-		return fCurrentStep;
+		return stepExecutor.getCurrentStep();
 	}
 
 	public void handleCommand(ReceivedCommand pReceivedCommand) {
 		if (pReceivedCommand == null) {
 			return;
 		}
-		if (fCurrentStep == null) {
-			startNextStep();
-		}
-		if (fCurrentStep != null) {
-			executeStep(StepExecutionMode.HandleCommand, pReceivedCommand);
-		}
+		stepExecutor.handleCommand(pReceivedCommand);
 	}
 
 	public void startNextStep() {
-		progressToNextStep();
-		if (fCurrentStep != null) {
-			getServer().getDebugLog().logCurrentStep(IServerLogLevel.DEBUG, this);
-			executeStep(StepExecutionMode.Start, null);
-		}
-	}
-
-	private void progressToNextStep() {
-		fCurrentStep = getStepStack().pop();
-	}
-
-	private void executeStep(StepExecutionMode mode, ReceivedCommand receivedCommand) {
-		boolean forward;
-		do {
-			if (mode == StepExecutionMode.Start) {
-				fCurrentStep.start();
-			} else if (receivedCommand != null) {
-				fCurrentStep.handleCommand(receivedCommand);
-			}
-
-			while (fCurrentStep.getResult().getNextAction().triggerRepeat()) {
-				fCurrentStep.repeat();
-			}
-
-			UtilServerGame.syncGameModel(fCurrentStep);
-			forward = processStepResult();
-			if (forward) {
-				mode = StepExecutionMode.HandleCommand;
-			}
-		} while (forward);
-	}
-
-	private boolean processStepResult() {
-		if (fCurrentStep == null) {
-			throw new StepException("Trying to process result from a null step.");
-		}
-
-		StepResult stepResult = fCurrentStep.getResult();
-		StepAction action = stepResult.getNextAction();
-
-		if (action.triggerGoto()) {
-			// Skip forward until we're at the appropriate label
-			handleStepResultGotoLabel(stepResult.getNextActionParameter());
-		}
-
-		if (action.triggerNextStep()) {
-			if (action.forwardCommand()) {
-				// With forwarded commands, we're expected to not run start()
-				// So just get the next step off of the stack
-				progressToNextStep();
-				return true;
-			} else {
-				// We're triggering the next step normally, so get it off of the stack
-				// and execute
-				startNextStep();
-			}
-		}
-		return false;
+		stepExecutor.startNextStep();
 	}
 
 	public void pushCurrentStepOnStack() {
-		if (fCurrentStep != null) {
-			getStepStack().push(fCurrentStep);
-		}
+		stepExecutor.pushCurrentStepOnStack();
 	}
 
+    /**
+     * Skips forward to the step with the provided label.
+     * If the label does not exist on the stack, do nothing.
+     *
+     * @param pGotoLabel Label to skip forward to
+     */
 	public void cleanupStepStack(String pGotoLabel) {
-		if (StringTool.isProvided(pGotoLabel)) {
-			List<IStep> poppedSteps = new ArrayList<>();
-			while (getStepStack().peek() != null) {
-				if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
-					return;
-				} else {
-					poppedSteps.add(getStepStack().pop());
-				}
-			}
-
-			getStepStack().push(poppedSteps);
-		}
-	}
-
-	private void handleStepResultGotoLabel(String pGotoLabel) {
-		if (pGotoLabel == null) {
-			String stepName = (fCurrentStep != null) ? fCurrentStep.getId().getName() : "unknown";
-			throw new StepException("Step " + stepName + ": No goto label set.");
-		}
-		fCurrentStep = null;
-		while (getStepStack().peek() != null) {
-			if (pGotoLabel.equals(getStepStack().peek().getLabel())) {
-				return;
-			} else {
-				getStepStack().pop();
-			}
-		}
-		throw new StepException("Goto unknown label " + pGotoLabel);
+		stepExecutor.cleanupStepStack(pGotoLabel);
 	}
 
 	public void addZappedPlayer(Player<?> player) {
@@ -451,8 +365,9 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 				IServerJsonOption.GAME_LOG.addTo(jsonObject, fGameLog.toJsonValue());
 			}
 		}
-		if (fCurrentStep != null) {
-			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, fCurrentStep.toJsonValue());
+		IStep currentStep = stepExecutor.getCurrentStep();
+		if (currentStep != null) {
+			IServerJsonOption.CURRENT_STEP.addTo(jsonObject, currentStep.toJsonValue());
 		}
 		if (fGame != null) {
 			IServerJsonOption.GAME.addTo(jsonObject, fGame.toJsonValue());
@@ -482,7 +397,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		// Preinitialize the game so we can get the correct factories later.
 		setGame(null);
 		JsonObject gameObject = IServerJsonOption.GAME.getFrom(emptySource, jsonObject);
-		fCurrentStep = null;
+		stepExecutor.setCurrentStep(null);
 		IFactorySource source = null;
 		if (gameObject != null) {
 			Game newGame = new Game(getServer().getFactorySource(), getServer().getFactoryManager());
@@ -492,7 +407,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 			initRulesDependentMembers();
 			JsonObject currentStepObject = IServerJsonOption.CURRENT_STEP.getFrom(source, jsonObject);
 			if (currentStepObject != null) {
-				fCurrentStep = stepFactory.forJsonValue(source, currentStepObject);
+				stepExecutor.setCurrentStep(stepFactory.forJsonValue(source, currentStepObject));
 			}
 		}
 
