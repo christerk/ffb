@@ -105,10 +105,17 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 							targetCoordinate = game.isHomePlaying() ? throwTeamMateCommand.getTargetCoordinate()
 								: throwTeamMateCommand.getTargetCoordinate().transform();
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
-						} else if (!StringTool.isProvided(thrownPlayerId)) {
-							thrownPlayerId = throwTeamMateCommand.getThrownPlayerId();
-							targetCoordinate = null;
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						} else if (StringTool.isProvided(throwTeamMateCommand.getThrownPlayerId())) {
+							PlayerState thrownPlayerState =
+								game.getFieldModel().getPlayerState(game.getPlayerById(throwTeamMateCommand.getThrownPlayerId()));
+
+							if (thrownPlayerState.getBase() == PlayerState.PICKED_UP) {
+								commandStatus = StepCommandStatus.SKIP_STEP;
+							} else {
+								thrownPlayerId = throwTeamMateCommand.getThrownPlayerId();
+								targetCoordinate = null;
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
 						}
 					}
 					break;
