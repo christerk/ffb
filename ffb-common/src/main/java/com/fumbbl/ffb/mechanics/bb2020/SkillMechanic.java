@@ -86,6 +86,11 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 	}
 
 	@Override
+	public int countAdvancements(Player<?> player) {
+		return 0;
+	}
+
+	@Override
 	public boolean canAlwaysAssistFoul(Game game, Player<?> assistant) {
 		return UtilGameOption.isOptionEnabled(game, GameOptionId.SNEAKY_GIT_AS_FOUL_GUARD)
 			&& assistant.hasSkillProperty(NamedProperties.canAlwaysAssistFouls);
