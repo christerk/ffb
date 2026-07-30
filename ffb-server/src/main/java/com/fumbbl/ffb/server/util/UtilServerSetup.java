@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.db.delete.DbTeamSetupsDeleteParameter;
 import com.fumbbl.ffb.server.db.insert.DbTeamSetupsInsertParameter;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsForTeamQuery;
 import com.fumbbl.ffb.server.db.query.DbTeamSetupsQuery;
+import com.fumbbl.ffb.server.net.ServerCommunication;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilBox;
 import org.eclipse.jetty.websocket.api.Session;
@@ -29,7 +30,6 @@ public class UtilServerSetup {
 	public static void loadTeamSetup(GameState gameState, String setupName) {
 
 		if (gameState != null) {
-
 			FantasyFootballServer server = gameState.getServer();
 			Game game = gameState.getGame();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -44,23 +44,31 @@ public class UtilServerSetup {
 				}
 
 			} else {
-				DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-					.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
-				String[] setupNames = allSetupNamesQuery.execute(team);
-				Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-					: server.getSessionManager().getSessionOfAwayCoach(game.getId());
-				server.getCommunication().sendTeamSetupList(session, setupNames);
+				replyToClientWithTeamSetups(
+						server.getCommunication(),
+						(DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
+								.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM),
+						game.isHomePlaying() ?
+								server.getSessionManager().getSessionOfHomeCoach(game.getId()) :
+								server.getSessionManager().getSessionOfAwayCoach(game.getId()),
+						team);
 			}
 
 		}
 
 	}
 
+	private static void replyToClientWithTeamSetups(ServerCommunication communication,
+	                                                DbTeamSetupsForTeamQuery allSetupNamesQuery,
+	                                                Session session, Team team) {
+		String[] setupNames = allSetupNamesQuery.execute(team);
+		communication.sendTeamSetupList(session, setupNames);
+	}
+
 	public static void saveTeamSetup(GameState gameState, String pSetupName, int[] pPlayerNumbers,
 	                                 FieldCoordinate[] pPlayerCoordinates) {
 
 		if ((gameState != null) && StringTool.isProvided(pSetupName)) {
-
 			FantasyFootballServer server = gameState.getServer();
 			Game game = gameState.getGame();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
@@ -88,28 +96,25 @@ public class UtilServerSetup {
 	}
 
 	public static void deleteTeamSetup(GameState gameState, String pSetupName) {
-
 		if (gameState != null) {
-
 			FantasyFootballServer server = gameState.getServer();
 			Game game = gameState.getGame();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 
 			if (StringTool.isProvided(pSetupName)) {
-				DbTransaction dbTransaction = new DbTransaction();
+				DbTransaction dbTransaction = new DbTransaction(() ->
+						replyToClientWithTeamSetups(
+								server.getCommunication(),
+								(DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
+										.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM),
+								game.isHomePlaying() ?
+										server.getSessionManager().getSessionOfHomeCoach(game.getId()) :
+										server.getSessionManager().getSessionOfAwayCoach(game.getId()),
+								team));
 				dbTransaction.add(new DbTeamSetupsDeleteParameter(team.getId(), pSetupName));
 				server.getDbUpdater().add(dbTransaction);
 			}
-
-			DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-				.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
-			String[] setupNames = allSetupNamesQuery.execute(team);
-			Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-				: server.getSessionManager().getSessionOfAwayCoach(game.getId());
-			server.getCommunication().sendTeamSetupList(session, setupNames);
-
 		}
-
 	}
 
 	public static void setupPlayer(GameState gameState, String pPlayerId, FieldCoordinate pCoordinate) {
