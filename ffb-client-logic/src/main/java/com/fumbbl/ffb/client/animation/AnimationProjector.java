@@ -1,7 +1,7 @@
 package com.fumbbl.ffb.client.animation;
 
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.client.PitchDimensionProvider;
+import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.model.AnimationType;
 
 import java.awt.*;
@@ -18,16 +18,16 @@ public class AnimationProjector {
 	private double currentHeight;
 
 	public AnimationProjector(FieldCoordinate start, FieldCoordinate end, FieldCoordinate interceptor,
-							  PitchDimensionProvider dimensionProvider, SteppingStrategy steppingStrategy) {
+							   PitchViewport pitchViewport, SteppingStrategy steppingStrategy) {
 		stepping = steppingStrategy.findStepping();
 
-		startDimension = dimensionProvider.mapToLocal(start, true);
-		endDimension = dimensionProvider.mapToLocal(end, true);
+		startDimension = pitchViewport.toLocal(start, true);
+		endDimension = pitchViewport.toLocal(end, true);
 		xAxisAnimation = (Math.abs(endDimension.width - startDimension.width) > Math.abs(endDimension.height - startDimension.height));
 		interceptorDimension = new Dimension(endDimension);
 
 		if (interceptor != null) {
-			interceptorDimension = dimensionProvider.mapToLocal(interceptor, true);
+			interceptorDimension = pitchViewport.toLocal(interceptor, true);
 		}
 
 		currentWidth = startDimension.getWidth();

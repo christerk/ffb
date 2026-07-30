@@ -39,6 +39,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	private boolean fClickable;
 	private final PitchDimensionProvider pitchDimensionProvider;
+	private final PitchViewport pitchViewport;
 	private JPopupMenu fPopupMenu;
 	private int popupIndex;
 	private List<JPopupMenu> popupMenus;
@@ -54,6 +55,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		setClickable(true);
 		pitchDimensionProvider = pClient.getUserInterface().getPitchDimensionProvider();
 		coordinateConverter = pClient.getUserInterface().getCoordinateConverter();
+		pitchViewport = pClient.getUserInterface().getPitchViewport();
 	}
 
 	public void setUp() {
@@ -108,12 +110,11 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		if (pCoordinate != null) {
 			FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 
-			Dimension dimension = pitchDimensionProvider.mapToLocal(pCoordinate);
+			Dimension dimension = pitchViewport.toLocal(pCoordinate);
 			int x = dimension.width + 1;
 			int y = dimension.height + 1;
 			Rectangle bounds =
-				new Rectangle(x, y, pitchDimensionProvider.fieldSquareSize() - 2,
-					pitchDimensionProvider.fieldSquareSize() - 2);
+				new Rectangle(x, y, pitchViewport.squareSize() - 2, pitchViewport.squareSize() - 2);
 
 			Graphics2D g2d = fieldComponent.getImage().createGraphics();
 			g2d.setPaint(pColor);
@@ -133,9 +134,9 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	private void clearCoordinate(FieldCoordinate coordinate) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
-		Dimension dimension = pitchDimensionProvider.mapToLocal(coordinate);
-		Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchDimensionProvider.fieldSquareSize(),
-			pitchDimensionProvider.fieldSquareSize());
+		Dimension dimension = pitchViewport.toLocal(coordinate);
+		Rectangle bounds = new Rectangle(dimension.width, dimension.height, pitchViewport.squareSize(),
+			pitchViewport.squareSize());
 		fieldComponent.refresh(bounds);
 	}
 
@@ -181,7 +182,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 				}
 
 				Dimension dimension =
-					pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+					pitchViewport.toLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 
 				if (player.isPresent()) {
 					getClient().getUserInterface().getMarkerService()
@@ -251,7 +252,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 					offsetX = -1;
 				}
 				Dimension dimension =
-					pitchDimensionProvider.mapToLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
+					pitchViewport.toLocal(coordinate.getX() + offsetX, coordinate.getY() + offsetY, false);
 				fPopupMenu.show(getClient().getUserInterface().getFieldComponent(), dimension.width, dimension.height);
 				menuOpen = true;
 			}

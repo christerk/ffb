@@ -44,7 +44,7 @@ public class AnimationSequenceCard implements IAnimationSequence, ActionListener
 	public static AnimationSequenceCard createAnimationSequence(FantasyFootballClient pClient, Animation pAnimation) {
 		String cardBackProperty = pAnimation.getCard().getType().getCardBack();
 		BufferedImage cardFront = createCardFront(pClient, pAnimation.getCard());
-		return new AnimationSequenceCard(pClient.getUserInterface().getUiDimensionProvider().dimension(Component.FIELD),
+		return new AnimationSequenceCard(pClient.getUserInterface().getPitchViewport().fieldSize(),
 			new AnimationFrame[]{new AnimationFrame(cardBackProperty, 0.5f, 0.3, 100),
 				new AnimationFrame(cardBackProperty, 0.6f, 0.4, 100), new AnimationFrame(cardBackProperty, 0.7f, 0.5, 100),
 				new AnimationFrame(cardBackProperty, 0.8f, 0.6, 100), new AnimationFrame(cardBackProperty, 0.9f, 0.7, 100),
