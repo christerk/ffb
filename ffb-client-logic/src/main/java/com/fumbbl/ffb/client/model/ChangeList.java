@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 		);
 
 		versions.add(new VersionChangeList("3.3.0")

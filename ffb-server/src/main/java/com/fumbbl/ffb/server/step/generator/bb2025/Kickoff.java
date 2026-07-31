@@ -48,7 +48,7 @@ public class Kickoff extends com.fumbbl.ffb.server.step.generator.Kickoff {
 		sequence.add(StepId.KICKOFF_RESULT_ROLL);
 		sequence.add(StepId.APPLY_KICKOFF_RESULT, from(StepParameterKey.GOTO_LABEL_ON_END, IStepLabel.END_KICKOFF),
 			from(StepParameterKey.GOTO_LABEL_ON_BLITZ, IStepLabel.BLITZ_TURN));
-		// may insert send off steps at this point
+		// may insert apothecary steps at this point
 		sequence.jump(IStepLabel.KICKOFF_ANIMATION);
 		sequence.add(StepId.BLITZ_TURN, IStepLabel.BLITZ_TURN);
 		// may insert selectSequence at this point
