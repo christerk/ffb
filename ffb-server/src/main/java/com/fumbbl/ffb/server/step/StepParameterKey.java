@@ -134,6 +134,7 @@ public enum StepParameterKey {
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean
 	REVERT_END_TURN, // Boolean
+	REVERT_TURNOVER, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SKIP, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect
@@ -154,7 +155,6 @@ public enum StepParameterKey {
 	THROW_SCATTER, // Boolean
 	TOUCHBACK, // Boolean
 	TOUCHDOWNS, // Integer
-	TURNOVER_PLAYER_ID, // String
 	TV_AWAY, // Integer
 	TV_HOME, // Integer
 	UPDATE_PERSISTENCE, // Boolean

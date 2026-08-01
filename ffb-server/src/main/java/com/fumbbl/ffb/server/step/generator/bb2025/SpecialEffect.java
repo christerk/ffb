@@ -25,7 +25,8 @@ public class SpecialEffect extends com.fumbbl.ffb.server.step.generator.SpecialE
 		sequence.add(StepId.SPECIAL_EFFECT, from(StepParameterKey.SPECIAL_EFFECT, params.getSpecialEffect()),
 			from(StepParameterKey.PLAYER_ID, params.getPlayerId()), from(StepParameterKey.ROLL_FOR_EFFECT, params.isRollForEffect()),
 			from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_SPECIAL_EFFECT));
-		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SPECIAL_EFFECT));
+		sequence.add(StepId.STEADY_FOOTING, from(StepParameterKey.GOTO_LABEL_ON_SUCCESS, IStepLabel.END_SPECIAL_EFFECT),
+			from(StepParameterKey.REVERT_TURNOVER, false));
 		sequence.add(StepId.HANDLE_DROP_PLAYER_CONTEXT);
 		sequence.add(StepId.PLACE_BALL);
 		sequence.add(StepId.APOTHECARY, from(StepParameterKey.APOTHECARY_MODE, ApothecaryMode.SPECIAL_EFFECT));

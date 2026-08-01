@@ -46,10 +46,10 @@ public class DropPlayerFromBombCommand extends DeferredCommand {
 		}
 		boolean droppedBall = parameterSet.remove(StepParameterKey.END_TURN);
 		step.publishParameters(parameterSet);
+		// this command only runs when the player actually goes down, so the turnover is only
+		// raised for players that failed to keep their footing
 		if (causesTurnover || (droppedBall && !suppressEndTurn)) {
-			// this command only runs when the player actually goes down, so the turnover of this
-			// player is final and must not be revoked by another player hit by the same bomb
-			step.publishParameter(new StepParameter(StepParameterKey.TURNOVER_PLAYER_ID, playerId));
+			step.publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 	}
 
