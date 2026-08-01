@@ -1,20 +1,15 @@
 package com.fumbbl.ffb.server.util;
 
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
-import com.fumbbl.ffb.factory.MechanicsFactory;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
-import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
-import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,10 +18,7 @@ import java.util.Set;
 public class UtilServerReRoll {
 
 	public static boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer) {
-		Game game = pStep.getGameState().getGame();
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-		return mechanic.useReRoll(pStep, pReRollSource, pPlayer);
+		return new ReRollService().useReRoll(pStep, pReRollSource, pPlayer);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer,
@@ -82,12 +74,14 @@ public class UtilServerReRoll {
 	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
 	                                              Skill reRollSkill, CommonProperty menuProperty,
 	                                              String defaultValueKey, List<String> messages) {
-		Game game = gameState.getGame();
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-
-		return mechanic.askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill,
-			reRollSkill, menuProperty, defaultValueKey, messages);
+		return new ReRollService().askForReRollIfAvailable(
+			ReRollRequest.forPlayer(gameState, player, reRolledAction, minimumRoll)
+				.fumble(fumble)
+				.modifyingSkill(modificationSkill)
+				.reRollSkill(reRollSkill)
+				.menu(menuProperty, defaultValueKey)
+				.messages(messages)
+				.build());
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
@@ -109,33 +103,20 @@ public class UtilServerReRoll {
 	}
 
 	public static boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-
-		return mechanic.isProReRollAvailable(player, game, passState);
+		return new ReRollService().isProReRollAvailable(player, game, passState);
 	}
 
 	public static boolean isSingleUseReRollAvailable(GameState pGameState, Player<?> pPlayer) {
-		Game game = pGameState.getGame();
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-
-		return mechanic.isSingleUseReRollAvailable(pGameState, pPlayer);
+		return new ReRollService().isSingleUseReRollAvailable(pGameState, pPlayer);
 	}
 
 	public static boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
-		Game game = pGameState.getGame();
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-
-		return mechanic.isTeamReRollAvailable(pGameState, pPlayer);
+		return new ReRollService().isTeamReRollAvailable(pGameState, pPlayer);
 	}
 
 	private static Skill getReRollSkill(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
 	                                    Set<Skill> ignoreSkills) {
-		Game game = gameState.getGame();
-		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction, ignoreSkills);
-		return reRollSource != null ? reRollSource.getSkill(game) : null;
+		return new ReRollService().findReRollSkill(gameState, actingPlayer, reRolledAction, ignoreSkills);
 	}
 
 }
