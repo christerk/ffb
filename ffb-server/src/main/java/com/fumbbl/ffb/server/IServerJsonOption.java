@@ -173,6 +173,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption RE_ROLLING = new JsonBooleanOption("reRolling");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
+    JsonBooleanOption REVERT_END_TURN = new JsonBooleanOption("revertEndTurn");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
     JsonBooleanOption SABOTEUR_TRIGGERED_ATTACKER = new JsonBooleanOption("saboteurTriggeredAttacker");
     JsonBooleanOption SABOTEUR_TRIGGERED_DEFENDER = new JsonBooleanOption("saboteurTriggeredDefender");
@@ -204,7 +205,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringOption THROWN_PLAYER_ID = new JsonStringOption("thrownPlayerId");
     JsonPlayerStateOption THROWN_PLAYER_STATE = new JsonPlayerStateOption("thrownPlayerState");
     JsonBooleanOption TOUCHBACK = new JsonBooleanOption("touchback");
-    JsonBooleanOption REVERT_TURNOVER = new JsonBooleanOption("revertTurnover");
     JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
     JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
     JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");

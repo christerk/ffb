@@ -134,7 +134,6 @@ public enum StepParameterKey {
 	RESET_PLAYER_ACTION, // PlayerAction
 	RETAIN_MODEL_DATA, // Boolean
 	REVERT_END_TURN, // Boolean
-	REVERT_TURNOVER, // Boolean
 	ROLL_FOR_EFFECT, // Boolean
 	SKIP, // Boolean
 	SPECIAL_EFFECT, // SpecialEffect

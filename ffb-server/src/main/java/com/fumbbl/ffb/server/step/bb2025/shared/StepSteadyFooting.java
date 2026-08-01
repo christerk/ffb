@@ -52,7 +52,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private boolean skip;
 	private String playerId;
 	private boolean removeCatchMode = true;
-	private boolean revertTurnover = true;
+	private boolean revertEndTurn = true;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -78,8 +78,8 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 					case APOTHECARY_MODE:
 						apothecaryMode = (ApothecaryMode) parameter.getValue();
 						break;
-					case REVERT_TURNOVER:
-						revertTurnover = parameter.getValue() == null || (Boolean) parameter.getValue();
+					case REVERT_END_TURN:
+						revertEndTurn = parameter.getValue() == null || (Boolean) parameter.getValue();
 						break;
 					default:
 						break;
@@ -222,7 +222,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		if (successful) {
 			// sequences that only raise a turnover once a player actually goes down must not revert it,
 			// as the turnover may have been caused by another player of the same sequence
-			if (revertTurnover && game.getActingTeam().hasPlayer(player)) {
+			if (revertEndTurn && game.getActingTeam().hasPlayer(player)) {
 				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			}
@@ -297,7 +297,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IServerJsonOption.SKIP.addTo(jsonObject, skip);
 		IServerJsonOption.REMOVE_CATCH_MODE.addTo(jsonObject, removeCatchMode);
-		IServerJsonOption.REVERT_TURNOVER.addTo(jsonObject, revertTurnover);
+		IServerJsonOption.REVERT_END_TURN.addTo(jsonObject, revertEndTurn);
 		return jsonObject;
 	}
 
@@ -313,8 +313,8 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		skip = IServerJsonOption.SKIP.getFrom(source, jsonObject);
 		removeCatchMode = IServerJsonOption.REMOVE_CATCH_MODE.getFrom(source, jsonObject);
-		Boolean revertTurnoverFromJson = IServerJsonOption.REVERT_TURNOVER.getFrom(source, jsonObject);
-		revertTurnover = revertTurnoverFromJson == null || revertTurnoverFromJson;
+		Boolean revertEndTurnFromJson = IServerJsonOption.REVERT_END_TURN.getFrom(source, jsonObject);
+		revertEndTurn = revertEndTurnFromJson == null || revertEndTurnFromJson;
 		if (IServerJsonOption.STEADY_FOOTING_CONTEXT.isDefinedIn(jsonObject)) {
 			context = new SteadyFootingContext().initFrom(source, IServerJsonOption.STEADY_FOOTING_CONTEXT.getFrom(source, jsonObject));
 		}

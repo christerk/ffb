@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.special;
+package com.fumbbl.ffb.server.step.bb2020.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
