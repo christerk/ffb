@@ -26,7 +26,6 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
-import com.fumbbl.ffb.server.model.TurnoverUpdate;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 
 import java.util.Arrays;
@@ -66,19 +65,15 @@ public final class StepEndBomb extends AbstractStep {
 					consume(parameter);
 					return true;
 				case END_TURN:
-					// turnovers of the bomb sequence are tracked per player via TURNOVER_UPDATE,
-					// so an end turn of a single player must not reset turnovers of other players
+					// a player avoiding its knock down must not reset a turnover caused by another
+					// player hit by the same bomb
 					fEndTurn |= parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
-				case TURNOVER_UPDATE:
-					TurnoverUpdate turnoverUpdate = (TurnoverUpdate) parameter.getValue();
-					if (turnoverUpdate != null && turnoverUpdate.getPlayerId() != null) {
-						if (turnoverUpdate.isTurnover()) {
-							fTurnoverPlayerIds.add(turnoverUpdate.getPlayerId());
-						} else {
-							fTurnoverPlayerIds.remove(turnoverUpdate.getPlayerId());
-						}
+				case TURNOVER_PLAYER_ID:
+					String turnoverPlayerId = (String) parameter.getValue();
+					if (turnoverPlayerId != null) {
+						fTurnoverPlayerIds.add(turnoverPlayerId);
 					}
 					consume(parameter);
 					return true;

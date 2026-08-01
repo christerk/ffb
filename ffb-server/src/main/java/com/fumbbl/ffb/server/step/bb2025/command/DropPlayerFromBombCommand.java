@@ -5,7 +5,6 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.server.model.TurnoverUpdate;
 import com.fumbbl.ffb.server.step.DeferredCommand;
 import com.fumbbl.ffb.server.step.DeferredCommandId;
 import com.fumbbl.ffb.server.step.IStep;
@@ -46,11 +45,12 @@ public class DropPlayerFromBombCommand extends DeferredCommand {
 			game.getFieldModel().setPlayerState(player, newState.changeActive(wasActive));
 		}
 		boolean droppedBall = parameterSet.remove(StepParameterKey.END_TURN);
-		boolean endTurn = causesTurnover || (droppedBall && !suppressEndTurn);
 		step.publishParameters(parameterSet);
-		// track the turnover per player as several players may be hit by the same bomb
-		// and each of them may avoid being knocked down on its own
-		step.publishParameter(new StepParameter(StepParameterKey.TURNOVER_UPDATE, new TurnoverUpdate(playerId, endTurn)));
+		if (causesTurnover || (droppedBall && !suppressEndTurn)) {
+			// this command only runs when the player actually goes down, so the turnover of this
+			// player is final and must not be revoked by another player hit by the same bomb
+			step.publishParameter(new StepParameter(StepParameterKey.TURNOVER_PLAYER_ID, playerId));
+		}
 	}
 
 	@Override
