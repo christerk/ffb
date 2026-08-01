@@ -174,7 +174,7 @@ public final class StepSpecialEffect extends AbstractStep {
 						suppressEndTurn = false;
 					}
 
-					DropPlayerFromBombCommand command = new DropPlayerFromBombCommand(player.getId(), ApothecaryMode.SPECIAL_EFFECT, true, isActive, suppressEndTurn);
+					DropPlayerFromBombCommand command = new DropPlayerFromBombCommand(player.getId(), ApothecaryMode.SPECIAL_EFFECT, true, isActive, suppressEndTurn, causesTurnover(game, player, isStanding, suppressEndTurn));
 					Player<?> bombardier = game.getPlayerById(getGameState().getPassState().getOriginalBombardier());
 					boolean bombardierGetsSpp = game.findTeam(bombardier) != game.findTeam(player) && UtilCards.hasSkillWithProperty(bombardier, NamedProperties.grantsSppFromSpecialActionsCas);
 					InjuryResult injuryResult = UtilServerInjury.handleInjury(this,
@@ -193,7 +193,9 @@ public final class StepSpecialEffect extends AbstractStep {
 					if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
 						actingTeam = game.getTeamAway();
 					}
-					if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL) && !suppressEndTurn) {
+					// the turnover of a bomb hit is published per player once the player fails to stay on its feet
+					if (actingTeam.hasPlayer(player) && (fSpecialEffect != SpecialEffect.FIREBALL)
+						&& (fSpecialEffect != SpecialEffect.BOMB) && !suppressEndTurn) {
 						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 					}
 				}
@@ -206,6 +208,20 @@ public final class StepSpecialEffect extends AbstractStep {
 
 		}
 
+	}
+
+	private boolean causesTurnover(Game game, Player<?> player, boolean isStanding, boolean suppressEndTurn) {
+		if (!isStanding || suppressEndTurn) {
+			return false;
+		}
+		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		if ((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode())) {
+			actingTeam = game.getTeamHome();
+		}
+		if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
+			actingTeam = game.getTeamAway();
+		}
+		return actingTeam.hasPlayer(player);
 	}
 
 	// JSON serialization

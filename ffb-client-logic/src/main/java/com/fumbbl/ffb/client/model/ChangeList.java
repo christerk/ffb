@@ -56,6 +56,7 @@ public class ChangeList {
 			.addBugfix("Cheering Fans assist was not granted to defensive team in case of a touchback")
 			.addBugfix("Punt: A ball bouncing out off bounds did not cause a turnover")
 			.addBugfix("TTM: When double-clicking while picking up a team-mate the player could vanish upon landing/cancelling")
+			.addBugfix("Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")

@@ -205,6 +205,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonPlayerStateOption THROWN_PLAYER_STATE = new JsonPlayerStateOption("thrownPlayerState");
     JsonBooleanOption TOUCHBACK = new JsonBooleanOption("touchback");
     JsonFieldCoordinateOption TOUCHBACK_COORDINATE = new JsonFieldCoordinateOption("touchbackCoordinate");
+    JsonStringArrayOption TURNOVER_PLAYER_IDS = new JsonStringArrayOption("turnoverPlayerIds");
     JsonBooleanOption TOUCHDOWN = new JsonBooleanOption("touchdown");
     JsonBooleanOption USE_ALTERNATE_LABEL = new JsonBooleanOption("useAlternateLabel");
     JsonBooleanOption USE_KICK_CHOICE = new JsonBooleanOption("useKickChoice");

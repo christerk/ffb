@@ -154,6 +154,7 @@ public enum StepParameterKey {
 	THROW_SCATTER, // Boolean
 	TOUCHBACK, // Boolean
 	TOUCHDOWNS, // Integer
+	TURNOVER_UPDATE, // TurnoverUpdate
 	TV_AWAY, // Integer
 	TV_HOME, // Integer
 	UPDATE_PERSISTENCE, // Boolean

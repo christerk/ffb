@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.special;
+package com.fumbbl.ffb.server.step.bb2025.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -26,7 +26,12 @@ import com.fumbbl.ffb.server.step.generator.EndPlayerAction;
 import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.Pass;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.model.TurnoverUpdate;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Final step of the bomb sequence. Consumes all expected stepParameters.
@@ -36,9 +41,10 @@ import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndBomb extends AbstractStep {
 
+	private final Set<String> fTurnoverPlayerIds = new HashSet<>();
 	private String fCatcherId;
 	private boolean fEndTurn;
 	private boolean fBombExploded;
@@ -60,7 +66,20 @@ public final class StepEndBomb extends AbstractStep {
 					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
+					// turnovers of the bomb sequence are tracked per player via TURNOVER_UPDATE,
+					// so an end turn of a single player must not reset turnovers of other players
+					fEndTurn |= parameter.getValue() != null && (Boolean) parameter.getValue();
+					consume(parameter);
+					return true;
+				case TURNOVER_UPDATE:
+					TurnoverUpdate turnoverUpdate = (TurnoverUpdate) parameter.getValue();
+					if (turnoverUpdate != null && turnoverUpdate.getPlayerId() != null) {
+						if (turnoverUpdate.isTurnover()) {
+							fTurnoverPlayerIds.add(turnoverUpdate.getPlayerId());
+						} else {
+							fTurnoverPlayerIds.remove(turnoverUpdate.getPlayerId());
+						}
+					}
 					consume(parameter);
 					return true;
 				case BOMB_EXPLODED:
@@ -84,6 +103,7 @@ public final class StepEndBomb extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 		SequenceGeneratorFactory factory = game.getFactory(FactoryType.Factory.SEQUENCE_GENERATOR);
+		fEndTurn |= !fTurnoverPlayerIds.isEmpty();
 		fEndTurn |= UtilServerSteps.checkTouchdown(getGameState());
 		boolean removePassCoordinate = true;
 		if (fEndTurn || (fCatcherId == null) || fBombExploded) {
@@ -169,6 +189,7 @@ public final class StepEndBomb extends AbstractStep {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.CATCHER_ID.addTo(jsonObject, fCatcherId);
 		IServerJsonOption.END_TURN.addTo(jsonObject, fEndTurn);
+		IServerJsonOption.TURNOVER_PLAYER_IDS.addTo(jsonObject, fTurnoverPlayerIds);
 		return jsonObject;
 	}
 
@@ -178,6 +199,11 @@ public final class StepEndBomb extends AbstractStep {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		fCatcherId = IServerJsonOption.CATCHER_ID.getFrom(source, jsonObject);
 		fEndTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
+		fTurnoverPlayerIds.clear();
+		String[] turnoverPlayerIds = IServerJsonOption.TURNOVER_PLAYER_IDS.getFrom(source, jsonObject);
+		if (turnoverPlayerIds != null) {
+			fTurnoverPlayerIds.addAll(Arrays.asList(turnoverPlayerIds));
+		}
 		return this;
 	}
 
