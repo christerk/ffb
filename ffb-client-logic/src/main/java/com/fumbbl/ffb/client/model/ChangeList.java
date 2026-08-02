@@ -13,6 +13,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.3.2")
 			.addBugfix("Taunt: Was not available after POW results")
 			.addBugfix("Bombardier: The bomber could be activated again when the bomb was caught or intercepted and thrown by another player")
+			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 		);
 
 		versions.add(new VersionChangeList("3.3.1")
