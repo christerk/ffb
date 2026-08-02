@@ -13,6 +13,15 @@ public class ChangeList {
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 		);
 
+		versions.add(new VersionChangeList("3.3.2")
+			.addBugfix("Taunt: Was not available after POW results")
+			.addBugfix("Bombardier: The bomber could be activated again when the bomb was caught or intercepted and thrown by another player")
+		);
+
+		versions.add(new VersionChangeList("3.3.1")
+			.addBugfix("Hatred: Game hung on hovers on players with gained hatred only")
+		);
+
 		versions.add(new VersionChangeList("3.3.0")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")

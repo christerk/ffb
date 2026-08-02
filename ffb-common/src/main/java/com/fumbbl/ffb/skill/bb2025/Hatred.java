@@ -53,9 +53,12 @@ public class Hatred extends Skill {
 			Set<String> tempSkillValues = map(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
 
-			Set<String> rosterSkillValues = map(player.getPosition().getSkillValue(skill));
-
-			skillValues.removeAll(rosterSkillValues);
+			Set<String> rosterSkillValues = new HashSet<>();
+			String skillValueRoster = player.getPosition().getSkillValue(skill);
+			if (StringTool.isProvided(skillValueRoster)) {
+				rosterSkillValues.addAll(map(skillValueRoster));
+				skillValues.removeAll(rosterSkillValues);
+			}
 
 			return Stream.concat(
 				Stream.concat(rosterSkillValues.stream()
