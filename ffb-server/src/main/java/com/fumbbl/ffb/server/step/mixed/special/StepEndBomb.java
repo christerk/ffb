@@ -106,6 +106,9 @@ public final class StepEndBomb extends AbstractStep {
 
 			if (originalBomber != actingPlayer.getPlayer()) {
 				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.THROW_BOMB, false);
+				// changing the acting player resets the used skills, so mark the bomb skill used again,
+				// otherwise ending the activation would leave the bomber active
+				actingPlayer.markSkillUsed(NamedProperties.enableThrowBombAction);
 				game.getFieldModel().setPlayerState(originalBomber, game.getFieldModel().getPlayerState(originalBomber).changeBase(playerState.getBase()).changeActive(true));
 				if (playerState.isProneOrStunned()) {
 					game.getFieldModel().setPlayerState(originalBomber, playerState.changeActive(false));
