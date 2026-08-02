@@ -3,7 +3,6 @@ package com.fumbbl.ffb.client.state.logic.bb2025;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
-import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.SpecialEffect;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
@@ -83,15 +82,6 @@ public class WizardLogicModule extends LogicModule {
 	private InteractionResult handleClick(FieldCoordinate pCoordinate) {
 		if (pCoordinate != null) {
 			SpecialEffect wizardSpell = client.getClientData().getWizardSpell();
-			if (SpecialEffect.LIGHTNING == wizardSpell) {
-				if (isValidLightningTarget(pCoordinate)) {
-					client.getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
-					spellAvailable = false;
-					return InteractionResult.handled();
-				} else {
-					return InteractionResult.reset();
-				}
-			}
 			if (SpecialEffect.ZAP == wizardSpell) {
 				if (isValidZapTarget(pCoordinate)) {
 					client.getCommunication().sendWizardSpell(wizardSpell, pCoordinate);
@@ -112,18 +102,6 @@ public class WizardLogicModule extends LogicModule {
 			}
 		}
 		return InteractionResult.ignore();
-	}
-
-
-	public boolean isValidLightningTarget(FieldCoordinate pCoordinate) {
-		boolean valid = false;
-		Game game = client.getGame();
-		Player<?> player = game.getFieldModel().getPlayer(pCoordinate);
-		if ((player != null) && game.getTeamAway().hasPlayer(player)) {
-			PlayerState playerState = game.getFieldModel().getPlayerState(player);
-			valid = ((playerState.getBase() != PlayerState.STUNNED) && (playerState.getBase() != PlayerState.PRONE));
-		}
-		return valid;
 	}
 
 	public boolean isValidZapTarget(FieldCoordinate pCoordinate) {

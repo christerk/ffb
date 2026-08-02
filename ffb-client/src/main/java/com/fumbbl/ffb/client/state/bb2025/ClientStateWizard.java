@@ -63,11 +63,6 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		switch (wizardSpell) {
-			case LIGHTNING:
-				fieldComponent.getLayerOverPlayers().clearSpellMarker();
-				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_LIGHTNING_SMALL,
-					!logicModule.isValidLightningTarget(pCoordinate));
-				break;
 			case ZAP:
 				fieldComponent.getLayerOverPlayers().clearSpellMarker();
 				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_ZAP_SMALL,
