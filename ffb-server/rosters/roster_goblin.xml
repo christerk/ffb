@@ -181,7 +181,7 @@
         <skillList>
             <skill>Bombardier</skill>
             <skill>Dodge</skill>
-            <skill value="5">Secret Weapon</skill>
+            <skill>Secret Weapon</skill>
             <skill>Stunty</skill>
             <skill>Regeneration</skill>
             <skill>Multiple Block</skill>
