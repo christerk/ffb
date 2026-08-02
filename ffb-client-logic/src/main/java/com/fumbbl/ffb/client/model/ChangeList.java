@@ -12,6 +12,7 @@ public class ChangeList {
 
 		versions.add(new VersionChangeList("3.3.2")
 			.addBugfix("Taunt: Was not available after POW results")
+			.addBugfix("Bombardier: The bomber could be activated again when the bomb was caught or intercepted and thrown by another player")
 		);
 
 		versions.add(new VersionChangeList("3.3.1")
