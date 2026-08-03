@@ -111,17 +111,34 @@ public class WizardLogicModule extends LogicModule {
 	}
 
 	public boolean isValidFireballTarget(FieldCoordinate pCoordinate) {
-		boolean valid = false;
+		return fireballAffectsPlayer(pCoordinate, false);
+	}
+
+	private boolean fireballAffectsPlayer(FieldCoordinate pCoordinate, boolean pOwnTeamOnly) {
 		Game game = client.getGame();
 		FieldCoordinate[] fireballSquares = game.getFieldModel().findAdjacentCoordinates(pCoordinate,
-				FieldCoordinateBounds.FIELD, 1, true);
+			FieldCoordinateBounds.FIELD, 1, true);
 		for (FieldCoordinate square : fireballSquares) {
 			Player<?> player = game.getFieldModel().getPlayer(square);
-			if ((player != null) && (game.getFieldModel().getPlayerState(player) != null)) {
+			if ((player != null)
+				&& (!pOwnTeamOnly || game.getTeamHome().hasPlayer(player))
+				&& (game.getFieldModel().getPlayerState(player) != null)) {
 				return true;
 			}
 		}
-		return valid;
+		return false;
+	}
+
+	public boolean affectsOwnPlayer(FieldCoordinate pCoordinate, SpecialEffect pWizardSpell) {
+		Game game = client.getGame();
+		if (SpecialEffect.ZAP == pWizardSpell) {
+			Player<?> player = game.getFieldModel().getPlayer(pCoordinate);
+			return (player instanceof RosterPlayer) && game.getTeamHome().hasPlayer(player);
+		}
+		if (SpecialEffect.FIREBALL == pWizardSpell) {
+			return fireballAffectsPlayer(pCoordinate, true);
+		}
+		return false;
 	}
 
 	@Override
