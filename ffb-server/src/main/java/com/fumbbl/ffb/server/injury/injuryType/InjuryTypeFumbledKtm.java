@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 
@@ -24,7 +24,7 @@ public class InjuryTypeFumbledKtm extends InjuryTypeServer<KTMFumbleInjury> {
 	}
 
 	@Override
-	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	public void handleInjury(IStep step, Game game, GameState gameState, IDiceRoller diceRoller,
 	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                         ApothecaryMode pApothecaryMode) {
 

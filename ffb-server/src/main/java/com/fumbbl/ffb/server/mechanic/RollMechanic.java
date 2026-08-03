@@ -17,7 +17,7 @@ import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
@@ -31,7 +31,7 @@ public abstract class RollMechanic implements Mechanic {
 		return Type.ROLL;
 	}
 
-	public abstract int[] rollCasualty(DiceRoller diceRoller);
+	public abstract int[] rollCasualty(IDiceRoller diceRoller);
 
 	public abstract PlayerState interpretInjuryRoll(Game game, InjuryContext pInjuryContext);
 

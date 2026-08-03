@@ -10,7 +10,7 @@ import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
@@ -29,7 +29,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 	}
 
 	@Override
-	public final void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	public final void handleInjury(IStep step, Game game, GameState gameState, IDiceRoller diceRoller,
 	                               Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                               ApothecaryMode pApothecaryMode) {
 
@@ -79,7 +79,7 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private void injury(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
+	private void injury(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker, Player<?> pDefender,
 			FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 			Optional<IInjuryContextModification> modification, InjuryContext currentInjuryContext) {
 		if (currentInjuryContext.isArmorBroken()) {
@@ -101,10 +101,10 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		injuryContext.setInjury(new PlayerState(PlayerState.PRONE));
 	}
 
-	protected abstract void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected abstract void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext);
 
-	protected abstract void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected abstract void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll);
 }

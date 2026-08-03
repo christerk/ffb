@@ -6,7 +6,7 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 
 public class InjuryTypeSabotaged extends ModificationAwareInjuryTypeServer<Sabotaged> {
@@ -16,7 +16,7 @@ public class InjuryTypeSabotaged extends ModificationAwareInjuryTypeServer<Sabot
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> attacker,
+	protected void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> attacker,
 		Player<?> defender, FieldCoordinate defenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
@@ -28,7 +28,7 @@ public class InjuryTypeSabotaged extends ModificationAwareInjuryTypeServer<Sabot
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> attacker,
+	protected void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> attacker,
 		Player<?> defender, FieldCoordinate defenderCoordinate, FieldCoordinate fromCoordinate,
 		InjuryContext injuryContext) {
 

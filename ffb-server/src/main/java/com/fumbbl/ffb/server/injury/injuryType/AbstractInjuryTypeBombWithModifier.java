@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.SpecialEffectArmourModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public abstract class AbstractInjuryTypeBombWithModifier<T extends InjuryType> e
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
@@ -50,7 +50,7 @@ public abstract class AbstractInjuryTypeBombWithModifier<T extends InjuryType> e
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		InjuryContext injuryContext) {
 

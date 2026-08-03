@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 
 import java.util.Set;
@@ -21,7 +21,7 @@ public class InjuryTypeBreatheFire extends ModificationAwareInjuryTypeServer<Bre
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext) {
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 
@@ -34,7 +34,7 @@ public class InjuryTypeBreatheFire extends ModificationAwareInjuryTypeServer<Bre
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		if (!injuryContext.isArmorBroken()) {

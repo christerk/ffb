@@ -10,7 +10,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.util.UtilCards;
 import java.util.Optional;
@@ -26,7 +26,7 @@ public class InjuryTypeDropDodgeForSpp extends ModificationAwareInjuryTypeServer
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 
@@ -54,7 +54,7 @@ public class InjuryTypeDropDodgeForSpp extends ModificationAwareInjuryTypeServer
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		InjuryContext injuryContext) {
 

@@ -26,7 +26,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.report.ReportRaiseDead;
 import com.fumbbl.ffb.report.ReportRegenerationRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeBallAndChain;
@@ -63,7 +63,7 @@ public class UtilServerInjury {
 
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
-		DiceRoller diceRoller = gameState.getDiceRoller();
+		IDiceRoller diceRoller = gameState.getDiceRoller();
 		injuryContext.setInjuryType(pInjuryType.injuryType());
 		injuryContext.setDefenderId(pDefender.getId());
 		injuryContext.setAttackerId((pAttacker != null) ? pAttacker.getId() : null);
@@ -202,7 +202,7 @@ public class UtilServerInjury {
 				givenPlayerState != null ? givenPlayerState : game.getFieldModel().getPlayerState(pPlayer);
 			if ((playerState != null) && playerState.isCasualty() &&
 				pPlayer.hasSkillProperty(NamedProperties.canRollToSaveFromInjury)) {
-				DiceRoller diceRoller = gameState.getDiceRoller();
+				IDiceRoller diceRoller = gameState.getDiceRoller();
 				DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 				int roll = diceRoller.rollSkill();
 				successful = diceInterpreter.isRegenerationSuccessful(roll);

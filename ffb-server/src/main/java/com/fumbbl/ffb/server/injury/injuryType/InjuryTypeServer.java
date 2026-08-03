@@ -12,7 +12,7 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.step.IStep;
@@ -76,16 +76,16 @@ public abstract class InjuryTypeServer<T extends InjuryType> implements INamedOb
 		return false;
 	}
 
-	public abstract void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	public abstract void handleInjury(IStep step, Game game, GameState gameState, IDiceRoller diceRoller,
 	                                  Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate,
 	                                  FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                                  ApothecaryMode pApothecaryMode);
 
-	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller) {
+	void setInjury(Player<?> pDefender, GameState gameState, IDiceRoller diceRoller) {
 		setInjury(pDefender, gameState, diceRoller, injuryContext);
 	}
 
-	void setInjury(Player<?> pDefender, GameState gameState, DiceRoller diceRoller, InjuryContext injuryContext) {
+	void setInjury(Player<?> pDefender, GameState gameState, IDiceRoller diceRoller, InjuryContext injuryContext) {
 		RollMechanic mechanic = ((RollMechanic) gameState.getGame().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name()));
 		injuryContext
 			.setInjury(interpretInjury(gameState, injuryContext));

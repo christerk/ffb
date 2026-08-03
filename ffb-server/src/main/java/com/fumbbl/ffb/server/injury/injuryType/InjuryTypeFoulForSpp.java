@@ -15,7 +15,7 @@ import com.fumbbl.ffb.modifiers.ArmorModifier;
 import com.fumbbl.ffb.modifiers.ArmorModifierContext;
 import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -32,7 +32,7 @@ public class InjuryTypeFoulForSpp extends ModificationAwareInjuryTypeServer<Foul
 	}
 
 	@Override
-	protected void injuryRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void injuryRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext injuryContext) {
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
@@ -45,7 +45,7 @@ public class InjuryTypeFoulForSpp extends ModificationAwareInjuryTypeServer<Foul
 	}
 
 	@Override
-	protected void armourRoll(Game game, GameState gameState, DiceRoller diceRoller, Player<?> pAttacker,
+	protected void armourRoll(Game game, GameState gameState, IDiceRoller diceRoller, Player<?> pAttacker,
 		Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate,
 		DiceInterpreter diceInterpreter, InjuryContext injuryContext, boolean roll) {
 		// Blatant Foul breaks armor without roll

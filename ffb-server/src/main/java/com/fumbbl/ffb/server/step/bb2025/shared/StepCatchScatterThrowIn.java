@@ -46,7 +46,7 @@ import com.fumbbl.ffb.report.ReportScatterBall;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.ReportThrowIn;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.IServerLogLevel;
@@ -782,7 +782,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		Game game = getGameState().getGame();
 		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "throwInBall()");
 
-		DiceRoller diceRoller = getGameState().getDiceRoller();
+		IDiceRoller diceRoller = getGameState().getDiceRoller();
 		FieldCoordinate ballCoordinateStart = fThrowInCoordinate;
 		fCatcherId = null;
 

@@ -9,7 +9,7 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
@@ -32,7 +32,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}};
 
 	@Override
-	public int[] rollCasualty(DiceRoller diceRoller) {
+	public int[] rollCasualty(IDiceRoller diceRoller) {
 		return diceRoller.rollCasualtyRenamed();
 	}
 

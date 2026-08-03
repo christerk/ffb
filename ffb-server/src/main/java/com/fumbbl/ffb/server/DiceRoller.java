@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Kalimar
  */
-public class DiceRoller {
+public class DiceRoller implements IDiceRoller {
 
 	private final GameState fGameState;
 	private final Map<String, List<DiceCategory>> testRolls;

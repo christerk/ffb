@@ -16,7 +16,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 
@@ -29,7 +29,7 @@ public class InjuryTypePilingOnArmour extends InjuryTypeServer<PilingOnArmour> {
 	}
 
 	@Override
-	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	public void handleInjury(IStep step, Game game, GameState gameState, IDiceRoller diceRoller,
 	                         Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 	                         ApothecaryMode pApothecaryMode) {
 

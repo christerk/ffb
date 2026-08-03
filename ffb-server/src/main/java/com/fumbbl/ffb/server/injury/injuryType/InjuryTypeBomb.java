@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceInterpreter;
-import com.fumbbl.ffb.server.DiceRoller;
+import com.fumbbl.ffb.server.IDiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.util.UtilCards;
@@ -24,7 +24,7 @@ public class InjuryTypeBomb extends InjuryTypeServer<Bomb> {
 	}
 
 	@Override
-	public void handleInjury(IStep step, Game game, GameState gameState, DiceRoller diceRoller,
+	public void handleInjury(IStep step, Game game, GameState gameState, IDiceRoller diceRoller,
 													 Player<?> pAttacker, Player<?> pDefender, FieldCoordinate pDefenderCoordinate, FieldCoordinate fromCoordinate, InjuryContext pOldInjuryContext,
 													 ApothecaryMode pApothecaryMode) {
 

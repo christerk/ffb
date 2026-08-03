@@ -5,6 +5,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.IDiceRoller;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.List;
@@ -19,20 +20,21 @@ public class TalkHandlerRoll extends TalkHandler {
 	@Override
 	void handle(FantasyFootballServer server, GameState gameState, String[] commands, Team team, Session session) {
 		Game game = gameState.getGame();
+		IDiceRoller roller = gameState.getDiceRoller();
 		if (commands.length > 1) {
 			if ("clear".equals(commands[1])) {
-				gameState.getDiceRoller().clearTestRolls();
+				roller.clearTestRolls();
 			} else {
 				for (int i = 1; i < commands.length; i++) {
 					try {
-						gameState.getDiceRoller().addTestRoll(commands[i], game, team);
+						roller.addTestRoll(commands[i], game, team);
 					} catch (NumberFormatException ignored) {
 					}
 				}
 			}
 		}
 
-		Map<String, List<DiceCategory>> testRolls = gameState.getDiceRoller().getTestRolls();
+		Map<String, List<DiceCategory>> testRolls = roller.getTestRolls();
 		if (testRolls.size() > 0) {
 			testRolls.forEach((key, rolls) -> {
 				List<String> strings = rolls.stream().map(x -> x.text(game)).collect(Collectors.toList());
