@@ -11,12 +11,14 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
+			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
+			.addBugfix(
+				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
 			.addBugfix("Taunt: Was not available after POW results")
 			.addBugfix("Bombardier: The bomber could be activated again when the bomb was caught or intercepted and thrown by another player")
-			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 		);
 
 		versions.add(new VersionChangeList("3.3.1")
@@ -78,8 +80,6 @@ public class ChangeList {
 			.addBugfix("Punt: A ball bouncing out off bounds did not cause a turnover")
 			.addBugfix(
 				"TTM: When double-clicking while picking up a team-mate the player could vanish upon landing/cancelling")
-			.addBugfix(
-				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
