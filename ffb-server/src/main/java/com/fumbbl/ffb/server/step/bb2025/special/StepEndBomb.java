@@ -60,9 +60,7 @@ public final class StepEndBomb extends AbstractStep {
 					consume(parameter);
 					return true;
 				case END_TURN:
-					// several players may be hit by the same bomb, so a turnover of one of them must
-					// not be reset by another one keeping its footing
-					fEndTurn |= parameter.getValue() != null && (Boolean) parameter.getValue();
+					fEndTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case BOMB_EXPLODED:
