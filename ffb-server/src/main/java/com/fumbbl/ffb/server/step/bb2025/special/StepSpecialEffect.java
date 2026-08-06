@@ -88,7 +88,7 @@ public final class StepSpecialEffect extends AbstractStep {
 						break;
 					// mandatory
 					case ROLL_FOR_EFFECT:
-						fRollForEffect = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						fRollForEffect = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					// mandatory
 					case SPECIAL_EFFECT:
@@ -161,8 +161,8 @@ public final class StepSpecialEffect extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 				}
 				if (fSpecialEffect == SpecialEffect.BOMB) {
-					boolean bombFromHome = game.getTurnMode() == TurnMode.BOMB_HOME || game.getTurnMode() == TurnMode.BOMB_HOME_BLITZ;
-					boolean bombFromAway = game.getTurnMode() == TurnMode.BOMB_AWAY || game.getTurnMode() == TurnMode.BOMB_AWAY_BLITZ;
+					boolean bombFromHome = game.getTurnMode() == TurnMode.BOMB_HOME;
+					boolean bombFromAway = game.getTurnMode() == TurnMode.BOMB_AWAY;
 
 					boolean playerHitIsFromBombTeam = (bombFromHome && game.getTeamHome().hasPlayer(player)) || (bombFromAway && game.getTeamAway().hasPlayer(player));
 
@@ -187,10 +187,10 @@ public final class StepSpecialEffect extends AbstractStep {
 				// check end turn
 				if (isStanding) {
 					Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-					if ((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode())) {
+					if (TurnMode.BOMB_HOME == game.getTurnMode()) {
 						actingTeam = game.getTeamHome();
 					}
-					if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
+					if (TurnMode.BOMB_AWAY == game.getTurnMode()) {
 						actingTeam = game.getTeamAway();
 					}
 					// the turnover of a bomb hit is published per player once the player fails to stay on its feet
@@ -215,10 +215,10 @@ public final class StepSpecialEffect extends AbstractStep {
 			return false;
 		}
 		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-		if ((TurnMode.BOMB_HOME == game.getTurnMode()) || (TurnMode.BOMB_HOME_BLITZ == game.getTurnMode())) {
+		if (TurnMode.BOMB_HOME == game.getTurnMode()) {
 			actingTeam = game.getTeamHome();
 		}
-		if ((TurnMode.BOMB_AWAY == game.getTurnMode()) || (TurnMode.BOMB_AWAY_BLITZ == game.getTurnMode())) {
+		if (TurnMode.BOMB_AWAY == game.getTurnMode()) {
 			actingTeam = game.getTeamAway();
 		}
 		return actingTeam.hasPlayer(player);
