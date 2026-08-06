@@ -11,8 +11,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.mechanic.RollMechanic;
-import com.fumbbl.ffb.server.step.IStep;
-import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.Set;
@@ -42,27 +40,11 @@ public class ReRollService {
 			request.getMenuProperty(), request.getDefaultValueKey(), request.getMessages());
 	}
 
-	public Skill findReRollSkill(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
-	                             Set<Skill> ignoreSkills) {
+	private Skill findReRollSkill(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
+	                              Set<Skill> ignoreSkills) {
 		Game game = gameState.getGame();
 		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction, ignoreSkills);
 		return reRollSource != null ? reRollSource.getSkill(game) : null;
-	}
-
-	public boolean useReRoll(IStep step, ReRollSource reRollSource, Player<?> player) {
-		return rollMechanic(step.getGameState().getGame()).useReRoll(step, reRollSource, player);
-	}
-
-	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
-		return rollMechanic(game).isProReRollAvailable(player, game, passState);
-	}
-
-	public boolean isSingleUseReRollAvailable(GameState gameState, Player<?> player) {
-		return rollMechanic(gameState.getGame()).isSingleUseReRollAvailable(gameState, player);
-	}
-
-	public boolean isTeamReRollAvailable(GameState gameState, Player<?> player) {
-		return rollMechanic(gameState.getGame()).isTeamReRollAvailable(gameState, player);
 	}
 
 	private RollMechanic rollMechanic(Game game) {
