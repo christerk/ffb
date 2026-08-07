@@ -8,7 +8,7 @@ public class DialogConfirmWizardFriendlyFire extends DialogThreeWayChoice {
 
 	public DialogConfirmWizardFriendlyFire(FantasyFootballClient pClient, SpecialEffect pWizardSpell) {
 		super(pClient, "Confirm Wizard Spell", new String[]{
-			pWizardSpell.getName() + " will affect one or more of your own players.",
+			Character.toUpperCase(pWizardSpell.getName().charAt(0)) + pWizardSpell.getName().substring(1) + " will affect one or more of your own players.",
 			"Do you want to cast it anyway?"
 		}, null);
 	}

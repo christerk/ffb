@@ -12,6 +12,7 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
+			.addBugfix("Wizard: Friendly-fire confirmation wording and target marker behavior")
 			.addBugfix(
 				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 		);

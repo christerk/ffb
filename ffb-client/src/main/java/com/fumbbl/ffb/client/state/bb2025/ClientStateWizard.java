@@ -65,6 +65,11 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 		return false;
 	}
 
+	@Override
+	public boolean isSelectable() {
+		return getClient().getUserInterface().getDialogManager().isDialogHidden();
+	}
+
 	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		switch (wizardSpell) {
