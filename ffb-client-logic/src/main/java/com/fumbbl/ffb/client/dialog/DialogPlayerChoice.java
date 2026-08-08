@@ -133,19 +133,16 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	private void shrinkListToClientHeight() {
 		int maxHeight = (int) (getClient().getUserInterface().getSize().height * 0.9);
-		int overflow = getPreferredSize().height - maxHeight;
-		if (overflow <= 0) {
-			return;
-		}
 		Rectangle cellBounds = fList.getCellBounds(0, 0);
 		if (cellBounds == null || cellBounds.height <= 0) {
 			return;
 		}
-		int rowsToRemove = (int) Math.ceil((double) overflow / cellBounds.height);
-		int visibleRows = Math.max(1, fList.getVisibleRowCount() - rowsToRemove);
-		if (visibleRows < fList.getVisibleRowCount()) {
-			fList.setVisibleRowCount(visibleRows);
+		int overflow = getPreferredSize().height - maxHeight;
+		while (overflow > 0 && fList.getVisibleRowCount() > 1) {
+			int rowsToRemove = Math.max(1, (int) Math.ceil((double) overflow / cellBounds.height));
+			fList.setVisibleRowCount(Math.max(1, fList.getVisibleRowCount() - rowsToRemove));
 			pack();
+			overflow = getPreferredSize().height - maxHeight;
 		}
 	}
 
