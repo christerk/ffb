@@ -141,10 +141,17 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		while (overflow > 0 && fList.getVisibleRowCount() > 1) {
 			int rowsToRemove = Math.max(1, (int) Math.ceil((double) overflow / cellBounds.height));
 			fList.setVisibleRowCount(Math.max(1, fList.getVisibleRowCount() - rowsToRemove));
-			// the cached preferred sizes of the list's ancestors have to be dropped to reflect the new row count
-			fList.invalidate();
+			invalidateListHierarchy();
 			pack();
 			overflow = getPreferredSize().height - maxHeight;
+		}
+	}
+
+	private void invalidateListHierarchy() {
+		// layout managers cache their sizes, so every ancestor has to be invalidated explicitly to pick up the new
+		// row count, as invalidation does not propagate through ancestors that are invalid already
+		for (java.awt.Component component = fList; component != null; component = component.getParent()) {
+			component.invalidate();
 		}
 	}
 
