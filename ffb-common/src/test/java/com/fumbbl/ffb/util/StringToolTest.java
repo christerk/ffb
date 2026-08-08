@@ -14,6 +14,7 @@ class StringToolTest {
 
 	@Test
 	void capitalizeCapitalizesRequestedCharacters() {
+		assertEquals("FIreball", StringTool.capitalize("fireball", 2));
 		assertEquals("ZAP", StringTool.capitalize("zap", 10));
 	}
 
