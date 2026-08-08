@@ -172,7 +172,7 @@ class ReRollApiEquivalenceTest {
 				f.modifyingSkill),
 			f -> new ReRollService().askForReRollIfAvailable(
 				ReRollRequest.forPlayer(f.gameState, f.otherPlayer, ACTION, MINIMUM_ROLL).fumble()
-					.modifyingSkill(f.modifyingSkill).resolveReRollSkill().build()));
+					.modifyingSkill(f.modifyingSkill).build()));
 	}
 
 	@Test
@@ -221,8 +221,7 @@ class ReRollApiEquivalenceTest {
 		assertSameDelegation(
 			f -> UtilServerReRoll.askForReRollIfAvailable(f.gameState, f.otherPlayer, ACTION, MINIMUM_ROLL, f.messages),
 			f -> new ReRollService().askForReRollIfAvailable(
-				ReRollRequest.forPlayer(f.gameState, f.otherPlayer, ACTION, MINIMUM_ROLL).resolveReRollSkill()
-					.messages(f.messages).build()));
+				ReRollRequest.forPlayer(f.gameState, f.otherPlayer, ACTION, MINIMUM_ROLL).messages(f.messages).build()));
 	}
 
 	@Test
@@ -232,7 +231,7 @@ class ReRollApiEquivalenceTest {
 				f.messages),
 			f -> new ReRollService().askForReRollIfAvailable(
 				ReRollRequest.forPlayer(f.gameState, f.otherPlayer, ACTION, MINIMUM_ROLL).fumble()
-					.resolveReRollSkill().messages(f.messages).build()));
+					.messages(f.messages).build()));
 	}
 
 	@Test

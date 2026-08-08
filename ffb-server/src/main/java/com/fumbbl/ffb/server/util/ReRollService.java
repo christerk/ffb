@@ -30,7 +30,7 @@ public class ReRollService {
 		}
 
 		Skill reRollSkill = request.getReRollSkill();
-		if (request.isResolveReRollSkill()) {
+		if (reRollSkill == null) {
 			ActingPlayer skillSource = actingPlayer != null ? actingPlayer : gameState.getGame().getActingPlayer();
 			reRollSkill = findReRollSkill(gameState, skillSource, request.getReRolledAction(), request.getIgnoreSkills());
 		}

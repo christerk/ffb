@@ -28,7 +28,6 @@ public class ReRollRequest {
 	private final boolean fumble;
 	private final Skill modifyingSkill;
 	private final Skill reRollSkill;
-	private final boolean resolveReRollSkill;
 	private final Set<Skill> ignoreSkills;
 	private final CommonProperty menuProperty;
 	private final String defaultValueKey;
@@ -43,7 +42,6 @@ public class ReRollRequest {
 		fumble = builder.fumble;
 		modifyingSkill = builder.modifyingSkill;
 		reRollSkill = builder.reRollSkill;
-		resolveReRollSkill = builder.resolveReRollSkill;
 		ignoreSkills = builder.ignoreSkills;
 		menuProperty = builder.menuProperty;
 		defaultValueKey = builder.defaultValueKey;
@@ -58,13 +56,12 @@ public class ReRollRequest {
 	                                      ReRolledAction reRolledAction, int minimumRoll) {
 		Builder builder = new Builder(gameState, reRolledAction, minimumRoll);
 		builder.actingPlayer = actingPlayer;
-		builder.resolveReRollSkill = true;
 		return builder;
 	}
 
 	/**
-	 * Creates a request for the given player. No re-roll skill is derived unless
-	 * {@link Builder#resolveReRollSkill()} or {@link Builder#reRollSkill(Skill)} is used.
+	 * Creates a request for the given player. The re-roll skill is resolved from the game's acting player unless
+	 * {@link Builder#reRollSkill(Skill)} is used.
 	 */
 	public static Builder forPlayer(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
 	                                int minimumRoll) {
@@ -105,10 +102,6 @@ public class ReRollRequest {
 		return reRollSkill;
 	}
 
-	public boolean isResolveReRollSkill() {
-		return resolveReRollSkill;
-	}
-
 	public Set<Skill> getIgnoreSkills() {
 		return ignoreSkills;
 	}
@@ -134,7 +127,6 @@ public class ReRollRequest {
 		private boolean fumble;
 		private Skill modifyingSkill;
 		private Skill reRollSkill;
-		private boolean resolveReRollSkill;
 		private Set<Skill> ignoreSkills = Collections.emptySet();
 		private CommonProperty menuProperty;
 		private String defaultValueKey;
@@ -165,16 +157,6 @@ public class ReRollRequest {
 		 */
 		public Builder reRollSkill(Skill reRollSkill) {
 			this.reRollSkill = reRollSkill;
-			this.resolveReRollSkill = false;
-			return this;
-		}
-
-		/**
-		 * Derives the re-roll skill from the acting player, honouring {@link #ignoreSkills(Set)}.
-		 */
-		public Builder resolveReRollSkill() {
-			this.resolveReRollSkill = true;
-			this.reRollSkill = null;
 			return this;
 		}
 
