@@ -40,10 +40,6 @@ public class DialogKeyGuard implements KeyEventDispatcher {
 		}
 
 		if (keyEvent.getWhen() < armedAt) {
-			if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-				// the press is swallowed, so the matching release has to be swallowed as well
-				pressedKeyCodes.remove(keyEvent.getKeyCode());
-			}
 			return false;
 		}
 
