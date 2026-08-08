@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2025;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -51,7 +51,6 @@ import java.util.List;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepWizard extends AbstractStep {
 
@@ -152,10 +151,6 @@ public final class StepWizard extends AbstractStep {
 					getResult().setAnimation(new Animation(AnimationType.SPELL_ZAP, fTargetCoordinate));
 					affectedPlayers.add(game.getFieldModel().getPlayer(fTargetCoordinate));
 				}
-				if (fWizardSpell == SpecialEffect.LIGHTNING) {
-					getResult().setAnimation(new Animation(AnimationType.SPELL_LIGHTNING, fTargetCoordinate));
-					addToAffectedPlayers(affectedPlayers, game.getFieldModel().getPlayer(fTargetCoordinate));
-				}
 				if (fWizardSpell == SpecialEffect.FIREBALL) {
 					getResult().setAnimation(new Animation(AnimationType.SPELL_FIREBALL, fTargetCoordinate));
 					FieldCoordinate[] targetCoordinates = game.getFieldModel().findAdjacentCoordinates(fTargetCoordinate,
@@ -191,8 +186,7 @@ public final class StepWizard extends AbstractStep {
 	private void addToAffectedPlayers(List<Player<?>> pAffectedPlayers, Player<?> pPlayer) {
 		Game game = getGameState().getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-		if ((pPlayer != null) && (playerState != null) && (playerState.getBase() != PlayerState.PRONE)
-			&& (playerState.getBase() != PlayerState.STUNNED)) {
+		if ((pPlayer != null) && (playerState != null)) {
 			pAffectedPlayers.add(pPlayer);
 		}
 	}

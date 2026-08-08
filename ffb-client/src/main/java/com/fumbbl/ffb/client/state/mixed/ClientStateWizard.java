@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.state.common;
+package com.fumbbl.ffb.client.state.mixed;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IIconProperty;
@@ -8,8 +8,8 @@ import com.fumbbl.ffb.client.FantasyFootballClientAwt;
 import com.fumbbl.ffb.client.FieldComponent;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
-import com.fumbbl.ffb.client.state.logic.WizardLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.mixed.WizardLogicModule;
 import com.fumbbl.ffb.model.Player;
 
 import java.util.Collections;
@@ -18,7 +18,8 @@ import java.util.Map;
 /**
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> {
 
 	public ClientStateWizard(FantasyFootballClientAwt pClient) {

@@ -313,6 +313,9 @@ public class UtilServerStartGame {
 			GameOptionBoolean allowTimeout = (GameOptionBoolean) optionFactory.createGameOption(GameOptionId.TIMEOUT_ALLOWED);
 			allowTimeout.setValue(false);
 			//game.getOptions().addOption(allowTimeout);
+			GameOptionInt maxStaff = (GameOptionInt) optionFactory.createGameOption(GameOptionId.INDUCEMENT_STAFF_MAX);
+			maxStaff.setValue(0);
+	//		game.getOptions().addOption(maxStaff);
 		}
 	}
 

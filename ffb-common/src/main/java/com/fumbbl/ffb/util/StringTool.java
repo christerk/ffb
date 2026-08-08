@@ -9,14 +9,12 @@ import java.util.regex.Pattern;
  */
 public class StringTool {
 
-	public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
-
 	private static final Pattern _PATTERN_PARAMETER = Pattern.compile("[$]([0-9]+)");
 
 	private static final Pattern IS_NUMBER = Pattern.compile("\\d+");
 
 	public static boolean isProvided(Object pObject) {
-		return ((pObject != null) && (pObject.toString().length() > 0));
+		return ((pObject != null) && (!pObject.toString().isEmpty()));
 	}
 
 	public static boolean isNumber(String string) {
@@ -103,6 +101,29 @@ public class StringTool {
 			enumeration.append(pItems[i]);
 		}
 		return enumeration.toString();
+	}
+
+	public static String capitalize(String input) {
+		return capitalize(input, 1);
+	}
+
+	public static String capitalize(String input, int length) {
+		if (input == null) {
+			return null;
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		for (char c : input.toCharArray()) {
+			if (length > 0) {
+				builder.append(Character.toUpperCase(c));
+				length--;
+			} else {
+				builder.append(c);
+			}
+		}
+
+		return builder.toString();
 	}
 
 	public static void main(String[] args) {

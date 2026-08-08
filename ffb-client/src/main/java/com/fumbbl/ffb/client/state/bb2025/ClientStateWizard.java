@@ -1,0 +1,184 @@
+package com.fumbbl.ffb.client.state.bb2025;
+
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.IIconProperty;
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SpecialEffect;
+import com.fumbbl.ffb.client.FantasyFootballClientAwt;
+import com.fumbbl.ffb.client.FieldComponent;
+import com.fumbbl.ffb.client.dialog.DialogConfirmWizardFriendlyFire;
+import com.fumbbl.ffb.client.dialog.IDialog;
+import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.state.ClientStateAwt;
+import com.fumbbl.ffb.client.state.logic.ClientAction;
+import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.client.state.logic.bb2025.WizardLogicModule;
+import com.fumbbl.ffb.model.Player;
+
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * @author Kalimar
+ */
+@RulesCollection(RulesCollection.Rules.BB2025)
+public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> implements IDialogCloseListener {
+
+	private FieldCoordinate pendingCoordinate;
+	private boolean showsConfirmation;
+
+	public ClientStateWizard(FantasyFootballClientAwt pClient) {
+		super(pClient, new WizardLogicModule(pClient));
+	}
+
+	public void setUp() {
+		super.setUp();
+		setClickable(true);
+		showsConfirmation = false;
+	}
+
+	@Override
+	public boolean mouseOverField(FieldCoordinate pCoordinate) {
+		InteractionResult result = logicModule.fieldPeek(pCoordinate);
+		switch (result.getKind()) {
+			case RESET:
+				return super.mouseOverField(pCoordinate);
+			case PERFORM:
+				drawSpellmarker(result.getCoordinate(), result.getSpecialEffect());
+				return true;
+			default:
+				break;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean mouseOverPlayer(Player<?> pPlayer) {
+		InteractionResult result = logicModule.playerPeek(pPlayer);
+		switch (result.getKind()) {
+			case RESET:
+				return super.mouseOverPlayer(pPlayer);
+			case PERFORM:
+				drawSpellmarker(result.getCoordinate(), result.getSpecialEffect());
+				return true;
+			default:
+				break;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isSelectable() {
+		return super.isSelectable() && !showsConfirmation;
+	}
+
+	@Override
+	public boolean isClickable() {
+		return super.isClickable() && !showsConfirmation;
+	}
+
+	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		switch (wizardSpell) {
+			case ZAP:
+				fieldComponent.getLayerOverPlayers().clearSpellMarker();
+				fieldComponent.getLayerOverPlayers().drawSpellMarker(pCoordinate, IIconProperty.GAME_ZAP_SMALL,
+					!logicModule.isValidZapTarget(pCoordinate));
+				break;
+			case FIREBALL:
+				fieldComponent.getLayerOverPlayers().clearFireballMarker();
+				fieldComponent.getLayerOverPlayers().drawFireballMarker(pCoordinate, !logicModule.isValidFireballTarget(pCoordinate));
+				break;
+		}
+		fieldComponent.refresh();
+	}
+
+	@Override
+	public void clickOnField(FieldCoordinate pCoordinate) {
+		if (showFriendlyFireConfirmation(pCoordinate)) {
+			return;
+		}
+
+		InteractionResult result = logicModule.fieldInteraction(pCoordinate);
+		switch (result.getKind()) {
+			case RESET:
+				clearMarker();
+				redisplaySpellDialog();
+				break;
+			case HANDLED:
+				clearMarker();
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void clearMarker() {
+		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
+		if (getClient().getClientData().getWizardSpell() == SpecialEffect.FIREBALL) {
+			fieldComponent.getLayerOverPlayers().clearFireballMarker();
+		} else {
+			fieldComponent.getLayerOverPlayers().clearSpellMarker();
+		}
+		fieldComponent.refresh();
+	}
+
+	@Override
+	public void clickOnPlayer(Player<?> pPlayer) {
+		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
+		if (showFriendlyFireConfirmation(playerCoordinate)) {
+			return;
+		}
+
+		InteractionResult result = logicModule.playerInteraction(pPlayer);
+		switch (result.getKind()) {
+			case RESET:
+				clearMarker();
+				redisplaySpellDialog();
+				break;
+			case HANDLED:
+				clearMarker();
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void redisplaySpellDialog() {
+		getClient().getClientData().setWizardSpell(null);
+		getClient().getUserInterface().getDialogManager().setShownDialogParameter(null);
+		getClient().getUserInterface().getDialogManager().updateDialog();
+	}
+
+	private boolean showFriendlyFireConfirmation(FieldCoordinate pCoordinate) {
+		SpecialEffect wizardSpell = getClient().getClientData().getWizardSpell();
+		if (!logicModule.affectsOwnPlayer(pCoordinate, wizardSpell)) {
+			return false;
+		}
+
+		showsConfirmation = true;
+		pendingCoordinate = pCoordinate;
+		new DialogConfirmWizardFriendlyFire(getClient(), wizardSpell).showDialog(this);
+		return true;
+	}
+
+	@Override
+	protected Map<Integer, ClientAction> actionMapping(int menuIndex) {
+		return Collections.emptyMap();
+	}
+
+	@Override
+	public void dialogClosed(IDialog pDialog) {
+		pDialog.hideDialog();
+		if (((DialogConfirmWizardFriendlyFire) pDialog).isChoiceYes()) {
+			logicModule.fieldInteraction(pendingCoordinate);
+			clearMarker();
+		} else {
+			clearMarker();
+			redisplaySpellDialog();
+		}
+
+		pendingCoordinate = null;
+		showsConfirmation = false;
+	}
+}

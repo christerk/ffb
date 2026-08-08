@@ -57,10 +57,12 @@ import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepException;
+import com.fumbbl.ffb.server.step.StepFactory;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -75,6 +77,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -816,6 +819,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	private List<String> stunPlayers(Team team, FieldModel fieldModel, int stunned) {
+		StepStack stepStack = getGameState().getStepStack();
+		StepFactory stepFactory = getGameState().getStepFactory();
+		boolean isHome = getGameState().getGame().getTeamHome() == team;
+		ApothecaryMode apothecaryMode = isHome ? ApothecaryMode.HOME : ApothecaryMode.AWAY;
+
 		List<String> affectedPlayers = new ArrayList<>();
 		List<Player<?>> standing = Arrays.stream(team.getPlayers())
 			.filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING)
@@ -823,7 +831,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		for (int i = 0; i < stunned && !standing.isEmpty(); i++) {
 			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
 			Player<?> stunnedPlayer = standing.get(index);
-			UtilServerInjury.stunPlayer(this, stunnedPlayer, ApothecaryMode.HOME);
+
+			StepParameterSet consumeSet = new StepParameterSet();
+			consumeSet.add(from(StepParameterKey.CONSUME_PARAMETER, Collections.singleton(StepParameterKey.INJURY_RESULT)));
+			stepStack.push(stepFactory.create(StepId.CONSUME_PARAMETER, null, consumeSet));
+
+			StepParameterSet apoSet = new StepParameterSet();
+			apoSet.add(from(StepParameterKey.APOTHECARY_MODE, apothecaryMode));
+			stepStack.push(stepFactory.create(StepId.APOTHECARY, null, apoSet));
+
+			UtilServerInjury.stunPlayer(this, stunnedPlayer, apothecaryMode);
 			standing.remove(stunnedPlayer);
 			affectedPlayers.add(stunnedPlayer.getId());
 		}
