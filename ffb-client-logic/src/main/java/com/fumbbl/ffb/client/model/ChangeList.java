@@ -10,7 +10,6 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.3.0")
-			.addBehaviorChange("Re-roll skills are now resolved automatically for all re-roll requests")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")
 			.addBugfix("Master Assassin: Re-rolled Stab armour breaks did not apply the resulting injury")

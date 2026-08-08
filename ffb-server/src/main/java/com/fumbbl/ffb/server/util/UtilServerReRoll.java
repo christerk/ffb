@@ -82,7 +82,7 @@ public class UtilServerReRoll {
 	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
 	                                              Skill reRollSkill, CommonProperty menuProperty,
 	                                              String defaultValueKey, List<String> messages) {
-		return new ReRollService().askForReRollIfAvailable(
+		return gameState.getReRollService().askForReRollIfAvailable(
 			ReRollRequest.forPlayer(gameState, player, reRolledAction, minimumRoll)
 				.fumble(fumble)
 				.modifyingSkill(modificationSkill)

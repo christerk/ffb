@@ -35,6 +35,7 @@ import com.fumbbl.ffb.server.step.StepFactory;
 import com.fumbbl.ffb.server.step.StepResult;
 import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.ReRollService;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -62,6 +63,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	private transient FantasyFootballServer fServer;
 	private final transient DiceRoller fDiceRoller;
+	private final transient ReRollService fReRollService;
 	private transient IdGenerator fCommandNrGenerator;
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
@@ -81,6 +83,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fServer = pServer;
 		fGameLog = new GameLog(this);
 		fDiceRoller = new DiceRoller(this);
+		fReRollService = new ReRollService();
 		fSpectatorCooldownTime = new HashMap<>();
 		initCommandNrGenerator(0);
 		fStepStack = new StepStack(this);
@@ -151,6 +154,10 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	public DiceRoller getDiceRoller() {
 		return fDiceRoller;
+	}
+
+	public ReRollService getReRollService() {
+		return fReRollService;
 	}
 
 	public int generateCommandNr() {

@@ -49,6 +49,7 @@ class ReRollApiEquivalenceTest {
 		private final GameState gameState = mock(GameState.class);
 		private final Game game = mock(Game.class);
 		private final RollMechanic mechanic = mock(RollMechanic.class);
+		private final ReRollService reRollService = new ReRollService();
 		private final ActingPlayer actingPlayer = mock(ActingPlayer.class);
 		private final Player<?> actingPlayerPlayer = mock(Player.class);
 		private final Player<?> otherPlayer = mock(Player.class);
@@ -61,6 +62,7 @@ class ReRollApiEquivalenceTest {
 		private Fixture() {
 			MechanicsFactory factory = mock(MechanicsFactory.class);
 			when(gameState.getGame()).thenReturn(game);
+			when(gameState.getReRollService()).thenReturn(reRollService);
 			when(game.getFactory(FactoryType.Factory.MECHANIC)).thenReturn(factory);
 			when(factory.forName(Mechanic.Type.ROLL.name())).thenReturn(mechanic);
 			when(game.getActingPlayer()).thenReturn(actingPlayer);
