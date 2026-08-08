@@ -25,6 +25,7 @@ import java.util.Map;
 public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> implements IDialogCloseListener {
 
 	private FieldCoordinate pendingCoordinate;
+	private boolean showsConfirmation;
 
 	public ClientStateWizard(FantasyFootballClientAwt pClient) {
 		super(pClient, new WizardLogicModule(pClient));
@@ -33,6 +34,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 	public void setUp() {
 		super.setUp();
 		setClickable(true);
+		showsConfirmation = false;
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 
 	@Override
 	public boolean isSelectable() {
-		return getClient().getUserInterface().getDialogManager().isDialogHidden();
+		return super.isSelectable() && !showsConfirmation;
 	}
 
 	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
@@ -88,7 +90,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 
 	@Override
 	public void clickOnField(FieldCoordinate pCoordinate) {
-		if (showFriendlyFireConfirmation(pCoordinate)) {
+		if (!isSelectable() || showFriendlyFireConfirmation(pCoordinate)) {
 			return;
 		}
 
@@ -119,7 +121,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 	@Override
 	public void clickOnPlayer(Player<?> pPlayer) {
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
-		if (showFriendlyFireConfirmation(playerCoordinate)) {
+		if (!isSelectable() || showFriendlyFireConfirmation(playerCoordinate)) {
 			return;
 		}
 
@@ -149,6 +151,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 			return false;
 		}
 
+		showsConfirmation = true;
 		pendingCoordinate = pCoordinate;
 		new DialogConfirmWizardFriendlyFire(getClient(), wizardSpell).showDialog(this);
 		return true;
@@ -162,7 +165,6 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 	@Override
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
-
 		if (((DialogConfirmWizardFriendlyFire) pDialog).isChoiceYes()) {
 			logicModule.fieldInteraction(pendingCoordinate);
 			clearMarker();
@@ -172,5 +174,6 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 		}
 
 		pendingCoordinate = null;
+		showsConfirmation = false;
 	}
 }
