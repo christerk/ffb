@@ -15,6 +15,7 @@ public class ChangeList {
 			.addBugfix(
 				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
+			.addImprovement("Active players can now show which action is being performed")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
