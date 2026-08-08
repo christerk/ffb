@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
-	private static final double MAX_HEIGHT_FACTOR = 0.8;
+	private static final double MAX_HEIGHT_FACTOR = 0.9;
 
 	private final PlayerCheckList fList;
 	private final JButton fButtonSelect;
