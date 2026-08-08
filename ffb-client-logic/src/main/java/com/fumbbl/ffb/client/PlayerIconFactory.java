@@ -30,16 +30,10 @@ public class PlayerIconFactory {
 	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
-		if (pIcon != null) {
-			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
-			g2d.drawImage(pIcon, x, y, null);
-		}
-		if (pDecoration != null) {
-			int x = (resultingIcon.getWidth() - pDecoration.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pDecoration.getHeight()) / 2;
-			g2d.drawImage(pDecoration, x, y, null);
-		}
+
+		drawCentered(g2d, pIcon, resultingIcon);
+		drawCentered(g2d, pDecoration, resultingIcon);
+
 		g2d.dispose();
 		return resultingIcon;
 	}
@@ -47,18 +41,27 @@ public class PlayerIconFactory {
 	private static BufferedImage decorateIconTopRight(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
-		if (pIcon != null) {
-			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
-			g2d.drawImage(pIcon, x, y, null);
-		}
-		if (pDecoration != null) {
-			int x = maxIconSize.width - pDecoration.getWidth();
-			g2d.drawImage(pDecoration, x, 0, null);
-		}
+
+		drawCentered(g2d, pIcon, resultingIcon);
+		drawTopRight(g2d, pDecoration, resultingIcon);
 
 		g2d.dispose();
 		return resultingIcon;
+	}
+
+	private static void drawCentered(Graphics2D g2d, BufferedImage image, BufferedImage target) {
+		if (image != null) {
+			int x = (target.getWidth() - image.getWidth()) / 2;
+			int y = (target.getHeight() - image.getHeight()) / 2;
+			g2d.drawImage(image, x, y, null);
+		}
+	}
+
+	private static void drawTopRight(Graphics2D g2d, BufferedImage image, BufferedImage target) {
+		if (image != null) {
+			int x = target.getWidth() - image.getWidth();
+			g2d.drawImage(image, x, 0, null);
+		}
 	}
 
 	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider,
@@ -359,7 +362,7 @@ public class PlayerIconFactory {
 		PlayerAction playerAction = actingPlayer.getPlayerAction();
 		if ((actingPlayer.getPlayer() == pPlayer) && (playerAction != null)
 				&& (playerState.getBase() == PlayerState.MOVING)) {
-			decorationProperty4 = getActionIconProperty(playerAction);
+			decorationProperty4 = playerAction.getIconProperty();
 		}
 		
 
@@ -495,44 +498,6 @@ public class PlayerIconFactory {
 			}
 		}
 		return pRelativeUrl;
-	}
-
-	private String getActionIconProperty(PlayerAction playerAction) {
-		System.out.println("playerAction=" + playerAction);
-		switch (playerAction) {
-			case MOVE:
-				return IIconProperty.ACTION_MOVE;
-			case BLITZ:
-			case BLITZ_MOVE:
-			case BLITZ_SELECT:
-			case STAND_UP_BLITZ:
-				return IIconProperty.ACTION_BLITZ;
-			case FOUL:
-			case FOUL_MOVE:
-				return IIconProperty.ACTION_FOUL;
-			case PASS:
-			case PASS_MOVE:
-			case HAIL_MARY_PASS:
-				return IIconProperty.ACTION_PASS;
-			case HAND_OVER:
-			case HAND_OVER_MOVE:
-				return IIconProperty.ACTION_HAND_OVER;
-			case GAZE:
-			case GAZE_MOVE:
-			case GAZE_SELECT:
-				return IIconProperty.ACTION_GAZE;
-			case THROW_TEAM_MATE:
-			case THROW_TEAM_MATE_MOVE:
-				return IIconProperty.ACTION_PASS;
-			case KICK_TEAM_MATE:
-			case KICK_TEAM_MATE_MOVE:
-				return IIconProperty.ACTION_BLITZ;
-			case THROW_BOMB:
-			case HAIL_MARY_BOMB:
-				return IIconProperty.ACTION_BOMB;
-			default:
-				return null;
-		}
 	}
 
 }
