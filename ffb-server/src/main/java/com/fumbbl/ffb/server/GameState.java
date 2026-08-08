@@ -63,7 +63,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 
 	private transient FantasyFootballServer fServer;
 	private final transient DiceRoller fDiceRoller;
-	private final transient ReRollService fReRollService;
+	private final transient ReRollService reRollService;
 	private transient IdGenerator fCommandNrGenerator;
 	private transient long fTurnTimeStarted;
 	private transient ModelChangeList fChangeList;
@@ -83,7 +83,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 		fServer = pServer;
 		fGameLog = new GameLog(this);
 		fDiceRoller = new DiceRoller(this);
-		fReRollService = new ReRollService();
+		reRollService = new ReRollService();
 		fSpectatorCooldownTime = new HashMap<>();
 		initCommandNrGenerator(0);
 		fStepStack = new StepStack(this);
@@ -157,7 +157,7 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 
 	public ReRollService getReRollService() {
-		return fReRollService;
+		return reRollService;
 	}
 
 	public int generateCommandNr() {
