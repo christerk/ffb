@@ -353,7 +353,7 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 	public synchronized void init() {
 		Game game = getClient().getGame();
 		game.addObserver(this);
-		initPlayerCoordinates();
+		initCoordinates();
 		getLayerField().init();
 		getLayerTeamLogo().init();
 		getLayerEnhancements().init();
@@ -370,11 +370,15 @@ public class FieldComponent extends JPanel implements IModelChangeObserver, Mous
 
 	}
 
-	private void initPlayerCoordinates() {
+	private void initCoordinates() {
 		Game game = getClient().getGame();
+		FieldModel fieldModel = game.getFieldModel();
+		fCoordinateByPlayerId.clear();
 		for (Player<?> player : game.getPlayers()) {
-			fCoordinateByPlayerId.put(player.getId(), game.getFieldModel().getPlayerCoordinate(player));
+			fCoordinateByPlayerId.put(player.getId(), fieldModel.getPlayerCoordinate(player));
 		}
+		fBallCoordinate = fieldModel.getBallCoordinate();
+		fBombCoordinate = fieldModel.getBombCoordinate();
 	}
 
 	private Rectangle combineRectangles(Rectangle[] pRectangles) {
