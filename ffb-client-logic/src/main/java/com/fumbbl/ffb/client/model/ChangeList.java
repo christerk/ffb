@@ -9,9 +9,12 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
+		);
+
 		versions.add(new VersionChangeList("3.3.1")
 			.addBugfix("Hatred: Game hung on hovers on players with gained hatred only")
-			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
 		);
 
 		versions.add(new VersionChangeList("3.3.0")
