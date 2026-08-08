@@ -82,12 +82,14 @@ public class UtilServerReRoll {
 	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
 	                                              Skill reRollSkill, CommonProperty menuProperty,
 	                                              String defaultValueKey, List<String> messages) {
-		Game game = gameState.getGame();
-		MechanicsFactory factory = game.getFactory(FactoryType.Factory.MECHANIC);
-		RollMechanic mechanic = (RollMechanic) factory.forName(Mechanic.Type.ROLL.name());
-
-		return mechanic.askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill,
-			reRollSkill, menuProperty, defaultValueKey, messages);
+		return gameState.getReRollService().askForReRollIfAvailable(
+			ReRollRequest.forPlayer(gameState, player, reRolledAction, minimumRoll)
+				.fumble(fumble)
+				.modifyingSkill(modificationSkill)
+				.reRollSkill(reRollSkill)
+				.menu(menuProperty, defaultValueKey)
+				.messages(messages)
+				.build());
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,

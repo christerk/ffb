@@ -11,6 +11,7 @@
 - Encoding: UTF-8
 - Testing: JUnit 5 with Mockito for mocking
 - Package naming: `com.fumbbl.*` 
+- Naming: Do not use legacy `f` or `p` prefixes for new fields or parameters.
 - Project structure: Multi-module Maven project with `ffb-common`, `ffb-tools`, `ffb-server`, `ffb-client`, `ffb-client-logic`, and `ffb-resources`; most client logic lives in `ffb-client-logic`, while desktop/AWT-specific client code and packaging live in `ffb-client`
 - Architecture hotspots: server game flow is organized around `Step` / `SequenceGenerator` classes under `ffb-server/src/main/java/com/fumbbl/ffb/server/step`, while client input/game-phase flow is organized around `ClientState` classes under `ffb-client-logic/src/main/java/com/fumbbl/ffb/client/state`
 - Ruleset-specific changes: when code used by multiple rulesets needs behavior changes for only one ruleset, create or move to a ruleset-specific package and update imports/annotations so unaffected rulesets keep the original behavior. `common` packages are shared by all rulesets; move shared `common` code to `mixed` before applying subset-specific behavior. `mixed` packages are shared by a subset; if modified behavior applies to only one ruleset, move the relevant class to that ruleset package instead. Never use inheritance between ruleset classes (e.g. a `bb2025` class extending a `bb2020`/`mixed` class); duplicate the class into each ruleset package and keep each ruleset's logic self-contained instead.

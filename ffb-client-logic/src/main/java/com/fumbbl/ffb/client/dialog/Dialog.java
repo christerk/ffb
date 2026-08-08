@@ -89,7 +89,8 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	protected void setLocationToCenter() {
 		Dimension dialogSize = getSize();
 		Dimension frameSize = getClient().getUserInterface().getSize();
-		setLocation((frameSize.width - dialogSize.width) / 2, (fClient.getUserInterface().getUiDimensionProvider().dimension(Component.FIELD).height - dialogSize.height) / 2);
+		int y = (fClient.getUserInterface().getUiDimensionProvider().dimension(Component.FIELD).height - dialogSize.height) / 2;
+		setLocation((frameSize.width - dialogSize.width) / 2, Math.max(0, y));
 	}
 
 	public void mouseEntered(MouseEvent pMouseEvent) {
