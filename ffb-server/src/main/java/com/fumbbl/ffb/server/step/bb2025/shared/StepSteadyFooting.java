@@ -52,6 +52,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 	private boolean skip;
 	private String playerId;
 	private boolean removeCatchMode = true;
+	private boolean revertEndTurn = true;
 
 	public StepSteadyFooting(GameState pGameState) {
 		super(pGameState);
@@ -76,6 +77,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 						break;
 					case APOTHECARY_MODE:
 						apothecaryMode = (ApothecaryMode) parameter.getValue();
+						break;
+					case REVERT_END_TURN:
+						revertEndTurn = parameter.getValue() == null || (Boolean) parameter.getValue();
 						break;
 					default:
 						break;
@@ -178,7 +182,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 
 		// do not use hasTacklezones as blocked players have base FALLING which is not included in that
-		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused() || playerState.getBase() == PlayerState.HIT_ON_GROUND) {
+		if (skip || !skill.isPresent() || playerState.isHypnotized() || playerState.isConfused() || playerState.getBase() == PlayerState.HIT_ON_GROUND || playerState.isProneOrStunned()) {
 			fail();
 			return;
 		}
@@ -216,7 +220,9 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		getResult().addReport(new ReportSteadyFootingRoll(player.getId(), successful, roll, MINMUM_ROLL, reRolled));
 
 		if (successful) {
-			if (game.getActingTeam().hasPlayer(player)) {
+			// sequences that only raise a turnover once a player actually goes down must not revert it,
+			// as the turnover may have been caused by another player of the same sequence
+			if (revertEndTurn && game.getActingTeam().hasPlayer(player)) {
 				publishParameter(StepParameter.from(StepParameterKey.END_TURN, false));
 				publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, false));
 			}
@@ -291,6 +297,7 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		IServerJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IServerJsonOption.SKIP.addTo(jsonObject, skip);
 		IServerJsonOption.REMOVE_CATCH_MODE.addTo(jsonObject, removeCatchMode);
+		IServerJsonOption.REVERT_END_TURN.addTo(jsonObject, revertEndTurn);
 		return jsonObject;
 	}
 
@@ -306,6 +313,8 @@ public class StepSteadyFooting extends AbstractStepWithReRoll {
 		playerId = IServerJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		skip = IServerJsonOption.SKIP.getFrom(source, jsonObject);
 		removeCatchMode = IServerJsonOption.REMOVE_CATCH_MODE.getFrom(source, jsonObject);
+		Boolean revertEndTurnFromJson = IServerJsonOption.REVERT_END_TURN.getFrom(source, jsonObject);
+		revertEndTurn = revertEndTurnFromJson == null || revertEndTurnFromJson;
 		if (IServerJsonOption.STEADY_FOOTING_CONTEXT.isDefinedIn(jsonObject)) {
 			context = new SteadyFootingContext().initFrom(source, IServerJsonOption.STEADY_FOOTING_CONTEXT.getFrom(source, jsonObject));
 		}

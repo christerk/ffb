@@ -113,7 +113,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					fThrownPlayerId = (String) parameter.getValue();
 					return true;
 				case DROP_THROWN_PLAYER:
-					fDropThrownPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fDropThrownPlayer = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				case PASS_RESULT:
 					passResult = (PassResult) parameter.getValue();
@@ -122,7 +122,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
 				case USING_SWOOP:
-					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					usingSwoop = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;	
 				default:
 					break;
@@ -170,7 +170,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(thrownPlayer);
 		// skip right stuff step when player has been thrown out of bounds or fell down a trapdoor
 		if ((thrownPlayer != null) && (game.getFieldModel().getPlayerState(thrownPlayer).getBase() == PlayerState.FALLING || playerCoordinate.isBoxCoordinate())) {
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, fThrownPlayerHasBall));
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;

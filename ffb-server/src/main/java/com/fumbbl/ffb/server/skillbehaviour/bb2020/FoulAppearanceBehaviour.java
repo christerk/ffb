@@ -94,7 +94,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 				PlayerAction playerAction = actingPlayer.getPlayerAction();
 				if (actingPlayer.isStandingUp() &&
 					(playerAction == PlayerAction.BLITZ_MOVE
-						|| playerAction != null && playerAction.isBlockAction()
+						|| playerAction != null && playerAction.isBlockOrSpecialAction()
 						|| playerAction == PlayerAction.GAZE_MOVE
 						|| playerAction != null && playerAction.isKickingDowned())) {
 					Player<?> player = actingPlayer.getPlayer();
@@ -112,7 +112,7 @@ public class FoulAppearanceBehaviour extends SkillBehaviour<FoulAppearance> {
 					}
 				}
 
-				if (playerAction == PlayerAction.GAZE || (playerAction != null && playerAction.isBlockAction())) {
+				if (playerAction == PlayerAction.GAZE || (playerAction != null && playerAction.isBlockOrSpecialAction())) {
 					step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 				}
 				game.setDefenderId(null);

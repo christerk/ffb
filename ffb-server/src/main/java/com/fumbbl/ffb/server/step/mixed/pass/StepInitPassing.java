@@ -11,6 +11,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.PassMechanic;
+import com.fumbbl.ffb.mechanics.PassRangeService;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -56,6 +57,7 @@ public final class StepInitPassing extends AbstractStep {
 	private String fCatcherId;
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
+	private final PassRangeService passRangeService = new PassRangeService();
 
 	public StepInitPassing(GameState pGameState) {
 		super(pGameState);
@@ -121,23 +123,30 @@ public final class StepInitPassing extends AbstractStep {
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)
 						|| (game.getTurnMode() == TurnMode.DUMP_OFF)) {
-						if (UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)) {
-							game.setPassCoordinate(passCommand.getTargetCoordinate());
-						} else {
-							game.setPassCoordinate(passCommand.getTargetCoordinate().transform());
-						}
-						Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
-						fCatcherId = ((catcher != null) ? catcher.getId() : null);
+						FieldCoordinate passCoordinate = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand)
+							? passCommand.getTargetCoordinate()
+							: passCommand.getTargetCoordinate().transform();
 						TargetSelectionState targetSelectionState = game.getFieldModel().getTargetSelectionState();
 						String defenderId = targetSelectionState != null ? targetSelectionState.getSelectedPlayerId() : (game.getDefender() != null ? game.getDefender().getId() : null);
+						String throwerId;
+						PlayerAction throwerAction;
 						if ((defenderId != null) && (game.getDefenderAction() == PlayerAction.DUMP_OFF)) {
-							game.setThrowerId(defenderId);
-							game.setThrowerAction(game.getDefenderAction());
+							throwerId = defenderId;
+							throwerAction = game.getDefenderAction();
 						} else {
-							game.setThrowerId(actingPlayer.getPlayerId());
-							game.setThrowerAction(actingPlayer.getPlayerAction());
+							throwerId = actingPlayer.getPlayerId();
+							throwerAction = actingPlayer.getPlayerAction();
 						}
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
+						// Guard against invalid (out of range) pass attempts from third party clients.
+						// Such attempts are ignored and must not modify the data model.
+						if (isPassTargetInRange(passCoordinate, throwerId, throwerAction)) {
+							game.setPassCoordinate(passCoordinate);
+							Player<?> catcher = game.getFieldModel().getPlayer(game.getPassCoordinate());
+							fCatcherId = ((catcher != null) ? catcher.getId() : null);
+							game.setThrowerId(throwerId);
+							game.setThrowerAction(throwerAction);
+							commandStatus = StepCommandStatus.EXECUTE_STEP;
+						}
 					}
 					break;
 				case CLIENT_HAND_OVER:
@@ -175,6 +184,11 @@ public final class StepInitPassing extends AbstractStep {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private boolean isPassTargetInRange(FieldCoordinate targetCoordinate, String throwerId, PlayerAction throwerAction) {
+		Game game = getGameState().getGame();
+		return passRangeService.isInRange(game, game.getPlayerById(throwerId), targetCoordinate, throwerAction);
 	}
 
 	private void executeStep() {

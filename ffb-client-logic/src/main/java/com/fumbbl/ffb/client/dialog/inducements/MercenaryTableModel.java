@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MercenaryTableModel extends AbstractTableModel {
+public class MercenaryTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final int mercExtraCost;
 	private final int mercSkillCost;
@@ -72,6 +72,24 @@ public class MercenaryTableModel extends AbstractTableModel {
 			}
 		}
 		return noBoughtMercs;
+	}
+
+	public boolean canBuyAnother() {
+		return getCheckedRows() < maxMercs;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			boolean selected = (Boolean) getValueAt(i, 0);
+			if (!selected) {
+				return ((Player<?>) getValueAt(i, 5)).getPosition().getCost() + mercExtraCost;
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return true;
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {

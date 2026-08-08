@@ -11,6 +11,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.change.ModelChange;
 import com.fumbbl.ffb.model.change.ModelChangeId;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -409,6 +410,10 @@ public class TeamResult implements IJsonSerializable {
 	public void removePlayerResult(Player<?> pPlayer) {
 		String playerId = (pPlayer != null) ? pPlayer.getId() : null;
 		fPlayerResultByPlayerId.remove(playerId);
+	}
+
+	public Collection<PlayerResult> playerResults() {
+		return fPlayerResultByPlayerId.values();
 	}
 
 	public Game getGame() {

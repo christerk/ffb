@@ -42,8 +42,9 @@ public final class StepEndPunt extends AbstractStep {
 					catcherId = (String) parameter.getValue();
 					consume(parameter);
 					return true;
+				case BALL_OUT_OF_BOUNDS:
 				case END_TURN:
-					endTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					endTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case PLAYER_ID:

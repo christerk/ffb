@@ -113,6 +113,14 @@ public class DropDownPanel extends JPanel implements ActionListener {
 
 	}
 
+	public int getCost() {
+		return fCost;
+	}
+
+	public boolean canBuyMore() {
+		return fBox.isEnabled() && fAmountSelected < fMax;
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (fHandleEvents) {
 			fAmountSelected = Integer.parseInt(fBox.getItemAt(fBox.getSelectedIndex()));

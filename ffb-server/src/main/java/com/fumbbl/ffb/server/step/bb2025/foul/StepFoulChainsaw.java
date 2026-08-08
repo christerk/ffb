@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.foul;
+package com.fumbbl.ffb.server.step.bb2025.foul;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -46,7 +46,6 @@ import com.fumbbl.ffb.util.UtilPlayer;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepFoulChainsaw extends AbstractStepWithReRoll {
 
@@ -149,7 +148,7 @@ public class StepFoulChainsaw extends AbstractStepWithReRoll {
 
 				publishParameter(StepParameter.from(StepParameterKey.DROP_PLAYER_CONTEXT,
 					new DropPlayerContext(injuryResultAttacker, causesTurnOver, true, fGotoLabelOnFailure,
-						actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, true)));
+						actingPlayer.getPlayerId(), ApothecaryMode.ATTACKER, false)));
 				getResult().setNextAction(StepAction.NEXT_STEP);
 			}
 		} else {

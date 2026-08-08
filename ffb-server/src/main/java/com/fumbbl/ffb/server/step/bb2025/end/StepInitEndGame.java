@@ -8,6 +8,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -53,7 +54,7 @@ public final class StepInitEndGame extends AbstractStep {
 					break;
 				// optional
 				case ADMIN_MODE:
-					fAdminMode = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fAdminMode = parameter.getValue() != null && (Boolean) parameter.getValue();
 					break;
 				default:
 					break;
@@ -79,8 +80,12 @@ public final class StepInitEndGame extends AbstractStep {
 		}
 		GameResult gameResult = game.getGameResult();
 		if (gameResult.getTeamResultHome().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, awardedTouchdowns(gameResult.getTeamResultAway())));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamAway().getId()));
 			adjustScore(gameResult.getTeamResultAway(), gameResult.getTeamResultHome());
 		} else if (gameResult.getTeamResultAway().hasConceded()) {
+			publishParameter(StepParameter.from(StepParameterKey.TOUCHDOWNS, awardedTouchdowns(gameResult.getTeamResultHome())));
+			publishParameter(StepParameter.from(StepParameterKey.TEAM_ID, game.getTeamHome().getId()));
 			adjustScore(gameResult.getTeamResultHome(), gameResult.getTeamResultAway());
 		}
 		game.setTurnMode(TurnMode.END_GAME);
@@ -89,9 +94,14 @@ public final class StepInitEndGame extends AbstractStep {
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
+	private int awardedTouchdowns(TeamResult winnerResult) {
+		return Math.max(0, 2 - winnerResult.getScore());
+	}
+
 	private void adjustScore(TeamResult winnerResult, TeamResult concedingResult) {
 		winnerResult.setScore(Math.max(winnerResult.getScore(), 2));
 		concedingResult.setScore(0);
+		concedingResult.playerResults().forEach(PlayerResult::clearSpp);
 	}
 
 	// JSON serialization
@@ -109,7 +119,7 @@ public final class StepInitEndGame extends AbstractStep {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		Boolean adminMode = IServerJsonOption.ADMIN_MODE.getFrom(source, jsonObject);
-		fAdminMode = (adminMode != null) ? adminMode : false;
+		fAdminMode = adminMode != null && adminMode;
 		fGotoLabelOnEnd = IServerJsonOption.GOTO_LABEL_ON_END.getFrom(source, jsonObject);
 		return this;
 	}

@@ -33,10 +33,9 @@ public class Block extends com.fumbbl.ffb.server.step.generator.Block {
 		ActivationSequenceBuilder.create().withFailureLabel(IStepLabel.END_BLOCKING).withOldDefender(params.getBlockDefenderId())
 			.withEventualDefender(params.getBlockDefenderId()).addTo(sequence);
 
+		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.FOUL_APPEARANCE, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.DUMP_OFF);
-		sequence.add(StepId.JUMP_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
-		sequence.add(StepId.STAND_UP, from(StepParameterKey.GOTO_LABEL_ON_FAILURE, IStepLabel.END_BLOCKING));
 		sequence.add(StepId.BLOCK_STATISTICS);
 		sequence.add(StepId.DAUNTLESS);
 		sequence.add(StepId.TRICKSTER);

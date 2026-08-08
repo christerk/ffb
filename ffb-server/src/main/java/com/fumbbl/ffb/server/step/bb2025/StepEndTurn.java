@@ -1021,7 +1021,7 @@ public class StepEndTurn extends AbstractStep {
 		fNewHalf = IServerJsonOption.NEW_HALF.getFrom(source, jsonObject);
 		fEndGame = IServerJsonOption.END_GAME.getFrom(source, jsonObject);
 		Boolean withinSecretWeaponHandling = IServerJsonOption.WITHIN_SECRET_WEAPON_HANDLING.getFrom(source, jsonObject);
-		fWithinSecretWeaponHandling = (withinSecretWeaponHandling != null) ? withinSecretWeaponHandling : false;
+		fWithinSecretWeaponHandling = withinSecretWeaponHandling != null && withinSecretWeaponHandling;
 		half = IServerJsonOption.HALF.getFrom(source, jsonObject);
 		turnNr = IServerJsonOption.TURN_NR.getFrom(source, jsonObject);
 		playerIdsNaturalOnes =

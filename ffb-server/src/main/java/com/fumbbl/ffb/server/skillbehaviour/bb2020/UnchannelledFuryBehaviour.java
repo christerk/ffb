@@ -87,7 +87,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 						boolean goodConditions = ((playerAction == PlayerAction.BLITZ_MOVE)
 							|| (playerAction != null && playerAction.isKickingDowned())
 							|| (playerAction == PlayerAction.BLITZ)
-							|| (playerAction != null && playerAction.isBlockAction())
+							|| (playerAction != null && playerAction.isBlockOrSpecialAction())
 							|| (playerAction == PlayerAction.MULTIPLE_BLOCK)
 							|| (playerAction == PlayerAction.STAND_UP_BLITZ));
 						int minimumRoll = DiceInterpreter.getInstance().minimumRollConfusion(goodConditions);
@@ -101,7 +101,7 @@ public class UnchannelledFuryBehaviour extends SkillBehaviour<UnchannelledFury> 
 								status = ActionStatus.WAITING_FOR_RE_ROLL;
 							} else {
 								Skill furySkill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canPerformTwoBlocksAfterFailedFury);
-								if (furySkill != null && playerAction != null && playerAction.isBlockAction()) {
+								if (furySkill != null && playerAction != null && playerAction.isBlockOrSpecialAction()) {
 									UtilServerDialog.showDialog(step.getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(), furySkill, 0), true);
 									status = ActionStatus.WAITING_FOR_SKILL_USE;
 								} else {

@@ -25,7 +25,7 @@ public class InjuryTypeBallAndChain extends InjuryTypeServer<BallAndChain> {
 		// ball and chain always breaks armour on being knocked down
 		injuryContext.setArmorBroken(true);
 
-		injuryContext.setInjuryRoll(diceRoller.rollInjury());
+		injuryContext.setInjuryRoll(new int[]{5,5}/*diceRoller.rollInjury()*/);
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
 		factory.findInjuryModifiers(game, injuryContext, pAttacker,
 			pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));

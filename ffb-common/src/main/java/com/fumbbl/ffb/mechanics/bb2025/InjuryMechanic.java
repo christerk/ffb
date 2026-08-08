@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.mechanics.bb2025;
 
 import com.fumbbl.ffb.ApothecaryType;
+import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
@@ -34,7 +35,10 @@ public class InjuryMechanic extends com.fumbbl.ffb.mechanics.InjuryMechanic {
 
 	@Override
 	public boolean canRaiseInfectedPlayers(Team team, TeamResult teamResult, Player<?> attacker, Player<?> deadPlayer) {
-		return teamResult.getRaisedDead() == 0 &&
+		PlayerAction playerAction = teamResult.getGame().getActingPlayer().getPlayerAction();
+
+		return playerAction != null && playerAction.isBlock() &&
+			teamResult.getRaisedDead() == 0 &&
 			attacker != null &&
 			attacker.hasSkillProperty(NamedProperties.allowsRaisingLineman) &&
 			!deadPlayer.getPosition().getKeywords().contains(Keyword.BIG_GUY) &&

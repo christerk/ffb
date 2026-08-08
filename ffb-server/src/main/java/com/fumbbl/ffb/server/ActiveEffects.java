@@ -95,9 +95,10 @@ public class ActiveEffects implements IJsonSerializable {
 	}
 
 	public void setCarriedPlayer(String carriedPlayerId, PlayerState oldCarriedPlayerState,
-		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall) {
+		FieldCoordinate oldCarriedPlayerCoordinate, boolean carriedPlayerHasBall, FieldCoordinate carrierCoordinate) {
 		this.carriedPlayer =
-			new CarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate, carriedPlayerHasBall);
+			new CarriedPlayer(carriedPlayerId, oldCarriedPlayerState, oldCarriedPlayerCoordinate, carriedPlayerHasBall,
+				carrierCoordinate);
 	}
 
 	@Override
@@ -144,6 +145,7 @@ public class ActiveEffects implements IJsonSerializable {
 			IServerJsonOption.OLD_CARRIED_PLAYER_STATE.addTo(jsonObject, carriedPlayer.getOldState());
 			IServerJsonOption.OLD_CARRIED_PLAYER_COORDINATE.addTo(jsonObject, carriedPlayer.getOldCoordinate());
 			IServerJsonOption.CARRIED_PLAYER_HAS_BALL.addTo(jsonObject, carriedPlayer.hasBall());
+			IServerJsonOption.CARRIER_COORDINATE.addTo(jsonObject, carriedPlayer.getCarrierCoordinate());
 		}
 		return jsonObject;
 	}

@@ -51,7 +51,11 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	public void handleCommand(NetCommand pNetCommand) {
-		logicModule.handleCommand(pNetCommand);
+		try {
+			logicModule.handleCommand(pNetCommand);
+		} catch (Exception e) {
+			getClient().logWithOutGameId(e);
+		}
 	}
 
 	@Override

@@ -32,6 +32,7 @@ public class Hatred extends Skill {
 	public void postConstruct() {
 		registerProperty(NamedProperties.canRerollSingleSkull);
 		registerProperty(NamedProperties.canBeGainedByGettingEven);
+		registerProperty(NamedProperties.doesNotCountAsAdvancement);
 		registerRerollSource(ReRolledActions.SINGLE_SKULL, ReRollSources.HATRED);
 	}
 
@@ -51,9 +52,19 @@ public class Hatred extends Skill {
 			}
 			Set<String> tempSkillValues = map(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
+
+			Set<String> rosterSkillValues = new HashSet<>();
+			String skillValueRoster = player.getPosition().getSkillValue(skill);
+			if (StringTool.isProvided(skillValueRoster)) {
+				rosterSkillValues.addAll(map(skillValueRoster));
+				skillValues.removeAll(rosterSkillValues);
+			}
+
 			return Stream.concat(
-				skillValues.stream()
-					.map(value -> new SkillDisplayInfo(sanitize(skill, value), SkillDisplayInfo.Category.ROSTER, skill)),
+				Stream.concat(rosterSkillValues.stream()
+						.map(value -> new SkillDisplayInfo(sanitize(skill, value), SkillDisplayInfo.Category.ROSTER, skill)),
+					skillValues.stream()
+						.map(value -> new SkillDisplayInfo(sanitize(skill, value), SkillDisplayInfo.Category.PLAYER, skill))),
 				tempSkillValues.stream()
 					.map(value -> new SkillDisplayInfo(sanitize(skill, value), SkillDisplayInfo.Category.TEMPORARY, skill))
 			).collect(Collectors.toSet());

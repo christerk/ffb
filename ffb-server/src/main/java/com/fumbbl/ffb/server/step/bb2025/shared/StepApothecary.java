@@ -41,6 +41,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
@@ -323,19 +325,30 @@ public class StepApothecary extends AbstractStep {
 		if (fInjuryResult.injuryContext().getApothecaryStatus() != null) {
 			switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
 				case DO_REQUEST:
-					if (fShowReport) {
-						fInjuryResult.report(this);
+					if (remainingApos() > 0) {
+						if (fShowReport) {
+							fInjuryResult.report(this);
+						}
+
+						List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId),
+							fInjuryResult.injuryContext().getPlayerState());
+						UtilServerDialog.showDialog(getGameState(),
+							new DialogUseApothecaryParameter(defenderId,
+								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
+								apothecaryTypes),
+							true);
+						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
 					}
-					List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId),
-						fInjuryResult.injuryContext().getPlayerState());
-					UtilServerDialog.showDialog(getGameState(),
-						new DialogUseApothecaryParameter(defenderId,
-							fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
-							apothecaryTypes),
-						true);
-					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
-					getResult().setNextAction(StepAction.CONTINUE);
-					return;
+					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+					// we need to fall through here!! If no apos are left we need to treat this as if the coach declined apo use
+					// this is a special case only needed to multiple B&C players being cassed on the same team by a pitch invasion
+				case DO_NOT_USE_APOTHECARY:
+					getResult()
+						.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null,
+							fInjuryResult.injuryContext().casualtyModifiers));
+					break;
 				case USE_APOTHECARY:
 					if (rollApothecary()) {
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
@@ -344,11 +357,6 @@ public class StepApothecary extends AbstractStep {
 					} else {
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 					}
-					break;
-				case DO_NOT_USE_APOTHECARY:
-					getResult()
-						.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null,
-							fInjuryResult.injuryContext().casualtyModifiers));
 					break;
 				case NO_APOTHECARY:
 					if (fShowReport) {
@@ -372,7 +380,8 @@ public class StepApothecary extends AbstractStep {
 		if (playerState != null) {
 			Player<?> defender = game.getPlayerById(defenderId);
 			Player<?> attacker = game.getPlayerById(fInjuryResult.injuryContext().getAttackerId());
-			if (playerState.isSi() && attacker != null) {
+			if (playerState.isSi() && attacker != null
+				&& UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_GETTING_EVEN)) {
 				Set<Keyword> availableKeywords =
 					attacker.getPosition().getKeywords().stream().filter(Keyword::isCanGetEvenWith)
 						.collect(Collectors.toSet());
@@ -434,6 +443,11 @@ public class StepApothecary extends AbstractStep {
 		return inducementSet.getInducementMapping().keySet().stream()
 			.filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSet.hasUsesLeft(type))
 			.sorted(Comparator.comparingInt(InducementType::getPriority)).collect(Collectors.toList());
+	}
+
+	private int remainingApos() {
+		TurnData turnData = getTurnData();
+		return turnData.getApothecaries() + turnData.getPlagueDoctors();
 	}
 
 	private TurnData getTurnData() {

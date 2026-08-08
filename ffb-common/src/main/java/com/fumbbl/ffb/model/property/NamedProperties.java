@@ -153,6 +153,7 @@ public class NamedProperties {
 	public static final ISkillProperty canUseVomitAfterBlock = new NamedProperty("Can Use Vomit After Block");
 	public static final ISkillProperty convertKOToStunOn8 = new NamedProperty("Convert KO to Stun on a roll of 8");
 	public static final ISkillProperty convertStunToKO = new NamedProperty("Convert Stun to KO");
+	public static final ISkillProperty doesNotCountAsAdvancement = new NamedProperty("Does Not Count As Advancement");
 	public static final ISkillProperty dontDropFumbles = new NamedProperty("Don't Drop 2+ Fumbles");
 	public static final ISkillProperty droppedBallCausesArmourRoll = new NamedProperty("Dropped Ball Causes Armour Roll");
 	public static final ISkillProperty enableStandUpAndEndBlitzAction = new NamedProperty(

@@ -48,6 +48,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption CARDS_SELECTED_HOME = new JsonBooleanOption("cardsSelectedHome");
     JsonBooleanOption CARRIED_PLAYER_HAS_BALL = new JsonBooleanOption("carriedPlayerHasBall");
     JsonStringOption CARRIED_PLAYER_ID = new JsonStringOption("carriedPlayerId");
+    JsonFieldCoordinateOption CARRIER_COORDINATE = new JsonFieldCoordinateOption("carrierCoordinate");
     JsonEnumWithNameOption CATCH_SCATTER_THROW_IN_MODE = new JsonEnumWithNameOption("catchScatterThrowInMode",
       Factory.CATCH_SCATTER_THROWIN_MODE);
     JsonBooleanOption CHECK_FORGO = new JsonBooleanOption("checkForgo");
@@ -172,6 +173,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption RE_ROLLING = new JsonBooleanOption("reRolling");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
+    JsonBooleanOption REVERT_END_TURN = new JsonBooleanOption("revertEndTurn");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
     JsonBooleanOption SABOTEUR_TRIGGERED_ATTACKER = new JsonBooleanOption("saboteurTriggeredAttacker");
     JsonBooleanOption SABOTEUR_TRIGGERED_DEFENDER = new JsonBooleanOption("saboteurTriggeredDefender");

@@ -25,6 +25,8 @@ public abstract class SkillMechanic implements Mechanic {
 
 	public abstract String calculatePlayerLevel(Game game, Player<?> player);
 
+	public abstract int countAdvancements(Player<?> player);
+
 	public abstract boolean canAlwaysAssistFoul(Game game, Player<?> assistant);
 
 	public abstract boolean animosityExists(Player<?> thrower, Player<?> catcher);

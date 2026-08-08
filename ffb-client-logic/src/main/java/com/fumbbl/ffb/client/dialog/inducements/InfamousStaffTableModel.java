@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InfamousStaffTableModel extends AbstractTableModel {
+public class InfamousStaffTableModel extends AbstractTableModel implements InducementTableModel {
 
 	private final String[] fColumnNames;
 	private final Object[][] fRowData;
@@ -62,6 +62,24 @@ public class InfamousStaffTableModel extends AbstractTableModel {
 			}
 		}
 		return boughtStaff;
+	}
+
+	public boolean canBuyAnother() {
+		return getCheckedRows() < maxStaff;
+	}
+
+	public int cheapestUnselectedCost() {
+		for (int i = 0; i < getRowCount(); i++) {
+			boolean selected = (Boolean) getValueAt(i, 0);
+			if (!selected) {
+				return ((Player<?>) getValueAt(i, 4)).getPosition().getCost();
+			}
+		}
+		return Integer.MAX_VALUE;
+	}
+
+	public boolean requiresFreeRosterSlot() {
+		return false;
 	}
 
 	public void setValueAt(Object pValue, int pRowIndex, int pColumnIndex) {

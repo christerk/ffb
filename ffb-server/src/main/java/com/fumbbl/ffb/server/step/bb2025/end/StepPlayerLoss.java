@@ -3,15 +3,14 @@ package com.fumbbl.ffb.server.step.bb2025.end;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.PlayerResult;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.report.ReportDefectingPlayers;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.GameState;
@@ -21,7 +20,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,14 +55,14 @@ public final class StepPlayerLoss extends AbstractStep {
 			team = game.getTeamAway();
 		}
 		if (team != null) {
+			SkillMechanic mechanic = game.getMechanic(Mechanic.Type.SKILL);
 			List<String> defectingPlayerIds = new ArrayList<>();
 			List<Integer> defectingRolls = new ArrayList<>();
 			List<Boolean> defectingFlags = new ArrayList<>();
 			for (Player<?> player : team.getPlayers()) {
 				PlayerResult playerResult = gameResult.getPlayerResult(player);
-				int playerSkillCount = countAdvancements(player.getSkills());
-				int positionSkillCount = countAdvancements(player.getPosition().getSkills());
-				if (playerSkillCount - positionSkillCount >= 3 && (playerResult.getSeriousInjury() == null || !playerResult.getSeriousInjury().isDead())) {
+				int playerSkillCount = mechanic.countAdvancements(player);
+				if (playerSkillCount >= 3 && (playerResult.getSeriousInjury() == null || !playerResult.getSeriousInjury().isDead())) {
 					defectingPlayerIds.add(player.getId());
 					int defectingRoll = getGameState().getDiceRoller().rollPlayerLoss();
 					defectingRolls.add(defectingRoll);
@@ -80,16 +78,6 @@ public final class StepPlayerLoss extends AbstractStep {
 			}
 		}
 		getResult().setNextAction(StepAction.NEXT_STEP);
-	}
-
-	private int countAdvancements(Skill[] skills) {
-		int offset = 0;
-
-		if (Arrays.stream(skills).anyMatch(skill -> skill.hasSkillProperty(NamedProperties.canSaveReRolls))) {
-			offset = 2;
-		}
-
-		return (int) Arrays.stream(skills).filter(skill -> skill.getCategory() != SkillCategory.STAT_DECREASE).count() - offset;
 	}
 	// JSON serialization
 

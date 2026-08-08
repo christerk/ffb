@@ -11,6 +11,7 @@ import com.fumbbl.ffb.client.state.logic.Influences;
 import com.fumbbl.ffb.client.state.logic.MoveLogicModule;
 import com.fumbbl.ffb.client.state.logic.interaction.ActionContext;
 import com.fumbbl.ffb.client.state.logic.interaction.InteractionResult;
+import com.fumbbl.ffb.mechanics.PassRangeService;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -25,6 +26,8 @@ import java.util.Set;
  * @author Kalimar
  */
 public class PassLogicModule extends MoveLogicModule {
+
+	private final PassRangeService passRangeService = new PassRangeService();
 
 	public PassLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
@@ -44,7 +47,11 @@ public class PassLogicModule extends MoveLogicModule {
 			if (!actingPlayer.hasPassed() && (PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction()
 				|| (UtilPlayer.hasBall(game, actingPlayer.getPlayer())
 				&& ((PlayerAction.PASS == actingPlayer.getPlayerAction()) || canPlayerGetPass(player))))) {
-				game.setPassCoordinate(game.getFieldModel().getPlayerCoordinate(player));
+				FieldCoordinate targetCoordinate = game.getFieldModel().getPlayerCoordinate(player);
+				if (!isPassTargetInRange(targetCoordinate)) {
+					return InteractionResult.ignore();
+				}
+				game.setPassCoordinate(targetCoordinate);
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
 				return InteractionResult.handled();
@@ -62,6 +69,9 @@ public class PassLogicModule extends MoveLogicModule {
 		} else {
 			if ((PlayerAction.HAIL_MARY_PASS == actingPlayer.getPlayerAction())
 				|| UtilPlayer.hasBall(game, actingPlayer.getPlayer())) {
+				if (!isPassTargetInRange(pCoordinate)) {
+					return InteractionResult.ignore();
+				}
 				game.setPassCoordinate(pCoordinate);
 				client.getCommunication().sendPass(actingPlayer.getPlayerId(), game.getPassCoordinate());
 				game.getFieldModel().setRangeRuler(null);
@@ -106,6 +116,12 @@ public class PassLogicModule extends MoveLogicModule {
 		} else {
 			return InteractionResult.previewThrow().with(pCoordinate);
 		}
+	}
+
+	protected boolean isPassTargetInRange(FieldCoordinate targetCoordinate) {
+		Game game = client.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return passRangeService.isInRange(game, actingPlayer.getPlayer(), targetCoordinate, actingPlayer.getPlayerAction());
 	}
 
 	public boolean canPlayerGetPass(Player<?> pCatcher) {

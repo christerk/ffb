@@ -14,7 +14,6 @@ public class InjuryModifiers implements com.fumbbl.ffb.factory.InjuryModifiers {
 
 	private final Set<? extends InjuryModifier> injuryModifiers = new HashSet<InjuryModifier>() {{
 		add(new SpecialEffectInjuryModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
-		add(new SpecialEffectInjuryModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
 
 	@Override

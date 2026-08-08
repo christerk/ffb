@@ -6,7 +6,7 @@
 
     <groupId>com.fumbbl.ffb</groupId>
     <artifactId>ffb</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,6 +25,7 @@
         <module>ffb-client</module>
         <module>ffb-client-logic</module>
         <module>ffb-resources</module>
+        <module>ffb-statetest</module>
     </modules>
     <dependencyManagement>
         <dependencies>

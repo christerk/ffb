@@ -49,6 +49,8 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRollForTarget;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
@@ -469,7 +471,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 				UtilServerGame.syncGameModel(this);
 			}
 
-			if (injuryResult.injuryContext().getPlayerState().isSi()) {
+			if (injuryResult.injuryContext().getPlayerState().isSi()
+				&& UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_GETTING_EVEN)) {
 				Player<?> defender = game.getPlayerById(injuryResult.injuryContext().getDefenderId());
 				Player<?> attacker = game.getPlayerById(injuryResult.injuryContext().getAttackerId());
 				Set<Keyword> availableKeywords =

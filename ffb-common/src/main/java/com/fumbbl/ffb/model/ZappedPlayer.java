@@ -399,6 +399,11 @@ public class ZappedPlayer extends Player<ZappedPosition> {
 	}
 
 	@Override
+	public void markUsed(ISkillProperty property, Game game) {
+		originalPlayer.markUsed(property, game);
+	}
+
+	@Override
 	public void markUnused(Skill skill, Game game) {
 		originalPlayer.markUnused(skill, game);
 	}

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.special;
+package com.fumbbl.ffb.server.step.bb2025.special;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -36,7 +36,6 @@ import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepEndBomb extends AbstractStep {
 
@@ -61,11 +60,11 @@ public final class StepEndBomb extends AbstractStep {
 					consume(parameter);
 					return true;
 				case END_TURN:
-					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fEndTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				case BOMB_EXPLODED:
-					fBombExploded = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					fBombExploded = parameter.getValue() != null && (Boolean) parameter.getValue();
 					consume(parameter);
 					return true;
 				default:
@@ -106,6 +105,9 @@ public final class StepEndBomb extends AbstractStep {
 
 			if (originalBomber != actingPlayer.getPlayer()) {
 				UtilServerSteps.changePlayerAction(this, originalBomber.getId(), PlayerAction.THROW_BOMB, false);
+				// restore the base the bomber had before becoming the acting player again (they may have been
+				// injured by their own bomb), keeping the active flag which was cleared when their activation ended
+				game.getFieldModel().setPlayerState(originalBomber, game.getFieldModel().getPlayerState(originalBomber).changeBase(playerState.getBase()));
 				if (playerState.isProneOrStunned()) {
 					game.getFieldModel().setPlayerState(originalBomber, playerState.changeActive(false));
 				}

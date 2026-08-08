@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.move;
+package com.fumbbl.ffb.server.step.bb2025.move;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -32,7 +32,6 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-@RulesCollection(RulesCollection.Rules.BB2020)
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepTrapDoor extends AbstractStepWithReRoll {
 
@@ -140,9 +139,9 @@ public class StepTrapDoor extends AbstractStepWithReRoll {
 		game.getFieldModel().remove(player);
 		if (hasBall) {
 			publishParameter(new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.SCATTER_BALL));
-			if (game.getActingTeam().hasPlayer(player)) {
-				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			}
+		}
+		if (game.getActingTeam().hasPlayer(player)) {
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		// we are in ttm context so we need to break the scatter loop
 		if (thrownPlayerHasBall != null) {

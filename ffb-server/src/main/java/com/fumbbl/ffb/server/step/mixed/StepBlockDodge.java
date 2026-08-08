@@ -136,7 +136,7 @@ public class StepBlockDodge extends AbstractStep {
 			}
 
 			PushbackSquare[] grabPushbackSquares = regularPushbackSquares;
-			if ((actingPlayer.getPlayerAction().isBlockAction())
+			if ((actingPlayer.getPlayerAction().isBlockOrSpecialAction())
 				&& attacker.hasSkillProperty(NamedProperties.canPushBackToAnySquare)
 				&& !game.getDefender().hasSkillProperty(NamedProperties.canChooseOwnPushedBackSquare)) {
 				grabPushbackSquares = UtilServerPushback.findPushbackSquares(game, startingSquare, PushbackMode.GRAB);

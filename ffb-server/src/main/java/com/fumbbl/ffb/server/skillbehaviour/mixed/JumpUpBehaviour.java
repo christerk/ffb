@@ -49,7 +49,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						&& UtilCards.hasUnusedSkill(actingPlayer, skill))
 						|| (ReRolledActions.JUMP_UP == step.getReRolledAction())) {
 					game.setConcessionPossible(false);
-					if ((actingPlayer.getPlayerAction().isBlockAction())
+					if ((actingPlayer.getPlayerAction().isBlockOrSpecialAction())
 							|| (PlayerAction.MULTIPLE_BLOCK == actingPlayer.getPlayerAction())) {
 						if (ReRolledActions.JUMP_UP == step.getReRolledAction()) {
 							if ((step.getReRollSource() == null)

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.bb2025.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -36,7 +36,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepTouchback extends AbstractStep {
 
 	private boolean fTouchback;
@@ -122,7 +122,7 @@ public final class StepTouchback extends AbstractStep {
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.CATCH_KICKOFF));
 					}
 				}
-				game.setTurnMode(TurnMode.REGULAR);
+				game.setTurnMode(TurnMode.KICKOFF);
 			}
 
 		}

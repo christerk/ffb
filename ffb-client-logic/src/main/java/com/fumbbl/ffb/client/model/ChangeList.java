@@ -9,6 +9,23 @@ public class ChangeList {
 	private final List<VersionChangeList> versions = new ArrayList<>();
 
 	public ChangeList() {
+		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
+			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
+			.addBugfix(
+				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
+			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
+		);
+
+		versions.add(new VersionChangeList("3.3.2")
+			.addBugfix("Taunt: Was not available after POW results")
+			.addBugfix("Bombardier: The bomber could be activated again when the bomb was caught or intercepted and thrown by another player")
+		);
+
+		versions.add(new VersionChangeList("3.3.1")
+			.addBugfix("Hatred: Game hung on hovers on players with gained hatred only")
+		);
+
 		versions.add(new VersionChangeList("3.3.0")
 			.addImprovement("Added scoreboard icons for the Cheering Fans offensive assist bonus")
 			.addImprovement("Updated db connector to most current mariadb client")
@@ -27,11 +44,43 @@ public class ChangeList {
 			.addBugfix("Using OtB vs G&G pass caused the game to crash if the passer moved on")
 			.addImprovement("Used-player marking now shows a dedicated icon for the player who used the team's blitz action")
 			.addBugfix("Self inflicted injuries never triggered Getting Even")
+			.addBugfix("Star players incorrectly rolled for Getting Even")
 			.addImprovement("Moved active cards into the inducements menu to reduce top-level menu width")
 			.addImprovement("Added chat command to reset used skills for selected players")
 			.addFeature("Added support for I'll Carry You (Stars Grak & Crumbleberry)")
-			.addBugfix("Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
+			.addBugfix(
+				"Special team re-rolls like Leader or Brilliant Coaching that were saved by Team Captain got converted to regular team re-rolls")
 			.addBugfix("Mascot/Loner fail on DT dodge re-roll caused the game to lock up")
+			.addBugfix("A manipulated client could submit an out-of-range pass that stalled the game")
+			.addBugfix("Conceding in the 2025 ruleset did not let the winning coach assign the awarded touchdowns for SPP")
+			.addImprovement(
+				"Buying inducements now prompts before closing if petty cash remains that could still buy an inducement")
+			.addBugfix(
+				"Active team players ending up in the crowd (crowd push, throw team-mate, ball & chain and trap doors) always cause a turnover")
+			.addBugfix(
+				"Gained Hatred no longer counts as a skill advancement for the player level or the post-concession player loss check")
+			.addFeature("Added game option to disable Getting Even")
+			.addBugfix("Leader re-roll was granted when Leader player was fielded only for a subsequent drive of a half")
+			.addBugfix("Jump up was rolled after Foul Appearance")
+			.addBugfix("Foul Appearance fail on a blitz from prone (when target was adjacent) left the blitzing player prone")
+			.addBugfix("Conceding teams did not lose their spp")
+			.addImprovement("Player choice dialogs now display amount of selected and to be selected players")
+			.addBugfix("Plague Ridden also worked for non-block casualties")
+			.addBugfix(
+				"Bombardier: If the original bomber was cassed by an intercepted bomb they were available for AtC at the end of drive and if successful did return to reserves")
+			.addBugfix(
+				"Bombardier: If the original bomber was cassed by an intercepted bomb the tooltip when hovering them in the dugout displayed the opponent team's turn number")
+			.addBugfix("Steady Footing: Could be used by prone/stunned players when hit by bombs etc")
+			.addBugfix("Chainsaw: Kickback always results in a knock down")
+			.addBugfix("Replays with BT vs DT did not load in some cases")
+			.addBugfix("TTM was only available for players with ST5 or more")
+			.addBugfix("The Ballista: Re-rolls were not offered for TTM/KTM/Pass")
+			.addBugfix(
+				"Joining a collaborative replay already in progress did cause the joining client to hang after loading the initial state")
+			.addBugfix("Cheering Fans assist was not granted to defensive team in case of a touchback")
+			.addBugfix("Punt: A ball bouncing out off bounds did not cause a turnover")
+			.addBugfix(
+				"TTM: When double-clicking while picking up a team-mate the player could vanish upon landing/cancelling")
 		);
 
 		versions.add(new VersionChangeList("3.2.3")
@@ -43,7 +92,8 @@ public class ChangeList {
 			.addBugfix("Ball & Chain hit by bomb did roll for armour")
 			.addBugfix("Dodgy Snack did not trigger auto marking update")
 			.addBugfix("Multiblock did not generate spp")
-			.addBugfix("Punt: If direction or distance put the ball out of bounds re-rolling the result did not reset the ball being in bounds")
+			.addBugfix(
+				"Punt: If direction or distance put the ball out of bounds re-rolling the result did not reset the ball being in bounds")
 			.addBugfix("Blessing of Nuffle: Description text was incorrect")
 			.addBugfix("With JVMs newer than 8, range rulers did not show the required roll anymore")
 			.addBugfix("Gaining additional Hatred results in duplication of existing Hatred skill listings")

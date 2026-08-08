@@ -10,24 +10,33 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 	// Handles rendering cells in the list using a checkbox
+	private final Consumer<Integer> callback;
 
 	public PlayerCheckList(FantasyFootballClient client, String[] playerIds, String[] descriptions, int minSelects,
-			int maxSelects, boolean preSelected, JButton selectButton) {
+	                       int maxSelects, boolean preSelected, JButton selectButton, Consumer<Integer> callback) {
 
 		if (!ArrayTool.isProvided(playerIds)) {
 			throw new IllegalArgumentException("Argument players must not be empty or null.");
 		}
+
+		this.callback = callback;
 
 		DimensionProvider dimensionProvider = client.getUserInterface().getPitchDimensionProvider();
 		Game game = client.getGame();
@@ -132,6 +141,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 				fSelectButton.setEnabled(nrOfSelectedItems > 0);
 			}
 			list.repaint(list.getCellBounds(index, index));
+			callback.accept(nrOfSelectedItems);
 		}
 
 	}
