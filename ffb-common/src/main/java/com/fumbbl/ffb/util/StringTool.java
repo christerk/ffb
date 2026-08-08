@@ -105,6 +105,29 @@ public class StringTool {
 		return enumeration.toString();
 	}
 
+	public static String capitalize(String input) {
+		return capitalize(input, 1);
+	}
+
+	public static String capitalize(String input, int length) {
+		if (input == null) {
+			return null;
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		for (char c : input.toCharArray()) {
+			if (length > 0) {
+				builder.append(Character.toUpperCase(c));
+				length--;
+			} else {
+				builder.append(c);
+			}
+		}
+
+		return builder.toString();
+	}
+
 	public static void main(String[] args) {
 		System.out.println(bind("Dies ist ein $1 Test der Bind-Methode $2", new String[] { "erster", "!" }));
 		System.out.println(formatThousands(2130000));
