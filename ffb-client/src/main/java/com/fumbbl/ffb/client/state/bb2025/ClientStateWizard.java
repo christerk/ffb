@@ -72,6 +72,11 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 		return super.isSelectable() && !showsConfirmation;
 	}
 
+	@Override
+	public boolean isClickable() {
+		return super.isClickable() && !showsConfirmation;
+	}
+
 	private void drawSpellmarker(FieldCoordinate pCoordinate, SpecialEffect wizardSpell) {
 		FieldComponent fieldComponent = getClient().getUserInterface().getFieldComponent();
 		switch (wizardSpell) {
@@ -90,7 +95,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 
 	@Override
 	public void clickOnField(FieldCoordinate pCoordinate) {
-		if (!isSelectable() || showFriendlyFireConfirmation(pCoordinate)) {
+		if (showFriendlyFireConfirmation(pCoordinate)) {
 			return;
 		}
 
@@ -121,7 +126,7 @@ public class ClientStateWizard extends ClientStateAwt<WizardLogicModule> impleme
 	@Override
 	public void clickOnPlayer(Player<?> pPlayer) {
 		FieldCoordinate playerCoordinate = getClient().getGame().getFieldModel().getPlayerCoordinate(pPlayer);
-		if (!isSelectable() || showFriendlyFireConfirmation(playerCoordinate)) {
+		if (showFriendlyFireConfirmation(playerCoordinate)) {
 			return;
 		}
 
