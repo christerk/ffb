@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
@@ -23,6 +24,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map;
@@ -35,6 +37,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private IDialogCloseListener fCloseListener;
 	private final FantasyFootballClient fClient;
 	private boolean fChatInputFocus;
+	private DialogKeyGuard keyGuard;
 
 	private final JPanel contentPanel;
 
@@ -64,6 +67,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 		UserInterface userInterface = getClient().getUserInterface();
 		fChatInputFocus = userInterface.getChat().hasChatInputFocus();
 		userInterface.getDesktop().add(Dialog.this);
+		installKeyGuard();
 		setVisible(true);
 		moveToFront();
 		if (fChatInputFocus) {
@@ -72,6 +76,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	}
 
 	public void hideDialog() {
+		removeKeyGuard();
 		if (isVisible()) {
 			setVisible(false);
 			UserInterface userInterface = getClient().getUserInterface();
@@ -79,6 +84,31 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 			if (fChatInputFocus) {
 				userInterface.getChat().requestChatInputFocus();
 			}
+		}
+	}
+
+	private void installKeyGuard() {
+		removeKeyGuard();
+		keyGuard = new DialogKeyGuard(this, System.currentTimeMillis(), keyDelayInMillis());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyGuard);
+	}
+
+	private void removeKeyGuard() {
+		if (keyGuard != null) {
+			KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyGuard);
+			keyGuard = null;
+		}
+	}
+
+	private long keyDelayInMillis() {
+		String delayProperty = getClient().getProperty(CommonProperty.SETTING_DIALOG_KEY_DELAY);
+		if (!StringTool.isProvided(delayProperty)) {
+			delayProperty = IClientPropertyValue.SETTING_DIALOG_KEY_DELAY_DEFAULT;
+		}
+		try {
+			return Math.max(0, Long.parseLong(delayProperty.trim()));
+		} catch (NumberFormatException e) {
+			return Long.parseLong(IClientPropertyValue.SETTING_DIALOG_KEY_DELAY_DEFAULT);
 		}
 	}
 
