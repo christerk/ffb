@@ -9,5 +9,8 @@
 ## Services
 - Prefer instantiable service classes with instance methods over static utility classes/methods; create a service instance at the call site instead of calling static methods.
 
+## Naming
+- Do not use legacy `f` or `p` prefixes for new fields or parameters.
+
 ## Change list entries
 - Add a user-facing change list entry for any user-visible change. Entries live in the top (latest) `VersionChangeList` in `ffb-client-logic/src/main/java/com/fumbbl/ffb/client/model/ChangeList.java`, added via `addBugfix`/`addImprovement`/`addFeature`/`addBehaviorChange`.
