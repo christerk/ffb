@@ -359,10 +359,14 @@ public class PlayerIconFactory {
 			decorationProperty3 = IIconProperty.DECORATION_CHOMPED;
 		}
 
-		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		if ((actingPlayer.getPlayer() == pPlayer) && (playerAction != null)
-				&& (playerState.getBase() == PlayerState.MOVING)) {
-			decorationProperty4 = playerAction.getIconProperty();
+		if ((actingPlayer.getPlayer() == pPlayer)
+			&& (playerState.getBase() == PlayerState.MOVING)
+			&& IClientPropertyValue.SETTING_MARK_ACTING_PLAYER_ACTION_ON.equals(
+				pClient.getProperty(CommonProperty.SETTING_MARK_ACTING_PLAYER_ACTION))) {
+			PlayerAction playerAction = actingPlayer.getPlayerAction();
+			if (playerAction != null) {
+				decorationProperty4 = playerAction.getIconProperty();
+			}
 		}
 		
 

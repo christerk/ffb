@@ -64,6 +64,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_MARK_USED_PLAYERS_CHECK_ICON_GREEN = "markUsedPlayersCheckIconGreen";
 	String SETTING_MARK_BLITZING_PLAYER_ON = "markBlitzingPlayerOn";
 	String SETTING_MARK_BLITZING_PLAYER_OFF = "markBlitzingPlayerOff";
+	String SETTING_MARK_ACTING_PLAYER_ACTION_ON = "markActingPlayerActionOn";
+	String SETTING_MARK_ACTING_PLAYER_ACTION_OFF = "markActingPlayerActionOff";
 	String SETTING_HIDE_AUTO_MARKING_DIALOG = "hideAutoMarkingDialog";
 
 	String SETTING_SWAP_TEAM_COLORS_ON = "swapTeamColorsOn";
