@@ -47,7 +47,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect,
 			this::updateCount);
 		fList.setBackground(Color.LIGHT_GRAY);
-		fList.setVisibleRowCount(Math.min(playerIds.length, 5));
+		fList.setVisibleRowCount(fList.getModel().getSize());
 		fList.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent pMouseEvent) {
 				int index = fList.locationToIndex(pMouseEvent.getPoint());
@@ -106,6 +106,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		getContentPane().add(centerPane, BorderLayout.CENTER);
 
 		pack();
+		shrinkListToClientHeight();
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
 			int offsetX = 1, offsetY = 1;
@@ -128,6 +129,24 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		fList.setSelectedIndex(0);
 
+	}
+
+	private void shrinkListToClientHeight() {
+		int maxHeight = (int) (getClient().getUserInterface().getSize().height * 0.9);
+		int overflow = getPreferredSize().height - maxHeight;
+		if (overflow <= 0) {
+			return;
+		}
+		Rectangle cellBounds = fList.getCellBounds(0, 0);
+		if (cellBounds == null || cellBounds.height <= 0) {
+			return;
+		}
+		int rowsToRemove = (int) Math.ceil((double) overflow / cellBounds.height);
+		int visibleRows = Math.max(1, fList.getVisibleRowCount() - rowsToRemove);
+		if (visibleRows < fList.getVisibleRowCount()) {
+			fList.setVisibleRowCount(visibleRows);
+			pack();
+		}
 	}
 
 	private void updateCount(int count) {
