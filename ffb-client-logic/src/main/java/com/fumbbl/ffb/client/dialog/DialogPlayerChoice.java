@@ -18,6 +18,8 @@ import java.util.List;
 
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
+	private static final double MAX_HEIGHT_FACTOR = 0.8;
+
 	private final PlayerCheckList fList;
 	private final JButton fButtonSelect;
 	private final JButton fButtonCancel;
@@ -120,7 +122,11 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 				playerCoordinate.getY() + offsetY, false);
 			int x = sidebarSize.width + onPitch.width;
 			int y = onPitch.height;
-			setLocation(x, y);
+			int desktopHeight = getClient().getUserInterface().getDesktop().getHeight();
+			if (desktopHeight <= 0) {
+				desktopHeight = getClient().getUserInterface().getSize().height;
+			}
+			setLocation(x, Math.max(0, Math.min(y, desktopHeight - getSize().height)));
 		} else {
 			setLocationToCenter();
 		}
@@ -132,7 +138,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 	}
 
 	private void shrinkListToClientHeight() {
-		int maxHeight = (int) (getClient().getUserInterface().getSize().height * 0.9);
+		int maxHeight = (int) (getClient().getUserInterface().getSize().height * MAX_HEIGHT_FACTOR);
 		Rectangle cellBounds = fList.getCellBounds(0, 0);
 		if (cellBounds == null || cellBounds.height <= 0) {
 			return;

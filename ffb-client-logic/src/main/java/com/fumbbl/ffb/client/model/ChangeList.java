@@ -15,7 +15,7 @@ public class ChangeList {
 			.addBugfix(
 				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
-			.addImprovement("Player choice dialogs now grow with the number of listed players (up to 90% of the client height) instead of always showing at most 5 rows")
+			.addImprovement("Player choice dialogs now grow with the number of listed players (up to 80% of the client height) instead of always showing at most 5 rows")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
