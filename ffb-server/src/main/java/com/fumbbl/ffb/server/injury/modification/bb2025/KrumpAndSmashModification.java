@@ -7,5 +7,4 @@ public class KrumpAndSmashModification extends RerollArmourModification {
 	public KrumpAndSmashModification() {
 		super(Collections.singleton(Block.class));
 	}
-	
 }
