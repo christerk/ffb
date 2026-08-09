@@ -132,7 +132,9 @@ public class StepHandleDropPlayerContext extends AbstractStepWithReRoll {
 				skill = injuryContext.getUsedSkill();
 
 				if (skill.getSkillBehaviour().getInjuryContextModification().appliesToDefender()) {
-					playerId = game.getPlayerById(injuryContext.fDefenderId).getId();
+					playerId = injuryContext.fDefenderId;
+				} else if (StringTool.isProvided(injuryContext.fAttackerId)) {
+					playerId = injuryContext.fAttackerId;
 				} else {
 					playerId = game.getActingPlayer().getPlayerId();
 				}
