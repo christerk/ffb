@@ -118,6 +118,10 @@ public class PlayerState {
 		return hasBit(_BIT_ACTIVE);
 	}
 
+	public boolean isMoving(){
+		return hasBit(MOVING);
+	}
+
 	public PlayerState changeActive(boolean pActive) {
 		return changeBit(_BIT_ACTIVE, pActive);
 	}

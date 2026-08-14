@@ -99,6 +99,8 @@ public interface IClientPropertyValue extends CommonPropertyValue {
 	String SETTING_TACKLEZONES_OVERLAP_OFF = "overlapTzOff";
 	String SETTING_TACKLEZONES_CONTOUR_ON = "tzContourOn";
 	String SETTING_TACKLEZONES_CONTOUR_OFF = "tzContourOff";
+	String SETTING_HIGHLIGHT_ACTIVE_PLAYER_ON ="highlightActivePlayerOn";
+	String SETTING_HIGHLIGHT_ACTIVE_PLAYER_OFF ="highlightActivePlayerOff";
 
 	// Click strategy settings
 	String SETTING_CLICK_LEFT = "clickLeft";

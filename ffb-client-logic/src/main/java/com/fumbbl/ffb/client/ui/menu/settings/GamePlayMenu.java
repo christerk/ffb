@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.StyleProvider;
+import com.fumbbl.ffb.client.animation.ActivePlayerHighlighter;
 import com.fumbbl.ffb.client.ui.menu.FfbMenu;
 import com.fumbbl.ffb.client.ui.swing.JMenu;
 import com.fumbbl.ffb.client.ui.swing.JRadioButtonMenuItem;
@@ -14,21 +15,18 @@ import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 
-import javax.swing.ButtonGroup;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.fumbbl.ffb.CommonProperty.SETTING_AUTOMOVE;
-import static com.fumbbl.ffb.CommonProperty.SETTING_BLITZ_TARGET_PANEL;
-import static com.fumbbl.ffb.CommonProperty.SETTING_GAZE_TARGET_PANEL;
+import static com.fumbbl.ffb.CommonProperty.*;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_HIGHLIGHT_ACTIVE_PLAYER_OFF;
 import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_BLITZING_PLAYER;
-import static com.fumbbl.ffb.CommonProperty.SETTING_MARK_USED_PLAYERS;
-import static com.fumbbl.ffb.CommonProperty.SETTING_RANGEGRID;
-import static com.fumbbl.ffb.CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN;
-import static com.fumbbl.ffb.CommonProperty.SETTING_RIGHT_CLICK_END_ACTION;
+import static com.fumbbl.ffb.IClientPropertyValue.SETTING_HIGHLIGHT_ACTIVE_PLAYER_ON;
+import static java.util.Optional.ofNullable;
 
 public class GamePlayMenu extends FfbMenu {
 
@@ -54,6 +52,9 @@ public class GamePlayMenu extends FfbMenu {
 
 	private JRadioButtonMenuItem markBlitzingPlayerOnMenuItem;
 	private JRadioButtonMenuItem markBlitzingPlayerOffMenuItem;
+
+	private JRadioButtonMenuItem highlightActivePlayerOn;
+	private JRadioButtonMenuItem highlightActivePlayerOff;
 
 	private JRadioButtonMenuItem reRollBallAndChainNeverMenuItem;
 	private JRadioButtonMenuItem reRollBallAndChainNoOpponentMenuItem;
@@ -106,6 +107,7 @@ public class GamePlayMenu extends FfbMenu {
 		createMarkUsedPlayerMenu();
 		createMarkBlitzingPlayerMenu();
 		createTacklezonesMenu();
+		createHighlightActivePlayerMenu();
 	}
 
 	@Override
@@ -145,6 +147,12 @@ public class GamePlayMenu extends FfbMenu {
 		String markBlitzingPlayerSetting = client.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER);
 		markBlitzingPlayerOffMenuItem.setSelected(true);
 		markBlitzingPlayerOnMenuItem.setSelected(IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(markBlitzingPlayerSetting));
+
+		boolean isHighlightActivePlayerOn = ofNullable(client.getProperty(SETTING_HIGHLIGHT_ACTIVE_PLAYER))
+				.map(SETTING_HIGHLIGHT_ACTIVE_PLAYER_ON::equals)
+				.orElse(false);
+		highlightActivePlayerOn.setSelected(true);
+		highlightActivePlayerOff.setSelected(!isHighlightActivePlayerOn);
 
 		boolean askForReRoll = ((GameOptionBoolean) client.getGame().getOptions().getOptionWithDefault(GameOptionId.ALLOW_BALL_AND_CHAIN_RE_ROLL)).isEnabled();
 		reRollBallAndChainPanelMenu.setText(askForReRoll ? "Ask to Re-Roll Ball & Chain Movement" : "Ask for Whirling Dervish");
@@ -343,6 +351,17 @@ public class GamePlayMenu extends FfbMenu {
 			client.setProperty(CommonProperty.SETTING_TACKLEZONES_CONTOUR, IClientPropertyValue.SETTING_TACKLEZONES_CONTOUR_OFF);
 			client.saveUserSettings(true);
 		}
+
+		if (source == highlightActivePlayerOn) {
+			client.setProperty(SETTING_HIGHLIGHT_ACTIVE_PLAYER, SETTING_HIGHLIGHT_ACTIVE_PLAYER_ON);
+			client.saveUserSettings(true);
+		}
+
+		if (source == highlightActivePlayerOff) {
+			client.setProperty(SETTING_HIGHLIGHT_ACTIVE_PLAYER, SETTING_HIGHLIGHT_ACTIVE_PLAYER_OFF);
+			ActivePlayerHighlighter.getInstance().setActivePlayer(null);
+			client.saveUserSettings(true);
+		}
 	}
 
 	private void createMarkUsedPlayerMenu() {
@@ -508,6 +527,23 @@ public class GamePlayMenu extends FfbMenu {
 		fAutomoveOffMenuItem.addActionListener(this);
 		automoveGroup.add(fAutomoveOffMenuItem);
 		fAutomoveMenu.add(fAutomoveOffMenuItem);
+	}
+
+	private void createHighlightActivePlayerMenu() {
+		JMenu highlightActivePlayerMenu = new JMenu(dimensionProvider, SETTING_HIGHLIGHT_ACTIVE_PLAYER);
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		highlightActivePlayerOn = new JRadioButtonMenuItem(dimensionProvider, "Enable");
+		highlightActivePlayerOn.addActionListener(this);
+		buttonGroup.add(highlightActivePlayerOn);
+		highlightActivePlayerMenu.add(highlightActivePlayerOn);
+
+		highlightActivePlayerOff = new JRadioButtonMenuItem(dimensionProvider, "Disable");
+		highlightActivePlayerOff.addActionListener(this);
+		buttonGroup.add(highlightActivePlayerOff);
+		highlightActivePlayerMenu.add(highlightActivePlayerOff);
+
+		add(highlightActivePlayerMenu);
 	}
 
 	private void createTacklezonesMenu() {

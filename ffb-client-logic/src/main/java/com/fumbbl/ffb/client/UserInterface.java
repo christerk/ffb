@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FantasyFootballException;
+import com.fumbbl.ffb.client.animation.ActivePlayerHighlighter;
 import com.fumbbl.ffb.client.dialog.DialogHandler;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
@@ -23,6 +24,7 @@ import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameOptions;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.client.ui.strategies.click.ClickStrategyRegistry;
@@ -66,6 +68,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
+	private final ActivePlayerHighlighter activePlayerHighlighter;
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -114,6 +117,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fChat = new ChatComponent(getClient(), uiDimensionProvider, styleProvider, fIconCache);
 		fSideBarHome = new SideBarComponent(getClient(), true, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
 		fSideBarAway = new SideBarComponent(getClient(), false, uiDimensionProvider, dugoutDimensionProvider, styleProvider, fontCache, markerService);
+		activePlayerHighlighter = ActivePlayerHighlighter.getInstance();
 
 		initComponents(false);
 
@@ -129,6 +133,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
 
 		fFieldComponent.initLayout();
+		activePlayerHighlighter.initialize(getClient(),
+				pitchDimensionProvider,
+				fFieldComponent.getLayerPlayers().getImage(),
+				getPlayerIconFactory());
 		fLog.initLayout();
 		fChat.initLayout();
 		fSideBarHome.initLayout();
@@ -455,6 +463,10 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		} else {
 			getStatusReport().reportSocketClosed();
 		}
+	}
+
+	public void setActivePlayer(Player<?> activePlayer) {
+		activePlayerHighlighter.setActivePlayer(activePlayer);
 	}
 
 	public ClickStrategyRegistry getClickStrategyRegistry() {
