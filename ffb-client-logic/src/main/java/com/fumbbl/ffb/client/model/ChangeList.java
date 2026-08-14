@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
 			.addImprovement("Player choice dialogs now grow with the number of listed players (up to 90% of the client height) instead of always showing at most 5 rows")
 			.addBugfix("Tentacles: Being held did not end the player action, allowing the held player to still pass, hand off, foul or block")
+			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
