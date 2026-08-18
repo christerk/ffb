@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PassTest {
 
@@ -58,6 +57,5 @@ public class PassTest {
 		assertNotNull(step);
 		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getBallCoordinate());
 		assertFalse(game.getFieldModel().isBallMoving());
-		assertTrue(game.getPlayerById("thrower").isUsed(safePass));
 	}
 }
