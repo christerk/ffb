@@ -58,6 +58,6 @@ public class PassTest {
 		assertNotNull(step);
 		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getBallCoordinate());
 		assertFalse(game.getFieldModel().isBallMoving());
-		assertTrue(game.getActingPlayer().isSkillUsed(safePass));
+		assertTrue(game.getPlayerById("thrower").isUsed(safePass));
 	}
 }
