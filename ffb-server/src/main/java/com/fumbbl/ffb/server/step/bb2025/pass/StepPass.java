@@ -179,6 +179,7 @@ public class StepPass extends AbstractStepWithReRoll {
 			passingDistance, false));
 
 		boolean isBomb = PlayerAction.THROW_BOMB == game.getThrowerAction() || PlayerAction.HAIL_MARY_BOMB == game.getThrowerAction();
+		boolean reRolled = ReRolledActions.PASS == getReRolledAction() && getReRollSource() != null;
 
 		if (ReRolledActions.PASS == getReRolledAction()) {
 			if (usingModifyingSkill == null || !usingModifyingSkill) {
@@ -223,7 +224,6 @@ public class StepPass extends AbstractStepWithReRoll {
 			}
 		}
 
-		boolean reRolled = ((getReRolledAction() == ReRolledActions.PASS) && (getReRollSource() != null));
 		getResult().addReport(new ReportPassRoll(game.getThrowerId(), roll, minimumRoll, reRolled,
 			passModifiers.toArray(new PassModifier[0]), passingDistance, isBomb, state.getResult(), false, statBasedRollModifier));
 		if (PassResult.ACCURATE == state.getResult()) {
@@ -380,4 +380,3 @@ public class StepPass extends AbstractStepWithReRoll {
 		return this;
 	}
 }
-

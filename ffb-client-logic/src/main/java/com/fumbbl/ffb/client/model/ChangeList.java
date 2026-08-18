@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Safe Pass: A thrower did not keep the ball when a re-rolled pass fumbled on a natural 1")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 			.addBugfix(
