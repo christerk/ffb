@@ -195,6 +195,9 @@ public class StepEndMoving extends AbstractStep {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
 
+		// steps like shadowing may leave a defender behind, which would be picked up by the following sequence
+		game.setDefenderId(null);
+
 		UtilServerDialog.hideDialog(getGameState());
 		boolean triesToSecureBall =
 			actingPlayer.getPlayerAction() == PlayerAction.SECURE_THE_BALL &&
