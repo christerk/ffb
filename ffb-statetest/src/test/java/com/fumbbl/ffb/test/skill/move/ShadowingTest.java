@@ -67,4 +67,43 @@ public class ShadowingTest {
 		assertFalse(game.getActingPlayer().hasBlocked());
 	}
 
+	@Test
+	public void failedShadowingDoesNotKeepShadowerAsDefender() {
+		GameState state = new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withTeam(true, t -> t
+				.player("runner", p -> p.at(12, 7).stats(6, 3, 3, 5, 8)))
+			.withTeam(false, t -> t
+				.player("shadower", p -> p.at(13, 7).stats(6, 3, 3, 5, 8)
+					.skill("Shadowing").skill("Foul Appearance")))
+			.build();
+
+		Game game = state.getGame();
+
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
+
+		// dodge roll leaving the shadower's tackle zone
+		TestRolls.on(state).general(6);
+		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(12, 7), new FieldCoordinate(11, 7)));
+
+		// failed shadowing roll, the shadower stays behind
+		TestRolls.on(state).general(1);
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.SHADOWING, game.getPlayerById("shadower")));
+
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(new FieldCoordinate(13, 7),
+			game.getFieldModel().getPlayerCoordinate(game.getPlayerById("shadower")));
+		assertNull(game.getDefenderId());
+
+		// the shadower must not be treated as defender anymore, otherwise its foul appearance is rolled for
+		// no dodge roll needed as the runner is out of the shadower's tackle zone
+		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(11, 7), new FieldCoordinate(10, 7)));
+
+		assertEquals(new FieldCoordinate(10, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertFalse(game.getActingPlayer().hasBlocked());
+	}
+
 }
