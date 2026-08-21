@@ -44,9 +44,11 @@ public class ShadowingTest {
 		StepEngine.start(state);
 		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
 
+		// dodge roll leaving the shadower's tackle zone
 		TestRolls.on(state).general(6);
 		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(12, 7), new FieldCoordinate(11, 7)));
 
+		// shadowing roll
 		TestRolls.on(state).general(6);
 		StepEngine.respond(state,
 			Commands.playerChoice(PlayerChoiceMode.SHADOWING, game.getPlayerById("shadower")));
@@ -57,6 +59,7 @@ public class ShadowingTest {
 		assertNull(game.getDefenderId());
 
 		// the shadower must not be treated as defender anymore, otherwise its foul appearance is rolled for
+		// dodge roll for the next square, the shadower cannot shadow again due to its movement of 1
 		TestRolls.on(state).general(6);
 		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(11, 7), new FieldCoordinate(10, 7)));
 
