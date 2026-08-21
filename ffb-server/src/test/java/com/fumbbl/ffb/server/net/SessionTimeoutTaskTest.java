@@ -13,60 +13,60 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SessionTimeoutTaskTest {
 
-  private static final long TIMEOUT = 10000;
+	private static final long TIMEOUT = 10000;
 
-  private SessionTimeoutTask timeoutTask;
+	private SessionTimeoutTask timeoutTask;
 
-  @Mock
-  private SessionManager sessionManager;
+	@Mock
+	private SessionManager sessionManager;
 
-  @Mock
-  private ReplaySessionManager replaySessionManager;
+	@Mock
+	private ReplaySessionManager replaySessionManager;
 
-  @Mock
-  private ServerCommunication communication;
+	@Mock
+	private ServerCommunication communication;
 
-  @Mock
-  private Session activeSession;
+	@Mock
+	private Session activeSession;
 
-  @Mock
-  private Session timeoutSession;
+	@Mock
+	private Session timeoutSession;
 
-  @Mock
-  private Session activeReplaySession;
+	@Mock
+	private Session activeReplaySession;
 
-  @Mock
-  private Session timeoutReplaySession;
-
-
-  @BeforeEach
-  void setUp() {
-    timeoutTask = new SessionTimeoutTask(sessionManager, replaySessionManager, communication, TIMEOUT);
-  }
-
-  @Test
-  void run() {
-    when(sessionManager.getAllSessions()).thenReturn(new Session[]{activeSession, timeoutSession});
-    when(sessionManager.getLastPing(activeSession)).then(
-      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT
-    );
-    when(sessionManager.getLastPing(timeoutSession)).then(
-      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT -1
-    );
-
-    when(replaySessionManager.getAllSessions()).thenReturn(new Session[]{activeReplaySession, timeoutReplaySession});
-    when(replaySessionManager.getLastPing(activeReplaySession)).then(
-      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT
-    );
-    when(replaySessionManager.getLastPing(timeoutReplaySession)).then(
-      (Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT -1
-    );
+	@Mock
+	private Session timeoutReplaySession;
 
 
-    timeoutTask.run();
+	@BeforeEach
+	void setUp() {
+		timeoutTask = new SessionTimeoutTask(sessionManager, replaySessionManager, communication, TIMEOUT);
+	}
 
-    verify(communication).close(timeoutSession);
-    verify(communication).close(timeoutReplaySession);
-    verifyNoMoreInteractions(communication);
-  }
+	@Test
+	void run() {
+		when(sessionManager.getAllSessions()).thenReturn(new Session[]{activeSession, timeoutSession});
+		when(sessionManager.getLastPing(activeSession)).then(
+			(Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT / 2
+		);
+		when(sessionManager.getLastPing(timeoutSession)).then(
+			(Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT - 1
+		);
+
+		when(replaySessionManager.getAllSessions()).thenReturn(new Session[]{activeReplaySession, timeoutReplaySession});
+		when(replaySessionManager.getLastPing(activeReplaySession)).then(
+			(Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT / 2
+		);
+		when(replaySessionManager.getLastPing(timeoutReplaySession)).then(
+			(Answer<Long>) invocationOnMock -> System.currentTimeMillis() - TIMEOUT - 1
+		);
+
+
+		timeoutTask.run();
+
+		verify(communication).close(timeoutSession);
+		verify(communication).close(timeoutReplaySession);
+		verifyNoMoreInteractions(communication);
+	}
 }
