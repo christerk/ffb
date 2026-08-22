@@ -8,6 +8,7 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.util.ArrayTool;
 
 /**
  * @author Kalimar
@@ -15,6 +16,8 @@ import com.fumbbl.ffb.model.Player;
 public class DialogPlayerChoiceHandler extends DialogHandler {
 
 	private DialogPlayerChoiceParameter fDialogParameter;
+	private DialogPlayerChoice playerChoiceDialog;
+	private String dialogHeader;
 
 	public DialogPlayerChoiceHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -29,7 +32,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 
 			if ((ClientMode.PLAYER == getClient().getMode())
 				&& game.getTeamHome().getId().equals(fDialogParameter.getTeamId())) {
-				String dialogHeader = fDialogParameter.getPlayerChoiceMode().getDialogHeader(fDialogParameter.getMaxSelects());
+				dialogHeader = fDialogParameter.getPlayerChoiceMode().getDialogHeader(fDialogParameter.getMaxSelects());
 				FieldCoordinate dialogCoordinate = null;
 				String[] playerIds = fDialogParameter.getPlayerIds();
 
@@ -50,6 +53,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 
 				setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(),
 					fDialogParameter.getMinSelects(), fDialogParameter.getMaxSelects(), dialogCoordinate, fDialogParameter.getPlayerChoiceMode().isPreselect()));
+				playerChoiceDialog = (DialogPlayerChoice) getDialog();
 				getDialog().showDialog(this);
 
 			} else {
@@ -62,11 +66,26 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 	}
 
 	public void dialogClosed(IDialog pDialog) {
-		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.PLAYER_CHOICE)) {
-			DialogPlayerChoice playerChoiceDialog = (DialogPlayerChoice) pDialog;
-			getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(),
-				playerChoiceDialog.getSelectedPlayers());
+			DialogPlayerChoice choiceDialog = (DialogPlayerChoice) pDialog;
+			Player<?>[] selectedPlayers = choiceDialog.getSelectedPlayers();
+			hideDialog();
+			if (!ArrayTool.isProvided(selectedPlayers)) {
+				setDialog(new DialogConfirmSkipPlayerChoice(getClient(), dialogHeader));
+				getDialog().showDialog(this);
+			} else {
+				getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(), selectedPlayers);
+			}
+		} else if (testDialogHasId(pDialog, DialogId.YES_OR_NO_QUESTION)) {
+			hideDialog();
+			if (((DialogConfirmSkipPlayerChoice) pDialog).isChoiceYes()) {
+				getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(), new Player[0]);
+			} else if (playerChoiceDialog != null) {
+				setDialog(playerChoiceDialog);
+				playerChoiceDialog.showDialog(this);
+			}
+		} else {
+			hideDialog();
 		}
 	}
 
