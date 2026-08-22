@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.skill.mixed;
+package com.fumbbl.ffb.skill.bb2025;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
@@ -19,11 +19,8 @@ import com.fumbbl.ffb.modifiers.StaticInjuryModifier;
  * Dodge roll modifier), but must subtract 1 from the roll when they pass. In
  * addition, this player treats a roll of 7 and 9 on the Injurytable after any
  * modifiers have been applied as a KO'd and Badly Hurt result respectively
- * rather than the normal results. Stunties that are armed with a Secret Weapon
- * are not allowed to ignore enemy tackle zones, but still suffer the other
- * penalties.
+ * rather than the normal results.
  */
-@RulesCollection(Rules.BB2020)
 @RulesCollection(Rules.BB2025)
 public class Stunty extends Skill {
 
@@ -47,7 +44,6 @@ public class Stunty extends Skill {
 		registerProperty(new CancelSkillProperty(NamedProperties.allowsRaisingLineman));
 		registerProperty(NamedProperties.ignoreTacklezonesWhenDodging);
 		registerProperty(NamedProperties.isHurtMoreEasily);
-		registerProperty(NamedProperties.passesAreInterceptedEasier);
 	}
 
 }

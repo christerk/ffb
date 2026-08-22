@@ -20,6 +20,7 @@ public class ChangeList {
 			.addImprovement("Active players can now show which action is being performed")
 			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 			.addBugfix("Foul Appearance: Was rolled on the next move after being successfully shadowed by a player with Foul Appearance")
+			.addBugfix("Stunty: Still applied a -1 modifier to interceptions for passes from stunty players")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
