@@ -79,7 +79,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 		} else if (testDialogHasId(pDialog, DialogId.YES_OR_NO_QUESTION)) {
 			hideDialog();
 			if (((DialogConfirmSkipPlayerChoice) pDialog).isChoiceYes()) {
-				getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(), new Player[0]);
+				getClient().getCommunication().sendPlayerChoice(fDialogParameter.getPlayerChoiceMode(), new Player<?>[0]);
 			} else if (playerChoiceDialog != null) {
 				setDialog(playerChoiceDialog);
 				playerChoiceDialog.showDialog(this);
