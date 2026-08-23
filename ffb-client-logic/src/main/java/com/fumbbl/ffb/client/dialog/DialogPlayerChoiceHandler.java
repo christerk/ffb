@@ -8,7 +8,6 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.util.ArrayTool;
 
 /**
  * @author Kalimar
@@ -70,7 +69,7 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 			DialogPlayerChoice choiceDialog = (DialogPlayerChoice) pDialog;
 			Player<?>[] selectedPlayers = choiceDialog.getSelectedPlayers();
 			hideDialog();
-			if (!ArrayTool.isProvided(selectedPlayers)) {
+			if (choiceDialog.isSkipped()) {
 				setDialog(new DialogConfirmSkipPlayerChoice(getClient(), dialogHeader));
 				getDialog().showDialog(this);
 			} else {

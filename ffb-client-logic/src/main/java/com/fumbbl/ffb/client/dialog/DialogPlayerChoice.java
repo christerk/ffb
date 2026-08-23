@@ -25,6 +25,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 	private final JButton fButtonCancel;
 	private final JLabel countLabel;
 	private Player<?>[] fSelectedPlayers;
+	private boolean skipped;
 	private final int fMinSelects;
 	private final int maxSelects;
 
@@ -179,10 +180,12 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if (pActionEvent.getSource() == fButtonCancel) {
+			skipped = true;
 			fSelectedPlayers = new Player[0];
 			closeDialog();
 		}
 		if (pActionEvent.getSource() == fButtonSelect) {
+			skipped = false;
 			fSelectedPlayers = fList.getSelectedPlayers();
 			if (fSelectedPlayers.length >= fMinSelects) {
 				closeDialog();
@@ -198,6 +201,10 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	public Player<?>[] getSelectedPlayers() {
 		return fSelectedPlayers;
+	}
+
+	public boolean isSkipped() {
+		return skipped;
 	}
 
 	public List<Integer> getSelectedIndexes() {
