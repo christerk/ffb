@@ -52,7 +52,11 @@ public class DialogKeyGuard implements KeyEventDispatcher {
 			return pressedKeyCodes.remove(keyEvent.getKeyCode());
 		}
 
-		// typed events carry no key code, they are only valid while one of the observed keys is still pressed
+		// Remaining events are KEY_TYPED. Those report VK_UNDEFINED as key code, so they cannot be matched
+		// against the observed presses individually. A KEY_TYPED is always sandwiched between the press and
+		// the release of the key that produced it, so it may only pass while at least one press seen by this
+		// dialog is still unreleased. Otherwise it stems from a key that was already pressed before the guard
+		// was armed and must be dropped like its press and release.
 		return !pressedKeyCodes.isEmpty();
 	}
 
