@@ -17,6 +17,7 @@ public class ChangeList {
 			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
 			.addImprovement("Player choice dialogs now grow with the number of listed players (up to 90% of the client height) instead of always showing at most 5 rows")
 			.addBugfix("Tentacles: Being held did not end the player action, allowing the held player to still pass, hand off, foul or block")
+			.addImprovement("Dialogs no longer react to key presses that were made before they popped up, e.g. while typing in the chat. The delay can be configured under Client Settings > Dialog Key Delay")
 			.addImprovement("Active players can now show which action is being performed")
 			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 			.addBugfix("Foul Appearance: Was rolled on the next move after being successfully shadowed by a player with Foul Appearance")
