@@ -2,12 +2,16 @@ package com.fumbbl.ffb.test;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.Pushback;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
+import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 
 public class Commands {
@@ -33,5 +37,14 @@ public class Commands {
 
 	public static ClientCommandPass pass(String playerId, FieldCoordinate target) {
 		return new ClientCommandPass(playerId, target);
+	}
+
+	public static ClientCommandMove move(String playerId, FieldCoordinate coordinateFrom,
+		FieldCoordinate... coordinatesTo) {
+		return new ClientCommandMove(playerId, coordinateFrom, coordinatesTo, null);
+	}
+
+	public static ClientCommandPlayerChoice playerChoice(PlayerChoiceMode mode, Player<?>... players) {
+		return new ClientCommandPlayerChoice(mode, players);
 	}
 }

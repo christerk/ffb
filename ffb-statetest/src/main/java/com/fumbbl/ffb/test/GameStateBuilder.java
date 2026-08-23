@@ -63,6 +63,7 @@ public class GameStateBuilder {
 
 		TeamDef(boolean home) {
 			this.team = new Team(gameState.getServer());
+			team.setId(home ? "homeTeam" : "awayTeam");
 			team.setName(home ? "Home Team" : "Away Team");
 			if (home) {
 				game.setTeamHome(team);
