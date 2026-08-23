@@ -69,7 +69,7 @@ public final class StepSetup extends AbstractStep {
 					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						fEndSetup = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;

@@ -51,6 +51,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.IStepLabel;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -191,7 +192,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
 						fEndKickoff = true;
 						if (TurnMode.QUICK_SNAP == getGameState().getGame().getTurnMode()) {
 							endQuickSnap(getGameState().getGame());

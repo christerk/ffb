@@ -22,6 +22,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
 import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -103,7 +104,7 @@ public final class StepSetup extends AbstractStep {
 					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						fEndSetup = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;

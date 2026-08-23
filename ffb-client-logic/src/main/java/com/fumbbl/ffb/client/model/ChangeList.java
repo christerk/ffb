@@ -21,6 +21,7 @@ public class ChangeList {
 			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 			.addBugfix("Foul Appearance: Was rolled on the next move after being successfully shadowed by a player with Foul Appearance")
 			.addBugfix("Stunty: Still applied a -1 modifier to interceptions for passes from stunty players")
+			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")

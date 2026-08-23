@@ -59,6 +59,10 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_KICKOFF = "Kick Off";
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
+	private static final long _END_TURN_PENDING_TIMEOUT_MILLIS = 5000;
+
+	private static final long _END_TURN_DEBOUNCE_MILLIS = 500;
+
 	private Font buttonFont;
 
 	private Font diceFont;
@@ -88,7 +92,9 @@ public class TurnDiceStatusComponent extends JPanel
 	private final List<BlockRoll> blockRolls = new ArrayList<>();
 
 	private boolean fRefreshNecessary;
-	private boolean buttonEnabled = true;
+	private boolean endTurnPending;
+	private long endTurnPendingSince;
+	private long lastEndTurnClick;
 
 	private Dimension size;
 
@@ -165,7 +171,6 @@ public class TurnDiceStatusComponent extends JPanel
 			case HIGH_KICK:
 				drawButton(_LABEL_END_SETUP);
 				fEndTurnButtonShown = true;
-				buttonEnabled = true;
 				break;
 			case KICKOFF_RETURN:
 			case SWARMING:
@@ -173,17 +178,14 @@ public class TurnDiceStatusComponent extends JPanel
 			case ILLEGAL_SUBSTITUTION:
 				drawButton(_LABEL_CONTINUE);
 				fEndTurnButtonShown = true;
-				buttonEnabled = true;
 				break;
 			case KICKOFF:
 				drawButton(_LABEL_KICKOFF);
 				fEndTurnButtonShown = true;
-				buttonEnabled = true;
 				break;
 			default:
 				drawButton(_LABEL_END_TURN);
 				fEndTurnButtonShown = true;
-				buttonEnabled = true;
 				break;
 			}
 		}
@@ -194,7 +196,6 @@ public class TurnDiceStatusComponent extends JPanel
 		if ((fFinished == null) && (fTurnMode != null) && !fHomePlaying && fTimeoutPossible && !fTimeoutEnforced) {
 			drawButton(_LABEL_TIMEOUT);
 			fTimeoutButtonShown = true;
-			buttonEnabled = true;
 		}
 	}
 
@@ -207,7 +208,7 @@ public class TurnDiceStatusComponent extends JPanel
 					fButtonSelected ? IIconProperty.SIDEBAR_TURN_BUTTON_SELECTED : IIconProperty.SIDEBAR_TURN_BUTTON, dimensionProvider);
 			g2d.drawImage(buttonImage, buttonArea.x, buttonArea.y, buttonArea.width, buttonArea.height, null);
 			g2d.setFont(buttonFont);
-			g2d.setColor(Color.BLACK);
+			g2d.setColor(isEndTurnPending() ? Color.GRAY : Color.BLACK);
 			FontMetrics metrics = g2d.getFontMetrics();
 			Rectangle2D bounds = metrics.getStringBounds(pButtonText, g2d);
 			int x = ((size.width - (int) bounds.getWidth()) / 2);
@@ -360,6 +361,10 @@ public class TurnDiceStatusComponent extends JPanel
 					|| !DateTool.isEqual(fFinished, game.getFinished()));
 		}
 		if (fRefreshNecessary) {
+			if ((fTurnMode != game.getTurnMode()) || (fHomePlaying != game.isHomePlaying())) {
+				// the server acknowledged the end turn command, so a new one may be sent
+				clearEndTurnPending();
+			}
 			fButtonSelected = false;
 			fTurnMode = game.getTurnMode();
 			fHomePlaying = game.isHomePlaying();
@@ -423,10 +428,11 @@ public class TurnDiceStatusComponent extends JPanel
 		GameMechanic mechanic = (GameMechanic) factory.forName(Mechanic.Type.GAME.name());
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
-			&& buttonArea.contains(pMouseEvent.getPoint()) && buttonEnabled) {
+			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
-				buttonEnabled = false;
+				markEndTurnPending();
 				fButtonSelected = false;
+				refreshButton();
 				if (fHomePlaying) {
 					if (fTurnMode != null && fTurnMode.isCheckForActivePlayers()
 						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
@@ -487,13 +493,43 @@ public class TurnDiceStatusComponent extends JPanel
 			if (dialogEndTurn.getChoice() == DialogEndTurn.YES) {
 				client.getClientState().endTurn();
 			} else {
-				buttonEnabled = true;
+				clearEndTurnPending();
 			}
 		}
 	}
 
 	public void enableButton() {
-		buttonEnabled = true;
+		clearEndTurnPending();
+		refreshButton();
+	}
+
+	private void refreshButton() {
+		fRefreshNecessary = true;
+		refresh();
 		repaint(buttonArea);
+	}
+
+	private void markEndTurnPending() {
+		endTurnPending = true;
+		endTurnPendingSince = System.currentTimeMillis();
+		lastEndTurnClick = endTurnPendingSince;
+	}
+
+	private boolean isWithinDebounceWindow() {
+		// swallows double clicks even if the previous command was acknowledged in between
+		return (lastEndTurnClick > 0) && (System.currentTimeMillis() - lastEndTurnClick < _END_TURN_DEBOUNCE_MILLIS);
+	}
+
+	private void clearEndTurnPending() {
+		endTurnPending = false;
+		endTurnPendingSince = 0;
+	}
+
+	private boolean isEndTurnPending() {
+		if (endTurnPending && (System.currentTimeMillis() - endTurnPendingSince > _END_TURN_PENDING_TIMEOUT_MILLIS)) {
+			// safety net, so a command that never gets acknowledged does not block the button forever
+			clearEndTurnPending();
+		}
+		return endTurnPending;
 	}
 }
