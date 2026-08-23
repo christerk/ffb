@@ -50,10 +50,10 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 					dialogCoordinate = new FieldCoordinate(maxX, maxY);
 				}
 
-				setDialog(new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(),
-					fDialogParameter.getMinSelects(), fDialogParameter.getMaxSelects(), dialogCoordinate, fDialogParameter.getPlayerChoiceMode().isPreselect()));
-				playerChoiceDialog = (DialogPlayerChoice) getDialog();
-				getDialog().showDialog(this);
+				playerChoiceDialog = new DialogPlayerChoice(getClient(), dialogHeader, playerIds, fDialogParameter.getDescriptions(),
+					fDialogParameter.getMinSelects(), fDialogParameter.getMaxSelects(), dialogCoordinate, fDialogParameter.getPlayerChoiceMode().isPreselect());
+				setDialog(playerChoiceDialog);
+				playerChoiceDialog.showDialog(this);
 
 			} else {
 				showStatus(fDialogParameter.getPlayerChoiceMode().getStatusTitle(),
@@ -83,8 +83,6 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 				setDialog(playerChoiceDialog);
 				playerChoiceDialog.showDialog(this);
 			}
-		} else {
-			hideDialog();
 		}
 	}
 
