@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Movement arrays could skip required dodge rolls, and legacy jump arrays could process intermediate squares as jumps")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 			.addBugfix(

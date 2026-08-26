@@ -337,7 +337,8 @@ public class StepInitMoving extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, coordinateFrom));
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
 					MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinateTo);
-					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
+					actingPlayer.setDodging(UtilServerPlayerMove.deriveDodgeRequired(getGameState(), coordinateTo,
+						moveSquare));
 					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
 					commitTargetSelection();

@@ -152,6 +152,57 @@ public class UtilServerPlayerMove {
 			pHomeCommand ? DebugLog.COMMAND_CLIENT_HOME : DebugLog.COMMAND_CLIENT_AWAY, pMessage);
 	}
 
+	/**
+	 * Returns whether the acting player must dodge when leaving its current square.
+	 * This is the authoritative rule used both when publishing move offers and when
+	 * consuming each coordinate of a retained movement stack.
+	 */
+	public static boolean isDodgeRequired(Game pGame, ActingPlayer pActingPlayer) {
+		return (pGame != null) && (pActingPlayer != null) && (pActingPlayer.getPlayer() != null)
+			&& !pActingPlayer.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)
+			&& (UtilPlayer.findTacklezones(pGame, pActingPlayer.getPlayer()) > 0);
+	}
+
+	/**
+	 * Derives the dodge flag from the live departure square and records any
+	 * disagreement with the client-facing offer metadata. A jump owns its own
+	 * escape roll and therefore never also dodges.
+	 */
+	public static boolean deriveDodgeRequired(GameState pGameState, FieldCoordinate pCoordinateTo,
+		MoveSquare pOfferedMove) {
+		if ((pGameState == null) || (pGameState.getGame() == null)) {
+			return false;
+		}
+		Game game = pGameState.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		boolean jumping = (actingPlayer != null) && actingPlayer.isJumping();
+		boolean derived = (actingPlayer != null) && !jumping
+			&& isDodgeRequired(game, actingPlayer);
+		Boolean offered = (pOfferedMove == null) ? null : pOfferedMove.isDodging();
+		// Jump offers store their jump target in MoveSquare.minimumRollDodge, so
+		// MoveSquare.isDodging() is intentionally not a dodge signal on this path.
+		if (!jumping && ((derived && (offered == null)) || ((offered != null) && (offered != derived)))) {
+			logDodgeDerivationDivergence(pGameState, actingPlayer, pCoordinateTo, offered, derived);
+		}
+		return derived;
+	}
+
+	private static void logDodgeDerivationDivergence(GameState pGameState, ActingPlayer pActingPlayer,
+		FieldCoordinate pCoordinateTo, Boolean pOffered, boolean pDerived) {
+		if ((pGameState.getServer() == null) || (pGameState.getServer().getDebugLog() == null)) {
+			return;
+		}
+		String commandKind = (pActingPlayer == null) || (pActingPlayer.getPlayerAction() == null)
+			? "UNKNOWN" : pActingPlayer.getPlayerAction().name();
+		String playerId = (pActingPlayer == null) ? null : pActingPlayer.getPlayerId();
+		pGameState.getServer().getDebugLog().log(IServerLogLevel.WARN, pGameState.getGame().getId(),
+			"!Dodge derivation divergence command=" + commandKind
+				+ " player=" + playerId
+				+ " square=" + pCoordinateTo
+				+ " offered=" + pOffered
+				+ " derived=" + pDerived);
+	}
+
 	public static final class MoveStackValidation {
 		private final boolean accepted;
 		private final FieldCoordinate coordinateFrom;
@@ -268,8 +319,7 @@ public class UtilServerPlayerMove {
 
 		boolean goForIt;
 		int minimumRollDodge = 0;
-		boolean dodging = !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)
-				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
+		boolean dodging = isDodgeRequired(game, actingPlayer);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (jumping) {
 			JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
