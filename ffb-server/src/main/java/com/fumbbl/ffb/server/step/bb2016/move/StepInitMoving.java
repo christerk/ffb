@@ -139,22 +139,30 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_BLITZ_MOVE:
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)
-							&& !ArrayTool.isProvided(fMoveStack)) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation blitzMoveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), blitzMoveCommand,
+								homePlayerBlitz, fMoveStack);
+						if (!blitzMoveValidation.isAccepted()) {
+							break;
+						}
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz)));
+								blitzMoveValidation.getMoveStack()));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_MOVE:
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
-							&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)
-							&& !ArrayTool.isProvided(fMoveStack)) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation moveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), moveCommand,
+								homePlayer, fMoveStack);
+						if (!moveValidation.isAccepted()) {
+							break;
+						}
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
+								moveValidation.getMoveStack()));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
