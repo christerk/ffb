@@ -46,6 +46,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fButtonCancel.setToolTipText("Do not select any player");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'i');
+		countLabel = new JLabel(dimensionProvider());
 
 		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect,
 			this::updateCount);
@@ -84,7 +85,6 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		listPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		JPanel textPanel = new JPanel();
-		countLabel = new JLabel(dimensionProvider());
 		countLabel.setAlignmentX(CENTER_ALIGNMENT);
 		textPanel.add(countLabel);
 		textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));

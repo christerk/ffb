@@ -68,7 +68,7 @@ public class PlayerCheckList extends JList<PlayerCheckListItem> {
 
 		// Add a mouse listener to handle changing selection
 		addMouseListener(new PlayerCheckListMouseAdapter(minSelects, maxSelects, selectButton));
-
+		callback.accept(findNrOfSelectedItems());
 	}
 
 	private static class PlayerCheckListRenderer extends JPanel implements ListCellRenderer<PlayerCheckListItem> {
