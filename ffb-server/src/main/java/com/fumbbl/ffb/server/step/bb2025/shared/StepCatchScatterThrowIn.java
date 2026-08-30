@@ -114,7 +114,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private boolean fBombMode, evaluate;
 	private DivingCatchPhase phase = DivingCatchPhase.ASK_ACTIVE;
 	private List<String> divingCatchers;
-	private String divingCatchControlTeam;
 	private int roll;
 	private Boolean usingModifyingSkill;
 	private ReportList reports = new ReportList();
@@ -812,7 +811,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.THROW_IN_COORDINATE.addTo(jsonObject, fThrowInCoordinate);
 		IServerJsonOption.BOMB_MODE.addTo(jsonObject, fBombMode);
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
-		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
 		if (divingCatchers != null) {
 			IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
 		}
@@ -838,7 +836,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(source, jsonObject);
 		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(source, jsonObject);
 		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
-		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
 
 		if (IServerJsonOption.PLAYER_IDS.isDefinedIn(jsonObject)) {
 			divingCatchers = new ArrayList<>();
