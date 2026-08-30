@@ -501,7 +501,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private List<String> divingCatchers(FieldModel fieldModel, FieldCoordinate coordinate) {
 		return Arrays.stream(fieldModel.findAdjacentCoordinates(coordinate, fScatterBounds, 1, false))
 			.map(fieldModel::getPlayer).filter(Objects::nonNull)
-			.filter(player -> player.hasSkillProperty(NamedProperties.canAttemptCatchInAdjacentSquares)).map(Player::getId)
+			.filter(player -> player.hasUsableSkillProperty(NamedProperties.canAttemptCatchInAdjacentSquares,
+				fieldModel.getPlayerState(player))).map(Player::getId)
 			.collect(Collectors.toList());
 	}
 
