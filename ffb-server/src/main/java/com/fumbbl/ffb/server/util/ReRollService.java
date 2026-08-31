@@ -25,14 +25,22 @@ public class ReRollService {
 		GameState gameState = request.getGameState();
 		ActingPlayer actingPlayer = request.getActingPlayer();
 		Player<?> player = request.getPlayer();
-		if (player == null && actingPlayer != null) {
+
+		if (actingPlayer == null) {
+			actingPlayer = gameState.getGame().getActingPlayer();
+		}
+
+		if (player == null) {
 			player = actingPlayer.getPlayer();
 		}
 
 		Skill reRollSkill = request.getReRollSkill();
 		if (reRollSkill == null) {
-			ActingPlayer skillSource = actingPlayer != null ? actingPlayer : gameState.getGame().getActingPlayer();
-			reRollSkill = findReRollSkill(gameState, skillSource, request.getReRolledAction(), request.getIgnoreSkills());
+			if (player == actingPlayer.getPlayer()) {
+				reRollSkill = findReRollSkill(gameState, actingPlayer, request.getReRolledAction(), request.getIgnoreSkills());
+			} else {
+				reRollSkill = findReRollSkill(gameState, player, request.getReRolledAction());
+			}
 		}
 
 		return rollMechanic(gameState.getGame()).askForReRollIfAvailable(gameState, player, request.getReRolledAction(),
@@ -44,6 +52,12 @@ public class ReRollService {
 	                              Set<Skill> ignoreSkills) {
 		Game game = gameState.getGame();
 		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction, ignoreSkills);
+		return reRollSource != null ? reRollSource.getSkill(game) : null;
+	}
+
+	private Skill findReRollSkill(GameState gameState, Player<?> player, ReRolledAction reRolledAction) {
+		Game game = gameState.getGame();
+		ReRollSource reRollSource = UtilCards.getRerollSource(player, reRolledAction);
 		return reRollSource != null ? reRollSource.getSkill(game) : null;
 	}
 
