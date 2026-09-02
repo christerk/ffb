@@ -30,20 +30,20 @@ public class UtilServerReRoll {
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer,
-	                                              ReRolledAction reRolledAction, int minimumRoll, boolean fumble) {
+																								ReRolledAction reRolledAction, int minimumRoll, boolean fumble) {
 		return askForReRollIfAvailable(gameState, actingPlayer, reRolledAction, minimumRoll, fumble, null);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer,
-	                                              ReRolledAction reRolledAction, int minimumRoll, boolean fumble,
-	                                              Skill modifyingSkill) {
+																								ReRolledAction reRolledAction, int minimumRoll, boolean fumble,
+																								Skill modifyingSkill) {
 		return askForReRollIfAvailable(gameState, actingPlayer, reRolledAction, minimumRoll, fumble, modifyingSkill,
 			Collections.emptySet());
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, ActingPlayer actingPlayer,
-	                                              ReRolledAction reRolledAction, int minimumRoll, boolean fumble,
-	                                              Skill modifyingSkill, Set<Skill> ignoreSkills) {
+																								ReRolledAction reRolledAction, int minimumRoll, boolean fumble,
+																								Skill modifyingSkill, Set<Skill> ignoreSkills) {
 
 		Skill reRollSkill = getReRollSkill(gameState, actingPlayer, reRolledAction, ignoreSkills);
 		Player<?> player = actingPlayer.getPlayer();
@@ -54,34 +54,33 @@ public class UtilServerReRoll {
 
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, Skill modificationSkill) {
+																								int minimumRoll, boolean fumble, Skill modificationSkill) {
 
-		Skill reRollSkill = getReRollSkill(gameState, gameState.getGame().getActingPlayer(), reRolledAction,
-			Collections.emptySet());
+		Skill reRollSkill = getReRollSkill(gameState, player, reRolledAction);
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill,
 			reRollSkill);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
-	                                              Skill reRollSkill) {
+																								int minimumRoll, boolean fumble, Skill modificationSkill,
+																								Skill reRollSkill) {
 
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill,
 			reRollSkill, null, null);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
-	                                              Skill reRollSkill, CommonProperty menuProperty,
-	                                              String defaultValueKey) {
+																								int minimumRoll, boolean fumble, Skill modificationSkill,
+																								Skill reRollSkill, CommonProperty menuProperty,
+																								String defaultValueKey) {
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, modificationSkill,
 			reRollSkill, menuProperty, defaultValueKey, null);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, Skill modificationSkill,
-	                                              Skill reRollSkill, CommonProperty menuProperty,
-	                                              String defaultValueKey, List<String> messages) {
+																								int minimumRoll, boolean fumble, Skill modificationSkill,
+																								Skill reRollSkill, CommonProperty menuProperty,
+																								String defaultValueKey, List<String> messages) {
 		return gameState.getReRollService().askForReRollIfAvailable(
 			ReRollRequest.forPlayer(gameState, player, reRolledAction, minimumRoll)
 				.fumble(fumble)
@@ -93,21 +92,32 @@ public class UtilServerReRoll {
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble) {
+																								int minimumRoll, boolean fumble) {
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, null, null);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, List<String> messages) {
+																								int minimumRoll, List<String> messages) {
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, false, messages);
 	}
 
 	public static boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-	                                              int minimumRoll, boolean fumble, List<String> messages) {
-		Skill reRollSkill = getReRollSkill(gameState, gameState.getGame().getActingPlayer(), reRolledAction,
-			Collections.emptySet());
+																								int minimumRoll, boolean fumble, List<String> messages) {
+		Skill reRollSkill = getRollSkill(gameState, player, reRolledAction);
+
 		return askForReRollIfAvailable(gameState, player, reRolledAction, minimumRoll, fumble, null, reRollSkill,
 			null, null, messages);
+	}
+
+	private static Skill getRollSkill(GameState gameState, Player<?> player, ReRolledAction reRolledAction) {
+		Skill reRollSkill;
+		if (player == gameState.getGame().getActingPlayer().getPlayer()) {
+			reRollSkill = getReRollSkill(gameState, gameState.getGame().getActingPlayer(), reRolledAction,
+				Collections.emptySet());
+		} else {
+			reRollSkill = getReRollSkill(gameState, player, reRolledAction);
+		}
+		return reRollSkill;
 	}
 
 	public static boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
@@ -134,10 +144,15 @@ public class UtilServerReRoll {
 	}
 
 	private static Skill getReRollSkill(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,
-	                                    Set<Skill> ignoreSkills) {
+																			Set<Skill> ignoreSkills) {
 		Game game = gameState.getGame();
 		ReRollSource reRollSource = UtilCards.getUnusedRerollSource(actingPlayer, reRolledAction, ignoreSkills);
 		return reRollSource != null ? reRollSource.getSkill(game) : null;
 	}
 
+	private static Skill getReRollSkill(GameState gameState, Player<?> player, ReRolledAction reRolledAction) {
+		Game game = gameState.getGame();
+		ReRollSource reRollSource = UtilCards.getRerollSource(player, reRolledAction);
+		return reRollSource != null ? reRollSource.getSkill(game) : null;
+	}
 }
