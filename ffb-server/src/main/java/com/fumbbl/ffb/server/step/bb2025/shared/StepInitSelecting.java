@@ -211,9 +211,11 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand)));
+						FieldCoordinate moveStart = UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, moveStart));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
+							UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), moveStart,
+								UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand), actingPlayer.isJumping())));
 						publishParameter(new StepParameter(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, moveCommand.getBallAndChainRrSetting()));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -223,9 +225,11 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homeCommand)));
+						FieldCoordinate blitzMoveStart = UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homeCommand);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, blitzMoveStart));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand)));
+							UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), blitzMoveStart,
+								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand), actingPlayer.isJumping())));
 						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
