@@ -146,26 +146,34 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_BLITZ_MOVE:
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
-						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
-						if (!ArrayTool.isProvided(fMoveStack)) {
-							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz)));
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation blitzMoveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), blitzMoveCommand,
+								homePlayerBlitz, fMoveStack);
+						if (!blitzMoveValidation.isAccepted()) {
+							break;
 						}
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
+							blitzMoveValidation.getCoordinateFrom()));
+						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+							blitzMoveValidation.getMoveStack()));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_MOVE:
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
-						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
-						if (!ArrayTool.isProvided(fMoveStack)) {
-							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation moveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), moveCommand,
+								homePlayer, fMoveStack);
+						if (!moveValidation.isAccepted()) {
+							break;
 						}
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
+							moveValidation.getCoordinateFrom()));
+						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
+							moveValidation.getMoveStack()));
 						ballAndChainRrSetting = moveCommand.getBallAndChainRrSetting();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -329,7 +337,8 @@ public class StepInitMoving extends AbstractStep {
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_FROM, coordinateFrom));
 					publishParameter(new StepParameter(StepParameterKey.COORDINATE_TO, coordinateTo));
 					MoveSquare moveSquare = game.getFieldModel().getMoveSquare(coordinateTo);
-					actingPlayer.setDodging((moveSquare != null) && moveSquare.isDodging() && !actingPlayer.isJumping());
+					actingPlayer.setDodging(UtilServerPlayerMove.deriveDodgeRequired(getGameState(), coordinateTo,
+						moveSquare));
 					actingPlayer.setGoingForIt((moveSquare != null) && moveSquare.isGoingForIt());
 					actingPlayer.setHasMoved(true);
 					commitTargetSelection();

@@ -121,20 +121,28 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_MOVE:
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
-						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation moveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), moveCommand, homeCommand);
+						if (!moveValidation.isAccepted()) {
+							break;
+						}
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
+							moveValidation.getMoveStack()));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
 				case CLIENT_BLITZ_MOVE:
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
-						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)) {
+						UtilServerPlayerMove.MoveStackValidation blitzMoveValidation =
+							UtilServerPlayerMove.validateAndFetchMoveStack(getGameState(), blitzMoveCommand, homeCommand);
+						if (!blitzMoveValidation.isAccepted()) {
+							break;
+						}
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand)));
+							blitzMoveValidation.getMoveStack()));
 						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
