@@ -533,6 +533,9 @@ public class TurnDiceStatusComponent extends JPanel
 	}
 
 	private boolean isEndTurnPending() {
+		if (isEndTurnDialogVisible()) {
+			return true;
+		}
 		if (endTurnPending && (System.currentTimeMillis() - endTurnPendingSince > _END_TURN_PENDING_TIMEOUT_MILLIS)) {
 			// safety net, so a command that never gets acknowledged does not block the button forever
 			clearEndTurnPending();
