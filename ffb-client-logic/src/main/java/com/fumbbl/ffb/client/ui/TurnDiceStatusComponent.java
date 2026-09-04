@@ -95,6 +95,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private boolean endTurnPending;
 	private long endTurnPendingSince;
 	private long lastEndTurnClick;
+	private DialogEndTurn endTurnDialog;
 
 	private Dimension size;
 
@@ -429,7 +430,7 @@ public class TurnDiceStatusComponent extends JPanel
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
 			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()
-			&& !isEndTurnDialogVisible(userInterface)) {
+			&& !isEndTurnDialogVisible()) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
 				markEndTurnPending();
 				fButtonSelected = false;
@@ -437,7 +438,7 @@ public class TurnDiceStatusComponent extends JPanel
 				if (fHomePlaying) {
 					if (fTurnMode != null && fTurnMode.isCheckForActivePlayers()
 						&& UtilPlayer.testPlayersAbleToAct(game, game.getTeamHome())) {
-						DialogEndTurn endTurnDialog = new DialogEndTurn(getSideBar().getClient(), mechanic.playersForGoActivations(
+						endTurnDialog = new DialogEndTurn(getSideBar().getClient(), mechanic.playersForGoActivations(
 							game));
 						endTurnDialog.showDialog(this);
 					} else {
@@ -489,6 +490,7 @@ public class TurnDiceStatusComponent extends JPanel
 	public void dialogClosed(IDialog pDialog) {
 		pDialog.hideDialog();
 		if (DialogId.END_TURN == pDialog.getId()) {
+			endTurnDialog = null;
 			DialogEndTurn dialogEndTurn = (DialogEndTurn) pDialog;
 			FantasyFootballClient client = getSideBar().getClient();
 			if (dialogEndTurn.getChoice() == DialogEndTurn.YES) {
@@ -526,12 +528,8 @@ public class TurnDiceStatusComponent extends JPanel
 		endTurnPendingSince = 0;
 	}
 
-	private boolean isEndTurnDialogVisible(UserInterface userInterface) {
-		return !userInterface.getDialogManager().isDialogHidden()
-			&& (userInterface.getDialogManager().getDialogHandler() != null)
-			&& (userInterface.getDialogManager().getDialogHandler().getDialog() != null)
-			&& userInterface.getDialogManager().getDialogHandler().getDialog().isVisible()
-			&& (DialogId.END_TURN == userInterface.getDialogManager().getDialogHandler().getDialog().getId());
+	private boolean isEndTurnDialogVisible() {
+		return (endTurnDialog != null) && endTurnDialog.isVisible();
 	}
 
 	private boolean isEndTurnPending() {
