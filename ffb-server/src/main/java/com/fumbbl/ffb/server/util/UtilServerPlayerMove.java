@@ -16,6 +16,7 @@ import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
@@ -33,6 +34,7 @@ import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPassing;
 import com.fumbbl.ffb.util.UtilPlayer;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -205,6 +207,79 @@ public class UtilServerPlayerMove {
 			}
 		}
 		return moveStack;
+	}
+
+	/**
+	 * Trims a client-supplied move path down to the leading squares that are
+	 * guaranteed to require no roll (dodge, rush/going-for-it or jump).
+	 * <p>
+	 * The client is trusted to only ever request a multi-square move when the
+	 * whole path is free of rolls, but a modified or malicious client could send
+	 * a path that skips over squares that would actually require a dodge, GFI or
+	 * jump roll. Since the server only ever recomputes the reachable squares
+	 * (MoveSquare cache) for the player's actual position - which matches only
+	 * the first element of the path - every following element has to be
+	 * re-validated here against the field state as it would be after the
+	 * preceding steps of the path were taken.
+	 * <p>
+	 * The first element of the path is never trimmed, since it is validated
+	 * against the actual, up-to-date MoveSquare cache elsewhere and may
+	 * legitimately require a roll, which is then handled by the normal move
+	 * sequence. Every following element that would require a roll is dropped,
+	 * together with all elements after it, so that the sequence stops there and
+	 * waits for a new command from the client.
+	 */
+	public static FieldCoordinate[] trimUnsafeMoveStack(GameState pGameState, FieldCoordinate pCoordinateFrom,
+	                                                     FieldCoordinate[] pMoveStack, boolean pJumping) {
+		if (!ArrayTool.isProvided(pMoveStack) || (pCoordinateFrom == null)) {
+			return pMoveStack;
+		}
+		Game game = pGameState.getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (actingPlayer.getPlayer() == null) {
+			return pMoveStack;
+		}
+		FieldCoordinate previousCoordinate = pCoordinateFrom;
+		int simulatedCurrentMove = actingPlayer.getCurrentMove();
+		for (int i = 0; i < pMoveStack.length; i++) {
+			FieldCoordinate coordinate = pMoveStack[i];
+			boolean stepIsJump = pJumping && (i == 0);
+			if ((i > 0) && stepRequiresRoll(game, actingPlayer, previousCoordinate, coordinate, simulatedCurrentMove, stepIsJump)) {
+				return Arrays.copyOf(pMoveStack, i);
+			}
+			simulatedCurrentMove += stepIsJump ? 2 : 1;
+			previousCoordinate = coordinate;
+		}
+		return pMoveStack;
+	}
+
+	private static boolean stepRequiresRoll(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
+	                                         int simulatedCurrentMove, boolean jumping) {
+		if (jumping) {
+			// jumping always requires a jump roll
+			return true;
+		}
+		if (from.distanceInSteps(to) != 1) {
+			// anything that is not a simple adjacent step (e.g. an unflagged jump)
+			// must be confirmed by the client one square at a time
+			return true;
+		}
+		Player<?> player = actingPlayer.getPlayer();
+		boolean dodging = !player.hasSkillProperty(NamedProperties.ignoreTacklezonesWhenMoving)
+				&& (UtilPlayer.findTacklezones(game, player, from) > 0);
+		return dodging || simulatedGoForIt(game, actingPlayer, simulatedCurrentMove);
+	}
+
+	private static boolean simulatedGoForIt(Game game, ActingPlayer actingPlayer, int simulatedCurrentMove) {
+		Player<?> player = actingPlayer.getPlayer();
+		if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			return false;
+		}
+		if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
+				&& !player.hasSkillProperty(NamedProperties.canStandUpForFree)) {
+			return (3 >= player.getMovementWithModifiers());
+		}
+		return simulatedCurrentMove >= player.getMovementWithModifiers();
 	}
 
 	public static FieldCoordinate fetchFromSquare(ClientCommandMove moveCommand,
