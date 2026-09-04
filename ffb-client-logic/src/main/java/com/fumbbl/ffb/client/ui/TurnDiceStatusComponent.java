@@ -59,7 +59,7 @@ public class TurnDiceStatusComponent extends JPanel
 	private static final String _LABEL_KICKOFF = "Kick Off";
 	private static final String _LABEL_TIMEOUT = "Timeout";
 
-	private static final long _END_TURN_PENDING_TIMEOUT_MILLIS = 5000;
+	private static final long _END_TURN_PENDING_TIMEOUT_MILLIS = 1000;
 
 	private static final long _END_TURN_DEBOUNCE_MILLIS = 500;
 
