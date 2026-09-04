@@ -3,7 +3,6 @@ package com.fumbbl.ffb.server.step.mixed.kickoff;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
@@ -91,10 +90,7 @@ public class StepSwarming extends AbstractStep {
 		// Only accept an end turn command that was actually issued for the swarming setup we are waiting for.
 		// Duplicate or stale commands (e.g. a double clicked end turn button during the preceding setup)
 		// would otherwise end the swarming setup before the coach had any chance to place players.
-		if (!state.awaitingSetup || getGameState().getGame().getTurnMode() != TurnMode.SWARMING) {
-			return false;
-		}
-		return new EndTurnCommandValidator().isValid(getGameState(), receivedCommand);
+		return state.awaitingSetup && new EndTurnCommandValidator().isValid(getGameState(), receivedCommand);
 	}
 
 	private void executeStep() {
