@@ -54,11 +54,7 @@ public class SetupLogicModule extends LogicModule {
 
 	@Override
 	public void endTurn() {
-		client.getCommunication().sendEndTurn(useTurnMode() ? client.getGame().getTurnMode() : null, client.getGame().getTeamHome(), client.getGame().getFieldModel());
-	}
-
-	protected boolean useTurnMode() {
-		return false;
+		client.getCommunication().sendEndTurn(client.getGame().getTurnMode(), client.getGame().getTeamHome(), client.getGame().getFieldModel());
 	}
 
 	public InteractionResult handleCommand(NetCommand pNetCommand, boolean loadDialog) {

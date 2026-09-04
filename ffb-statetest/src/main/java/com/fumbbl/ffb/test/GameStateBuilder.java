@@ -7,7 +7,9 @@ import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.RosterPlayer;
+import com.fumbbl.ffb.model.RosterPosition;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -19,6 +21,7 @@ import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.UtilSkillBehaviours;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -109,6 +112,13 @@ public class GameStateBuilder {
 			return this;
 		}
 
+		public PlayerDef position(String positionId, Keyword... keywords) {
+			RosterPosition rosterPosition = new RosterPosition(positionId);
+			rosterPosition.getKeywords().addAll(Arrays.asList(keywords));
+			player.updatePosition(rosterPosition, false, game.getRules(), game.getId());
+			return this;
+		}
+
 		public PlayerDef skill(String name) {
 			skillNames.add(name);
 			return this;
@@ -125,6 +135,8 @@ public class GameStateBuilder {
 		}
 
 		void commit() {
+			// players are stored by number, so each of them needs a unique one to not replace a previously added player
+			player.setNr(team.getMaxPlayerNr() + 1);
 			team.addPlayer(player);
 			game.getFieldModel().setPlayerState(player, state);
 		}

@@ -77,9 +77,11 @@ public class StepSwarming extends AbstractStep {
 
 		switch (pReceivedCommand.getId()) {
 			case CLIENT_END_TURN:
-				setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
-				state.endTurn = true;
-				executeStep();
+				if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SWARMING)) {
+					setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
+					state.endTurn = true;
+					executeStep();
+				}
 				break;
 
 			case CLIENT_SETUP_PLAYER:
