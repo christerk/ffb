@@ -493,7 +493,7 @@ public class TurnDiceStatusComponent extends JPanel
 			if (dialogEndTurn.getChoice() == DialogEndTurn.YES) {
 				client.getClientState().endTurn();
 			} else {
-				clearEndTurnPending();
+				enableButton();
 			}
 		}
 	}
