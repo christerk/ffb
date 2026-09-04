@@ -112,7 +112,6 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 
 						state.rolledAmount = step.getGameState().getDiceRoller().rollSwarmingPlayers();
 						state.allowedAmount = Math.min(state.limitingAmount, state.rolledAmount);
-						state.awaitingSetup = true;
 						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount, state.rolledAmount, state.limitingAmount));
 						if (state.allowedAmount == 0) {
 							leave(step, state, game, 0);
@@ -130,7 +129,6 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 			}
 
 			private void leave(StepSwarming step, StepState state, Game game, int placedSwarmingPlayers) {
-				state.awaitingSetup = false;
 				for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(player);
 					if (playerState.getBase() == PlayerState.PRONE) {

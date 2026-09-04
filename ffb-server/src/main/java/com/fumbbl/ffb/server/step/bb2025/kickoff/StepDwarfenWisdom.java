@@ -114,7 +114,7 @@ public class StepDwarfenWisdom extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.DWARFEN_WISDOM)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						state.endTurn = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;

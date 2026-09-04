@@ -192,7 +192,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SOLID_DEFENCE, TurnMode.HIGH_KICK, TurnMode.QUICK_SNAP)) {
 						fEndKickoff = true;
 						if (TurnMode.QUICK_SNAP == getGameState().getGame().getTurnMode()) {
 							endQuickSnap(getGameState().getGame());

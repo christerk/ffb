@@ -159,7 +159,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				commandStatus = StepCommandStatus.SKIP_STEP;
 				break;
 			case CLIENT_END_TURN:
-				if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand)) {
+				if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.PERFECT_DEFENCE, TurnMode.HIGH_KICK, TurnMode.QUICK_SNAP)) {
 					fEndKickoff = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}

@@ -63,7 +63,6 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 							UtilServerDialog.showDialog(step.getGameState(),
 									new DialogSwarmingErrorParameter(state.allowedAmount, placedSwarmingPlayers), false);
 						} else {
-							state.awaitingSetup = false;
 
 							for (Player<?> player : game.getTeamById(state.teamId).getPlayers()) {
 								PlayerState playerState = game.getFieldModel().getPlayerState(player);
@@ -123,7 +122,6 @@ public class SwarmingBehaviour extends SkillBehaviour<Swarming> {
 						step.getGameState().pushCurrentStepOnStack();
 
 						state.allowedAmount = step.getGameState().getDiceRoller().rollSwarmingPlayers();
-						state.awaitingSetup = true;
 						step.getResult().addReport(new ReportSwarmingRoll(state.teamId, state.allowedAmount, -1, -1));
 						UtilServerDialog.showDialog(step.getGameState(), new DialogSwarmingPlayersParameter(state.allowedAmount),
 								false);

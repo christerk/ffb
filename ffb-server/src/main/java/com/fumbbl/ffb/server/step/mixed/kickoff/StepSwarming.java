@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.mixed.kickoff;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
@@ -28,7 +29,6 @@ public class StepSwarming extends AbstractStep {
 		public ActionStatus status;
 		public boolean endTurn;
 		public boolean handleReceivingTeam;
-		public boolean awaitingSetup;
 		public int allowedAmount, rolledAmount = -1, limitingAmount  = -1;
 		public String teamId;
 	}
@@ -69,7 +69,7 @@ public class StepSwarming extends AbstractStep {
 
 		switch (pReceivedCommand.getId()) {
 		case CLIENT_END_TURN:
-			if (isEndTurnCommandValid(pReceivedCommand)) {
+			if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SWARMING)) {
 				setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 				state.endTurn = true;
 				executeStep();
@@ -86,13 +86,6 @@ public class StepSwarming extends AbstractStep {
 		return commandStatus;
 	}
 
-	private boolean isEndTurnCommandValid(ReceivedCommand receivedCommand) {
-		// Only accept an end turn command that was actually issued for the swarming setup we are waiting for.
-		// Duplicate or stale commands (e.g. a double clicked end turn button during the preceding setup)
-		// would otherwise end the swarming setup before the coach had any chance to place players.
-		return state.awaitingSetup && new EndTurnCommandValidator().isValid(getGameState(), receivedCommand);
-	}
-
 	private void executeStep() {
 		getGameState().executeStepHooks(this, state);
 	}
@@ -100,7 +93,6 @@ public class StepSwarming extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		IServerJsonOption.AWAITING_SETUP.addTo(jsonObject, state.awaitingSetup);
 		IServerJsonOption.END_TURN.addTo(jsonObject, state.endTurn);
 		IServerJsonOption.HANDLE_RECEIVING_TEAM.addTo(jsonObject, state.handleReceivingTeam);
 		IServerJsonOption.SWARMING_PLAYER_AMOUNT.addTo(jsonObject, state.allowedAmount);
@@ -114,9 +106,6 @@ public class StepSwarming extends AbstractStep {
 	public StepSwarming initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		if (IServerJsonOption.AWAITING_SETUP.isDefinedIn(jsonObject)) {
-			state.awaitingSetup = IServerJsonOption.AWAITING_SETUP.getFrom(source, jsonObject);
-		}
 		state.endTurn = IServerJsonOption.END_TURN.getFrom(source, jsonObject);
 		state.handleReceivingTeam = IServerJsonOption.HANDLE_RECEIVING_TEAM.getFrom(source, jsonObject);
 		state.allowedAmount = IServerJsonOption.SWARMING_PLAYER_AMOUNT.getFrom(source, jsonObject);
