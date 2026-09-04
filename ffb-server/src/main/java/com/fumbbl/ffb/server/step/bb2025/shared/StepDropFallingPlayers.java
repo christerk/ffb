@@ -193,7 +193,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 						attackerCoordinate, null, null, ApothecaryMode.ATTACKER);
 			} else {
 				deferredCommands.add(new DropPlayerCommand(actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true));
-				InjuryTypeServer<?> injuryType = new InjuryTypeBlock();
+				InjuryTypeServer<?> injuryType = new InjuryTypeBlock(InjuryTypeBlock.Mode.REGULAR, false);
 				if (state.saboteurTriggeredAttacker) {
 					injuryType = new InjuryTypeSaboteur();
 				} else if (state.saboteurTriggeredDefender) {
