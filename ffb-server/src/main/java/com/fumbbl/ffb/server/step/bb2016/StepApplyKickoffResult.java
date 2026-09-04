@@ -41,6 +41,7 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeThrowARock;
 import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -158,7 +159,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 				commandStatus = StepCommandStatus.SKIP_STEP;
 				break;
 			case CLIENT_END_TURN:
-				if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+				if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.PERFECT_DEFENCE, TurnMode.HIGH_KICK, TurnMode.QUICK_SNAP)) {
 					fEndKickoff = true;
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}

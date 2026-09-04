@@ -22,6 +22,7 @@ public class ChangeList {
 			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 			.addBugfix("Foul Appearance: Was rolled on the next move after being successfully shadowed by a player with Foul Appearance")
 			.addBugfix("Stunty: Still applied a -1 modifier to interceptions for passes from stunty players")
+			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addImprovement("Skipping a player choice dialog now asks for confirmation and reopens the dialog if the skip is not confirmed")
 			.addBugfix("Diving Catch: Now follows NAF recommendation, active team gets first pick to choose catcher with DC (or without if a player is in the target square), then passive team, then default catch rules.")
 			.addBugfix("On The Ball: Players on LoS could not use OtB during kick-off even if they were open")

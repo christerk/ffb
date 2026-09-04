@@ -5,6 +5,7 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.inducement.InducementPhase;
@@ -69,7 +70,7 @@ public final class StepSetup extends AbstractStep {
 					commandStatus = StepCommandStatus.SKIP_STEP;
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SETUP)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						fEndSetup = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;

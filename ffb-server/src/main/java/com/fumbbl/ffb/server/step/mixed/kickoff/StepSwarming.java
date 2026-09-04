@@ -3,6 +3,7 @@ package com.fumbbl.ffb.server.step.mixed.kickoff;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
@@ -12,6 +13,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStep;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
@@ -67,9 +69,11 @@ public class StepSwarming extends AbstractStep {
 
 		switch (pReceivedCommand.getId()) {
 		case CLIENT_END_TURN:
-			setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
-			state.endTurn = true;
-			executeStep();
+			if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SWARMING)) {
+				setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
+				state.endTurn = true;
+				executeStep();
+			}
 			break;
 
 		case CLIENT_SETUP_PLAYER:
