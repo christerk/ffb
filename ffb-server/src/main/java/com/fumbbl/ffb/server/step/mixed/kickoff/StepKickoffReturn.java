@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.phase.kickoff;
+package com.fumbbl.ffb.server.step.mixed.kickoff;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -36,18 +36,19 @@ import java.util.List;
 
 /**
  * Step in kickoff sequence to handle KICKOFF_RETURN skill.
- *
+ * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
  * (parameter is consumed on TurnMode.KICKOFF_RETURN) Expects stepParameter
  * END_TURN to be set by a preceding step. (parameter is consumed on
  * TurnMode.KICKOFF_RETURN) Expects stepParameter TOUCHBACK to be set by a
  * preceding step.
- *
+ * <p>
  * May push new select sequence on the stack.
  *
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepKickoffReturn extends AbstractStep {
 
 	private boolean fTouchback;
@@ -68,13 +69,13 @@ public final class StepKickoffReturn extends AbstractStep {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
 			case END_PLAYER_ACTION:
-				fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				fEndPlayerAction = parameter.getValue() != null && (Boolean) parameter.getValue();
 				if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 					consume(parameter);
 				}
 				return true;
 			case END_TURN:
-				fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				fEndTurn = parameter.getValue() != null && (Boolean) parameter.getValue();
 				if (game.getTurnMode() == TurnMode.KICKOFF_RETURN) {
 					consume(parameter);
 				}
