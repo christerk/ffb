@@ -429,8 +429,7 @@ public class TurnDiceStatusComponent extends JPanel
 		GameMechanic mechanic = (GameMechanic) factory.forName(Mechanic.Type.GAME.name());
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
-			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()
-			&& !isEndTurnDialogVisible()) {
+			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
 				markEndTurnPending();
 				fButtonSelected = false;
