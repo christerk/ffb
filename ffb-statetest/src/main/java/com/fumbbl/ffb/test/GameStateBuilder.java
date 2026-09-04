@@ -135,6 +135,8 @@ public class GameStateBuilder {
 		}
 
 		void commit() {
+			// players are stored by number, so each of them needs a unique one to not replace a previously added player
+			player.setNr(team.getMaxPlayerNr() + 1);
 			team.addPlayer(player);
 			game.getFieldModel().setPlayerState(player, state);
 		}
