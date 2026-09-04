@@ -428,7 +428,8 @@ public class TurnDiceStatusComponent extends JPanel
 		GameMechanic mechanic = (GameMechanic) factory.forName(Mechanic.Type.GAME.name());
 		UserInterface userInterface = client.getUserInterface();
 		if ((fEndTurnButtonShown || fTimeoutButtonShown) && getSideBar().isHomeSide()
-			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()) {
+			&& buttonArea.contains(pMouseEvent.getPoint()) && !isEndTurnPending() && !isWithinDebounceWindow()
+			&& !isEndTurnDialogVisible(userInterface)) {
 			if (userInterface.getDialogManager().isEndTurnAllowed()) {
 				markEndTurnPending();
 				fButtonSelected = false;
@@ -523,6 +524,14 @@ public class TurnDiceStatusComponent extends JPanel
 	private void clearEndTurnPending() {
 		endTurnPending = false;
 		endTurnPendingSince = 0;
+	}
+
+	private boolean isEndTurnDialogVisible(UserInterface userInterface) {
+		return !userInterface.getDialogManager().isDialogHidden()
+			&& (userInterface.getDialogManager().getDialogHandler() != null)
+			&& (userInterface.getDialogManager().getDialogHandler().getDialog() != null)
+			&& userInterface.getDialogManager().getDialogHandler().getDialog().isVisible()
+			&& (DialogId.END_TURN == userInterface.getDialogManager().getDialogHandler().getDialog().getId());
 	}
 
 	private boolean isEndTurnPending() {
