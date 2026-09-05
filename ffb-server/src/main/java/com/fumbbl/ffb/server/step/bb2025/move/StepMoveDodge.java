@@ -420,38 +420,26 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 					NamedProperties.canAttemptToTackleDodgingPlayer);
 
 				if (ArrayTool.isProvided(dtOpponents)) {
-					Set<DodgeModifier> withDt = new HashSet<>(dodgeModifiers);
+					// recalculate the modifiers instead of copying dodgeModifiers: Break Tackle is removed from that set
+					// when it is not needed for the plain dodge, but it would still be available to counter Diving Tackle
+					Set<DodgeModifier> withDt = modifierFactory.findModifiers(
+						new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, fUsingBreakTackle));
 					withDt.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 					int minimumWithDt = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), withDt, statBasedRollModifier);
 					boolean failsWithDt = !DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumWithDt);
 
-					if (failsWithDt) {
-						// try BT + DT before reroll
-						if (!fUsingBreakTackle && UtilCards.getUnusedSkillWithProperty(actingPlayer.getPlayer(), NamedProperties.canAddStrengthToDodge).isPresent()) {
-							Set<DodgeModifier> withDtAndBt = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, fCoordinateFrom, fCoordinateTo, true));
-							withDtAndBt.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
-							StatBasedRollModifier btStat = actingPlayer.statBasedModifier(NamedProperties.canAddStrengthToDodge);
-							int minimumWithDtBt = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), withDtAndBt, btStat);
-							if (DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumWithDtBt)) {
-								fUsingBreakTackle = true;
-								actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
-								publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, true));
-								failsWithDt = false;
-							}
+					if (failsWithDt && !fReRollUsed) {
+						List<String> message = Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?");
+						ReRollSource rerollSource = uncanceledDodgeRerollSource(game, actingPlayer);
+						Skill rerollSkill = rerollSource != null ? rerollSource.getSkill(game) : null;
+						if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
+							ReRolledActions.DODGE, minimumWithDt, false, null, rerollSkill, null, null, message)) {
+							dtRerollAsked = true;
+							return ActionStatus.WAITING_FOR_RE_ROLL;
 						}
-
-						if (failsWithDt && !fReRollUsed) {
-							List<String> message = Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?");
-							ReRollSource rerollSource = uncanceledDodgeRerollSource(game, actingPlayer);
-							Skill rerollSkill = rerollSource != null ? rerollSource.getSkill(game) : null;
-							if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(),
-								ReRolledActions.DODGE, minimumWithDt, false, null, rerollSkill, null, null, message)) {
-								dtRerollAsked = true;
-								return ActionStatus.WAITING_FOR_RE_ROLL;
-							}
-						}
-						// If we reach here: either DT doesnt flip the result, BT just saved it, or reroll was declined and DT will be decided next.
 					}
+					// If we reach here: either DT doesn't flip the result (a still available Break Tackle counters it),
+					// or the reroll was declined/unavailable and DT will be decided next.
 				}
 			}
 			status = ActionStatus.SUCCESS;
