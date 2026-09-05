@@ -73,7 +73,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
 							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-								state.coordinateTo, state.usingBreakTackle));
+								state.coordinateTo, false));
 							dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 
 							int minimumRollWithCurrentModifiers = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
