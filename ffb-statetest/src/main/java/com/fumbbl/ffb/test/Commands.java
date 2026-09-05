@@ -11,6 +11,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
@@ -39,6 +40,10 @@ public class Commands {
 
 	public static ClientCommandPass pass(String playerId, FieldCoordinate target) {
 		return new ClientCommandPass(playerId, target);
+	}
+
+	public static ClientCommandHandOver handOver(String playerId, String catcherId) {
+		return new ClientCommandHandOver(playerId, catcherId);
 	}
 
 	public static ClientCommandMove move(String playerId, FieldCoordinate coordinateFrom,

@@ -398,15 +398,18 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "pushCurrentStepOnStack()");
 				getGameState().pushCurrentStepOnStack();
 			} else {
+				// the ball may have moved since the coordinate was determined at the start of this step execution,
+				// so the current coordinate has to be used to find the player ending up with the ball (if any)
 				Player<?> catcher;
 				if (fBombMode) {
 					catcher = !fieldModel.isBombMoving()
-						? fieldModel.getPlayer(catchCoordinate)
+						? fieldModel.getPlayer(fieldModel.getBombCoordinate())
 						: null;
 				} else {
-					catcher = fieldModel.getPlayer(catchCoordinate);
+					FieldCoordinate ballCoordinate = fieldModel.getBallCoordinate();
+					catcher = fieldModel.getPlayer(ballCoordinate);
 					if (catcher != null) {
-						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, catchCoordinate,
+						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, ballCoordinate,
 							NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
 						if (ArrayTool.isProvided(opponents)) {
 							SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
@@ -420,7 +423,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 				// Diving Catch during kickoff might take the ball out of bounds
 				if (game.getTurnMode() == TurnMode.KICKOFF
-					&& !fScatterBounds.isInBounds(catchCoordinate)) {
+					&& !fScatterBounds.isInBounds(fieldModel.getBallCoordinate())) {
 					publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
 				}
 
