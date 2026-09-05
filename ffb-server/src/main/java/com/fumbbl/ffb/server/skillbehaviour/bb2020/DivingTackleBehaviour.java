@@ -144,7 +144,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 						// Check if the dodge is successful with BT (ie. DT was used only to trigger BT)
 						DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 						Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, state.coordinateFrom,
-							state.coordinateTo, false));
+							state.coordinateTo, state.usingBreakTackle));
 						dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 
 						int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
