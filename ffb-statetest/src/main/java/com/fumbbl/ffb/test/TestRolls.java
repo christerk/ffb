@@ -24,6 +24,13 @@ public class TestRolls {
 		return this;
 	}
 
+	public TestRolls direction(String... values) {
+		for (String value : values) {
+			gameState.getDiceRoller().addTestRoll(value, gameState.getGame(), team);
+		}
+		return this;
+	}
+
 	public TestRolls armor(int d1, int d2) {
 		general(d1, d2);
 		return this;

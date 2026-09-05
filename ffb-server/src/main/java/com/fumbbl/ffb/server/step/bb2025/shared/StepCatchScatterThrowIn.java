@@ -110,6 +110,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private String fCatcherId;
 	private FieldCoordinateBounds fScatterBounds;
 	private CatchScatterThrowInMode fCatchScatterThrowInMode;
+	private boolean handOver;
 	private FieldCoordinate fThrowInCoordinate;
 	private boolean fBombMode, evaluate;
 	private DivingCatchPhase phase = DivingCatchPhase.ASK_ACTIVE;
@@ -303,6 +304,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case CATCH_SCATTER:
 			case CATCH_PUNT:
 				fBombMode = false;
+				handOver = fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF;
 				if (!StringTool.isProvided(fCatcherId)) {
 					fCatcherId = (directCatcher != null) ? directCatcher.getId() : null;
 				}
@@ -348,6 +350,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case FAILED_CATCH:
 			case FAILED_PICK_UP:
 				fBombMode = false;
+				fCatcherId = null;
 				if ((directCatcher != null) && fieldModel.isBallInPlay()
 					&& (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)
 					|| game.isActive(NamedProperties.droppedBallCausesArmourRoll))) {
@@ -370,6 +373,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				fBombMode = false;
 				if (fieldModel.isBallInPlay()) {
 					fCatchScatterThrowInMode = bounceBall();
+					if (handOver && (fCatchScatterThrowInMode == null)) {
+						publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+					}
 				} else {
 					fCatchScatterThrowInMode = null;
 				}
@@ -416,6 +422,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					}
 				}
 				publishParameter(new StepParameter(StepParameterKey.CATCHER_ID, (catcher != null) ? catcher.getId() : null));
+				if (handOver
+					&& ((catcher == null) || UtilPlayer.findOtherTeam(game, game.getThrower()).hasPlayer(catcher))) {
+					publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+				}
 				deactivateCards();
 
 				// Diving Catch during kickoff might take the ball out of bounds
@@ -643,9 +653,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					getGameState().getPassState().setUsingBlastIt(false);
 				}
 			}
-		}
-		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF) {
-			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
 		}
 		return CatchScatterThrowInMode.FAILED_CATCH;
 

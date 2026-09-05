@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HandOverTest {
 
@@ -37,12 +38,36 @@ public class HandOverTest {
 			.build();
 
 		Game game = state.getGame();
-		TestRolls.on(state).general(1);
+		TestRolls.on(state).general(1).direction("n");
 
 		StepEngine.start(state);
 		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.HAND_OVER));
 		StepEngine.respond(state, Commands.handOver("thrower", "catcher"));
 
 		assertFalse(game.isHomePlaying());
+	}
+
+	@Test
+	public void failedCatchCanBounceToActiveTeamWithoutTurnover() {
+		GameState state = new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withBallAt(7, 7)
+			.withTeam(true, team -> team
+				.player("thrower", player -> player.at(7, 7).stats(6, 3, 3, 5, 8))
+				.player("catcher", player -> player.at(8, 7).stats(6, 3, 3, 5, 8))
+				.player("bouncer", player -> player.at(9, 7).stats(6, 3, 3, 5, 8)))
+			.withTeam(false, team -> team
+				.player("opponent", player -> player.at(16, 7).stats(6, 3, 3, 5, 8)))
+			.build();
+
+		Game game = state.getGame();
+		TestRolls.on(state).general(1).direction("e").general(6);
+
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.HAND_OVER));
+		StepEngine.respond(state, Commands.handOver("thrower", "catcher"));
+
+		assertTrue(game.isHomePlaying());
 	}
 }
