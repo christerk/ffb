@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.test.skill.pass;
 
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.test.Commands;
@@ -26,6 +27,7 @@ public class HandOverTest {
 	public void failedCatchCausesTurnover() {
 		GameState state = new GameStateBuilder(testServer.getGameState())
 			.withRule("BB2025")
+			.withWeather(Weather.NICE)
 			.withBallAt(7, 7)
 			.withTeam(true, team -> team
 				.player("thrower", player -> player.at(7, 7).stats(6, 3, 3, 5, 8))
