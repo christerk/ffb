@@ -263,18 +263,17 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			fScatterBounds = FieldCoordinateBounds.FIELD;
 		}
 		FieldModel fieldModel = game.getFieldModel();
-		FieldCoordinate catchCoordinate = catchCoordinate(fieldModel);
-		Player<?> directCatcher = fieldModel.getPlayer(catchCoordinate);
 
 		switch (fCatchScatterThrowInMode) {
 			case CATCH_BOMB:
 			case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
 			case CATCH_ACCURATE_BOMB:
-				if (askForDivingCatch(fieldModel, catchCoordinate, directCatcher, game)) {
+				if (askForDivingCatch(fieldModel, game)) {
 					return;
 				}
 				fBombMode = true;
 				if (!StringTool.isProvided(fCatcherId)) {
+					Player<?> directCatcher = directCatcher(fieldModel);
 					fCatcherId = (directCatcher != null) ? directCatcher.getId() : null;
 				}
 				if (StringTool.isProvided(fCatcherId)) {
@@ -295,7 +294,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				break;
 			case CATCH_KICKOFF:
 			case CATCH_ACCURATE_PASS:
-				if (askForDivingCatch(fieldModel, catchCoordinate, directCatcher, game)) {
+				if (askForDivingCatch(fieldModel, game)) {
 					return;
 				}
 				// fall through
@@ -304,6 +303,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case CATCH_PUNT:
 				fBombMode = false;
 				if (!StringTool.isProvided(fCatcherId)) {
+					Player<?> directCatcher = directCatcher(fieldModel);
 					fCatcherId = (directCatcher != null) ? directCatcher.getId() : null;
 				}
 				if (StringTool.isProvided(fCatcherId)) {
@@ -327,11 +327,11 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case CATCH_THROW_IN:
 			case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
 			case CATCH_MISSED_PASS:
-				if (askForDivingCatch(fieldModel, catchCoordinate, directCatcher, game)) {
+				if (askForDivingCatch(fieldModel, game)) {
 					return;
 				}
 				fBombMode = false;
-				if (directCatcher != null) {
+				if (directCatcher(fieldModel) != null) {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_SCATTER;
 				} else {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
@@ -348,11 +348,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			case FAILED_CATCH:
 			case FAILED_PICK_UP:
 				fBombMode = false;
-				if ((directCatcher != null) && fieldModel.isBallInPlay()
+				Player<?> playerUnderBall = directCatcher(fieldModel);
+				if ((playerUnderBall != null) && fieldModel.isBallInPlay()
 					&& (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)
 					|| game.isActive(NamedProperties.droppedBallCausesArmourRoll))) {
 					InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true), null,
-						directCatcher, catchCoordinate, null, null, ApothecaryMode.CATCHER);
+						playerUnderBall, catchCoordinate(fieldModel), null, null, ApothecaryMode.CATCHER);
 					getGameState().pushCurrentStepOnStack();
 					SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
 					((SpikedBallApo) factory.forName(SequenceGenerator.Type.SpikedBallApo.name()))
@@ -360,7 +361,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 					getResult().setNextAction(StepAction.NEXT_STEP);
 					if (injuryResultCatcher.injuryContext().isArmorBroken()) {
-						publishParameters(UtilServerInjury.dropPlayer(this, directCatcher, ApothecaryMode.CATCHER));
+						publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
 					}
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
 					return;
@@ -398,19 +399,16 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "pushCurrentStepOnStack()");
 				getGameState().pushCurrentStepOnStack();
 			} else {
-				// the ball may have moved since the coordinate was determined at the start of this step execution,
-				// so the current coordinate has to be used to find the player ending up with the ball (if any)
 				Player<?> catcher;
 				if (fBombMode) {
 					catcher = !fieldModel.isBombMoving()
 						? fieldModel.getPlayer(fieldModel.getBombCoordinate())
 						: null;
 				} else {
-					FieldCoordinate ballCoordinate = fieldModel.getBallCoordinate();
-					catcher = fieldModel.getPlayer(ballCoordinate);
+					catcher = fieldModel.getPlayer(fieldModel.getBallCoordinate());
 					if (catcher != null) {
-						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, ballCoordinate,
-							NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
+						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher,
+							fieldModel.getBallCoordinate(), NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
 						if (ArrayTool.isProvided(opponents)) {
 							SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
 							((QuickBite) factory.forName(SequenceGenerator.Type.QuickBite.name()))
@@ -432,12 +430,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 	}
 
-	private boolean askForDivingCatch(FieldModel fieldModel, FieldCoordinate catchCoordinate, Player<?> directCatcher,
-																		Game game) {
+	private boolean askForDivingCatch(FieldModel fieldModel, Game game) {
 		if (divingCatchers == null) {
-			divingCatchers = divingCatchers(fieldModel, catchCoordinate);
+			divingCatchers = divingCatchers(fieldModel, catchCoordinate(fieldModel));
 		}
 
+		Player<?> directCatcher = directCatcher(fieldModel);
 		if (divingCatchers.isEmpty()) {
 			if (directCatcher != null) {
 				fCatcherId = directCatcher.getId();
@@ -498,6 +496,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	private FieldCoordinate catchCoordinate(FieldModel fieldModel) {
 		return fCatchScatterThrowInMode.isBomb() ? fieldModel.getBombCoordinate() : fieldModel.getBallCoordinate();
+	}
+
+	private Player<?> directCatcher(FieldModel fieldModel) {
+		return fieldModel.getPlayer(catchCoordinate(fieldModel));
 	}
 
 	private List<String> divingCatchers(FieldModel fieldModel, FieldCoordinate coordinate) {
