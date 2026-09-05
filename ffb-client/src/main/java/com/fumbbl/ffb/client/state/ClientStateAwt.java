@@ -40,7 +40,10 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	private boolean fClickable;
 	private final PitchDimensionProvider pitchDimensionProvider;
 	private JPopupMenu fPopupMenu;
-	private int popupIndex;
+	private int popupIndexIndex = 0;
+	private final List<Integer> popupIndexes = new ArrayList<Integer>() {{
+		add(0);
+	}};
 	private List<JPopupMenu> popupMenus;
 	private final CoordinateConverter coordinateConverter;
 	private final Set<FieldCoordinate> markedCoordinates = new HashSet<>();
@@ -235,8 +238,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			}
 			return menu;
 		}).collect(Collectors.toList());
-		popupIndex = 0;
-		fPopupMenu = popupMenus.get(popupIndex);
+		fPopupMenu = popupMenus.get(0);
 	}
 
 	public void showPopupMenuForPlayer(Player<?> pPlayer) {
@@ -309,7 +311,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			return;
 		}
 		prePerform(pMenuKey);
-		ClientAction action = actionMapping(popupIndex).get(pMenuKey);
+		ClientAction action = actionMapping(popupIndexes.get(popupIndexIndex)).get(pMenuKey);
 		if (action != null) {
 			logicModule.perform(player, action);
 		}
@@ -318,8 +320,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	private void switchPopup(Player<?> player) {
-		popupIndex = (popupIndex + 1) % popupMenus.size();
-		fPopupMenu = popupMenus.get(popupIndex);
+		popupIndexIndex = (popupIndexIndex + 1) % popupIndexes.size();
+		fPopupMenu = popupMenus.get(popupIndexIndex);
 		showPopupMenuForPlayer(player);
 	}
 
@@ -360,7 +362,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public final boolean actionKeyPressed(ActionKey pActionKey) {
-		return actionKeyPressed(pActionKey, popupIndex);
+		return actionKeyPressed(pActionKey, popupIndexes.get(popupIndexIndex));
 	}
 
 	protected boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
@@ -453,7 +455,7 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 		return new HashMap<>();
 	}
 
-	protected List<List<JMenuItem>> menuItems(ActionContext actionContext) {
+	protected Map<Integer, List<JMenuItem>> menuItems(ActionContext actionContext) {
 		Map<ClientAction, MenuItemConfig> configs = new HashMap<>(itemConfigs(actionContext));
 
 		influencedItemConfigs().entrySet().stream().filter(entry -> actionContext.getInfluences()
@@ -464,9 +466,8 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 			.forEach(entry -> configs.put(entry.getKey(), entry.getValue()));
 
 		return actionContext.getActions().stream()
-			.collect(Collectors.groupingBy(this::menuIndex)).values().stream()
-			.map(values -> values.stream().map(configs::get).map(this::menuItem).collect(Collectors.toList()))
-			.collect(Collectors.toList());
+			.collect(Collectors.groupingBy(this::menuIndex)).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+				entry -> entry.getValue().stream().map(configs::get).map(this::menuItem).collect(Collectors.toList())));
 	}
 
 	protected int menuIndex(ClientAction action) {
@@ -478,12 +479,22 @@ public abstract class ClientStateAwt<T extends LogicModule> extends ClientState<
 	}
 
 	protected void createAndShowPopupMenuForPlayer(Player<?> pPlayer, ActionContext actionContext,
-		List<JMenuItem> prepopulated) {
-		List<List<JMenuItem>> menuItemList = menuItems(actionContext);
-		menuItemList.get(0).addAll(0, prepopulated);
-		if (!menuItemList.get(0).isEmpty()) {
-			createPopupMenus(menuItemList);
-			showPopupMenuForPlayer(pPlayer);
+																								 List<JMenuItem> prepopulated) {
+		Map<Integer, List<JMenuItem>> menuItemMap = menuItems(actionContext);
+		List<Integer> indexes = menuItemMap.keySet().stream().sorted().collect(Collectors.toList());
+		popupIndexes.clear();
+		popupIndexIndex = 0;
+		if (!indexes.isEmpty()) {
+			popupIndexes.addAll(indexes);
+			Integer firstIndex = indexes.get(0);
+			menuItemMap.get(firstIndex).addAll(0, prepopulated);
+			if (!menuItemMap.get(firstIndex).isEmpty()) {
+				createPopupMenus(menuItemMap.entrySet().stream().sorted(Map.Entry.comparingByKey()).map(Map.Entry::getValue)
+					.collect(Collectors.toList()));
+				showPopupMenuForPlayer(pPlayer);
+			}
+		} else {
+			popupIndexes.add(0);
 		}
 	}
 

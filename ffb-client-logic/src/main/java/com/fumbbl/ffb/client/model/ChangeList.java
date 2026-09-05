@@ -29,6 +29,7 @@ public class ChangeList {
 			.addBugfix("Fan Interaction: Injury rolls of players pushed into the crowd or falling through a trap door applied injury modifiers like Mighty Blow of the player causing the push")
 			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addBugfix("Chainsaw: Attacker down (skull or both down) when blocking a player with chainsaw did add chainsaw modifier to armour roll on attacker")
+			.addBugfix("If the only available action was forgo activation, a foul action was started instead")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
