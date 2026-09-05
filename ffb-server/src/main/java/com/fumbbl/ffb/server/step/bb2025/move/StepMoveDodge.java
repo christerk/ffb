@@ -407,10 +407,11 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 
 		boolean reRolled = getReRolledAction() == ReRolledActions.DODGE && getReRollSource() != null;
+		ReportDodgeRoll dodgeReport = null;
 		if (pDoRoll) {
-			getResult().addReport(
-				new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, fDodgeRoll, minimumRoll, reRolled,
-					dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier));
+			dodgeReport = new ReportDodgeRoll(actingPlayer.getPlayerId(), successful, fDodgeRoll, minimumRoll, reRolled,
+				dodgeModifiers.toArray(new DodgeModifier[0]), statBasedRollModifier);
+			getResult().addReport(dodgeReport);
 		}
 
 		if (successful) {
@@ -435,6 +436,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 							if (DiceInterpreter.getInstance().isSkillRollSuccessful(fDodgeRoll, minimumWithDtBt)) {
 								fUsingBreakTackle = true;
 								actingPlayer.markSkillUsed(NamedProperties.canAddStrengthToDodge);
+								if (dodgeReport != null && btModifier.isPresent()) {
+									dodgeReport.addRollModifier(btModifier.get());
+								}
 								publishParameter(new StepParameter(StepParameterKey.USING_BREAK_TACKLE, true));
 								failsWithDt = false;
 							}
