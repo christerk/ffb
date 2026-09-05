@@ -644,6 +644,9 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 			}
 		}
+		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_HAND_OFF) {
+			publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
+		}
 		return CatchScatterThrowInMode.FAILED_CATCH;
 
 	}
