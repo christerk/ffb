@@ -13,7 +13,7 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
@@ -24,7 +24,7 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
@@ -34,7 +34,7 @@ import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.net.NetCommandId;
-import com.fumbbl.ffb.net.commands.ClientCommandDodgeModifierChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -185,9 +185,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
-			pReceivedCommand.getId() == NetCommandId.CLIENT_DODGE_MODIFIER_CHOICE) {
-			ClientCommandDodgeModifierChoice modifierChoiceCommand =
-				(ClientCommandDodgeModifierChoice) pReceivedCommand.getCommand();
+			pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE) {
+			ClientCommandReRollModifierChoice modifierChoiceCommand =
+				(ClientCommandReRollModifierChoice) pReceivedCommand.getCommand();
 			chosenModifierSkills = new ArrayList<>(modifierChoiceCommand.getSkills());
 			commandStatus = StepCommandStatus.EXECUTE_STEP;
 		}
@@ -431,7 +431,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			return fallback;
 		}
 
-		List<DodgeModifierOption> options = selectionService.findOptions(game, actingPlayer, fCoordinateFrom,
+		List<ModifierChoiceOption> options = selectionService.findOptions(game, actingPlayer, fCoordinateFrom,
 			fCoordinateTo, extraModifiers, fDodgeRoll);
 
 		boolean reRollPossible = fUsingDivingTackle == null && !fReRollUsed
@@ -459,7 +459,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 			Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 			UtilServerDialog.showDialog(getGameState(),
-				new DialogDodgeModifierChoiceParameter(actingPlayer.getPlayerId(), ReRolledActions.DODGE, minimumRoll,
+				new DialogReRollModifierChoiceParameter(actingPlayer.getPlayerId(), ReRolledActions.DODGE, minimumRoll,
 					fDodgeRoll, options, reRollOptions.getProperties(), false, reRollOptions.getReRollSkill(), null, null,
 					messages),
 				!actingTeam.hasPlayer(actingPlayer.getPlayer()));

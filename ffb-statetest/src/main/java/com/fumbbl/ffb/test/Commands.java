@@ -11,7 +11,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandDodgeModifierChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
@@ -60,9 +60,9 @@ public class Commands {
 		return new ClientCommandEndTurn(turnMode, null);
 	}
 
-	public static ClientCommandDodgeModifierChoice dodgeModifierChoice(String playerId, ReRolledAction reRolledAction,
+	public static ClientCommandReRollModifierChoice reRollModifierChoice(String playerId, ReRolledAction reRolledAction,
 		Skill... skills) {
-		return new ClientCommandDodgeModifierChoice(playerId, Arrays.asList(skills), reRolledAction);
+		return new ClientCommandReRollModifierChoice(playerId, Arrays.asList(skills), reRolledAction);
 	}
 
 	public static ClientCommandPlayerChoice playerChoice(PlayerChoiceMode mode, Player<?>... players) {

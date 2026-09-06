@@ -189,7 +189,7 @@ New file: `ffb-server/src/main/java/com/fumbbl/ffb/server/util/bb2025/DodgeModif
 
 1. **Enumerate viable options**:
    ```java
-   List<DodgeModifierOption> findOptions(Game game, ActingPlayer actingPlayer,
+   List<ModifierChoiceOption> findOptions(Game game, ActingPlayer actingPlayer,
                                           FieldCoordinate from, FieldCoordinate to,
                                           Set<DodgeModifier> extraModifiers, // e.g. DIVING_TACKLE
                                           int dodgeRoll);
@@ -202,7 +202,7 @@ New file: `ffb-server/src/main/java/com/fumbbl/ffb/server/util/bb2025/DodgeModif
      `minimumRoll = AgilityMechanic.minimumRollDodge(...)` +
      `DiceInterpreter.isSkillRollSuccessful(dodgeRoll, minimumRoll)`.
    * Keep only subsets that **guarantee success**, and **record each subset's `minimumRoll` on the
-     resulting `DodgeModifierOption`** so the dialog can display, per option, the roll that would
+     resulting `ModifierChoiceOption`** so the dialog can display, per option, the roll that would
      have been needed (see §4.3).
 
 2. **Prune and rank** (R7):
@@ -222,9 +222,9 @@ New file: `ffb-server/src/main/java/com/fumbbl/ffb/server/util/bb2025/DodgeModif
 4. **Describe** an option for the dialog and for report text: `"Break Tackle"`,
    `"Consummate Professional"`, `"Break Tackle + Consummate Professional"`.
 
-### 3.6 New common model: `DodgeModifierOption`
+### 3.6 New common model: `ModifierChoiceOption`
 
-New file: `ffb-common/src/main/java/com/fumbbl/ffb/model/DodgeModifierOption.java`,
+New file: `ffb-common/src/main/java/com/fumbbl/ffb/model/ModifierChoiceOption.java`,
 implementing `IJsonSerializable`.
 
 Fields: `List<Skill> skills`, `int totalModifier`, `int minimumRoll`, `String label`.
@@ -293,39 +293,39 @@ and is produced by the already-public
 
 | Module | File | Action |
 |---|---|---|
-| ffb-common | `dialog/DialogDodgeModifierChoiceParameter.java` | **new** — implements `IDialogParameter`, `HasReRollProperties` |
-| ffb-common | `dialog/DialogId.java` | add `DODGE_MODIFIER_CHOICE("dodgeModifierChoice")` |
-| ffb-common | `dialog/DialogParameterFactory.java` | add `case DODGE_MODIFIER_CHOICE` |
-| ffb-common | `model/DodgeModifierOption.java` | **new** |
-| ffb-common | `json/IJsonOption.java` | add `DODGE_MODIFIER_OPTIONS` (json array), `SELECTED_SKILLS` (string array) |
-| ffb-common | `net/commands/ClientCommandDodgeModifierChoice.java` | **new** |
-| ffb-common | `net/NetCommandId.java` | add `CLIENT_DODGE_MODIFIER_CHOICE("clientDodgeModifierChoice")` + factory case (~line 263) |
-| ffb-client-logic | `client/dialog/DialogDodgeModifierChoice.java` | **new** — Swing dialog |
-| ffb-client-logic | `client/dialog/DialogDodgeModifierChoiceHandler.java` | **new** |
-| ffb-client-logic | `client/dialog/DialogManager.java` | add `case DODGE_MODIFIER_CHOICE` (~line 45) |
-| ffb-client-logic | `client/net/ClientCommunication.java` | add `sendDodgeModifierChoice(String playerId, List<Skill> skills, ReRolledAction action)` |
+| ffb-common | `dialog/DialogReRollModifierChoiceParameter.java` | **new** — implements `IDialogParameter`, `HasReRollProperties` |
+| ffb-common | `dialog/DialogId.java` | add `RE_ROLL_MODIFIER_CHOICE("reRollModifierChoice")` |
+| ffb-common | `dialog/DialogParameterFactory.java` | add `case RE_ROLL_MODIFIER_CHOICE` |
+| ffb-common | `model/ModifierChoiceOption.java` | **new** |
+| ffb-common | `json/IJsonOption.java` | add `MODIFIER_OPTIONS` (json array), `SELECTED_SKILLS` (string array) |
+| ffb-common | `net/commands/ClientCommandReRollModifierChoice.java` | **new** |
+| ffb-common | `net/NetCommandId.java` | add `CLIENT_RE_ROLL_MODIFIER_CHOICE("clientReRollModifierChoice")` + factory case (~line 263) |
+| ffb-client-logic | `client/dialog/DialogReRollModifierChoice.java` | **new** — Swing dialog |
+| ffb-client-logic | `client/dialog/DialogReRollModifierChoiceHandler.java` | **new** |
+| ffb-client-logic | `client/dialog/DialogManager.java` | add `case RE_ROLL_MODIFIER_CHOICE` (~line 45) |
+| ffb-client-logic | `client/net/ClientCommunication.java` | add `sendReRollModifierChoice(String playerId, List<Skill> skills, ReRolledAction action)` |
 
-### 4.2 `DialogDodgeModifierChoiceParameter`
+### 4.2 `DialogReRollModifierChoiceParameter`
 
 ```java
-public class DialogDodgeModifierChoiceParameter implements IDialogParameter, HasReRollProperties {
+public class DialogReRollModifierChoiceParameter implements IDialogParameter, HasReRollProperties {
     private String playerId;
     private ReRolledAction reRolledAction;
     private int minimumRoll;              // required roll WITHOUT any optional modifier
     private int dodgeRoll;                // the die that was actually rolled
     private boolean fumble;
-    private List<DodgeModifierOption> modifierOptions;   // each carries its own minimumRoll
+    private List<ModifierChoiceOption> modifierOptions;   // each carries its own minimumRoll
     private List<ReRollProperty> reRollProperties;   // from ReRollOptions
     private Skill reRollSkill;                       // from ReRollOptions
     private List<String> messages;                   // context, e.g. the Diving Tackle warning
     private CommonProperty menuProperty;
     private String defaultValueKey;
     ...
-    public DialogId getId() { return DialogId.DODGE_MODIFIER_CHOICE; }
+    public DialogId getId() { return DialogId.RE_ROLL_MODIFIER_CHOICE; }
 }
 ```
 
-### 4.3 `DialogDodgeModifierChoice` (client)
+### 4.3 `DialogReRollModifierChoice` (client)
 
 Layout mirrors `DialogReRollProperties.java`:
 
@@ -333,7 +333,7 @@ Layout mirrors `DialogReRollProperties.java`:
 * Info panel with the dice icon, the base message
   (`"You rolled a <dodgeRoll> and needed <minimumRoll>+ to succeed."`), the `messages` list, the
   LONER warning (`hasProperty(ReRollProperty.LONER)`), and the fumble line.
-* **One button per `DodgeModifierOption`, labelled `"<label> (<option.minimumRoll>+)"`**, e.g.
+* **One button per `ModifierChoiceOption`, labelled `"<label> (<option.minimumRoll>+)"`**, e.g.
   `"Break Tackle (4+)"`, `"Consummate Professional (5+)"`,
   `"Break Tackle + Consummate Professional (3+)"`. This is the per-option required roll produced in
   §3.5, so the coach can see exactly what each combination buys before committing a
@@ -346,13 +346,13 @@ Layout mirrors `DialogReRollProperties.java`:
 
 Exposes `getSelectedOption()`, `getReRollSource()`, `isUseModifiers()`.
 
-### 4.4 `DialogDodgeModifierChoiceHandler`
+### 4.4 `DialogReRollModifierChoiceHandler`
 
 `dialogClosed(IDialog)` mirrors `DialogReRollPropertiesHandler:52-62`:
 
 ```java
 if (dialog.isUseModifiers()) {
-    communication.sendDodgeModifierChoice(playerId, dialog.getSelectedOption().getSkills(), reRolledAction);
+    communication.sendReRollModifierChoice(playerId, dialog.getSelectedOption().getSkills(), reRolledAction);
 } else {
     communication.sendUseReRoll(reRolledAction, dialog.getReRollSource());   // may be null = decline
 }
@@ -390,7 +390,7 @@ New step parameter keys (`ffb-server/.../step/StepParameterKey.java`) and JSON o
 `StepMoveDodge`). `USING_BREAK_TACKLE` and `USING_MODIFYING_SKILL` are no longer published by the
 bb2025 step — they must remain in the enums because `bb2016`/`bb2020` still use them.
 
-**`handleCommand`** gains a `NetCommandId.CLIENT_DODGE_MODIFIER_CHOICE` branch that stores the chosen
+**`handleCommand`** gains a `NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE` branch that stores the chosen
 skills and returns `StepCommandStatus.EXECUTE_STEP`. The `canAddStrengthToDodge` branch at
 lines 176-184 is deleted. `canChooseToIgnoreDodgeModifierAfterRoll` and `canRerollDodge` branches
 are retained unchanged.
@@ -418,7 +418,7 @@ rrOptions = rollMechanic.findReRollOptions(gameState, player, ReRolledActions.DO
 
 if (options.isEmpty() && !rrOptions.canActuallyReRoll())  -> failDodge() / return FAILURE
 if (options.isEmpty())                                     -> existing UtilServerReRoll.askForReRollIfAvailable(...)
-else  -> UtilServerDialog.showDialog(new DialogDodgeModifierChoiceParameter(...))
+else  -> UtilServerDialog.showDialog(new DialogReRollModifierChoiceParameter(...))
          modifierChoiceOffered = true
          return WAITING_FOR_RE_ROLL
 ```
@@ -580,19 +580,19 @@ case would honour that more literally but doubles the number of code paths.
 |---|---|---|---|
 | 1 | `DodgeModifier.optional` flag; `DodgeContext.selectedSkills` + `isSkillSelected` | ffb-common | ✅ |
 | 2 | `OptionalDodgeModifierService` + `OptionalDodgeModifier` holder | ffb-common | ✅ |
-| 3 | `DodgeModifierOption` model (incl. `minimumRoll`) + JSON | ffb-common | ✅ |
+| 3 | `ModifierChoiceOption` model (incl. `minimumRoll`) + JSON | ffb-common | ✅ |
 | 4 | BB2025 `BreakTackle` opt-in; new BB2025 `ConsummateProfessional` | ffb-common | ✅ |
 | 5 | `AgilityMechanic.minimumRollDodgePreview` + bb2016/bb2020 (verbatim) and bb2025 (best achievable) implementations | ffb-common | ✅ |
 | 6 | `UtilServerPlayerMove.addMoveSquare` delegates to the mechanic | ffb-server | ✅ |
 | 7 | `SkillUse.ADD_DODGE_MODIFIER`; new `IJsonOption`s | ffb-common | ✅ |
-| 8 | `DialogId`, `DialogParameterFactory`, `DialogDodgeModifierChoiceParameter` | ffb-common | ✅ |
-| 9 | `NetCommandId` + `ClientCommandDodgeModifierChoice` | ffb-common | ✅ |
+| 8 | `DialogId`, `DialogParameterFactory`, `DialogReRollModifierChoiceParameter` | ffb-common | ✅ |
+| 9 | `NetCommandId` + `ClientCommandReRollModifierChoice` | ffb-common | ✅ |
 | 10 | `DodgeModifierSelectionService` (subset enumeration, per-option `minimumRoll`, pruning, ranking) | ffb-server | ✅ |
 | 11 | `StepParameterKey.SELECTED_DODGE_MODIFIER_SKILLS` + `IServerJsonOption` entries | ffb-server | ✅ |
 | 12 | `StepDivingTackle.StepState.selectedModifierSkills` + param/JSON plumbing | ffb-server | ✅ |
 | 13 | Rewrite `step/bb2025/move/StepMoveDodge` (§5.1, §5.2) | ffb-server | ✅ |
 | 14 | Rewrite `skillbehaviour/bb2025/DivingTackleBehaviour` (§5.3) | ffb-server | ✅ |
-| 15 | `DialogDodgeModifierChoice` + handler + `DialogManager` + `ClientCommunication` | ffb-client-logic | ✅ |
+| 15 | `DialogReRollModifierChoice` + handler + `DialogManager` + `ClientCommunication` | ffb-client-logic | ✅ |
 | 16 | Change list entry in the `3.4.0` `VersionChangeList` | ffb-client-logic | ✅ |
 | 17 | Tests (§9) | ffb-common, ffb-server, ffb-client-logic | ✅ |
 
@@ -624,13 +624,13 @@ Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-clien
 * bb2025 returns the roll with all available optional modifiers applied, and ignores skills that are
   already used.
 
-**`DialogDodgeModifierChoiceTest`** (ffb-client-logic) — model on the existing
+**`DialogReRollModifierChoiceTest`** (ffb-client-logic) — model on the existing
 `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogReRollPropertiesTest.java`:
 button visibility per `ReRollProperty`, one button per option, per-option label shows the option's
 own `minimumRoll`, correct command on close.
 
-**JSON round-trip** tests for `DialogDodgeModifierChoiceParameter`, `DodgeModifierOption`,
-`ClientCommandDodgeModifierChoice`, and the extended `StepMoveDodge` / `StepDivingTackle` step state
+**JSON round-trip** tests for `DialogReRollModifierChoiceParameter`, `ModifierChoiceOption`,
+`ClientCommandReRollModifierChoice`, and the extended `StepMoveDodge` / `StepDivingTackle` step state
 (step serialisation matters for replay and reconnect).
 
 **Implemented automated tests:**
@@ -638,10 +638,10 @@ own `minimumRoll`, correct command on close.
 * `ffb-server/src/test/java/com/fumbbl/ffb/server/util/bb2025/DodgeModifierSelectionServiceTest.java` ✅
 * `ffb-common/src/test/java/com/fumbbl/ffb/mechanics/AgilityMechanicDodgePreviewTest.java` ✅
   (named `AgilityMechanicDodgePreviewTest`, covers the §3.7 regression guard for all three rulesets)
-* `ffb-common/src/test/java/com/fumbbl/ffb/json/DodgeModifierChoiceJsonTest.java` ✅
-  (round trips for `DodgeModifierOption`, `DialogDodgeModifierChoiceParameter`,
-  `ClientCommandDodgeModifierChoice`)
-* `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogDodgeModifierChoiceTest.java` ✅
+* `ffb-common/src/test/java/com/fumbbl/ffb/json/ReRollModifierChoiceJsonTest.java` ✅
+  (round trips for `ModifierChoiceOption`, `DialogReRollModifierChoiceParameter`,
+  `ClientCommandReRollModifierChoice`)
+* `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogReRollModifierChoiceTest.java` ✅
   (visual harness, same style as `DialogReRollPropertiesTest`)
 * `ffb-statetest/src/test/java/com/fumbbl/ffb/test/skill/move/DodgeModifierChoiceTest.java` ✅
   (step flow: no dialog on success, both single-skill options offered on failure, chosen skill

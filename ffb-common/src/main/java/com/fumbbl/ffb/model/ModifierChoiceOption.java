@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * One combination of optional dodge modifier skills that would make a dodge roll succeed.
+ * One combination of optional modifier skills that would make a roll succeed.
  */
-public class DodgeModifierOption implements IJsonSerializable {
+public class ModifierChoiceOption implements IJsonSerializable {
 
 	private final List<Skill> skills = new ArrayList<>();
 	private int totalModifier;
 	private int minimumRoll;
 	private String label;
 
-	public DodgeModifierOption() {
+	public ModifierChoiceOption() {
 	}
 
-	public DodgeModifierOption(List<Skill> skills, int totalModifier, int minimumRoll) {
+	public ModifierChoiceOption(List<Skill> skills, int totalModifier, int minimumRoll) {
 		if (skills != null) {
 			this.skills.addAll(skills);
 		}
@@ -71,7 +71,7 @@ public class DodgeModifierOption implements IJsonSerializable {
 	}
 
 	@Override
-	public DodgeModifierOption initFrom(IFactorySource source, JsonValue jsonValue) {
+	public ModifierChoiceOption initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		skills.clear();
 		JsonArray skillArray = IJsonOption.SKILL_ARRAY.getFrom(source, jsonObject);

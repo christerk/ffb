@@ -13,7 +13,7 @@ import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import java.util.ArrayList;
@@ -22,33 +22,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Asks the coach whether they want to spend optional dodge modifiers or a re-roll to rescue a dodge.
+ * Asks the coach whether they want to spend optional roll modifiers or a re-roll to rescue a failed roll.
  */
-public class DialogDodgeModifierChoiceParameter implements IDialogParameter, HasReRollProperties {
+public class DialogReRollModifierChoiceParameter implements IDialogParameter, HasReRollProperties {
 
 	private String playerId, defaultValueKey;
 	private ReRolledAction reRolledAction;
 	private int minimumRoll;
-	private int dodgeRoll;
+	private int roll;
 	private boolean fumble;
 	private Skill reRollSkill;
 	private CommonProperty menuProperty;
 	private final List<String> messages = new ArrayList<>();
 	private final List<ReRollProperty> reRollProperties = new ArrayList<>();
-	private final List<DodgeModifierOption> modifierOptions = new ArrayList<>();
+	private final List<ModifierChoiceOption> modifierOptions = new ArrayList<>();
 
-	public DialogDodgeModifierChoiceParameter() {
+	public DialogReRollModifierChoiceParameter() {
 		super();
 	}
 
-	public DialogDodgeModifierChoiceParameter(String playerId, ReRolledAction reRolledAction, int minimumRoll,
-																						int dodgeRoll, List<DodgeModifierOption> modifierOptions,
+	public DialogReRollModifierChoiceParameter(String playerId, ReRolledAction reRolledAction, int minimumRoll,
+																						int roll, List<ModifierChoiceOption> modifierOptions,
 																						List<ReRollProperty> reRollProperties, boolean fumble, Skill reRollSkill,
 																						CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
 		this.playerId = playerId;
 		this.reRolledAction = reRolledAction;
 		this.minimumRoll = minimumRoll;
-		this.dodgeRoll = dodgeRoll;
+		this.roll = roll;
 		this.fumble = fumble;
 		this.reRollSkill = reRollSkill;
 		this.menuProperty = menuProperty;
@@ -65,7 +65,7 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 	}
 
 	public DialogId getId() {
-		return DialogId.DODGE_MODIFIER_CHOICE;
+		return DialogId.RE_ROLL_MODIFIER_CHOICE;
 	}
 
 	public String getPlayerId() {
@@ -80,8 +80,8 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 		return minimumRoll;
 	}
 
-	public int getDodgeRoll() {
-		return dodgeRoll;
+	public int getRoll() {
+		return roll;
 	}
 
 	public boolean isFumble() {
@@ -104,7 +104,7 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 		return messages;
 	}
 
-	public List<DodgeModifierOption> getModifierOptions() {
+	public List<ModifierChoiceOption> getModifierOptions() {
 		return modifierOptions;
 	}
 
@@ -116,7 +116,7 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 	// transformation
 
 	public IDialogParameter transform() {
-		return new DialogDodgeModifierChoiceParameter(playerId, reRolledAction, minimumRoll, dodgeRoll, modifierOptions,
+		return new DialogReRollModifierChoiceParameter(playerId, reRolledAction, minimumRoll, roll, modifierOptions,
 			reRollProperties, fumble, reRollSkill, menuProperty, defaultValueKey, messages);
 	}
 
@@ -128,7 +128,7 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 		IJsonOption.PLAYER_ID.addTo(jsonObject, playerId);
 		IJsonOption.RE_ROLLED_ACTION.addTo(jsonObject, reRolledAction);
 		IJsonOption.MINIMUM_ROLL.addTo(jsonObject, minimumRoll);
-		IJsonOption.ROLL.addTo(jsonObject, dodgeRoll);
+		IJsonOption.ROLL.addTo(jsonObject, roll);
 		List<String> properties = reRollProperties.stream().map(ReRollProperty::getName).collect(Collectors.toList());
 		IJsonOption.RE_ROLL_PROPERTIES.addTo(jsonObject, properties);
 		IJsonOption.FUMBLE.addTo(jsonObject, fumble);
@@ -139,18 +139,18 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 		}
 		IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
 		JsonArray optionArray = new JsonArray();
-		modifierOptions.stream().map(DodgeModifierOption::toJsonValue).forEach(optionArray::add);
-		IJsonOption.DODGE_MODIFIER_OPTIONS.addTo(jsonObject, optionArray);
+		modifierOptions.stream().map(ModifierChoiceOption::toJsonValue).forEach(optionArray::add);
+		IJsonOption.MODIFIER_OPTIONS.addTo(jsonObject, optionArray);
 		return jsonObject;
 	}
 
-	public DialogDodgeModifierChoiceParameter initFrom(IFactorySource source, JsonValue jsonValue) {
+	public DialogReRollModifierChoiceParameter initFrom(IFactorySource source, JsonValue jsonValue) {
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		UtilDialogParameter.validateDialogId(this, (DialogId) IJsonOption.DIALOG_ID.getFrom(source, jsonObject));
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);
 		reRolledAction = (ReRolledAction) IJsonOption.RE_ROLLED_ACTION.getFrom(source, jsonObject);
 		minimumRoll = IJsonOption.MINIMUM_ROLL.getFrom(source, jsonObject);
-		dodgeRoll = IJsonOption.ROLL.getFrom(source, jsonObject);
+		roll = IJsonOption.ROLL.getFrom(source, jsonObject);
 		fumble = IJsonOption.FUMBLE.getFrom(source, jsonObject);
 		reRollSkill = (Skill) IJsonOption.SKILL.getFrom(source, jsonObject);
 		menuProperty = CommonProperty.forKey(IJsonOption.MENU_PROPERTY.getFrom(source, jsonObject));
@@ -165,10 +165,10 @@ public class DialogDodgeModifierChoiceParameter implements IDialogParameter, Has
 				.collect(Collectors.toList()));
 
 		modifierOptions.clear();
-		JsonArray optionArray = IJsonOption.DODGE_MODIFIER_OPTIONS.getFrom(source, jsonObject);
+		JsonArray optionArray = IJsonOption.MODIFIER_OPTIONS.getFrom(source, jsonObject);
 		if (optionArray != null) {
 			for (int i = 0; i < optionArray.size(); i++) {
-				modifierOptions.add(new DodgeModifierOption().initFrom(source, optionArray.get(i)));
+				modifierOptions.add(new ModifierChoiceOption().initFrom(source, optionArray.get(i)));
 			}
 		}
 		return this;

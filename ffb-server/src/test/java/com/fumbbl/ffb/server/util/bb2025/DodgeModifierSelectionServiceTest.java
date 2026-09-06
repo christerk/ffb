@@ -7,7 +7,7 @@ import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameRules;
 import com.fumbbl.ffb.model.Player;
@@ -88,12 +88,12 @@ class DodgeModifierSelectionServiceTest {
 		when(game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER)).thenReturn(modifierFactory);
 	}
 
-	private List<DodgeModifierOption> findOptions(int dodgeRoll) {
+	private List<ModifierChoiceOption> findOptions(int dodgeRoll) {
 		return service.findOptions(game, actingPlayer, FROM, TO, Collections.emptySet(), dodgeRoll);
 	}
 
-	private List<String> labels(List<DodgeModifierOption> options) {
-		return options.stream().map(DodgeModifierOption::getLabel).collect(Collectors.toList());
+	private List<String> labels(List<ModifierChoiceOption> options) {
+		return options.stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList());
 	}
 
 	@Test
@@ -105,7 +105,7 @@ class DodgeModifierSelectionServiceTest {
 	void breakTackleAloneRescuesTheRoll() {
 		skills.add(breakTackle);
 		// agility 4, tacklezone +1 => 5+ needed, break tackle at strength 3 gives -1
-		List<DodgeModifierOption> options = findOptions(4);
+		List<ModifierChoiceOption> options = findOptions(4);
 		assertEquals(Collections.singletonList("Break Tackle"), labels(options));
 		assertEquals(4, options.get(0).getMinimumRoll());
 		assertEquals(1, options.get(0).getSkills().size());
@@ -114,7 +114,7 @@ class DodgeModifierSelectionServiceTest {
 	@Test
 	void consummateProfessionalAloneRescuesTheRoll() {
 		skills.add(consummateProfessional);
-		List<DodgeModifierOption> options = findOptions(4);
+		List<ModifierChoiceOption> options = findOptions(4);
 		assertEquals(Collections.singletonList("Consummate Professional"), labels(options));
 		assertEquals(4, options.get(0).getMinimumRoll());
 	}
@@ -123,7 +123,7 @@ class DodgeModifierSelectionServiceTest {
 	void combinationIsOfferedWhenSingleSkillsAreNotEnough() {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
 		// a 3 on the die needs both modifiers to reach a 3+
-		List<DodgeModifierOption> options = findOptions(3);
+		List<ModifierChoiceOption> options = findOptions(3);
 		assertEquals(Collections.singletonList("Break Tackle + Consummate Professional"), labels(options));
 		assertEquals(3, options.get(0).getMinimumRoll());
 	}
@@ -132,7 +132,7 @@ class DodgeModifierSelectionServiceTest {
 	void cheaperUsageTypeIsRankedFirstAndSupersetsArePruned() {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
 		// either skill alone is enough for a 4, so no combined option is kept
-		List<DodgeModifierOption> options = findOptions(4);
+		List<ModifierChoiceOption> options = findOptions(4);
 		assertEquals(Arrays.asList("Break Tackle", "Consummate Professional"), labels(options));
 	}
 
@@ -147,7 +147,7 @@ class DodgeModifierSelectionServiceTest {
 	void extraModifiersShiftTheThreshold() {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
 		DodgeModifier divingTackle = new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE, false);
-		List<DodgeModifierOption> options = service.findOptions(game, actingPlayer, FROM, TO,
+		List<ModifierChoiceOption> options = service.findOptions(game, actingPlayer, FROM, TO,
 			new HashSet<>(Collections.singletonList(divingTackle)), 5);
 		// 5+ with diving tackle becomes 7+, both modifiers are needed to get back to a 5+
 		assertEquals(Collections.singletonList("Break Tackle + Consummate Professional"), labels(options));

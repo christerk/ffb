@@ -5,7 +5,7 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.DialogIdFactory;
@@ -13,9 +13,9 @@ import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.factory.ReRolledActionFactory;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.factory.application.NetCommandIdFactory;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.net.commands.ClientCommandDodgeModifierChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.skill.bb2025.BreakTackle;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * Round trip tests for the JSON payloads of the optional dodge modifier selection.
  */
-class DodgeModifierChoiceJsonTest {
+class ReRollModifierChoiceJsonTest {
 
 	private IFactorySource source;
 	private BreakTackle breakTackle;
@@ -66,9 +66,9 @@ class DodgeModifierChoiceJsonTest {
 
 	@Test
 	void dodgeModifierOptionSurvivesRoundTrip() {
-		DodgeModifierOption option = new DodgeModifierOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3);
+		ModifierChoiceOption option = new ModifierChoiceOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3);
 
-		DodgeModifierOption restored = new DodgeModifierOption().initFrom(source, option.toJsonValue());
+		ModifierChoiceOption restored = new ModifierChoiceOption().initFrom(source, option.toJsonValue());
 
 		assertEquals(Arrays.asList(breakTackle, consummateProfessional), restored.getSkills());
 		assertEquals(-2, restored.getTotalModifier());
@@ -78,21 +78,21 @@ class DodgeModifierChoiceJsonTest {
 
 	@Test
 	void dialogParameterSurvivesRoundTrip() {
-		DodgeModifierOption option = new DodgeModifierOption(Collections.singletonList(breakTackle), -1, 4);
-		DialogDodgeModifierChoiceParameter parameter =
-			new DialogDodgeModifierChoiceParameter("playerId", ReRolledActions.DODGE, 5, 4,
+		ModifierChoiceOption option = new ModifierChoiceOption(Collections.singletonList(breakTackle), -1, 4);
+		DialogReRollModifierChoiceParameter parameter =
+			new DialogReRollModifierChoiceParameter("playerId", ReRolledActions.DODGE, 5, 4,
 				Collections.singletonList(option), Arrays.asList(ReRollProperty.TRR, ReRollProperty.PRO), true,
 				consummateProfessional, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, "someKey",
 				Collections.singletonList("a message"));
 
-		DialogDodgeModifierChoiceParameter restored =
-			new DialogDodgeModifierChoiceParameter().initFrom(source, parameter.toJsonValue());
+		DialogReRollModifierChoiceParameter restored =
+			new DialogReRollModifierChoiceParameter().initFrom(source, parameter.toJsonValue());
 
-		assertEquals(DialogId.DODGE_MODIFIER_CHOICE, restored.getId());
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, restored.getId());
 		assertEquals("playerId", restored.getPlayerId());
 		assertEquals(ReRolledActions.DODGE, restored.getReRolledAction());
 		assertEquals(5, restored.getMinimumRoll());
-		assertEquals(4, restored.getDodgeRoll());
+		assertEquals(4, restored.getRoll());
 		assertTrue(restored.isFumble());
 		assertEquals(consummateProfessional, restored.getReRollSkill());
 		assertEquals(CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, restored.getMenuProperty());
@@ -102,17 +102,17 @@ class DodgeModifierChoiceJsonTest {
 		assertTrue(restored.hasProperty(ReRollProperty.PRO));
 		assertFalse(restored.hasProperty(ReRollProperty.LONER));
 		assertEquals(Collections.singletonList("Break Tackle"),
-			restored.getModifierOptions().stream().map(DodgeModifierOption::getLabel).collect(Collectors.toList()));
+			restored.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList()));
 		assertEquals(4, restored.getModifierOptions().get(0).getMinimumRoll());
 	}
 
 	@Test
 	void clientCommandSurvivesRoundTrip() {
-		ClientCommandDodgeModifierChoice command = new ClientCommandDodgeModifierChoice("playerId",
+		ClientCommandReRollModifierChoice command = new ClientCommandReRollModifierChoice("playerId",
 			Arrays.asList(breakTackle, consummateProfessional), ReRolledActions.DODGE);
 
-		ClientCommandDodgeModifierChoice restored =
-			new ClientCommandDodgeModifierChoice().initFrom(source, command.toJsonValue());
+		ClientCommandReRollModifierChoice restored =
+			new ClientCommandReRollModifierChoice().initFrom(source, command.toJsonValue());
 
 		assertEquals("playerId", restored.getPlayerId());
 		assertEquals(Arrays.asList(breakTackle, consummateProfessional), restored.getSkills());

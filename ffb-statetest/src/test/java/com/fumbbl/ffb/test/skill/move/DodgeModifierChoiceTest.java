@@ -4,7 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -81,10 +81,10 @@ public class DodgeModifierChoiceTest {
 		// agility 3 plus one tacklezone on the target square is a 4+
 		dodge(state, 3);
 
-		assertEquals(DialogId.DODGE_MODIFIER_CHOICE, game.getDialogParameter().getId());
-		DialogDodgeModifierChoiceParameter parameter = (DialogDodgeModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
 		assertEquals(4, parameter.getMinimumRoll());
-		assertEquals(3, parameter.getDodgeRoll());
+		assertEquals(3, parameter.getRoll());
 		List<String> labels =
 			parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
 		assertEquals(2, labels.size());
@@ -100,7 +100,7 @@ public class DodgeModifierChoiceTest {
 		dodge(state, 3);
 
 		Skill breakTackle = game.getRules().getSkillFactory().forName("Break Tackle");
-		StepEngine.respond(state, Commands.dodgeModifierChoice("runner", ReRolledActions.DODGE, breakTackle));
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, breakTackle));
 
 		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
 		assertTrue(game.getActingPlayer().isSkillUsed(breakTackle));

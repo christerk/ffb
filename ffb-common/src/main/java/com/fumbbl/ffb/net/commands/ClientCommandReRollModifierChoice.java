@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reports the optional dodge modifier skills the coach decided to use.
+ * Reports the optional roll modifier skills the coach decided to use.
  */
-public class ClientCommandDodgeModifierChoice extends ClientCommand {
+public class ClientCommandReRollModifierChoice extends ClientCommand {
 
 	private final List<Skill> skills = new ArrayList<>();
 	private String playerId;
 	private ReRolledAction reRolledAction;
 
-	public ClientCommandDodgeModifierChoice() {
+	public ClientCommandReRollModifierChoice() {
 		super();
 	}
 
-	public ClientCommandDodgeModifierChoice(String playerId, List<Skill> skills, ReRolledAction reRolledAction) {
+	public ClientCommandReRollModifierChoice(String playerId, List<Skill> skills, ReRolledAction reRolledAction) {
 		this.playerId = playerId;
 		if (skills != null) {
 			this.skills.addAll(skills);
@@ -37,7 +37,7 @@ public class ClientCommandDodgeModifierChoice extends ClientCommand {
 	}
 
 	public NetCommandId getId() {
-		return NetCommandId.CLIENT_DODGE_MODIFIER_CHOICE;
+		return NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE;
 	}
 
 	public String getPlayerId() {
@@ -66,7 +66,7 @@ public class ClientCommandDodgeModifierChoice extends ClientCommand {
 		return jsonObject;
 	}
 
-	public ClientCommandDodgeModifierChoice initFrom(IFactorySource source, JsonValue jsonValue) {
+	public ClientCommandReRollModifierChoice initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		playerId = IJsonOption.PLAYER_ID.getFrom(source, jsonObject);

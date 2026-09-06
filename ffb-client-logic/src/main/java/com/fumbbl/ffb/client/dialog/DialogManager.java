@@ -45,8 +45,8 @@ public class DialogManager {
 					case RE_ROLL_PROPERTIES:
 						setDialogHandler(new DialogReRollPropertiesHandler(getClient()));
 						break;
-					case DODGE_MODIFIER_CHOICE:
-						setDialogHandler(new DialogDodgeModifierChoiceHandler(getClient()));
+					case RE_ROLL_MODIFIER_CHOICE:
+						setDialogHandler(new DialogReRollModifierChoiceHandler(getClient()));
 						break;
 					case SKILL_USE:
 						setDialogHandler(new DialogSkillUseHandler(getClient()));

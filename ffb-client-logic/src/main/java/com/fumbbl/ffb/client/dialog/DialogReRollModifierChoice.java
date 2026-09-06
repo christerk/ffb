@@ -9,9 +9,9 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 
 import javax.swing.BorderFactory;
@@ -29,15 +29,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Lets the coach pick a combination of optional dodge modifiers or a re-roll.
+ * Lets the coach pick a combination of optional roll modifiers or a re-roll.
  */
-public class DialogDodgeModifierChoice extends Dialog implements ActionListener, KeyListener {
+public class DialogReRollModifierChoice extends Dialog implements ActionListener, KeyListener {
 
 	private static final int MAX_MODIFIER_BUTTONS = 9;
 
-	private final DialogDodgeModifierChoiceParameter dialogParameter;
+	private final DialogReRollModifierChoiceParameter dialogParameter;
 	private final List<JButton> modifierButtons = new ArrayList<>();
-	private final List<DodgeModifierOption> modifierOptions = new ArrayList<>();
+	private final List<ModifierChoiceOption> modifierOptions = new ArrayList<>();
 	private JButton buttonFallbackReRoll;
 	private final JButton buttonTeamReRoll;
 	private final JButton buttonProReRoll;
@@ -47,11 +47,11 @@ public class DialogDodgeModifierChoice extends Dialog implements ActionListener,
 	private ReRollSource reRollSource;
 	private boolean useSkill;
 	private Skill usedSkill;
-	private DodgeModifierOption selectedOption;
+	private ModifierChoiceOption selectedOption;
 	private final boolean willUseMascot;
 
-	public DialogDodgeModifierChoice(FantasyFootballClient pClient,
-																	 DialogDodgeModifierChoiceParameter pDialogParameter) {
+	public DialogReRollModifierChoice(FantasyFootballClient pClient,
+																	 DialogReRollModifierChoiceParameter pDialogParameter) {
 
 		super(pClient, "Use a Skill or a Re-roll", false);
 
@@ -93,7 +93,7 @@ public class DialogDodgeModifierChoice extends Dialog implements ActionListener,
 		buttonNoReRoll.setMnemonic((int) 'N');
 		buttonNoReRoll.setAlignmentY(Box.TOP_ALIGNMENT);
 
-		for (DodgeModifierOption option : pDialogParameter.getModifierOptions()) {
+		for (ModifierChoiceOption option : pDialogParameter.getModifierOptions()) {
 			if (modifierOptions.size() >= MAX_MODIFIER_BUTTONS) {
 				break;
 			}
@@ -108,7 +108,7 @@ public class DialogDodgeModifierChoice extends Dialog implements ActionListener,
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
-		messagePanel.add(new JLabel(dimensionProvider(), "You rolled a " + pDialogParameter.getDodgeRoll()
+		messagePanel.add(new JLabel(dimensionProvider(), "You rolled a " + pDialogParameter.getRoll()
 			+ " and needed " + pDialogParameter.getMinimumRoll() + "+ to succeed."));
 
 		if (pDialogParameter.getMessages() != null) {
@@ -215,7 +215,7 @@ public class DialogDodgeModifierChoice extends Dialog implements ActionListener,
 	}
 
 	public DialogId getId() {
-		return DialogId.DODGE_MODIFIER_CHOICE;
+		return DialogId.RE_ROLL_MODIFIER_CHOICE;
 	}
 
 	public void actionPerformed(ActionEvent pActionEvent) {
@@ -266,11 +266,11 @@ public class DialogDodgeModifierChoice extends Dialog implements ActionListener,
 		return dialogParameter.getReRolledAction();
 	}
 
-	public DialogDodgeModifierChoiceParameter getDialogParameter() {
+	public DialogReRollModifierChoiceParameter getDialogParameter() {
 		return dialogParameter;
 	}
 
-	public DodgeModifierOption getSelectedOption() {
+	public ModifierChoiceOption getSelectedOption() {
 		return selectedOption;
 	}
 

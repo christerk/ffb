@@ -247,8 +247,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseReRoll(pReRolledAction, pReRollSource));
 	}
 
-	public void sendDodgeModifierChoice(String playerId, List<Skill> skills, ReRolledAction reRolledAction) {
-		send(new ClientCommandDodgeModifierChoice(playerId, skills, reRolledAction));
+	public void sendReRollModifierChoice(String playerId, List<Skill> skills, ReRolledAction reRolledAction) {
+		send(new ClientCommandReRollModifierChoice(playerId, skills, reRolledAction));
 	}
 
 	public void sendUseProReRollForBlock(int proIndex) {

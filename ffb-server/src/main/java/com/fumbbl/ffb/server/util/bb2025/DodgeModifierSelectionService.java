@@ -6,7 +6,7 @@ import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
@@ -33,7 +33,7 @@ public class DodgeModifierSelectionService {
 
 	private final OptionalDodgeModifierService optionalModifierService = new OptionalDodgeModifierService();
 
-	public List<DodgeModifierOption> findOptions(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+	public List<ModifierChoiceOption> findOptions(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
 																							 FieldCoordinate to, Set<DodgeModifier> extraModifiers, int dodgeRoll) {
 
 		List<Skill> skills = optionalModifierService.availableFor(game, actingPlayer, from, to).stream()
@@ -51,7 +51,7 @@ public class DodgeModifierSelectionService {
 			(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 
-		List<DodgeModifierOption> options = new ArrayList<>();
+		List<ModifierChoiceOption> options = new ArrayList<>();
 		List<Set<Skill>> successfulCombinations = new ArrayList<>();
 
 		for (Set<Skill> combination : combinations(skills)) {
@@ -69,17 +69,17 @@ public class DodgeModifierSelectionService {
 				continue;
 			}
 			successfulCombinations.add(combination);
-			options.add(new DodgeModifierOption(orderedSkills(skills, combination), totalModifier(combination, modifiers),
+			options.add(new ModifierChoiceOption(orderedSkills(skills, combination), totalModifier(combination, modifiers),
 				minimumRoll));
 		}
 
-		options.sort(Comparator.comparingInt((DodgeModifierOption option) -> option.getSkills().size())
-			.thenComparingInt(this::usageCost).thenComparing(DodgeModifierOption::getLabel));
+		options.sort(Comparator.comparingInt((ModifierChoiceOption option) -> option.getSkills().size())
+			.thenComparingInt(this::usageCost).thenComparing(ModifierChoiceOption::getLabel));
 
 		return options;
 	}
 
-	public int usageCost(DodgeModifierOption option) {
+	public int usageCost(ModifierChoiceOption option) {
 		return option.getSkills().stream().mapToInt(skill -> usageCost(skill.getSkillUsageType())).sum();
 	}
 

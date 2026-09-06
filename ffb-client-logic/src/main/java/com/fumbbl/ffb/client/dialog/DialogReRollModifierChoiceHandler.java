@@ -4,32 +4,32 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 /**
- * Handles the dialog offering optional dodge modifiers and re-rolls.
+ * Handles the dialog offering optional roll modifiers and re-rolls.
  */
-public class DialogDodgeModifierChoiceHandler extends DialogHandler {
+public class DialogReRollModifierChoiceHandler extends DialogHandler {
 
-	public DialogDodgeModifierChoiceHandler(FantasyFootballClient pClient) {
+	public DialogReRollModifierChoiceHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
 
 	public void showDialog() {
 
 		Game game = getClient().getGame();
-		DialogDodgeModifierChoiceParameter dialogParameter =
-			(DialogDodgeModifierChoiceParameter) game.getDialogParameter();
+		DialogReRollModifierChoiceParameter dialogParameter =
+			(DialogReRollModifierChoiceParameter) game.getDialogParameter();
 
 		if (dialogParameter != null) {
 
 			Player<?> player = game.getPlayerById(dialogParameter.getPlayerId());
 
 			if ((ClientMode.PLAYER == getClient().getMode()) && game.getTeamHome().hasPlayer(player)) {
-				setDialog(new DialogDodgeModifierChoice(getClient(), dialogParameter));
+				setDialog(new DialogReRollModifierChoice(getClient(), dialogParameter));
 				getDialog().showDialog(this);
 
 			} else {
@@ -51,11 +51,11 @@ public class DialogDodgeModifierChoiceHandler extends DialogHandler {
 
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
-		if (testDialogHasId(pDialog, DialogId.DODGE_MODIFIER_CHOICE)) {
-			DialogDodgeModifierChoice modifierChoiceDialog = (DialogDodgeModifierChoice) pDialog;
+		if (testDialogHasId(pDialog, DialogId.RE_ROLL_MODIFIER_CHOICE)) {
+			DialogReRollModifierChoice modifierChoiceDialog = (DialogReRollModifierChoice) pDialog;
 			String playerId = modifierChoiceDialog.getDialogParameter().getPlayerId();
 			if (modifierChoiceDialog.isUseModifiers()) {
-				getClient().getCommunication().sendDodgeModifierChoice(playerId,
+				getClient().getCommunication().sendReRollModifierChoice(playerId,
 					modifierChoiceDialog.getSelectedOption().getSkills(), modifierChoiceDialog.getReRolledAction());
 			} else if (modifierChoiceDialog.isUseSkill()) {
 				getClient().getCommunication().sendUseSkill(modifierChoiceDialog.getUsedSkill(), true, playerId,

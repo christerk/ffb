@@ -10,11 +10,11 @@ import com.fumbbl.ffb.client.LayoutSettings;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
-import com.fumbbl.ffb.dialog.DialogDodgeModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
-import com.fumbbl.ffb.model.DodgeModifierOption;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.skill.bb2025.BreakTackle;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class DialogDodgeModifierChoiceTest {
+class DialogReRollModifierChoiceTest {
 	public static void main(String[] args)
 		throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -72,13 +72,13 @@ class DialogDodgeModifierChoiceTest {
 		Skill consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
 
-		List<DodgeModifierOption> options = Arrays.asList(
-			new DodgeModifierOption(Collections.singletonList(breakTackle), -1, 4),
-			new DodgeModifierOption(Collections.singletonList(consummateProfessional), -1, 4),
-			new DodgeModifierOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3));
+		List<ModifierChoiceOption> options = Arrays.asList(
+			new ModifierChoiceOption(Collections.singletonList(breakTackle), -1, 4),
+			new ModifierChoiceOption(Collections.singletonList(consummateProfessional), -1, 4),
+			new ModifierChoiceOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3));
 
-		DialogDodgeModifierChoiceParameter param =
-			new DialogDodgeModifierChoiceParameter("playerID", ReRolledActions.DODGE, 5, 4, options, properties, false,
+		DialogReRollModifierChoiceParameter param =
+			new DialogReRollModifierChoiceParameter("playerID", ReRolledActions.DODGE, 5, 4, options, properties, false,
 				null, null, null, Collections.singletonList("You rolled a 4, you needed a 5+."));
 
 		JPanel panelContent = new JPanel();
@@ -92,7 +92,7 @@ class DialogDodgeModifierChoiceTest {
 
 		frame.setVisible(true);
 
-		DialogDodgeModifierChoice comp = new DialogDodgeModifierChoice(client, param);
+		DialogReRollModifierChoice comp = new DialogReRollModifierChoice(client, param);
 		frame.getContentPane().add(comp);
 		comp.setVisible(true);
 
