@@ -21,7 +21,8 @@ public enum NetCommandId implements INamedObject {
 	CLIENT_USE_CONSUMMATE_RE_ROLL_FOR_BLOCK("clientUseConsummateReRollForBlock"),
 	CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK("clientUseProReRollForBlock"),
 	CLIENT_FOLLOWUP_CHOICE("clientFollowupChoice"), CLIENT_INTERCEPTOR_CHOICE("clientInterceptorChoice"),
-	CLIENT_USE_SKILL("clientUseSkill"), SERVER_TEAM_SETUP_LIST("serverTeamSetupList"),
+	CLIENT_USE_SKILL("clientUseSkill"), CLIENT_DODGE_MODIFIER_CHOICE("clientDodgeModifierChoice"),
+	SERVER_TEAM_SETUP_LIST("serverTeamSetupList"),
 	CLIENT_TEAM_SETUP_LOAD("clientTeamSetupLoad"), CLIENT_TEAM_SETUP_SAVE("clientTeamSetupSave"),
 	CLIENT_TEAM_SETUP_DELETE("clientTeamSetupDelete"), CLIENT_FOUL("clientFoul"),
 	CLIENT_USE_APOTHECARY("clientUseApothecary"), CLIENT_APOTHECARY_CHOICE("clientApothecaryChoice"),
@@ -145,6 +146,8 @@ public enum NetCommandId implements INamedObject {
 				return new ClientCommandInterceptorChoice();
 			case CLIENT_USE_SKILL:
 				return new ClientCommandUseSkill();
+			case CLIENT_DODGE_MODIFIER_CHOICE:
+				return new ClientCommandDodgeModifierChoice();
 			case SERVER_TEAM_SETUP_LIST:
 				return new ServerCommandTeamSetupList();
 			case CLIENT_TEAM_SETUP_LOAD:

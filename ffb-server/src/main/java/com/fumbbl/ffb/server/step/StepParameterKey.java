@@ -159,6 +159,8 @@ public enum StepParameterKey {
 	UPDATE_PERSISTENCE, // Boolean
 	USE_ALTERNATE_LABEL, // Boolean
 	USING_BREAK_TACKLE, // Boolean
+	SELECTED_DODGE_MODIFIER_SKILLS, // Set<Skill>
+	MODIFIER_CHOICE_OFFERED, // Boolean
 	USING_BREATHE_FIRE, // Boolean
 	USING_BULLSEYE, // Boolean
 	USING_CHAINSAW, // Boolean

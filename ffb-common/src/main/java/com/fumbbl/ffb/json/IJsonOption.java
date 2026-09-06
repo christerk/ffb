@@ -299,6 +299,7 @@ public interface IJsonOption {
 	JsonStringOption MESSAGE = new JsonStringOption("message");
 	JsonStringArrayOption MESSAGE_ARRAY = new JsonStringArrayOption("messageArray");
 	JsonIntOption MIN_SELECTS = new JsonIntOption("minSelects");
+	JsonArrayOption DODGE_MODIFIER_OPTIONS = new JsonArrayOption("dodgeModifierOptions");
 	JsonIntOption MINIMUM_ROLL = new JsonIntOption("minimumRoll");
 	JsonIntOption MINIMUM_ROLL_DODGE = new JsonIntOption("minimumRollDodge");
 	JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");
