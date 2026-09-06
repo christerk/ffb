@@ -71,7 +71,6 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption DT_REROLL_ASKED = new JsonBooleanOption("dtRerollAsked");
     JsonArrayOption SELECTED_DODGE_MODIFIER_SKILLS = new JsonArrayOption("selectedDodgeModifierSkills");
     JsonBooleanOption MODIFIER_CHOICE_OFFERED = new JsonBooleanOption("modifierChoiceOffered");
-    JsonBooleanOption MODIFIER_CHOICE_MADE = new JsonBooleanOption("modifierChoiceMade");
     JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");

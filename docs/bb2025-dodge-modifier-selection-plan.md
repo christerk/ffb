@@ -544,7 +544,7 @@ branches on `isUseStrength`, which is unchanged.
 
 ---
 
-## 7. Open decisions
+## 7. Decisions (resolved)
 
 **D1 — Should the move-square preview show one number or two?**
 §3.7 makes the preview show the **best achievable** roll (all available optional modifiers applied),
@@ -553,11 +553,15 @@ downside is that the preview no longer shows the roll the coach will actually fa
 spend anything. Showing both would mean extending `MoveSquare` with a second int plus client
 rendering changes — a shared-model change affecting all rulesets.
 *Recommendation:* single best-achievable number now; revisit if coaches find it misleading.
+**Decided:** one number, the best achievable roll of all available combinations. Implemented in
+`bb2025/AgilityMechanic.minimumRollDodgePreview`.
 
 **D2 — Re-prompt after Diving Tackle is actually declared?**
 `modifierChoiceOffered` suppresses a second prompt in the retry `StepMoveDodge`. This follows from
 the rule that all of the active player's modifiers are declared before the Diving Tackle decision,
 and mirrors the existing `dtRerollAsked` design. Confirm no BB2025 corner case re-opens the choice.
+**Decided:** do not re-prompt, the plan is correct. `modifierChoiceOffered` is published to the retry
+step and only reset when a new die is rolled.
 
 **D3 — Dialog when only a single one-skill option exists.**
 The plan always uses the new dialog when at least one modifier option exists, and falls back to the
@@ -565,31 +569,32 @@ existing `DialogReRollProperties` only when there are no modifier options. R8 sa
 where more than one skill could be used" — reusing `DialogSkillUseParameter` for the single-skill
 case would honour that more literally but doubles the number of code paths.
 *Recommendation:* one dialog for all modifier cases.
+**Decided:** follow the recommendation, a single path for all modifier cases.
 
 
 ---
 
 ## 8. Work breakdown
 
-| # | Task | Modules |
-|---|---|---|
-| 1 | `DodgeModifier.optional` flag; `DodgeContext.selectedSkills` + `isSkillSelected` | ffb-common |
-| 2 | `OptionalDodgeModifierService` + `OptionalDodgeModifier` holder | ffb-common |
-| 3 | `DodgeModifierOption` model (incl. `minimumRoll`) + JSON | ffb-common |
-| 4 | BB2025 `BreakTackle` opt-in; new BB2025 `ConsummateProfessional` | ffb-common |
-| 5 | `AgilityMechanic.minimumRollDodgePreview` + bb2016/bb2020 (verbatim) and bb2025 (best achievable) implementations | ffb-common |
-| 6 | `UtilServerPlayerMove.addMoveSquare` delegates to the mechanic | ffb-server |
-| 7 | `SkillUse.ADD_DODGE_MODIFIER`; new `IJsonOption`s | ffb-common |
-| 8 | `DialogId`, `DialogParameterFactory`, `DialogDodgeModifierChoiceParameter` | ffb-common |
-| 9 | `NetCommandId` + `ClientCommandDodgeModifierChoice` | ffb-common |
-| 10 | `DodgeModifierSelectionService` (subset enumeration, per-option `minimumRoll`, pruning, ranking) | ffb-server |
-| 11 | `StepParameterKey.SELECTED_DODGE_MODIFIER_SKILLS` + `IServerJsonOption` entries | ffb-server |
-| 12 | `StepDivingTackle.StepState.selectedModifierSkills` + param/JSON plumbing | ffb-server |
-| 13 | Rewrite `step/bb2025/move/StepMoveDodge` (§5.1, §5.2) | ffb-server |
-| 14 | Rewrite `skillbehaviour/bb2025/DivingTackleBehaviour` (§5.3) | ffb-server |
-| 15 | `DialogDodgeModifierChoice` + handler + `DialogManager` + `ClientCommunication` | ffb-client-logic |
-| 16 | Change list entry in the `3.4.0` `VersionChangeList` | ffb-client-logic |
-| 17 | Tests (§9) | ffb-common, ffb-server, ffb-client-logic |
+| # | Task | Modules | Done |
+|---|---|---|---|
+| 1 | `DodgeModifier.optional` flag; `DodgeContext.selectedSkills` + `isSkillSelected` | ffb-common | ✅ |
+| 2 | `OptionalDodgeModifierService` + `OptionalDodgeModifier` holder | ffb-common | ✅ |
+| 3 | `DodgeModifierOption` model (incl. `minimumRoll`) + JSON | ffb-common | ✅ |
+| 4 | BB2025 `BreakTackle` opt-in; new BB2025 `ConsummateProfessional` | ffb-common | ✅ |
+| 5 | `AgilityMechanic.minimumRollDodgePreview` + bb2016/bb2020 (verbatim) and bb2025 (best achievable) implementations | ffb-common | ✅ |
+| 6 | `UtilServerPlayerMove.addMoveSquare` delegates to the mechanic | ffb-server | ✅ |
+| 7 | `SkillUse.ADD_DODGE_MODIFIER`; new `IJsonOption`s | ffb-common | ✅ |
+| 8 | `DialogId`, `DialogParameterFactory`, `DialogDodgeModifierChoiceParameter` | ffb-common | ✅ |
+| 9 | `NetCommandId` + `ClientCommandDodgeModifierChoice` | ffb-common | ✅ |
+| 10 | `DodgeModifierSelectionService` (subset enumeration, per-option `minimumRoll`, pruning, ranking) | ffb-server | ✅ |
+| 11 | `StepParameterKey.SELECTED_DODGE_MODIFIER_SKILLS` + `IServerJsonOption` entries | ffb-server | ✅ |
+| 12 | `StepDivingTackle.StepState.selectedModifierSkills` + param/JSON plumbing | ffb-server | ✅ |
+| 13 | Rewrite `step/bb2025/move/StepMoveDodge` (§5.1, §5.2) | ffb-server | ✅ |
+| 14 | Rewrite `skillbehaviour/bb2025/DivingTackleBehaviour` (§5.3) | ffb-server | ✅ |
+| 15 | `DialogDodgeModifierChoice` + handler + `DialogManager` + `ClientCommunication` | ffb-client-logic | ✅ |
+| 16 | Change list entry in the `3.4.0` `VersionChangeList` | ffb-client-logic | ✅ |
+| 17 | Tests (§9) | ffb-common, ffb-server, ffb-client-logic | ✅ |
 
 
 Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-client`.
@@ -628,7 +633,21 @@ own `minimumRoll`, correct command on close.
 `ClientCommandDodgeModifierChoice`, and the extended `StepMoveDodge` / `StepDivingTackle` step state
 (step serialisation matters for replay and reconnect).
 
-**Manual / scripted scenarios:**
+**Implemented automated tests:**
+
+* `ffb-server/src/test/java/com/fumbbl/ffb/server/util/bb2025/DodgeModifierSelectionServiceTest.java` ✅
+* `ffb-common/src/test/java/com/fumbbl/ffb/mechanics/AgilityMechanicDodgePreviewTest.java` ✅
+  (named `AgilityMechanicDodgePreviewTest`, covers the §3.7 regression guard for all three rulesets)
+* `ffb-common/src/test/java/com/fumbbl/ffb/json/DodgeModifierChoiceJsonTest.java` ✅
+  (round trips for `DodgeModifierOption`, `DialogDodgeModifierChoiceParameter`,
+  `ClientCommandDodgeModifierChoice`)
+* `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogDodgeModifierChoiceTest.java` ✅
+  (visual harness, same style as `DialogReRollPropertiesTest`)
+* `ffb-statetest/src/test/java/com/fumbbl/ffb/test/skill/move/DodgeModifierChoiceTest.java` ✅
+  (step flow: no dialog on success, both single-skill options offered on failure, chosen skill
+  rescues the dodge and is marked used; covers scenarios 1, 4 and 5 below)
+
+**Manual / scripted scenarios:** (still to be verified by hand)
 
 1. Dodge succeeds outright, no DT adjacent → no dialogs, no skills used.
 2. Dodge succeeds outright, DT adjacent, DT cannot change the result → defender is still prompted
