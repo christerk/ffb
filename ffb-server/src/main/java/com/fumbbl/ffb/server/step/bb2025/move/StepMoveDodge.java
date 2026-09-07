@@ -63,6 +63,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.DodgeModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollOptionsService;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -100,6 +101,7 @@ import java.util.Set;
 public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private final DodgeModifierSelectionService selectionService = new DodgeModifierSelectionService();
+	private final ReRollOptionsService reRollOptionsService = new ReRollOptionsService();
 
 	private String fGotoLabelOnFailure;
 	private FieldCoordinate fCoordinateFrom;
@@ -440,66 +442,64 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		ReRollSource skillReRollSource = reRollPossible ? uncanceledDodgeRerollSource(game, actingPlayer) : null;
 
-		if (!options.isEmpty()) {
-			RollMechanic rollMechanic =
-				(RollMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
-			ReRollOptions reRollOptions = reRollPossible
-				? rollMechanic.findReRollOptions(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-				skillReRollSource != null ? skillReRollSource.getSkill(game) : null)
-				: new ReRollOptions(new ArrayList<>(), null);
-
-			List<String> messages = new ArrayList<>();
-			if (dueToDivingTackle) {
-				messages.add("Diving Tackle can make this dodge fail.");
+		if (options.isEmpty()) {
+			if (!reRollPossible) {
+				if (ignoreModifierSkill.isPresent() && usingModifierIgnoringSkill == null) {
+					return offerModifierIgnoringSkill(ignoreModifierSkill.get());
+				}
+				return fallback;
 			}
 
-			if (!dueToDivingTackle && reRollPossible) {
+			if (!dueToDivingTackle) {
 				setReRolledAction(ReRolledActions.DODGE);
+				if (ignoreModifierSkill.isPresent() && usingModifierIgnoringSkill == null) {
+					return offerModifierIgnoringSkill(ignoreModifierSkill.get());
+				}
+				if (skillReRollSource != null) {
+					fReRollUsed = true;
+					useSkillReRollSource(skillReRollSource);
+					return dodge(true);
+				}
 			}
-
-			Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			UtilServerDialog.showDialog(getGameState(),
-				new DialogReRollModifierChoiceParameter(actingPlayer.getPlayerId(), ReRolledActions.DODGE, minimumRoll,
-					fDodgeRoll, options, reRollOptions.getProperties(), false, reRollOptions.getReRollSkill(), null, null,
-					messages),
-				!actingTeam.hasPlayer(actingPlayer.getPlayer()));
-			setModifierChoiceOffered(true);
-			return ActionStatus.WAITING_FOR_RE_ROLL;
 		}
 
-		if (!reRollPossible) {
-			if (ignoreModifierSkill.isPresent() && usingModifierIgnoringSkill == null) {
-				return offerModifierIgnoringSkill(ignoreModifierSkill.get());
-			}
+		ReRollOptions reRollOptions = reRollPossible
+			? reRollOptionsService.withoutTeamReRollForSkillAvailableEveryTurn(
+			rollMechanic(game).findReRollOptions(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
+				skillReRollSource != null ? skillReRollSource.getSkill(game) : null))
+			: new ReRollOptions(new ArrayList<>(), null);
+
+		if (options.isEmpty() && !reRollOptions.canActuallyReRoll()) {
 			return fallback;
 		}
 
-		if (!dueToDivingTackle) {
+		List<String> messages = new ArrayList<>();
+		if (dueToDivingTackle) {
+			messages.add(options.isEmpty()
+				? "Diving Tackle can make this dodge fail. Reroll the dodge now?"
+				: "Diving Tackle can make this dodge fail.");
+		}
+
+		if (!dueToDivingTackle && reRollPossible) {
 			setReRolledAction(ReRolledActions.DODGE);
-			if (ignoreModifierSkill.isPresent() && usingModifierIgnoringSkill == null) {
-				return offerModifierIgnoringSkill(ignoreModifierSkill.get());
-			}
-			if (skillReRollSource != null) {
-				fReRollUsed = true;
-				useSkillReRollSource(skillReRollSource);
-				return dodge(true);
-			}
 		}
 
-		List<String> messages = dueToDivingTackle
-			? Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?")
-			: null;
-		Skill reRollSkill = skillReRollSource != null ? skillReRollSource.getSkill(game) : null;
+		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		UtilServerDialog.showDialog(getGameState(),
+			new DialogReRollModifierChoiceParameter(actingPlayer.getPlayerId(), ReRolledActions.DODGE, minimumRoll,
+				fDodgeRoll, options, reRollOptions.getProperties(), false, reRollOptions.getReRollSkill(), null, null,
+				messages),
+			!actingTeam.hasPlayer(actingPlayer.getPlayer()));
 
-		if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-			minimumRoll, false, null, reRollSkill, null, null, messages)) {
-			if (dueToDivingTackle) {
-				setModifierChoiceOffered(true);
-			}
-			return ActionStatus.WAITING_FOR_RE_ROLL;
+		if (!options.isEmpty() || dueToDivingTackle) {
+			setModifierChoiceOffered(true);
 		}
 
-		return fallback;
+		return ActionStatus.WAITING_FOR_RE_ROLL;
+	}
+
+	private RollMechanic rollMechanic(Game game) {
+		return (RollMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
 	}
 
 	private ActionStatus offerModifierIgnoringSkill(Skill ignoreModifierSkill) {

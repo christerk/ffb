@@ -32,6 +32,7 @@ public class ChangeList {
 			.addBugfix("If the only available action was forgo activation, a foul action was started instead")
 			.addFeature("2025: Optional dodge modifiers like Break Tackle and Consummate Professional are now offered in a dialog that lets you choose between skill combinations and re-rolls instead of being applied automatically")
 			.addBugfix("2025 Diving Tackle: The prompt is now always shown, describes the actual effect of the declaration and no longer offers skills the dodging player cannot use")
+			.addBehaviorChange("2025: Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
