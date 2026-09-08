@@ -111,7 +111,7 @@ public class ChatLogTextPane extends JTextPane {
 
 	/**
 	 * Batch insert of chat segments.
-	 *
+	 * <p>
 	 * Performs all inserts in one EDT run, avoiding overhead from many
 	 * small append calls (e.g. 150+ segments in stress test).
 	 */
