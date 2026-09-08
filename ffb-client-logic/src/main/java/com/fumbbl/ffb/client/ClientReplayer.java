@@ -4,7 +4,6 @@ import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryManager;
 import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
@@ -15,6 +14,7 @@ import com.fumbbl.ffb.client.handler.ClientCommandHandler;
 import com.fumbbl.ffb.client.handler.ClientCommandHandlerMode;
 import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.LogComponent;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.dialog.DialogCoinChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogStartGameParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
@@ -39,7 +39,7 @@ import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilBox;
 
-import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -66,6 +66,7 @@ public class ClientReplayer implements ActionListener {
 	private boolean fReplayDirectionForward, fStopping, fSkipping, control, online;
 	private ClientCommandHandlerMode lastMode;
 	private final Timer fTimer;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public ClientReplayer(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -510,11 +511,7 @@ public class ClientReplayer implements ActionListener {
 	public void positionOnFirstCommand() {
 		LogComponent log = getClient().getUserInterface().getLog();
 		replayToCommand(log.findCommandNr(1));
-		try {
-			SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
-		} catch (Exception pE) {
-			throw new FantasyFootballException(pE);
-		}
+		uiDispatcher.runOnUiThread(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
 	}
 
 	public void positionOnLastCommand() {
@@ -524,15 +521,7 @@ public class ClientReplayer implements ActionListener {
 		if (serverCommand != null) {
 			highlightCommand(serverCommand.getCommandNr());
 		}
-		try {
-			if (!SwingUtilities.isEventDispatchThread()) {
-				SwingUtilities.invokeAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
-			} else {
-				getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum();
-			}
-		} catch (Exception pE) {
-			throw new FantasyFootballException(pE);
-		}
+		uiDispatcher.runOnUiThread(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
 	}
 
 	public void stop() {
@@ -605,8 +594,9 @@ public class ClientReplayer implements ActionListener {
 		}
 	}
 
-	public synchronized void handleCommand(ServerCommandReplayStatus command, ReplayLogicModule.ReplayCallbacks callbacks) {
-		SwingUtilities.invokeLater(() -> {
+	// must not be synchronized, the body is handed over to the event dispatch thread which also needs this monitor
+	public void handleCommand(ServerCommandReplayStatus command, ReplayLogicModule.ReplayCallbacks callbacks) {
+		uiDispatcher.runLaterOnUiThread(() -> {
 			fTimer.stop();
 			setReplaySpeed(command.getSpeed());
 			if (fLastReplayPosition != command.getCommandNr()) {

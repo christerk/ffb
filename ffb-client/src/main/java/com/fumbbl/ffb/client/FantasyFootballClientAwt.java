@@ -13,9 +13,11 @@ import com.fumbbl.ffb.client.overlay.PathSketchOverlay;
 import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.ClientStateFactoryAwt;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.Insets;
 import java.io.IOException;
@@ -43,6 +45,8 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	private final ClientLogger logger;
 	private Overlay activeOverlay;
 	private final PathSketchOverlay pathSketchOverlay;
+
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	private transient int currentMouseButton;
 
@@ -84,12 +88,25 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	}
 
 	public void showUserInterface() {
-		getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
-		getUserInterface().getFieldComponent().refresh();
-		getUserInterface().setVisible(true);
+		uiDispatcher.runOnUiThread(() -> {
+			getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
+			getUserInterface().getFieldComponent().refresh();
+			getUserInterface().setVisible(true);
 
-		DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
-		aboutDialogHandler.showDialog();
+			DialogAboutHandler aboutDialogHandler = new DialogAboutHandler(this);
+			aboutDialogHandler.showDialog();
+		});
+
+		// connecting to the server and loading the game or replay must not happen on the event dispatch thread,
+		// otherwise the user interface freezes during startup
+		Thread startupThread = new Thread(() -> {
+			try {
+				startClient();
+			} catch (Exception all) {
+				logWithOutGameId(all);
+			}
+		}, "FFB-Client-Startup");
+		startupThread.start();
 	}
 
 	public void dialogClosed(IDialog pDialog) {
@@ -152,8 +169,15 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 				System.out.println(ClientParameters.USAGE);
 				return;
 			}
-			FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
-			client.showUserInterface();
+			// the whole user interface has to be created on the event dispatch thread
+			SwingUtilities.invokeAndWait(() -> {
+				try {
+					FantasyFootballClientAwt client = new FantasyFootballClientAwt(parameters);
+					client.showUserInterface();
+				} catch (Exception all) {
+					all.printStackTrace(System.err);
+				}
+			});
 		} catch (Exception all) {
 			all.printStackTrace(System.err);
 		}

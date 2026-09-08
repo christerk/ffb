@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.dialog.DialogProgressBar;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
 import com.fumbbl.ffb.client.state.logic.LogicModule;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.net.NetCommand;
 
 import java.awt.event.MouseEvent;
@@ -18,7 +19,8 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	protected final T logicModule;
 
 	protected FieldCoordinate fSelectSquareCoordinate;
-	private DialogProgressBar dialogProgress;
+	private volatile DialogProgressBar dialogProgress;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public ClientState(C pClient, T logicModule) {
 		fClient = pClient;
@@ -131,18 +133,27 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	}
 
 	public void showIconProgress(IDialogCloseListener listener, int total) {
-		dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, total);
-		dialogProgress.showDialog(listener);
+		uiDispatcher.runOnUiThread(() -> {
+			dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, total);
+			dialogProgress.showDialog(listener);
+		});
 	}
 
-	public synchronized void updateIconProgress(AtomicInteger count, int total) {
-		String message = String.format("Loaded icon %d of %d.", count.incrementAndGet(), total);
-		dialogProgress.updateProgress(count.get(), message);
+	// must not be synchronized, the progress dialog hands its work over to the event dispatch thread and holding a
+	// lock while doing so deadlocks the client when the event dispatch thread is busy
+	public void updateIconProgress(AtomicInteger count, int total) {
+		if (dialogProgress == null) {
+			return;
+		}
+		int loaded = count.incrementAndGet();
+		dialogProgress.updateProgress(loaded, String.format("Loaded icon %d of %d.", loaded, total));
 	}
 
 	public void hideIconProgress() {
-		dialogProgress.hideDialog();
+		DialogProgressBar progressBar = dialogProgress;
 		dialogProgress = null;
+		if (progressBar != null) {
+			progressBar.hideDialog();
+		}
 	}
 }
-

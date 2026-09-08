@@ -7,6 +7,7 @@ import com.fumbbl.ffb.client.ui.chat.ChatSegment;
 import com.fumbbl.ffb.client.ui.chat.MessageParser;
 import com.fumbbl.ffb.client.ui.swing.JTextField;
 import com.fumbbl.ffb.client.ui.swing.WrappingEditorKit;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -39,6 +40,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	private final JTextField fChatInputField;
 	private final ReplayControl fReplayControl;
 	private boolean fReplayShown;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	private final List<String> fInputLog;
 	private int fInputLogPosition;
@@ -199,14 +201,16 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void showReplay(boolean pShowReplay) {
-		removeAll();
-		if (pShowReplay) {
-			add(fReplayControl, BorderLayout.NORTH);
-		}
-		add(fChatScrollPane, BorderLayout.CENTER);
-		add(fChatInputPanel, BorderLayout.SOUTH);
-		revalidate();
-		repaint();
+		uiDispatcher.runOnUiThread(() -> {
+			removeAll();
+			if (pShowReplay) {
+				add(fReplayControl, BorderLayout.NORTH);
+			}
+			add(fChatScrollPane, BorderLayout.CENTER);
+			add(fChatInputPanel, BorderLayout.SOUTH);
+			revalidate();
+			repaint();
+		});
 		fReplayShown = pShowReplay;
 	}
 

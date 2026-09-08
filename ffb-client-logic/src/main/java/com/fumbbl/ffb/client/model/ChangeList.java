@@ -31,6 +31,8 @@ public class ChangeList {
 			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addBugfix("Chainsaw: Attacker down (skull or both down) when blocking a player with chainsaw did add chainsaw modifier to armour roll on attacker")
 			.addBugfix("If the only available action was forgo activation, a foul action was started instead")
+			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
+			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")

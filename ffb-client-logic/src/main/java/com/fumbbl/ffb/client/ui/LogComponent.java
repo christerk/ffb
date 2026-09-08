@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.ui;
 
 import com.fumbbl.ffb.client.*;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 
 import javax.swing.JPanel;
 import javax.swing.text.BadLocationException;
@@ -26,6 +27,7 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	private final StyleProvider styleProvider;
 
 	private final FantasyFootballClient fClient;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public LogComponent(FantasyFootballClient pClient, StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		fClient = pClient;
@@ -91,12 +93,14 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	}
 
 	public void detachLogDocument() {
-		fLogTextPane.detachDocument();
-		fCommandHighlightAreaByCommandNr.clear();
+		uiDispatcher.runOnUiThread(() -> {
+			fLogTextPane.detachDocument();
+			fCommandHighlightAreaByCommandNr.clear();
+		});
 	}
 
 	public void attachLogDocument() {
-		fLogTextPane.attachDocument();
+		uiDispatcher.runOnUiThread(fLogTextPane::attachDocument);
 	}
 
 	public boolean hasCommandHighlight(int pCommandNr) {
