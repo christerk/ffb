@@ -417,8 +417,9 @@ rrOptions = rollMechanic.findReRollOptions(gameState, player, ReRolledActions.DO
                                             uncanceledDodgeRerollSource(...))
 
 if (options.isEmpty() && !rrOptions.canActuallyReRoll())  -> failDodge() / return FAILURE
+if (options.isEmpty())                                     -> existing UtilServerReRoll.askForReRollIfAvailable(...)
 else  -> UtilServerDialog.showDialog(new DialogReRollModifierChoiceParameter(...))
-         modifierChoiceOffered = true (unless the re-roll question is the only content)
+         modifierChoiceOffered = true
          return WAITING_FOR_RE_ROLL
 ```
 
@@ -563,8 +564,8 @@ and mirrors the existing `dtRerollAsked` design. Confirm no BB2025 corner case r
 step and only reset when a new die is rolled.
 
 **D3 — Dialog when only a single one-skill option exists.**
-The plan always uses the new dialog when at least one modifier option exists; after review it is
-now used for the re-roll question of a dodge as well, even when there are no modifier options. R8 says "for the cases
+The plan always uses the new dialog when at least one modifier option exists, and falls back to the
+existing `DialogReRollProperties` only when there are no modifier options. R8 says "for the cases
 where more than one skill could be used" — reusing `DialogSkillUseParameter` for the single-skill
 case would honour that more literally but doubles the number of code paths.
 *Recommendation:* one dialog for all modifier cases.
@@ -652,7 +653,7 @@ own `minimumRoll`, correct command on close.
 2. Dodge succeeds outright, DT adjacent, DT cannot change the result → defender is still prompted
    with *"This will NOT trip the dodger, the dodge will still succeed."* (R10, B3), and using DT
    still places the tackler prone.
-3. Dodge fails, only a TRR available → new dialog without modifier buttons.
+3. Dodge fails, only a TRR available → existing `DialogReRollProperties`.
 4. Dodge fails, only Break Tackle rescues → new dialog with one skill button + TRR; picking the
    skill succeeds without a new roll, and the button showed the correct required roll.
 5. Dodge fails, BT and CP both individually rescue → two single-skill buttons with their own required

@@ -2,7 +2,6 @@ package com.fumbbl.ffb.test.skill.move;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
-import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -92,34 +90,6 @@ public class DodgeModifierChoiceTest {
 		assertEquals(2, labels.size());
 		assertTrue(labels.contains("Break Tackle"));
 		assertTrue(labels.contains("Consummate Professional"));
-	}
-
-	@Test
-	public void failedDodgeWithoutOptionalModifiersOffersTheReRollDialog() {
-		GameState state = buildState();
-		Game game = state.getGame();
-		game.getTurnData().setReRolls(1);
-
-		dodge(state, 3);
-
-		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
-		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		assertTrue(parameter.getModifierOptions().isEmpty());
-		assertTrue(parameter.hasProperty(ReRollProperty.TRR));
-		assertNull(parameter.getReRollSkill());
-	}
-
-	@Test
-	public void teamReRollIsNotOfferedWhenTheReRollSkillIsAvailableEveryTurn() {
-		GameState state = buildState("Break Tackle", "Dodge");
-		Game game = state.getGame();
-		game.getTurnData().setReRolls(1);
-
-		dodge(state, 3);
-
-		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		assertFalse(parameter.hasProperty(ReRollProperty.TRR));
-		assertEquals("Dodge", parameter.getReRollSkill().getName());
 	}
 
 	@Test
