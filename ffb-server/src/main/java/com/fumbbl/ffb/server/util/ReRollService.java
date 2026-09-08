@@ -43,9 +43,7 @@ public class ReRollService {
 			}
 		}
 
-		return rollMechanic(gameState.getGame()).askForReRollIfAvailable(gameState, player, request.getReRolledAction(),
-			request.getMinimumRoll(), request.isFumble(), request.getModifyingSkill(), reRollSkill,
-			request.getMenuProperty(), request.getDefaultValueKey(), request.getMessages());
+		return rollMechanic(gameState.getGame()).askForReRollIfAvailable(request.resolved(player, reRollSkill));
 	}
 
 	private Skill findReRollSkill(GameState gameState, ActingPlayer actingPlayer, ReRolledAction reRolledAction,

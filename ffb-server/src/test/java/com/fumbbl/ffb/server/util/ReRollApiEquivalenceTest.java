@@ -29,8 +29,6 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -80,24 +78,17 @@ class ReRollApiEquivalenceTest {
 			call.apply(fixture);
 		}
 
-		ArgumentCaptor<Player> player = ArgumentCaptor.forClass(Player.class);
-		ArgumentCaptor<ReRolledAction> action = ArgumentCaptor.forClass(ReRolledAction.class);
-		ArgumentCaptor<Integer> minimumRoll = ArgumentCaptor.forClass(Integer.class);
-		ArgumentCaptor<Boolean> fumble = ArgumentCaptor.forClass(Boolean.class);
-		ArgumentCaptor<Skill> modificationSkill = ArgumentCaptor.forClass(Skill.class);
-		ArgumentCaptor<Skill> reRollSkill = ArgumentCaptor.forClass(Skill.class);
-		ArgumentCaptor<CommonProperty> menuProperty = ArgumentCaptor.forClass(CommonProperty.class);
-		ArgumentCaptor<String> defaultValueKey = ArgumentCaptor.forClass(String.class);
-		ArgumentCaptor<List> messages = ArgumentCaptor.forClass(List.class);
+		ArgumentCaptor<ReRollRequest> request = ArgumentCaptor.forClass(ReRollRequest.class);
 
-		verify(fixture.mechanic).askForReRollIfAvailable(eq(fixture.gameState), player.capture(), action.capture(),
-			minimumRoll.capture(), fumble.capture(), modificationSkill.capture(), reRollSkill.capture(),
-			menuProperty.capture(), defaultValueKey.capture(), messages.capture());
+		verify(fixture.mechanic).askForReRollIfAvailable(request.capture());
 
+		ReRollRequest resolvedRequest = request.getValue();
+		assertEquals(fixture.gameState, resolvedRequest.getGameState());
 		return Arrays.asList(
-			describe(fixture, player.getValue()), action.getValue(), minimumRoll.getValue(), fumble.getValue(),
-			describe(fixture, modificationSkill.getValue()), describe(fixture, reRollSkill.getValue()),
-			menuProperty.getValue(), defaultValueKey.getValue(), messages.getValue());
+			describe(fixture, resolvedRequest.getPlayer()), resolvedRequest.getReRolledAction(),
+			resolvedRequest.getMinimumRoll(), resolvedRequest.isFumble(),
+			describe(fixture, resolvedRequest.getModifyingSkill()), describe(fixture, resolvedRequest.getReRollSkill()),
+			resolvedRequest.getMenuProperty(), resolvedRequest.getDefaultValueKey(), resolvedRequest.getMessages());
 	}
 
 	private String describe(Fixture fixture, Object value) {
@@ -246,7 +237,11 @@ class ReRollApiEquivalenceTest {
 			new ReRollService().askForReRollIfAvailable(
 				ReRollRequest.forActingPlayer(fixture.gameState, fixture.actingPlayer, ACTION, MINIMUM_ROLL).build());
 		}
-		verify(fixture.mechanic).askForReRollIfAvailable(eq(fixture.gameState), eq(fixture.actingPlayerPlayer),
-			eq(ACTION), anyInt(), anyBoolean(), eq(null), eq(fixture.resolvedReRollSkill), eq(null), eq(null), eq(null));
+		ArgumentCaptor<ReRollRequest> request = ArgumentCaptor.forClass(ReRollRequest.class);
+		verify(fixture.mechanic).askForReRollIfAvailable(request.capture());
+		assertEquals(fixture.gameState, request.getValue().getGameState());
+		assertEquals(fixture.actingPlayerPlayer, request.getValue().getPlayer());
+		assertEquals(ACTION, request.getValue().getReRolledAction());
+		assertEquals(fixture.resolvedReRollSkill, request.getValue().getReRollSkill());
 	}
 }

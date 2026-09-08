@@ -6,14 +6,12 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
-import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
@@ -49,7 +47,6 @@ import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropDodge;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeDropDodgeForSpp;
 import com.fumbbl.ffb.server.injury.injuryType.InjuryTypeServer;
-import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.model.SteadyFootingContext;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.AbstractStepWithReRoll;
@@ -60,9 +57,11 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.DodgeModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -438,16 +437,14 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			&& (getReRolledAction() != ReRolledActions.DODGE
 			|| (successWithoutModifiers && !Boolean.TRUE.equals(usingModifierIgnoringSkill)));
 
+		ReRollSource rawReRollSource = reRollPossible ? findSkillReRollSource(ReRolledActions.DODGE) : null;
 		ReRollSource skillReRollSource = reRollPossible ? uncanceledDodgeRerollSource(game, actingPlayer) : null;
+		// the re-roll service would offer a canceled skill again, so it has to skip it explicitly
+		Set<Skill> canceledReRollSkills = rawReRollSource != null && skillReRollSource == null
+			? Collections.singleton(rawReRollSource.getSkill(game))
+			: Collections.emptySet();
 
 		if (!options.isEmpty()) {
-			RollMechanic rollMechanic =
-				(RollMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
-			ReRollOptions reRollOptions = reRollPossible
-				? rollMechanic.findReRollOptions(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-				skillReRollSource != null ? skillReRollSource.getSkill(game) : null)
-				: new ReRollOptions(new ArrayList<>(), null);
-
 			List<String> messages = new ArrayList<>();
 			if (dueToDivingTackle) {
 				messages.add("Diving Tackle can make this dodge fail.");
@@ -457,12 +454,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				setReRolledAction(ReRolledActions.DODGE);
 			}
 
-			Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-			UtilServerDialog.showDialog(getGameState(),
-				new DialogReRollModifierChoiceParameter(actingPlayer.getPlayerId(), ReRolledActions.DODGE, minimumRoll,
-					fDodgeRoll, options, reRollOptions.getProperties(), false, reRollOptions.getReRollSkill(), null, null,
-					messages),
-				!actingTeam.hasPlayer(actingPlayer.getPlayer()));
+			askForRescue(minimumRoll, options, reRollPossible, skillReRollSource, canceledReRollSkills, messages);
 			setModifierChoiceOffered(true);
 			return ActionStatus.WAITING_FOR_RE_ROLL;
 		}
@@ -489,10 +481,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		List<String> messages = dueToDivingTackle
 			? Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?")
 			: null;
-		Skill reRollSkill = skillReRollSource != null ? skillReRollSource.getSkill(game) : null;
 
-		if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer.getPlayer(), ReRolledActions.DODGE,
-			minimumRoll, false, null, reRollSkill, null, null, messages)) {
+		if (askForRescue(minimumRoll, options, true, skillReRollSource, canceledReRollSkills, messages)) {
 			if (dueToDivingTackle) {
 				setModifierChoiceOffered(true);
 			}
@@ -500,6 +490,23 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		}
 
 		return fallback;
+	}
+
+	/**
+	 * Offers the given modifier options together with the available re-rolls in a single dialog.
+	 *
+	 * @return whether the dialog was shown
+	 */
+	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options, boolean reRollPossible,
+															 ReRollSource skillReRollSource, Set<Skill> canceledReRollSkills, List<String> messages) {
+		Game game = getGameState().getGame();
+		return getGameState().getReRollService().askForReRollIfAvailable(
+			ReRollRequest.forActingPlayer(getGameState(), game.getActingPlayer(), ReRolledActions.DODGE, minimumRoll)
+				.reRollSkill(skillReRollSource != null ? skillReRollSource.getSkill(game) : null)
+				.ignoreSkills(canceledReRollSkills)
+				.messages(messages)
+				.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(fDodgeRoll, options, reRollPossible))
+				.build());
 	}
 
 	private ActionStatus offerModifierIgnoringSkill(Skill ignoreModifierSkill) {
