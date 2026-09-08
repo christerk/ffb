@@ -353,11 +353,10 @@ public class IconCache {
 					});
 
 				} catch (Exception pAny) {
-					synchronized (this) {
-						getClient().logError(0, pAny.getMessage());
-						// This should catch issues where the image is broken...
-						getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
-					}
+					// no lock may be held here, reporting hands work over to the event dispatch thread
+					getClient().logError(0, pAny.getMessage());
+					// This should catch issues where the image is broken...
+					getClient().getUserInterface().getStatusReport().reportIconLoadFailure(iconUrl);
 				}
 
 			}

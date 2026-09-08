@@ -15,6 +15,7 @@ import com.fumbbl.ffb.client.state.ClientStateAwt;
 import com.fumbbl.ffb.client.state.logic.ClientAction;
 import com.fumbbl.ffb.client.state.logic.ReplayLogicModule;
 import com.fumbbl.ffb.client.ui.ChatComponent;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.util.StringTool;
@@ -36,8 +37,9 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 		REPLACE_CHOICE
 	}
 
-	private DialogProgressBar fDialogProgress;
+	private volatile DialogProgressBar fDialogProgress;
 	private DialogState currentDialog = DialogState.NONE;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public ClientStateReplay(FantasyFootballClientAwt pClient) {
 		super(pClient, new ReplayLogicModule(pClient));
@@ -97,19 +99,41 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	private void updateProgress(int pProgress, String pFormat) {
-		String message = String.format(pFormat, pProgress, fDialogProgress.getMaximum());
-		fDialogProgress.updateProgress(pProgress, message);
+		DialogProgressBar progressBar = fDialogProgress;
+		if (progressBar == null) {
+			return;
+		}
+		String message = String.format(pFormat, pProgress, progressBar.getMaximum());
+		progressBar.updateProgress(pProgress, message);
 	}
 
 	public void initProgress(int pMinimum, int pMaximum) {
-		fDialogProgress.setMinimum(pMinimum);
-		fDialogProgress.setMaximum(pMaximum);
+		DialogProgressBar progressBar = fDialogProgress;
+		if (progressBar == null) {
+			return;
+		}
+		progressBar.setMinimum(pMinimum);
+		progressBar.setMaximum(pMaximum);
 	}
 
 	private void showProgressDialog() {
-		fDialogProgress = new DialogProgressBar(getClient(), "Receiving Replay");
-		currentDialog = DialogState.REPLAY_PROGRESS;
-		fDialogProgress.showDialog(this);
+		showProgressDialog("Receiving Replay", DialogState.REPLAY_PROGRESS);
+	}
+
+	private void showProgressDialog(String title, DialogState dialogState) {
+		uiDispatcher.runOnUiThread(() -> {
+			fDialogProgress = new DialogProgressBar(getClient(), title);
+			currentDialog = dialogState;
+			fDialogProgress.showDialog(this);
+		});
+	}
+
+	private void hideProgressDialog() {
+		DialogProgressBar progressBar = fDialogProgress;
+		currentDialog = DialogState.NONE;
+		if (progressBar != null) {
+			progressBar.hideDialog();
+		}
 	}
 
 	public boolean actionKeyPressed(ActionKey pActionKey, int menuIndex) {
@@ -212,31 +236,25 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 
 		@Override
 		public void loadDone() {
-			if (clientStateReplay.fDialogProgress != null) {
-				clientStateReplay.fDialogProgress.hideDialog();
-			}
-			clientStateReplay.currentDialog = DialogState.NONE;
+			clientStateReplay.hideProgressDialog();
 		}
 
 		@Override
 		public void startReplayerInit() {
-			clientStateReplay.fDialogProgress = new DialogProgressBar(clientStateReplay.getClient(), "Initializing Replay");
-			clientStateReplay.currentDialog = DialogState.INIT_PROGRESS;
-			clientStateReplay.fDialogProgress.showDialog(clientStateReplay);
+			clientStateReplay.showProgressDialog("Initializing Replay", DialogState.INIT_PROGRESS);
 		}
 
 		@Override
 		public void replayerInitialized() {
-			if (clientStateReplay.fDialogProgress != null) {
-				clientStateReplay.fDialogProgress.hideDialog();
-			}
-			clientStateReplay.currentDialog = DialogState.NONE;
+			clientStateReplay.hideProgressDialog();
 		}
 
 		@Override
 		public void promptForReplayChoice() {
-			clientStateReplay.currentDialog = DialogState.REPLACE_CHOICE;
-			new DialogReplayModeChoice(clientStateReplay.getClient()).showDialog(clientStateReplay);
+			clientStateReplay.uiDispatcher.runOnUiThread(() -> {
+				clientStateReplay.currentDialog = DialogState.REPLACE_CHOICE;
+				new DialogReplayModeChoice(clientStateReplay.getClient()).showDialog(clientStateReplay);
+			});
 		}
 
 		@Override

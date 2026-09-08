@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.PlayerIconFactory;
 import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.dialog.IDialog;
 import com.fumbbl.ffb.client.dialog.IDialogCloseListener;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.client.util.UtilClientThrowTeamMate;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -19,8 +20,6 @@ import com.fumbbl.ffb.net.commands.ServerCommandGameState;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.util.StringTool;
 
-import javax.swing.SwingUtilities;
-import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.HashSet;
@@ -37,6 +36,7 @@ import java.util.stream.Collectors;
 public class ClientCommandHandlerGameState extends ClientCommandHandler implements IDialogCloseListener {
 
 	private final SubHandlerGameStateMarking subHandler;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	protected ClientCommandHandlerGameState(FantasyFootballClient pClient) {
 		super(pClient);
@@ -134,19 +134,15 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
-			try {
-				SwingUtilities.invokeAndWait(() -> {
-					UserInterface userInterface = getClient().getUserInterface();
-					userInterface.init(game.getOptions());
-					getClient().updateClientState();
-					userInterface.getDialogManager().updateDialog();
-					userInterface.getGameMenuBar().updateMissingPlayers();
-					userInterface.getGameMenuBar().updateInducements();
-					userInterface.getChat().requestChatInputFocus();
-				});
-			} catch (InterruptedException | InvocationTargetException e) {
-				getClient().logWithOutGameId(e);
-			}
+			uiDispatcher.runOnUiThread(() -> {
+				UserInterface userInterface = getClient().getUserInterface();
+				userInterface.init(game.getOptions());
+				getClient().updateClientState();
+				userInterface.getDialogManager().updateDialog();
+				userInterface.getGameMenuBar().updateMissingPlayers();
+				userInterface.getGameMenuBar().updateInducements();
+				userInterface.getChat().requestChatInputFocus();
+			});
 		}
 
 		getClient().initRulesDependentMembers();

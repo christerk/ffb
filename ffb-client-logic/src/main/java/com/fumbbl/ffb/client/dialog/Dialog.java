@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -40,6 +41,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private DialogKeyGuard keyGuard;
 
 	private final JPanel contentPanel;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public Dialog(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
 		super(pTitle, false, pCloseable);
@@ -64,27 +66,31 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 	public void showDialog(IDialogCloseListener pCloseListener) {
 		fCloseListener = pCloseListener;
-		UserInterface userInterface = getClient().getUserInterface();
-		fChatInputFocus = userInterface.getChat().hasChatInputFocus();
-		userInterface.getDesktop().add(Dialog.this);
-		installKeyGuard();
-		setVisible(true);
-		moveToFront();
-		if (fChatInputFocus) {
-			userInterface.getChat().requestChatInputFocus();
-		}
-	}
-
-	public void hideDialog() {
-		removeKeyGuard();
-		if (isVisible()) {
-			setVisible(false);
+		uiDispatcher.runOnUiThread(() -> {
 			UserInterface userInterface = getClient().getUserInterface();
-			userInterface.getDesktop().remove(this);
+			fChatInputFocus = userInterface.getChat().hasChatInputFocus();
+			userInterface.getDesktop().add(Dialog.this);
+			installKeyGuard();
+			setVisible(true);
+			moveToFront();
 			if (fChatInputFocus) {
 				userInterface.getChat().requestChatInputFocus();
 			}
-		}
+		});
+	}
+
+	public void hideDialog() {
+		uiDispatcher.runOnUiThread(() -> {
+			removeKeyGuard();
+			if (isVisible()) {
+				setVisible(false);
+				UserInterface userInterface = getClient().getUserInterface();
+				userInterface.getDesktop().remove(this);
+				if (fChatInputFocus) {
+					userInterface.getChat().requestChatInputFocus();
+				}
+			}
+		});
 	}
 
 	private void installKeyGuard() {

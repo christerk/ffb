@@ -4,6 +4,7 @@ import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.client.ui.swing.JProgressBar;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -11,10 +12,10 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Kalimar
@@ -23,6 +24,12 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 
 	private final JLabel fMessageLabel;
 	private final JProgressBar fProgressBar;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
+	// progress updates are coalesced, background threads must never wait for the event dispatch thread here
+	private final AtomicReference<Progress> pendingProgress = new AtomicReference<>();
+	private final AtomicBoolean updateScheduled = new AtomicBoolean();
+	private volatile int minimum;
+	private volatile int maximum;
 
 	public DialogProgressBar(FantasyFootballClient pClient, String pTitle) {
 		this(pClient, pTitle, 0, 0);
@@ -35,6 +42,8 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 		JButton fButton = new JButton(dimensionProvider(), "Cancel");
 		fButton.addActionListener(this);
 
+		minimum = pMinValue;
+		maximum = pMaxValue;
 		fProgressBar = new JProgressBar(dimensionProvider(), pMinValue, pMaxValue);
 		fProgressBar.setValue(pMinValue);
 		fProgressBar.setStringPainted(true);
@@ -77,57 +86,57 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 	}
 
 	public int getMinimum() {
-		return fProgressBar.getMinimum();
+		return minimum;
 	}
 
 	public void setMinimum(final int pMinimum) {
-		if (pMinimum != getMinimum()) {
-			if (SwingUtilities.isEventDispatchThread()) {
-				fProgressBar.setMinimum(pMinimum);
-			} else {
-				try {
-					SwingUtilities.invokeAndWait(() -> fProgressBar.setMinimum(pMinimum));
-				} catch (InterruptedException | InvocationTargetException ignored) {
-				}
-			}
+		if (pMinimum != minimum) {
+			minimum = pMinimum;
+			uiDispatcher.runLaterOnUiThread(() -> fProgressBar.setMinimum(pMinimum));
 		}
 	}
 
 	public int getMaximum() {
-		return fProgressBar.getMaximum();
+		return maximum;
 	}
 
 	public void setMaximum(final int pMaximum) {
-		if (pMaximum != getMaximum()) {
-			if (SwingUtilities.isEventDispatchThread()) {
-				fProgressBar.setMaximum(pMaximum);
-			} else {
-				try {
-					SwingUtilities.invokeAndWait(() -> fProgressBar.setMaximum(pMaximum));
-				} catch (InterruptedException | InvocationTargetException ignored) {
-				}
-			}
+		if (pMaximum != maximum) {
+			maximum = pMaximum;
+			uiDispatcher.runLaterOnUiThread(() -> fProgressBar.setMaximum(pMaximum));
 		}
 	}
 
 	public void updateProgress(final int pProgress, final String pMessage) {
-		if (SwingUtilities.isEventDispatchThread()) {
-			fProgressBar.setValue(pProgress);
-			if (StringTool.isProvided(pMessage)) {
-				fMessageLabel.setText(pMessage);
+		pendingProgress.set(new Progress(pProgress, pMessage));
+		if (updateScheduled.compareAndSet(false, true)) {
+			uiDispatcher.runLaterOnUiThread(this::applyPendingProgress);
+		}
+	}
+
+	private void applyPendingProgress() {
+		updateScheduled.set(false);
+		Progress progress = pendingProgress.getAndSet(null);
+		if (progress == null) {
+			return;
+		}
+		fProgressBar.setValue(progress.value);
+		if (StringTool.isProvided(progress.message)) {
+			fMessageLabel.setText(progress.message);
+			// relayouting for every single step stalls the event dispatch thread, only do it when the text grows
+			if (fMessageLabel.getPreferredSize().width > fMessageLabel.getWidth()) {
 				pack();
 			}
-		} else {
-			try {
-				SwingUtilities.invokeAndWait(() -> {
-					fProgressBar.setValue(pProgress);
-					if (StringTool.isProvided(pMessage)) {
-						fMessageLabel.setText(pMessage);
-						pack();
-					}
-				});
-			} catch (InterruptedException | InvocationTargetException ignored) {
-			}
+		}
+	}
+
+	private static class Progress {
+		private final int value;
+		private final String message;
+
+		private Progress(int value, String message) {
+			this.value = value;
+			this.message = message;
 		}
 	}
 

@@ -6,14 +6,13 @@ import com.fumbbl.ffb.client.ParagraphStyle;
 import com.fumbbl.ffb.client.StyleProvider;
 import com.fumbbl.ffb.client.TextStyle;
 import com.fumbbl.ffb.client.ui.chat.ChatSegment;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -25,6 +24,7 @@ public class ChatLogTextPane extends JTextPane {
 	private IReplayMouseListener fReplayMouseListener;
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
 		this.styleProvider = styleProvider;
@@ -68,49 +68,39 @@ public class ChatLogTextPane extends JTextPane {
 
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
 
-		try {
-			Runnable runnable;
-			if (pText != null) {
+		TextStyle style = (pStyle != null) ? pStyle : TextStyle.NONE;
+		ParagraphStyle textIndent = (pTextIndent != null) ? pTextIndent : ParagraphStyle.INDENT_0;
 
-				if (pStyle == null) {
-					pStyle = TextStyle.NONE;
+		Runnable runnable = () -> {
+			try {
+				if (pText != null) {
+					fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
+						fChatLogDocument.getStyle(textIndent.getName()), false);
+					fChatLogDocument.insertString(fChatLogDocument.getLength(), pText,
+						fChatLogDocument.getStyle(style.getName()));
+				} else {
+					fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
+						fChatLogDocument.getStyle(TextStyle.NONE.getName()));
 				}
-				if (pTextIndent == null) {
-					pTextIndent = ParagraphStyle.INDENT_0;
-				}
-
-				fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
-					fChatLogDocument.getStyle(pTextIndent.getName()), false);
-				String name = pStyle.getName();
-
-				runnable = () -> {
-					try {
-						fChatLogDocument.insertString(fChatLogDocument.getLength(), pText, fChatLogDocument.getStyle(name));
-					} catch (BadLocationException ex) {
-						throw new FantasyFootballException(ex);
-					}
-				};
-			} else {
-				runnable = () -> {
-					try {
-						fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
-							fChatLogDocument.getStyle(TextStyle.NONE.getName()));
-					} catch (BadLocationException ex) {
-						throw new FantasyFootballException(ex);
-					}
-				};
+			} catch (BadLocationException ex) {
+				throw new FantasyFootballException(ex);
 			}
+		};
 
-			if (SwingUtilities.isEventDispatchThread()) {
+		if (isDocumentDetached()) {
+			// the document is not shown by any component, so it can be filled without involving the event dispatch
+			// thread, this avoids tens of thousands of round trips while a replay is initialized
+			synchronized (fChatLogDocument) {
 				runnable.run();
-			} else {
-				SwingUtilities.invokeAndWait(runnable);
 			}
-
-		} catch (InterruptedException | InvocationTargetException e) {
-			throw new FantasyFootballException(e);
+		} else {
+			uiDispatcher.runOnUiThread(runnable);
 		}
 
+	}
+
+	private boolean isDocumentDetached() {
+		return getDocument() != fChatLogDocument;
 	}
 
 	public void update() {
@@ -124,44 +114,35 @@ public class ChatLogTextPane extends JTextPane {
 	 * small append calls (e.g. 150+ segments in stress test).
 	 */
 	public void appendBatch(List<ChatSegment> segments, ParagraphStyle paragraphStyle) {
-		try {
-			Runnable runnable = () -> {
-				try {
+		Runnable runnable = () -> {
+			try {
 
-					int startOffset = fChatLogDocument.getParagraphElement(fChatLogDocument.getLength()).getStartOffset();
+				int startOffset = fChatLogDocument.getParagraphElement(fChatLogDocument.getLength()).getStartOffset();
 
-					for (ChatSegment segment : segments) {
-						if (segment.icon != null) {
-							setCaretPosition(fChatLogDocument.getLength());
-							insertIcon(new OffsetIcon(segment.icon.getImage(), segment.offset));
-						} else if (segment.text != null) {
-							TextStyle style = (segment.style == null ? TextStyle.NONE : segment.style);
-							fChatLogDocument.insertString(fChatLogDocument.getLength(), segment.text,
-								fChatLogDocument.getStyle(style.getName()));
-						} else {
-							fChatLogDocument.insertString(fChatLogDocument.getLength(),	ChatLogDocument.LINE_SEPARATOR,
-								fChatLogDocument.getStyle(TextStyle.NONE.getName()));
-						}
+				for (ChatSegment segment : segments) {
+					if (segment.icon != null) {
+						setCaretPosition(fChatLogDocument.getLength());
+						insertIcon(new OffsetIcon(segment.icon.getImage(), segment.offset));
+					} else if (segment.text != null) {
+						TextStyle style = (segment.style == null ? TextStyle.NONE : segment.style);
+						fChatLogDocument.insertString(fChatLogDocument.getLength(), segment.text,
+							fChatLogDocument.getStyle(style.getName()));
+					} else {
+						fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
+							fChatLogDocument.getStyle(TextStyle.NONE.getName()));
 					}
-
-					int endOffset = fChatLogDocument.getParagraphElement(startOffset).getEndOffset();
-					fChatLogDocument.setParagraphAttributes(startOffset, endOffset - startOffset,
-						fChatLogDocument.getStyle(paragraphStyle.getName()),false	);
-
-				} catch (BadLocationException ex) {
-					throw new FantasyFootballException(ex);
 				}
-			};
 
-			if (SwingUtilities.isEventDispatchThread()) {
-				runnable.run();
-			} else {
-				SwingUtilities.invokeAndWait(runnable);
+				int endOffset = fChatLogDocument.getParagraphElement(startOffset).getEndOffset();
+				fChatLogDocument.setParagraphAttributes(startOffset, endOffset - startOffset,
+					fChatLogDocument.getStyle(paragraphStyle.getName()), false);
+
+			} catch (BadLocationException ex) {
+				throw new FantasyFootballException(ex);
 			}
+		};
 
-		} catch (InterruptedException | InvocationTargetException e) {
-			throw new FantasyFootballException(e);
-		}
+		uiDispatcher.runOnUiThread(runnable);
 	}
 
 }
