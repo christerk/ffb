@@ -99,21 +99,19 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	private void updateProgress(int pProgress, String pFormat) {
-		DialogProgressBar progressBar = fDialogProgress;
-		if (progressBar == null) {
+		if (fDialogProgress == null) {
 			return;
 		}
-		String message = String.format(pFormat, pProgress, progressBar.getMaximum());
-		progressBar.updateProgress(pProgress, message);
+		String message = String.format(pFormat, pProgress, fDialogProgress.getMaximum());
+		fDialogProgress.updateProgress(pProgress, message);
 	}
 
 	public void initProgress(int pMinimum, int pMaximum) {
-		DialogProgressBar progressBar = fDialogProgress;
-		if (progressBar == null) {
+		if (fDialogProgress == null) {
 			return;
 		}
-		progressBar.setMinimum(pMinimum);
-		progressBar.setMaximum(pMaximum);
+		fDialogProgress.setMinimum(pMinimum);
+		fDialogProgress.setMaximum(pMaximum);
 	}
 
 	private void showProgressDialog() {

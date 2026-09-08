@@ -142,12 +142,11 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	// must not be synchronized, the progress dialog hands its work over to the event dispatch thread and holding a
 	// lock while doing so deadlocks the client when the event dispatch thread is busy
 	public void updateIconProgress(AtomicInteger count, int total) {
-		DialogProgressBar progressBar = dialogProgress;
-		if (progressBar == null) {
+		if (dialogProgress == null) {
 			return;
 		}
 		int loaded = count.incrementAndGet();
-		progressBar.updateProgress(loaded, String.format("Loaded icon %d of %d.", loaded, total));
+		dialogProgress.updateProgress(loaded, String.format("Loaded icon %d of %d.", loaded, total));
 	}
 
 	public void hideIconProgress() {
@@ -158,4 +157,3 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 		}
 	}
 }
-

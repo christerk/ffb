@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.client.handler;
 
+import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.IIconProperty;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.client.FantasyFootballClient;
@@ -134,15 +135,19 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 		UtilClientThrowTeamMate.updateThrownPlayer(getClient());
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
-			uiDispatcher.runOnUiThread(() -> {
-				UserInterface userInterface = getClient().getUserInterface();
-				userInterface.init(game.getOptions());
-				getClient().updateClientState();
-				userInterface.getDialogManager().updateDialog();
-				userInterface.getGameMenuBar().updateMissingPlayers();
-				userInterface.getGameMenuBar().updateInducements();
-				userInterface.getChat().requestChatInputFocus();
-			});
+			try {
+				uiDispatcher.runOnUiThread(() -> {
+					UserInterface userInterface = getClient().getUserInterface();
+					userInterface.init(game.getOptions());
+					getClient().updateClientState();
+					userInterface.getDialogManager().updateDialog();
+					userInterface.getGameMenuBar().updateMissingPlayers();
+					userInterface.getGameMenuBar().updateInducements();
+					userInterface.getChat().requestChatInputFocus();
+				});
+			} catch (FantasyFootballException e) {
+				getClient().logWithOutGameId(e);
+			}
 		}
 
 		getClient().initRulesDependentMembers();

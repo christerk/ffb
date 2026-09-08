@@ -24,6 +24,7 @@ public class ChatLogTextPane extends JTextPane {
 	private IReplayMouseListener fReplayMouseListener;
 	private final StyleProvider styleProvider;
 	private final DimensionProvider dimensionProvider;
+	private final Object documentMonitor = new Object();
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public ChatLogTextPane(StyleProvider styleProvider, DimensionProvider dimensionProvider) {
@@ -71,27 +72,13 @@ public class ChatLogTextPane extends JTextPane {
 		TextStyle style = (pStyle != null) ? pStyle : TextStyle.NONE;
 		ParagraphStyle textIndent = (pTextIndent != null) ? pTextIndent : ParagraphStyle.INDENT_0;
 
-		Runnable runnable = () -> {
-			try {
-				if (pText != null) {
-					fChatLogDocument.setParagraphAttributes(fChatLogDocument.getLength(), 1,
-						fChatLogDocument.getStyle(textIndent.getName()), false);
-					fChatLogDocument.insertString(fChatLogDocument.getLength(), pText,
-						fChatLogDocument.getStyle(style.getName()));
-				} else {
-					fChatLogDocument.insertString(fChatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
-						fChatLogDocument.getStyle(TextStyle.NONE.getName()));
-				}
-			} catch (BadLocationException ex) {
-				throw new FantasyFootballException(ex);
-			}
-		};
+		Runnable runnable = () -> appendToDocument(fChatLogDocument, textIndent, style, pText);
 
 		if (isDocumentDetached()) {
 			// the document is not shown by any component, so it can be filled without involving the event dispatch
 			// thread, this avoids tens of thousands of round trips while a replay is initialized
-			synchronized (fChatLogDocument) {
-				runnable.run();
+			synchronized (documentMonitor) {
+				appendToDocument(fChatLogDocument, textIndent, style, pText);
 			}
 		} else {
 			uiDispatcher.runOnUiThread(runnable);
@@ -101,6 +88,21 @@ public class ChatLogTextPane extends JTextPane {
 
 	private boolean isDocumentDetached() {
 		return getDocument() != fChatLogDocument;
+	}
+
+	private void appendToDocument(ChatLogDocument chatLogDocument, ParagraphStyle textIndent, TextStyle style, String text) {
+		try {
+			if (text != null) {
+				chatLogDocument.setParagraphAttributes(chatLogDocument.getLength(), 1,
+					chatLogDocument.getStyle(textIndent.getName()), false);
+				chatLogDocument.insertString(chatLogDocument.getLength(), text, chatLogDocument.getStyle(style.getName()));
+			} else {
+				chatLogDocument.insertString(chatLogDocument.getLength(), ChatLogDocument.LINE_SEPARATOR,
+					chatLogDocument.getStyle(TextStyle.NONE.getName()));
+			}
+		} catch (BadLocationException ex) {
+			throw new FantasyFootballException(ex);
+		}
 	}
 
 	public void update() {
