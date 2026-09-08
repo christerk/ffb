@@ -1,16 +1,24 @@
 package com.fumbbl.ffb.mechanics.bb2025;
 
+import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.mechanics.Wording;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.CatchModifier;
+import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
+import com.fumbbl.ffb.modifiers.OptionalDodgeModifier;
+import com.fumbbl.ffb.modifiers.OptionalDodgeModifierService;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
@@ -20,7 +28,9 @@ import com.fumbbl.ffb.report.ReportPickupRoll;
 import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
@@ -38,6 +48,19 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	@Override
 	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier) {
 		return minimumRoll(pPlayer.getAgilityWithModifiers(), pDodgeModifiers, statBasedRollModifier == null ? 0 : statBasedRollModifier.getModifier());
+	}
+
+	@Override
+	public int minimumRollDodgePreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																		 FieldCoordinate to) {
+		OptionalDodgeModifierService optionalModifierService = new OptionalDodgeModifierService();
+		List<OptionalDodgeModifier> optionalModifiers = optionalModifierService.availableFor(game, actingPlayer, from, to);
+		Set<Skill> selectedSkills = optionalModifiers.stream().map(OptionalDodgeModifier::getSkill)
+			.collect(Collectors.toSet());
+		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
+		Set<DodgeModifier> dodgeModifiers =
+			modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, from, to, selectedSkills));
+		return minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
 	}
 
 	@Override
