@@ -44,7 +44,8 @@ public class UiDispatcher {
 
 	/**
 	 * Schedules the given task on the event dispatch thread without waiting for its completion. Runs the task
-	 * directly when already on the event dispatch thread.
+	 * directly when already on the event dispatch thread. Callers that need the task to run after the currently
+	 * processed event has been completed have to use {@link #postToUiThread(Runnable)} instead.
 	 */
 	public void runLaterOnUiThread(Runnable task) {
 		if (isUiThread()) {
@@ -52,6 +53,15 @@ public class UiDispatcher {
 		} else {
 			SwingUtilities.invokeLater(task);
 		}
+	}
+
+	/**
+	 * Always schedules the given task as a separate event on the event dispatch thread, even when the calling thread
+	 * already is the event dispatch thread. Use this when the task must not run before the currently processed event
+	 * has been completed, for example when it depends on pending document, focus or layout updates.
+	 */
+	public void postToUiThread(Runnable task) {
+		SwingUtilities.invokeLater(task);
 	}
 
 	/**

@@ -6,6 +6,7 @@ import com.fumbbl.ffb.client.Component;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.IconCache;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -36,6 +37,7 @@ public class Autocomplete {
   private final JScrollPane scrollPane;
   private final AutocompleteGenerator generator;
   private final FantasyFootballClient client;
+  private final UiDispatcher uiDispatcher = new UiDispatcher();
 
   private static final int MAX_ROWS_VISIBLE = 8;
 
@@ -134,7 +136,7 @@ public class Autocomplete {
       popup.show(input, position.x, position.y);
 
       // Ensure caret focus returns to input after popup is shown. Otherwise popup creation can momentarily steal focus.
-      SwingUtilities.invokeLater(input::requestFocusInWindow);
+      uiDispatcher.postToUiThread(input::requestFocusInWindow);
     } catch (BadLocationException ignored) {
       hide();
     }
@@ -166,7 +168,8 @@ public class Autocomplete {
   }
 
   private void scheduleUpdate() {
-    SwingUtilities.invokeLater(this::update);
+    // must not run inline, the update reads caret and document state that is still being modified by the current event
+    uiDispatcher.postToUiThread(this::update);
   }
 
   private void layout() {

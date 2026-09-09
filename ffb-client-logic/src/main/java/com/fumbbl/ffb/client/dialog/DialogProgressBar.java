@@ -110,6 +110,8 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 	public void updateProgress(final int pProgress, final String pMessage) {
 		pendingProgress.set(new Progress(pProgress, pMessage));
 		if (updateScheduled.compareAndSet(false, true)) {
+			// progress updates come from background threads, so this coalesces multiple updates into one repaint,
+			// callers on the event dispatch thread apply their update immediately instead
 			uiDispatcher.runLaterOnUiThread(this::applyPendingProgress);
 		}
 	}
