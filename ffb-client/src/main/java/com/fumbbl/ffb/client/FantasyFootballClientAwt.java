@@ -88,7 +88,7 @@ public class FantasyFootballClientAwt extends FantasyFootballClient {
 	}
 
 	public void showUserInterface() {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			getUserInterface().getFieldComponent().getLayerField().drawWeather(Weather.INTRO);
 			getUserInterface().getFieldComponent().refresh();
 			getUserInterface().setVisible(true);

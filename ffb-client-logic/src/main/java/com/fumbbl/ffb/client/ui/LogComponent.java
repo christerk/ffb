@@ -93,14 +93,14 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 	}
 
 	public void detachLogDocument() {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			fLogTextPane.detachDocument();
 			fCommandHighlightAreaByCommandNr.clear();
 		});
 	}
 
 	public void attachLogDocument() {
-		uiDispatcher.runOnUiThread(fLogTextPane::attachDocument);
+		uiDispatcher.runOnUiThreadAndWait(fLogTextPane::attachDocument);
 	}
 
 	public boolean hasCommandHighlight(int pCommandNr) {

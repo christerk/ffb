@@ -119,7 +119,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 	}
 
 	private void showProgressDialog(String title, DialogState dialogState) {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			fDialogProgress = new DialogProgressBar(getClient(), title);
 			currentDialog = dialogState;
 			fDialogProgress.showDialog(this);
@@ -249,7 +249,7 @@ public class ClientStateReplay extends ClientStateAwt<ReplayLogicModule> impleme
 
 		@Override
 		public void promptForReplayChoice() {
-			clientStateReplay.uiDispatcher.runOnUiThread(() -> {
+			clientStateReplay.uiDispatcher.runOnUiThreadAndWait(() -> {
 				clientStateReplay.currentDialog = DialogState.REPLACE_CHOICE;
 				new DialogReplayModeChoice(clientStateReplay.getClient()).showDialog(clientStateReplay);
 			});

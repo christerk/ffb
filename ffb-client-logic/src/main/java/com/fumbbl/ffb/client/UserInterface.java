@@ -329,7 +329,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	public void init(GameOptions gameOptions) {
-		uiDispatcher.runOnUiThread(() -> initOnUiThread(gameOptions));
+		uiDispatcher.runOnUiThreadAndWait(() -> initOnUiThread(gameOptions));
 	}
 
 	private void initOnUiThread(GameOptions gameOptions) {
@@ -382,12 +382,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		return fStatusReport;
 	}
 
+	/**
+	 * @see UiDispatcher#runOnUiThreadAndWait(Runnable)
+	 */
 	public void invokeAndWait(Runnable pRunnable) {
-		uiDispatcher.runOnUiThread(pRunnable);
+		uiDispatcher.runOnUiThreadAndWait(pRunnable);
 	}
 
+	/**
+	 * @see UiDispatcher#runOnUiThreadWithoutWaiting(Runnable)
+	 */
 	public void invokeLater(Runnable pRunnable) {
-		uiDispatcher.runLaterOnUiThread(pRunnable);
+		uiDispatcher.runOnUiThreadWithoutWaiting(pRunnable);
 	}
 
 	public MouseEntropySource getMouseEntropySource() {

@@ -66,7 +66,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 	public void showDialog(IDialogCloseListener pCloseListener) {
 		fCloseListener = pCloseListener;
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			UserInterface userInterface = getClient().getUserInterface();
 			fChatInputFocus = userInterface.getChat().hasChatInputFocus();
 			userInterface.getDesktop().add(Dialog.this);
@@ -80,7 +80,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	}
 
 	public void hideDialog() {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			removeKeyGuard();
 			if (isVisible()) {
 				setVisible(false);

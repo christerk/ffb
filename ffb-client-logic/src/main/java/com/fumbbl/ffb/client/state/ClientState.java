@@ -133,7 +133,7 @@ public abstract class ClientState<T extends LogicModule, C extends FantasyFootba
 	}
 
 	public void showIconProgress(IDialogCloseListener listener, int total) {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			dialogProgress = new DialogProgressBar(getClient(), "Loading icons", 0, total);
 			dialogProgress.showDialog(listener);
 		});
