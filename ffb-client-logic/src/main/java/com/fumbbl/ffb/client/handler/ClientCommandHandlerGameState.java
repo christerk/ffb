@@ -136,7 +136,7 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		if (pMode == ClientCommandHandlerMode.PLAYING) {
 			try {
-				uiDispatcher.runOnUiThread(() -> {
+				uiDispatcher.runOnUiThreadAndWait(() -> {
 					UserInterface userInterface = getClient().getUserInterface();
 					userInterface.init(game.getOptions());
 					getClient().updateClientState();

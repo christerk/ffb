@@ -511,7 +511,7 @@ public class ClientReplayer implements ActionListener {
 	public void positionOnFirstCommand() {
 		LogComponent log = getClient().getUserInterface().getLog();
 		replayToCommand(log.findCommandNr(1));
-		uiDispatcher.runOnUiThread(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
+		uiDispatcher.runOnUiThreadAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMinimum());
 	}
 
 	public void positionOnLastCommand() {
@@ -521,7 +521,7 @@ public class ClientReplayer implements ActionListener {
 		if (serverCommand != null) {
 			highlightCommand(serverCommand.getCommandNr());
 		}
-		uiDispatcher.runOnUiThread(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
+		uiDispatcher.runOnUiThreadAndWait(() -> getClient().getUserInterface().getLog().getLogScrollPane().setScrollBarToMaximum());
 	}
 
 	public void stop() {
@@ -596,7 +596,7 @@ public class ClientReplayer implements ActionListener {
 
 	// must not be synchronized, the body is handed over to the event dispatch thread which also needs this monitor
 	public void handleCommand(ServerCommandReplayStatus command, ReplayLogicModule.ReplayCallbacks callbacks) {
-		uiDispatcher.runLaterOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadWithoutWaiting(() -> {
 			fTimer.stop();
 			setReplaySpeed(command.getSpeed());
 			if (fLastReplayPosition != command.getCommandNr()) {

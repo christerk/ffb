@@ -81,7 +81,7 @@ public class ChatLogTextPane extends JTextPane {
 				appendToDocument(fChatLogDocument, textIndent, style, pText);
 			}
 		} else {
-			uiDispatcher.runOnUiThread(runnable);
+			uiDispatcher.runOnUiThreadAndWait(runnable);
 		}
 
 	}
@@ -144,7 +144,7 @@ public class ChatLogTextPane extends JTextPane {
 			}
 		};
 
-		uiDispatcher.runOnUiThread(runnable);
+		uiDispatcher.runOnUiThreadAndWait(runnable);
 	}
 
 }

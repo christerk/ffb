@@ -136,7 +136,7 @@ public class Autocomplete {
       popup.show(input, position.x, position.y);
 
       // Ensure caret focus returns to input after popup is shown. Otherwise popup creation can momentarily steal focus.
-      uiDispatcher.postToUiThread(input::requestFocusInWindow);
+      uiDispatcher.runOnUiThreadAfterCurrentEvent(input::requestFocusInWindow);
     } catch (BadLocationException ignored) {
       hide();
     }
@@ -169,7 +169,7 @@ public class Autocomplete {
 
   private void scheduleUpdate() {
     // must not run inline, the update reads caret and document state that is still being modified by the current event
-    uiDispatcher.postToUiThread(this::update);
+    uiDispatcher.runOnUiThreadAfterCurrentEvent(this::update);
   }
 
   private void layout() {

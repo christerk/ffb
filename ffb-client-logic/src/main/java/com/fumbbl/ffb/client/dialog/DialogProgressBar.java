@@ -92,7 +92,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 	public void setMinimum(final int pMinimum) {
 		if (pMinimum != minimum) {
 			minimum = pMinimum;
-			uiDispatcher.runLaterOnUiThread(() -> fProgressBar.setMinimum(pMinimum));
+			uiDispatcher.runOnUiThreadWithoutWaiting(() -> fProgressBar.setMinimum(pMinimum));
 		}
 	}
 
@@ -103,7 +103,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 	public void setMaximum(final int pMaximum) {
 		if (pMaximum != maximum) {
 			maximum = pMaximum;
-			uiDispatcher.runLaterOnUiThread(() -> fProgressBar.setMaximum(pMaximum));
+			uiDispatcher.runOnUiThreadWithoutWaiting(() -> fProgressBar.setMaximum(pMaximum));
 		}
 	}
 
@@ -112,7 +112,7 @@ public class DialogProgressBar extends Dialog implements ActionListener {
 		if (updateScheduled.compareAndSet(false, true)) {
 			// progress updates come from background threads, so this coalesces multiple updates into one repaint,
 			// callers on the event dispatch thread apply their update immediately instead
-			uiDispatcher.runLaterOnUiThread(this::applyPendingProgress);
+			uiDispatcher.runOnUiThreadWithoutWaiting(this::applyPendingProgress);
 		}
 	}
 

@@ -201,7 +201,7 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 	}
 
 	public void showReplay(boolean pShowReplay) {
-		uiDispatcher.runOnUiThread(() -> {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			removeAll();
 			if (pShowReplay) {
 				add(fReplayControl, BorderLayout.NORTH);
