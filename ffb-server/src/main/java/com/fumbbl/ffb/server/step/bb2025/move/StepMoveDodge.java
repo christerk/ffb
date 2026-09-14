@@ -432,6 +432,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 
 		List<ModifierChoiceOption> options = selectionService.findOptions(game, actingPlayer, fCoordinateFrom,
 			fCoordinateTo, extraModifiers, fDodgeRoll);
+		List<ModifierChoiceOption> combinations = selectionService.findCombinations(game, actingPlayer, fCoordinateFrom,
+			fCoordinateTo, extraModifiers);
 
 		boolean reRollPossible = fUsingDivingTackle == null && !fReRollUsed
 			&& (getReRolledAction() != ReRolledActions.DODGE
@@ -454,7 +456,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				setReRolledAction(ReRolledActions.DODGE);
 			}
 
-			askForRescue(minimumRoll, options, reRollPossible, skillReRollSource, canceledReRollSkills, messages);
+			askForRescue(minimumRoll, options, combinations, reRollPossible, skillReRollSource, canceledReRollSkills,
+				messages);
 			setModifierChoiceOffered(true);
 			return ActionStatus.WAITING_FOR_RE_ROLL;
 		}
@@ -482,7 +485,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			? Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?")
 			: null;
 
-		if (askForRescue(minimumRoll, options, true, skillReRollSource, canceledReRollSkills, messages)) {
+		if (askForRescue(minimumRoll, options, combinations, true, skillReRollSource, canceledReRollSkills, messages)) {
 			if (dueToDivingTackle) {
 				setModifierChoiceOffered(true);
 			}
@@ -497,7 +500,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	 *
 	 * @return whether the dialog was shown
 	 */
-	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options, boolean reRollPossible,
+	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
+															 List<ModifierChoiceOption> combinations, boolean reRollPossible,
 															 ReRollSource skillReRollSource, Set<Skill> canceledReRollSkills, List<String> messages) {
 		Game game = getGameState().getGame();
 		return getGameState().getReRollService().askForReRollIfAvailable(
@@ -505,7 +509,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				.reRollSkill(skillReRollSource != null ? skillReRollSource.getSkill(game) : null)
 				.ignoreSkills(canceledReRollSkills)
 				.messages(messages)
-				.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(fDodgeRoll, options, reRollPossible))
+				.dialogParameter(
+					new ReRollModifierChoiceDialogParameterFactory(fDodgeRoll, options, combinations, reRollPossible))
 				.build());
 	}
 

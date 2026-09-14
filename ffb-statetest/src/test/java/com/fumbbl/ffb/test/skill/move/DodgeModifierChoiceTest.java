@@ -95,6 +95,39 @@ public class DodgeModifierChoiceTest {
 	}
 
 	@Test
+	public void modifierOptionsAreOfferedWithoutAnyReRoll() {
+		GameState state = buildState("Break Tackle");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(1, parameter.getModifierOptions().size());
+		assertFalse(parameter.hasProperty(ReRollProperty.TRR));
+		assertNull(parameter.getReRollSkill());
+	}
+
+	@Test
+	public void allModifierCombinationsAreListedWithTheirMinimumRoll() {
+		GameState state = buildState("Break Tackle", "Consummate Professional");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		// a 1 always fails, so no combination can rescue it, but a re-roll could
+		dodge(state, 1);
+
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertTrue(parameter.getModifierOptions().isEmpty());
+		List<String> combinations = parameter.getModifierCombinations().stream()
+			.map(option -> option.getLabel() + ":" + option.getMinimumRoll()).collect(Collectors.toList());
+		assertEquals(3, combinations.size());
+		assertTrue(combinations.contains("Consummate Professional + Break Tackle:2"));
+		assertTrue(combinations.contains("Break Tackle:3"));
+		assertTrue(combinations.contains("Consummate Professional:3"));
+	}
+
+	@Test
 	public void failedDodgeWithoutOptionalModifiersOffersTheReRollDialog() {
 		GameState state = buildState();
 		Game game = state.getGame();

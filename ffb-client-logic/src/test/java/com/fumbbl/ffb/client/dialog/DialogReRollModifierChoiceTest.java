@@ -72,14 +72,18 @@ class DialogReRollModifierChoiceTest {
 		Skill consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
 
+		List<ModifierChoiceOption> combinations = Arrays.asList(
+			new ModifierChoiceOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3),
+			new ModifierChoiceOption(Collections.singletonList(breakTackle), -1, 4),
+			new ModifierChoiceOption(Collections.singletonList(consummateProfessional), -1, 4));
+
 		List<ModifierChoiceOption> options = Arrays.asList(
 			new ModifierChoiceOption(Collections.singletonList(breakTackle), -1, 4),
-			new ModifierChoiceOption(Collections.singletonList(consummateProfessional), -1, 4),
-			new ModifierChoiceOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3));
+			new ModifierChoiceOption(Collections.singletonList(consummateProfessional), -1, 4));
 
 		DialogReRollModifierChoiceParameter param =
-			new DialogReRollModifierChoiceParameter("playerID", ReRolledActions.DODGE, 5, 4, options, properties, false,
-				null, null, null, Collections.singletonList("You rolled a 4, you needed a 5+."));
+			new DialogReRollModifierChoiceParameter("playerID", ReRolledActions.DODGE, 5, 4, options, combinations,
+				properties, false, null, null, null, Collections.singletonList("You rolled a 4, you needed a 5+."));
 
 		JPanel panelContent = new JPanel();
 

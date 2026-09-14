@@ -33,6 +33,8 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 	private ReRollRequest request;
 	private final List<ModifierChoiceOption> options =
 		Collections.singletonList(new ModifierChoiceOption(Collections.emptyList(), 1, 3));
+	private final List<ModifierChoiceOption> combinations =
+		Arrays.asList(options.get(0), new ModifierChoiceOption(Collections.emptyList(), 2, 2));
 
 	@BeforeEach
 	void setUp() {
@@ -56,6 +58,7 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 		assertEquals(ROLL, parameter.getRoll());
 		assertEquals(MINIMUM_ROLL, parameter.getMinimumRoll());
 		assertEquals(options, parameter.getModifierOptions());
+		assertEquals(combinations, parameter.getModifierCombinations());
 	}
 
 	@Test
@@ -96,13 +99,14 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 		assertFalse(parameter.hasProperty(ReRollProperty.TRR));
 		assertNull(parameter.getReRollSkill());
 		assertEquals(options, parameter.getModifierOptions());
+		assertEquals(combinations, parameter.getModifierCombinations());
 	}
 
 	@Test
 	void showsNoDialogWithoutOptionsAndReRolls() {
 		ReRollOptions reRollOptions = new ReRollOptions(Collections.singletonList(ReRollProperty.LONER), null);
 
-		assertNull(new ReRollModifierChoiceDialogParameterFactory(ROLL, Collections.emptyList(), true)
+		assertNull(new ReRollModifierChoiceDialogParameterFactory(ROLL, Collections.emptyList(), combinations, true)
 			.create(request, reRollOptions));
 	}
 
@@ -113,8 +117,9 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 	}
 
 	private DialogReRollModifierChoiceParameter create(ReRollOptions reRollOptions, boolean reRollAllowed) {
-		IDialogParameter parameter = new ReRollModifierChoiceDialogParameterFactory(ROLL, options, reRollAllowed)
-			.create(request, reRollOptions);
+		IDialogParameter parameter =
+			new ReRollModifierChoiceDialogParameterFactory(ROLL, options, combinations, reRollAllowed)
+				.create(request, reRollOptions);
 		return (DialogReRollModifierChoiceParameter) parameter;
 	}
 }

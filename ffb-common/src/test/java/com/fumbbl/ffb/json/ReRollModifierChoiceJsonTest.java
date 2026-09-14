@@ -79,9 +79,12 @@ class ReRollModifierChoiceJsonTest {
 	@Test
 	void dialogParameterSurvivesRoundTrip() {
 		ModifierChoiceOption option = new ModifierChoiceOption(Collections.singletonList(breakTackle), -1, 4);
+		ModifierChoiceOption combination =
+			new ModifierChoiceOption(Arrays.asList(breakTackle, consummateProfessional), -2, 3);
 		DialogReRollModifierChoiceParameter parameter =
 			new DialogReRollModifierChoiceParameter("playerId", ReRolledActions.DODGE, 5, 4,
-				Collections.singletonList(option), Arrays.asList(ReRollProperty.TRR, ReRollProperty.PRO), true,
+				Collections.singletonList(option), Arrays.asList(option, combination),
+				Arrays.asList(ReRollProperty.TRR, ReRollProperty.PRO), true,
 				consummateProfessional, CommonProperty.SETTING_RE_ROLL_BALL_AND_CHAIN, "someKey",
 				Collections.singletonList("a message"));
 
@@ -104,6 +107,9 @@ class ReRollModifierChoiceJsonTest {
 		assertEquals(Collections.singletonList("Break Tackle"),
 			restored.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList()));
 		assertEquals(4, restored.getModifierOptions().get(0).getMinimumRoll());
+		assertEquals(Arrays.asList("Break Tackle", "Break Tackle + Consummate Professional"),
+			restored.getModifierCombinations().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList()));
+		assertEquals(3, restored.getModifierCombinations().get(1).getMinimumRoll());
 	}
 
 	@Test

@@ -300,6 +300,7 @@ public interface IJsonOption {
 	JsonStringArrayOption MESSAGE_ARRAY = new JsonStringArrayOption("messageArray");
 	JsonIntOption MIN_SELECTS = new JsonIntOption("minSelects");
 	JsonArrayOption MODIFIER_OPTIONS = new JsonArrayOption("modifierOptions");
+	JsonArrayOption MODIFIER_COMBINATIONS = new JsonArrayOption("modifierCombinations");
 	JsonIntOption MINIMUM_ROLL = new JsonIntOption("minimumRoll");
 	JsonIntOption MINIMUM_ROLL_DODGE = new JsonIntOption("minimumRollDodge");
 	JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");

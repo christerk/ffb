@@ -33,13 +33,66 @@ public class DodgeModifierSelectionService {
 
 	private final OptionalDodgeModifierService optionalModifierService = new OptionalDodgeModifierService();
 
+	/**
+	 * @return the combinations that would turn the given roll into a success, without the ones that are not minimal
+	 */
 	public List<ModifierChoiceOption> findOptions(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
 																							 FieldCoordinate to, Set<DodgeModifier> extraModifiers, int dodgeRoll) {
+
+		if (dodgeRoll <= 0) {
+			return new ArrayList<>();
+		}
+
+		List<ModifierChoiceOption> options = new ArrayList<>();
+		List<Set<Skill>> successfulCombinations = new ArrayList<>();
+
+		// evaluated combinations are ordered by ascending size, so a minimal combination is always seen first
+		for (ModifierChoiceOption combination : evaluateCombinations(game, actingPlayer, from, to, extraModifiers)) {
+			if (!DiceInterpreter.getInstance().isSkillRollSuccessful(dodgeRoll, combination.getMinimumRoll())) {
+				continue;
+			}
+			Set<Skill> skills = new LinkedHashSet<>(combination.getSkills());
+			if (successfulCombinations.stream().anyMatch(skills::containsAll)) {
+				// a smaller combination already succeeds, this one is not minimal
+				continue;
+			}
+			successfulCombinations.add(skills);
+			options.add(combination);
+		}
+
+		options.sort(Comparator.comparingInt((ModifierChoiceOption option) -> option.getSkills().size())
+			.thenComparingInt(this::usageCost).thenComparing(ModifierChoiceOption::getLabel));
+
+		return options;
+	}
+
+	/**
+	 * @return every combination of the available optional modifier skills with the roll it would require, so that the
+	 * coach can judge what a re-roll could achieve
+	 */
+	public List<ModifierChoiceOption> findCombinations(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																										 FieldCoordinate to, Set<DodgeModifier> extraModifiers) {
+
+		List<ModifierChoiceOption> combinations = evaluateCombinations(game, actingPlayer, from, to, extraModifiers);
+
+		combinations.sort(Comparator.comparingInt(ModifierChoiceOption::getMinimumRoll)
+			.thenComparingInt((ModifierChoiceOption option) -> option.getSkills().size())
+			.thenComparingInt(this::usageCost).thenComparing(ModifierChoiceOption::getLabel));
+
+		return combinations;
+	}
+
+	/**
+	 * @return one entry per non empty combination of the available optional modifier skills, ordered by ascending
+	 * combination size
+	 */
+	private List<ModifierChoiceOption> evaluateCombinations(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																													FieldCoordinate to, Set<DodgeModifier> extraModifiers) {
 
 		List<Skill> skills = optionalModifierService.availableFor(game, actingPlayer, from, to).stream()
 			.map(OptionalDodgeModifier::getSkill).distinct().collect(Collectors.toList());
 
-		if (skills.isEmpty() || dodgeRoll <= 0) {
+		if (skills.isEmpty()) {
 			return new ArrayList<>();
 		}
 
@@ -51,8 +104,7 @@ public class DodgeModifierSelectionService {
 			(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 
-		List<ModifierChoiceOption> options = new ArrayList<>();
-		List<Set<Skill>> successfulCombinations = new ArrayList<>();
+		List<ModifierChoiceOption> combinations = new ArrayList<>();
 
 		for (Set<Skill> combination : combinations(skills)) {
 			Set<DodgeModifier> modifiers =
@@ -60,23 +112,11 @@ public class DodgeModifierSelectionService {
 			if (extraModifiers != null) {
 				modifiers.addAll(extraModifiers);
 			}
-			int minimumRoll = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), modifiers);
-			if (!DiceInterpreter.getInstance().isSkillRollSuccessful(dodgeRoll, minimumRoll)) {
-				continue;
-			}
-			if (successfulCombinations.stream().anyMatch(combination::containsAll)) {
-				// a smaller combination already succeeds, this one is not minimal
-				continue;
-			}
-			successfulCombinations.add(combination);
-			options.add(new ModifierChoiceOption(orderedSkills(skills, combination), totalModifier(combination, modifiers),
-				minimumRoll));
+			combinations.add(new ModifierChoiceOption(orderedSkills(skills, combination),
+				totalModifier(combination, modifiers), mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), modifiers)));
 		}
 
-		options.sort(Comparator.comparingInt((ModifierChoiceOption option) -> option.getSkills().size())
-			.thenComparingInt(this::usageCost).thenComparing(ModifierChoiceOption::getLabel));
-
-		return options;
+		return combinations;
 	}
 
 	public int usageCost(ModifierChoiceOption option) {

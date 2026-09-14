@@ -315,6 +315,7 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
     private int dodgeRoll;                // the die that was actually rolled
     private boolean fumble;
     private List<ModifierChoiceOption> modifierOptions;   // each carries its own minimumRoll
+    private List<ModifierChoiceOption> modifierCombinations; // every combination, for information only
     private List<ReRollProperty> reRollProperties;   // from ReRollOptions
     private Skill reRollSkill;                       // from ReRollOptions
     private List<String> messages;                   // context, e.g. the Diving Tackle warning
@@ -333,12 +334,14 @@ Layout mirrors `DialogReRollProperties.java`:
 * Info panel with the dice icon, the base message
   (`"You rolled a <dodgeRoll> and needed <minimumRoll>+ to succeed."`), the `messages` list, the
   LONER warning (`hasProperty(ReRollProperty.LONER)`), and the fumble line.
-* **One button per `ModifierChoiceOption`, labelled `"<label> (<option.minimumRoll>+)"`**, e.g.
-  `"Break Tackle (4+)"`, `"Consummate Professional (5+)"`,
-  `"Break Tackle + Consummate Professional (3+)"`. This is the per-option required roll produced in
-  §3.5, so the coach can see exactly what each combination buys before committing a
-  once-per-game skill. Mnemonics assigned from a fixed pool (`1..9`) to avoid clashing with the
-  re-roll mnemonics `T`/`F`/`P`/`S`/`N`.
+* A bullet list of **every** combination in `modifierCombinations` with the roll it would require,
+  e.g. `"• Break Tackle + Consummate Professional: 3+"`. It also contains the combinations that
+  cannot rescue the current die, so the coach sees what a re-roll could achieve.
+* **One button per `ModifierChoiceOption`, labelled with the plain `<label>`**, e.g.
+  `"Break Tackle"`, `"Break Tackle + Consummate Professional"`. Only the combinations that rescue
+  the current roll become buttons; the required rolls are in the bullet list above. Mnemonics
+  assigned from a fixed pool (`1..9`) to avoid clashing with the re-roll mnemonics
+  `T`/`F`/`P`/`S`/`N`.
 * The full re-roll button block copied verbatim from `DialogReRollProperties`, including the
   `DialogExtensionMascot` wrapper, `PRO`/`TRR`/`MASCOT` fallback checkboxes and
   `determineProReRollSource()`.
@@ -625,8 +628,8 @@ Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-clien
 
 **`DialogReRollModifierChoiceTest`** (ffb-client-logic) — model on the existing
 `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogReRollPropertiesTest.java`:
-button visibility per `ReRollProperty`, one button per option, per-option label shows the option's
-own `minimumRoll`, correct command on close.
+button visibility per `ReRollProperty`, one button per option, the bullet list shows the
+`minimumRoll` of every combination, correct command on close.
 
 **JSON round-trip** tests for `DialogReRollModifierChoiceParameter`, `ModifierChoiceOption`,
 `ClientCommandReRollModifierChoice`, and the extended `StepMoveDodge` / `StepDivingTackle` step state
@@ -654,7 +657,7 @@ own `minimumRoll`, correct command on close.
    still places the tackler prone.
 3. Dodge fails, only a TRR available → new dialog without modifier buttons.
 4. Dodge fails, only Break Tackle rescues → new dialog with one skill button + TRR; picking the
-   skill succeeds without a new roll, and the button showed the correct required roll.
+   skill succeeds without a new roll, and the bullet list showed the correct required roll.
 5. Dodge fails, BT and CP both individually rescue → two single-skill buttons with their own required
    rolls; CP (once per game) ranked last.
 6. Dodge fails, only BT + CP together rescue → one combined button.

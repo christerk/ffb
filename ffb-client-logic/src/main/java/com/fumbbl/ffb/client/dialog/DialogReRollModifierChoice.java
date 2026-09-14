@@ -97,7 +97,7 @@ public class DialogReRollModifierChoice extends Dialog implements ActionListener
 			if (modifierOptions.size() >= MAX_MODIFIER_BUTTONS) {
 				break;
 			}
-			JButton button = new JButton(dimensionProvider(), option.getLabel() + " (" + option.getMinimumRoll() + "+)");
+			JButton button = new JButton(dimensionProvider(), option.getLabel());
 			button.addActionListener(this);
 			button.addKeyListener(this);
 			button.setMnemonic(KeyEvent.VK_1 + modifierOptions.size());
@@ -110,6 +110,15 @@ public class DialogReRollModifierChoice extends Dialog implements ActionListener
 		messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
 		messagePanel.add(new JLabel(dimensionProvider(), "You rolled a " + pDialogParameter.getRoll()
 			+ " and needed " + pDialogParameter.getMinimumRoll() + "+ to succeed."));
+
+		if (!pDialogParameter.getModifierCombinations().isEmpty()) {
+			messagePanel.add(Box.createVerticalStrut(5));
+			messagePanel.add(new JLabel(dimensionProvider(), "Rolls needed with optional skills:"));
+			for (ModifierChoiceOption combination : pDialogParameter.getModifierCombinations()) {
+				messagePanel.add(new JLabel(dimensionProvider(),
+					"\u2022 " + combination.getLabel() + ": " + combination.getMinimumRoll() + "+"));
+			}
+		}
 
 		if (pDialogParameter.getMessages() != null) {
 			for (String additionalMessage : pDialogParameter.getMessages()) {

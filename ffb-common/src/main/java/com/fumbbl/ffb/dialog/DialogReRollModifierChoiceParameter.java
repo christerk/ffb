@@ -36,6 +36,7 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 	private final List<String> messages = new ArrayList<>();
 	private final List<ReRollProperty> reRollProperties = new ArrayList<>();
 	private final List<ModifierChoiceOption> modifierOptions = new ArrayList<>();
+	private final List<ModifierChoiceOption> modifierCombinations = new ArrayList<>();
 
 	public DialogReRollModifierChoiceParameter() {
 		super();
@@ -43,6 +44,7 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 
 	public DialogReRollModifierChoiceParameter(String playerId, ReRolledAction reRolledAction, int minimumRoll,
 																						int roll, List<ModifierChoiceOption> modifierOptions,
+																						List<ModifierChoiceOption> modifierCombinations,
 																						List<ReRollProperty> reRollProperties, boolean fumble, Skill reRollSkill,
 																						CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
 		this.playerId = playerId;
@@ -55,6 +57,9 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 		this.defaultValueKey = defaultValueKey;
 		if (modifierOptions != null) {
 			this.modifierOptions.addAll(modifierOptions);
+		}
+		if (modifierCombinations != null) {
+			this.modifierCombinations.addAll(modifierCombinations);
 		}
 		if (reRollProperties != null) {
 			this.reRollProperties.addAll(reRollProperties);
@@ -108,6 +113,14 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 		return modifierOptions;
 	}
 
+	/**
+	 * @return every combination of the optional modifiers with the roll it would require, including the ones that
+	 * cannot rescue the current roll, so that the coach sees what a re-roll could achieve
+	 */
+	public List<ModifierChoiceOption> getModifierCombinations() {
+		return modifierCombinations;
+	}
+
 	@Override
 	public boolean hasProperty(ReRollProperty property) {
 		return reRollProperties.contains(property);
@@ -117,7 +130,7 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 
 	public IDialogParameter transform() {
 		return new DialogReRollModifierChoiceParameter(playerId, reRolledAction, minimumRoll, roll, modifierOptions,
-			reRollProperties, fumble, reRollSkill, menuProperty, defaultValueKey, messages);
+			modifierCombinations, reRollProperties, fumble, reRollSkill, menuProperty, defaultValueKey, messages);
 	}
 
 	// JSON serialization
@@ -141,6 +154,9 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 		JsonArray optionArray = new JsonArray();
 		modifierOptions.stream().map(ModifierChoiceOption::toJsonValue).forEach(optionArray::add);
 		IJsonOption.MODIFIER_OPTIONS.addTo(jsonObject, optionArray);
+		JsonArray combinationArray = new JsonArray();
+		modifierCombinations.stream().map(ModifierChoiceOption::toJsonValue).forEach(combinationArray::add);
+		IJsonOption.MODIFIER_COMBINATIONS.addTo(jsonObject, combinationArray);
 		return jsonObject;
 	}
 
@@ -165,13 +181,19 @@ public class DialogReRollModifierChoiceParameter implements IDialogParameter, Ha
 				.collect(Collectors.toList()));
 
 		modifierOptions.clear();
-		JsonArray optionArray = IJsonOption.MODIFIER_OPTIONS.getFrom(source, jsonObject);
-		if (optionArray != null) {
-			for (int i = 0; i < optionArray.size(); i++) {
-				modifierOptions.add(new ModifierChoiceOption().initFrom(source, optionArray.get(i)));
-			}
-		}
+		readOptions(source, IJsonOption.MODIFIER_OPTIONS.getFrom(source, jsonObject), modifierOptions);
+		modifierCombinations.clear();
+		readOptions(source, IJsonOption.MODIFIER_COMBINATIONS.getFrom(source, jsonObject), modifierCombinations);
 		return this;
+	}
+
+	private void readOptions(IFactorySource source, JsonArray optionArray, List<ModifierChoiceOption> options) {
+		if (optionArray == null) {
+			return;
+		}
+		for (int i = 0; i < optionArray.size(); i++) {
+			options.add(new ModifierChoiceOption().initFrom(source, optionArray.get(i)));
+		}
 	}
 
 }

@@ -159,4 +159,35 @@ class DodgeModifierSelectionServiceTest {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
 		assertTrue(findOptions(2).isEmpty());
 	}
+
+	@Test
+	void noOptionalSkillsYieldNoCombinations() {
+		assertTrue(findCombinations().isEmpty());
+	}
+
+	@Test
+	void allCombinationsAreListedWithTheRollTheyNeed() {
+		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
+
+		List<ModifierChoiceOption> combinations = findCombinations();
+
+		assertEquals(Arrays.asList("Break Tackle + Consummate Professional", "Break Tackle", "Consummate Professional"),
+			labels(combinations));
+		assertEquals(3, combinations.get(0).getMinimumRoll());
+		assertEquals(4, combinations.get(1).getMinimumRoll());
+		assertEquals(4, combinations.get(2).getMinimumRoll());
+	}
+
+	@Test
+	void combinationsAreIndependentOfTheRolledDie() {
+		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
+
+		// nothing rescues a 2, but the coach still learns what a re-roll could achieve
+		assertTrue(findOptions(2).isEmpty());
+		assertEquals(3, findCombinations().size());
+	}
+
+	private List<ModifierChoiceOption> findCombinations() {
+		return service.findCombinations(game, actingPlayer, FROM, TO, Collections.emptySet());
+	}
 }

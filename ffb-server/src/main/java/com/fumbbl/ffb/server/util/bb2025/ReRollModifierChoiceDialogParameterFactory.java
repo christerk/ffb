@@ -27,12 +27,20 @@ public class ReRollModifierChoiceDialogParameterFactory implements ReRollDialogP
 
 	private final int roll;
 	private final List<ModifierChoiceOption> modifierOptions;
+	private final List<ModifierChoiceOption> modifierCombinations;
 	private final boolean reRollAllowed;
 
+	/**
+	 * @param modifierOptions      the combinations the coach can pick right away, they become buttons
+	 * @param modifierCombinations every combination with the roll it would require, shown for information only
+	 */
 	public ReRollModifierChoiceDialogParameterFactory(int roll, List<ModifierChoiceOption> modifierOptions,
+																										List<ModifierChoiceOption> modifierCombinations,
 																										boolean reRollAllowed) {
 		this.roll = roll;
 		this.modifierOptions = modifierOptions == null ? new ArrayList<>() : new ArrayList<>(modifierOptions);
+		this.modifierCombinations =
+			modifierCombinations == null ? new ArrayList<>() : new ArrayList<>(modifierCombinations);
 		this.reRollAllowed = reRollAllowed;
 	}
 
@@ -50,14 +58,15 @@ public class ReRollModifierChoiceDialogParameterFactory implements ReRollDialogP
 			}
 		}
 
+		// the modifier options are actionable on their own, so they justify the dialog without any re-roll
 		boolean canReRoll = reRollSkill != null || properties.stream().anyMatch(ReRollProperty::isActualReRoll);
 		if (modifierOptions.isEmpty() && !canReRoll) {
 			return null;
 		}
 
 		return new DialogReRollModifierChoiceParameter(request.getPlayer().getId(), request.getReRolledAction(),
-			request.getMinimumRoll(), roll, modifierOptions, properties, request.isFumble(), reRollSkill,
-			request.getMenuProperty(), request.getDefaultValueKey(), request.getMessages());
+			request.getMinimumRoll(), roll, modifierOptions, modifierCombinations, properties, request.isFumble(),
+			reRollSkill, request.getMenuProperty(), request.getDefaultValueKey(), request.getMessages());
 	}
 
 	private boolean usableEveryTurn(Skill reRollSkill) {
