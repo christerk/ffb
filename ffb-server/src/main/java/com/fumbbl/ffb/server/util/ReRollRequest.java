@@ -32,6 +32,7 @@ public class ReRollRequest {
 	private final CommonProperty menuProperty;
 	private final String defaultValueKey;
 	private final List<String> messages;
+	private final ReRollDialogParameterFactory dialogParameterFactory;
 
 	private ReRollRequest(Builder builder) {
 		gameState = builder.gameState;
@@ -46,6 +47,31 @@ public class ReRollRequest {
 		menuProperty = builder.menuProperty;
 		defaultValueKey = builder.defaultValueKey;
 		messages = builder.messages;
+		dialogParameterFactory = builder.dialogParameterFactory;
+	}
+
+	private ReRollRequest(ReRollRequest request, Player<?> player, Skill reRollSkill) {
+		gameState = request.gameState;
+		this.player = player;
+		actingPlayer = request.actingPlayer;
+		reRolledAction = request.reRolledAction;
+		minimumRoll = request.minimumRoll;
+		fumble = request.fumble;
+		modifyingSkill = request.modifyingSkill;
+		this.reRollSkill = reRollSkill;
+		ignoreSkills = request.ignoreSkills;
+		menuProperty = request.menuProperty;
+		defaultValueKey = request.defaultValueKey;
+		messages = request.messages;
+		dialogParameterFactory = request.dialogParameterFactory;
+	}
+
+	/**
+	 * Creates a copy with the player and the re-roll skill the {@link ReRollService} derived from this request, so
+	 * that mechanics can rely on both of them being present.
+	 */
+	public ReRollRequest resolved(Player<?> player, Skill reRollSkill) {
+		return new ReRollRequest(this, player, reRollSkill);
 	}
 
 	/**
@@ -118,6 +144,14 @@ public class ReRollRequest {
 		return messages;
 	}
 
+	/**
+	 * @return the factory building the dialog parameter that is shown to the coach or {@code null} to use the default
+	 * of the ruleset, only honoured by rulesets showing re-roll properties
+	 */
+	public ReRollDialogParameterFactory getDialogParameterFactory() {
+		return dialogParameterFactory;
+	}
+
 	public static class Builder {
 		private final GameState gameState;
 		private final ReRolledAction reRolledAction;
@@ -131,6 +165,7 @@ public class ReRollRequest {
 		private CommonProperty menuProperty;
 		private String defaultValueKey;
 		private List<String> messages;
+		private ReRollDialogParameterFactory dialogParameterFactory;
 
 		private Builder(GameState gameState, ReRolledAction reRolledAction, int minimumRoll) {
 			this.gameState = gameState;
@@ -173,6 +208,14 @@ public class ReRollRequest {
 
 		public Builder messages(List<String> messages) {
 			this.messages = messages;
+			return this;
+		}
+
+		/**
+		 * Uses the given factory to build the dialog parameter instead of the default one of the ruleset.
+		 */
+		public Builder dialogParameter(ReRollDialogParameterFactory dialogParameterFactory) {
+			this.dialogParameterFactory = dialogParameterFactory;
 			return this;
 		}
 

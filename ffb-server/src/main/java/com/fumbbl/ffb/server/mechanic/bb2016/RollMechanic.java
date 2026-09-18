@@ -15,6 +15,7 @@ import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.HasIdForSingleUseReRoll;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -217,12 +218,13 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-		int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill,
-		CommonProperty menuProperty, String defaultValueKey, List<String> messages) {
+	public boolean askForReRollIfAvailable(ReRollRequest request) {
 		boolean dialogShown = false;
+		GameState gameState = request.getGameState();
+		Player<?> player = request.getPlayer();
+		Skill reRollSkill = request.getReRollSkill();
 		Game game = gameState.getGame();
-		if (minimumRoll >= 0) {
+		if (request.getMinimumRoll() >= 0) {
 			boolean teamReRollOption = isTeamReRollAvailable(gameState, player);
 			boolean singleUseReRollOption = isSingleUseReRollAvailable(gameState, player);
 			boolean proOption = isProReRollAvailable(player, game, gameState.getPassState());
@@ -234,15 +236,16 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 				}
 			}
 
-			dialogShown =
-				(teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null || modificationSkill != null);
+			dialogShown = (teamReRollOption || proOption || singleUseReRollOption || reRollSkill != null
+				|| request.getModifyingSkill() != null);
 			if (dialogShown) {
 				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 				String playerId = player.getId();
 				UtilServerDialog.showDialog(gameState,
-					new DialogReRollParameter(playerId, reRolledAction, minimumRoll, teamReRollOption, proOption, fumble,
-						reRollSkill, singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null, modificationSkill, menuProperty,
-						defaultValueKey, messages),
+					new DialogReRollParameter(playerId, request.getReRolledAction(), request.getMinimumRoll(),
+						teamReRollOption, proOption, request.isFumble(), reRollSkill,
+						singleUseReRollOption ? ReRollSources.LORD_OF_CHAOS : null, request.getModifyingSkill(),
+						request.getMenuProperty(), request.getDefaultValueKey(), request.getMessages()),
 					!actingTeam.hasPlayer(player));
 			}
 		}
