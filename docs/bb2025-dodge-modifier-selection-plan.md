@@ -222,6 +222,8 @@ New file: `ffb-server/src/main/java/com/fumbbl/ffb/server/util/bb2025/DodgeModif
      one that can be used more often) is kept, both for the buttons and for the informational
      combination list. Combinations of several skills are unaffected, they still add up to a larger
      bonus.
+   * The informational combination list additionally drops any combination that needs the same roll as
+     a combination it contains, the extra skills would not improve anything.
 
 4. **Describe** an option for the dialog and for report text: `"Break Tackle"`,
    `"Consummate Professional"`, `"Break Tackle + Consummate Professional"`.
@@ -638,6 +640,7 @@ Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-clien
 * Already-used skill is not offered.
 * Diving Tackle `extraModifiers` shift the threshold correctly.
 * Each returned option carries the correct `minimumRoll` for its own skill set.
+* A combination that needs the same roll as a combination it contains is not listed.
 
 **`AgilityMechanicPreviewTest`** (ffb-common) — regression guard for §3.7:
 

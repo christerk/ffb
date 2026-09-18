@@ -75,7 +75,8 @@ public class DodgeModifierSelectionService {
 	public List<ModifierChoiceOption> findCombinations(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
 																										 FieldCoordinate to, Set<DodgeModifier> extraModifiers) {
 
-		List<ModifierChoiceOption> combinations = evaluateCombinations(game, actingPlayer, from, to, extraModifiers);
+		List<ModifierChoiceOption> combinations =
+			removeRedundantSupersets(evaluateCombinations(game, actingPlayer, from, to, extraModifiers));
 
 		combinations.sort(Comparator.comparingInt(ModifierChoiceOption::getMinimumRoll)
 			.thenComparingInt((ModifierChoiceOption option) -> option.getSkills().size())
@@ -119,6 +120,26 @@ public class DodgeModifierSelectionService {
 		}
 
 		return removeRedundantSingleSkills(combinations);
+	}
+
+	/**
+	 * Drops combinations that need the same roll as a combination they contain, as the additional skills would not
+	 * improve anything. The given combinations have to be ordered by ascending size, so a contained combination is
+	 * always seen first.
+	 */
+	private List<ModifierChoiceOption> removeRedundantSupersets(List<ModifierChoiceOption> combinations) {
+		List<ModifierChoiceOption> kept = new ArrayList<>();
+
+		for (ModifierChoiceOption combination : combinations) {
+			Set<Skill> skills = new LinkedHashSet<>(combination.getSkills());
+			boolean redundant = kept.stream().anyMatch(other -> other.getMinimumRoll() == combination.getMinimumRoll()
+				&& other.getSkills().size() < skills.size() && skills.containsAll(other.getSkills()));
+			if (!redundant) {
+				kept.add(combination);
+			}
+		}
+
+		return kept;
 	}
 
 	/**

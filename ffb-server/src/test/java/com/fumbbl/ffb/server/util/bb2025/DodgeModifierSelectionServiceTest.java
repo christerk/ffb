@@ -187,6 +187,15 @@ class DodgeModifierSelectionServiceTest {
 	}
 
 	@Test
+	void combinationsThatDoNotImproveOnASubsetAreNotListed() {
+		when(player.getAgilityWithModifiers()).thenReturn(2);
+		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
+
+		// agility 2 with a tacklezone needs a 3+, a single modifier already caps the roll at 2+
+		assertEquals(Collections.singletonList("Break Tackle"), labels(findCombinations()));
+	}
+
+	@Test
 	void combinationsAreIndependentOfTheRolledDie() {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
 
