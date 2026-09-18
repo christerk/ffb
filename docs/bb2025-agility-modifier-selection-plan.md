@@ -1,6 +1,6 @@
 # BB2025: Optional Agility Modifier Selection (all Agility Tests)
 
-Status: dodge **implemented**, all other Agility Tests **planned / not implemented**.
+Status: dodge and pick up **implemented**, all other Agility Tests **planned / not implemented**.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour untouched.
 
 > This document supersedes `docs/bb2025-dodge-modifier-selection-plan.md`. The dodge design is
@@ -295,6 +295,8 @@ combinations → merge with the available re-roll sources into one
 auto-use a lone free re-roll only when §2.10 allows it.
 
 ### A. Pick up — `step/bb2025/move/StepPickUp`
+
+**Implemented.** Other action work packages remain out of scope for the pickup implementation.
 
 The acting player rolls, so `ActingPlayer.markSkillUsed` applies. Fold the existing automatic Sure
 Hands branch into the merged dialog: when Consummate Professional is also available, Sure Hands must
