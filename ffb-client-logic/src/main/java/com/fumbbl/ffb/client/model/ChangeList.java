@@ -26,13 +26,17 @@ public class ChangeList {
 			.addImprovement("Skipping a player choice dialog now asks for confirmation and reopens the dialog if the skip is not confirmed")
 			.addBugfix("Diving Catch: Now follows NAF recommendation, active team gets first pick to choose catcher with DC (or without if a player is in the target square), then passive team, then default catch rules.")
 			.addBugfix("On The Ball: Players on LoS could not use OtB during kick-off even if they were open")
+			.addImprovement("Move paths sent by the client are sanitized to ensure a client does not send invalid move sequences")
 			.addBugfix("Fan Interaction: Injury rolls of players pushed into the crowd or falling through a trap door applied injury modifiers like Mighty Blow of the player causing the push")
 			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addBugfix("Chainsaw: Attacker down (skull or both down) when blocking a player with chainsaw did add chainsaw modifier to armour roll on attacker")
 			.addBugfix("If the only available action was forgo activation, a foul action was started instead")
 			.addFeature("2025: Optional dodge modifiers like Break Tackle and Consummate Professional are now offered in a dialog that lets you choose between skill combinations and re-rolls instead of being applied automatically")
 			.addBugfix("2025 Diving Tackle: The prompt is now always shown, describes the actual effect of the declaration and no longer offers skills the dodging player cannot use")
-			.addBehaviorChange("2025: Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
+			.addBugfix("2025: Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
+			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
+			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
+      .addFeature("Consummate Professional)
 		);
 
 		versions.add(new VersionChangeList("3.3.2")

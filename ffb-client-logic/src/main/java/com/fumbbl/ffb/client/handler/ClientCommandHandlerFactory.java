@@ -17,7 +17,11 @@ public class ClientCommandHandlerFactory {
 
 	private final FantasyFootballClient fClient;
 
+	private static final long ANIMATION_TIMEOUT_IN_MILLIS = 30000;
+
 	private final Map<NetCommandId, ClientCommandHandler> fCommandHandlerById;
+
+	private boolean animationRunning;
 
 	public ClientCommandHandlerFactory(FantasyFootballClient pClient) {
 		fClient = pClient;
@@ -51,17 +55,20 @@ public class ClientCommandHandlerFactory {
 		if (pNetCommand != null) {
 			ClientCommandHandler commandHandler = getCommandHandler(pNetCommand.getId());
 			if (commandHandler != null) {
+				boolean playing = (pMode == ClientCommandHandlerMode.PLAYING);
+				if (playing) {
+					// arm the guard before the handler starts, otherwise a fast animation may signal completion
+					// before this thread starts waiting
+					synchronized (this) {
+						animationRunning = true;
+					}
+				}
 				boolean completed = commandHandler.handleNetCommand(pNetCommand, pMode);
 				if (completed) {
 					updateClientState(pNetCommand, false);
 				} else {
-					if (pMode == ClientCommandHandlerMode.PLAYING) {
-						synchronized (this) {
-							try {
-								wait();
-							} catch (InterruptedException ignored) {
-							}
-						}
+					if (playing) {
+						awaitAnimation();
 					}
 				}
 			} else {
@@ -70,6 +77,30 @@ public class ClientCommandHandlerFactory {
 		} else {
 			fClient.logDebug(gameId, "Received null command");
 
+		}
+	}
+
+	/**
+	 * Waits until the running animation signals completion. Uses a guard and a timeout, so a notification that is
+	 * missed because the event dispatch thread was busy cannot block command processing forever.
+	 */
+	private void awaitAnimation() {
+		synchronized (this) {
+			long deadline = System.currentTimeMillis() + ANIMATION_TIMEOUT_IN_MILLIS;
+			while (animationRunning) {
+				long remaining = deadline - System.currentTimeMillis();
+				if (remaining <= 0) {
+					fClient.logDebug(0, "Timed out waiting for animation to finish");
+					animationRunning = false;
+					break;
+				}
+				try {
+					wait(remaining);
+				} catch (InterruptedException interrupted) {
+					Thread.currentThread().interrupt();
+					animationRunning = false;
+				}
+			}
 		}
 	}
 
@@ -84,6 +115,7 @@ public class ClientCommandHandlerFactory {
 		}
 		if (pNotify) {
 			synchronized (this) {
+				animationRunning = false;
 				notifyAll();
 			}
 		}

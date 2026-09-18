@@ -15,7 +15,7 @@ public enum KickoffResult implements com.fumbbl.ffb.kickoff.KickoffResult {
 	SOLID_DEFENCE("Solid Defence", "The kicking team may setup D3+3 of its players again."),
 	HIGH_KICK("High Kick", "A player on the receiving team may try to catch the ball directly."),
 	CHEERING_FANS("Cheering Fans",
-		"The team with the most enthusiastic fans gains an additonal offensive assist on their next block."),
+		"The team with the most enthusiastic fans gains an additional offensive assist on their next block."),
 	WEATHER_CHANGE("Weather Change", "The weather changes suddenly."),
 	BRILLIANT_COACHING("Brilliant Coaching", "The team with the best coaching gains a re-roll.") {
 		@Override
@@ -25,7 +25,7 @@ public enum KickoffResult implements com.fumbbl.ffb.kickoff.KickoffResult {
 	},
 	QUICK_SNAP("Quick Snap", "The offence may reposition D3+3 of their open players 1 square each."),
 	CHARGE("Charge",
-		"The kicking team can select D3+3 open players to perform Move, Blitz, TTM and KTM actions as it was a regular team turn."),
+		"The kicking team can select D3+3 open players to perform Move, Blitz, TTM and KTM actions as if it was a regular team turn."),
 	DODGY_SNACK("Dodgy Snack", "A random player gets either -MA and -AV for the Drive or is sent to reserves.") {
 		@Override
 		public TemporaryEnhancements enhancements(StatsMechanic mechanic) {

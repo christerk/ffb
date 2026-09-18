@@ -365,6 +365,16 @@ public class UtilPlayer {
 		return findTacklezonePlayers(pGame, pPlayer).length;
 	}
 
+	/**
+	 * Same as {@link #findTacklezones(Game, Player)} but for a hypothetical
+	 * coordinate instead of the player's actual current position on the field.
+	 * Used to validate move paths that have not been committed to the field yet.
+	 */
+	public static int findTacklezones(Game pGame, Player<?> pPlayer, FieldCoordinate pCoordinate) {
+		Team otherTeam = findOtherTeam(pGame, pPlayer);
+		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinate, false).length;
+	}
+
 	public static Player<?>[] findTacklezonePlayers(Game pGame, Player<?> pPlayer) {
 		Team otherTeam = findOtherTeam(pGame, pPlayer);
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);

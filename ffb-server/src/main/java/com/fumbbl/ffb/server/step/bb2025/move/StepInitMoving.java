@@ -153,11 +153,12 @@ public class StepInitMoving extends AbstractStep {
 					boolean homePlayerBlitz = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homePlayerBlitz)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
-							UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz)));
+						FieldCoordinate blitzMoveStart = UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homePlayerBlitz);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, blitzMoveStart));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz)));
+								UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), blitzMoveStart,
+									UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homePlayerBlitz), actingPlayer.isJumping())));
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -167,11 +168,12 @@ public class StepInitMoving extends AbstractStep {
 					boolean homePlayer = UtilServerSteps.checkCommandIsFromHomePlayer(getGameState(), pReceivedCommand);
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homePlayer)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START,
-							UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer)));
+						FieldCoordinate moveStart = UtilServerPlayerMove.fetchFromSquare(moveCommand, homePlayer);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, moveStart));
 						if (!ArrayTool.isProvided(fMoveStack)) {
 							publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-								UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer)));
+								UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), moveStart,
+									UtilServerPlayerMove.fetchMoveStack(moveCommand, homePlayer), actingPlayer.isJumping())));
 						}
 						ballAndChainRrSetting = moveCommand.getBallAndChainRrSetting();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -402,6 +404,10 @@ public class StepInitMoving extends AbstractStep {
 					game.setConcessionPossible(false);
 					getResult().setNextAction(StepAction.NEXT_STEP);
 				}
+			} else if (fMoveStack != null) {
+				// move stack was explicitly emptied (e.g. the requested square failed validation), so there is
+				// nothing left to move here; go to the end of the move sequence so the player can continue acting
+				getResult().setNextAction(StepAction.GOTO_LABEL, fGotoLabelOnEnd);
 			}
 		}
 	}
