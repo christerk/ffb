@@ -36,7 +36,7 @@ public class ChangeList {
 			.addBugfix("2025: Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
-      .addFeature("Consummate Professional)
+      .addFeature("Consummate Professional")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
