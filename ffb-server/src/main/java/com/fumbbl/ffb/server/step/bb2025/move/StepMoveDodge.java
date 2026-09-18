@@ -57,6 +57,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -99,6 +100,7 @@ import java.util.Set;
 public class StepMoveDodge extends AbstractStepWithReRoll {
 
 	private final DodgeModifierSelectionService selectionService = new DodgeModifierSelectionService();
+	private final StallingExtension stallingExtension = new StallingExtension();
 
 	private String fGotoLabelOnFailure;
 	private FieldCoordinate fCoordinateFrom;
@@ -474,7 +476,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			if (ignoreModifierSkill.isPresent() && usingModifierIgnoringSkill == null) {
 				return offerModifierIgnoringSkill(ignoreModifierSkill.get());
 			}
-			if (skillReRollSource != null) {
+			// the coach has to decide themselves when failing the dodge would cost a team mate a rock to the head
+			if (skillReRollSource != null
+				&& !stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, actingPlayer.getPlayer())) {
 				fReRollUsed = true;
 				useSkillReRollSource(skillReRollSource);
 				return dodge(true);

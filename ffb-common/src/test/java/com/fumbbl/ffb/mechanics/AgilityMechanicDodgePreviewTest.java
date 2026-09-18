@@ -2,14 +2,23 @@ package com.fumbbl.ffb.mechanics;
 
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.GameOptions;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.option.GameOptionBoolean;
+import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.skill.bb2025.BreakTackle;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +31,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,11 +43,16 @@ class AgilityMechanicDodgePreviewTest {
 
 	private static final FieldCoordinate FROM = new FieldCoordinate(5, 5);
 	private static final FieldCoordinate TO = new FieldCoordinate(6, 5);
+	private static final FieldCoordinate TACKLER_COORDINATE = new FieldCoordinate(5, 6);
 	private static final DodgeModifier TACKLEZONE = new DodgeModifier("Tacklezone", 1, ModifierType.REGULAR, false);
+	private static final DodgeModifier DIVING_TACKLE =
+		new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE, false);
 
 	private Game game;
 	private ActingPlayer actingPlayer;
 	private Player<?> player;
+	private FieldModel fieldModel;
+	private Team awayTeam;
 	private final Set<Skill> skills = new LinkedHashSet<>();
 	private final Set<Skill> usedSkills = new HashSet<>();
 
@@ -70,8 +86,38 @@ class AgilityMechanicDodgePreviewTest {
 			return modifiers;
 		});
 
+		when(modifierFactory.forType(ModifierType.DIVING_TACKLE))
+			.thenReturn(new HashSet<>(Collections.singletonList(DIVING_TACKLE)));
+
+		Team homeTeam = mock(Team.class);
+		awayTeam = mock(Team.class);
+		when(player.getTeam()).then(invocation -> homeTeam);
+
+		fieldModel = mock(FieldModel.class);
+		when(fieldModel.findAdjacentCoordinates(any(FieldCoordinate.class), any(FieldCoordinateBounds.class), anyInt(),
+			anyBoolean())).thenReturn(new FieldCoordinate[]{TACKLER_COORDINATE});
+
+		GameOptions gameOptions = mock(GameOptions.class);
+		when(gameOptions.getOptionWithDefault(any(GameOptionId.class)))
+			.thenReturn(new GameOptionBoolean(GameOptionId.DIVING_TACKLE_LEAVING_TZ_ONLY).setValue(false));
+
 		game = mock(Game.class);
 		when(game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER)).thenReturn(modifierFactory);
+		when(game.getActingPlayer()).then(invocation -> actingPlayer);
+		when(game.getFieldModel()).then(invocation -> fieldModel);
+		when(game.getTeamHome()).then(invocation -> homeTeam);
+		when(game.getTeamAway()).then(invocation -> awayTeam);
+		when(game.getTurnMode()).thenReturn(TurnMode.REGULAR);
+		when(game.getOptions()).thenReturn(gameOptions);
+	}
+
+	private void addDivingTackler() {
+		Player<?> tackler = mock(Player.class);
+		when(tackler.getTeam()).then(invocation -> awayTeam);
+		when(tackler.hasSkillProperty(NamedProperties.canAttemptToTackleDodgingPlayer)).thenReturn(true);
+		when(fieldModel.getPlayer(TACKLER_COORDINATE)).then(invocation -> tackler);
+		when(fieldModel.getPlayerState(tackler)).thenReturn(new PlayerState(PlayerState.STANDING));
+		when(fieldModel.getPlayerCoordinate(tackler)).thenReturn(TACKLER_COORDINATE);
 	}
 
 	private void assertPreviewIgnoresOptionalModifiers(AgilityMechanic mechanic) {
@@ -91,6 +137,14 @@ class AgilityMechanicDodgePreviewTest {
 	void bb2025PreviewIgnoresUsedSkills() {
 		usedSkills.addAll(skills);
 		assertPreviewIgnoresOptionalModifiers(new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic());
+	}
+
+	@Test
+	void bb2025PreviewIncludesDivingTackle() {
+		addDivingTackler();
+		// agility 4 plus one tacklezone and diving tackle is a 7+, both optional modifiers bring it down to a 5+
+		assertEquals(5, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
+			.minimumRollDodgePreview(game, actingPlayer, FROM, TO));
 	}
 
 	@Test

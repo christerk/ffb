@@ -18,8 +18,10 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -116,7 +118,26 @@ public class DodgeModifierSelectionService {
 				totalModifier(combination, modifiers), mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), modifiers)));
 		}
 
-		return combinations;
+		return removeRedundantSingleSkills(combinations);
+	}
+
+	/**
+	 * Drops single skills that give the same bonus as another single skill that can be used more often, as using the
+	 * scarcer skill would only waste it. Combinations of several skills are kept, they still add up to a larger bonus.
+	 */
+	private List<ModifierChoiceOption> removeRedundantSingleSkills(List<ModifierChoiceOption> combinations) {
+		Map<Integer, Integer> cheapestCostPerBonus = new HashMap<>();
+		combinations.stream().filter(this::isSingleSkill).forEach(option -> cheapestCostPerBonus
+			.merge(option.getTotalModifier(), usageCost(option), Math::min));
+
+		return combinations.stream()
+			.filter(option -> !isSingleSkill(option)
+				|| usageCost(option) <= cheapestCostPerBonus.getOrDefault(option.getTotalModifier(), 0))
+			.collect(Collectors.toList());
+	}
+
+	private boolean isSingleSkill(ModifierChoiceOption option) {
+		return option.getSkills().size() == 1;
 	}
 
 	public int usageCost(ModifierChoiceOption option) {

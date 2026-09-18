@@ -44,6 +44,7 @@ class DodgeModifierSelectionServiceTest {
 
 	private Game game;
 	private ActingPlayer actingPlayer;
+	private Player<?> player;
 	private final Set<Skill> skills = new LinkedHashSet<>();
 	private final Set<Skill> usedSkills = new HashSet<>();
 
@@ -57,7 +58,7 @@ class DodgeModifierSelectionServiceTest {
 		consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
 
-		Player<?> player = mock(Player.class);
+		player = mock(Player.class);
 		when(player.getSkillsIncludingTemporaryOnes()).thenReturn(skills);
 		when(player.getStrengthWithModifiers()).thenReturn(3);
 		when(player.getAgilityWithModifiers()).thenReturn(4);
@@ -129,11 +130,19 @@ class DodgeModifierSelectionServiceTest {
 	}
 
 	@Test
-	void cheaperUsageTypeIsRankedFirstAndSupersetsArePruned() {
+	void onlyTheSkillUsableMoreOftenIsOfferedForTheSameBonus() {
 		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
-		// either skill alone is enough for a 4, so no combined option is kept
+		// both skills give the same bonus at strength 3, consummate professional is the once per game one
 		List<ModifierChoiceOption> options = findOptions(4);
-		assertEquals(Arrays.asList("Break Tackle", "Consummate Professional"), labels(options));
+		assertEquals(Collections.singletonList("Break Tackle"), labels(options));
+	}
+
+	@Test
+	void bothSkillsAreOfferedWhenTheirBonusDiffers() {
+		when(player.getStrengthWithModifiers()).thenReturn(4);
+		skills.addAll(Arrays.asList(breakTackle, consummateProfessional));
+		// break tackle gives -2 at strength 4, so the skills are no longer interchangeable
+		assertEquals(Arrays.asList("Break Tackle", "Consummate Professional"), labels(findOptions(4)));
 	}
 
 	@Test
@@ -171,11 +180,10 @@ class DodgeModifierSelectionServiceTest {
 
 		List<ModifierChoiceOption> combinations = findCombinations();
 
-		assertEquals(Arrays.asList("Break Tackle + Consummate Professional", "Break Tackle", "Consummate Professional"),
-			labels(combinations));
+		// consummate professional alone is not listed, break tackle gives the same bonus and can be used more often
+		assertEquals(Arrays.asList("Break Tackle + Consummate Professional", "Break Tackle"), labels(combinations));
 		assertEquals(3, combinations.get(0).getMinimumRoll());
 		assertEquals(4, combinations.get(1).getMinimumRoll());
-		assertEquals(4, combinations.get(2).getMinimumRoll());
 	}
 
 	@Test
@@ -184,7 +192,7 @@ class DodgeModifierSelectionServiceTest {
 
 		// nothing rescues a 2, but the coach still learns what a re-roll could achieve
 		assertTrue(findOptions(2).isEmpty());
-		assertEquals(3, findCombinations().size());
+		assertEquals(2, findCombinations().size());
 	}
 
 	private List<ModifierChoiceOption> findCombinations() {

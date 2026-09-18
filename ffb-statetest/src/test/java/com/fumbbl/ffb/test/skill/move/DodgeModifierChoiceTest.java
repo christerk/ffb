@@ -18,6 +18,7 @@ import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,16 +40,39 @@ public class DodgeModifierChoiceTest {
 	}
 
 	private GameState buildState(String... dodgerSkills) {
+		return buildState(3, dodgerSkills);
+	}
+
+	private GameState buildState(int strength, String... dodgerSkills) {
 		return new GameStateBuilder(testServer.getGameState())
 			.withRule("BB2025")
 			.withWeather(Weather.NICE)
+			.withTeam(true, t -> t
+				.player("runner", p -> {
+					p.at(12, 7).stats(6, strength, 3, 5, 8);
+					for (String skill : dodgerSkills) {
+						p.skill(skill);
+					}
+				}))
+			.withTeam(false, t -> t
+				.player("marker", p -> p.at(13, 7).stats(6, 3, 3, 5, 8))
+				.player("blocker", p -> p.at(10, 7).stats(6, 3, 3, 5, 8)))
+			.build();
+	}
+
+	private GameState buildStateWithScoringTeamMate(String... dodgerSkills) {
+		return new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withBallAt(24, 3)
 			.withTeam(true, t -> t
 				.player("runner", p -> {
 					p.at(12, 7).stats(6, 3, 3, 5, 8);
 					for (String skill : dodgerSkills) {
 						p.skill(skill);
 					}
-				}))
+				})
+				.player("carrier", p -> p.at(24, 3).stats(6, 3, 3, 5, 8)))
 			.withTeam(false, t -> t
 				.player("marker", p -> p.at(13, 7).stats(6, 3, 3, 5, 8))
 				.player("blocker", p -> p.at(10, 7).stats(6, 3, 3, 5, 8)))
@@ -77,7 +101,8 @@ public class DodgeModifierChoiceTest {
 
 	@Test
 	public void failedDodgeOffersTheAvailableModifierCombinations() {
-		GameState state = buildState("Break Tackle", "Consummate Professional");
+		// at strength 4 break tackle gives -2, so it is not interchangeable with consummate professional
+		GameState state = buildState(4, "Break Tackle", "Consummate Professional");
 		Game game = state.getGame();
 
 		// agility 3 plus one tacklezone on the target square is a 4+
@@ -92,6 +117,20 @@ public class DodgeModifierChoiceTest {
 		assertEquals(2, labels.size());
 		assertTrue(labels.contains("Break Tackle"));
 		assertTrue(labels.contains("Consummate Professional"));
+	}
+
+	@Test
+	public void onlyTheSkillUsableMoreOftenIsOfferedWhenTheBonusIsEqual() {
+		GameState state = buildState("Break Tackle", "Consummate Professional");
+		Game game = state.getGame();
+
+		// at strength 3 both skills give -1, consummate professional is the once per game one
+		dodge(state, 3);
+
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		List<String> labels =
+			parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+		assertEquals(Collections.singletonList("Break Tackle"), labels);
 	}
 
 	@Test
@@ -121,10 +160,9 @@ public class DodgeModifierChoiceTest {
 		assertTrue(parameter.getModifierOptions().isEmpty());
 		List<String> combinations = parameter.getModifierCombinations().stream()
 			.map(option -> option.getLabel() + ":" + option.getMinimumRoll()).collect(Collectors.toList());
-		assertEquals(3, combinations.size());
+		assertEquals(2, combinations.size());
 		assertTrue(combinations.contains("Consummate Professional + Break Tackle:2"));
 		assertTrue(combinations.contains("Break Tackle:3"));
-		assertTrue(combinations.contains("Consummate Professional:3"));
 	}
 
 	@Test
@@ -152,6 +190,34 @@ public class DodgeModifierChoiceTest {
 
 		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
 		assertFalse(parameter.hasProperty(ReRollProperty.TRR));
+		assertEquals("Dodge", parameter.getReRollSkill().getName());
+	}
+
+	@Test
+	public void loneDodgeReRollIsUsedAutomatically() {
+		GameState state = buildState("Dodge");
+		Game game = state.getGame();
+
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
+		// the failed dodge is re-rolled right away, the second roll succeeds
+		TestRolls.on(state).general(3, 5);
+		StepEngine.respond(state, Commands.move("runner", new FieldCoordinate(12, 7), new FieldCoordinate(11, 7)));
+
+		assertNull(game.getDialogParameter());
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+	}
+
+	@Test
+	public void loneDodgeReRollIsOfferedWhenATeamMateWouldBeStalling() {
+		GameState state = buildStateWithScoringTeamMate("Dodge");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertTrue(parameter.getModifierOptions().isEmpty());
 		assertEquals("Dodge", parameter.getReRollSkill().getName());
 	}
 

@@ -218,6 +218,10 @@ New file: `ffb-server/src/main/java/com/fumbbl/ffb/server/util/bb2025/DodgeModif
      Add a `usageCost(SkillUsageType)` helper on the service (do **not** put ordering into the
      `SkillUsageType` enum — it is shared by all rulesets).
    * When two options are equivalent in size and total modifier value, keep only the cheaper one.
+   * When several **single** skills give the same bonus, only the one with the lowest usage cost (the
+     one that can be used more often) is kept, both for the buttons and for the informational
+     combination list. Combinations of several skills are unaffected, they still add up to a larger
+     bonus.
 
 4. **Describe** an option for the dialog and for report text: `"Break Tackle"`,
    `"Consummate Professional"`, `"Break Tackle + Consummate Professional"`.
@@ -270,6 +274,10 @@ public abstract int minimumRollDodgePreview(Game game, ActingPlayer actingPlayer
   Set<DodgeModifier> modifiers = factory.findModifiers(new DodgeContext(game, actingPlayer, from, to, allOptional));
   return minimumRollDodge(game, actingPlayer.getPlayer(), modifiers);
   ```
+  It also adds the Diving Tackle modifier when
+  `UtilPlayer.findEligibleDivingTacklers(game, from, to, canAttemptToTackleDodgingPlayer)` reports an
+  opponent that could declare it, so the preview does not promise a roll the opponent can still make
+  worse.
 
 `UtilServerPlayerMove.addMoveSquare` then becomes a one-line delegation:
 `minimumRollDodge = mechanic.minimumRollDodgePreview(game, actingPlayer, playerCoordinate, pCoordinate);`
@@ -444,6 +452,17 @@ they are offered again (R11).
 `canChooseToIgnoreDodgeModifierAfterRoll` handling (lines 320-340, 471-476, 505-511) is **kept** —
 it is a separate mechanic.
 
+#### 5.1.1 Auto used skill re-rolls and stalling
+
+When no modifier option is available and the only rescue is a skill re-roll (e.g. Dodge), the step
+uses it without asking — except when failing the dodge would get a rock thrown at a team mate.
+`StallingExtension.wouldEndOfTurnTriggerStallingRoll(game, actingPlayer)` (bb2025 shared, already the
+home of the stalling rules used by `StepForgoneStalling` and `StepStallingPlayer`) answers that: the
+stalling check has to be enabled, it has to be a regular turn number 6 or lower, and a team mate
+other than the acting player has to hold the ball, still be unactivated and count as stalling (no
+marking opponent and an open path to the endzone that needs no dice). In that case the coach gets the
+normal re-roll dialog instead.
+
 ### 5.2 Diving Tackle look-ahead (replaces `StepMoveDodge.java:416-456`)
 
 ```
@@ -612,8 +631,9 @@ Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-clien
 * Consummate Professional alone rescues → single option `[Consummate Professional]`.
 * Both needed → single option `[Break Tackle, Consummate Professional]`; the two single-skill subsets
   are excluded because they do not succeed.
-* Either alone rescues, both are `ONCE_PER_GAME`/`ONCE_PER_TURN` → the `ONCE_PER_TURN` skill ranks
-  first (R7).
+* Either alone rescues with the same bonus, one is `ONCE_PER_GAME` → only the skill that can be used
+  more often is offered (R7).
+* Either alone rescues with a different bonus → both are offered.
 * Superset pruning: `[BT]` succeeds → `[BT, CP]` is discarded.
 * Already-used skill is not offered.
 * Diving Tackle `extraModifiers` shift the threshold correctly.
@@ -625,6 +645,7 @@ Build order: `ffb-common` → `ffb-server` → `ffb-client-logic` → `ffb-clien
   `UtilServerPlayerMove` computation returned (including Break Tackle auto-inclusion).
 * bb2025 returns the roll with all available optional modifiers applied, and ignores skills that are
   already used.
+* bb2025 includes the Diving Tackle modifier when an adjacent opponent could declare it.
 
 **`DialogReRollModifierChoiceTest`** (ffb-client-logic) — model on the existing
 `ffb-client-logic/src/test/java/com/fumbbl/ffb/client/dialog/DialogReRollPropertiesTest.java`:
@@ -647,7 +668,8 @@ button visibility per `ReRollProperty`, one button per option, the bullet list s
   (visual harness, same style as `DialogReRollPropertiesTest`)
 * `ffb-statetest/src/test/java/com/fumbbl/ffb/test/skill/move/DodgeModifierChoiceTest.java` ✅
   (step flow: no dialog on success, both single-skill options offered on failure, chosen skill
-  rescues the dodge and is marked used; covers scenarios 1, 4 and 5 below)
+  rescues the dodge and is marked used, a lone skill re-roll is auto used unless a team mate would be
+  hit by a rock for it; covers scenarios 1, 4, 5 and 11 below)
 
 **Manual / scripted scenarios:** (still to be verified by hand)
 
@@ -667,4 +689,6 @@ button visibility per `ReRollProperty`, one button per option, the bullet list s
 9. Move-square preview on a player with unused BT and/or CP shows the best achievable dodge roll;
    the same player with both skills already used shows the unmodified roll.
 10. Reconnect / replay in the middle of an open modifier dialog.
+11. Dodge fails with the Dodge skill as the only rescue → the re-roll is used automatically, unless an
+    unactivated team mate holds the ball and could still score, in which case the coach is asked.
 

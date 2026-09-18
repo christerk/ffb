@@ -17,6 +17,7 @@ import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
+import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.OptionalDodgeModifier;
 import com.fumbbl.ffb.modifiers.OptionalDodgeModifierService;
 import com.fumbbl.ffb.modifiers.PickupModifier;
@@ -26,6 +27,8 @@ import com.fumbbl.ffb.modifiers.StatBasedRollModifier;
 import com.fumbbl.ffb.report.ReportSkillRoll;
 import com.fumbbl.ffb.report.ReportPickupRoll;
 import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
+import com.fumbbl.ffb.util.ArrayTool;
+import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +63,10 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers =
 			modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, from, to, selectedSkills));
+		if (ArrayTool.isProvided(UtilPlayer.findEligibleDivingTacklers(game, from, to,
+			NamedProperties.canAttemptToTackleDodgingPlayer))) {
+			dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
+		}
 		return minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
 	}
 
