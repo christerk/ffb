@@ -8,6 +8,8 @@ import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.PickupContext;
+import com.fumbbl.ffb.modifiers.PickupModifier;
 
 /**
  * Once per game, this player may apply a +1 modifier to an Agility Test they have made.
@@ -29,5 +31,11 @@ public class ConsummateProfessional extends Skill {
 					return context.isSkillSelected(skill);
 				}
 			});
+		registerModifier(new PickupModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, PickupContext context) {
+				return context.isSkillSelected(skill);
+			}
+		});
 	}
 }

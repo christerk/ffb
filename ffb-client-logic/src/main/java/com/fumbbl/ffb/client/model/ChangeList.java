@@ -32,6 +32,8 @@ public class ChangeList {
 			.addBugfix("Chainsaw: Attacker down (skull or both down) when blocking a player with chainsaw did add chainsaw modifier to armour roll on attacker")
 			.addBugfix("If the only available action was forgo activation, a foul action was started instead")
 			.addFeature("Optional dodge modifiers like Break Tackle and Consummate Professional are now offered in a dialog that lets you choose between skill combinations and re-rolls instead of being applied automatically. Skills that give the same bonus as a skill that can be used more often are not offered")
+			.addFeature("Consummate Professional can now rescue a failed pick-up, with a choice between using the skill and available re-rolls")
+			.addBehaviorChange("Sure Hands is now optional when a team mate is at risk of a stalling roll")
 			.addBugfix("Diving Tackle: The prompt is now always shown, describes the actual effect of the declaration and no longer offers skills the dodging player cannot use")
 			.addBugfix("Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
 			.addImprovement("Move squares now show the roll needed when an adjacent opponent can use Diving Tackle")

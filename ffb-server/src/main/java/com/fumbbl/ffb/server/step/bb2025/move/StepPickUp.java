@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.move;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.CatchScatterThrowInMode;
@@ -10,19 +11,26 @@ import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.SoundId;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.PickupModifierFactory;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPickUpChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.report.bb2025.ReportPickupRoll;
 import com.fumbbl.ffb.server.ActionStatus;
 import com.fumbbl.ffb.server.DiceInterpreter;
@@ -37,10 +45,16 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.PickupModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,6 +74,11 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private boolean ignore, secureTheBall, optionalPickUp, attemptPickUp;
 	private String overridePlayerId;
+	private int pickupRoll;
+	private boolean reRollUsed, awaitingRescue;
+	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
+	private final PickupModifierSelectionService selectionService = new PickupModifierSelectionService();
+	private final StallingExtension stallingExtension = new StallingExtension();
 
 	public StepPickUp(GameState pGameState) {
 		super(pGameState);
@@ -127,6 +146,35 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand pReceivedCommand) {
+		if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE) {
+			ClientCommandReRollModifierChoice command = (ClientCommandReRollModifierChoice) pReceivedCommand.getCommand();
+			Game game = getGameState().getGame();
+			Player<?> player = pickupPlayer();
+			if (!awaitingRescue || secureTheBall || player == null
+				|| command.getReRolledAction() != ReRolledActions.PICK_UP
+				|| !player.getId().equals(command.getPlayerId())
+				|| !(game.getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
+				return StepCommandStatus.UNHANDLED_COMMAND;
+			}
+			Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
+			boolean offered = selectionService.findOptions(game, player, pickupRoll).stream()
+				.anyMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills));
+			if (!offered || skills.size() != command.getSkills().size()) {
+				return StepCommandStatus.UNHANDLED_COMMAND;
+			}
+			for (Skill skill : skills) {
+				selectedModifierSkills.add(skill);
+				if (player == game.getActingPlayer().getPlayer()) {
+					game.getActingPlayer().markSkillUsed(skill);
+				} else {
+					player.markUsed(skill, game);
+				}
+				getResult().addReport(new ReportSkillUse(player.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+			}
+			awaitingRescue = false;
+			executeStep();
+			return StepCommandStatus.EXECUTE_STEP;
+		}
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND &&
 			pReceivedCommand.getId() == NetCommandId.CLIENT_PICK_UP_CHOICE) {
@@ -142,10 +190,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 
 	private void executeStep() {
 		Game game = getGameState().getGame();
-		Player<?> player = StringTool.isProvided(overridePlayerId)
-			? game.getPlayerById(overridePlayerId)
-			:
-			(StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
+		Player<?> player = pickupPlayer();
 		secureTheBall = game.getActingPlayer().getPlayerAction() == PlayerAction.SECURE_THE_BALL;
 		boolean doPickUp = true;
 
@@ -158,8 +203,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		if (player != null && isPickUp(player)) {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.hasTacklezones()) {
-				if (ReRolledActions.PICK_UP == getReRolledAction()) {
-					if ((getReRollSource() == null)
+				if (awaitingRescue) {
+					awaitingRescue = false;
+					if (reRollUsed || (getReRollSource() == null)
 						|| !UtilServerReRoll.useReRoll(this, getReRollSource(), player)) {
 						doPickUp = false;
 						publishParameter(new StepParameter(StepParameterKey.FEEDING_ALLOWED, false));
@@ -171,6 +217,9 @@ public class StepPickUp extends AbstractStepWithReRoll {
 						}
 						publishParameter(
 							new StepParameter(StepParameterKey.CATCH_SCATTER_THROW_IN_MODE, CatchScatterThrowInMode.FAILED_PICK_UP));
+					} else {
+						reRollUsed = true;
+						pickupRoll = 0;
 					}
 				}
 				if (doPickUp) {
@@ -214,6 +263,12 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		}
 	}
 
+	private Player<?> pickupPlayer() {
+		Game game = getGameState().getGame();
+		return StringTool.isProvided(overridePlayerId) ? game.getPlayerById(overridePlayerId)
+			: (StringTool.isProvided(thrownPlayerId) ? game.getPlayerById(thrownPlayerId) : game.getActingPlayer().getPlayer());
+	}
+
 	private boolean isPickUp(Player<?> player) {
 		Game game = getGameState().getGame();
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(player);
@@ -231,7 +286,8 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			return ActionStatus.FAILURE;
 		} else {
 			PickupModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.PICKUP_MODIFIER);
-			Set<PickupModifier> pickupModifiers = modifierFactory.findModifiers(new PickupContext(game, player));
+			Set<PickupModifier> pickupModifiers =
+				modifierFactory.findModifiers(new PickupContext(game, player, selectedModifierSkills));
 
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC)
 				.forName(Mechanic.Type.AGILITY.name());
@@ -241,34 +297,54 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			} else {
 				minimumRoll = mechanic.minimumRollPickup(player, pickupModifiers);
 			}
-			int roll = getGameState().getDiceRoller().rollSkill();
-			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			boolean reRolled = ((getReRolledAction() == ReRolledActions.PICK_UP) && (getReRollSource() != null));
-			getResult().addReport(new ReportPickupRoll(player.getId(), successful, roll,
-				minimumRoll, reRolled, pickupModifiers.toArray(new PickupModifier[0]), secureTheBall));
+			boolean doRoll = pickupRoll == 0;
+			if (doRoll) {
+				pickupRoll = getGameState().getDiceRoller().rollSkill();
+			}
+			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(pickupRoll, minimumRoll);
+			if (doRoll) {
+				getResult().addReport(new ReportPickupRoll(player.getId(), successful, pickupRoll,
+					minimumRoll, reRollUsed, pickupModifiers.toArray(new PickupModifier[0]), secureTheBall));
+			}
 			if (successful) {
 				return ActionStatus.SUCCESS;
 			} else {
-				if (getReRolledAction() != ReRolledActions.PICK_UP) {
-					setReRolledAction(ReRolledActions.PICK_UP);
-					ReRollSource rerollSource = UtilCards.getRerollSource(player, ReRolledActions.PICK_UP);
-					if (rerollSource != null && !secureTheBall) {
-						setReRollSource(rerollSource);
-						UtilServerReRoll.useReRoll(this, getReRollSource(), player);
-						return pickUp(player);
-					} else {
-						if (!reRolled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), player,
-							ReRolledActions.PICK_UP, minimumRoll, false)) {
-							return ActionStatus.WAITING_FOR_RE_ROLL;
-						} else {
-							return ActionStatus.FAILURE;
-						}
-					}
-				} else {
-					return ActionStatus.FAILURE;
-				}
+				return offerRescue(player, minimumRoll);
 			}
 		}
+	}
+
+	private ActionStatus offerRescue(Player<?> player, int minimumRoll) {
+		Game game = getGameState().getGame();
+		setReRolledAction(ReRolledActions.PICK_UP);
+		// Secure the Ball is not an Agility Test and retains its existing re-roll prompt.
+		if (secureTheBall) {
+			awaitingRescue = !reRollUsed && UtilServerReRoll.askForReRollIfAvailable(getGameState(), player,
+				ReRolledActions.PICK_UP, minimumRoll, false);
+		} else {
+			List<ModifierChoiceOption> options = selectionService.findOptions(game, player, pickupRoll);
+			List<ModifierChoiceOption> combinations = selectionService.findCombinations(game, player);
+			ReRollSource skillReRoll = reRollUsed ? null : (player == game.getActingPlayer().getPlayer()
+				? UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.PICK_UP)
+				: UtilCards.getRerollSource(player, ReRolledActions.PICK_UP));
+			if (options.isEmpty() && skillReRoll != null
+				&& !stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, player)) {
+				setReRollSource(skillReRoll);
+				if (UtilServerReRoll.useReRoll(this, skillReRoll, player)) {
+					reRollUsed = true;
+					pickupRoll = 0;
+					return pickUp(player);
+				}
+				return ActionStatus.FAILURE;
+			}
+			awaitingRescue = getGameState().getReRollService().askForReRollIfAvailable(
+				ReRollRequest.forPlayer(getGameState(), player, ReRolledActions.PICK_UP, minimumRoll)
+					.reRollSkill(skillReRoll == null ? null : skillReRoll.getSkill(game))
+					.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(
+						pickupRoll, options, combinations, !reRollUsed))
+					.build());
+		}
+		return awaitingRescue ? ActionStatus.WAITING_FOR_RE_ROLL : ActionStatus.FAILURE;
 	}
 
 	// JSON serialization
@@ -283,6 +359,12 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		IServerJsonOption.PICK_UP_OPTIONAL.addTo(jsonObject, optionalPickUp);
 		IServerJsonOption.ATTEMPT_PICK_UP.addTo(jsonObject, attemptPickUp);
 		IServerJsonOption.PLAYER_ON_BALL_ID.addTo(jsonObject, overridePlayerId);
+		IServerJsonOption.PICKUP_ROLL.addTo(jsonObject, pickupRoll);
+		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, reRollUsed);
+		IServerJsonOption.AWAITING_RESCUE.addTo(jsonObject, awaitingRescue);
+		JsonArray skills = new JsonArray();
+		selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
+		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, skills);
 		return jsonObject;
 	}
 
@@ -297,6 +379,20 @@ public class StepPickUp extends AbstractStepWithReRoll {
 		optionalPickUp = toPrimitive(IServerJsonOption.PICK_UP_OPTIONAL.getFrom(source, jsonObject));
 		attemptPickUp = IServerJsonOption.ATTEMPT_PICK_UP.getFrom(source, jsonObject);
 		overridePlayerId = IServerJsonOption.PLAYER_ON_BALL_ID.getFrom(source, jsonObject);
+		pickupRoll = IServerJsonOption.PICKUP_ROLL.isDefinedIn(jsonObject)
+			? IServerJsonOption.PICKUP_ROLL.getFrom(source, jsonObject) : 0;
+		reRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
+		awaitingRescue = IServerJsonOption.AWAITING_RESCUE.isDefinedIn(jsonObject)
+			? toPrimitive(IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject))
+			: getReRolledAction() == ReRolledActions.PICK_UP;
+		selectedModifierSkills.clear();
+		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
+		if (skills != null) {
+			SkillFactory factory = source.getFactory(FactoryType.Factory.SKILL);
+			for (JsonValue skill : skills) {
+				selectedModifierSkills.add(factory.forName(skill.asString()));
+			}
+		}
 		return this;
 	}
 

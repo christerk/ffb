@@ -10,7 +10,6 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 	private final int fModifier, multiplier;
 	private final ModifierType type;
 	private final boolean useStrength;
-	private final boolean optional;
 
 	public DodgeModifier(String pName, int pModifier, ModifierType type) {
 		this(pName, pModifier, type, false);
@@ -39,13 +38,13 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 
 	public DodgeModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type,
 											 boolean useStrength, boolean optional) {
+		super(optional);
 		fName = pName;
 		this.reportString = reportString;
 		fModifier = pModifier;
 		this.type = type;
 		this.useStrength = useStrength;
 		this.multiplier = multiplier;
-		this.optional = optional;
 	}
 
 	@Override
@@ -79,11 +78,4 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 		return useStrength;
 	}
 
-	/**
-	 * Optional modifiers are never applied automatically, they only apply when the coach explicitly selects the
-	 * skill providing them.
-	 */
-	public boolean isOptional() {
-		return optional;
-	}
 }
