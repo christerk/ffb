@@ -16,4 +16,10 @@ public interface IDbUpdateParameter {
 
 	public DbUpdateStatement getDbUpdateStatement(FantasyFootballServer pServer);
 
+	default void doAfterCommit(FantasyFootballServer pServer) {
+	}
+
+	default void doAfterRollback(FantasyFootballServer pServer) {
+	}
+
 }
