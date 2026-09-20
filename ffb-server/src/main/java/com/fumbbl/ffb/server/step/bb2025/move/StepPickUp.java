@@ -45,7 +45,6 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
-import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.PickupModifierSelectionService;
@@ -78,7 +77,6 @@ public class StepPickUp extends AbstractStepWithReRoll {
 	private boolean reRollUsed, awaitingRescue;
 	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
 	private final PickupModifierSelectionService selectionService = new PickupModifierSelectionService();
-	private final StallingExtension stallingExtension = new StallingExtension();
 
 	public StepPickUp(GameState pGameState) {
 		super(pGameState);
@@ -327,8 +325,7 @@ public class StepPickUp extends AbstractStepWithReRoll {
 			ReRollSource skillReRoll = reRollUsed ? null : (player == game.getActingPlayer().getPlayer()
 				? UtilCards.getUnusedRerollSource(game.getActingPlayer(), ReRolledActions.PICK_UP)
 				: UtilCards.getRerollSource(player, ReRolledActions.PICK_UP));
-			if (options.isEmpty() && skillReRoll != null
-				&& !stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, player)) {
+			if (options.isEmpty() && skillReRoll != null) {
 				setReRollSource(skillReRoll);
 				if (UtilServerReRoll.useReRoll(this, skillReRoll, player)) {
 					reRollUsed = true;
