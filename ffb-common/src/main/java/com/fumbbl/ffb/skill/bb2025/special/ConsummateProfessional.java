@@ -7,6 +7,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
+import com.fumbbl.ffb.modifiers.JumpUpContext;
+import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
@@ -34,6 +36,12 @@ public class ConsummateProfessional extends Skill {
 		registerModifier(new PickupModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
 			@Override
 			public boolean appliesToContext(Skill skill, PickupContext context) {
+				return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new JumpUpModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, JumpUpContext context) {
 				return context.isSkillSelected(skill);
 			}
 		});

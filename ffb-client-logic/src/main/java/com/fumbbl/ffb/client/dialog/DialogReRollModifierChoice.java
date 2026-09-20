@@ -310,16 +310,24 @@ public class DialogReRollModifierChoice extends Dialog implements ActionListener
 		}
 		switch (pKeyEvent.getKeyCode()) {
 			case KeyEvent.VK_T:
-				reRollSource = willUseMascot ? ReRollSources.MASCOT : ReRollSources.TEAM_RE_ROLL;
+				if (willUseMascot || dialogParameter.hasProperty(ReRollProperty.TRR)) {
+					reRollSource = willUseMascot ? ReRollSources.MASCOT : ReRollSources.TEAM_RE_ROLL;
+				} else {
+					keyHandled = false;
+				}
 				break;
 			case KeyEvent.VK_F:
 				if (buttonFallbackReRoll != null) {
 					reRollSource = ReRollSources.MASCOT_TRR;
+				} else {
+					keyHandled = false;
 				}
 				break;
 			case KeyEvent.VK_P:
 				if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
 					determineProReRollSource();
+				} else {
+					keyHandled = false;
 				}
 				break;
 			case KeyEvent.VK_S:
