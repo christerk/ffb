@@ -18,7 +18,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
-import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -41,7 +40,7 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public final class StepJumpUp extends AbstractStepWithReRoll {
 
-	public class StepState {
+	public static class StepState {
 		public String goToLabelOnFailure;
 		public int roll;
 		public boolean awaitingRescue;
@@ -120,16 +119,6 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 				}
 				failJumpUp();
 				return StepCommandStatus.EXECUTE_STEP;
-			case CLIENT_USE_SKILL:
-				ClientCommandUseSkill useSkill = (ClientCommandUseSkill) receivedCommand.getCommand();
-				if (isAwaitingLegacyChoice() && useSkill.getReRolledAction() == ReRolledActions.JUMP_UP
-					&& game.getActingPlayer().getPlayerId().equals(useSkill.getPlayerId())
-					&& useSkill.getSkill() != null
-					&& useSkill.getSkill().equals(((DialogReRollPropertiesParameter) game.getDialogParameter()).getReRollSkill())) {
-					failJumpUp();
-					return StepCommandStatus.EXECUTE_STEP;
-				}
-				return StepCommandStatus.UNHANDLED_COMMAND;
 			case CLIENT_PLAYER_CHOICE:
 				return StepCommandStatus.UNHANDLED_COMMAND;
 			default:
