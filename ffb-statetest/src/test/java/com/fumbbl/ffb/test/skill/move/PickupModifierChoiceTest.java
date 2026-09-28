@@ -106,6 +106,27 @@ class PickupModifierChoiceTest {
 	}
 
 	@Test
+	void failedPickupOffersModifierAndChoosingItRescuesOriginalDieEvenWithDuplicateSkill() {
+		GameState state = buildState("Consummate Professional");
+		assertEquals(StepId.PICK_UP, pickup(state, 2).getId());
+		DialogReRollModifierChoiceParameter dialog = dialog(state);
+		assertEquals(ReRolledActions.PICK_UP, dialog.getReRolledAction());
+		assertEquals(3, dialog.getMinimumRoll());
+		assertEquals(2, dialog.getRoll());
+		assertEquals("Consummate Professional", dialog.getModifierOptions().get(0).getLabel());
+		assertEquals(2, dialog.getModifierOptions().get(0).getMinimumRoll());
+		assertNull(dialog.getReRollSkill());
+		assertFalse(dialog.hasProperty(ReRollProperty.TRR));
+
+		StepEngine.respond(state,
+			Commands.reRollModifierChoice("runner", ReRolledActions.PICK_UP, professional(state), professional(state)));
+
+		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("runner")));
+		assertTrue(state.getGame().getActingPlayer().isSkillUsed(professional(state)));
+		assertTrue(state.getGame().getPlayerById("runner").isUsed(professional(state)));
+	}
+
+	@Test
 	void actionableModifierIsOfferedAlongsideSureHands() {
 		GameState state = buildState("Consummate Professional", "Sure Hands");
 		pickup(state, 2);
@@ -222,7 +243,8 @@ class PickupModifierChoiceTest {
 
 		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("runner")));
 		JsonObject committed = step.toJsonValue();
-		assertEquals(1, IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(state.getGame().getRules(), committed).size());
+		assertEquals(1,
+			IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(state.getGame().getRules(), committed).size());
 		assertEquals(committed, new StepPickUp(state).initFrom(state.getGame().getRules(), committed).toJsonValue());
 	}
 
@@ -290,13 +312,12 @@ class PickupModifierChoiceTest {
 	}
 
 	@Test
-	void mismatchedOrDuplicateModifierSelectionsAreRejected() {
+	void mismatchedModifierSelectionsAreRejected() {
 		GameState state = buildState("Consummate Professional");
 		pickup(state, 2);
 		Skill skill = professional(state);
 		StepEngine.respond(state, Commands.reRollModifierChoice("opponent", ReRolledActions.PICK_UP, skill));
 		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, skill));
-		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.PICK_UP, skill, skill));
 		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.PICK_UP));
 		assertEquals(2, dialog(state).getRoll());
 		assertFalse(state.getGame().getPlayerById("runner").isUsed(skill));
