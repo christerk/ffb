@@ -8,7 +8,6 @@ import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
-import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.JumpUpModifierFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -16,6 +15,7 @@ import com.fumbbl.ffb.modifiers.JumpUpContext;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.report.ReportId;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -167,8 +167,15 @@ class JumpUpModifierChoiceTest {
 	@Test
 	void decliningLeavesPlayerProneAndOnlyEndsTheirActivation() {
 		GameState state = buildState();
-		jumpUp(state, 2);
+		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		assertNull(step.getReRolledAction());
 		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
+		assertEquals(ReRolledActions.JUMP_UP, step.getReRolledAction());
+		assertNull(step.getReRollSource());
+		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
+		assertEquals(2, IServerJsonOption.JUMP_UP_ROLL.getFrom(state.getGame().getRules(), step.toJsonValue()));
+		assertFalse(IServerJsonOption.AWAITING_RESCUE.getFrom(state.getGame().getRules(), step.toJsonValue()));
+		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
 		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
 		assertFailedWithoutTurnover(state);
 		StepEngine.respond(state, Commands.selectPlayer("teammate", PlayerAction.MOVE));
@@ -227,8 +234,6 @@ class JumpUpModifierChoiceTest {
 			Commands.reRollModifierChoice("jumper", ReRolledActions.JUMP_UP),
 			Commands.reRollModifierChoice("jumper", ReRolledActions.JUMP_UP, professional, professional),
 			Commands.reRollModifierChoice("jumper", ReRolledActions.JUMP_UP, skill(state, "Pro")),
-			new ClientCommandUseReRoll(ReRolledActions.DODGE, null),
-			new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL),
 			new ClientCommandUseSkill(professional, true, "jumper", ReRolledActions.JUMP_UP, false)
 		};
 		for (NetCommand command : invalid) {
@@ -273,13 +278,19 @@ class JumpUpModifierChoiceTest {
 		chooseModifier(state);
 		JsonObject committed = step.toJsonValue();
 		assertEquals(1, IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(state.getGame().getRules(), committed).size());
-		assertEquals(committed, new StepJumpUp(state).initFrom(state.getGame().getRules(), committed).toJsonValue());
+		StepJumpUp restoredSelection = new StepJumpUp(state).initFrom(state.getGame().getRules(), committed);
+		assertEquals(committed, restoredSelection.toJsonValue());
+		restoredSelection.getResult().reset();
+		restoredSelection.start();
+		assertEquals(StepAction.NEXT_STEP, restoredSelection.getResult().getNextAction());
+		assertNull(state.getGame().getDialogParameter());
+		assertEquals(0, restoredSelection.getResult().getReportList().size());
 		assertEquals(5, state.getDiceRoller().rollSkill());
 		assertTrue(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
 	}
 
 	@Test
-	void legacyUnstartedStepLoadsWithoutNewFieldsAndUsesCurrentSelectionFlow() {
+	void unstartedStepRoundTripsAndUsesCurrentSelectionFlow() {
 		GameState state = buildState();
 		Game game = state.getGame();
 		game.getActingPlayer().setPlayerId("jumper");
@@ -287,9 +298,10 @@ class JumpUpModifierChoiceTest {
 		game.getActingPlayer().setStandingUp(true);
 		StepParameterSet parameters = new StepParameterSet();
 		parameters.add(StepParameter.from(StepParameterKey.GOTO_LABEL_ON_FAILURE, "failure"));
-		IStep legacy = new com.fumbbl.ffb.server.step.mixed.action.select.StepJumpUp(state);
-		legacy.init(parameters);
-		IStep restored = state.getStepFactory().forJsonValue(game.getRules(), legacy.toJsonValue());
+		IStep original = new StepJumpUp(state);
+		original.init(parameters);
+		IStep restored = state.getStepFactory().forJsonValue(game.getRules(), original.toJsonValue());
+		assertEquals(original.toJsonValue(), restored.toJsonValue());
 		TestRolls.on(state).general(2, 5);
 		restored.start();
 		assertEquals(StepJumpUp.class, restored.getClass());
@@ -312,68 +324,54 @@ class JumpUpModifierChoiceTest {
 	}
 
 	@Test
-	void legacyPendingFailureCanBeDeclinedWithoutRollingOrSpendingResources() {
+	void savedPendingChoiceCanBeDeclinedWithoutRollingOrSpendingResources() {
 		GameState state = buildState();
 		state.getGame().getTurnData().setReRolls(1);
-		jumpUp(state, 2);
-		restoreLegacyPendingFailure(state);
-		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
-		assertEquals(1, state.getGame().getTurnData().getReRolls());
-		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
-		assertFailedWithoutTurnover(state);
-	}
-
-	@Test
-	void legacyPositiveTeamRerollReplyResolvesFailureWithoutStrandingClientOrSpendingResource() {
-		GameState state = buildState();
-		state.getGame().getTurnData().setReRolls(1);
-		jumpUp(state, 2);
-		restoreLegacyPendingFailure(state);
-		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
-		assertEquals(1, state.getGame().getTurnData().getReRolls());
-		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
-		assertFailedWithoutTurnover(state);
-	}
-
-	@Test
-	void legacyPositiveSkillReplyResolvesFailureWithoutSpendingSkillOrRolling() {
-		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
-		jumpUp(state, 2);
-		StepJumpUp step = restoreLegacyPendingFailure(state);
-		Skill pro = skill(state, "Pro");
-		state.getGame().setDialogParameter(new DialogReRollPropertiesParameter("jumper",
-			ReRolledActions.JUMP_UP, 3, Collections.emptyList(), false, pro, null, null, null, Collections.emptyList()));
-		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
-			new ClientCommandUseSkill(professional(state), true, "jumper", ReRolledActions.JUMP_UP, false), null)));
-		StepEngine.respond(state, new ClientCommandUseSkill(pro, true, "jumper", ReRolledActions.JUMP_UP, false));
-		assertFalse(state.getGame().getPlayerById("jumper").isUsed(pro));
-		assertFailedWithoutTurnover(state);
-	}
-
-	@Test
-	void restartingLegacyPendingFailureDoesNotTurnItIntoSuccessOrRollAgain() {
-		GameState state = buildState();
-		jumpUp(state, 2);
-		StepJumpUp step = restoreLegacyPendingFailure(state);
+		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		step.initFrom(state.getGame().getRules(), step.toJsonValue());
 		step.start();
+		assertEquals(2, dialog(state).getRoll());
+		step.getResult().reset();
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
+		assertEquals(ReRolledActions.JUMP_UP, step.getReRolledAction());
+		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void superclassRerollDispatchUpdatesSourceWithoutRollingAgainOrSpendingResource() {
+		GameState state = buildState();
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertEquals(ReRolledActions.JUMP_UP, step.getReRolledAction());
+		assertEquals(ReRollSources.TEAM_RE_ROLL, step.getReRollSource());
 		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void savedDeclineDoesNotReopenModifierChoiceOrRollAgain() {
+		GameState state = buildState();
+		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		step.getResult().reset();
+		assertEquals(StepCommandStatus.EXECUTE_STEP, step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null), null)));
+		JsonObject saved = step.toJsonValue();
+		StepJumpUp restored = new StepJumpUp(state).initFrom(state.getGame().getRules(), saved);
+		assertEquals(saved, restored.toJsonValue());
+		restored.start();
+		assertEquals(StepAction.GOTO_LABEL, restored.getResult().getNextAction());
+		assertNull(state.getGame().getDialogParameter());
+		assertFalse(restored.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
 		assertEquals(PlayerState.PRONE, playerState(state).getBase());
 		assertFalse(playerState(state).isActive());
 		assertTrue(state.getGame().isHomePlaying());
 		assertEquals(5, state.getDiceRoller().rollSkill());
-	}
-
-	private StepJumpUp restoreLegacyPendingFailure(GameState state) {
-		StepJumpUp step = (StepJumpUp) state.getCurrentStep();
-		JsonObject legacy = step.toJsonValue();
-		legacy.remove("jumpUpRoll");
-		legacy.remove("awaitingRescue");
-		legacy.remove("selectedAgilityModifierSkills");
-		step.initFrom(state.getGame().getRules(), legacy);
-		state.getGame().setDialogParameter(new DialogReRollPropertiesParameter("jumper",
-			ReRolledActions.JUMP_UP, 3, Collections.singletonList(ReRollProperty.TRR),
-			false, null, null, null, null, Collections.emptyList()));
-		return step;
 	}
 
 	@Test

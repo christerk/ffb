@@ -9,7 +9,6 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
-import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
@@ -17,7 +16,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
-import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -44,7 +42,6 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		public String goToLabelOnFailure;
 		public int roll;
 		public boolean awaitingRescue;
-		public boolean legacySave;
 		public final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
 	}
 
@@ -82,6 +79,14 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
+		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
+		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			executeStep();
+			return commandStatus;
+		}
+		if (commandStatus != StepCommandStatus.UNHANDLED_COMMAND) {
+			return commandStatus;
+		}
 		Game game = getGameState().getGame();
 		switch (receivedCommand.getId()) {
 			case CLIENT_RE_ROLL_MODIFIER_CHOICE:
@@ -104,25 +109,8 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 				state.awaitingRescue = false;
 				executeStep();
 				return StepCommandStatus.EXECUTE_STEP;
-			case CLIENT_USE_RE_ROLL:
-				ClientCommandUseReRoll reRoll = (ClientCommandUseReRoll) receivedCommand.getCommand();
-				if (isAwaitingLegacyChoice() && reRoll.getReRolledAction() == ReRolledActions.JUMP_UP) {
-					// Old dialogs still offer re-roll buttons, but the saved failed die cannot be recovered.
-					// Resolve that failure without spending a resource or rolling again, even for a stale positive reply.
-					failJumpUp();
-					return StepCommandStatus.EXECUTE_STEP;
-				}
-				// Jump Up offers modifiers only; this command is also how the dialog sends "decline".
-				if (!isAwaitingChoice() || reRoll.getReRolledAction() != ReRolledActions.JUMP_UP
-					|| reRoll.getReRollSource() != null) {
-					return StepCommandStatus.UNHANDLED_COMMAND;
-				}
-				failJumpUp();
-				return StepCommandStatus.EXECUTE_STEP;
-			case CLIENT_PLAYER_CHOICE:
-				return StepCommandStatus.UNHANDLED_COMMAND;
 			default:
-				return super.handleCommand(receivedCommand);
+				return commandStatus;
 		}
 	}
 
@@ -135,17 +123,6 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		DialogReRollModifierChoiceParameter dialog = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
 		return dialog.getReRolledAction() == ReRolledActions.JUMP_UP
 			&& game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId()) && state.roll == dialog.getRoll();
-	}
-
-	private boolean isAwaitingLegacyChoice() {
-		Game game = getGameState().getGame();
-		if (!state.legacySave || state.roll != 0 || game.getActingPlayer().getPlayer() == null
-			|| !(game.getDialogParameter() instanceof DialogReRollPropertiesParameter)) {
-			return false;
-		}
-		DialogReRollPropertiesParameter dialog = (DialogReRollPropertiesParameter) game.getDialogParameter();
-		return dialog.getReRolledAction() == ReRolledActions.JUMP_UP
-			&& game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId());
 	}
 
 	public void failJumpUp() {
@@ -168,9 +145,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
-		if (!state.legacySave || state.roll > 0) {
-			IServerJsonOption.JUMP_UP_ROLL.addTo(jsonObject, state.roll);
-		}
+		IServerJsonOption.JUMP_UP_ROLL.addTo(jsonObject, state.roll);
 		IServerJsonOption.AWAITING_RESCUE.addTo(jsonObject, state.awaitingRescue);
 		JsonArray skills = new JsonArray();
 		state.selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
@@ -183,17 +158,13 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
-		state.legacySave = !IServerJsonOption.JUMP_UP_ROLL.isDefinedIn(jsonObject);
-		state.roll = IServerJsonOption.JUMP_UP_ROLL.isDefinedIn(jsonObject)
-			? IServerJsonOption.JUMP_UP_ROLL.getFrom(source, jsonObject) : 0;
-		state.awaitingRescue = toPrimitive(IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject));
+		state.roll = IServerJsonOption.JUMP_UP_ROLL.getFrom(source, jsonObject);
+		state.awaitingRescue = IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject);
 		state.selectedModifierSkills.clear();
 		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
-		if (skills != null) {
-			SkillFactory factory = source.getFactory(Factory.SKILL);
-			for (JsonValue skill : skills) {
-				state.selectedModifierSkills.add(factory.forName(skill.asString()));
-			}
+		SkillFactory factory = source.getFactory(Factory.SKILL);
+		for (JsonValue skill : skills) {
+			state.selectedModifierSkills.add(factory.forName(skill.asString()));
 		}
 		return this;
 	}

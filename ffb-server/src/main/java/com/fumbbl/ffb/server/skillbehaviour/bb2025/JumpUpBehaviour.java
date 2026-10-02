@@ -44,12 +44,6 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 			public boolean handleExecuteStepHook(StepJumpUp step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				// Older saves did not retain the failed die, but did mark Jump Up used before waiting for a reply.
-				if (state.legacySave && state.roll == 0 && actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
-					&& actingPlayer.isSkillUsed(skill)) {
-					step.failJumpUp();
-					return false;
-				}
 				if (state.roll > 0 || (actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
 					&& UtilCards.hasUnusedSkill(actingPlayer, skill))) {
 					game.setConcessionPossible(false);
@@ -76,6 +70,8 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 							actingPlayer.setHasMoved(true);
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
+						} else if (step.getReRolledAction() == ReRolledActions.JUMP_UP) {
+							step.failJumpUp();
 						} else {
 							JumpUpModifierSelectionService service = new JumpUpModifierSelectionService();
 							List<ModifierChoiceOption> options = service.findOptions(game, state.roll);
