@@ -1,6 +1,6 @@
 # BB2025: Optional Agility Modifier Selection (all Agility Tests)
 
-Status: dodge **implemented**, all other Agility Tests **planned / not implemented**.
+Status: dodge, pick up and jump up **implemented**, all other Agility Tests **planned / not implemented**.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour untouched.
 
 > This document supersedes `docs/bb2025-dodge-modifier-selection-plan.md`. The dodge design is
@@ -25,9 +25,12 @@ every BB2025 Agility Test into it.
 | Pick up | `step/bb2025/move/StepPickUp` | Consummate Professional | Sure Hands (auto, stalling guarded) | no | yes |
 | Catch | `step/bb2025/shared/StepCatchScatterThrowIn` | Consummate Professional | Catch (auto only for deliberate deliveries, see §3.4) | no | sometimes |
 | Jump | `step/bb2025/move/StepJump` | Consummate Professional; Leap, Very Long Legs, Pogo (conditionally, see §3.3) | Bounding Leap (auto, stalling guarded) | yes | yes |
-| Jump up | `step/action/select/StepJumpUp` + `skillbehaviour/mixed/JumpUpBehaviour` | Consummate Professional | none | no | no (player stays prone) |
+| Jump up | `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour` | Consummate Professional | none | no | no (player stays prone) |
 | Interception | `step/bb2025/pass/StepIntercept` | Consummate Professional | none | no | no |
 | Right Stuff / landing | `step/bb2025/ttm/StepRightStuff` | Consummate Professional | Swoop | no | yes |
+
+Jump Up has no dedicated skill re-roll, but available team re-rolls and Pro are offered
+alongside optional modifiers.
 
 ### 1.2 Explicitly out of scope
 
@@ -296,6 +299,8 @@ auto-use a lone free re-roll only when §2.10 allows it.
 
 ### A. Pick up — `step/bb2025/move/StepPickUp`
 
+**Implemented.** Other action work packages remain out of scope for the pickup implementation.
+
 The acting player rolls, so `ActingPlayer.markSkillUsed` applies. Fold the existing automatic Sure
 Hands branch into the merged dialog: when Consummate Professional is also available, Sure Hands must
 be offered next to it instead of being consumed silently. Keep the automatic use when no modifier
@@ -340,12 +345,14 @@ The richest case.
   `factory/bb2025` with retargeted `@RulesCollection` annotations rather than adding 2025-only
   behaviour to the shared classes, and never inherit a bb2025 class from a mixed/bb2020 one.
 
-### F. Jump up — `step/action/select/StepJumpUp` + `skillbehaviour/mixed/JumpUpBehaviour`
+### F. Jump up — `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour`
 
-`StepJumpUp` is `@RulesCollection COMMON` and the roll lives in the mixed behaviour. Duplicate both
-into bb2025 packages (`step/bb2025/action/select/StepJumpUp`, `skillbehaviour/bb2025/JumpUpBehaviour`)
-and add the dialog there. No re-roll source and no turnover, so this is the simplest case: options
-only, stalling guard irrelevant.
+**Implemented.** The step and behaviour are isolated in `step/bb2025/action/select/StepJumpUp`
+and `skillbehaviour/bb2025/JumpUpBehaviour`. Failed rolls offer optional modifier choices alongside
+available team re-rolls and Pro, including when no modifier can rescue the current die.
+A failed re-roll can still be rescued with an unused optional modifier, but cannot be re-rolled again.
+Declining leaves the player prone and ends their activation without a turnover.
+The earlier rulesets retain their existing behaviour. Stalling guards are not applicable.
 
 ## 6. Phase 3 — previews and client
 

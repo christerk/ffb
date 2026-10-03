@@ -85,6 +85,7 @@ class DodgeModifierSelectionServiceTest {
 		when(gameRules.<MechanicsFactory>getFactory(Factory.MECHANIC)).thenReturn(mechanicsFactory);
 
 		game = mock(Game.class);
+		when(game.getActingPlayer()).thenReturn(actingPlayer);
 		when(game.getRules()).thenReturn(gameRules);
 		when(game.<DodgeModifierFactory>getFactory(Factory.DODGE_MODIFIER)).thenReturn(modifierFactory);
 	}
