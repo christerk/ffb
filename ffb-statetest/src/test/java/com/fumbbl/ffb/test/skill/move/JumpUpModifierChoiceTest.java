@@ -367,6 +367,72 @@ class JumpUpModifierChoiceTest {
 		assertEquals(5, state.getDiceRoller().rollSkill());
 	}
 
+	@Test
+	void serializedSuperclassRerollResponseIsExecutedOnceOnResume() {
+		GameState state = buildState();
+		state.getGame().getTurnData().setReRolls(2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 2, 3, 5);
+		step.setReRolledAction(ReRolledActions.JUMP_UP);
+		step.setReRollSource(ReRollSources.TEAM_RE_ROLL);
+		StepJumpUp restored = new StepJumpUp(state).initFrom(state.getGame().getRules(), step.toJsonValue());
+		restored.getResult().reset();
+
+		restored.start();
+
+		assertEquals(StepAction.NEXT_STEP, restored.getResult().getNextAction());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		ReportJumpUpRoll report = (ReportJumpUpRoll) Arrays.stream(restored.getResult().getReportList().getReports())
+			.filter(value -> value instanceof ReportJumpUpRoll).findFirst().get();
+		assertEquals(3, report.getRoll());
+		assertTrue(report.isReRolled());
+		assertTrue(report.isSuccessful());
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+
+		restored.initFrom(state.getGame().getRules(), restored.toJsonValue());
+		restored.getResult().reset();
+		restored.start();
+		assertEquals(StepAction.NEXT_STEP, restored.getResult().getNextAction());
+		assertEquals(0, restored.getResult().getReportList().size());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void serializedSuperclassDeclineResponseEndsActivationOnResume() {
+		GameState state = buildState();
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		assertSerializedDecline(state, step);
+	}
+
+	@Test
+	void serializedSuperclassDeclineAfterFailedRerollEndsActivationOnResume() {
+		GameState state = buildState();
+		state.getGame().getTurnData().setReRolls(2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 2, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertSerializedDecline(state, step);
+	}
+
+	private void assertSerializedDecline(GameState state, StepJumpUp step) {
+		step.setReRolledAction(ReRolledActions.JUMP_UP);
+		step.setReRollSource(null);
+		StepJumpUp restored = new StepJumpUp(state).initFrom(state.getGame().getRules(), step.toJsonValue());
+		restored.getResult().reset();
+
+		restored.start();
+
+		assertEquals(StepAction.GOTO_LABEL, restored.getResult().getNextAction());
+		assertEquals(PlayerState.PRONE, playerState(state).getBase());
+		assertFalse(playerState(state).isActive());
+		assertTrue(state.getGame().isHomePlaying());
+		assertNull(state.getGame().getDialogParameter());
+		assertEquals(0, restored.getResult().getReportList().size());
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
 	private void assertJumpUpReport(IStep step, int roll, boolean successful, boolean reRolled) {
 		ReportJumpUpRoll[] reports = Arrays.stream(step.getGameState().getGameLog().getServerCommands())
 			.filter(command -> command instanceof ServerCommandModelSync)
@@ -565,7 +631,7 @@ class JumpUpModifierChoiceTest {
 		step.start();
 		assertEquals(2, dialog(state).getRoll());
 		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
-		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
+		assertEquals(StepCommandStatus.EXECUTE_STEP, step.handleCommand(new ReceivedCommand(
 			new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL), null)));
 		chooseModifier(state);
 		assertEquals(PlayerState.MOVING, playerState(state).getBase());

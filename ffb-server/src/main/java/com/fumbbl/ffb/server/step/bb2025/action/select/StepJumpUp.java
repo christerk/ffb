@@ -77,14 +77,15 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	@Override
 	public void start() {
 		super.start();
-		executeStep(false);
+		executeStep();
 	}
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
-			return executeStep(true);
+			executeStep();
+			return commandStatus;
 		}
 		if (commandStatus != StepCommandStatus.UNHANDLED_COMMAND) {
 			return commandStatus;
@@ -109,7 +110,8 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 					getResult().addReport(new ReportSkillUse(choice.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
 				}
 				state.awaitingRescue = false;
-				return executeStep(false);
+				executeStep();
+				return StepCommandStatus.EXECUTE_STEP;
 			default:
 				return commandStatus;
 		}
@@ -138,35 +140,33 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		getResult().setNextAction(StepAction.GOTO_LABEL, state.goToLabelOnFailure);
 	}
 
-	private StepCommandStatus executeStep(boolean reRollResponse) {
-		// Persisted re-roll fields alone must not trigger spending on restart or modifier selection.
-		if (reRollResponse) {
-			if (!state.awaitingRescue || getReRolledAction() != ReRolledActions.JUMP_UP
-				|| (state.reRollUsed && getReRollSource() != null)) {
-				return StepCommandStatus.UNHANDLED_COMMAND;
-			}
+	private void executeStep() {
+		if (state.endPlayerAction) {
+			failJumpUp();
+			return;
+		}
+		// A source's player-choice dialog must survive a reconnect until its command completes the request.
+		if (state.awaitingRescue && getGameState().getGame().getDialogParameter() != null
+			&& !(getGameState().getGame().getDialogParameter() instanceof DialogReRollModifierChoiceParameter)
+			&& idForSingleUseReRoll() == null) {
+			getResult().setNextAction(StepAction.CONTINUE);
+			return;
+		}
+		// Keep the consumed source: a saved failed re-roll is not a new request, but a null source is a decline.
+		if (state.awaitingRescue && state.selectedModifierSkills.isEmpty()
+			&& getReRolledAction() == ReRolledActions.JUMP_UP
+			&& (!state.reRollUsed || getReRollSource() == null)) {
 			state.awaitingRescue = false;
 			if (getReRollSource() == null
 				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), getGameState().getGame().getActingPlayer().getPlayer())) {
 				failJumpUp();
-				return StepCommandStatus.EXECUTE_STEP;
+				return;
 			}
 			state.reRollUsed = true;
 			state.roll = 0;
 		}
-		if (state.endPlayerAction) {
-			failJumpUp();
-			return StepCommandStatus.EXECUTE_STEP;
-		}
-		// A source's player-choice dialog must survive a reconnect until its command completes the request.
-		if (state.awaitingRescue && getGameState().getGame().getDialogParameter() != null
-			&& !(getGameState().getGame().getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
-			getResult().setNextAction(StepAction.CONTINUE);
-			return StepCommandStatus.EXECUTE_STEP;
-		}
 		UtilServerDialog.hideDialog(getGameState());
 		getGameState().executeStepHooks(this, state);
-		return StepCommandStatus.EXECUTE_STEP;
 	}
 
 	@Override
