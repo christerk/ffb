@@ -4,7 +4,6 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.factory.JumpUpModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -22,12 +21,12 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.bb2025.action.select.StepJumpUp;
 import com.fumbbl.ffb.server.step.bb2025.action.select.StepJumpUp.StepState;
-import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.bb2025.JumpUpModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
 import com.fumbbl.ffb.skill.common.JumpUp;
 import com.fumbbl.ffb.util.UtilCards;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 			public boolean handleExecuteStepHook(StepJumpUp step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				if (state.roll > 0 || (actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
+				if (state.roll > 0 || state.reRollUsed || (actingPlayer.isStandingUp() && !actingPlayer.hasMoved()
 					&& UtilCards.hasUnusedSkill(actingPlayer, skill))) {
 					game.setConcessionPossible(false);
 					if (actingPlayer.getPlayerAction().isBlockOrSpecialAction()
@@ -62,7 +61,7 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 						boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(state.roll, minimumRoll);
 						if (doRoll) {
 							step.getResult().addReport(new ReportJumpUpRoll(actingPlayer.getPlayerId(), successful,
-								state.roll, minimumRoll, false, modifiers.toArray(new JumpUpModifier[0])));
+								state.roll, minimumRoll, state.reRollUsed, modifiers.toArray(new JumpUpModifier[0])));
 						}
 						actingPlayer.markSkillUsed(skill);
 						if (successful) {
@@ -70,20 +69,18 @@ public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 							actingPlayer.setHasMoved(true);
 							actingPlayer.setStandingUp(false);
 							step.getResult().setNextAction(StepAction.NEXT_STEP);
-						} else if (step.getReRolledAction() == ReRolledActions.JUMP_UP) {
-							step.failJumpUp();
 						} else {
 							JumpUpModifierSelectionService service = new JumpUpModifierSelectionService();
 							List<ModifierChoiceOption> options = service.findOptions(game, state.roll);
-							if (options.isEmpty()) {
-								step.failJumpUp();
-							} else {
-								state.awaitingRescue = true;
-								UtilServerDialog.showDialog(step.getGameState(), new DialogReRollModifierChoiceParameter(
-									actingPlayer.getPlayerId(), ReRolledActions.JUMP_UP, minimumRoll, state.roll, options,
-									service.findCombinations(game), Collections.emptyList(), false, null, null, null,
-									Collections.emptyList()), false);
+							state.awaitingRescue = step.getGameState().getReRollService().askForReRollIfAvailable(
+								ReRollRequest.forActingPlayer(step.getGameState(), actingPlayer, ReRolledActions.JUMP_UP, minimumRoll)
+									.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(
+										state.roll, options, service.findCombinations(game), !state.reRollUsed))
+									.build());
+							if (state.awaitingRescue) {
 								step.getResult().setNextAction(StepAction.CONTINUE);
+							} else {
+								step.failJumpUp();
 							}
 						}
 						return false;

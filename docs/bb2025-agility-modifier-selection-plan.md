@@ -29,6 +29,9 @@ every BB2025 Agility Test into it.
 | Interception | `step/bb2025/pass/StepIntercept` | Consummate Professional | none | no | no |
 | Right Stuff / landing | `step/bb2025/ttm/StepRightStuff` | Consummate Professional | Swoop | no | yes |
 
+Jump Up has no dedicated skill re-roll, but available team re-rolls and Pro are offered
+alongside optional modifiers.
+
 ### 1.2 Explicitly out of scope
 
 * **Hypnotic Gaze** and **Secure the Ball** — not Agility Tests.
@@ -345,8 +348,10 @@ The richest case.
 ### F. Jump up — `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour`
 
 **Implemented.** The step and behaviour are isolated in `step/bb2025/action/select/StepJumpUp`
-and `skillbehaviour/bb2025/JumpUpBehaviour`. Failed rolls offer optional modifier choices without
-re-roll sources; declining leaves the player prone and ends their activation without a turnover.
+and `skillbehaviour/bb2025/JumpUpBehaviour`. Failed rolls offer optional modifier choices alongside
+available team re-rolls and Pro, including when no modifier can rescue the current die.
+A failed re-roll can still be rescued with an unused optional modifier, but cannot be re-rolled again.
+Declining leaves the player prone and ends their activation without a turnover.
 The earlier rulesets retain their existing behaviour. Stalling guards are not applicable.
 
 ## 6. Phase 3 — previews and client

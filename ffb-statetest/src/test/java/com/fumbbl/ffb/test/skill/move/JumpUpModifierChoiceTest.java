@@ -15,7 +15,9 @@ import com.fumbbl.ffb.modifiers.JumpUpContext;
 import com.fumbbl.ffb.net.NetCommand;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.report.ReportId;
+import com.fumbbl.ffb.report.ReportJumpUpRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -35,6 +37,7 @@ import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,8 +72,12 @@ class JumpUpModifierChoiceTest {
 	}
 
 	private IStep jumpUp(GameState state, int roll) {
+		return jumpUpWithRolls(state, roll, 5);
+	}
+
+	private IStep jumpUpWithRolls(GameState state, int... rolls) {
 		StepEngine.start(state);
-		TestRolls.on(state).general(roll, 5).block("pushback");
+		TestRolls.on(state).general(rolls).block("pushback");
 		StepEngine.respond(state, Commands.selectPlayer("jumper", PlayerAction.BLOCK));
 		return StepEngine.respond(state, Commands.block("jumper", "opponent"));
 	}
@@ -198,24 +205,27 @@ class JumpUpModifierChoiceTest {
 	}
 
 	@Test
-	void rerollResourcesNeverAppearInModifierDialog() {
+	void teamAndProAppearAlongsideModifierButChoosingModifierSpendsNeither() {
 		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
 		state.getGame().getTurnData().setReRolls(2);
 		jumpUp(state, 2);
 		assertNull(dialog(state).getReRollSkill());
-		for (ReRollProperty property : ReRollProperty.values()) {
-			assertFalse(dialog(state).hasProperty(property));
-		}
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertTrue(dialog(state).hasProperty(ReRollProperty.PRO));
 		chooseModifier(state);
 		assertEquals(2, state.getGame().getTurnData().getReRolls());
-		assertFalse(state.getGame().getActingPlayer().isSkillUsed(skill(state, "Pro")));
+		assertFalse(playerState(state).hasUsedPro());
 	}
 
 	@Test
-	void failureWithoutRescueDoesNotOfferTeamReroll() {
+	void failureWithoutRescuingModifierStillOffersTeamReroll() {
 		GameState state = buildState();
 		state.getGame().getTurnData().setReRolls(2);
 		jumpUp(state, 1);
+		assertTrue(dialog(state).getModifierOptions().isEmpty());
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.PRO));
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
 		assertEquals(2, state.getGame().getTurnData().getReRolls());
 		assertFailedWithoutTurnover(state);
 	}
@@ -341,17 +351,235 @@ class JumpUpModifierChoiceTest {
 	}
 
 	@Test
-	void superclassRerollDispatchUpdatesSourceWithoutRollingAgainOrSpendingResource() {
+	void superclassRerollDispatchSpendsTeamResourceAndReportsSuccessfulReroll() {
 		GameState state = buildState();
 		state.getGame().getTurnData().setReRolls(1);
-		StepJumpUp step = (StepJumpUp) jumpUp(state, 2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 2, 3, 5);
+		assertJumpUpReport(step, 2, false, false);
 		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
 		assertEquals(ReRolledActions.JUMP_UP, step.getReRolledAction());
 		assertEquals(ReRollSources.TEAM_RE_ROLL, step.getReRollSource());
-		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
-		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(StepAction.NEXT_STEP, step.getResult().getNextAction());
+		assertEquals(0, state.getGame().getTurnData().getReRolls());
 		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertJumpUpReport(step, 3, true, true);
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	private void assertJumpUpReport(IStep step, int roll, boolean successful, boolean reRolled) {
+		ReportJumpUpRoll[] reports = Arrays.stream(step.getGameState().getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportJumpUpRoll).toArray(ReportJumpUpRoll[]::new);
+		assertEquals(reRolled ? 2 : 1, reports.length);
+		assertFalse(reports[0].isReRolled());
+		ReportJumpUpRoll latest = reports[reports.length - 1];
+		assertEquals(roll, latest.getRoll());
+		assertEquals(successful, latest.isSuccessful());
+		assertEquals(reRolled, latest.isReRolled());
+	}
+
+	@Test
+	void failedTeamRerollEndsOnlyActivationEvenWithResourcesRemaining() {
+		GameState state = buildState("BB2025", 4, "Pro");
+		state.getGame().getTurnData().setReRolls(2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 1, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertJumpUpReport(step, 1, false, true);
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
 		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void usedTeamAndProResourcesAreNotOffered() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
+		state.getGame().getTurnData().setReRolls(0);
+		state.getGame().getFieldModel().setPlayerState(state.getGame().getPlayerById("jumper"),
+			playerState(state).changeUsedPro(true));
+		jumpUp(state, 2);
+		assertFalse(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.PRO));
+		chooseModifier(state);
+		assertEquals(0, state.getGame().getTurnData().getReRolls());
+		assertTrue(playerState(state).hasUsedPro());
+	}
+
+	@Test
+	void proCanRerollJumpUpSuccessfullyWithoutSpendingTeamResource() {
+		GameState state = buildState("BB2025", 4, "Pro");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 3, 3, 5);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.PRO));
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.PRO));
+		assertJumpUpReport(step, 3, true, true);
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertTrue(playerState(state).hasUsedPro());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void successfulProFollowedByFailedJumpUpCannotRerollAgain() {
+		GameState state = buildState("BB2025", 4, "Pro");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 3, 1, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.PRO));
+		assertJumpUpReport(step, 1, false, true);
+		assertTrue(playerState(state).hasUsedPro());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void failedProEndsActivationWithoutRollingJumpUpAgain() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 2, 1, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.PRO));
+		assertJumpUpReport(step, 2, false, false);
+		assertTrue(playerState(state).hasUsedPro());
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void proTeamFallbackRerollsProThenJumpUpThroughStandardMechanic() {
+		GameState state = buildState("BB2025", 4, "Pro");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 1, 3, 3, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.PRO_TRR));
+		assertJumpUpReport(step, 3, true, true);
+		assertTrue(playerState(state).hasUsedPro());
+		assertEquals(0, state.getGame().getTurnData().getReRolls());
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void failedLonerSpendsTeamResourceButDoesNotRerollJumpUp() {
+		GameState state = buildState("BB2025", 4, "Loner");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 1, 5);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.LONER));
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertJumpUpReport(step, 1, false, false);
+		assertEquals(0, state.getGame().getTurnData().getReRolls());
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void successfulLonerAllowsTeamReroll() {
+		GameState state = buildState("BB2025", 4, "Loner");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 4, 3, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertJumpUpReport(step, 3, true, true);
+		assertEquals(0, state.getGame().getTurnData().getReRolls());
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void proIsOfferedWithoutTeamRerollAndCanBeDeclined() {
+		GameState state = buildState("BB2025", 4, "Pro");
+		jumpUp(state, 1);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.PRO));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.TRR));
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
+		assertFalse(playerState(state).hasUsedPro());
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void usedSingleUseSkillAndBlockOnlyLordOfChaosDoNotOfferJumpUpReroll() {
+		GameState state = buildState("BB2025", 4, "Halfling Luck", "Lord of Chaos");
+		state.getGame().getPlayerById("jumper").markUsed(skill(state, "Halfling Luck"), state.getGame());
+		jumpUp(state, 1);
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void singleUseSkillCanRerollAndIsConsumed() {
+		GameState state = buildState("BB2025", 4, "Halfling Luck");
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 3, 5);
+		Skill luck = skill(state, "Halfling Luck");
+		assertEquals(luck, dialog(state).getReRollSkill());
+		StepEngine.respond(state, new ClientCommandUseSkill(luck, true, "jumper", ReRolledActions.JUMP_UP, false));
+		assertJumpUpReport(step, 3, true, true);
+		assertTrue(state.getGame().getPlayerById("jumper").isUsed(luck));
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void successfulProCanBeFollowedByModifierRescuingFailedReroll() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 3, 2, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.PRO));
+		assertJumpUpReport(step, 2, false, true);
+		assertFalse(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.PRO));
+		chooseModifier(state);
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertTrue(playerState(state).hasUsedPro());
+		assertTrue(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertJumpUpReport(step, 2, false, true);
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void decliningModifierAfterFailedRerollDoesNotSpendAnotherResource() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
+		state.getGame().getTurnData().setReRolls(2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 2, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, null));
+		assertJumpUpReport(step, 2, false, true);
+		assertFalse(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertFalse(playerState(state).hasUsedPro());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFailedWithoutTurnover(state);
+	}
+
+	@Test
+	void failedRerollCanBeRescuedAfterResumeWithoutSpendingAgain() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
+		state.getGame().getTurnData().setReRolls(2);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 2, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL));
+		assertJumpUpReport(step, 2, false, true);
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertFalse(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.PRO));
+		assertNull(dialog(state).getReRollSkill());
+		assertEquals(1, dialog(state).getModifierOptions().size());
+
+		JsonObject saved = step.toJsonValue();
+		step.initFrom(state.getGame().getRules(), saved);
+		assertEquals(saved, step.toJsonValue());
+		step.getResult().reset();
+		step.start();
+		assertEquals(2, dialog(state).getRoll());
+		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
+		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseReRoll(ReRolledActions.JUMP_UP, ReRollSources.TEAM_RE_ROLL), null)));
+		chooseModifier(state);
+		assertEquals(PlayerState.MOVING, playerState(state).getBase());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertTrue(state.getGame().getPlayerById("jumper").isUsed(professional(state)));
+		assertFalse(playerState(state).hasUsedPro());
+		assertFalse(step.getResult().getReportList().hasReport(ReportId.JUMP_UP_ROLL));
+		StepJumpUp restored = new StepJumpUp(state).initFrom(state.getGame().getRules(), step.toJsonValue());
+		restored.getResult().reset();
+		restored.start();
+		assertEquals(StepAction.NEXT_STEP, restored.getResult().getNextAction());
+		assertEquals(0, restored.getResult().getReportList().size());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
 	}
 
 	@Test

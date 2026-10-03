@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.JumpUpModifierSelectionService;
 import com.fumbbl.ffb.util.StringTool;
 
@@ -42,6 +43,8 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		public String goToLabelOnFailure;
 		public int roll;
 		public boolean awaitingRescue;
+		public boolean reRollUsed;
+		public boolean endPlayerAction;
 		public final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
 	}
 
@@ -81,6 +84,18 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
+			if (!state.awaitingRescue || getReRolledAction() != ReRolledActions.JUMP_UP
+				|| (state.reRollUsed && getReRollSource() != null)) {
+				return StepCommandStatus.UNHANDLED_COMMAND;
+			}
+			state.awaitingRescue = false;
+			if (getReRollSource() == null
+				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), getGameState().getGame().getActingPlayer().getPlayer())) {
+				failJumpUp();
+				return commandStatus;
+			}
+			state.reRollUsed = true;
+			state.roll = 0;
 			executeStep();
 			return commandStatus;
 		}
@@ -130,6 +145,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		Player<?> player = game.getActingPlayer().getPlayer();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		state.awaitingRescue = false;
+		state.endPlayerAction = true;
 		UtilServerDialog.hideDialog(getGameState());
 		game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.PRONE).changeActive(false));
 		publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
@@ -137,6 +153,16 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 
 	private void executeStep() {
+		if (state.endPlayerAction) {
+			failJumpUp();
+			return;
+		}
+		// A source's player-choice dialog must survive a reconnect until its command completes the request.
+		if (state.awaitingRescue && getGameState().getGame().getDialogParameter() != null
+			&& !(getGameState().getGame().getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
+			getResult().setNextAction(StepAction.CONTINUE);
+			return;
+		}
 		UtilServerDialog.hideDialog(getGameState());
 		getGameState().executeStepHooks(this, state);
 	}
@@ -147,6 +173,8 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		IServerJsonOption.GOTO_LABEL_ON_FAILURE.addTo(jsonObject, state.goToLabelOnFailure);
 		IServerJsonOption.JUMP_UP_ROLL.addTo(jsonObject, state.roll);
 		IServerJsonOption.AWAITING_RESCUE.addTo(jsonObject, state.awaitingRescue);
+		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, state.reRollUsed);
+		IServerJsonOption.END_PLAYER_ACTION.addTo(jsonObject, state.endPlayerAction);
 		JsonArray skills = new JsonArray();
 		state.selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
 		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, skills);
@@ -160,6 +188,8 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		state.goToLabelOnFailure = IServerJsonOption.GOTO_LABEL_ON_FAILURE.getFrom(source, jsonObject);
 		state.roll = IServerJsonOption.JUMP_UP_ROLL.getFrom(source, jsonObject);
 		state.awaitingRescue = IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject);
+		state.reRollUsed = IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject);
+		state.endPlayerAction = IServerJsonOption.END_PLAYER_ACTION.getFrom(source, jsonObject);
 		state.selectedModifierSkills.clear();
 		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
 		SkillFactory factory = source.getFactory(Factory.SKILL);
