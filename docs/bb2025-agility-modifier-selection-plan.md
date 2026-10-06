@@ -1,6 +1,6 @@
 # BB2025: Optional Agility Modifier Selection (all Agility Tests)
 
-Status: dodge, pick up and jump up **implemented**, all other Agility Tests **planned / not implemented**.
+Status: dodge, pick up, jump and jump up **implemented**, all other Agility Tests **planned / not implemented**.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour untouched.
 
 > This document supersedes `docs/bb2025-dodge-modifier-selection-plan.md`. The dodge design is
@@ -331,19 +331,22 @@ no skill based Right Stuff modifiers at all today, only throw quality and tackle
 
 ### E. Jump — `step/bb2025/move/StepJump`
 
-The richest case.
+**Implemented.** The richest case.
 
-* Implement §3.3: keep `Leap`, `Very Long Legs` and `Pogo` auto-applied inside the jump modifier
-  factory, and only when the stalling condition holds build the modifier set **without** them and
-  offer them as declinable options. `Pogo` needs the distinct "do not ignore jump modifiers" option
-  kind driven by a context flag.
-* Evaluate `Leap`'s availability against the post-selection context.
-* Merge with the automatic Bounding Leap re-roll, applying the stalling guard.
-* Port the Diving Tackle look-ahead from `StepMoveDodge` (§2.9).
+* §3.3 is implemented in `factory/bb2025/JumpModifierFactory`: `Leap`, `Very Long Legs` and `Pogo`
+  stay auto-applied and are only built without them, and offered as declinable options, when
+  `JumpContext.areFreeModifiersOptional()` is set, which `StepJump` derives once per jump from the
+  stalling condition. `Pogo` is offered as a regular option whose bonus is derived from the roll it
+  saves, as it is not a modifier.
+* `JumpModifierSelectionService` builds a fresh `JumpContext` per candidate combination and decides
+  availability by "does adding the skill lower the needed roll", which evaluates `Leap` against the
+  post-selection context.
+* The automatic Bounding Leap re-roll is only used when no modifier option exists and the stalling
+  guard allows it, otherwise everything is merged into one dialog.
+* The Diving Tackle look-ahead offers the same options as a real failure.
 * **Ruleset separation:** `modifiers/mixed/JumpModifierCollection` and `factory/mixed/JumpModifierFactory`
-  are shared with BB2020. Per the repository rules, duplicate them into `modifiers/bb2025` and
-  `factory/bb2025` with retargeted `@RulesCollection` annotations rather than adding 2025-only
-  behaviour to the shared classes, and never inherit a bb2025 class from a mixed/bb2020 one.
+  were duplicated into `modifiers/bb2025` and `factory/bb2025` and the originals moved to
+  `modifiers/bb2020` / `factory/bb2020`, as BB2020 is their only remaining user.
 
 ### F. Jump up — `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour`
 

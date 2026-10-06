@@ -36,6 +36,8 @@ public class ChangeList {
 			.addBugfix("Dodge re-roll prompts no longer offer a team re-roll when the player has a re-roll skill that is available in every turn")
 			.addImprovement("Move squares now show the roll needed when an adjacent opponent can use Diving Tackle")
 			.addBehaviorChange("A dodge re-roll from a skill is no longer used automatically when failing the dodge would get a rock thrown at a team mate that could still score")
+			.addFeature("Optional modifiers are now offered when a jump fails, Bounding Leap is no longer used automatically when a modifier could rescue the jump")
+			.addBehaviorChange("Leap, Very Long Legs and Pogo can now be declined on a jump when failing it would get a rock thrown at a team mate that could still score")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
       .addFeature("Consummate Professional")
