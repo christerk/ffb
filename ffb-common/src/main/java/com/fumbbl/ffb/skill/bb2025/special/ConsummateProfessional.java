@@ -12,6 +12,8 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
+import com.fumbbl.ffb.modifiers.RightStuffContext;
+import com.fumbbl.ffb.modifiers.RightStuffModifier;
 
 /**
  * Once per game, this player may apply a +1 modifier to an Agility Test they have made.
@@ -42,6 +44,12 @@ public class ConsummateProfessional extends Skill {
 		registerModifier(new JumpUpModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpUpContext context) {
+				return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new RightStuffModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, RightStuffContext context) {
 				return context.isSkillSelected(skill);
 			}
 		});

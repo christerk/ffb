@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.ttm;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
@@ -7,12 +8,14 @@ import com.fumbbl.ffb.CatchScatterThrowInMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.RightStuffModifierFactory;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -20,12 +23,15 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.mechanics.SppMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.GameResult;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.net.NetCommandId;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -46,10 +52,15 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
+import com.fumbbl.ffb.server.util.bb2025.RightStuffModifierSelectionService;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,6 +85,10 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	private PassResult passResult;
 	private String goToOnSuccess;
 	private PlayerState oldPlayerState;
+	private int landingRoll;
+	private boolean reRollUsed, awaitingRescue;
+	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
+	private final RightStuffModifierSelectionService selectionService = new RightStuffModifierSelectionService();
 
 	public StepRightStuff(GameState pGameState) {
 		super(pGameState);
@@ -149,6 +164,9 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 					setReRollSource(ReRollSources.SWOOP);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
+			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE
+				&& handleModifierChoice((ClientCommandReRollModifierChoice) pReceivedCommand.getCommand())) {
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
 			}
 		}
 
@@ -162,6 +180,31 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 	public void repeat() {
 		super.repeat();
 		executeStep();
+	}
+
+	private boolean handleModifierChoice(ClientCommandReRollModifierChoice command) {
+		Game game = getGameState().getGame();
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		if (!awaitingRescue || thrownPlayer == null || command.getReRolledAction() != ReRolledActions.RIGHT_STUFF
+			|| !thrownPlayer.getId().equals(command.getPlayerId())) {
+			return false;
+		}
+		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
+		if (selectionService.findOptions(game, thrownPlayer, passResult, landingRoll).stream()
+			.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
+			return false;
+		}
+		for (Skill skill : skills) {
+			selectedModifierSkills.add(skill);
+			if (thrownPlayer == game.getActingPlayer().getPlayer()) {
+				game.getActingPlayer().markSkillUsed(skill);
+			} else {
+				thrownPlayer.markUsed(skill, game);
+			}
+			getResult().addReport(new ReportSkillUse(thrownPlayer.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+		}
+		awaitingRescue = false;
+		return true;
 	}
 
 	private void executeStep() {
@@ -184,28 +227,38 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		boolean autoFailLanding = oldPlayerState != null && (oldPlayerState.isProneOrStunned() || oldPlayerState.isDistracted());
 
 		boolean doRoll = !fDropThrownPlayer && !fumbledKtm && !autoFailLanding;
-		if (doRoll && (ReRolledActions.RIGHT_STUFF == getReRolledAction())) {
-			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
+		if (doRoll && awaitingRescue) {
+			awaitingRescue = false;
+			if (reRollUsed || (getReRollSource() == null)
+				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), thrownPlayer)) {
 				doRoll = false;
+			} else {
+				reRollUsed = true;
+				landingRoll = 0;
 			}
 		}
 		if (doRoll) {
 			RightStuffModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.RIGHT_STUFF_MODIFIER);
-			Set<RightStuffModifier> rightStuffModifiers = modifierFactory.findModifiers(new RightStuffContext(game, thrownPlayer, passResult));
+			Set<RightStuffModifier> rightStuffModifiers = modifierFactory
+				.findModifiers(new RightStuffContext(game, thrownPlayer, passResult, selectedModifierSkills));
 			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 			int minimumRoll = mechanic.minimumRollRightStuff(thrownPlayer, rightStuffModifiers);
-			int roll = getGameState().getDiceRoller().rollSkill();
-			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			boolean reRolled = ((getReRolledAction() == ReRolledActions.RIGHT_STUFF) && (getReRollSource() != null));
+			boolean rollDice = landingRoll == 0;
+			if (rollDice) {
+				landingRoll = getGameState().getDiceRoller().rollSkill();
+			}
+			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(landingRoll, minimumRoll);
 
 			if (PassResult.FUMBLE == passResult && game.getThrower() != null && game.getThrower().hasSkillProperty(NamedProperties.fumbledPlayerLandsSafely)) {
 				successful = true;
-				getResult().addReport(new ReportSkillUse(game.getThrowerId(),
-					game.getThrower().getSkillWithProperty(NamedProperties.fumbledPlayerLandsSafely),
-					true, SkillUse.FUMBLED_PLAYER_LANDS_SAFELY));
-			} else {
-				getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, roll,
-					minimumRoll, reRolled, rightStuffModifiers.toArray(new RightStuffModifier[0])));
+				if (rollDice) {
+					getResult().addReport(new ReportSkillUse(game.getThrowerId(),
+						game.getThrower().getSkillWithProperty(NamedProperties.fumbledPlayerLandsSafely),
+						true, SkillUse.FUMBLED_PLAYER_LANDS_SAFELY));
+				}
+			} else if (rollDice) {
+				getResult().addReport(new ReportRightStuffRoll(fThrownPlayerId, successful, landingRoll,
+					minimumRoll, reRollUsed, rightStuffModifiers.toArray(new RightStuffModifier[0])));
 			}
 			if (successful) {
 
@@ -234,19 +287,7 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 				publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null)); // avoid reset in end step
 				getResult().setNextAction(StepAction.GOTO_LABEL, goToOnSuccess);
 			} else {
-				if (getReRolledAction() != ReRolledActions.RIGHT_STUFF) {
-					setReRolledAction(ReRolledActions.RIGHT_STUFF);
-					if (usingSwoop) {
-						setReRollSource(ReRollSources.SWOOP);
-						getResult().setNextAction(StepAction.REPEAT);
-						return;
-					} else {
-						doRoll = UtilServerReRoll.askForReRollIfAvailable(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF,
-							minimumRoll, false, null, null);
-					}
-				} else {
-					doRoll = false;
-				}
+				doRoll = offerRescue(thrownPlayer, minimumRoll);
 			}
 		}
 		if (!doRoll) {
@@ -259,6 +300,34 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_COORDINATE, null));
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	/**
+	 * Offers the optional modifiers of the thrown player together with the available re-rolls. A lone Swoop re-roll is
+	 * used right away, there is nothing to choose between.
+	 *
+	 * @return whether the step waits for the coach or for a re-roll instead of resolving the failed landing
+	 */
+	private boolean offerRescue(Player<?> thrownPlayer, int minimumRoll) {
+		Game game = getGameState().getGame();
+		setReRolledAction(ReRolledActions.RIGHT_STUFF);
+		List<ModifierChoiceOption> options = selectionService.findOptions(game, thrownPlayer, passResult, landingRoll);
+		ReRollSource swoopReRoll = (!reRollUsed && usingSwoop
+			&& thrownPlayer.hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) ? ReRollSources.SWOOP : null;
+		if (options.isEmpty() && swoopReRoll != null) {
+			setReRollSource(swoopReRoll);
+			awaitingRescue = true;
+			getResult().setNextAction(StepAction.REPEAT);
+			return true;
+		}
+		List<ModifierChoiceOption> combinations = selectionService.findCombinations(game, thrownPlayer, passResult);
+		awaitingRescue = getGameState().getReRollService().askForReRollIfAvailable(
+			ReRollRequest.forPlayer(getGameState(), thrownPlayer, ReRolledActions.RIGHT_STUFF, minimumRoll)
+				.reRollSkill(swoopReRoll == null ? null : swoopReRoll.getSkill(game))
+				.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(
+					landingRoll, options, combinations, !reRollUsed))
+				.build());
+		return awaitingRescue;
 	}
 
 	// JSON serialization
@@ -274,6 +343,12 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		IServerJsonOption.IS_KICKED_PLAYER.addTo(jsonObject, kickedPlayer);
 		IServerJsonOption.OLD_DEFENDER_STATE.addTo(jsonObject, oldPlayerState);
 		IServerJsonOption.USING_SWOOP.addTo(jsonObject, usingSwoop);
+		IServerJsonOption.RIGHT_STUFF_ROLL.addTo(jsonObject, landingRoll);
+		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, reRollUsed);
+		IServerJsonOption.AWAITING_RESCUE.addTo(jsonObject, awaitingRescue);
+		JsonArray skills = new JsonArray();
+		selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
+		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, skills);
 		return jsonObject;
 	}
 
@@ -289,6 +364,20 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		fDropThrownPlayer = IServerJsonOption.DROP_THROWN_PLAYER.getFrom(source, jsonObject);
 		oldPlayerState = IServerJsonOption.OLD_DEFENDER_STATE.getFrom(source, jsonObject);
 		usingSwoop = IServerJsonOption.USING_SWOOP.getFrom(source, jsonObject);
+		landingRoll = IServerJsonOption.RIGHT_STUFF_ROLL.isDefinedIn(jsonObject)
+			? IServerJsonOption.RIGHT_STUFF_ROLL.getFrom(source, jsonObject) : 0;
+		reRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
+		awaitingRescue = IServerJsonOption.AWAITING_RESCUE.isDefinedIn(jsonObject)
+			? toPrimitive(IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject))
+			: getReRolledAction() == ReRolledActions.RIGHT_STUFF;
+		selectedModifierSkills.clear();
+		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
+		if (skills != null) {
+			SkillFactory factory = source.getFactory(FactoryType.Factory.SKILL);
+			for (JsonValue skill : skills) {
+				selectedModifierSkills.add(factory.forName(skill.asString()));
+			}
+		}
 		return this;
 	}
 
