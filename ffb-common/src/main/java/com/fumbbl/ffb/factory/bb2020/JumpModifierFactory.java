@@ -39,10 +39,10 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 		return Stream.concat(
 				jumpModifierCollection.getModifiers().stream(),
 				modifierAggregator.getJumpModifiers().stream())
-				.filter(modifier -> modifier.getName().equals(name))
-				.findFirst()
-				.orElse(null);	}
-
+			.filter(modifier -> modifier.getName().equals(name))
+			.findFirst()
+			.orElse(null);
+	}
 
 	@Override
 	protected Scanner<JumpModifierCollection> getScanner() {
@@ -88,7 +88,6 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 		}
 
 		if (!UtilCards.hasSkillToCancelProperty(context.getPlayer(), NamedProperties.makesJumpingHarder)) {
-
 			prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
 				.ifPresent(modifiers::add);
 		}
@@ -130,8 +129,10 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 	protected int numberOfTacklezones(JumpContext context) {
 		Team otherTeam = UtilPlayer.findOtherTeam(context.getGame(), context.getPlayer());
 
-		int fromZones = UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), otherTeam, context.getFrom(), false).length;
-		int toZones = UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), otherTeam, context.getTo(), false).length;
+		int fromZones = UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), otherTeam, context.getFrom(),
+			false).length;
+		int toZones = UtilPlayer.findAdjacentPlayersWithTacklezones(context.getGame(), otherTeam, context.getTo(),
+			false).length;
 
 		return Math.max(fromZones, toZones);
 	}
