@@ -14,7 +14,16 @@ public class CatchModifier extends RollModifier<CatchContext> {
 		this(pName, pName, pModifier, type);
 	}
 
+	public CatchModifier(String name, int modifier, ModifierType type, boolean optional) {
+		this(name, name, modifier, type, optional);
+	}
+
 	public CatchModifier(String name, String reportingString, int pModifier, ModifierType type) {
+		this(name, reportingString, pModifier, type, false);
+	}
+
+	public CatchModifier(String name, String reportingString, int pModifier, ModifierType type, boolean optional) {
+		super(optional);
 		this.name = name;
 		this.reportingString = reportingString;
 		fModifier = pModifier;
