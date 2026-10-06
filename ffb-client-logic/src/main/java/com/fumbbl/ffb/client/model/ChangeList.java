@@ -39,6 +39,7 @@ public class ChangeList {
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
       .addFeature("Consummate Professional")
+			.addBehaviorChange("Catch: The re-roll is no longer used automatically when catching a bouncing ball, an inaccurate pass or a scattered bomb, it is offered as a choice instead")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")

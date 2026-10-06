@@ -1,6 +1,6 @@
 # BB2025: Optional Agility Modifier Selection (all Agility Tests)
 
-Status: dodge, pick up and jump up **implemented**, all other Agility Tests **planned / not implemented**.
+Status: dodge, pick up, jump up and catch **implemented**, all other Agility Tests **planned / not implemented**.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour untouched.
 
 > This document supersedes `docs/bb2025-dodge-modifier-selection-plan.md`. The dodge design is
@@ -308,6 +308,8 @@ option exists.
 
 ### B. Catch — `step/bb2025/shared/StepCatchScatterThrowIn`
 
+**Implemented.** Other action work packages remain out of scope for the catch implementation.
+
 The catcher is usually **not** the acting player: use `ReRollRequest.forPlayer(...)` and
 `Player.markUsed` / `isUsed` (honoured for `SkillUsageType.isTrackOutsideActivation()`), not
 `ActingPlayer.markSkillUsed`. The Catch re-roll arrives through the `CatchBehaviour` step hook, so
@@ -411,8 +413,10 @@ Report progress after each package.
 
 ## 10. Open items
 
-* The bomb catch modes (`CATCH_BOMB`, `DEFLECTED_BOMB`) and `CATCH_THROW_IN` need a ruling on whether
-  they count as "loose ball" for §3.4; the plan currently treats only the modes that reduce to
-  `CATCH_SCATTER` as always optional.
+* **Resolved during implementation.** `CATCH_THROW_IN` converts to `CATCH_SCATTER` before any catch
+  roll happens, so it is covered automatically. `CATCH_BOMB` is the bomb equivalent of an inaccurate
+  pass or scatter (the shared "Inaccurate Pass or Scatter" modifier applies to both) and is therefore
+  treated as a loose ball too, while `CATCH_ACCURATE_BOMB` counts as a deliberate delivery.
+  `DEFLECTED_BOMB` never reaches a catch roll in this step.
 * Whether the "do not ignore jump modifiers" option for `Pogo` should be presented as a single
   combined option together with `Leap`/`Very Long Legs` or as separate toggles.

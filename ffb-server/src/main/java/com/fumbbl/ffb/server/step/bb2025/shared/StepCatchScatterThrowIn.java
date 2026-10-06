@@ -730,8 +730,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	 * On a loose ball the coach may prefer not to hold the ball in that square, so the re-roll is always a choice.
 	 * For a deliberate delivery it is only a choice when failing would get a rock thrown at a team mate.
 	 */
+	/**
+	 * A ball or bomb that is not delivered deliberately may always be declined, so the skill re-roll has to be a
+	 * choice. For a deliberate delivery it is used automatically unless failing on purpose could be the better play.
+	 */
 	private boolean mayUseSkillReRollAutomatically() {
-		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER) {
+		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER
+			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_BOMB) {
 			return false;
 		}
 		Game game = getGameState().getGame();
