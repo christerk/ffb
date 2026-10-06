@@ -1,11 +1,10 @@
-package com.fumbbl.ffb.modifiers.mixed;
+package com.fumbbl.ffb.modifiers.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class JumpModifierCollection extends com.fumbbl.ffb.modifiers.JumpModifierCollection {
 	public JumpModifierCollection() {
 		add(new JumpModifier("1 Tacklezone", 1, ModifierType.TACKLEZONE));

@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.factory.mixed;
+package com.fumbbl.ffb.factory.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
@@ -31,7 +31,6 @@ import java.util.stream.Stream;
  */
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFactory {
 
 	private JumpModifierCollection jumpModifierCollection;

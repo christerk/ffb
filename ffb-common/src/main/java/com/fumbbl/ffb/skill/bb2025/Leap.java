@@ -24,9 +24,12 @@ public class Leap extends Skill {
 	@Override
 	public void postConstruct() {
 		registerProperty(NamedProperties.canLeap);
-		registerModifier(new JumpModifier("Leap", -1, ModifierType.DEPENDS_ON_SUM_OF_OTHERS) {
+		registerModifier(new JumpModifier("Leap", -1, ModifierType.DEPENDS_ON_SUM_OF_OTHERS, true) {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpContext context) {
+				if (context.areFreeModifiersOptional() && !context.isSkillSelected(skill)) {
+					return false;
+				}
 				if (context.getAccumulatedModifiers() > 1 ||
 					(context.getAccumulatedModifiers() > 0 && context.getModifierCount() > 1)) {
 					context.addModifierValue(getModifier());

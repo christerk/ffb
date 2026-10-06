@@ -15,7 +15,18 @@ public class JumpModifier extends RollModifier<JumpContext> {
 	public JumpModifier(String pName, int pModifier, ModifierType type) {
 		this(pName, pName, pModifier, pModifier, type);
 	}
+
+	public JumpModifier(String pName, int pModifier, ModifierType type, boolean optional) {
+		this(pName, pName, pModifier, pModifier, type, optional);
+	}
+
 	public JumpModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type) {
+		this(pName, reportString, pModifier, multiplier, type, false);
+	}
+
+	public JumpModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type,
+		boolean optional) {
+		super(optional);
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;

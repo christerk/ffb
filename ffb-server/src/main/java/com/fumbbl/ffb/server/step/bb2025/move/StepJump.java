@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.move;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
@@ -13,12 +14,14 @@ import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -26,6 +29,7 @@ import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportJumpRoll;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -44,17 +48,21 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.JumpModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,6 +79,9 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepJump extends AbstractStepWithReRoll {
 
+	private final JumpModifierSelectionService selectionService = new JumpModifierSelectionService();
+	private final StallingExtension stallingExtension = new StallingExtension();
+
 	private String goToLabelOnFailure;
 	private FieldCoordinate moveStart;
 	private int roll;
@@ -80,7 +91,10 @@ public class StepJump extends AbstractStepWithReRoll {
 	private Boolean useIgnoreModifierAfterRollSkill;
 	private boolean useIgnoreModifierSkill;
 	private boolean dtRerollAsked;
-
+	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
+	private boolean modifierChoiceOffered;
+	private Boolean freeModifiersOptional;
+	private boolean modifierChoiceApplied;
 
 	public StepJump(GameState pGameState) {
 		super(pGameState);
@@ -138,11 +152,40 @@ public class StepJump extends AbstractStepWithReRoll {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
+			if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE
+				&& commitModifierChoice((ClientCommandReRollModifierChoice) pReceivedCommand.getCommand())) {
+				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			}
 		}
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	/**
+	 * Applies the optional modifiers the coach picked instead of a re-roll. They are marked used right away, as all
+	 * modifiers of the jumping player have to be declared before Diving Tackle is decided.
+	 *
+	 * @return whether the choice was accepted
+	 */
+	private boolean commitModifierChoice(ClientCommandReRollModifierChoice command) {
+		Game game = getGameState().getGame();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		if (command.getReRolledAction() != ReRolledActions.JUMP || actingPlayer.getPlayer() == null
+			|| command.getSkills().isEmpty()) {
+			return false;
+		}
+		for (Skill skill : command.getSkills()) {
+			if (skill != null && selectedModifierSkills.add(skill)) {
+				actingPlayer.markSkillUsed(skill);
+				getResult()
+					.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+			}
+		}
+		modifierChoiceApplied = true;
+		modifierChoiceOffered = true;
+		return true;
 	}
 
 	@Override
@@ -165,9 +208,9 @@ public class StepJump extends AbstractStepWithReRoll {
 			(JumpMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.JUMP.name());
 		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
-			if (ReRolledActions.JUMP == getReRolledAction() 
+			if (ReRolledActions.JUMP == getReRolledAction()
 				&& !Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)
-				&& usingDivingTackle == null) {
+				&& usingDivingTackle == null && !modifierChoiceApplied) {
 				if (!dtRerollAsked && (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
 					if (!Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
 						handleFailure(game);
@@ -234,8 +277,9 @@ public class StepJump extends AbstractStepWithReRoll {
 
 		FieldCoordinate to = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
-		JumpContext context = new JumpContext(game, actingPlayer.getPlayer(), moveStart, to);
-		List<JumpModifier> divingTackleModifiers = new ArrayList<>();
+		JumpContext context = new JumpContext(game, actingPlayer.getPlayer(), moveStart, to, selectedModifierSkills,
+			freeModifiersOptional(game));
+		Set<JumpModifier> divingTackleModifiers = new HashSet<>();
 		if (usingDivingTackle != null && usingDivingTackle) {
 			Optional<Skill> skill = game.getDefender().getSkillsIncludingTemporaryOnes().stream()
 				.filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer)).findFirst();
@@ -263,10 +307,13 @@ public class StepJump extends AbstractStepWithReRoll {
 			(AgilityMechanic) game.getRules().getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		int minimumRoll = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 
-		boolean doRoll = (usingDivingTackle == null || useIgnoreModifierSkill)
+		boolean doRoll = !modifierChoiceApplied && (usingDivingTackle == null || useIgnoreModifierSkill)
 			&& (reRolled || ((status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) && !dtRerollAsked));
+		modifierChoiceApplied = false;
 		if (doRoll) {
 			roll = getGameState().getDiceRoller().rollSkill();
+			// a fresh die may be improved by the very same skills again
+			modifierChoiceOffered = false;
 		}
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
@@ -297,9 +344,8 @@ public class StepJump extends AbstractStepWithReRoll {
 
 		if (successful) {
 			if (usingDivingTackle == null) {
-				status =
-					checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to), modifierFactory,
-						mechanic);
+				status = checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to,
+					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic);
 			} else {
 				status = ActionStatus.SUCCESS;
 			}
@@ -310,30 +356,105 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (skill != null) {
 				ignoreSkills.add(skill);
 			}
+
+			// the dialog offering the modifiers cannot show the skill ignoring the modifiers after the roll,
+			// so that skill keeps its own dialog
+			List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null
+				? findOptions(game, actingPlayer, to, divingTackleModifiers)
+				: Collections.emptyList();
+			List<ModifierChoiceOption> combinations =
+				options.isEmpty() ? Collections.emptyList() : findCombinations(game, actingPlayer, to,
+					divingTackleModifiers);
+
 			if (getReRolledAction() != ReRolledActions.JUMP) {
 				setReRolledAction(ReRolledActions.JUMP);
 
 				ReRollSource skillReRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.JUMP);
 
-				if (skillReRollSource != null &&
+				boolean automaticReRoll = skillReRollSource != null &&
 					(skill == null || skill.getRerollSource(ReRolledActions.JUMP) != skillReRollSource ||
-						useIgnoreModifierSkill)) {
+						useIgnoreModifierSkill);
+
+				// the coach has to decide themselves when there are modifiers to pick from or when failing the jump
+				// would cost a team mate a rock to the head
+				if (automaticReRoll && options.isEmpty()
+					&& !stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, actingPlayer.getPlayer())) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 					status = leap();
-				} else if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), actingPlayer, ReRolledActions.JUMP,
-					minimumRoll, false, ignoreModifiersAfterRollSkill, ignoreSkills)) {
+				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreModifiersAfterRollSkill,
+					ignoreSkills)) {
+					modifierChoiceOffered = !options.isEmpty();
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
 			} else if (useIgnoreModifierAfterRollSkill == null && ignoreModifiersAfterRollSkill != null) {
 				UtilServerDialog.showDialog(getGameState(),
 					new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, 0), false);
 				return ActionStatus.WAITING_FOR_SKILL_USE;
+			} else if (!options.isEmpty()
+				&& askForRescue(minimumRoll, options, combinations, false, null, ignoreSkills)) {
+				// the re-roll is gone, but optional modifiers can still save the jump
+				modifierChoiceOffered = true;
+				status = ActionStatus.WAITING_FOR_RE_ROLL;
 			}
 		}
 		if (useIgnoreModifierSkill) {
 			actingPlayer.markSkillUsed(NamedProperties.canIgnoreJumpModifiers);
 		}
 		return status;
+	}
+
+	private List<ModifierChoiceOption> findOptions(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
+		Set<JumpModifier> extraModifiers) {
+		if (modifierChoiceOffered || useIgnoreModifierSkill) {
+			return Collections.emptyList();
+		}
+		return selectionService.findOptions(game, actingPlayer, moveStart, to, selectedModifierSkills, extraModifiers,
+			freeModifiersOptional(game), roll);
+	}
+
+	private List<ModifierChoiceOption> findCombinations(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
+		Set<JumpModifier> extraModifiers) {
+		return selectionService.findCombinations(game, actingPlayer, moveStart, to, selectedModifierSkills,
+			extraModifiers, freeModifiersOptional(game));
+	}
+
+	/**
+	 * Offers the given modifier options together with the available re-rolls in a single dialog.
+	 *
+	 * @return whether the dialog was shown
+	 */
+	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
+		List<ModifierChoiceOption> combinations, boolean reRollPossible, Skill modifyingSkill, Set<Skill> ignoreSkills) {
+		return askForRescue(minimumRoll, options, combinations, reRollPossible, modifyingSkill, ignoreSkills, null);
+	}
+
+	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
+		List<ModifierChoiceOption> combinations, boolean reRollPossible, Skill modifyingSkill, Set<Skill> ignoreSkills,
+		List<String> messages) {
+		GameState gameState = getGameState();
+		ReRollRequest.Builder builder =
+			ReRollRequest.forActingPlayer(gameState, gameState.getGame().getActingPlayer(), ReRolledActions.JUMP,
+					minimumRoll)
+				.modifyingSkill(modifyingSkill)
+				.ignoreSkills(ignoreSkills)
+				.messages(messages);
+		if (!options.isEmpty() || !reRollPossible) {
+			builder.dialogParameter(
+				new ReRollModifierChoiceDialogParameterFactory(roll, options, combinations, reRollPossible));
+		}
+		return gameState.getReRollService().askForReRollIfAvailable(builder.build());
+	}
+
+	/**
+	 * Free modifiers may only be declined when failing the jump would cost a team mate a rock to the head, otherwise
+	 * declining them would never be a meaningful choice.
+	 */
+	private boolean freeModifiersOptional(Game game) {
+		if (freeModifiersOptional == null) {
+			freeModifiersOptional = stallingExtension.wouldEndOfTurnTriggerStallingRoll(game,
+				game.getActingPlayer().getPlayer());
+		}
+		return freeModifiersOptional;
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory,
@@ -362,12 +483,21 @@ public class StepJump extends AbstractStepWithReRoll {
 					return ActionStatus.SUCCESS;
 				}
 
-				if (!dtRerollAsked && getReRolledAction() != ReRolledActions.JUMP) {
-					List<String> message =
-						Collections.singletonList("Diving Tackle can make this jump fail. Reroll the jump now?");
-					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getActingPlayer().getPlayer(),
-						ReRolledActions.JUMP, minimumRoll, false, null, null, null, null, message)) {
+				// all modifiers of the jumping player have to be declared before Diving Tackle is decided, so the
+				// coach gets the same options as on a real failure
+				if (!dtRerollAsked) {
+					ActingPlayer actingPlayer = game.getActingPlayer();
+					Set<JumpModifier> divingTackleModifiers = new HashSet<>(skill.get().getJumpModifiers());
+					List<ModifierChoiceOption> options =
+						findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
+					List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
+						: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
+					boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
+					if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
+						reRollPossible, null, Collections.emptySet(),
+						Collections.singletonList("Diving Tackle can make this jump fail."))) {
 						dtRerollAsked = true;
+						modifierChoiceOffered = !options.isEmpty();
 						return ActionStatus.WAITING_FOR_RE_ROLL;
 					}
 				}
@@ -400,6 +530,11 @@ public class StepJump extends AbstractStepWithReRoll {
 			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
 		}
 		IServerJsonOption.DT_REROLL_ASKED.addTo(jsonObject, dtRerollAsked);
+		IServerJsonOption.MODIFIER_CHOICE_OFFERED.addTo(jsonObject, modifierChoiceOffered);
+		IServerJsonOption.FREE_MODIFIERS_OPTIONAL.addTo(jsonObject, freeModifiersOptional);
+		JsonArray skills = new JsonArray();
+		selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
+		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, skills);
 		return jsonObject;
 	}
 
@@ -420,6 +555,16 @@ public class StepJump extends AbstractStepWithReRoll {
 			status = ActionStatus.valueOf(statusString);
 		}
 		dtRerollAsked = IServerJsonOption.DT_REROLL_ASKED.getFrom(source, jsonObject);
+		modifierChoiceOffered = toPrimitive(IServerJsonOption.MODIFIER_CHOICE_OFFERED.getFrom(source, jsonObject));
+		freeModifiersOptional = IServerJsonOption.FREE_MODIFIERS_OPTIONAL.getFrom(source, jsonObject);
+		selectedModifierSkills.clear();
+		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
+		if (skills != null) {
+			SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
+			for (JsonValue skill : skills) {
+				selectedModifierSkills.add(skillFactory.forName(skill.asString()));
+			}
+		}
 		return this;
 	}
 

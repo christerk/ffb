@@ -75,6 +75,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonIntOption PICKUP_ROLL = new JsonIntOption("pickupRoll");
     JsonIntOption JUMP_UP_ROLL = new JsonIntOption("jumpUpRoll");
     JsonBooleanOption MODIFIER_CHOICE_OFFERED = new JsonBooleanOption("modifierChoiceOffered");
+    JsonBooleanOption FREE_MODIFIERS_OPTIONAL = new JsonBooleanOption("freeModifiersOptional");
     JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
