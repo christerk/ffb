@@ -15,6 +15,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
+import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
@@ -63,6 +64,10 @@ public class Commands {
 	public static ClientCommandReRollModifierChoice reRollModifierChoice(String playerId, ReRolledAction reRolledAction,
 		Skill... skills) {
 		return new ClientCommandReRollModifierChoice(playerId, Arrays.asList(skills), reRolledAction);
+	}
+
+	public static ClientCommandInterceptorChoice interceptorChoice(String interceptorId) {
+		return new ClientCommandInterceptorChoice(interceptorId, null);
 	}
 
 	public static ClientCommandPlayerChoice playerChoice(PlayerChoiceMode mode, Player<?>... players) {
