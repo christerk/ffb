@@ -79,6 +79,9 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepJump extends AbstractStepWithReRoll {
 
+	private static final String STALLING_EXPLANATION =
+		"You are only asked because failing the jump would end the turn and skip the stalling roll for a team mate.";
+
 	private final JumpModifierSelectionService selectionService = new JumpModifierSelectionService();
 	private final StallingExtension stallingExtension = new StallingExtension();
 
@@ -92,6 +95,8 @@ public class StepJump extends AbstractStepWithReRoll {
 	private boolean useIgnoreModifierSkill;
 	private boolean dtRerollAsked;
 	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
+	private final Set<Skill> declinedFreeSkills = new LinkedHashSet<>();
+	private Skill pendingFreeSkill;
 	private boolean modifierChoiceOffered;
 	private Boolean freeModifiersOptional;
 	private boolean modifierChoiceApplied;
@@ -150,6 +155,9 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canChooseToIgnoreJumpModifierAfterRoll)) {
 					useIgnoreModifierAfterRollSkill = commandUseSkill.isSkillUsed();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
+				} else if (pendingFreeSkill != null && pendingFreeSkill.equals(commandUseSkill.getSkill())) {
+					commitFreeModifierSkill(commandUseSkill.isSkillUsed());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE
@@ -186,6 +194,24 @@ public class StepJump extends AbstractStepWithReRoll {
 		modifierChoiceApplied = true;
 		modifierChoiceOffered = true;
 		return true;
+	}
+
+	/**
+	 * Applies the answer to the skill use dialog for a free and unlimited modifier skill. Those skills are never
+	 * spent, so they must not be marked used, they are only remembered for the current jump.
+	 */
+	private void commitFreeModifierSkill(boolean used) {
+		ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+		Skill skill = pendingFreeSkill;
+		pendingFreeSkill = null;
+		if (used) {
+			selectedModifierSkills.add(skill);
+		} else {
+			declinedFreeSkills.add(skill);
+		}
+		// either way the already rolled die has to be evaluated again instead of falling through to the failure
+		modifierChoiceApplied = true;
+		getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, used, SkillUse.ADD_AGILITY_MODIFIER));
 	}
 
 	@Override
@@ -366,7 +392,10 @@ public class StepJump extends AbstractStepWithReRoll {
 				options.isEmpty() ? Collections.emptyList() : findCombinations(game, actingPlayer, to,
 					divingTackleModifiers);
 
-			if (getReRolledAction() != ReRolledActions.JUMP) {
+			if (ignoreModifiersAfterRollSkill == null
+				&& askForFreeModifierSkill(game, actingPlayer, to, divingTackleModifiers)) {
+				status = ActionStatus.WAITING_FOR_SKILL_USE;
+			} else if (getReRolledAction() != ReRolledActions.JUMP) {
 				setReRolledAction(ReRolledActions.JUMP);
 
 				ReRollSource skillReRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.JUMP);
@@ -446,6 +475,33 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	/**
+	 * Leap, Very Long Legs and Pogo can be used on every jump and cost nothing, the coach is only asked about them
+	 * because failing the jump would skip a stalling roll for a team mate. That is a plain skill use question, so it
+	 * gets its own dialog instead of being mixed into the modifier choice.
+	 *
+	 * @return whether the dialog was shown
+	 */
+	private boolean askForFreeModifierSkill(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
+		Set<JumpModifier> extraModifiers) {
+		if (pendingFreeSkill != null || useIgnoreModifierSkill || !freeModifiersOptional(game)) {
+			return false;
+		}
+		Optional<Skill> candidate = selectionService.findFreeSkills(game, actingPlayer, moveStart, to,
+				selectedModifierSkills, extraModifiers, true).stream()
+			.filter(skill -> !declinedFreeSkills.contains(skill)).findFirst();
+		if (!candidate.isPresent()) {
+			return false;
+		}
+		pendingFreeSkill = candidate.get();
+		Set<Skill> withSkill = new LinkedHashSet<>(selectedModifierSkills);
+		withSkill.add(pendingFreeSkill);
+		int minimumRoll = selectionService.minimumRoll(game, actingPlayer, moveStart, to, withSkill, extraModifiers, true);
+		UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(actingPlayer.getPlayerId(),
+			pendingFreeSkill, minimumRoll, Collections.singletonList(STALLING_EXPLANATION)), false);
+		return true;
+	}
+
+	/**
 	 * Free modifiers may only be declined when failing the jump would cost a team mate a rock to the head, otherwise
 	 * declining them would never be a meaningful choice.
 	 */
@@ -488,6 +544,9 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (!dtRerollAsked) {
 					ActingPlayer actingPlayer = game.getActingPlayer();
 					Set<JumpModifier> divingTackleModifiers = new HashSet<>(skill.get().getJumpModifiers());
+					if (askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
+						return ActionStatus.WAITING_FOR_SKILL_USE;
+					}
 					List<ModifierChoiceOption> options =
 						findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
 					List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
@@ -535,6 +594,11 @@ public class StepJump extends AbstractStepWithReRoll {
 		JsonArray skills = new JsonArray();
 		selectedModifierSkills.forEach(skill -> skills.add(skill.getName()));
 		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, skills);
+		JsonArray declinedSkills = new JsonArray();
+		declinedFreeSkills.forEach(skill -> declinedSkills.add(skill.getName()));
+		IServerJsonOption.DECLINED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, declinedSkills);
+		IServerJsonOption.PENDING_AGILITY_MODIFIER_SKILL.addTo(jsonObject,
+			pendingFreeSkill != null ? pendingFreeSkill.getName() : null);
 		return jsonObject;
 	}
 
@@ -557,15 +621,25 @@ public class StepJump extends AbstractStepWithReRoll {
 		dtRerollAsked = IServerJsonOption.DT_REROLL_ASKED.getFrom(source, jsonObject);
 		modifierChoiceOffered = toPrimitive(IServerJsonOption.MODIFIER_CHOICE_OFFERED.getFrom(source, jsonObject));
 		freeModifiersOptional = IServerJsonOption.FREE_MODIFIERS_OPTIONAL.getFrom(source, jsonObject);
+		SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
 		selectedModifierSkills.clear();
-		JsonArray skills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
-		if (skills != null) {
-			SkillFactory skillFactory = source.getFactory(FactoryType.Factory.SKILL);
-			for (JsonValue skill : skills) {
-				selectedModifierSkills.add(skillFactory.forName(skill.asString()));
-			}
-		}
+		readSkills(skillFactory, IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject),
+			selectedModifierSkills);
+		declinedFreeSkills.clear();
+		readSkills(skillFactory, IServerJsonOption.DECLINED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject),
+			declinedFreeSkills);
+		String pendingSkillName = IServerJsonOption.PENDING_AGILITY_MODIFIER_SKILL.getFrom(source, jsonObject);
+		pendingFreeSkill = StringTool.isProvided(pendingSkillName) ? skillFactory.forName(pendingSkillName) : null;
 		return this;
+	}
+
+	private void readSkills(SkillFactory skillFactory, JsonArray skillNames, Set<Skill> target) {
+		if (skillNames == null) {
+			return;
+		}
+		for (JsonValue skillName : skillNames) {
+			target.add(skillFactory.forName(skillName.asString()));
+		}
 	}
 
 }

@@ -120,8 +120,17 @@ class JumpModifierSelectionServiceTest {
 	}
 
 	private List<ModifierChoiceOption> findOptions(int roll, boolean freeModifiersOptional) {
-		return service.findOptions(game, actingPlayer, FROM, TO, Collections.emptySet(), Collections.emptySet(),
+		return findOptions(roll, freeModifiersOptional, Collections.emptySet());
+	}
+
+	private List<ModifierChoiceOption> findOptions(int roll, boolean freeModifiersOptional, Set<Skill> selectedSkills) {
+		return service.findOptions(game, actingPlayer, FROM, TO, selectedSkills, Collections.emptySet(),
 			freeModifiersOptional, roll);
+	}
+
+	private List<String> findFreeSkills(boolean freeModifiersOptional) {
+		return service.findFreeSkills(game, actingPlayer, FROM, TO, Collections.emptySet(), Collections.emptySet(),
+			freeModifiersOptional).stream().map(Skill::getName).collect(Collectors.toList());
 	}
 
 	private List<ModifierChoiceOption> findCombinations(boolean freeModifiersOptional) {
@@ -166,32 +175,33 @@ class JumpModifierSelectionServiceTest {
 		skills.add(veryLongLegs);
 		// very long legs is already part of the roll, so there is nothing left to pick
 		assertTrue(findOptions(5).isEmpty());
+		assertTrue(findFreeSkills(false).isEmpty());
 	}
 
 	@Test
-	void freeModifiersAreOfferedWhenTheyMayBeDeclined() {
+	void freeModifiersAreOfferedSeparatelyWhenTheyMayBeDeclined() {
 		skills.add(veryLongLegs);
-		List<ModifierChoiceOption> options = findOptions(5, true);
-		assertEquals(Collections.singletonList("Very Long Legs"), labels(options));
-		assertEquals(5, options.get(0).getMinimumRoll());
+		// free skills are asked for with a skill use dialog, so they are kept out of the modifier choice
+		assertTrue(findOptions(5, true).isEmpty());
+		assertEquals(Collections.singletonList("Very Long Legs"), findFreeSkills(true));
 	}
 
 	@Test
 	void declinableLeapIsOfferedOnTopOfAnotherModifier() {
 		skills.addAll(Arrays.asList(leap, consummateProfessional));
+		assertEquals(Collections.singletonList("Leap"), findFreeSkills(true));
 		// leap only applies once the other modifiers add up, so it is worth picking together with them
-		List<ModifierChoiceOption> options = findOptions(4, true);
-		assertEquals(Collections.singletonList("Leap + Consummate Professional"), labels(options));
+		List<ModifierChoiceOption> options =
+			findOptions(4, true, new HashSet<>(Collections.singletonList(leap)));
+		assertEquals(Collections.singletonList("Consummate Professional"), labels(options));
 		assertEquals(4, options.get(0).getMinimumRoll());
 	}
 
 	@Test
 	void declinablePogoIsOfferedAlthoughItIsNoModifier() {
 		skills.add(pogo);
-		List<ModifierChoiceOption> options = findOptions(4, true);
-		assertEquals(Collections.singletonList("Pogo"), labels(options));
-		assertEquals(4, options.get(0).getMinimumRoll());
-		assertEquals(-2, options.get(0).getTotalModifier());
+		assertTrue(findOptions(4, true).isEmpty());
+		assertEquals(Collections.singletonList("Pogo"), findFreeSkills(true));
 	}
 
 	@Test
@@ -200,9 +210,8 @@ class JumpModifierSelectionServiceTest {
 
 		List<ModifierChoiceOption> combinations = findCombinations(true);
 
-		assertEquals(Arrays.asList("Very Long Legs + Consummate Professional", "Very Long Legs"), labels(combinations));
-		assertEquals(4, combinations.get(0).getMinimumRoll());
-		assertEquals(5, combinations.get(1).getMinimumRoll());
+		assertEquals(Collections.singletonList("Consummate Professional"), labels(combinations));
+		assertEquals(5, combinations.get(0).getMinimumRoll());
 	}
 
 	@Test
@@ -210,6 +219,6 @@ class JumpModifierSelectionServiceTest {
 		skills.addAll(Arrays.asList(veryLongLegs, consummateProfessional));
 
 		assertTrue(findOptions(2, true).isEmpty());
-		assertEquals(2, findCombinations(true).size());
+		assertEquals(1, findCombinations(true).size());
 	}
 }

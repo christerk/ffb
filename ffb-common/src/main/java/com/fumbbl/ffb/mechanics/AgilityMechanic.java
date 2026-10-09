@@ -46,6 +46,13 @@ public abstract class AgilityMechanic implements Mechanic {
 
 	public abstract int minimumRollJump(Player<?> pPlayer, Set<JumpModifier> pJumpModifiers);
 
+	/**
+	 * @return the jump roll shown in the move square preview, i.e. the best roll the player could achieve for this
+	 * jump with the modifiers currently available to them
+	 */
+	public abstract int minimumRollJumpPreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																						 FieldCoordinate to);
+
 	public abstract int minimumRollHypnoticGaze(Player<?> pPlayer, Set<GazeModifier> pGazeModifiers);
 
 	public abstract int minimumRollCatch(Player<?> pPlayer, Set<CatchModifier> pCatchModifiers);

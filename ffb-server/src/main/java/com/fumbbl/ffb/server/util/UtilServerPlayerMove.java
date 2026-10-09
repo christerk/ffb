@@ -1,12 +1,10 @@
 package com.fumbbl.ffb.server.util;
 
-import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.factory.common.GoForItModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
 import com.fumbbl.ffb.mechanics.JumpMechanic;
@@ -19,8 +17,6 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
-import com.fumbbl.ffb.modifiers.JumpContext;
-import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandBlitzMove;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.server.DebugLog;
@@ -32,7 +28,7 @@ import com.fumbbl.ffb.util.UtilPassing;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -145,12 +141,9 @@ public class UtilServerPlayerMove {
 				&& (UtilPlayer.findTacklezones(game, actingPlayer.getPlayer()) > 0);
 		AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 		if (jumping) {
-			JumpModifierFactory modifierFactory = game.getFactory(FactoryType.Factory.JUMP_MODIFIER);
-			Set<JumpModifier> jumpModifiers = new HashSet<>();
-			if (!actingPlayer.isJumpsWithoutModifiers()) {
-				jumpModifiers = modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), playerCoordinate, pCoordinate));
-			}
-			minimumRollDodge = mechanic.minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
+			minimumRollDodge = actingPlayer.isJumpsWithoutModifiers()
+				? mechanic.minimumRollJump(actingPlayer.getPlayer(), Collections.emptySet())
+				: mechanic.minimumRollJumpPreview(game, actingPlayer, playerCoordinate, pCoordinate);
 			if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
 				goForIt = ((3 + playerCoordinate.distanceInSteps(pCoordinate)) > actingPlayer.getPlayer().getMovementWithModifiers());

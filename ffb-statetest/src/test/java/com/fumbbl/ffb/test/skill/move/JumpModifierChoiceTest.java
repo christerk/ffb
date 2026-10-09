@@ -2,12 +2,15 @@ package com.fumbbl.ffb.test.skill.move;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.test.Commands;
 import com.fumbbl.ffb.test.GameStateBuilder;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -148,11 +152,59 @@ public class JumpModifierChoiceTest {
 		GameState state = buildStateWithScoringTeamMate("Very Long Legs");
 		Game game = state.getGame();
 
-		// the coach may want to fail the jump, so very long legs has to be picked explicitly
+		// the coach may want to fail the jump, so very long legs has to be confirmed explicitly
 		jump(state, 3);
+
+		assertEquals(DialogId.SKILL_USE, game.getDialogParameter().getId());
+		DialogSkillUseParameter parameter = (DialogSkillUseParameter) game.getDialogParameter();
+		assertEquals("Very Long Legs", parameter.getSkill().getName());
+		assertEquals(Collections.singletonList(
+				"You are only asked because failing the jump would end the turn and skip the stalling roll for a team mate."),
+			parameter.getMessages());
+	}
+
+	@Test
+	public void usingTheFreeModifierRescuesTheJumpWithoutSpendingTheSkill() {
+		GameState state = buildStateWithScoringTeamMate("Very Long Legs");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill veryLongLegs = game.getRules().getSkillFactory().forName("Very Long Legs");
+		StepEngine.respond(state, new ClientCommandUseSkill(veryLongLegs, true, "runner", null, false));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertFalse(game.getActingPlayer().isSkillUsed(veryLongLegs));
+	}
+
+	@Test
+	public void decliningTheFreeModifierLeavesTheJumpFailed() {
+		GameState state = buildStateWithScoringTeamMate("Very Long Legs");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill veryLongLegs = game.getRules().getSkillFactory().forName("Very Long Legs");
+		StepEngine.respond(state, new ClientCommandUseSkill(veryLongLegs, false, "runner", null, false));
+
+		// the jumper drops in the square they jumped to, which ends the turn
+		assertNull(game.getDialogParameter());
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("runner")).getBase());
+	}
+
+	@Test
+	public void limitedModifiersStayInTheModifierChoiceWhenATeamMateWouldBeStalling() {
+		GameState state = buildStateWithScoringTeamMate("Very Long Legs", "Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill veryLongLegs = game.getRules().getSkillFactory().forName("Very Long Legs");
+		StepEngine.respond(state, new ClientCommandUseSkill(veryLongLegs, false, "runner", null, false));
 
 		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
 		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		assertEquals(Collections.singletonList("Very Long Legs"), labels(parameter));
+		assertEquals(Collections.singletonList("Consummate Professional"), labels(parameter));
 	}
 }
