@@ -15,7 +15,6 @@ import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class JumpModifierSelectionService {
 		Function<Set<Skill>, ModifierChoiceOption> evaluator =
 			evaluator(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional);
 		return selectionService.findOptions(
-			availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional, evaluator),
+			availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional),
 			evaluator, roll);
 	}
 
@@ -48,7 +47,7 @@ public class JumpModifierSelectionService {
 		Function<Set<Skill>, ModifierChoiceOption> evaluator =
 			evaluator(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional);
 		return selectionService.findCombinations(
-			availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional, evaluator),
+			availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional),
 			evaluator);
 	}
 
@@ -56,8 +55,7 @@ public class JumpModifierSelectionService {
 	 * @return the unused skills that lower the needed roll when they are added to the current selection
 	 */
 	private List<Skill> availableSkills(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
-		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional,
-		Function<Set<Skill>, ModifierChoiceOption> evaluator) {
+		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional) {
 		List<Skill> available = new ArrayList<>();
 		if (actingPlayer.getPlayer() == null) {
 			return available;
@@ -65,7 +63,7 @@ public class JumpModifierSelectionService {
 
 		int minimumRoll = minimumRoll(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional);
 
-		for (Skill skill : Arrays.asList(UtilCards.findAllSkills(actingPlayer.getPlayer()))) {
+		for (Skill skill : UtilCards.findAllSkills(actingPlayer.getPlayer())) {
 			if (actingPlayer.isSkillUsed(skill) || !isCandidate(skill, freeModifiersOptional)) {
 				continue;
 			}
@@ -121,6 +119,6 @@ public class JumpModifierSelectionService {
 	}
 
 	private AgilityMechanic mechanic(Game game) {
-		return (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+		return game.getMechanic(Mechanic.Type.AGILITY);
 	}
 }

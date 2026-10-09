@@ -1,7 +1,5 @@
 package com.fumbbl.ffb.modifiers;
 
-import com.fumbbl.ffb.model.skill.Skill;
-
 /**
  *
  * @author Kalimar
@@ -59,9 +57,5 @@ public class JumpModifier extends RollModifier<JumpContext> {
 	@Override
 	public String getReportString() {
 		return reportString;
-	}
-
-	public boolean appliesToContext(Skill skill, JumpContext context) {
-		return true;
 	}
 }
