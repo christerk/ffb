@@ -7,6 +7,10 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Kalimar
  */
@@ -64,26 +68,20 @@ public class DialogSkillUse extends DialogThreeWayChoice {
 	}
 
 	private static String[] createMessages(DialogSkillUseParameter pDialogParameter, FantasyFootballClient client) {
-		String[] messages = new String[0];
+		List<String> messages = new ArrayList<>();
 		if ((pDialogParameter != null) && (pDialogParameter.getSkill() != null)) {
 			Skill skill = pDialogParameter.getSkill();
 
+			messages.add(createDefaultQuestion(pDialogParameter, client));
 			String[] customMessages = skill.getSkillUseDescription();
 			if (customMessages != null) {
-				messages = new String[customMessages.length + 1];
-				messages[0] = createDefaultQuestion(pDialogParameter, client);
-				System.arraycopy(customMessages, 0, messages, 1, customMessages.length);
-			} else {
-				if (pDialogParameter.getMinimumRoll() > 0) {
-					messages = new String[2];
-					messages[1] = createDefaultMinimumRoll(pDialogParameter);
-				} else {
-					messages = new String[1];
-				}
-				messages[0] = createDefaultQuestion(pDialogParameter, client);
+				messages.addAll(Arrays.asList(customMessages));
+			} else if (pDialogParameter.getMinimumRoll() > 0) {
+				messages.add(createDefaultMinimumRoll(pDialogParameter));
 			}
+			messages.addAll(pDialogParameter.getMessages());
 		}
-		return messages;
+		return messages.toArray(new String[0]);
 	}
 
 	public Skill getModifyingSkill() {

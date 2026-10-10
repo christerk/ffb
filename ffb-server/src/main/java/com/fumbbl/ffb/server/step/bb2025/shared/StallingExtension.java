@@ -3,14 +3,19 @@ package com.fumbbl.ffb.server.step.bb2025.shared;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.model.TeamResult;
 import com.fumbbl.ffb.util.pathfinding.PathFinderWithPassBlockSupport;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
+import com.fumbbl.ffb.option.GameOptionId;
+import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.mixed.ReportThrowAtStallingPlayer;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.InjuryResult;
@@ -32,6 +37,9 @@ import java.util.stream.Collectors;
 
 public class StallingExtension {
 
+	// from this turn on the rock throwing coach runs out of time to be angry about stalling
+	private static final int LAST_STALLING_TURN = 6;
+
 	private final Set<ISkillProperty> rollAtActivation = new HashSet<ISkillProperty>() {{
 		add(NamedProperties.appliesConfusion);
 		add(NamedProperties.needsToRollForActionBlockingIsEasier);
@@ -46,6 +54,28 @@ public class StallingExtension {
 			&& !ArrayTool.isProvided(UtilPlayer.findAdjacentPlayersWithTacklezones(game, game.getOtherTeam(player.getTeam()),
 			game.getFieldModel().getPlayerCoordinate(player), false))
 			&& hasOpenPathToEndzone(game, player);
+	}
+
+	/**
+	 * Checks whether ending the turn right now would get a rock thrown at a team mate that could still score.
+	 *
+	 * @param excludedPlayer the currently acting player, they are not stalling as long as their action is running
+	 */
+	public boolean wouldEndOfTurnTriggerStallingRoll(Game game, Player<?> excludedPlayer) {
+		if (game.getTurnMode() != TurnMode.REGULAR
+			|| !UtilGameOption.isOptionEnabled(game, GameOptionId.ENABLE_STALLING_CHECK)
+			|| game.getTurnData().getTurnNr() > LAST_STALLING_TURN) {
+			return false;
+		}
+
+		Team team = excludedPlayer != null ? excludedPlayer.getTeam() : game.getActingTeam();
+
+		return Arrays.stream(team.getPlayers())
+			.filter(player -> player != excludedPlayer && UtilPlayer.hasBall(game, player))
+			.anyMatch(player -> {
+				PlayerState playerState = game.getFieldModel().getPlayerState(player);
+				return playerState != null && playerState.isActive() && isConsideredStalling(game, player);
+			});
 	}
 
 	private boolean hasOpenPathToEndzone(Game game, Player<?> player) {
@@ -66,7 +96,7 @@ public class StallingExtension {
 		int roll = 0;
 		boolean successful;
 
-		if (game.getTurnData().getTurnNr() > 6) {
+		if (game.getTurnData().getTurnNr() > LAST_STALLING_TURN) {
 			successful = false;
 		} else {
 			roll = gameState.getDiceRoller().rollDice(6);

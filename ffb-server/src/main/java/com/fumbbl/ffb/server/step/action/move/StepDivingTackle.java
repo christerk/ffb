@@ -1,12 +1,16 @@
 package com.fumbbl.ffb.server.step.action.move;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.server.GameState;
@@ -21,7 +25,9 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.util.StringTool;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Step in move sequence to handle the DIVING_TACKLE skill.
@@ -87,11 +93,22 @@ public class StepDivingTackle extends AbstractStep {
 				case USING_DIVING_TACKLE:
 					state.usingDivingTackle = (Boolean) parameter.getValue();
 					return true;
+				case SELECTED_DODGE_MODIFIER_SKILLS:
+					state.selectedModifierSkills.clear();
+					if (parameter.getValue() != null) {
+						state.selectedModifierSkills.addAll(castToSkills(parameter.getValue()));
+					}
+					return true;
 				default:
 					break;
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Set<Skill> castToSkills(Object value) {
+		return (Set<Skill>) value;
 	}
 
 	@Override
@@ -129,6 +146,9 @@ public class StepDivingTackle extends AbstractStep {
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, state.usingDivingTackle);
 		IServerJsonOption.USING_BREAK_TACKLE.addTo(jsonObject, state.usingBreakTackle);
 		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, state.usingModifyingSkill);
+		JsonArray skillArray = new JsonArray();
+		state.selectedModifierSkills.stream().map(UtilJson::toJsonValue).forEach(skillArray::add);
+		IServerJsonOption.SELECTED_DODGE_MODIFIER_SKILLS.addTo(jsonObject, skillArray);
 		return jsonObject;
 	}
 
@@ -149,6 +169,16 @@ public class StepDivingTackle extends AbstractStep {
 		state.usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		state.usingBreakTackle = IServerJsonOption.USING_BREAK_TACKLE.getFrom(source, jsonObject);
 		state.usingModifyingSkill = toPrimitive(IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject));
+		state.selectedModifierSkills.clear();
+		JsonArray skillArray = IServerJsonOption.SELECTED_DODGE_MODIFIER_SKILLS.getFrom(source, jsonObject);
+		if (skillArray != null) {
+			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
+			if (skillFactory != null) {
+				for (int i = 0; i < skillArray.size(); i++) {
+					state.selectedModifierSkills.add((Skill) UtilJson.toEnumWithName(skillFactory, skillArray.get(i)));
+				}
+			}
+		}
 		return this;
 	}
 
@@ -160,6 +190,7 @@ public class StepDivingTackle extends AbstractStep {
 		public Boolean usingDivingTackle;
 		public boolean usingBreakTackle;
 		public Boolean usingModifyingSkill;
+		public final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
 	}
 
 }
