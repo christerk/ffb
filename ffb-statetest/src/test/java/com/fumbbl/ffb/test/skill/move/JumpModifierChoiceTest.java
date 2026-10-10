@@ -111,6 +111,19 @@ public class JumpModifierChoiceTest {
 		StepEngine.respond(state, Commands.move("runner", FROM, TO));
 	}
 
+	/**
+	 * Declares the skill ignoring the jump modifiers at the start of the activation, which is how Bounding Leap is
+	 * used, instead of declaring a plain jump.
+	 */
+	private void jumpIgnoringModifiers(GameState state, int roll, int... followUpRolls) {
+		Skill boundingLeap = state.getGame().getRules().getSkillFactory().forName("Bounding Leap");
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
+		StepEngine.respond(state, new ClientCommandUseSkill(boundingLeap, true, "runner", null, false));
+		TestRolls.on(state).general(roll).general(followUpRolls);
+		StepEngine.respond(state, Commands.move("runner", FROM, TO));
+	}
+
 	private List<String> labels(DialogReRollModifierChoiceParameter parameter) {
 		return parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
 	}
@@ -332,6 +345,51 @@ public class JumpModifierChoiceTest {
 		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
 		assertEquals(Collections.singletonList(
 				"This will NOT trip the jumper, but will force the use of Consummate Professional."),
+			Arrays.asList(parameter.getDescriptions()));
+	}
+
+	@Test
+	public void divingTackleIsOfferedAfterAJumpIgnoringTheModifiers() {
+		GameState state = buildStateWithDivingTackler("Bounding Leap");
+		Game game = state.getGame();
+
+		// a 4 passes the jump without modifiers, diving tackle cannot change that any more
+		jumpIgnoringModifiers(state, 4);
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(PlayerChoiceMode.DIVING_TACKLE, parameter.getPlayerChoiceMode());
+		assertEquals(Collections.singletonList("marker"), Arrays.asList(parameter.getPlayerIds()));
+		assertEquals(Collections.singletonList("This will NOT trip the jumper, the jump will still succeed."),
+			Arrays.asList(parameter.getDescriptions()));
+	}
+
+	@Test
+	public void divingTackleDoesNotStopAJumpIgnoringTheModifiers() {
+		GameState state = buildStateWithDivingTackler("Bounding Leap");
+		Game game = state.getGame();
+
+		jumpIgnoringModifiers(state, 4);
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("marker")).getBase());
+	}
+
+	@Test
+	public void theModifierIgnoringSkillIsNotOfferedAsReRollWhenDivingTackleWouldTrip() {
+		GameState state = buildStateWithDivingTackler("Bounding Leap");
+		Game game = state.getGame();
+
+		// a 4 passes the plain jump, diving tackle makes it fail, but Bounding Leap has to be declared before
+		// the jump and must therefore not show up as a re-roll the step could not process
+		jump(state, 4);
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("This will trip the jumper."),
 			Arrays.asList(parameter.getDescriptions()));
 	}
 }

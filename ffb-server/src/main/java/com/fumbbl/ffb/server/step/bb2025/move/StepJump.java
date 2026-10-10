@@ -245,18 +245,21 @@ public class StepJump extends AbstractStepWithReRoll {
 					}
 				}
 			}
-			useIgnoreModifierSkill = actingPlayer.isJumpsWithoutModifiers();
-			if (doLeap) {
+			if (status == null) {
+				// the skill is marked used by the first roll, so it has to be resolved before that roll and kept
+				// afterwards, otherwise a re-roll or the Diving Tackle answer would bring the modifiers back
+				useIgnoreModifierSkill = actingPlayer.isJumpsWithoutModifiers();
 				if (useIgnoreModifierSkill) {
 					Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
 					if (skill == null) {
 						useIgnoreModifierSkill = false;
 					} else {
-						usingDivingTackle = false;
 						getResult().addReport(
 							new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
 					}
 				}
+			}
+			if (doLeap) {
 				switch (leap()) {
 					case SUCCESS:
 						actingPlayer.setJumping(false);
@@ -548,7 +551,9 @@ public class StepJump extends AbstractStepWithReRoll {
 		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
 		jumpModifiers.addAll(skill.get().getJumpModifiers());
 		int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
-		boolean tripsJumper = !DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+		// the skill ignoring the modifiers also ignores the one of Diving Tackle, so the jump cannot be stopped
+		boolean tripsJumper =
+			!useIgnoreModifierSkill && !DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 
 		// all modifiers of the jumping player have to be declared before Diving Tackle is decided, so the
 		// coach gets the same options as on a real failure
@@ -573,8 +578,16 @@ public class StepJump extends AbstractStepWithReRoll {
 				List<String> messages = Collections.singletonList(options.isEmpty()
 					? "Diving Tackle can make this jump fail. Reroll the jump now?"
 					: "Diving Tackle can make this jump fail.");
+				// the skill ignoring the modifiers has to be declared before the jump, so it must not show up as a
+				// re-roll the step could not process afterwards
+				Set<Skill> ignoreSkills = new HashSet<>();
+				Skill ignoreModifiersSkill =
+					UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
+				if (ignoreModifiersSkill != null) {
+					ignoreSkills.add(ignoreModifiersSkill);
+				}
 				if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
-					reRollPossible, ignoreModifiersAfterRollSkill, Collections.emptySet(), messages)) {
+					reRollPossible, ignoreModifiersAfterRollSkill, ignoreSkills, messages)) {
 					dtRerollAsked = true;
 					modifierChoiceOffered = true;
 					return ActionStatus.WAITING_FOR_RE_ROLL;
@@ -617,7 +630,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
 		IServerJsonOption.USING_DIVING_TACKLE.addTo(jsonObject, usingDivingTackle);
 		IServerJsonOption.ALREADY_REPORTED.addTo(jsonObject, alreadyReported);
-		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL.addTo(jsonObject, useIgnoreModifierAfterRollSkill);
+		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL.addTo(jsonObject, useIgnoreModifierSkill);
 		IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.addTo(jsonObject, useIgnoreModifierAfterRollSkill);
 		if (status != null) {
 			IServerJsonOption.STATUS.addTo(jsonObject, status.name());
