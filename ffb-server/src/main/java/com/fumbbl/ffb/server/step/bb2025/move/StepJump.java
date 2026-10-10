@@ -80,7 +80,7 @@ import java.util.Set;
 public class StepJump extends AbstractStepWithReRoll {
 
 	private static final String STALLING_EXPLANATION =
-		"You are only asked because failing the jump would end the turn and skip the stalling roll for a team mate.";
+		"You are only asked because failing the jump would end the turn and skip the stalling roll.";
 
 	private final JumpModifierSelectionService selectionService = new JumpModifierSelectionService();
 	private final StallingExtension stallingExtension = new StallingExtension();
@@ -384,9 +384,12 @@ public class StepJump extends AbstractStepWithReRoll {
 				ignoreSkills.add(skill);
 			}
 
+			// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to rescue it
+			boolean rescueDeclined = !declinedFreeSkills.isEmpty();
+
 			// the dialog offering the modifiers cannot show the skill ignoring the modifiers after the roll,
 			// so that skill keeps its own dialog
-			List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null
+			List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null && !rescueDeclined
 				? findOptions(game, actingPlayer, to, divingTackleModifiers)
 				: Collections.emptyList();
 			List<ModifierChoiceOption> combinations =
@@ -396,6 +399,9 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (ignoreModifiersAfterRollSkill == null
 				&& askForFreeModifierSkill(game, actingPlayer, to, divingTackleModifiers)) {
 				status = ActionStatus.WAITING_FOR_SKILL_USE;
+			} else if (rescueDeclined) {
+				// the free modifier was declined on purpose, neither modifiers nor re-rolls are offered any more
+				status = ActionStatus.FAILURE;
 			} else if (getReRolledAction() != ReRolledActions.JUMP) {
 				setReRolledAction(ReRolledActions.JUMP);
 
@@ -488,7 +494,7 @@ public class StepJump extends AbstractStepWithReRoll {
 			return false;
 		}
 		Optional<Skill> candidate = selectionService.findFreeSkills(game, actingPlayer, moveStart, to,
-				selectedModifierSkills, extraModifiers, true).stream()
+				selectedModifierSkills, extraModifiers, true, roll).stream()
 			.filter(skill -> !declinedFreeSkills.contains(skill)).findFirst();
 		if (!candidate.isPresent()) {
 			return false;
@@ -548,17 +554,21 @@ public class StepJump extends AbstractStepWithReRoll {
 					if (askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
 						return ActionStatus.WAITING_FOR_SKILL_USE;
 					}
-					List<ModifierChoiceOption> options =
-						findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
-					List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
-						: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
-					boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
-					if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
-						reRollPossible, null, Collections.emptySet(),
-						Collections.singletonList("Diving Tackle can make this jump fail."))) {
-						dtRerollAsked = true;
-						modifierChoiceOffered = !options.isEmpty();
-						return ActionStatus.WAITING_FOR_RE_ROLL;
+					// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to
+					// rescue it and Diving Tackle is simply applied
+					if (declinedFreeSkills.isEmpty()) {
+						List<ModifierChoiceOption> options =
+							findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
+						List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
+							: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
+						boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
+						if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
+							reRollPossible, null, Collections.emptySet(),
+							Collections.singletonList("Diving Tackle can make this jump fail."))) {
+							dtRerollAsked = true;
+							modifierChoiceOffered = !options.isEmpty();
+							return ActionStatus.WAITING_FOR_RE_ROLL;
+						}
 					}
 				}
 

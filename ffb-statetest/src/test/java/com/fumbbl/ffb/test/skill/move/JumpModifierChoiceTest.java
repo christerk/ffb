@@ -80,11 +80,11 @@ public class JumpModifierChoiceTest {
 			.build();
 	}
 
-	private void jump(GameState state, int roll) {
+	private void jump(GameState state, int roll, int... followUpRolls) {
 		StepEngine.start(state);
 		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE));
 		StepEngine.respond(state, Commands.selectPlayer("runner", PlayerAction.MOVE, true));
-		TestRolls.on(state).general(roll);
+		TestRolls.on(state).general(roll).general(followUpRolls);
 		StepEngine.respond(state, Commands.move("runner", FROM, TO));
 	}
 
@@ -159,7 +159,7 @@ public class JumpModifierChoiceTest {
 		DialogSkillUseParameter parameter = (DialogSkillUseParameter) game.getDialogParameter();
 		assertEquals("Very Long Legs", parameter.getSkill().getName());
 		assertEquals(Collections.singletonList(
-				"You are only asked because failing the jump would end the turn and skip the stalling roll for a team mate."),
+				"You are only asked because failing the jump would end the turn and skip the stalling roll."),
 			parameter.getMessages());
 	}
 
@@ -195,17 +195,33 @@ public class JumpModifierChoiceTest {
 	}
 
 	@Test
-	public void limitedModifiersStayInTheModifierChoiceWhenATeamMateWouldBeStalling() {
+	public void decliningTheFreeModifierSuppressesModifiersAndReRolls() {
 		GameState state = buildStateWithScoringTeamMate("Very Long Legs", "Consummate Professional");
 		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
 
 		jump(state, 3);
 
 		Skill veryLongLegs = game.getRules().getSkillFactory().forName("Very Long Legs");
+		TestRolls.on(state).armor(1, 1);
 		StepEngine.respond(state, new ClientCommandUseSkill(veryLongLegs, false, "runner", null, false));
 
-		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
-		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		assertEquals(Collections.singletonList("Consummate Professional"), labels(parameter));
+		// declining a free modifier is a deliberate failure, so nothing is offered to rescue the jump
+		assertNull(game.getDialogParameter());
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("runner")).getBase());
+	}
+
+	@Test
+	public void freeModifiersAreNotOfferedWhenTheyCannotRescueTheJump() {
+		GameState state = buildStateWithScoringTeamMate("Very Long Legs");
+		Game game = state.getGame();
+
+		// very long legs would only bring the needed roll down to 3+, so a 2 fails either way
+		jump(state, 2, 1, 1);
+
+		assertNull(game.getDialogParameter());
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("runner")).getBase());
 	}
 }

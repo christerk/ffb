@@ -13,6 +13,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
+import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
@@ -56,12 +57,32 @@ public class JumpModifierSelectionService {
 	/**
 	 * @return the skills that are free and usable on every jump, e.g. Leap, Very Long Legs or Pogo. They are only
 	 * declinable under the stalling condition and are asked for with a plain skill use dialog instead of being
-	 * mixed into the modifier choice.
+	 * mixed into the modifier choice. Nothing is offered when even using every modifier left would not rescue the jump.
 	 */
 	public List<Skill> findFreeSkills(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
-		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional) {
-		return availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional,
-			this::isFreeSkill);
+		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional, int roll) {
+		List<Skill> freeSkills = availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers,
+			freeModifiersOptional, this::isFreeSkill);
+		if (freeSkills.isEmpty()
+			|| !canSucceed(game, actingPlayer, from, to, selectedSkills, extraModifiers, freeModifiersOptional, roll)) {
+			return new ArrayList<>();
+		}
+		return freeSkills;
+	}
+
+	/**
+	 * @return whether taking every modifier that is still available turns the given roll into a success
+	 */
+	private boolean canSucceed(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
+		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional, int roll) {
+		if (roll <= 0) {
+			return false;
+		}
+		Set<Skill> allSkills = new LinkedHashSet<>(selectedSkills);
+		allSkills.addAll(availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers,
+			freeModifiersOptional, skill -> true));
+		return DiceInterpreter.getInstance().isSkillRollSuccessful(roll,
+			minimumRoll(game, actingPlayer, from, to, allSkills, extraModifiers, freeModifiersOptional));
 	}
 
 	private boolean isFreeSkill(Skill skill) {
@@ -140,6 +161,6 @@ public class JumpModifierSelectionService {
 	}
 
 	private AgilityMechanic mechanic(Game game) {
-		return (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+		return game.getMechanic(Mechanic.Type.AGILITY);
 	}
 }

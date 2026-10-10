@@ -3,12 +3,10 @@ package com.fumbbl.ffb.server.util.bb2025;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
-import com.fumbbl.ffb.factory.MechanicsFactory;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
-import com.fumbbl.ffb.model.GameRules;
 import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
@@ -90,14 +88,9 @@ class JumpModifierSelectionServiceTest {
 			return modifiers;
 		});
 
-		MechanicsFactory mechanicsFactory = mock(MechanicsFactory.class);
-		when(mechanicsFactory.forName(Mechanic.Type.AGILITY.name())).thenReturn(new AgilityMechanic());
-		GameRules gameRules = mock(GameRules.class);
-		when(gameRules.<MechanicsFactory>getFactory(Factory.MECHANIC)).thenReturn(mechanicsFactory);
-
 		game = mock(Game.class);
 		when(game.getActingPlayer()).thenReturn(actingPlayer);
-		when(game.getRules()).thenReturn(gameRules);
+		when(game.<AgilityMechanic>getMechanic(Mechanic.Type.AGILITY)).thenReturn(new AgilityMechanic());
 		when(game.<JumpModifierFactory>getFactory(Factory.JUMP_MODIFIER)).thenReturn(modifierFactory);
 	}
 
@@ -128,9 +121,9 @@ class JumpModifierSelectionServiceTest {
 			freeModifiersOptional, roll);
 	}
 
-	private List<String> findFreeSkills(boolean freeModifiersOptional) {
+	private List<String> findFreeSkills(boolean freeModifiersOptional, int roll) {
 		return service.findFreeSkills(game, actingPlayer, FROM, TO, Collections.emptySet(), Collections.emptySet(),
-			freeModifiersOptional).stream().map(Skill::getName).collect(Collectors.toList());
+			freeModifiersOptional, roll).stream().map(Skill::getName).collect(Collectors.toList());
 	}
 
 	private List<ModifierChoiceOption> findCombinations(boolean freeModifiersOptional) {
@@ -175,7 +168,7 @@ class JumpModifierSelectionServiceTest {
 		skills.add(veryLongLegs);
 		// very long legs is already part of the roll, so there is nothing left to pick
 		assertTrue(findOptions(5).isEmpty());
-		assertTrue(findFreeSkills(false).isEmpty());
+		assertTrue(findFreeSkills(false, 5).isEmpty());
 	}
 
 	@Test
@@ -183,13 +176,13 @@ class JumpModifierSelectionServiceTest {
 		skills.add(veryLongLegs);
 		// free skills are asked for with a skill use dialog, so they are kept out of the modifier choice
 		assertTrue(findOptions(5, true).isEmpty());
-		assertEquals(Collections.singletonList("Very Long Legs"), findFreeSkills(true));
+		assertEquals(Collections.singletonList("Very Long Legs"), findFreeSkills(true, 5));
 	}
 
 	@Test
 	void declinableLeapIsOfferedOnTopOfAnotherModifier() {
 		skills.addAll(Arrays.asList(leap, consummateProfessional));
-		assertEquals(Collections.singletonList("Leap"), findFreeSkills(true));
+		assertEquals(Collections.singletonList("Leap"), findFreeSkills(true, 4));
 		// leap only applies once the other modifiers add up, so it is worth picking together with them
 		List<ModifierChoiceOption> options =
 			findOptions(4, true, new HashSet<>(Collections.singletonList(leap)));
@@ -201,7 +194,21 @@ class JumpModifierSelectionServiceTest {
 	void declinablePogoIsOfferedAlthoughItIsNoModifier() {
 		skills.add(pogo);
 		assertTrue(findOptions(4, true).isEmpty());
-		assertEquals(Collections.singletonList("Pogo"), findFreeSkills(true));
+		assertEquals(Collections.singletonList("Pogo"), findFreeSkills(true, 4));
+	}
+
+	@Test
+	void freeModifiersAreNotOfferedWhenTheyCannotRescueTheRoll() {
+		skills.add(veryLongLegs);
+		// very long legs only brings the needed roll down to 5+, so a 2 fails either way
+		assertTrue(findFreeSkills(true, 2).isEmpty());
+	}
+
+	@Test
+	void freeModifiersAreNotOfferedWhenEvenEveryModifierTogetherFails() {
+		skills.addAll(Arrays.asList(leap, consummateProfessional));
+		// leap and consummate professional together still need a 4+
+		assertTrue(findFreeSkills(true, 3).isEmpty());
 	}
 
 	@Test
