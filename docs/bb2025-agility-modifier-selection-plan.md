@@ -344,9 +344,12 @@ no skill based Right Stuff modifiers at all today, only throw quality and tackle
 * The automatic Bounding Leap re-roll is only used when no modifier option exists and the stalling
   guard allows it, otherwise everything is merged into one dialog.
 * The Diving Tackle look-ahead offers the same options as a real failure.
-* **Ruleset separation:** `modifiers/mixed/JumpModifierCollection` and `factory/mixed/JumpModifierFactory`
-  were duplicated into `modifiers/bb2025` and `factory/bb2025` and the originals moved to
-  `modifiers/bb2020` / `factory/bb2020`, as BB2020 is their only remaining user.
+* A `JumpContext` built without declared modifiers, i.e. the four argument constructor used by the
+  move square preview in `UtilServerPlayerMove`, makes the factory report the roll the player would
+  end up with: every optional modifier still available to them plus a possible Diving Tackle.
+* **Ruleset separation:** `factory/mixed/JumpModifierFactory` was duplicated into `factory/bb2025`
+  and the original moved to `factory/bb2020`, as BB2020 is its only remaining user.
+  `modifiers/mixed/JumpModifierCollection` stays shared, the modifiers themselves are identical.
 
 ### F. Jump up — `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour`
 
@@ -360,9 +363,8 @@ The earlier rulesets retain their existing behaviour. Stalling guards are not ap
 ## 6. Phase 3 — previews and client
 
 1. Generalise `minimumRollDodgePreview` into a per roll preview that accounts for the best free
-   optional modifiers, and **add a jump preview**: `UtilServerPlayerMove` computes jump squares
-   inline and never consults the preview, so jump move squares currently under-report their
-   difficulty.
+   optional modifiers. The jump squares are already covered, `factory/bb2025/JumpModifierFactory`
+   answers an undeclared `JumpContext` with the modifiers the player would really face (§5.E).
 2. Drive the dialog title and prompt from the roll descriptor; the dialog itself is already action
    agnostic, so this should be text only.
 3. Check `DialogManager` / `TurnDiceStatusComponent` behaviour for dialogs raised for the **non
@@ -373,8 +375,8 @@ The earlier rulesets retain their existing behaviour. Stalling guards are not ap
 * `AgilityModifierSelectionServiceTest` per roll type, with emphasis on jump (fresh context per
   combination, `Leap`'s `DEPENDS_ON_SUM_OF_OTHERS` gate, the `Pogo` option). The existing 13 dodge
   cases must keep passing after the rename.
-* `AgilityMechanic` preview tests for jump, including `Pogo`/`Leap`/`Very Long Legs` and the Diving
-  Tackle look-ahead, plus the existing `bb2016`/`bb2020` regression guards.
+* Preview tests for jump, including `Pogo`/`Leap`/`Very Long Legs` and the Diving Tackle look-ahead,
+  plus the existing `bb2016`/`bb2020` regression guards.
 * JSON round trips for any changed dialog parameter, command and step state (replay and reconnect).
 * `ffb-statetest` step flow regressions per action, following `ffb-statetest/TESTING_INSTRUCTIONS.md`
   (GameStateBuilder / StepEngine / Commands / TestRolls):

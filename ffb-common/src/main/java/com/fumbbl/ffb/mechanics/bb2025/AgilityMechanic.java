@@ -4,7 +4,6 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
-import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.mechanics.Wording;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -16,13 +15,11 @@ import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
-import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.OptionalDodgeModifier;
 import com.fumbbl.ffb.modifiers.OptionalDodgeModifierService;
-import com.fumbbl.ffb.modifiers.OptionalRollModifierService;
 import com.fumbbl.ffb.modifiers.PickupModifier;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
 import com.fumbbl.ffb.modifiers.RollModifier;
@@ -31,11 +28,9 @@ import com.fumbbl.ffb.report.ReportSkillRoll;
 import com.fumbbl.ffb.report.ReportPickupRoll;
 import com.fumbbl.ffb.report.mixed.ReportDodgeRoll;
 import com.fumbbl.ffb.util.ArrayTool;
-import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -88,40 +83,6 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	@Override
 	public int minimumRollJump(Player<?> pPlayer, Set<JumpModifier> pJumpModifiers) {
 		return minimumRoll(pPlayer.getAgilityWithModifiers(), pJumpModifiers);
-	}
-
-	@Override
-	public int minimumRollJumpPreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
-																		FieldCoordinate to) {
-		Player<?> player = actingPlayer.getPlayer();
-		Set<Skill> selectedSkills = new HashSet<>(new OptionalRollModifierService().availableSkills(game, player,
-			skills -> new JumpContext(game, player, from, to, skills), Skill::getJumpModifiers));
-		JumpContext context = new JumpContext(game, player, from, to, selectedSkills);
-		Set<JumpModifier> divingTackleModifiers = divingTackleModifiers(game, player, from, to);
-		// Leap depends on the sum of the other modifiers, so Diving Tackle has to be accumulated before they are found
-		divingTackleModifiers.forEach(modifier -> context.addModifierValue(modifier.getModifier()));
-		JumpModifierFactory modifierFactory = game.getFactory(Factory.JUMP_MODIFIER);
-		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
-		jumpModifiers.addAll(divingTackleModifiers);
-		return minimumRollJump(player, jumpModifiers);
-	}
-
-	/**
-	 * @return the modifiers an opponent could still add with Diving Tackle, empty when the jumping player is immune
-	 */
-	private Set<JumpModifier> divingTackleModifiers(Game game, Player<?> player, FieldCoordinate from,
-																									FieldCoordinate to) {
-		if (UtilCards.hasSkillToCancelProperty(player, NamedProperties.canAttemptToTackleJumpingPlayer)) {
-			return new HashSet<>();
-		}
-		Player<?>[] divingTacklers =
-			UtilPlayer.findEligibleDivingTacklers(game, from, to, NamedProperties.canAttemptToTackleJumpingPlayer);
-		if (!ArrayTool.isProvided(divingTacklers)) {
-			return new HashSet<>();
-		}
-		return divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> skill.hasSkillProperty(NamedProperties.canAttemptToTackleJumpingPlayer))
-			.findFirst().map(skill -> new HashSet<>(skill.getJumpModifiers())).orElseGet(HashSet::new);
 	}
 
 	@Override

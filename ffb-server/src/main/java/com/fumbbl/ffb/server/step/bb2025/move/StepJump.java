@@ -335,6 +335,7 @@ public class StepJump extends AbstractStepWithReRoll {
 
 		boolean doRoll = !modifierChoiceApplied && (usingDivingTackle == null || useIgnoreModifierSkill)
 			&& (reRolled || ((status == null || status == ActionStatus.WAITING_FOR_RE_ROLL) && !dtRerollAsked));
+		// the choice has been evaluated now, when it did not rescue the jump a following re-roll has to roll again
 		modifierChoiceApplied = false;
 		if (doRoll) {
 			roll = getGameState().getDiceRoller().rollSkill();
@@ -405,7 +406,7 @@ public class StepJump extends AbstractStepWithReRoll {
 						useIgnoreModifierSkill);
 
 				// the coach has to decide themselves when there are modifiers to pick from or when failing the jump
-				// would cost a team mate a rock to the head
+				// would skip the stalling roll for a team mate
 				if (automaticReRoll && options.isEmpty()
 					&& !stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, actingPlayer.getPlayer())) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
@@ -502,7 +503,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	/**
-	 * Free modifiers may only be declined when failing the jump would cost a team mate a rock to the head, otherwise
+	 * Free modifiers may only be declined when failing the jump would skip the stalling roll for a team mate, otherwise
 	 * declining them would never be a meaningful choice.
 	 */
 	private boolean freeModifiersOptional(Game game) {

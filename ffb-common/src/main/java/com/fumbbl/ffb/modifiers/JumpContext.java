@@ -14,11 +14,15 @@ public class JumpContext implements ModifierContext {
 	private final Player<?> player;
 	private final FieldCoordinate from, to;
 	private final Set<Skill> selectedSkills;
-	private final boolean freeModifiersOptional;
+	private final boolean freeModifiersOptional, modifiersDeclared;
 	private int accumulatedModifiers, modifierCount;
 
+	/**
+	 * Creates a context for a jump for which no optional modifier has been declared yet, e.g. when the roll of a move
+	 * square is previewed.
+	 */
 	public JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to) {
-		this(game, player, from, to, Collections.emptySet(), false);
+		this(game, player, from, to, Collections.emptySet(), false, false);
 	}
 
 	public JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to, Set<Skill> selectedSkills) {
@@ -32,17 +36,31 @@ public class JumpContext implements ModifierContext {
 	 */
 	public JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to, Set<Skill> selectedSkills,
 		boolean freeModifiersOptional) {
+		this(game, player, from, to, selectedSkills, freeModifiersOptional, true);
+	}
+
+	private JumpContext(Game game, Player<?> player, FieldCoordinate from, FieldCoordinate to, Set<Skill> selectedSkills,
+		boolean freeModifiersOptional, boolean modifiersDeclared) {
 		this.game = game;
 		this.player = player;
 		this.from = from;
 		this.to = to;
 		this.selectedSkills = selectedSkills == null ? Collections.emptySet() : new HashSet<>(selectedSkills);
 		this.freeModifiersOptional = freeModifiersOptional;
+		this.modifiersDeclared = modifiersDeclared;
 	}
 
 	@Override
 	public boolean isSkillSelected(Skill skill) {
 		return selectedSkills.contains(skill);
+	}
+
+	/**
+	 * @return whether the selected skills are the final choice of the coach, false while the optional modifiers are
+	 * still up for grabs
+	 */
+	public boolean areModifiersDeclared() {
+		return modifiersDeclared;
 	}
 
 	/**

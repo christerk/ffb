@@ -8,20 +8,19 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.property.CancelSkillProperty;
-import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpModifierCollection;
 import com.fumbbl.ffb.modifiers.ModifierType;
+import com.fumbbl.ffb.modifiers.OptionalRollModifierService;
 import com.fumbbl.ffb.modifiers.RollModifier;
+import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -31,7 +30,8 @@ import java.util.stream.Stream;
 /**
  * Jump modifiers of the BB2025 ruleset. The skills ignoring jump modifiers (e.g. Pogo) are free and unlimited, so
  * they are applied automatically unless the context declares them optional, which happens when the coach may want to
- * fail the jump on purpose.
+ * fail the jump on purpose. A context without declared modifiers, e.g. the move square preview, gets the roll the
+ * player would end up with after declaring everything that is available to them.
  */
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2025)
@@ -85,13 +85,19 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 
 	@Override
 	public Set<JumpModifier> findModifiers(JumpContext context) {
+		if (!context.areModifiersDeclared()) {
+			return findUndeclaredModifiers(context);
+		}
+
 		Set<JumpModifier> modifiers = new HashSet<>();
-		if (!appliesFreeSkillEffect(context, skillWithProperty(context, NamedProperties.ignoreTacklezonesWhenJumping))) {
+		if (!appliesFreeSkillEffect(context,
+			Optional.ofNullable(context.getPlayer().getSkillWithProperty(NamedProperties.ignoreTacklezonesWhenJumping)))) {
 			Optional<JumpModifier> tacklezoneModifier = getTacklezoneModifier(context);
 			tacklezoneModifier.ifPresent(modifiers::add);
 		}
 
-		if (!appliesFreeSkillEffect(context, skillCancellingProperty(context, NamedProperties.makesJumpingHarder))) {
+		if (!appliesFreeSkillEffect(context,
+			UtilCards.getSkillToCancelProperty(context.getPlayer(), NamedProperties.makesJumpingHarder))) {
 			prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
 				.ifPresent(modifiers::add);
 		}
@@ -111,24 +117,48 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 	}
 
 	/**
+	 * Nothing has been declared yet, so the modifiers are those of the roll the player would end up with: every
+	 * optional modifier they still have available is applied and an opponent who could declare Diving Tackle does so.
+	 */
+	private Set<JumpModifier> findUndeclaredModifiers(JumpContext context) {
+		Game game = context.getGame();
+		Player<?> player = context.getPlayer();
+		FieldCoordinate from = context.getFrom(), to = context.getTo();
+		Set<Skill> availableSkills = new HashSet<>(new OptionalRollModifierService().availableSkills(game, player,
+			skills -> new JumpContext(game, player, from, to, skills), Skill::getJumpModifiers));
+		JumpContext declaredContext = new JumpContext(game, player, from, to, availableSkills);
+		Set<JumpModifier> divingTackleModifiers = divingTackleModifiers(game, player, from, to);
+		// Leap depends on the sum of the other modifiers, so Diving Tackle has to be accumulated before they are found
+		divingTackleModifiers.forEach(modifier -> declaredContext.addModifierValue(modifier.getModifier()));
+		Set<JumpModifier> modifiers = findModifiers(declaredContext);
+		modifiers.addAll(divingTackleModifiers);
+		return modifiers;
+	}
+
+	/**
+	 * @return the modifiers an opponent could still add with Diving Tackle, empty when the jumping player is immune
+	 */
+	private Set<JumpModifier> divingTackleModifiers(Game game, Player<?> player, FieldCoordinate from,
+		FieldCoordinate to) {
+		if (UtilCards.hasSkillToCancelProperty(player, NamedProperties.canAttemptToTackleJumpingPlayer)) {
+			return new HashSet<>();
+		}
+		Player<?>[] divingTacklers =
+			UtilPlayer.findEligibleDivingTacklers(game, from, to, NamedProperties.canAttemptToTackleJumpingPlayer);
+		if (!ArrayTool.isProvided(divingTacklers)) {
+			return new HashSet<>();
+		}
+		return divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill.hasSkillProperty(NamedProperties.canAttemptToTackleJumpingPlayer))
+			.findFirst().map(skill -> new HashSet<>(skill.getJumpModifiers())).orElseGet(HashSet::new);
+	}
+
+	/**
 	 * @return whether the effect of a free skill applies, which requires the skill to be selected when the context
 	 * declares the free modifiers optional
 	 */
 	private boolean appliesFreeSkillEffect(JumpContext context, Optional<Skill> skill) {
 		return skill.isPresent() && (!context.areFreeModifiersOptional() || context.isSkillSelected(skill.get()));
-	}
-
-	private Optional<Skill> skillWithProperty(JumpContext context, ISkillProperty property) {
-		return Arrays.stream(UtilCards.findAllSkills(context.getPlayer()))
-			.filter(skill -> skill.hasSkillProperty(property))
-			.findFirst();
-	}
-
-	private Optional<Skill> skillCancellingProperty(JumpContext context, ISkillProperty property) {
-		return Arrays.stream(UtilCards.findAllSkills(context.getPlayer()))
-			.filter(skill -> skill.getSkillProperties().stream().anyMatch(skillProperty ->
-				skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property)))
-			.findFirst();
 	}
 
 	private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {

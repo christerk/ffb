@@ -4,7 +4,6 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
-import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.mechanics.Wording;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
@@ -14,7 +13,6 @@ import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
-import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.PickupModifier;
@@ -92,15 +90,6 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 			modifierTotal += jumpModifier.getModifier();
 		}
 		return Math.max(2, getAgilityRollBase(pPlayer.getAgilityWithModifiers()) + modifierTotal);
-	}
-
-	@Override
-	public int minimumRollJumpPreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
-																		FieldCoordinate to) {
-		JumpModifierFactory modifierFactory = game.getFactory(Factory.JUMP_MODIFIER);
-		Set<JumpModifier> jumpModifiers =
-			modifierFactory.findModifiers(new JumpContext(game, actingPlayer.getPlayer(), from, to));
-		return minimumRollJump(actingPlayer.getPlayer(), jumpModifiers);
 	}
 
 	@Override

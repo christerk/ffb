@@ -185,6 +185,7 @@ public class JumpModifierChoiceTest {
 		jump(state, 3);
 
 		Skill veryLongLegs = game.getRules().getSkillFactory().forName("Very Long Legs");
+		TestRolls.on(state).armor(1, 1);
 		StepEngine.respond(state, new ClientCommandUseSkill(veryLongLegs, false, "runner", null, false));
 
 		// the jumper drops in the square they jumped to, which ends the turn
