@@ -66,6 +66,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Step in move sequence to handle jumps.
@@ -372,7 +373,8 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (successful) {
 			if (usingDivingTackle == null) {
 				status = checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to,
-					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic);
+					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic,
+					ignoreModifiersAfterRollSkill);
 			} else {
 				status = ActionStatus.SUCCESS;
 			}
@@ -521,7 +523,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory,
-		AgilityMechanic mechanic) {
+		AgilityMechanic mechanic, Skill ignoreModifiersAfterRollSkill) {
 		boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(),
 			NamedProperties.canAttemptToTackleJumpingPlayer));
 
@@ -532,56 +534,77 @@ public class StepJump extends AbstractStepWithReRoll {
 		Player<?>[] divingTacklers = UtilPlayer.findEligibleDivingTacklers(game, context.getFrom(),
 			context.getTo(), NamedProperties.canAttemptToTackleJumpingPlayer);
 
-		if (ArrayTool.isProvided(divingTacklers)) {
-			Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
-				.filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer)).findFirst();
-			if (skill.isPresent()) {
-				skill.get().getJumpModifiers().forEach(modifier -> context.addModifierValue(modifier.getModifier()));
-				Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
-				jumpModifiers.addAll(skill.get().getJumpModifiers());
-				int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
+		if (!ArrayTool.isProvided(divingTacklers)) {
+			return ActionStatus.SUCCESS;
+		}
 
-				if (DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll)) {
-					getResult().addReport(new ReportSkillUse(null, skill.get(), false, SkillUse.WOULD_NOT_HELP));
-					return ActionStatus.SUCCESS;
-				}
+		Optional<Skill> skill = divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
+			.filter(s -> s.getSkillProperties().contains(NamedProperties.canAttemptToTackleJumpingPlayer)).findFirst();
+		if (!skill.isPresent()) {
+			return ActionStatus.SUCCESS;
+		}
 
-				// all modifiers of the jumping player have to be declared before Diving Tackle is decided, so the
-				// coach gets the same options as on a real failure
-				if (!dtRerollAsked) {
-					ActingPlayer actingPlayer = game.getActingPlayer();
-					Set<JumpModifier> divingTackleModifiers = new HashSet<>(skill.get().getJumpModifiers());
-					if (askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
-						return ActionStatus.WAITING_FOR_SKILL_USE;
-					}
-					// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to
-					// rescue it and Diving Tackle is simply applied
-					if (declinedFreeSkills.isEmpty()) {
-						List<ModifierChoiceOption> options =
-							findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
-						List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
-							: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
-						boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
-						if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
-							reRollPossible, null, Collections.emptySet(),
-							Collections.singletonList("Diving Tackle can make this jump fail."))) {
-							dtRerollAsked = true;
-							modifierChoiceOffered = !options.isEmpty();
-							return ActionStatus.WAITING_FOR_RE_ROLL;
-						}
-					}
-				}
+		skill.get().getJumpModifiers().forEach(modifier -> context.addModifierValue(modifier.getModifier()));
+		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
+		jumpModifiers.addAll(skill.get().getJumpModifiers());
+		int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
+		boolean tripsJumper = !DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 
-				String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
-				UtilServerDialog.showDialog(getGameState(),
-					new DialogPlayerChoiceParameter(teamId, PlayerChoiceMode.DIVING_TACKLE, divingTacklers, null, 1), true);
-
+		// all modifiers of the jumping player have to be declared before Diving Tackle is decided, so the
+		// coach gets the same options as on a real failure
+		if (tripsJumper && !dtRerollAsked && !modifierChoiceOffered) {
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			Set<JumpModifier> divingTackleModifiers = new HashSet<>(skill.get().getJumpModifiers());
+			if (ignoreModifiersAfterRollSkill == null
+				&& askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
 				return ActionStatus.WAITING_FOR_SKILL_USE;
+			}
+			// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to
+			// rescue it and Diving Tackle is simply applied
+			if (declinedFreeSkills.isEmpty()) {
+				// the dialog offering the modifiers cannot show the skill ignoring the modifiers after the roll,
+				// so that skill keeps its own dialog
+				List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null
+					? findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers)
+					: Collections.emptyList();
+				List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
+					: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
+				boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
+				List<String> messages = Collections.singletonList(options.isEmpty()
+					? "Diving Tackle can make this jump fail. Reroll the jump now?"
+					: "Diving Tackle can make this jump fail.");
+				if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
+					reRollPossible, ignoreModifiersAfterRollSkill, Collections.emptySet(), messages)) {
+					dtRerollAsked = true;
+					modifierChoiceOffered = true;
+					return ActionStatus.WAITING_FOR_RE_ROLL;
+				}
+				if (ignoreModifiersAfterRollSkill != null && useIgnoreModifierAfterRollSkill == null) {
+					dtRerollAsked = true;
+					UtilServerDialog.showDialog(getGameState(),
+						new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, 0), false);
+					return ActionStatus.WAITING_FOR_SKILL_USE;
+				}
 			}
 		}
 
+		// the opposing coach decides even when the jump cannot be stopped any more, the dialog explains why
+		String teamId = game.isHomePlaying() ? game.getTeamAway().getId() : game.getTeamHome().getId();
+		UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(teamId,
+			PlayerChoiceMode.DIVING_TACKLE, divingTacklers, new String[]{divingTackleDescription(tripsJumper)}, 1), true);
 
-		return ActionStatus.SUCCESS;
+		return ActionStatus.WAITING_FOR_SKILL_USE;
+	}
+
+	private String divingTackleDescription(boolean tripsJumper) {
+		if (tripsJumper) {
+			return "This will trip the jumper.";
+		}
+		if (selectedModifierSkills.isEmpty()) {
+			return "This will NOT trip the jumper, the jump will still succeed.";
+		}
+		return "This will NOT trip the jumper, but will force the use of "
+			+ selectedModifierSkills.stream().map(Skill::getName).collect(Collectors.joining(" + ")) + ".";
 	}
 
 	// JSON serialization

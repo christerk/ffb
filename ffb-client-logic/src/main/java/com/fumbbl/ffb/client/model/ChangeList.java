@@ -38,6 +38,7 @@ public class ChangeList {
 			.addBehaviorChange("A dodge re-roll from a skill is no longer used automatically when failing the dodge would get a rock thrown at a team mate that could still score")
 			.addBehaviorChange("Optional modifiers are now offered when a jump fails, Bounding Leap is no longer used automatically when a modifier could rescue the jump")
 			.addBehaviorChange("Leap, Very Long Legs and Pogo can now be declined on a jump when failing it would skip the stalling roll for a team mate that could still score")
+			.addBugfix("Diving Tackle: The prompt on a jump is now always shown and describes the actual effect of the declaration")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
       .addFeature("Consummate Professional")

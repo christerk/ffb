@@ -2,10 +2,12 @@ package com.fumbbl.ffb.test.skill.move;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
@@ -20,6 +22,7 @@ import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +80,26 @@ public class JumpModifierChoiceTest {
 				.player("carrier", p -> p.at(24, 3).stats(6, 3, 3, 5, 8)))
 			.withTeam(false, t -> t
 				.player("marker", p -> p.at(13, 7).stats(6, 3, 3, 5, 8)))
+			.build();
+	}
+
+	private GameState buildStateWithDivingTackler(String... jumperSkills) {
+		return new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withTeam(true, t -> t
+				.player("runner", p -> {
+					p.at(FROM.getX(), FROM.getY()).stats(6, 3, 3, 5, 8);
+					p.skill("Leap");
+					for (String skill : jumperSkills) {
+						p.skill(skill);
+					}
+				}))
+			.withTeam(false, t -> t
+				.player("marker", p -> {
+					p.at(13, 7).stats(6, 3, 3, 5, 8);
+					p.skill("Diving Tackle");
+				}))
 			.build();
 	}
 
@@ -223,5 +246,92 @@ public class JumpModifierChoiceTest {
 		assertNull(game.getDialogParameter());
 		assertEquals(PlayerState.PRONE,
 			game.getFieldModel().getPlayerState(game.getPlayerById("runner")).getBase());
+	}
+
+	@Test
+	public void divingTackleIsOfferedEvenWhenTheJumpWouldStillSucceed() {
+		GameState state = buildStateWithDivingTackler();
+		Game game = state.getGame();
+
+		// a 6 passes the jump even with the diving tackle modifier
+		jump(state, 6);
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(PlayerChoiceMode.DIVING_TACKLE, parameter.getPlayerChoiceMode());
+		assertEquals(Collections.singletonList("marker"), Arrays.asList(parameter.getPlayerIds()));
+		assertEquals(Collections.singletonList("This will NOT trip the jumper, the jump will still succeed."),
+			Arrays.asList(parameter.getDescriptions()));
+	}
+
+	@Test
+	public void decliningTheOfferedDivingTackleLeavesTheJumpSuccessful() {
+		GameState state = buildStateWithDivingTackler();
+		Game game = state.getGame();
+
+		jump(state, 6);
+		StepEngine.respond(state, Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE));
+
+		assertNull(game.getDialogParameter());
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+	}
+
+	@Test
+	public void usingTheOfferedDivingTackleStillLeavesTheJumpSuccessful() {
+		GameState state = buildStateWithDivingTackler();
+		Game game = state.getGame();
+
+		jump(state, 6);
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("marker")).getBase());
+	}
+
+	@Test
+	public void divingTackleIsOfferedWithoutRescueWhenItTripsTheJumper() {
+		GameState state = buildStateWithDivingTackler();
+		Game game = state.getGame();
+
+		// a 4 passes the plain jump, diving tackle pushes the needed roll to 5+
+		jump(state, 4);
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("This will trip the jumper."),
+			Arrays.asList(parameter.getDescriptions()));
+	}
+
+	@Test
+	public void divingTackleOffersTheModifierOptionsBeforeTheOpposingCoachDecides() {
+		GameState state = buildStateWithDivingTackler("Consummate Professional");
+		Game game = state.getGame();
+
+		// a 4 passes the plain jump, diving tackle pushes the needed roll to 5+
+		jump(state, 4);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Consummate Professional"), labels(parameter));
+	}
+
+	@Test
+	public void divingTackleDialogNamesTheModifiersItWouldForce() {
+		GameState state = buildStateWithDivingTackler("Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 4);
+
+		Skill consummateProfessional = game.getRules().getSkillFactory().forName("Consummate Professional");
+		StepEngine.respond(state,
+			Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, consummateProfessional));
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList(
+				"This will NOT trip the jumper, but will force the use of Consummate Professional."),
+			Arrays.asList(parameter.getDescriptions()));
 	}
 }
