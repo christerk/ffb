@@ -154,15 +154,15 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 				ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 				Skill commandSkill = commandUseSkill.getSkill();
-				// a client may send a skill this step never offered, e.g. the one ignoring the modifiers which has
-				// to be declared before the dice are rolled, such a command is ignored
+				// only the two skills the step actually asks about are accepted, every other skill command is
+				// ignored, which covers the skill ignoring the modifiers as that one is declared before the jump
 				if (commandSkill != null) {
 					if (commandSkill.equals(pendingFreeSkill)) {
 						commitFreeModifierSkill(commandUseSkill.isSkillUsed());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					} else if (commandSkill.equals(UtilCards.getUnusedSkillWithProperty(
-						getGameState().getGame().getActingPlayer(),
-						NamedProperties.canChooseToIgnoreJumpModifierAfterRoll))) {
+					} else if (useIgnoreModifierAfterRollSkill == null && commandSkill.equals(
+						UtilCards.getUnusedSkillWithProperty(getGameState().getGame().getActingPlayer(),
+							NamedProperties.canChooseToIgnoreJumpModifierAfterRoll))) {
 						useIgnoreModifierAfterRollSkill = commandUseSkill.isSkillUsed();
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -478,8 +478,8 @@ public class StepJump extends AbstractStepWithReRoll {
 
 	/**
 	 * The skill ignoring the jump modifiers grants its re-roll as part of the declaration made before the dice are
-	 * rolled, so it must never show up as a re-roll in a dialog that follows a roll. A client sending it anyway is
-	 * ignored by {@link #handleCommand}.
+	 * rolled, so it must never show up as a re-roll in a dialog that follows a roll. A client sending it anyway
+	 * matches none of the skills {@link #handleCommand} accepts and is therefore ignored.
 	 */
 	private Set<Skill> reRollSkillsToIgnore() {
 		Set<Skill> ignoreSkills = new HashSet<>();
