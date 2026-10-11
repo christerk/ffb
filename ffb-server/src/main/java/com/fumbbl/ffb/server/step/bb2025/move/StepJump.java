@@ -92,7 +92,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	private Boolean usingDivingTackle;
 	private boolean alreadyReported;
 	private ActionStatus status;
-	private Boolean useIgnoreModifierAfterRollSkill;
+	private boolean useIgnoreModifierAfterRollSkill;
 	private boolean useIgnoreModifierSkill;
 	private boolean dtRerollAsked;
 	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
@@ -154,18 +154,11 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
 				ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 				Skill commandSkill = commandUseSkill.getSkill();
-				// only the two skills the step actually asks about are accepted, every other skill command is
-				// ignored, which covers the skill ignoring the modifiers as that one is declared before the jump
-				if (commandSkill != null) {
-					if (commandSkill.equals(pendingFreeSkill)) {
-						commitFreeModifierSkill(commandUseSkill.isSkillUsed());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					} else if (useIgnoreModifierAfterRollSkill == null && commandSkill.equals(
-						UtilCards.getUnusedSkillWithProperty(getGameState().getGame().getActingPlayer(),
-							NamedProperties.canChooseToIgnoreJumpModifierAfterRoll))) {
-						useIgnoreModifierAfterRollSkill = commandUseSkill.isSkillUsed();
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					}
+				// the free modifier skill is the only one the step asks about with a skill use dialog, every other
+				// skill command is ignored
+				if (commandSkill != null && commandSkill.equals(pendingFreeSkill)) {
+					commitFreeModifierSkill(commandUseSkill.isSkillUsed());
+					commandStatus = StepCommandStatus.EXECUTE_STEP;
 				}
 			}
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE
@@ -183,6 +176,9 @@ public class StepJump extends AbstractStepWithReRoll {
 	 * Applies the optional modifiers the coach picked instead of a re-roll. They are marked used right away, as all
 	 * modifiers of the jumping player have to be declared before Diving Tackle is decided. Skills the jumping player
 	 * cannot use are ignored, the command is only accepted when at least one of them is usable.
+	 * <p>
+	 * The skill ignoring every modifier after the roll is offered as an option of its own, it is not a modifier, so it
+	 * is only remembered here and spent by {@link #leap()} together with its report.
 	 *
 	 * @return whether the choice was accepted
 	 */
@@ -193,17 +189,28 @@ public class StepJump extends AbstractStepWithReRoll {
 			|| command.getSkills().isEmpty()) {
 			return false;
 		}
+		Skill modifierIgnoringSkill =
+			UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
 		boolean accepted = false;
 		for (Skill skill : command.getSkills()) {
 			if (skill == null || actingPlayer.isSkillUsed(skill)
 				|| !actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().contains(skill)) {
 				continue;
 			}
-			accepted = true;
-			if (selectedModifierSkills.add(skill)) {
-				actingPlayer.markSkillUsed(skill);
-				getResult()
-					.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+			if (skill.equals(modifierIgnoringSkill)) {
+				// without the modifiers the roll still has to succeed, otherwise the skill would be wasted
+				if (!succeedsWithoutModifiers(game)) {
+					continue;
+				}
+				accepted = true;
+				useIgnoreModifierAfterRollSkill = true;
+			} else {
+				accepted = true;
+				if (selectedModifierSkills.add(skill)) {
+					actingPlayer.markSkillUsed(skill);
+					getResult()
+						.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+				}
 			}
 		}
 		if (!accepted) {
@@ -212,6 +219,15 @@ public class StepJump extends AbstractStepWithReRoll {
 		modifierChoiceApplied = true;
 		modifierChoiceOffered = true;
 		return true;
+	}
+
+	/**
+	 * @return whether the current roll passes the jump when every modifier is ignored
+	 */
+	private boolean succeedsWithoutModifiers(Game game) {
+		AgilityMechanic mechanic = game.getMechanic(Mechanic.Type.AGILITY);
+		return DiceInterpreter.getInstance().isSkillRollSuccessful(roll,
+			mechanic.minimumRollJump(game.getActingPlayer().getPlayer(), Collections.emptySet()));
 	}
 
 	/**
@@ -253,13 +269,11 @@ public class StepJump extends AbstractStepWithReRoll {
 		boolean doLeap = (actingPlayer.isJumping() && mechanic.canStillJump(game, actingPlayer));
 		if (doLeap) {
 			if (ReRolledActions.JUMP == getReRolledAction()
-				&& !Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)
+				&& !useIgnoreModifierAfterRollSkill
 				&& usingDivingTackle == null && !modifierChoiceApplied) {
 				if (!dtRerollAsked && (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
-					if (!Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill)) {
-						handleFailure(game);
-						doLeap = false;
-					}
+					handleFailure(game);
+					doLeap = false;
 				}
 			}
 			if (status == null) {
@@ -366,24 +380,28 @@ public class StepJump extends AbstractStepWithReRoll {
 
 		DiceInterpreter diceInterpreter = DiceInterpreter.getInstance();
 
-		boolean successfulWithoutModifiers = diceInterpreter.isSkillRollSuccessful(roll,
-			mechanic.minimumRollJump(actingPlayer.getPlayer(), Collections.emptySet()));
-		Skill ignoreModifiersAfterRollSkill = null;
-		if (successfulWithoutModifiers) {
-			ignoreModifiersAfterRollSkill =
+		if (useIgnoreModifierAfterRollSkill) {
+			Skill ignoreModifiersAfterRollSkill =
 				UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
-		}
-
-		if (Boolean.TRUE.equals(useIgnoreModifierAfterRollSkill) && ignoreModifiersAfterRollSkill != null) {
-			actingPlayer.markSkillUsed(ignoreModifiersAfterRollSkill);
-			getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, true,
-				SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
-			status = ActionStatus.SUCCESS;
+			// the skill is spent by the first pass through here, afterwards only the flag is left to go on
+			if (ignoreModifiersAfterRollSkill != null) {
+				actingPlayer.markSkillUsed(ignoreModifiersAfterRollSkill);
+				getResult().addReport(new ReportSkillUse(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, true,
+					SkillUse.PASS_JUMP_WITHOUT_MODIFIERS));
+			}
+			// the opposing coach still decides about Diving Tackle, even though it cannot stop this jump any more
+			if (usingDivingTackle == null) {
+				status = checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to,
+					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic);
+			} else {
+				status = ActionStatus.SUCCESS;
+			}
 			return status;
 		}
 
-		boolean successful =
-			useIgnoreModifierSkill ? successfulWithoutModifiers : diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
+		boolean successful = useIgnoreModifierSkill
+			? succeedsWithoutModifiers(game)
+			: diceInterpreter.isSkillRollSuccessful(roll, minimumRoll);
 
 		if (doRoll) {
 			getResult().addReport(new ReportJumpRoll(actingPlayer.getPlayerId(), successful, roll, minimumRoll, reRolled,
@@ -393,8 +411,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (successful) {
 			if (usingDivingTackle == null) {
 				status = checkDivingTackle(game, new JumpContext(game, actingPlayer.getPlayer(), moveStart, to,
-					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic,
-					ignoreModifiersAfterRollSkill);
+					selectedModifierSkills, freeModifiersOptional(game)), modifierFactory, mechanic);
 			} else {
 				status = ActionStatus.SUCCESS;
 			}
@@ -406,17 +423,15 @@ public class StepJump extends AbstractStepWithReRoll {
 			// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to rescue it
 			boolean rescueDeclined = !declinedFreeSkills.isEmpty();
 
-			// the dialog offering the modifiers cannot show the skill ignoring the modifiers after the roll,
-			// so that skill keeps its own dialog
-			List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null && !rescueDeclined
-				? findOptions(game, actingPlayer, to, divingTackleModifiers)
-				: Collections.emptyList();
+			// the skill ignoring the modifiers after the roll is one of the options, so it needs no dialog of its own
+			List<ModifierChoiceOption> options = rescueDeclined
+				? Collections.emptyList()
+				: findOptions(game, actingPlayer, to, divingTackleModifiers);
 			List<ModifierChoiceOption> combinations =
 				options.isEmpty() ? Collections.emptyList() : findCombinations(game, actingPlayer, to,
 					divingTackleModifiers);
 
-			if (ignoreModifiersAfterRollSkill == null
-				&& askForFreeModifierSkill(game, actingPlayer, to, divingTackleModifiers)) {
+			if (askForFreeModifierSkill(game, actingPlayer, to, divingTackleModifiers)) {
 				status = ActionStatus.WAITING_FOR_SKILL_USE;
 			} else if (rescueDeclined) {
 				// the free modifier was declined on purpose, neither modifiers nor re-rolls are offered any more
@@ -439,17 +454,12 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (automaticReRoll && !coachDecides) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 					status = leap();
-				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreModifiersAfterRollSkill,
-					ignoreSkills)) {
+				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreSkills)) {
 					modifierChoiceOffered = !options.isEmpty();
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
-			} else if (useIgnoreModifierAfterRollSkill == null && ignoreModifiersAfterRollSkill != null) {
-				UtilServerDialog.showDialog(getGameState(),
-					new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, 0), false);
-				return ActionStatus.WAITING_FOR_SKILL_USE;
 			} else if (!options.isEmpty()
-				&& askForRescue(minimumRoll, options, combinations, false, null, ignoreSkills)) {
+				&& askForRescue(minimumRoll, options, combinations, false, ignoreSkills)) {
 				// the re-roll is gone, but optional modifiers can still save the jump
 				modifierChoiceOffered = true;
 				status = ActionStatus.WAITING_FOR_RE_ROLL;
@@ -497,18 +507,17 @@ public class StepJump extends AbstractStepWithReRoll {
 	 * @return whether the dialog was shown
 	 */
 	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
-		List<ModifierChoiceOption> combinations, boolean reRollPossible, Skill modifyingSkill, Set<Skill> ignoreSkills) {
-		return askForRescue(minimumRoll, options, combinations, reRollPossible, modifyingSkill, ignoreSkills, null);
+		List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills) {
+		return askForRescue(minimumRoll, options, combinations, reRollPossible, ignoreSkills, null);
 	}
 
 	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
-		List<ModifierChoiceOption> combinations, boolean reRollPossible, Skill modifyingSkill, Set<Skill> ignoreSkills,
+		List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills,
 		List<String> messages) {
 		GameState gameState = getGameState();
 		ReRollRequest.Builder builder =
 			ReRollRequest.forActingPlayer(gameState, gameState.getGame().getActingPlayer(), ReRolledActions.JUMP,
 					minimumRoll)
-				.modifyingSkill(modifyingSkill)
 				.ignoreSkills(ignoreSkills)
 				.messages(messages);
 		if (!options.isEmpty() || !reRollPossible) {
@@ -558,7 +567,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory,
-		AgilityMechanic mechanic, Skill ignoreModifiersAfterRollSkill) {
+		AgilityMechanic mechanic) {
 		boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(),
 			NamedProperties.canAttemptToTackleJumpingPlayer));
 
@@ -583,27 +592,24 @@ public class StepJump extends AbstractStepWithReRoll {
 		Set<JumpModifier> jumpModifiers = modifierFactory.findModifiers(context);
 		jumpModifiers.addAll(skill.get().getJumpModifiers());
 		int minimumRoll = mechanic.minimumRollJump(context.getPlayer(), jumpModifiers);
-		// the skill ignoring the modifiers also ignores the one of Diving Tackle, so the jump cannot be stopped
-		boolean tripsJumper =
-			!useIgnoreModifierSkill && !DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
+		// a skill ignoring the modifiers also ignores the one of Diving Tackle, so the jump cannot be stopped
+		boolean tripsJumper = !useIgnoreModifierSkill && !useIgnoreModifierAfterRollSkill
+			&& !DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
 
 		// all modifiers of the jumping player have to be declared before Diving Tackle is decided, so the
 		// coach gets the same options as on a real failure
 		if (tripsJumper && !dtRerollAsked && !modifierChoiceOffered) {
 			ActingPlayer actingPlayer = game.getActingPlayer();
 			Set<JumpModifier> divingTackleModifiers = new HashSet<>(skill.get().getJumpModifiers());
-			if (ignoreModifiersAfterRollSkill == null
-				&& askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
+			if (askForFreeModifierSkill(game, actingPlayer, context.getTo(), divingTackleModifiers)) {
 				return ActionStatus.WAITING_FOR_SKILL_USE;
 			}
 			// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to
 			// rescue it and Diving Tackle is simply applied
 			if (declinedFreeSkills.isEmpty()) {
-				// the dialog offering the modifiers cannot show the skill ignoring the modifiers after the roll,
-				// so that skill keeps its own dialog
-				List<ModifierChoiceOption> options = ignoreModifiersAfterRollSkill == null
-					? findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers)
-					: Collections.emptyList();
+				// the skill ignoring the modifiers after the roll is one of the options, so it needs no dialog of its own
+				List<ModifierChoiceOption> options =
+					findOptions(game, actingPlayer, context.getTo(), divingTackleModifiers);
 				List<ModifierChoiceOption> combinations = options.isEmpty() ? Collections.emptyList()
 					: findCombinations(game, actingPlayer, context.getTo(), divingTackleModifiers);
 				boolean reRollPossible = getReRolledAction() != ReRolledActions.JUMP;
@@ -612,16 +618,10 @@ public class StepJump extends AbstractStepWithReRoll {
 					: "Diving Tackle can make this jump fail.");
 				Set<Skill> ignoreSkills = reRollSkillsToIgnore();
 				if ((!options.isEmpty() || reRollPossible) && askForRescue(minimumRoll, options, combinations,
-					reRollPossible, ignoreModifiersAfterRollSkill, ignoreSkills, messages)) {
+					reRollPossible, ignoreSkills, messages)) {
 					dtRerollAsked = true;
 					modifierChoiceOffered = true;
 					return ActionStatus.WAITING_FOR_RE_ROLL;
-				}
-				if (ignoreModifiersAfterRollSkill != null && useIgnoreModifierAfterRollSkill == null) {
-					dtRerollAsked = true;
-					UtilServerDialog.showDialog(getGameState(),
-						new DialogSkillUseParameter(actingPlayer.getPlayerId(), ignoreModifiersAfterRollSkill, 0), false);
-					return ActionStatus.WAITING_FOR_SKILL_USE;
 				}
 			}
 		}
@@ -683,7 +683,8 @@ public class StepJump extends AbstractStepWithReRoll {
 		roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
 		usingDivingTackle = IServerJsonOption.USING_DIVING_TACKLE.getFrom(source, jsonObject);
 		alreadyReported = IServerJsonOption.ALREADY_REPORTED.getFrom(source, jsonObject);
-		useIgnoreModifierAfterRollSkill = IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject);
+		useIgnoreModifierAfterRollSkill =
+			toPrimitive(IServerJsonOption.USING_MODIFIER_IGNORING_SKILL.getFrom(source, jsonObject));
 		useIgnoreModifierSkill =
 			toPrimitive(IServerJsonOption.USING_MODIFIER_IGNORING_SKILL_BEFORE_ROLL.getFrom(source, jsonObject));
 		String statusString = IServerJsonOption.STATUS.getFrom(source, jsonObject);

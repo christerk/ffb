@@ -17,6 +17,7 @@ import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +72,8 @@ public class JumpModifierSelectionService {
 	}
 
 	/**
-	 * @return whether taking every modifier that is still available turns the given roll into a success
+	 * @return whether taking every modifier that is still available turns the given roll into a success. The skill
+	 * ignoring all modifiers is left out, it rescues the jump on its own and does not make a free modifier worthwhile.
 	 */
 	private boolean canSucceed(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
 		Set<Skill> selectedSkills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional, int roll) {
@@ -80,13 +82,21 @@ public class JumpModifierSelectionService {
 		}
 		Set<Skill> allSkills = new LinkedHashSet<>(selectedSkills);
 		allSkills.addAll(availableSkills(game, actingPlayer, from, to, selectedSkills, extraModifiers,
-			freeModifiersOptional, skill -> true));
+			freeModifiersOptional, skill -> !isModifierIgnoringSkill(skill)));
 		return DiceInterpreter.getInstance().isSkillRollSuccessful(roll,
 			minimumRoll(game, actingPlayer, from, to, allSkills, extraModifiers, freeModifiersOptional));
 	}
 
 	private boolean isFreeSkill(Skill skill) {
 		return skill.getSkillUsageType() == SkillUsageType.REGULAR;
+	}
+
+	/**
+	 * @return whether the skill lets the player ignore every jump modifier once the die is known, e.g. Swift As The
+	 * Breeze
+	 */
+	private boolean isModifierIgnoringSkill(Skill skill) {
+		return skill.hasSkillProperty(NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
 	}
 
 	/**
@@ -116,21 +126,26 @@ public class JumpModifierSelectionService {
 	}
 
 	/**
-	 * @return whether the skill may be selected at all, i.e. it either registers an optional jump modifier or it is a
-	 * skill ignoring the jump modifiers that the coach is allowed to decline
+	 * @return whether the skill may be selected at all, i.e. it either registers an optional jump modifier, it ignores
+	 * every jump modifier once the die is known or it is a skill ignoring the jump modifiers that the coach is allowed
+	 * to decline
 	 */
 	private boolean isCandidate(Skill skill, boolean freeModifiersOptional) {
-		if (skill.getJumpModifiers().stream().anyMatch(JumpModifier::isOptional)) {
+		if (skill.getJumpModifiers().stream().anyMatch(JumpModifier::isOptional) || isModifierIgnoringSkill(skill)) {
 			return true;
 		}
 		return freeModifiersOptional && skill.hasSkillProperty(NamedProperties.ignoreTacklezonesWhenJumping);
 	}
 
 	/**
-	 * @return the roll the player needs for the jump with the given skills selected
+	 * @return the roll the player needs for the jump with the given skills selected. A skill ignoring every modifier
+	 * after the roll reduces this to the unmodified roll, the other selected skills no longer matter then.
 	 */
 	public int minimumRoll(Game game, ActingPlayer actingPlayer, FieldCoordinate from, FieldCoordinate to,
 		Set<Skill> skills, Set<JumpModifier> extraModifiers, boolean freeModifiersOptional) {
+		if (skills.stream().anyMatch(this::isModifierIgnoringSkill)) {
+			return mechanic(game).minimumRollJump(actingPlayer.getPlayer(), new HashSet<>());
+		}
 		JumpModifierFactory factory = game.getFactory(Factory.JUMP_MODIFIER);
 		JumpContext context =
 			new JumpContext(game, actingPlayer.getPlayer(), from, to, skills, freeModifiersOptional);

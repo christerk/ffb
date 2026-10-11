@@ -18,6 +18,7 @@ import com.fumbbl.ffb.skill.bb2025.Leap;
 import com.fumbbl.ffb.skill.bb2025.Pogo;
 import com.fumbbl.ffb.skill.bb2025.VeryLongLegs;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
+import com.fumbbl.ffb.skill.mixed.special.SwiftAsTheBreeze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -53,6 +54,7 @@ class JumpModifierSelectionServiceTest {
 	private VeryLongLegs veryLongLegs;
 	private Leap leap;
 	private Pogo pogo;
+	private SwiftAsTheBreeze swiftAsTheBreeze;
 
 	@BeforeEach
 	void setUp() {
@@ -64,6 +66,8 @@ class JumpModifierSelectionServiceTest {
 		leap.postConstruct();
 		pogo = new Pogo();
 		pogo.postConstruct();
+		swiftAsTheBreeze = new SwiftAsTheBreeze();
+		swiftAsTheBreeze.postConstruct();
 
 		player = mock(Player.class);
 		when(player.getSkillsIncludingTemporaryOnes()).thenReturn(skills);
@@ -209,6 +213,30 @@ class JumpModifierSelectionServiceTest {
 		skills.addAll(Arrays.asList(leap, consummateProfessional));
 		// leap and consummate professional together still need a 4+
 		assertTrue(findFreeSkills(true, 3).isEmpty());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersAfterTheRollRescuesTheUnmodifiedRoll() {
+		skills.add(swiftAsTheBreeze);
+		// agility 4+, two tacklezones => 6+ needed, the skill drops the roll back to the unmodified 4+
+		List<ModifierChoiceOption> options = findOptions(5);
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(options));
+		assertEquals(4, options.get(0).getMinimumRoll());
+		assertEquals(-2, options.get(0).getTotalModifier());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersAfterTheRollIsNotOfferedWhenEvenTheUnmodifiedRollFails() {
+		skills.add(swiftAsTheBreeze);
+		assertTrue(findOptions(3).isEmpty());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersAfterTheRollDoesNotMakeAFreeModifierWorthwhile() {
+		skills.addAll(Arrays.asList(leap, swiftAsTheBreeze));
+		// leap alone only brings the needed roll down to 5+, so the free skill is pointless on a 4
+		assertTrue(findFreeSkills(true, 4).isEmpty());
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(findOptions(4, true)));
 	}
 
 	@Test

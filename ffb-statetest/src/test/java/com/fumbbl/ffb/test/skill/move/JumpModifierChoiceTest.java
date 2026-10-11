@@ -351,6 +351,101 @@ public class JumpModifierChoiceTest {
 	}
 
 	@Test
+	public void theSkillIgnoringTheModifiersAfterTheRollIsOfferedAsAModifierOption() {
+		GameState state = buildState("Swift As The Breeze", "Consummate Professional");
+		Game game = state.getGame();
+
+		// without the tacklezone a 3 is enough, so the skill ignoring the modifiers can rescue the jump
+		jump(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Arrays.asList("Consummate Professional", "Swift As The Breeze"), labels(parameter));
+	}
+
+	@Test
+	public void choosingTheSkillIgnoringTheModifiersAfterTheRollRescuesTheJump() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill swiftAsTheBreeze = game.getRules().getSkillFactory().forName("Swift As The Breeze");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, swiftAsTheBreeze));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertTrue(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze));
+	}
+
+	@Test
+	public void theSkillIgnoringTheModifiersAfterTheRollIsNotAcceptedAsASkillUseCommand() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill swiftAsTheBreeze = game.getRules().getSkillFactory().forName("Swift As The Breeze");
+		StepEngine.respond(state,
+			new ClientCommandUseSkill(swiftAsTheBreeze, true, "runner", ReRolledActions.JUMP, false));
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		assertFalse(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze));
+	}
+
+	@Test
+	public void theSkillIgnoringTheModifiersAfterTheRollIsNotAcceptedWhenItCannotRescueTheJump() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		// a 2 fails even without the tacklezone, so the skill must not be spent on it
+		jump(state, 2);
+
+		assertEquals(DialogId.RE_ROLL_PROPERTIES, game.getDialogParameter().getId());
+		Skill swiftAsTheBreeze = game.getRules().getSkillFactory().forName("Swift As The Breeze");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, swiftAsTheBreeze));
+
+		assertEquals(DialogId.RE_ROLL_PROPERTIES, game.getDialogParameter().getId());
+		assertFalse(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze));
+	}
+
+	@Test
+	public void divingTackleOffersTheSkillIgnoringTheModifiersAfterTheRoll() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		Game game = state.getGame();
+
+		// a 4 passes the plain jump, diving tackle pushes the needed roll to 5+
+		jump(state, 4);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(parameter));
+	}
+
+	@Test
+	public void divingTackleStillAsksTheOpposingCoachAfterTheModifiersWereIgnored() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		Game game = state.getGame();
+
+		jump(state, 4);
+
+		Skill swiftAsTheBreeze = game.getRules().getSkillFactory().forName("Swift As The Breeze");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, swiftAsTheBreeze));
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("This will NOT trip the jumper, the jump will still succeed."),
+			Arrays.asList(parameter.getDescriptions()));
+
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(PlayerState.PRONE,
+			game.getFieldModel().getPlayerState(game.getPlayerById("marker")).getBase());
+	}
+
+	@Test
 	public void divingTackleIsOfferedAfterAJumpIgnoringTheModifiers() {
 		GameState state = buildStateWithDivingTackler("Bounding Leap");
 		Game game = state.getGame();
