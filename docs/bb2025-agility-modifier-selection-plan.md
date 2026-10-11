@@ -24,7 +24,7 @@ every BB2025 Agility Test into it.
 | Dodge | `step/bb2025/move/StepMoveDodge` | Break Tackle, Consummate Professional | Dodge (auto, stalling guarded) | yes | yes |
 | Pick up | `step/bb2025/move/StepPickUp` | Consummate Professional | Sure Hands (auto, stalling guarded) | no | yes |
 | Catch | `step/bb2025/shared/StepCatchScatterThrowIn` | Consummate Professional | Catch (auto only for deliberate deliveries, see §3.4) | no | sometimes |
-| Jump | `step/bb2025/move/StepJump` | Consummate Professional; Leap, Very Long Legs, Pogo (conditionally, see §3.3) | Bounding Leap (auto, stalling guarded) | yes | yes |
+| Jump | `step/bb2025/move/StepJump` | Consummate Professional; Leap, Very Long Legs, Pogo (conditionally, see §3.3) | Bounding Leap (auto, declared before the roll) | yes | yes |
 | Jump up | `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour` | Consummate Professional | none | no | no (player stays prone) |
 | Interception | `step/bb2025/pass/StepIntercept` | Consummate Professional | none | no | no |
 | Right Stuff / landing | `step/bb2025/ttm/StepRightStuff` | Consummate Professional | Swoop | no | yes |
@@ -341,8 +341,9 @@ no skill based Right Stuff modifiers at all today, only throw quality and tackle
 * `JumpModifierSelectionService` builds a fresh `JumpContext` per candidate combination and decides
   availability by "does adding the skill lower the needed roll", which evaluates `Leap` against the
   post-selection context.
-* The automatic Bounding Leap re-roll is only used when no modifier option exists and the stalling
-  guard allows it, otherwise everything is merged into one dialog.
+* Bounding Leap is declared before the dice are rolled and grants both the ignored modifiers and the
+  re-roll, so its re-roll is always taken automatically and the skill is never offered as a re-roll
+  in a dialog that follows a roll. Skill commands the step did not offer are ignored.
 * The Diving Tackle look-ahead offers the same options as a real failure.
 * A `JumpContext` built without declared modifiers, i.e. the four argument constructor used by the
   move square preview in `UtilServerPlayerMove`, makes the factory report the roll the player would

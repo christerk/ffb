@@ -4,11 +4,13 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -391,5 +393,78 @@ public class JumpModifierChoiceTest {
 		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
 		assertEquals(Collections.singletonList("This will trip the jumper."),
 			Arrays.asList(parameter.getDescriptions()));
+	}
+
+	@Test
+	public void theModifierIgnoringSkillIsNotOfferedAsReRollWhenTheJumpFails() {
+		GameState state = buildState("Bounding Leap");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		jump(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_PROPERTIES, game.getDialogParameter().getId());
+		DialogReRollPropertiesParameter parameter = (DialogReRollPropertiesParameter) game.getDialogParameter();
+		assertNull(parameter.getReRollSkill());
+		assertTrue(parameter.hasProperty(ReRollProperty.TRR));
+	}
+
+	@Test
+	public void theModifierIgnoringSkillReRollsTheFailedJump() {
+		GameState state = buildState("Bounding Leap");
+		Game game = state.getGame();
+
+		// without modifiers the jump needs a 4+, the failed first roll is re-rolled by the skill itself
+		jumpIgnoringModifiers(state, 2, 6);
+
+		assertNull(game.getDialogParameter());
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+	}
+
+	@Test
+	public void theModifierIgnoringSkillReRollsTheFailedJumpWhenATeamMateWouldBeStalling() {
+		GameState state = buildStateWithScoringTeamMate("Bounding Leap");
+		Game game = state.getGame();
+
+		// the re-roll is part of the declaration made before the roll, so there is nothing left to decide
+		jumpIgnoringModifiers(state, 2, 6);
+
+		assertNull(game.getDialogParameter());
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+	}
+
+	@Test
+	public void skillCommandsTheStepCannotUseAreIgnored() {
+		GameState state = buildState("Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		Skill boundingLeap = game.getRules().getSkillFactory().forName("Bounding Leap");
+		StepEngine.respond(state,
+			new ClientCommandUseSkill(boundingLeap, false, "runner", ReRolledActions.JUMP, false));
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+
+		Skill consummateProfessional = game.getRules().getSkillFactory().forName("Consummate Professional");
+		StepEngine.respond(state,
+			Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, consummateProfessional));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+	}
+
+	@Test
+	public void modifierChoicesForSkillsThePlayerDoesNotHaveAreIgnored() {
+		GameState state = buildState("Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill breakTackle = game.getRules().getSkillFactory().forName("Break Tackle");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, breakTackle));
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		assertFalse(game.getActingPlayer().isSkillUsed(breakTackle));
 	}
 }
