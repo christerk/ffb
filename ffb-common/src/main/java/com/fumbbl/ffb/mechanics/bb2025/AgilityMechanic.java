@@ -58,7 +58,9 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 																		 FieldCoordinate to) {
 		OptionalDodgeModifierService optionalModifierService = new OptionalDodgeModifierService();
 		List<OptionalDodgeModifier> optionalModifiers = optionalModifierService.availableFor(game, actingPlayer, from, to);
+		// skills limited to one use per drive, half or game would promise a roll the player cannot reach again
 		Set<Skill> selectedSkills = optionalModifiers.stream().map(OptionalDodgeModifier::getSkill)
+			.filter(skill -> skill.getSkillUsageType().isUsableEveryTurn())
 			.collect(Collectors.toSet());
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers =

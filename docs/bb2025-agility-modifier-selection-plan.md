@@ -185,8 +185,10 @@ that case the coach gets the normal dialog instead, so they can decline and fail
 
 `AgilityMechanic.minimumRollDodgePreview(game, actingPlayer, from, to)` is abstract per ruleset.
 `bb2016`/`bb2020` replicate the old inline `UtilServerPlayerMove` computation verbatim; `bb2025`
-applies every currently available optional modifier (best achievable roll) and adds the Diving Tackle
-modifier when an eligible opponent could declare it. `UtilServerPlayerMove.addMoveSquare` is a pure
+applies every currently available optional modifier of a skill that is usable in every turn (best
+achievable roll) and adds the Diving Tackle modifier when an eligible opponent could declare it.
+Skills limited to one use per drive, half or game (e.g. `Consummate Professional`) are left out, the
+preview would otherwise promise a roll the player cannot reach again. `UtilServerPlayerMove.addMoveSquare` is a pure
 dispatch to the mechanic.
 
 ---
@@ -347,7 +349,8 @@ no skill based Right Stuff modifiers at all today, only throw quality and tackle
 * The Diving Tackle look-ahead offers the same options as a real failure.
 * A `JumpContext` built without declared modifiers, i.e. the four argument constructor used by the
   move square preview in `UtilServerPlayerMove`, makes the factory report the roll the player would
-  end up with: every optional modifier still available to them plus a possible Diving Tackle.
+  end up with in any turn: every optional modifier still available to them from a skill usable in
+  every turn, plus a possible Diving Tackle.
 * **Ruleset separation:** `factory/mixed/JumpModifierFactory` was duplicated into `factory/bb2025`
   and the original moved to `factory/bb2020`, as BB2020 is its only remaining user.
   `modifiers/mixed/JumpModifierCollection` stays shared, the modifiers themselves are identical.

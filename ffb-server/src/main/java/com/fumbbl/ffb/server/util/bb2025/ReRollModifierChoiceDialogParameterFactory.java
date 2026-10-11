@@ -6,7 +6,6 @@ import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.server.util.ReRollDialogParameterFactory;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 
@@ -70,10 +69,6 @@ public class ReRollModifierChoiceDialogParameterFactory implements ReRollDialogP
 	}
 
 	private boolean usableEveryTurn(Skill reRollSkill) {
-		if (reRollSkill == null) {
-			return false;
-		}
-		SkillUsageType usageType = reRollSkill.getSkillUsageType();
-		return usageType == SkillUsageType.REGULAR || usageType == SkillUsageType.ONCE_PER_TURN;
+		return reRollSkill != null && reRollSkill.getSkillUsageType().isUsableEveryTurn();
 	}
 }

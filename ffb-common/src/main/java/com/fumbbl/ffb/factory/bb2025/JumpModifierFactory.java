@@ -25,13 +25,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Jump modifiers of the BB2025 ruleset. The skills ignoring jump modifiers (e.g. Pogo) are free and unlimited, so
  * they are applied automatically unless the context declares them optional, which happens when the coach may want to
  * fail the jump on purpose. A context without declared modifiers, e.g. the move square preview, gets the roll the
- * player would end up with after declaring everything that is available to them.
+ * player would end up with after declaring everything that is available to them in every turn.
  */
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2025)
@@ -117,15 +118,19 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 	}
 
 	/**
-	 * Nothing has been declared yet, so the modifiers are those of the roll the player would end up with: every
-	 * optional modifier they still have available is applied and an opponent who could declare Diving Tackle does so.
+	 * Nothing has been declared yet, so the modifiers are those of the roll the player would end up with in every turn:
+	 * every optional modifier of a skill they can use in any turn is applied and an opponent who could declare Diving
+	 * Tackle does so. Skills that are limited to one use per drive, half or game are left out, the preview would
+	 * otherwise promise a roll the player cannot reach again.
 	 */
 	private Set<JumpModifier> findUndeclaredModifiers(JumpContext context) {
 		Game game = context.getGame();
 		Player<?> player = context.getPlayer();
 		FieldCoordinate from = context.getFrom(), to = context.getTo();
-		Set<Skill> availableSkills = new HashSet<>(new OptionalRollModifierService().availableSkills(game, player,
-			skills -> new JumpContext(game, player, from, to, skills), Skill::getJumpModifiers));
+		Set<Skill> availableSkills = new OptionalRollModifierService().availableSkills(game, player,
+				skills -> new JumpContext(game, player, from, to, skills), Skill::getJumpModifiers).stream()
+			.filter(skill -> skill.getSkillUsageType().isUsableEveryTurn())
+			.collect(Collectors.toCollection(HashSet::new));
 		JumpContext declaredContext = new JumpContext(game, player, from, to, availableSkills);
 		Set<JumpModifier> divingTackleModifiers = divingTackleModifiers(game, player, from, to);
 		// Leap depends on the sum of the other modifiers, so Diving Tackle has to be accumulated before they are found

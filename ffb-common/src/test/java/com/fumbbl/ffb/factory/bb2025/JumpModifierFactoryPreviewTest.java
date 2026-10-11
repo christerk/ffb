@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic;
@@ -20,6 +21,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.ModifierAggregator;
+import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.skill.bb2025.VeryLongLegs;
@@ -52,6 +54,7 @@ class JumpModifierFactoryPreviewTest {
 	private static final FieldCoordinate TACKLER_COORDINATE = new FieldCoordinate(6, 5);
 
 	private final AgilityMechanic mechanic = new AgilityMechanic();
+	private final Skill everyTurnSkill = new EveryTurnJumpSkill();
 	private final Set<Skill> skills = new LinkedHashSet<>();
 	private final Set<Skill> usedSkills = new HashSet<>();
 	private final Set<FieldCoordinate> occupiedCoordinates = new LinkedHashSet<>();
@@ -68,8 +71,10 @@ class JumpModifierFactoryPreviewTest {
 		veryLongLegs.postConstruct();
 		ConsummateProfessional consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
+		everyTurnSkill.postConstruct();
 		skills.add(veryLongLegs);
 		skills.add(consummateProfessional);
+		skills.add(everyTurnSkill);
 
 		player = mock(Player.class);
 		when(player.getSkillsIncludingTemporaryOnes()).thenReturn(skills);
@@ -144,14 +149,21 @@ class JumpModifierFactoryPreviewTest {
 
 	@Test
 	void previewShowsTheBestAchievableRoll() {
-		// agility 4 plus one tacklezone is a 5+, Very Long Legs and Consummate Professional bring it down to a 3+
+		// agility 4 plus one tacklezone is a 5+, Very Long Legs and the skill usable in every turn bring it down to a 3+
 		assertEquals(3, minimumRollPreview());
+	}
+
+	@Test
+	void previewIgnoresSkillsThatCannotBeUsedEveryTurn() {
+		skills.remove(everyTurnSkill);
+		// Consummate Professional can only be used once per game, so it is not part of the preview
+		assertEquals(4, minimumRollPreview());
 	}
 
 	@Test
 	void previewIgnoresUsedSkills() {
 		usedSkills.addAll(skills);
-		// the used Consummate Professional is gone, the free Very Long Legs still applies
+		// the used optional modifiers are gone, the free Very Long Legs still applies
 		assertEquals(4, minimumRollPreview());
 	}
 
@@ -169,5 +181,26 @@ class JumpModifierFactoryPreviewTest {
 			factory.findModifiers(new JumpContext(game, player, FROM, TO, Collections.emptySet()));
 		// agility 4 plus two tacklezones is a 6+, only the free Very Long Legs applies without being declared
 		assertEquals(5, mechanic.minimumRollJump(player, modifiers));
+	}
+
+	/**
+	 * Stands in for a skill with an optional jump modifier that is available in every turn, the released ones are
+	 * either free (Leap, Very Long Legs) or limited to one use per game (Consummate Professional).
+	 */
+	private static class EveryTurnJumpSkill extends Skill {
+
+		private EveryTurnJumpSkill() {
+			super("Every Turn Jump Skill", SkillCategory.AGILITY);
+		}
+
+		@Override
+		public void postConstruct() {
+			registerModifier(new JumpModifier("Every Turn Jump Skill", -1, ModifierType.REGULAR, true) {
+				@Override
+				public boolean appliesToContext(Skill skill, JumpContext context) {
+					return context.isSkillSelected(skill);
+				}
+			});
+		}
 	}
 }
