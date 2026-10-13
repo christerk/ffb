@@ -10,13 +10,13 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.DivingTackleModifierService;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpModifierCollection;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.OptionalRollModifierService;
 import com.fumbbl.ffb.modifiers.RollModifier;
-import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.Scanner;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -37,6 +37,8 @@ import java.util.stream.Stream;
 @FactoryType(FactoryType.Factory.JUMP_MODIFIER)
 @RulesCollection(Rules.BB2025)
 public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFactory {
+
+	private final DivingTackleModifierService divingTackleService = new DivingTackleModifierService();
 
 	private JumpModifierCollection jumpModifierCollection;
 
@@ -132,30 +134,12 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 			.filter(skill -> skill.getSkillUsageType().isUsableEveryTurn())
 			.collect(Collectors.toCollection(HashSet::new));
 		JumpContext declaredContext = new JumpContext(game, player, from, to, availableSkills);
-		Set<JumpModifier> divingTackleModifiers = divingTackleModifiers(game, player, from, to);
+		Set<JumpModifier> divingTackleModifiers = divingTackleService.jumpModifiers(game, player, from, to);
 		// Leap depends on the sum of the other modifiers, so Diving Tackle has to be accumulated before they are found
 		divingTackleModifiers.forEach(modifier -> declaredContext.addModifierValue(modifier.getModifier()));
 		Set<JumpModifier> modifiers = findModifiers(declaredContext);
 		modifiers.addAll(divingTackleModifiers);
 		return modifiers;
-	}
-
-	/**
-	 * @return the modifiers an opponent could still add with Diving Tackle, empty when the jumping player is immune
-	 */
-	private Set<JumpModifier> divingTackleModifiers(Game game, Player<?> player, FieldCoordinate from,
-		FieldCoordinate to) {
-		if (UtilCards.hasSkillToCancelProperty(player, NamedProperties.canAttemptToTackleJumpingPlayer)) {
-			return new HashSet<>();
-		}
-		Player<?>[] divingTacklers =
-			UtilPlayer.findEligibleDivingTacklers(game, from, to, NamedProperties.canAttemptToTackleJumpingPlayer);
-		if (!ArrayTool.isProvided(divingTacklers)) {
-			return new HashSet<>();
-		}
-		return divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> skill.hasSkillProperty(NamedProperties.canAttemptToTackleJumpingPlayer))
-			.findFirst().map(skill -> new HashSet<>(skill.getJumpModifiers())).orElseGet(HashSet::new);
 	}
 
 	/**

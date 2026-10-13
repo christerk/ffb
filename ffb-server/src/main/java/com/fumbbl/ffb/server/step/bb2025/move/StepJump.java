@@ -25,6 +25,7 @@ import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.DivingTackleModifierService;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -83,7 +84,11 @@ public class StepJump extends AbstractStepWithReRoll {
 	private static final String STALLING_EXPLANATION =
 		"You are only asked because failing the jump would end the turn and skip the stalling roll.";
 
+	private static final String PENDING_DIVING_TACKLE_EXPLANATION =
+		"Diving Tackle can still be declared, the listed rolls include its modifier.";
+
 	private final JumpModifierSelectionService selectionService = new JumpModifierSelectionService();
+	private final DivingTackleModifierService divingTackleService = new DivingTackleModifierService();
 	private final StallingExtension stallingExtension = new StallingExtension();
 
 	private String goToLabelOnFailure;
@@ -420,18 +425,27 @@ public class StepJump extends AbstractStepWithReRoll {
 			Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
 			Set<Skill> ignoreSkills = reRollSkillsToIgnore();
 
+			// an opponent who has not been asked yet declares Diving Tackle right after the jump was rescued, so its
+			// modifier is part of the roll the offered modifiers have to beat, exactly like in the move square preview
+			Set<JumpModifier> pendingDivingTackleModifiers = usingDivingTackle == null
+				? divingTackleService.jumpModifiers(game, actingPlayer.getPlayer(), moveStart, to)
+				: divingTackleModifiers;
+
 			// declining a free modifier is a deliberate choice to fail the jump, so nothing is offered to rescue it
 			boolean rescueDeclined = !declinedFreeSkills.isEmpty();
 
 			// the skill ignoring the modifiers after the roll is one of the options, so it needs no dialog of its own
 			List<ModifierChoiceOption> options = rescueDeclined
 				? Collections.emptyList()
-				: findOptions(game, actingPlayer, to, divingTackleModifiers);
+				: findOptions(game, actingPlayer, to, pendingDivingTackleModifiers);
 			List<ModifierChoiceOption> combinations =
 				options.isEmpty() ? Collections.emptyList() : findCombinations(game, actingPlayer, to,
-					divingTackleModifiers);
+					pendingDivingTackleModifiers);
+			List<String> messages = options.isEmpty() || usingDivingTackle != null
+				|| pendingDivingTackleModifiers.isEmpty() ? null
+				: Collections.singletonList(PENDING_DIVING_TACKLE_EXPLANATION);
 
-			if (askForFreeModifierSkill(game, actingPlayer, to, divingTackleModifiers)) {
+			if (askForFreeModifierSkill(game, actingPlayer, to, pendingDivingTackleModifiers)) {
 				status = ActionStatus.WAITING_FOR_SKILL_USE;
 			} else if (rescueDeclined) {
 				// the free modifier was declined on purpose, neither modifiers nor re-rolls are offered any more
@@ -454,12 +468,12 @@ public class StepJump extends AbstractStepWithReRoll {
 				if (automaticReRoll && !coachDecides) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 					status = leap();
-				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreSkills)) {
+				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreSkills, messages)) {
 					modifierChoiceOffered = !options.isEmpty();
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 				}
 			} else if (!options.isEmpty()
-				&& askForRescue(minimumRoll, options, combinations, false, ignoreSkills)) {
+				&& askForRescue(minimumRoll, options, combinations, false, ignoreSkills, messages)) {
 				// the re-roll is gone, but optional modifiers can still save the jump
 				modifierChoiceOffered = true;
 				status = ActionStatus.WAITING_FOR_RE_ROLL;
@@ -506,11 +520,6 @@ public class StepJump extends AbstractStepWithReRoll {
 	 *
 	 * @return whether the dialog was shown
 	 */
-	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
-		List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills) {
-		return askForRescue(minimumRoll, options, combinations, reRollPossible, ignoreSkills, null);
-	}
-
 	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
 		List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills,
 		List<String> messages) {

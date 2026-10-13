@@ -410,6 +410,48 @@ public class JumpModifierChoiceTest {
 	}
 
 	@Test
+	public void failedJumpDoesNotOfferAModifierTheUndeclaredDivingTackleWouldUndo() {
+		GameState state = buildStateWithDivingTackler("Consummate Professional");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		// the jump needs a 4+, diving tackle is still undeclared and would push it to 5+, so the 3+ consummate
+		// professional offers would be spent for nothing
+		jump(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_PROPERTIES, game.getDialogParameter().getId());
+	}
+
+	@Test
+	public void failedJumpOffersAModifierSurvivingTheUndeclaredDivingTackle() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze", "Consummate Professional");
+		Game game = state.getGame();
+
+		// ignoring the modifiers also ignores the undeclared diving tackle, so a 3 is enough
+		jump(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(parameter));
+		assertEquals(Collections.singletonList(
+				"Diving Tackle can still be declared, the listed rolls include its modifier."),
+			parameter.getMessages());
+	}
+
+	@Test
+	public void failedJumpShowsCombinationsIncludingTheUndeclaredDivingTackle() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze", "Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(4, parameter.getModifierCombinations().stream()
+			.filter(option -> "Consummate Professional".equals(option.getLabel())).findFirst()
+			.orElseThrow(AssertionError::new).getMinimumRoll());
+	}
+
+	@Test
 	public void divingTackleOffersTheSkillIgnoringTheModifiersAfterTheRoll() {
 		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
 		Game game = state.getGame();
