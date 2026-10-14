@@ -276,7 +276,8 @@ public class StepJump extends AbstractStepWithReRoll {
 			if (ReRolledActions.JUMP == getReRolledAction()
 				&& !useIgnoreModifierAfterRollSkill
 				&& usingDivingTackle == null && !modifierChoiceApplied) {
-				if (!dtRerollAsked && (getReRollSource() == null || !UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
+				if (!dtRerollAsked && (getReRollSource() == null ||
+					!UtilServerReRoll.useReRoll(this, getReRollSource(), actingPlayer.getPlayer()))) {
 					handleFailure(game);
 					doLeap = false;
 				}
@@ -486,7 +487,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private List<ModifierChoiceOption> findOptions(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
-		Set<JumpModifier> extraModifiers) {
+																								 Set<JumpModifier> extraModifiers) {
 		if (modifierChoiceOffered || useIgnoreModifierSkill) {
 			return Collections.emptyList();
 		}
@@ -495,7 +496,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private List<ModifierChoiceOption> findCombinations(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
-		Set<JumpModifier> extraModifiers) {
+																											Set<JumpModifier> extraModifiers) {
 		return selectionService.findCombinations(game, actingPlayer, moveStart, to, selectedModifierSkills,
 			extraModifiers, freeModifiersOptional(game));
 	}
@@ -521,8 +522,8 @@ public class StepJump extends AbstractStepWithReRoll {
 	 * @return whether the dialog was shown
 	 */
 	private boolean askForRescue(int minimumRoll, List<ModifierChoiceOption> options,
-		List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills,
-		List<String> messages) {
+															 List<ModifierChoiceOption> combinations, boolean reRollPossible, Set<Skill> ignoreSkills,
+															 List<String> messages) {
 		GameState gameState = getGameState();
 		ReRollRequest.Builder builder =
 			ReRollRequest.forActingPlayer(gameState, gameState.getGame().getActingPlayer(), ReRolledActions.JUMP,
@@ -544,7 +545,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	 * @return whether the dialog was shown
 	 */
 	private boolean askForFreeModifierSkill(Game game, ActingPlayer actingPlayer, FieldCoordinate to,
-		Set<JumpModifier> extraModifiers) {
+																					Set<JumpModifier> extraModifiers) {
 		if (pendingFreeSkill != null || useIgnoreModifierSkill || !freeModifiersOptional(game)) {
 			return false;
 		}
@@ -576,7 +577,7 @@ public class StepJump extends AbstractStepWithReRoll {
 	}
 
 	private ActionStatus checkDivingTackle(Game game, JumpContext context, JumpModifierFactory modifierFactory,
-		AgilityMechanic mechanic) {
+																				 AgilityMechanic mechanic) {
 		boolean ignoresDT = (UtilCards.hasSkillToCancelProperty(game.getActingPlayer().getPlayer(),
 			NamedProperties.canAttemptToTackleJumpingPlayer));
 
