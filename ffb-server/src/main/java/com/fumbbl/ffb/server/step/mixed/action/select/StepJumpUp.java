@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.action.select;
+package com.fumbbl.ffb.server.step.mixed.action.select;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,7 +27,8 @@ import com.fumbbl.ffb.util.StringTool;
  * 
  * @author Kalimar
  */
-@RulesCollection(RulesCollection.Rules.COMMON)
+@RulesCollection(RulesCollection.Rules.BB2016)
+@RulesCollection(RulesCollection.Rules.BB2020)
 public final class StepJumpUp extends AbstractStepWithReRoll {
 
 	public class StepState {

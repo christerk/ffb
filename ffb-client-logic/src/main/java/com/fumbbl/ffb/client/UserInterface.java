@@ -2,7 +2,6 @@ package com.fumbbl.ffb.client;
 
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.CommonProperty;
-import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.client.dialog.DialogHandler;
 import com.fumbbl.ffb.client.dialog.DialogInformation;
 import com.fumbbl.ffb.client.dialog.DialogLeaveGame;
@@ -19,6 +18,7 @@ import com.fumbbl.ffb.client.ui.LogComponent;
 import com.fumbbl.ffb.client.ui.ScoreBarComponent;
 import com.fumbbl.ffb.client.ui.SideBarComponent;
 import com.fumbbl.ffb.client.util.MarkerService;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.client.util.rng.MouseEntropySource;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.model.Game;
@@ -31,7 +31,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Kalimar
@@ -66,6 +65,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final CoordinateConverter coordinateConverter;
 	private final ClientSketchManager sketchManager;
 	private final MarkerService markerService;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 
 	public UserInterface(FantasyFootballClient pClient) {
@@ -328,7 +328,11 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		getGameMenuBar().refresh();
 	}
 
-	public synchronized void init(GameOptions gameOptions) {
+	public void init(GameOptions gameOptions) {
+		uiDispatcher.runOnUiThreadAndWait(() -> initOnUiThread(gameOptions));
+	}
+
+	private void initOnUiThread(GameOptions gameOptions) {
 
 		if (gameOptions != null && ArrayTool.isProvided(gameOptions.getOptions())) {
 			getStatusReport().init(gameOptions);
@@ -378,20 +382,18 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		return fStatusReport;
 	}
 
+	/**
+	 * @see UiDispatcher#runOnUiThreadAndWait(Runnable)
+	 */
 	public void invokeAndWait(Runnable pRunnable) {
-		try {
-			if (SwingUtilities.isEventDispatchThread()) {
-				pRunnable.run();
-			} else {
-				SwingUtilities.invokeAndWait(pRunnable);
-			}
-		} catch (InterruptedException | InvocationTargetException e) {
-			throw new FantasyFootballException(e);
-		}
+		uiDispatcher.runOnUiThreadAndWait(pRunnable);
 	}
 
+	/**
+	 * @see UiDispatcher#runOnUiThreadWithoutWaiting(Runnable)
+	 */
 	public void invokeLater(Runnable pRunnable) {
-		SwingUtilities.invokeLater(pRunnable);
+		uiDispatcher.runOnUiThreadWithoutWaiting(pRunnable);
 	}
 
 	public MouseEntropySource getMouseEntropySource() {

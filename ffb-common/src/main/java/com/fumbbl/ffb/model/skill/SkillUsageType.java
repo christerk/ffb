@@ -28,4 +28,12 @@ public enum SkillUsageType {
 	public boolean isTrackOutsideActivation() {
 		return trackOutsideActivation;
 	}
+
+	/**
+	 * @return whether a skill of this type is available in every turn, which is not the case for skills limited to one
+	 * use per drive, half or game
+	 */
+	public boolean isUsableEveryTurn() {
+		return this == REGULAR || this == ONCE_PER_TURN;
+	}
 }

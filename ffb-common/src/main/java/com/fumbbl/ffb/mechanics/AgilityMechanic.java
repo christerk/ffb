@@ -1,5 +1,7 @@
 package com.fumbbl.ffb.mechanics;
 
+import com.fumbbl.ffb.FieldCoordinate;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.CatchModifier;
@@ -30,6 +32,13 @@ public abstract class AgilityMechanic implements Mechanic {
 	public abstract int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers);
 
 	public abstract int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier);
+
+	/**
+	 * @return the dodge roll shown in the move square preview, i.e. the best roll the player could achieve for this
+	 * dodge with the modifiers currently available to them
+	 */
+	public abstract int minimumRollDodgePreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																							FieldCoordinate to);
 
 	public abstract int minimumRollPickup(Player<?> pPlayer, Set<PickupModifier> pPickupModifiers);
 

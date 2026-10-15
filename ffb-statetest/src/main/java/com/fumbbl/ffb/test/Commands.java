@@ -3,12 +3,15 @@ package com.fumbbl.ffb.test;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.Pushback;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandActingPlayer;
 import com.fumbbl.ffb.net.commands.ClientCommandBlock;
 import com.fumbbl.ffb.net.commands.ClientCommandBlockChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
@@ -17,9 +20,15 @@ import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
 
+import java.util.Arrays;
+
 public class Commands {
 	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action) {
-		return new ClientCommandActingPlayer(playerId, action, false);
+		return selectPlayer(playerId, action, false);
+	}
+
+	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action, boolean jumping) {
+		return new ClientCommandActingPlayer(playerId, action, jumping);
 	}
 
 	public static ClientCommandBlock block(String attackerId, String defenderId) {
@@ -53,6 +62,11 @@ public class Commands {
 
 	public static ClientCommandEndTurn endTurn(TurnMode turnMode) {
 		return new ClientCommandEndTurn(turnMode, null);
+	}
+
+	public static ClientCommandReRollModifierChoice reRollModifierChoice(String playerId, ReRolledAction reRolledAction,
+		Skill... skills) {
+		return new ClientCommandReRollModifierChoice(playerId, Arrays.asList(skills), reRolledAction);
 	}
 
 	public static ClientCommandPlayerChoice playerChoice(PlayerChoiceMode mode, Player<?>... players) {

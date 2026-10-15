@@ -3,18 +3,19 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * 
  * @author Kalimar
  */
 public class DialogAboutHandler extends DialogHandler {
+
+	private static final int CLOSE_DELAY_IN_MILLIS = 5000;
 
 	private Timer fCloseTimer;
 
@@ -64,18 +65,20 @@ public class DialogAboutHandler extends DialogHandler {
 		getClient().getUserInterface().setGlassPane(new MyGlassPane());
 		getClient().getUserInterface().getGlassPane().setVisible(true);
 		getClient().getUserInterface().getGlassPane().requestFocus();
-		fCloseTimer = new Timer();
-		fCloseTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				fCloseTimer = null;
-				dialogClosed(getDialog());
-			}
-		}, 5 * 1000);
-		getClient().startClient();
+		// a swing timer fires on the event dispatch thread, so hiding the dialog does not race the user interface
+		fCloseTimer = new Timer(CLOSE_DELAY_IN_MILLIS, event -> {
+			fCloseTimer = null;
+			dialogClosed(getDialog());
+		});
+		fCloseTimer.setRepeats(false);
+		fCloseTimer.start();
 	}
 
 	public void dialogClosed(IDialog pDialog) {
+		if (fCloseTimer != null) {
+			fCloseTimer.stop();
+			fCloseTimer = null;
+		}
 		if (getDialog().isVisible()) {
 			hideDialog();
 			getClient().getUserInterface().getGlassPane().setVisible(false);
