@@ -53,9 +53,15 @@ public final class UtilCards {
 	}
 
 	public static boolean hasSkillToCancelProperty(Player<?> player, ISkillProperty property) {
+		return getSkillToCancelProperty(player, property).isPresent();
+	}
+
+	public static Optional<Skill> getSkillToCancelProperty(Player<?> player, ISkillProperty property) {
 		return Arrays.stream(findAllSkills(player))
-			.flatMap(skill -> skill.getSkillProperties().stream())
-			.anyMatch(skillProperty -> skillProperty instanceof CancelSkillProperty && ((CancelSkillProperty) skillProperty).cancelsProperty(property));
+			.filter(skill -> skill.getSkillProperties().stream()
+				.anyMatch(skillProperty -> skillProperty instanceof CancelSkillProperty
+					&& ((CancelSkillProperty) skillProperty).cancelsProperty(property)))
+			.findFirst();
 	}
 
 	public static boolean hasSkill(ActingPlayer pActingPlayer, Skill pSkill) {

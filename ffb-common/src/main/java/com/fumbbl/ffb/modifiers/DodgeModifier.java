@@ -19,11 +19,26 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 		this(pName, pName, pModifier, type, useStrength);
 	}
 
+	public DodgeModifier(String pName, int pModifier, ModifierType type, boolean useStrength, boolean optional) {
+		this(pName, pName, pModifier, pModifier, type, useStrength, optional);
+	}
+
 	public DodgeModifier(String pName, String reportString, int pModifier, ModifierType type, boolean useStrength) {
 		this(pName, reportString, pModifier, pModifier, type, useStrength);
 	}
 
+	public DodgeModifier(String pName, String reportString, int pModifier, ModifierType type, boolean useStrength,
+											 boolean optional) {
+		this(pName, reportString, pModifier, pModifier, type, useStrength, optional);
+	}
+
 	public DodgeModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type, boolean useStrength) {
+		this(pName, reportString, pModifier, multiplier, type, useStrength, false);
+	}
+
+	public DodgeModifier(String pName, String reportString, int pModifier, int multiplier, ModifierType type,
+											 boolean useStrength, boolean optional) {
+		super(optional);
 		fName = pName;
 		this.reportString = reportString;
 		fModifier = pModifier;
@@ -62,4 +77,5 @@ public class DodgeModifier extends RollModifier<DodgeContext> {
 	public boolean isUseStrength() {
 		return useStrength;
 	}
+
 }

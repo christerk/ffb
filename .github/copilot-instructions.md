@@ -14,3 +14,5 @@
 
 ## Change list entries
 - Add a user-facing change list entry for any user-visible change. Entries live in the top (latest) `VersionChangeList` in `ffb-client-logic/src/main/java/com/fumbbl/ffb/client/model/ChangeList.java`, added via `addBugfix`/`addImprovement`/`addFeature`/`addBehaviorChange`.
+- Do not mention the rules version in entries for the 2025 ruleset, it is the default. Only name the rules version when the change is specific to the 2016 or 2020 ruleset.
+- Do not add an entry for a fix of an issue that was introduced by the ongoing feature implementation itself. Only changes to already released behavior need an entry.
