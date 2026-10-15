@@ -53,12 +53,12 @@ class AgilityMechanicDodgePreviewTest {
 	private Player<?> player;
 	private FieldModel fieldModel;
 	private Team awayTeam;
+	private final Skill breakTackle = new BreakTackle();
 	private final Set<Skill> skills = new LinkedHashSet<>();
 	private final Set<Skill> usedSkills = new HashSet<>();
 
 	@BeforeEach
 	void setUp() {
-		BreakTackle breakTackle = new BreakTackle();
 		breakTackle.postConstruct();
 		ConsummateProfessional consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
@@ -128,9 +128,16 @@ class AgilityMechanicDodgePreviewTest {
 
 	@Test
 	void bb2025PreviewShowsTheBestAchievableRoll() {
-		// agility 4 plus one tacklezone is a 5+, both optional modifiers bring it down to a 3+
-		assertEquals(3, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
+		// agility 4 plus one tacklezone is a 5+, Break Tackle brings it down to a 4+
+		assertEquals(4, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
 			.minimumRollDodgePreview(game, actingPlayer, FROM, TO));
+	}
+
+	@Test
+	void bb2025PreviewIgnoresSkillsThatCannotBeUsedEveryTurn() {
+		skills.remove(breakTackle);
+		// Consummate Professional can only be used once per game, so it is not part of the preview
+		assertPreviewIgnoresOptionalModifiers(new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic());
 	}
 
 	@Test
@@ -142,8 +149,8 @@ class AgilityMechanicDodgePreviewTest {
 	@Test
 	void bb2025PreviewIncludesDivingTackle() {
 		addDivingTackler();
-		// agility 4 plus one tacklezone and diving tackle is a 7+, both optional modifiers bring it down to a 5+
-		assertEquals(5, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
+		// agility 4 plus one tacklezone and diving tackle is a 7+, Break Tackle brings it down to a 6+
+		assertEquals(6, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
 			.minimumRollDodgePreview(game, actingPlayer, FROM, TO));
 	}
 
