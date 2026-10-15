@@ -423,7 +423,6 @@ public class StepJump extends AbstractStepWithReRoll {
 			}
 		} else {
 			status = ActionStatus.FAILURE;
-			Skill skill = UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canIgnoreJumpModifiers);
 			Set<Skill> ignoreSkills = reRollSkillsToIgnore();
 
 			// an opponent who has not been asked yet declares Diving Tackle right after the jump was rescued, so its
@@ -456,17 +455,9 @@ public class StepJump extends AbstractStepWithReRoll {
 
 				ReRollSource skillReRollSource = UtilCards.getUnusedRerollSource(actingPlayer, ReRolledActions.JUMP);
 
-				boolean automaticReRoll = skillReRollSource != null &&
-					(skill == null || skill.getRerollSource(ReRolledActions.JUMP) != skillReRollSource ||
-						useIgnoreModifierSkill);
+				boolean automaticReRoll = skillReRollSource != null && useIgnoreModifierSkill;
 
-				// the skill ignoring the modifiers grants its re-roll as part of the very same declaration, so there
-				// is nothing left to decide, every other re-roll is up to the coach when there are modifiers to pick
-				// from or when failing the jump would skip the stalling roll
-				boolean coachDecides = !useIgnoreModifierSkill && (!options.isEmpty()
-					|| stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, actingPlayer.getPlayer()));
-
-				if (automaticReRoll && !coachDecides) {
+				if (automaticReRoll) {
 					status = ActionStatus.WAITING_FOR_RE_ROLL;
 					status = leap();
 				} else if (askForRescue(minimumRoll, options, combinations, true, ignoreSkills, messages)) {

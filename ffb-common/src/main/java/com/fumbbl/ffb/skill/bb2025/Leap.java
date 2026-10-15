@@ -11,7 +11,7 @@ import com.fumbbl.ffb.modifiers.ModifierType;
 
 /**
  * A player with the Leap skill is allowed to also jump over squares that are
- * empty or occupied by a standing player. Additionally modifiers from being
+ * empty or occupied by a standing player. Additionally, modifiers from being
  * marked can be reduced by 1 to a minimum of -1.
  */
 @RulesCollection(Rules.BB2025)

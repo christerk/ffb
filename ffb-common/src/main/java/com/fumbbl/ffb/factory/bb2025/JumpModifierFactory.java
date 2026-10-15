@@ -92,14 +92,18 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 			return findUndeclaredModifiers(context);
 		}
 
+		return findDeclaredModifiers(context);
+	}
+
+	private Set<JumpModifier> findDeclaredModifiers(JumpContext context) {
 		Set<JumpModifier> modifiers = new HashSet<>();
-		if (!appliesFreeSkillEffect(context,
+		if (preventsFreeSkillEffect(context,
 			Optional.ofNullable(context.getPlayer().getSkillWithProperty(NamedProperties.ignoreTacklezonesWhenJumping)))) {
 			Optional<JumpModifier> tacklezoneModifier = getTacklezoneModifier(context);
 			tacklezoneModifier.ifPresent(modifiers::add);
 		}
 
-		if (!appliesFreeSkillEffect(context,
+		if (preventsFreeSkillEffect(context,
 			UtilCards.getSkillToCancelProperty(context.getPlayer(), NamedProperties.makesJumpingHarder))) {
 			prehensileTailModifier(findNumberOfPrehensileTails(context.getGame(), context.getFrom()))
 				.ifPresent(modifiers::add);
@@ -137,7 +141,7 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 		Set<JumpModifier> divingTackleModifiers = divingTackleService.jumpModifiers(game, player, from, to);
 		// Leap depends on the sum of the other modifiers, so Diving Tackle has to be accumulated before they are found
 		divingTackleModifiers.forEach(modifier -> declaredContext.addModifierValue(modifier.getModifier()));
-		Set<JumpModifier> modifiers = findModifiers(declaredContext);
+		Set<JumpModifier> modifiers = findDeclaredModifiers(declaredContext);
 		modifiers.addAll(divingTackleModifiers);
 		return modifiers;
 	}
@@ -146,8 +150,9 @@ public class JumpModifierFactory extends com.fumbbl.ffb.factory.JumpModifierFact
 	 * @return whether the effect of a free skill applies, which requires the skill to be selected when the context
 	 * declares the free modifiers optional
 	 */
-	private boolean appliesFreeSkillEffect(JumpContext context, Optional<Skill> skill) {
-		return skill.isPresent() && (!context.areFreeModifiersOptional() || context.isSkillSelected(skill.get()));
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private boolean preventsFreeSkillEffect(JumpContext context, Optional<Skill> skill) {
+		return !skill.isPresent() || (context.areFreeModifiersOptional() && !context.isSkillSelected(skill.get()));
 	}
 
 	private int findNumberOfPrehensileTails(Game pGame, FieldCoordinate pCoordinateFrom) {
