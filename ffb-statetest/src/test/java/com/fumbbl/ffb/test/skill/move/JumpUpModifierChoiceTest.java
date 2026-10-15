@@ -580,6 +580,56 @@ class JumpUpModifierChoiceTest {
 	}
 
 	@Test
+	void reRollSkillThePlayerDoesNotHaveCannotRerollJumpUp() {
+		GameState state = buildState("BB2025", 4, "Consummate Professional");
+		state.getGame().getTurnData().setReRolls(1);
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 5);
+		JsonObject saved = step.toJsonValue();
+		assertNull(dialog(state).getReRollSkill());
+
+		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseSkill(skill(state, "Halfling Luck"), true, "jumper", ReRolledActions.JUMP_UP, false), null)));
+
+		assertEquals(saved, step.toJsonValue());
+		assertEquals(1, state.getGame().getTurnData().getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void reRollSkillThatWasNotOfferedCannotRerollJumpUp() {
+		GameState state = buildState("BB2025", 4, "Halfling Luck", "Thinking Man's Troll");
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 5);
+		Skill offered = dialog(state).getReRollSkill();
+		Skill other = skill(state, "Halfling Luck").equals(offered)
+			? skill(state, "Thinking Man's Troll")
+			: skill(state, "Halfling Luck");
+		JsonObject saved = step.toJsonValue();
+
+		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseSkill(other, true, "jumper", ReRolledActions.JUMP_UP, false), null)));
+
+		assertEquals(saved, step.toJsonValue());
+		assertFalse(state.getGame().getActingPlayer().isSkillUsed(other));
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void reRollSkillUsedMeanwhileCannotRerollJumpUp() {
+		GameState state = buildState("BB2025", 4, "Halfling Luck");
+		StepJumpUp step = (StepJumpUp) jumpUpWithRolls(state, 1, 5);
+		Skill luck = skill(state, "Halfling Luck");
+		assertEquals(luck, dialog(state).getReRollSkill());
+		state.getGame().getActingPlayer().markSkillUsed(luck);
+		JsonObject saved = step.toJsonValue();
+
+		assertEquals(StepCommandStatus.UNHANDLED_COMMAND, step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseSkill(luck, true, "jumper", ReRolledActions.JUMP_UP, false), null)));
+
+		assertEquals(saved, step.toJsonValue());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
 	void successfulProCanBeFollowedByModifierRescuingFailedReroll() {
 		GameState state = buildState("BB2025", 4, "Consummate Professional", "Pro");
 		state.getGame().getTurnData().setReRolls(1);

@@ -2,13 +2,17 @@ package com.fumbbl.ffb.test.skill.move;
 
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerChoiceMode;
+import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
-import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogId;
+import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
+import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.test.Commands;
 import com.fumbbl.ffb.test.GameStateBuilder;
@@ -18,6 +22,7 @@ import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +82,33 @@ public class DodgeModifierChoiceTest {
 				.player("marker", p -> p.at(13, 7).stats(6, 3, 3, 5, 8))
 				.player("blocker", p -> p.at(10, 7).stats(6, 3, 3, 5, 8)))
 			.build();
+	}
+
+	private GameState buildStateWithDivingTackler(String... dodgerSkills) {
+		return new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withTeam(true, t -> t
+				.player("runner", p -> {
+					p.at(12, 7).stats(6, 3, 3, 5, 8);
+					for (String skill : dodgerSkills) {
+						p.skill(skill);
+					}
+				}))
+			.withTeam(false, t -> t
+				.player("marker", p -> {
+					p.at(13, 7).stats(6, 3, 3, 5, 8);
+					p.skill("Diving Tackle");
+				}))
+			.build();
+	}
+
+	private List<String> labels(DialogReRollModifierChoiceParameter parameter) {
+		return parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+	}
+
+	private Skill swiftAsTheBreeze(Game game) {
+		return game.getRules().getSkillFactory().forName("Swift As The Breeze");
 	}
 
 	private void dodge(GameState state, int roll) {
@@ -233,5 +265,110 @@ public class DodgeModifierChoiceTest {
 
 		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
 		assertTrue(game.getActingPlayer().isSkillUsed(breakTackle));
+	}
+
+	@Test
+	public void swiftAsTheBreezeIsOfferedAsAModifierOption() {
+		GameState state = buildState("Swift As The Breeze", "Consummate Professional");
+		Game game = state.getGame();
+
+		// a 3 fails the 4+ dodge but passes the unmodified 3+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Arrays.asList("Consummate Professional", "Swift As The Breeze"), labels(parameter));
+	}
+
+	@Test
+	public void swiftAsTheBreezeIsOfferedTogetherWithTheReRoll() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(parameter));
+		assertTrue(parameter.hasProperty(ReRollProperty.TRR));
+	}
+
+	@Test
+	public void choosingSwiftAsTheBreezeRescuesTheDodge() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, swiftAsTheBreeze(game)));
+
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertTrue(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze(game)));
+	}
+
+	@Test
+	public void swiftAsTheBreezeIsNotAcceptedAsASkillUseCommand() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		StepEngine.respond(state,
+			new ClientCommandUseSkill(swiftAsTheBreeze(game), true, "runner", ReRolledActions.DODGE, false));
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		assertFalse(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze(game)));
+	}
+
+	@Test
+	public void swiftAsTheBreezeIsNotOfferedWhenItCannotRescueTheDodge() {
+		GameState state = buildState("Swift As The Breeze");
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		// a 2 fails even without the tacklezone
+		dodge(state, 2);
+
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertTrue(parameter.getModifierOptions().isEmpty());
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, swiftAsTheBreeze(game)));
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		assertFalse(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze(game)));
+	}
+
+	@Test
+	public void divingTackleOffersSwiftAsTheBreeze() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		Game game = state.getGame();
+
+		// a 3 passes the plain 3+ dodge, diving tackle pushes the needed roll to 5+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(parameter));
+	}
+
+	@Test
+	public void divingTackleCannotTripTheDodgerAfterSwiftAsTheBreeze() {
+		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, swiftAsTheBreeze(game)));
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
+		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("This will NOT trip the dodger, the dodge will still succeed."),
+			Arrays.asList(parameter.getDescriptions()));
+
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
+
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(PlayerState.PRONE, game.getFieldModel().getPlayerState(game.getPlayerById("marker")).getBase());
 	}
 }

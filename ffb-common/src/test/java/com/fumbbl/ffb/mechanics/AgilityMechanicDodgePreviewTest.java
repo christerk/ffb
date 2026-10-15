@@ -4,6 +4,7 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -14,6 +15,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.model.skill.SkillUsageType;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
@@ -152,6 +154,48 @@ class AgilityMechanicDodgePreviewTest {
 		// agility 4 plus one tacklezone and diving tackle is a 7+, Break Tackle brings it down to a 6+
 		assertEquals(6, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
 			.minimumRollDodgePreview(game, actingPlayer, FROM, TO));
+	}
+
+	/**
+	 * @return a skill with a single dodge modifier
+	 */
+	private Skill skillWithModifier(SkillUsageType usageType, int value, boolean optional) {
+		Skill skill = new Skill("Test Skill " + value, SkillCategory.TRAIT, usageType) {
+			@Override
+			public void postConstruct() {
+				registerModifier(new DodgeModifier("Test Modifier " + value, value, ModifierType.REGULAR, false, optional) {
+					@Override
+					public boolean appliesToContext(Skill skill, DodgeContext context) {
+						return !optional || context.isSkillSelected(skill);
+					}
+				});
+			}
+		};
+		skill.postConstruct();
+		return skill;
+	}
+
+	@Test
+	void bb2025PreviewIgnoresBonusesOfSkillsThatCannotBeUsedEveryTurnEvenWhenNotOptional() {
+		skills.clear();
+		skills.add(skillWithModifier(SkillUsageType.ONCE_PER_GAME, -1, false));
+		assertPreviewIgnoresOptionalModifiers(new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic());
+	}
+
+	@Test
+	void bb2025PreviewKeepsPenaltiesOfSkillsThatCannotBeUsedEveryTurn() {
+		skills.clear();
+		skills.add(skillWithModifier(SkillUsageType.ONCE_PER_GAME, 1, false));
+		// agility 4 plus one tacklezone and the penalty is a 6+
+		assertEquals(6, new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic()
+			.minimumRollDodgePreview(game, actingPlayer, FROM, TO));
+	}
+
+	@Test
+	void bb2025PreviewDoesNotDeclareOptionalPenalties() {
+		skills.clear();
+		skills.add(skillWithModifier(SkillUsageType.REGULAR, 1, true));
+		assertPreviewIgnoresOptionalModifiers(new com.fumbbl.ffb.mechanics.bb2025.AgilityMechanic());
 	}
 
 	@Test
