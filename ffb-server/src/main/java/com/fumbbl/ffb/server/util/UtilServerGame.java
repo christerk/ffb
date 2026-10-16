@@ -69,8 +69,13 @@ public class UtilServerGame {
 		return synced;
 	}
 
-	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
+	public static void changeActingPlayer(IStep pStep, String actingPlayerId, PlayerAction playerAction,
 																				boolean jumping) {
+		changeActingPlayer(pStep, actingPlayerId, playerAction, jumping, false);
+	}
+
+	public static void changeActingPlayer(IStep pStep, String pActingPlayerId, PlayerAction pPlayerAction,
+																				boolean jumping, boolean forceActionReport) {
 		Game game = pStep.getGameState().getGame();
 		PlayerAction oldPlayerAction = game.getActingPlayer().getPlayerAction();
 
@@ -83,7 +88,7 @@ public class UtilServerGame {
 		boolean playerChanged = UtilActingPlayer.changeActingPlayer(game, pActingPlayerId, actualAction, jumping);
 		if (pPlayerAction != null) {
 			boolean differentAction = (oldPlayerAction == null) || (pPlayerAction.getType() != oldPlayerAction.getType());
-			if ((playerChanged && differentAction) || pPlayerAction.forceLog()) {
+			if ((playerChanged && differentAction) || pPlayerAction.forceLog() || forceActionReport) {
 				if (oldPlayerAction == null) {
 					pStep.getResult().setSound(SoundId.CLICK);
 				}

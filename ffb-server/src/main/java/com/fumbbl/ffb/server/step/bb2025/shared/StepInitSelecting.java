@@ -116,7 +116,8 @@ public final class StepInitSelecting extends AbstractStep {
 						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
 						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
-							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction, actingPlayerCommand.isJumping());
+							UtilServerGame.changeActingPlayer(this, actingPlayerCommand.getPlayerId(), playerAction,
+								actingPlayerCommand.isJumping(), true);
 							forceGotoOnDispatch = true;
 						} else {
 							if (playerAction != null && playerAction.isStandingUp()) {
@@ -138,7 +139,7 @@ public final class StepInitSelecting extends AbstractStep {
 							}
 
 							UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
-								playerAction, actingPlayerCommand.isJumping());
+								playerAction, actingPlayerCommand.isJumping(), true);
 
 						}
 						game.getActingPlayer().setInitialAdjacentPartnerIds(UtilPlayer.findPickUpPartners(game, selectedPlayer));
