@@ -110,14 +110,17 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_APOTHECARY_CHOICE:
 					ClientCommandApothecaryChoice apothecaryChoiceCommand = (ClientCommandApothecaryChoice) pReceivedCommand
 						.getCommand();
+					DialogApothecaryChoiceParameter dialogParameter =
+						(DialogApothecaryChoiceParameter) getGameState().getGame().getDialogParameter();
+
 					Optional<InjuryResult> choiceResult = injuryResults.stream().filter(injuryResult ->
-							injuryResult.injuryContext().getDefenderId().equals(apothecaryChoiceCommand.getPlayerId())
-								&& injuryResult.injuryContext().getPlayerState().equals(apothecaryChoiceCommand.getOldPlayerState())
+							injuryResult.injuryContext().getDefenderId().equals(dialogParameter.getPlayerId())
+								&& injuryResult.injuryContext().getPlayerState().equals(dialogParameter.getPlayerStateOld())
 								&& injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE
 						)
 						.findFirst();
 					if (choiceResult.isPresent()) {
-						handleApothecaryChoice(choiceResult.get(), apothecaryChoiceCommand.getPlayerState(), apothecaryChoiceCommand.getSeriousInjury());
+						handleApothecaryChoice(choiceResult.get(), dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -444,9 +447,17 @@ public class StepApothecaryMultiple extends AbstractStep {
 		return apothecaryChoice;
 	}
 
-	private void handleApothecaryChoice(InjuryResult injuryResult, PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-		injuryResult.injuryContext().setInjury(pPlayerState);
-		injuryResult.injuryContext().setSeriousInjury(pSeriousInjury);
+	private void handleApothecaryChoice(InjuryResult injuryResult,
+		DialogApothecaryChoiceParameter dialogParameter, boolean choiceNewInjury) {
+
+		if (choiceNewInjury) {
+			injuryResult.injuryContext().setInjury(dialogParameter.getPlayerStateNew());
+			injuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjuryNew());
+		} else {
+			injuryResult.injuryContext().setInjury(dialogParameter.getPlayerStateOld());
+			injuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjuryOld());
+		}
+
 		injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 	}
 
