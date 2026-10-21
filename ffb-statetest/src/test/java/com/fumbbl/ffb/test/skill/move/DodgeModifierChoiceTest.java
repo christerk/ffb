@@ -11,6 +11,7 @@ import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
@@ -65,7 +66,7 @@ public class DodgeModifierChoiceTest {
 			.build();
 	}
 
-	private GameState buildStateWithScoringTeamMate(String... dodgerSkills) {
+	private GameState buildStateWithScoringTeamMate() {
 		return new GameStateBuilder(testServer.getGameState())
 			.withRule("BB2025")
 			.withWeather(Weather.NICE)
@@ -73,7 +74,7 @@ public class DodgeModifierChoiceTest {
 			.withTeam(true, t -> t
 				.player("runner", p -> {
 					p.at(12, 7).stats(6, 3, 3, 5, 8);
-					for (String skill : dodgerSkills) {
+					for (String skill : new String[]{"Dodge"}) {
 						p.skill(skill);
 					}
 				})
@@ -84,14 +85,14 @@ public class DodgeModifierChoiceTest {
 			.build();
 	}
 
-	private GameState buildStateWithDivingTackler(String... dodgerSkills) {
+	private GameState buildStateWithDivingTackler() {
 		return new GameStateBuilder(testServer.getGameState())
 			.withRule("BB2025")
 			.withWeather(Weather.NICE)
 			.withTeam(true, t -> t
 				.player("runner", p -> {
 					p.at(12, 7).stats(6, 3, 3, 5, 8);
-					for (String skill : dodgerSkills) {
+					for (String skill : new String[]{"Swift As The Breeze"}) {
 						p.skill(skill);
 					}
 				}))
@@ -103,8 +104,28 @@ public class DodgeModifierChoiceTest {
 			.build();
 	}
 
+	private GameState buildStateWithDivingTacklerAndMarkedTarget(int strength) {
+		return new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withWeather(Weather.NICE)
+			.withTeam(true, t -> t
+				.player("runner", p -> {
+					p.at(12, 7).stats(6, strength, 3, 5, 8);
+					for (String skill : new String[]{"Break Tackle"}) {
+						p.skill(skill);
+					}
+				}))
+			.withTeam(false, t -> t
+				.player("marker", p -> {
+					p.at(13, 7).stats(6, 3, 3, 5, 8);
+					p.skill("Diving Tackle");
+				})
+				.player("blocker", p -> p.at(10, 7).stats(6, 3, 3, 5, 8)))
+			.build();
+	}
+
 	private List<String> labels(DialogReRollModifierChoiceParameter parameter) {
-		return parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+		return parameter.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList());
 	}
 
 	private Skill swiftAsTheBreeze(Game game) {
@@ -145,7 +166,7 @@ public class DodgeModifierChoiceTest {
 		assertEquals(4, parameter.getMinimumRoll());
 		assertEquals(3, parameter.getRoll());
 		List<String> labels =
-			parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+			parameter.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList());
 		assertEquals(2, labels.size());
 		assertTrue(labels.contains("Break Tackle"));
 		assertTrue(labels.contains("Consummate Professional"));
@@ -161,7 +182,7 @@ public class DodgeModifierChoiceTest {
 
 		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
 		List<String> labels =
-			parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+			parameter.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList());
 		assertEquals(Collections.singletonList("Break Tackle"), labels);
 	}
 
@@ -242,7 +263,7 @@ public class DodgeModifierChoiceTest {
 
 	@Test
 	public void loneDodgeReRollIsOfferedWhenATeamMateWouldBeStalling() {
-		GameState state = buildStateWithScoringTeamMate("Dodge");
+		GameState state = buildStateWithScoringTeamMate();
 		Game game = state.getGame();
 
 		dodge(state, 3);
@@ -340,7 +361,7 @@ public class DodgeModifierChoiceTest {
 
 	@Test
 	public void divingTackleOffersSwiftAsTheBreeze() {
-		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		GameState state = buildStateWithDivingTackler();
 		Game game = state.getGame();
 
 		// a 3 passes the plain 3+ dodge, diving tackle pushes the needed roll to 5+
@@ -353,7 +374,7 @@ public class DodgeModifierChoiceTest {
 
 	@Test
 	public void divingTackleCannotTripTheDodgerAfterSwiftAsTheBreeze() {
-		GameState state = buildStateWithDivingTackler("Swift As The Breeze");
+		GameState state = buildStateWithDivingTackler();
 		Game game = state.getGame();
 
 		dodge(state, 3);
@@ -365,6 +386,58 @@ public class DodgeModifierChoiceTest {
 		assertEquals(Collections.singletonList("This will NOT trip the dodger, the dodge will still succeed."),
 			Arrays.asList(parameter.getDescriptions()));
 
+		StepEngine.respond(state,
+			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
+
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertEquals(PlayerState.PRONE, game.getFieldModel().getPlayerState(game.getPlayerById("marker")).getBase());
+	}
+
+	@Test
+	public void failedDodgeOptionsIncludeAPendingDivingTackle() {
+		// break tackle at strength 5 gives -3
+		GameState state = buildStateWithDivingTacklerAndMarkedTarget(5);
+		Game game = state.getGame();
+
+		// a 3 fails the 4+ dodge, diving tackle would push it to 6+, break tackle brings it back to 3+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertEquals(Collections.singletonList("Break Tackle"), labels(parameter));
+		assertEquals(3, parameter.getModifierOptions().get(0).getMinimumRoll());
+		assertEquals(4, parameter.getMinimumRoll());
+		assertEquals(Collections.singletonList("Diving Tackle can still be declared, the listed rolls include its modifier."),
+			parameter.getMessages());
+	}
+
+	@Test
+	public void failedDodgeDoesNotOfferAModifierThatAPendingDivingTackleWouldWaste() {
+		// break tackle at strength 4 gives -2, enough for the plain dodge but not once diving tackle is declared
+		GameState state = buildStateWithDivingTacklerAndMarkedTarget(4);
+		Game game = state.getGame();
+		game.getTurnData().setReRolls(1);
+
+		dodge(state, 3);
+
+		assertEquals(DialogId.RE_ROLL_MODIFIER_CHOICE, game.getDialogParameter().getId());
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		assertTrue(parameter.getModifierOptions().isEmpty());
+		assertTrue(parameter.getModifierCombinations().stream().allMatch(option -> option.getMinimumRoll() == 4));
+		assertTrue(parameter.hasProperty(ReRollProperty.TRR));
+	}
+
+	@Test
+	public void choosingAModifierIncludingAPendingDivingTackleSurvivesTheDeclaration() {
+		GameState state = buildStateWithDivingTacklerAndMarkedTarget(5);
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		Skill breakTackle = game.getRules().getSkillFactory().forName("Break Tackle");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, breakTackle));
+
+		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
 		StepEngine.respond(state,
 			Commands.playerChoice(PlayerChoiceMode.DIVING_TACKLE, game.getPlayerById("marker")));
 

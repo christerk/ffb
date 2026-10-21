@@ -38,4 +38,18 @@ public class DivingTackleModifierService {
 			.filter(skill -> skill.hasSkillProperty(NamedProperties.canAttemptToTackleJumpingPlayer))
 			.findFirst().map(skill -> new HashSet<>(skill.getJumpModifiers())).orElseGet(HashSet::new);
 	}
+
+	/**
+	 * @return the dodge modifiers an opponent could still add, empty when no eligible tackler is adjacent
+	 */
+	public Set<DodgeModifier> dodgeModifiers(Game game, FieldCoordinate from, FieldCoordinate to) {
+		Player<?>[] divingTacklers =
+			UtilPlayer.findEligibleDivingTacklers(game, from, to, NamedProperties.canAttemptToTackleDodgingPlayer);
+		if (!ArrayTool.isProvided(divingTacklers)) {
+			return new HashSet<>();
+		}
+		return divingTacklers[0].getSkillsIncludingTemporaryOnes().stream()
+			.filter(skill -> skill.hasSkillProperty(NamedProperties.canAttemptToTackleDodgingPlayer))
+			.findFirst().map(skill -> new HashSet<>(skill.getDodgeModifiers())).orElseGet(HashSet::new);
+	}
 }

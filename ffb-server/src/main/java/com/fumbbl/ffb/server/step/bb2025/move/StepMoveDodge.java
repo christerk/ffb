@@ -30,6 +30,7 @@ import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.modifiers.DivingTackleModifierService;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.net.NetCommandId;
@@ -98,7 +99,11 @@ import java.util.Set;
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepMoveDodge extends AbstractStepWithReRoll {
 
+	private static final String PENDING_DIVING_TACKLE_EXPLANATION =
+		"Diving Tackle can still be declared, the listed rolls include its modifier.";
+
 	private final DodgeModifierSelectionService selectionService = new DodgeModifierSelectionService();
+	private final DivingTackleModifierService divingTackleService = new DivingTackleModifierService();
 	private final StallingExtension stallingExtension = new StallingExtension();
 
 	private String fGotoLabelOnFailure;
@@ -466,10 +471,19 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			return fallback;
 		}
 
+		// an opponent who has not been asked yet declares Diving Tackle right after the dodge was rescued, so its
+		// modifier is part of the roll the offered modifiers have to beat, exactly like in the move square preview
+		Set<DodgeModifier> pendingDivingTackleModifiers = dueToDivingTackle || fUsingDivingTackle != null
+			? Collections.emptySet()
+			: divingTackleService.dodgeModifiers(game, fCoordinateFrom, fCoordinateTo);
+		Set<DodgeModifier> rescuedModifiers = new HashSet<>(extraModifiers);
+		rescuedModifiers.addAll(pendingDivingTackleModifiers);
+
 		List<ModifierChoiceOption> options = selectionService.findOptions(game, actingPlayer, fCoordinateFrom,
-			fCoordinateTo, extraModifiers, fDodgeRoll);
+			fCoordinateTo, rescuedModifiers, fDodgeRoll);
 		List<ModifierChoiceOption> combinations = selectionService.findCombinations(game, actingPlayer, fCoordinateFrom,
-			fCoordinateTo, extraModifiers);
+			fCoordinateTo, rescuedModifiers);
+		boolean explainPendingDivingTackle = !pendingDivingTackleModifiers.isEmpty() && !combinations.isEmpty();
 
 		boolean reRollPossible = fUsingDivingTackle == null && !fReRollUsed
 			&& getReRolledAction() != ReRolledActions.DODGE;
@@ -485,6 +499,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			List<String> messages = new ArrayList<>();
 			if (dueToDivingTackle) {
 				messages.add("Diving Tackle can make this dodge fail.");
+			}
+			if (explainPendingDivingTackle) {
+				messages.add(PENDING_DIVING_TACKLE_EXPLANATION);
 			}
 
 			if (!dueToDivingTackle && reRollPossible) {
@@ -512,9 +529,12 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 			}
 		}
 
-		List<String> messages = dueToDivingTackle
-			? Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?")
-			: null;
+		List<String> messages = null;
+		if (dueToDivingTackle) {
+			messages = Collections.singletonList("Diving Tackle can make this dodge fail. Reroll the dodge now?");
+		} else if (explainPendingDivingTackle) {
+			messages = Collections.singletonList(PENDING_DIVING_TACKLE_EXPLANATION);
+		}
 
 		if (askForRescue(minimumRoll, options, combinations, true, skillReRollSource, canceledReRollSkills, messages)) {
 			if (dueToDivingTackle) {
