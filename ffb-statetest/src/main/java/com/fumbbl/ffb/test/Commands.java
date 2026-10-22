@@ -24,7 +24,11 @@ import java.util.Arrays;
 
 public class Commands {
 	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action) {
-		return new ClientCommandActingPlayer(playerId, action, false);
+		return selectPlayer(playerId, action, false);
+	}
+
+	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action, boolean jumping) {
+		return new ClientCommandActingPlayer(playerId, action, jumping);
 	}
 
 	public static ClientCommandBlock block(String attackerId, String defenderId) {

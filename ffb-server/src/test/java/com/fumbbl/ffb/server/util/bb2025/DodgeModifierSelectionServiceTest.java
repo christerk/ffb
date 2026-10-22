@@ -17,6 +17,7 @@ import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.skill.bb2025.BreakTackle;
 import com.fumbbl.ffb.skill.bb2025.special.ConsummateProfessional;
+import com.fumbbl.ffb.skill.mixed.special.SwiftAsTheBreeze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +51,7 @@ class DodgeModifierSelectionServiceTest {
 
 	private BreakTackle breakTackle;
 	private ConsummateProfessional consummateProfessional;
+	private SwiftAsTheBreeze swiftAsTheBreeze;
 
 	@BeforeEach
 	void setUp() {
@@ -57,6 +59,8 @@ class DodgeModifierSelectionServiceTest {
 		breakTackle.postConstruct();
 		consummateProfessional = new ConsummateProfessional();
 		consummateProfessional.postConstruct();
+		swiftAsTheBreeze = new SwiftAsTheBreeze();
+		swiftAsTheBreeze.postConstruct();
 
 		player = mock(Player.class);
 		when(player.getSkillsIncludingTemporaryOnes()).thenReturn(skills);
@@ -203,6 +207,67 @@ class DodgeModifierSelectionServiceTest {
 		// nothing rescues a 2, but the coach still learns what a re-roll could achieve
 		assertTrue(findOptions(2).isEmpty());
 		assertEquals(2, findCombinations().size());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersRescuesTheUnmodifiedRoll() {
+		skills.add(swiftAsTheBreeze);
+		// agility 4 with a tacklezone needs a 5+, ignoring the modifiers brings it back to the unmodified 4+
+		List<ModifierChoiceOption> options = findOptions(4);
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(options));
+		assertEquals(4, options.get(0).getMinimumRoll());
+		assertEquals(-1, options.get(0).getTotalModifier());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersIsNotOfferedWhenEvenTheUnmodifiedRollFails() {
+		skills.add(swiftAsTheBreeze);
+		assertTrue(findOptions(3).isEmpty());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersIsNotOfferedWhenUsed() {
+		skills.add(swiftAsTheBreeze);
+		usedSkills.add(swiftAsTheBreeze);
+		assertTrue(findOptions(4).isEmpty());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersAlsoIgnoresExtraModifiers() {
+		skills.addAll(Arrays.asList(breakTackle, swiftAsTheBreeze));
+		DodgeModifier divingTackle = new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE, false);
+		// diving tackle pushes the roll to 7+, break tackle alone only gets it to 6+
+		List<ModifierChoiceOption> options = service.findOptions(game, actingPlayer, FROM, TO,
+			new HashSet<>(Collections.singletonList(divingTackle)), 4);
+		assertEquals(Collections.singletonList("Swift As The Breeze"), labels(options));
+		assertEquals(4, options.get(0).getMinimumRoll());
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersIsNotCombinedWithOtherSkills() {
+		skills.addAll(Arrays.asList(consummateProfessional, swiftAsTheBreeze));
+		when(player.getStrengthWithModifiers()).thenReturn(4);
+		skills.add(breakTackle);
+		// every combination containing the skill needs the unmodified roll, so only the skill alone is listed
+		assertTrue(findCombinations().stream()
+			.noneMatch(option -> option.getSkills().size() > 1 && option.getSkills().contains(swiftAsTheBreeze)));
+	}
+
+	@Test
+	void theSkillIgnoringTheModifiersIsAvailable() {
+		skills.addAll(Arrays.asList(breakTackle, swiftAsTheBreeze));
+		assertEquals(Arrays.asList(breakTackle, swiftAsTheBreeze), service.availableSkills(game, actingPlayer, FROM, TO));
+	}
+
+	@Test
+	void selectingTheSkillIgnoringTheModifiersLeavesNoModifiers() {
+		skills.add(swiftAsTheBreeze);
+		DodgeModifier divingTackle = new DodgeModifier("Diving Tackle", 2, ModifierType.DIVING_TACKLE, false);
+		Set<Skill> selected = new HashSet<>(Collections.singletonList(swiftAsTheBreeze));
+		assertTrue(service.modifiers(game, actingPlayer, FROM, TO, selected,
+			new HashSet<>(Collections.singletonList(divingTackle))).isEmpty());
+		assertEquals(4, service.minimumRoll(game, actingPlayer, FROM, TO, selected,
+			new HashSet<>(Collections.singletonList(divingTackle))));
 	}
 
 	private List<ModifierChoiceOption> findCombinations() {

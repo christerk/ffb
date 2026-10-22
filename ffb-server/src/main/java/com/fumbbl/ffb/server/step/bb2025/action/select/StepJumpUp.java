@@ -12,10 +12,13 @@ import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -82,6 +85,11 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
+		// the superclass would accept any re-roll skill, even one the player does not have or that was never offered
+		if (receivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL
+			&& !isOfferedReRollSkill((ClientCommandUseSkill) receivedCommand.getCommand())) {
+			return StepCommandStatus.UNHANDLED_COMMAND;
+		}
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -94,7 +102,7 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		switch (receivedCommand.getId()) {
 			case CLIENT_RE_ROLL_MODIFIER_CHOICE:
 				ClientCommandReRollModifierChoice choice = (ClientCommandReRollModifierChoice) receivedCommand.getCommand();
-				if (!isAwaitingChoice() || choice.getReRolledAction() != ReRolledActions.JUMP_UP
+				if (isNotAwaitingChoice() || choice.getReRolledAction() != ReRolledActions.JUMP_UP
 					|| !game.getActingPlayer().getPlayerId().equals(choice.getPlayerId())) {
 					return StepCommandStatus.UNHANDLED_COMMAND;
 				}
@@ -117,15 +125,31 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		}
 	}
 
-	private boolean isAwaitingChoice() {
+	private boolean isNotAwaitingChoice() {
 		Game game = getGameState().getGame();
 		if (!state.awaitingRescue || game.getActingPlayer().getPlayer() == null
 			|| !(game.getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
-			return false;
+			return true;
 		}
 		DialogReRollModifierChoiceParameter dialog = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		return dialog.getReRolledAction() == ReRolledActions.JUMP_UP
-			&& game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId()) && state.roll == dialog.getRoll();
+		return dialog.getReRolledAction() != ReRolledActions.JUMP_UP
+			|| !game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId()) || state.roll != dialog.getRoll();
+	}
+
+	/**
+	 * @return whether the command uses the re-roll skill offered by the open dialog and the jumping player can still use
+	 * that skill
+	 */
+	private boolean isOfferedReRollSkill(ClientCommandUseSkill command) {
+		Skill skill = command.getSkill();
+		if (skill == null || !command.isSkillUsed() || isNotAwaitingChoice()) {
+			return false;
+		}
+		ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
+		DialogReRollModifierChoiceParameter dialog =
+			(DialogReRollModifierChoiceParameter) getGameState().getGame().getDialogParameter();
+		return skill.equals(dialog.getReRollSkill()) && !actingPlayer.isSkillUsed(skill)
+			&& actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().contains(skill);
 	}
 
 	public void failJumpUp() {

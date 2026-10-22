@@ -7,15 +7,11 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
-import com.fumbbl.ffb.mechanics.AgilityMechanic;
-import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
-import com.fumbbl.ffb.modifiers.DodgeContext;
-import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -29,11 +25,11 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle;
 import com.fumbbl.ffb.server.step.action.move.StepDivingTackle.StepState;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
+import com.fumbbl.ffb.server.util.bb2025.DodgeModifierSelectionService;
 import com.fumbbl.ffb.skill.mixed.DivingTackle;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2025)
@@ -42,6 +38,8 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 		super();
 
 		registerModifier(new StepModifier<StepDivingTackle, StepState>() {
+
+			private final DodgeModifierSelectionService selectionService = new DodgeModifierSelectionService();
 
 			@Override
 			public StepCommandStatus handleCommandHook(StepDivingTackle step, StepState state,
@@ -53,8 +51,6 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 			public boolean handleExecuteStepHook(StepDivingTackle step, StepState state) {
 				Game game = step.getGameState().getGame();
 				ActingPlayer actingPlayer = game.getActingPlayer();
-				AgilityMechanic mechanic =
-					(AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
 
 				if (state.usingDivingTackle == null) {
 					game.setDefenderId(null);
@@ -64,12 +60,10 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							state.coordinateTo, NamedProperties.canAttemptToTackleDodgingPlayer);
 						if (ArrayTool.isProvided(divingTacklers) && (state.dodgeRoll > 0)) {
 							DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
-							Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer,
-								state.coordinateFrom, state.coordinateTo, state.selectedModifierSkills));
-							dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
-
-							int minimumRollWithDivingTackle =
-								mechanic.minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+							// a selected skill ignoring every modifier also ignores the one of Diving Tackle
+							int minimumRollWithDivingTackle = selectionService.minimumRoll(game, actingPlayer,
+								state.coordinateFrom, state.coordinateTo, state.selectedModifierSkills,
+								modifierFactory.forType(ModifierType.DIVING_TACKLE));
 							boolean tripsDodger = !DiceInterpreter.getInstance()
 								.isSkillRollSuccessful(state.dodgeRoll, minimumRollWithDivingTackle);
 
@@ -94,7 +88,8 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 				if (tripsDodger) {
 					return "This will trip the dodger.";
 				}
-				if (state.selectedModifierSkills.isEmpty()) {
+				if (state.selectedModifierSkills.isEmpty()
+					|| state.selectedModifierSkills.stream().anyMatch(selectionService::isModifierIgnoringSkill)) {
 					return "This will NOT trip the dodger, the dodge will still succeed.";
 				}
 				return "This will NOT trip the dodger, but will force the use of "
