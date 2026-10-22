@@ -5,7 +5,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.FieldCoordinate;
-import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerChoiceMode;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
@@ -14,8 +13,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.SkillUse;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
-import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
-import com.fumbbl.ffb.dialog.DialogReRollParameter;
 import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
@@ -59,6 +56,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -103,6 +101,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		"Diving Tackle can still be declared, the listed rolls include its modifier.";
 
 	private final DodgeModifierSelectionService selectionService = new DodgeModifierSelectionService();
+	private final OfferedSkillService offeredSkillService = new OfferedSkillService();
 	private final DivingTackleModifierService divingTackleService = new DivingTackleModifierService();
 	private final StallingExtension stallingExtension = new StallingExtension();
 
@@ -202,7 +201,7 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 				if (commandSkill != null && commandSkill.hasSkillProperty(NamedProperties.canRerollDodge)) {
 					// the skill re-roll only counts when it was offered and the player can still use it
 					ReRollSource skillReRollSource = commandSkill.getRerollSource(ReRolledActions.DODGE);
-					if (skillReRollSource != null && !fReRollUsed && isOfferedReRollSkill(commandSkill)
+					if (skillReRollSource != null && !fReRollUsed && offeredSkillService.isOffered(getGameState().getGame(), commandSkill)
 						&& isUsableSkill(actingPlayer, commandSkill)) {
 						setReRolledAction(ReRolledActions.DODGE);
 						setReRollSource(skillReRollSource);
@@ -238,16 +237,13 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	private boolean acceptModifierChoice(ClientCommandReRollModifierChoice command) {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		DialogReRollModifierChoiceParameter dialog = pendingModifierChoiceDialog();
-		if (dialog == null || command.getReRolledAction() != ReRolledActions.DODGE
-			|| !actingPlayer.getPlayerId().equals(command.getPlayerId()) || command.getSkills().isEmpty()) {
+		if (actingPlayer.getPlayer() == null || command.getReRolledAction() != ReRolledActions.DODGE
+			|| !actingPlayer.getPlayerId().equals(command.getPlayerId())
+			|| !offeredSkillService.isOfferedModifierOption(game, actingPlayer.getPlayerId(), ReRolledActions.DODGE,
+			fDodgeRoll, command.getSkills())) {
 			return false;
 		}
 		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
-		if (dialog.getModifierOptions().stream()
-			.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-			return false;
-		}
 		List<Skill> availableSkills =
 			selectionService.availableSkills(game, actingPlayer, fCoordinateFrom, fCoordinateTo);
 		if (skills.stream().anyMatch(skill -> !availableSkills.contains(skill) || !isUsableSkill(actingPlayer, skill))) {
@@ -257,38 +253,8 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 		return true;
 	}
 
-	/**
-	 * @return the open dialog offering optional modifiers for the current dodge roll, null when there is none
-	 */
-	private DialogReRollModifierChoiceParameter pendingModifierChoiceDialog() {
-		Game game = getGameState().getGame();
-		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (actingPlayer.getPlayer() == null
-			|| !(game.getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
-			return null;
-		}
-		DialogReRollModifierChoiceParameter dialog = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		return dialog.getReRolledAction() == ReRolledActions.DODGE && dialog.getRoll() == fDodgeRoll
-			&& actingPlayer.getPlayerId().equals(dialog.getPlayerId()) ? dialog : null;
-	}
-
-	/**
-	 * @return whether the open dialog offers the given skill as re-roll
-	 */
-	private boolean isOfferedReRollSkill(Skill skill) {
-		IDialogParameter dialogParameter = getGameState().getGame().getDialogParameter();
-		if (dialogParameter instanceof DialogReRollModifierChoiceParameter) {
-			return skill.equals(((DialogReRollModifierChoiceParameter) dialogParameter).getReRollSkill());
-		}
-		if (dialogParameter instanceof DialogReRollParameter) {
-			return skill.equals(((DialogReRollParameter) dialogParameter).getReRollSkill());
-		}
-		return false;
-	}
-
 	private boolean isUsableSkill(ActingPlayer actingPlayer, Skill skill) {
-		return !actingPlayer.isSkillUsed(skill)
-			&& actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().contains(skill);
+		return offeredSkillService.hasUnused(getGameState().getGame(), actingPlayer.getPlayer(), skill);
 	}
 
 	private void executeStep() {

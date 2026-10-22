@@ -70,6 +70,7 @@ import com.fumbbl.ffb.server.step.generator.QuickBite;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.SpikedBallApo;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -188,8 +189,13 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					PassState passState = getGameState().getPassState();
 					ActingPlayer actingPlayer = game.getActingPlayer();
-					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
-						if (passState != null) {
+					Skill commandSkill = commandUseSkill.getSkill();
+					// a skill the step does not actually offer right now is ignored
+					if (commandSkill == null) {
+						break;
+					}
+					if (commandSkill.hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
+						if (isCatchBonusSkillAvailable(commandSkill)) {
 							passState.setUsingBlastIt(commandUseSkill.isSkillUsed());
 							if (commandUseSkill.isSkillUsed()) {
 								evaluate = true;
@@ -200,7 +206,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 								commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-					} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
+					} else if (isCatchReRollSkillAvailable(commandSkill)) {
 						if (commandUseSkill.isSkillUsed()) {
 							setReRollSource(commandUseSkill.getSkill().getRerollSource(getReRolledAction()));
 						} else if (passState != null) {
@@ -236,17 +242,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private boolean handleModifierChoice(ClientCommandReRollModifierChoice command) {
 		Game game = getGameState().getGame();
 		Player<?> catcher = game.getPlayerById(fCatcherId);
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
 		if (!awaitingRescue || catcher == null || command.getReRolledAction() != ReRolledActions.CATCH
-			|| !catcher.getId().equals(command.getPlayerId())) {
+			|| !catcher.getId().equals(command.getPlayerId())
+			|| !offeredSkillService.isOfferedModifierOption(game, catcher.getId(), ReRolledActions.CATCH, roll,
+			command.getSkills())
+			|| command.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, catcher, skill))) {
 			return false;
 		}
-		PassState passState = getGameState().getPassState();
 		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
-		if (selectionService.findOptions(game, catcher, fCatchScatterThrowInMode,
-			passState != null ? passState.getUsingBlastIt() : null, roll).stream()
-			.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-			return false;
-		}
 		for (Skill skill : skills) {
 			selectedModifierSkills.add(skill);
 			if (catcher == game.getActingPlayer().getPlayer()) {
@@ -259,6 +263,37 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		awaitingRescue = false;
 		modifierChosen = true;
 		return true;
+	}
+
+	/**
+	 * The thrower's catch bonus skill can only be decided on once during a Hail Mary Pass, only if the thrower still
+	 * has it unused and only while a dialog offers it.
+	 */
+	private boolean isCatchBonusSkillAvailable(Skill skill) {
+		Game game = getGameState().getGame();
+		PassState passState = getGameState().getPassState();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return passState != null && passState.getUsingBlastIt() == null
+			&& actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS
+			&& skill.equals(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.grantsCatchBonusToReceiver))
+			&& new OfferedSkillService().isOffered(game, skill);
+	}
+
+	/**
+	 * A catch re-roll skill can only be used by the catcher owning it while a dialog offers the not yet used
+	 * re-roll of a failed catch.
+	 */
+	private boolean isCatchReRollSkillAvailable(Skill skill) {
+		Game game = getGameState().getGame();
+		Player<?> catcher = game.getPlayerById(fCatcherId);
+		if (getReRolledAction() != ReRolledActions.CATCH || reRollUsed || fCatchScatterThrowInMode == null ||
+			skill.getRerollSource(ReRolledActions.CATCH) == null
+			|| !UtilCards.hasSkill(catcher, skill) || !new OfferedSkillService().isOffered(game, skill)) {
+			return false;
+		}
+		GameOptionBoolean catchForBombs = (GameOptionBoolean) game.getOptions()
+			.getOptionWithDefault(GameOptionId.CATCH_WORKS_FOR_BOMBS);
+		return !fCatchScatterThrowInMode.isBomb() || catchForBombs.isEnabled();
 	}
 
 	@Override
@@ -729,10 +764,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	 * <p>
 	 * On a loose ball the coach may prefer not to hold the ball in that square, so the re-roll is always a choice.
 	 * For a deliberate delivery it is only a choice when failing would get a rock thrown at a team mate.
-	 */
-	/**
-	 * A ball or bomb that is not delivered deliberately may always be declined, so the skill re-roll has to be a
-	 * choice. For a deliberate delivery it is used automatically unless failing on purpose could be the better play.
 	 */
 	private boolean mayUseSkillReRollAutomatically() {
 		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER

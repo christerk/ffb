@@ -50,6 +50,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
@@ -179,8 +180,9 @@ public class StepJump extends AbstractStepWithReRoll {
 
 	/**
 	 * Applies the optional modifiers the coach picked instead of a re-roll. They are marked used right away, as all
-	 * modifiers of the jumping player have to be declared before Diving Tackle is decided. Skills the jumping player
-	 * cannot use are ignored, the command is only accepted when at least one of them is usable.
+	 * modifiers of the jumping player have to be declared before Diving Tackle is decided. The command is only
+	 * accepted when the matching dialog is open, the selection is one of the options it offered and the jumping player
+	 * can still use every skill of it.
 	 * <p>
 	 * The skill ignoring every modifier after the roll is offered as an option of its own, it is not a modifier, so it
 	 * is only remembered here and spent by {@link #leap()} together with its report.
@@ -190,36 +192,30 @@ public class StepJump extends AbstractStepWithReRoll {
 	private boolean commitModifierChoice(ClientCommandReRollModifierChoice command) {
 		Game game = getGameState().getGame();
 		ActingPlayer actingPlayer = game.getActingPlayer();
-		if (command.getReRolledAction() != ReRolledActions.JUMP || actingPlayer.getPlayer() == null
-			|| command.getSkills().isEmpty()) {
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		if (actingPlayer.getPlayer() == null || !actingPlayer.getPlayerId().equals(command.getPlayerId())
+			|| command.getReRolledAction() != ReRolledActions.JUMP
+			|| !offeredSkillService.isOfferedModifierOption(game, actingPlayer.getPlayerId(), ReRolledActions.JUMP, roll,
+			command.getSkills())
+			|| command.getSkills().stream()
+			.anyMatch(skill -> !offeredSkillService.hasUnused(game, actingPlayer.getPlayer(), skill))) {
 			return false;
 		}
 		Skill modifierIgnoringSkill =
 			UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canChooseToIgnoreJumpModifierAfterRoll);
-		boolean accepted = false;
-		for (Skill skill : command.getSkills()) {
-			if (skill == null || actingPlayer.isSkillUsed(skill)
-				|| !actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().contains(skill)) {
-				continue;
-			}
-			if (skill.equals(modifierIgnoringSkill)) {
-				// without the modifiers the roll still has to succeed, otherwise the skill would be wasted
-				if (!succeedsWithoutModifiers(game)) {
-					continue;
-				}
-				accepted = true;
-				useIgnoreModifierAfterRollSkill = true;
-			} else {
-				accepted = true;
-				if (selectedModifierSkills.add(skill)) {
-					actingPlayer.markSkillUsed(skill);
-					getResult()
-						.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
-				}
-			}
-		}
-		if (!accepted) {
+		// without the modifiers the roll still has to succeed, otherwise the skill would be wasted
+		if (modifierIgnoringSkill != null && command.getSkills().contains(modifierIgnoringSkill)
+			&& !succeedsWithoutModifiers(game)) {
 			return false;
+		}
+		for (Skill skill : command.getSkills()) {
+			if (skill.equals(modifierIgnoringSkill)) {
+				useIgnoreModifierAfterRollSkill = true;
+			} else if (selectedModifierSkills.add(skill)) {
+				actingPlayer.markSkillUsed(skill);
+				getResult()
+					.addReport(new ReportSkillUse(actingPlayer.getPlayerId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+			}
 		}
 		modifierChoiceApplied = true;
 		modifierChoiceOffered = true;
