@@ -1,6 +1,6 @@
 # BB2025: Optional Agility Modifier Selection (all Agility Tests)
 
-Status: dodge, pick up and jump up **implemented**, all other Agility Tests **planned / not implemented**.
+Status: dodge, pick up, jump, jump up and catch **implemented**, all other Agility Tests **planned / not implemented**.
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep their current behaviour untouched.
 
 > This document supersedes `docs/bb2025-dodge-modifier-selection-plan.md`. The dodge design is
@@ -24,7 +24,7 @@ every BB2025 Agility Test into it.
 | Dodge | `step/bb2025/move/StepMoveDodge` | Break Tackle, Consummate Professional | Dodge (auto, stalling guarded) | yes | yes |
 | Pick up | `step/bb2025/move/StepPickUp` | Consummate Professional | Sure Hands (auto, stalling guarded) | no | yes |
 | Catch | `step/bb2025/shared/StepCatchScatterThrowIn` | Consummate Professional | Catch (auto only for deliberate deliveries, see §3.4) | no | sometimes |
-| Jump | `step/bb2025/move/StepJump` | Consummate Professional; Leap, Very Long Legs, Pogo (conditionally, see §3.3) | Bounding Leap (auto, stalling guarded) | yes | yes |
+| Jump | `step/bb2025/move/StepJump` | Consummate Professional; Leap, Very Long Legs, Pogo (conditionally, see §3.3) | Bounding Leap (auto, declared before the roll) | yes | yes |
 | Jump up | `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour` | Consummate Professional | none | no | no (player stays prone) |
 | Interception | `step/bb2025/pass/StepIntercept` | Consummate Professional | none | no | no |
 | Right Stuff / landing | `step/bb2025/ttm/StepRightStuff` | Consummate Professional | Swoop | no | yes |
@@ -185,8 +185,10 @@ that case the coach gets the normal dialog instead, so they can decline and fail
 
 `AgilityMechanic.minimumRollDodgePreview(game, actingPlayer, from, to)` is abstract per ruleset.
 `bb2016`/`bb2020` replicate the old inline `UtilServerPlayerMove` computation verbatim; `bb2025`
-applies every currently available optional modifier (best achievable roll) and adds the Diving Tackle
-modifier when an eligible opponent could declare it. `UtilServerPlayerMove.addMoveSquare` is a pure
+applies every currently available optional modifier of a skill that is usable in every turn (best
+achievable roll) and adds the Diving Tackle modifier when an eligible opponent could declare it.
+Skills limited to one use per drive, half or game (e.g. `Consummate Professional`) are left out, the
+preview would otherwise promise a roll the player cannot reach again. `UtilServerPlayerMove.addMoveSquare` is a pure
 dispatch to the mechanic.
 
 ---
@@ -308,6 +310,8 @@ option exists.
 
 ### B. Catch — `step/bb2025/shared/StepCatchScatterThrowIn`
 
+**Implemented.** Other action work packages remain out of scope for the catch implementation.
+
 The catcher is usually **not** the acting player: use `ReRollRequest.forPlayer(...)` and
 `Player.markUsed` / `isUsed` (honoured for `SkillUsageType.isTrackOutsideActivation()`), not
 `ActingPlayer.markSkillUsed`. The Catch re-roll arrives through the `CatchBehaviour` step hook, so
@@ -331,19 +335,27 @@ no skill based Right Stuff modifiers at all today, only throw quality and tackle
 
 ### E. Jump — `step/bb2025/move/StepJump`
 
-The richest case.
+**Implemented.** The richest case.
 
-* Implement §3.3: keep `Leap`, `Very Long Legs` and `Pogo` auto-applied inside the jump modifier
-  factory, and only when the stalling condition holds build the modifier set **without** them and
-  offer them as declinable options. `Pogo` needs the distinct "do not ignore jump modifiers" option
-  kind driven by a context flag.
-* Evaluate `Leap`'s availability against the post-selection context.
-* Merge with the automatic Bounding Leap re-roll, applying the stalling guard.
-* Port the Diving Tackle look-ahead from `StepMoveDodge` (§2.9).
-* **Ruleset separation:** `modifiers/mixed/JumpModifierCollection` and `factory/mixed/JumpModifierFactory`
-  are shared with BB2020. Per the repository rules, duplicate them into `modifiers/bb2025` and
-  `factory/bb2025` with retargeted `@RulesCollection` annotations rather than adding 2025-only
-  behaviour to the shared classes, and never inherit a bb2025 class from a mixed/bb2020 one.
+* §3.3 is implemented in `factory/bb2025/JumpModifierFactory`: `Leap`, `Very Long Legs` and `Pogo`
+  stay auto-applied and are only built without them, and offered as declinable options, when
+  `JumpContext.areFreeModifiersOptional()` is set, which `StepJump` derives once per jump from the
+  stalling condition. `Pogo` is offered as a regular option whose bonus is derived from the roll it
+  saves, as it is not a modifier.
+* `JumpModifierSelectionService` builds a fresh `JumpContext` per candidate combination and decides
+  availability by "does adding the skill lower the needed roll", which evaluates `Leap` against the
+  post-selection context.
+* Bounding Leap is declared before the dice are rolled and grants both the ignored modifiers and the
+  re-roll, so its re-roll is always taken automatically and the skill is never offered as a re-roll
+  in a dialog that follows a roll. Skill commands the step did not offer are ignored.
+* The Diving Tackle look-ahead offers the same options as a real failure.
+* A `JumpContext` built without declared modifiers, i.e. the four argument constructor used by the
+  move square preview in `UtilServerPlayerMove`, makes the factory report the roll the player would
+  end up with in any turn: every optional modifier still available to them from a skill usable in
+  every turn, plus a possible Diving Tackle.
+* **Ruleset separation:** `factory/mixed/JumpModifierFactory` was duplicated into `factory/bb2025`
+  and the original moved to `factory/bb2020`, as BB2020 is its only remaining user.
+  `modifiers/mixed/JumpModifierCollection` stays shared, the modifiers themselves are identical.
 
 ### F. Jump up — `step/bb2025/action/select/StepJumpUp` + `skillbehaviour/bb2025/JumpUpBehaviour`
 
@@ -357,9 +369,8 @@ The earlier rulesets retain their existing behaviour. Stalling guards are not ap
 ## 6. Phase 3 — previews and client
 
 1. Generalise `minimumRollDodgePreview` into a per roll preview that accounts for the best free
-   optional modifiers, and **add a jump preview**: `UtilServerPlayerMove` computes jump squares
-   inline and never consults the preview, so jump move squares currently under-report their
-   difficulty.
+   optional modifiers. The jump squares are already covered, `factory/bb2025/JumpModifierFactory`
+   answers an undeclared `JumpContext` with the modifiers the player would really face (§5.E).
 2. Drive the dialog title and prompt from the roll descriptor; the dialog itself is already action
    agnostic, so this should be text only.
 3. Check `DialogManager` / `TurnDiceStatusComponent` behaviour for dialogs raised for the **non
@@ -370,8 +381,8 @@ The earlier rulesets retain their existing behaviour. Stalling guards are not ap
 * `AgilityModifierSelectionServiceTest` per roll type, with emphasis on jump (fresh context per
   combination, `Leap`'s `DEPENDS_ON_SUM_OF_OTHERS` gate, the `Pogo` option). The existing 13 dodge
   cases must keep passing after the rename.
-* `AgilityMechanic` preview tests for jump, including `Pogo`/`Leap`/`Very Long Legs` and the Diving
-  Tackle look-ahead, plus the existing `bb2016`/`bb2020` regression guards.
+* Preview tests for jump, including `Pogo`/`Leap`/`Very Long Legs` and the Diving Tackle look-ahead,
+  plus the existing `bb2016`/`bb2020` regression guards.
 * JSON round trips for any changed dialog parameter, command and step state (replay and reconnect).
 * `ffb-statetest` step flow regressions per action, following `ffb-statetest/TESTING_INSTRUCTIONS.md`
   (GameStateBuilder / StepEngine / Commands / TestRolls):
@@ -411,8 +422,10 @@ Report progress after each package.
 
 ## 10. Open items
 
-* The bomb catch modes (`CATCH_BOMB`, `DEFLECTED_BOMB`) and `CATCH_THROW_IN` need a ruling on whether
-  they count as "loose ball" for §3.4; the plan currently treats only the modes that reduce to
-  `CATCH_SCATTER` as always optional.
+* **Resolved during implementation.** `CATCH_THROW_IN` converts to `CATCH_SCATTER` before any catch
+  roll happens, so it is covered automatically. `CATCH_BOMB` is the bomb equivalent of an inaccurate
+  pass or scatter (the shared "Inaccurate Pass or Scatter" modifier applies to both) and is therefore
+  treated as a loose ball too, while `CATCH_ACCURATE_BOMB` counts as a deliberate delivery.
+  `DEFLECTED_BOMB` never reaches a catch roll in this step.
 * Whether the "do not ignore jump modifiers" option for `Pogo` should be presented as a single
   combined option together with `Leap`/`Very Long Legs` or as separate toggles.

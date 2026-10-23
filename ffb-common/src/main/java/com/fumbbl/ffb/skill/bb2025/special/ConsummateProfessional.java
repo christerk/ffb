@@ -5,8 +5,12 @@ import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.SkillCategory;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
+import com.fumbbl.ffb.modifiers.CatchContext;
+import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
+import com.fumbbl.ffb.modifiers.JumpContext;
+import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpContext;
 import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
@@ -50,6 +54,18 @@ public class ConsummateProfessional extends Skill {
 		registerModifier(new RightStuffModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
 			@Override
 			public boolean appliesToContext(Skill skill, RightStuffContext context) {
+        return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new CatchModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, CatchContext context) {
+				return context.isSkillSelected(skill);
+			}
+    });
+		registerModifier(new JumpModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, JumpContext context) {
 				return context.isSkillSelected(skill);
 			}
 		});

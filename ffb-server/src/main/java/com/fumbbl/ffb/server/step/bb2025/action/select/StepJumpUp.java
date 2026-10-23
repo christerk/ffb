@@ -15,7 +15,9 @@ import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -28,9 +30,9 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.server.util.bb2025.JumpUpModifierSelectionService;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.LinkedHashSet;
@@ -49,7 +51,6 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 
 	private final StepState state = new StepState();
-	private final JumpUpModifierSelectionService selectionService = new JumpUpModifierSelectionService();
 
 	public StepJumpUp(GameState gameState) {
 		super(gameState);
@@ -82,6 +83,11 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 
 	@Override
 	public StepCommandStatus handleCommand(ReceivedCommand receivedCommand) {
+		// the superclass would accept any re-roll skill, even one the player does not have or that was never offered
+		if (receivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL
+			&& !isOfferedReRollSkill((ClientCommandUseSkill) receivedCommand.getCommand())) {
+			return StepCommandStatus.UNHANDLED_COMMAND;
+		}
 		StepCommandStatus commandStatus = super.handleCommand(receivedCommand);
 		if (commandStatus == StepCommandStatus.EXECUTE_STEP) {
 			executeStep();
@@ -94,16 +100,16 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		switch (receivedCommand.getId()) {
 			case CLIENT_RE_ROLL_MODIFIER_CHOICE:
 				ClientCommandReRollModifierChoice choice = (ClientCommandReRollModifierChoice) receivedCommand.getCommand();
-				if (!isAwaitingChoice() || choice.getReRolledAction() != ReRolledActions.JUMP_UP
-					|| !game.getActingPlayer().getPlayerId().equals(choice.getPlayerId())) {
+				Player<?> player = game.getActingPlayer().getPlayer();
+				OfferedSkillService offeredSkillService = new OfferedSkillService();
+				if (!state.awaitingRescue || player == null || choice.getReRolledAction() != ReRolledActions.JUMP_UP
+					|| !player.getId().equals(choice.getPlayerId())
+					|| !offeredSkillService.isOfferedModifierOption(game, player.getId(), ReRolledActions.JUMP_UP, state.roll,
+					choice.getSkills())
+					|| choice.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, player, skill))) {
 					return StepCommandStatus.UNHANDLED_COMMAND;
 				}
 				Set<Skill> skills = new LinkedHashSet<>(choice.getSkills());
-				if (skills.size() != choice.getSkills().size()
-					|| selectionService.findOptions(game, state.roll).stream()
-					.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-					return StepCommandStatus.UNHANDLED_COMMAND;
-				}
 				for (Skill skill : skills) {
 					state.selectedModifierSkills.add(skill);
 					game.getActingPlayer().markSkillUsed(skill);
@@ -117,15 +123,30 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		}
 	}
 
-	private boolean isAwaitingChoice() {
+	private boolean isNotAwaitingChoice() {
 		Game game = getGameState().getGame();
 		if (!state.awaitingRescue || game.getActingPlayer().getPlayer() == null
 			|| !(game.getDialogParameter() instanceof DialogReRollModifierChoiceParameter)) {
-			return false;
+			return true;
 		}
 		DialogReRollModifierChoiceParameter dialog = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
-		return dialog.getReRolledAction() == ReRolledActions.JUMP_UP
-			&& game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId()) && state.roll == dialog.getRoll();
+		return dialog.getReRolledAction() != ReRolledActions.JUMP_UP
+			|| !game.getActingPlayer().getPlayerId().equals(dialog.getPlayerId()) || state.roll != dialog.getRoll();
+	}
+
+	/**
+	 * @return whether the command uses the re-roll skill offered by the open dialog and the jumping player can still use
+	 * that skill
+	 */
+	private boolean isOfferedReRollSkill(ClientCommandUseSkill command) {
+		Skill skill = command.getSkill();
+		if (skill == null || !command.isSkillUsed() || isNotAwaitingChoice()) {
+			return false;
+		}
+		Game game = getGameState().getGame();
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		return offeredSkillService.isOffered(game, skill)
+			&& offeredSkillService.hasUnused(game, game.getActingPlayer().getPlayer(), skill);
 	}
 
 	public void failJumpUp() {
