@@ -30,7 +30,6 @@ import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.RightStuffContext;
 import com.fumbbl.ffb.modifiers.RightStuffModifier;
-import com.fumbbl.ffb.net.NetCommandId;
 import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportRightStuffRoll;
@@ -52,6 +51,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -157,16 +157,23 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		StepCommandStatus commandStatus = super.handleCommand(pReceivedCommand);
 
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
-			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_SKILL) {
-				ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-				if (useSkill.isSkillUsed() && useSkill.getSkill().hasSkillProperty(NamedProperties.ttmScattersInSingleDirection)) {
-					setReRolledAction(ReRolledActions.RIGHT_STUFF);
-					setReRollSource(ReRollSources.SWOOP);
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
-				}
-			} else if (pReceivedCommand.getId() == NetCommandId.CLIENT_RE_ROLL_MODIFIER_CHOICE
-				&& handleModifierChoice((ClientCommandReRollModifierChoice) pReceivedCommand.getCommand())) {
-				commandStatus = StepCommandStatus.EXECUTE_STEP;
+			switch (pReceivedCommand.getId()) {
+				case CLIENT_USE_SKILL:
+					ClientCommandUseSkill useSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
+					// the re-roll skill only counts when it was offered and the thrown player can still use it
+					if (isOfferedReRollSkill(useSkill)) {
+						setReRolledAction(ReRolledActions.RIGHT_STUFF);
+						setReRollSource(useSkill.getSkill().getRerollSource(ReRolledActions.RIGHT_STUFF));
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_RE_ROLL_MODIFIER_CHOICE:
+					if (handleModifierChoice((ClientCommandReRollModifierChoice) pReceivedCommand.getCommand())) {
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -182,26 +189,51 @@ public final class StepRightStuff extends AbstractStepWithReRoll {
 		executeStep();
 	}
 
+	/**
+	 * @return whether the command uses the re-roll skill the open dialog offers to the thrown player for the failed
+	 * landing and the thrown player can still use it
+	 */
+	private boolean isOfferedReRollSkill(ClientCommandUseSkill command) {
+		Game game = getGameState().getGame();
+		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		Skill skill = command.getSkill();
+		if (!awaitingRescue || reRollUsed || thrownPlayer == null || skill == null || !command.isSkillUsed()
+			|| !thrownPlayer.getId().equals(command.getPlayerId())
+			|| skill.getRerollSource(ReRolledActions.RIGHT_STUFF) == null) {
+			return false;
+		}
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		return thrownPlayer.getId().equals(offeredSkillService.offeringPlayerId(game, skill))
+			&& offeredSkillService.hasUnused(game, thrownPlayer, skill);
+	}
+
+	/**
+	 * Applies the optional modifiers the coach picked instead of a re-roll. The command is only accepted when the
+	 * matching dialog is open, the selection is one of the options it offered and the thrown player can still use
+	 * every skill of it. A skill listed more than once is used once.
+	 *
+	 * @return whether the choice was accepted
+	 */
 	private boolean handleModifierChoice(ClientCommandReRollModifierChoice command) {
 		Game game = getGameState().getGame();
 		Player<?> thrownPlayer = game.getPlayerById(fThrownPlayerId);
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
 		if (!awaitingRescue || thrownPlayer == null || command.getReRolledAction() != ReRolledActions.RIGHT_STUFF
-			|| !thrownPlayer.getId().equals(command.getPlayerId())) {
+			|| !thrownPlayer.getId().equals(command.getPlayerId())
+			|| !offeredSkillService.isOfferedModifierOption(game, thrownPlayer.getId(), ReRolledActions.RIGHT_STUFF,
+			landingRoll, command.getSkills())
+			|| command.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, thrownPlayer, skill))) {
 			return false;
 		}
-		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
-		if (selectionService.findOptions(game, thrownPlayer, passResult, landingRoll).stream()
-			.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-			return false;
-		}
-		for (Skill skill : skills) {
-			selectedModifierSkills.add(skill);
-			if (thrownPlayer == game.getActingPlayer().getPlayer()) {
-				game.getActingPlayer().markSkillUsed(skill);
-			} else {
-				thrownPlayer.markUsed(skill, game);
+		for (Skill skill : new LinkedHashSet<>(command.getSkills())) {
+			if (selectedModifierSkills.add(skill)) {
+				if (thrownPlayer == game.getActingPlayer().getPlayer()) {
+					game.getActingPlayer().markSkillUsed(skill);
+				} else {
+					thrownPlayer.markUsed(skill, game);
+				}
+				getResult().addReport(new ReportSkillUse(thrownPlayer.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
 			}
-			getResult().addReport(new ReportSkillUse(thrownPlayer.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
 		}
 		awaitingRescue = false;
 		return true;

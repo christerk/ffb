@@ -5,10 +5,14 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.Weather;
+import com.fumbbl.ffb.dialog.DialogInterceptionParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
+import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportInterceptionRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.bb2025.pass.StepIntercept;
 import com.fumbbl.ffb.test.Commands;
@@ -19,6 +23,8 @@ import com.fumbbl.ffb.test.TestServer;
 import com.fumbbl.ffb.util.UtilPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -174,5 +180,46 @@ class InterceptionModifierChoiceTest {
 		chooseModifier(state);
 
 		assertTrue(UtilPlayer.hasBall(game, game.getPlayerById("interceptor")));
+	}
+
+	@Test
+	void rescuedInterceptionIsNotLoggedAsAnotherRoll() {
+		GameState state = buildState("Consummate Professional");
+		passAndIntercept(state, 5);
+		assertEquals(1, interceptionRollReports(state));
+
+		chooseModifier(state);
+
+		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("interceptor")));
+		assertEquals(1, interceptionRollReports(state));
+	}
+
+	@Test
+	void interceptorChoicesTheDialogDidNotOfferAreIgnored() {
+		GameState state = buildState("Consummate Professional");
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.PASS));
+		TestRolls.on(state).general(6);
+		StepEngine.respond(state, Commands.pass("thrower", new FieldCoordinate(16, 7)));
+		assertTrue(state.getGame().getDialogParameter() instanceof DialogInterceptionParameter);
+
+		StepEngine.respond(state, Commands.interceptorChoice("catcher"));
+		StepEngine.respond(state, new ClientCommandInterceptorChoice("interceptor", professional(state)));
+		StepEngine.respond(state, new ClientCommandInterceptorChoice(null, professional(state)));
+
+		assertTrue(state.getGame().getDialogParameter() instanceof DialogInterceptionParameter);
+		assertFalse(state.getPassState().isInterceptorChosen());
+		TestRolls.on(state).general(6);
+		StepEngine.respond(state, Commands.interceptorChoice("interceptor"));
+		assertTrue(UtilPlayer.hasBall(state.getGame(), state.getGame().getPlayerById("interceptor")));
+		assertFalse(state.getGame().getPlayerById("interceptor").isUsed(professional(state)));
+	}
+
+	private long interceptionRollReports(GameState state) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportInterceptionRoll)
+			.count();
 	}
 }

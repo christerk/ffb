@@ -44,6 +44,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
@@ -116,11 +117,13 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 				case CLIENT_INTERCEPTOR_CHOICE:
 					ClientCommandInterceptorChoice interceptorCommand = (ClientCommandInterceptorChoice) pReceivedCommand
 						.getCommand();
-					PassState state = getGameState().getPassState();
-					state.setInterceptorId(interceptorCommand.getInterceptorId());
-					state.setInterceptorChosen(true);
-					interceptionSkill = interceptorCommand.getInterceptionSkill();
-					commandStatus = StepCommandStatus.EXECUTE_STEP;
+					if (isOfferedInterceptorChoice(interceptorCommand)) {
+						PassState state = getGameState().getPassState();
+						state.setInterceptorId(interceptorCommand.getInterceptorId());
+						state.setInterceptorChosen(true);
+						interceptionSkill = interceptorCommand.getInterceptionSkill();
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
 					break;
 				case CLIENT_RE_ROLL_MODIFIER_CHOICE:
 					if (handleModifierChoice((ClientCommandReRollModifierChoice) pReceivedCommand.getCommand())) {
@@ -137,24 +140,58 @@ public final class StepIntercept extends AbstractStepWithReRoll {
 		return commandStatus;
 	}
 
+	/**
+	 * The interceptor can only be chosen once while the interception dialog is open. Declining is always possible,
+	 * otherwise the interceptor has to be one of the eligible players and the skill making the interception easy is
+	 * only accepted when the dialog offered it and the interceptor can still use it.
+	 */
+	private boolean isOfferedInterceptorChoice(ClientCommandInterceptorChoice command) {
+		Game game = getGameState().getGame();
+		PassState state = getGameState().getPassState();
+		if (state == null || state.isInterceptorChosen()
+			|| !(game.getDialogParameter() instanceof DialogInterceptionParameter)) {
+			return false;
+		}
+		String interceptorId = command.getInterceptorId();
+		if (!StringTool.isProvided(interceptorId)) {
+			return command.getInterceptionSkill() == null;
+		}
+		Player<?> interceptor = game.getPlayerById(interceptorId);
+		if (interceptor == null || Arrays.stream(UtilPassing.findInterceptors(game, game.getThrower(),
+			game.getPassCoordinate())).noneMatch(interceptor::equals)) {
+			return false;
+		}
+		Skill skill = command.getInterceptionSkill();
+		return skill == null
+			|| (skill.equals(((DialogInterceptionParameter) game.getDialogParameter()).getInterceptionSkill())
+			&& new OfferedSkillService().hasUnused(game, interceptor, skill));
+	}
+
+	/**
+	 * Applies the optional modifiers the coach picked instead of a re-roll. The command is only accepted when the
+	 * matching dialog is open, the selection is one of the options it offered and the interceptor can still use every
+	 * skill of it. A skill listed more than once is used once.
+	 *
+	 * @return whether the choice was accepted
+	 */
 	private boolean handleModifierChoice(ClientCommandReRollModifierChoice command) {
 		Game game = getGameState().getGame();
 		PassState state = getGameState().getPassState();
-		Player<?> interceptor = game.getPlayerById(state.getInterceptorId());
+		Player<?> interceptor = state != null ? game.getPlayerById(state.getInterceptorId()) : null;
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
 		if (!awaitingRescue || interceptor == null || easyIntercept(interceptor)
 			|| command.getReRolledAction() != ReRolledActions.INTERCEPTION
-			|| !interceptor.getId().equals(command.getPlayerId())) {
+			|| !interceptor.getId().equals(command.getPlayerId())
+			|| !offeredSkillService.isOfferedModifierOption(game, interceptor.getId(), ReRolledActions.INTERCEPTION,
+			interceptionRoll, command.getSkills())
+			|| command.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, interceptor, skill))) {
 			return false;
 		}
-		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
-		if (selectionService.findOptions(game, interceptor, state.getResult(), isBomb(state), interceptionRoll).stream()
-			.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-			return false;
-		}
-		for (Skill skill : skills) {
-			selectedModifierSkills.add(skill);
-			interceptor.markUsed(skill, game);
-			getResult().addReport(new ReportSkillUse(interceptor.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+		for (Skill skill : new LinkedHashSet<>(command.getSkills())) {
+			if (selectedModifierSkills.add(skill)) {
+				interceptor.markUsed(skill, game);
+				getResult().addReport(new ReportSkillUse(interceptor.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+			}
 		}
 		awaitingRescue = false;
 		return true;

@@ -11,7 +11,11 @@ import com.fumbbl.ffb.mechanics.PassResult;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
+import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportRightStuffRoll;
 import com.fumbbl.ffb.server.GameState;
+import com.fumbbl.ffb.server.net.ReceivedCommand;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
@@ -24,6 +28,8 @@ import com.fumbbl.ffb.test.TestRolls;
 import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -130,7 +136,11 @@ class RightStuffModifierChoiceTest {
 		assertFalse(landedStanding(state));
 	}
 
-	private StepRightStuff swoopLanding(GameState state, int landingRoll) {
+	private StepRightStuff swoopLanding(GameState state) {
+		return landing(state, true);
+	}
+
+	private StepRightStuff landing(GameState state, boolean usingSwoop) {
 		StepEngine.start(state);
 		StepEngine.respond(state, Commands.selectPlayer("thrower", PlayerAction.THROW_TEAM_MATE));
 		StepRightStuff step = new StepRightStuff(state);
@@ -140,10 +150,10 @@ class RightStuffModifierChoiceTest {
 		step.setParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, "stunty"));
 		step.setParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, false));
 		step.setParameter(StepParameter.from(StepParameterKey.PASS_RESULT, PassResult.ACCURATE));
-		step.setParameter(new StepParameter(StepParameterKey.USING_SWOOP, true));
+		step.setParameter(new StepParameter(StepParameterKey.USING_SWOOP, usingSwoop));
 		step.setParameter(
 			new StepParameter(StepParameterKey.OLD_DEFENDER_STATE, new PlayerState(PlayerState.STANDING)));
-		TestRolls.on(state).general(landingRoll);
+		TestRolls.on(state).general(2);
 		step.start();
 		return step;
 	}
@@ -151,7 +161,7 @@ class RightStuffModifierChoiceTest {
 	@Test
 	void swoopReRollIsOfferedAlongsideTheModifier() {
 		GameState state = buildState("Swoop", "Consummate Professional");
-		swoopLanding(state, 2);
+		swoopLanding(state);
 		DialogReRollModifierChoiceParameter dialog = dialog(state);
 		assertEquals("Swoop", dialog.getReRollSkill().getName());
 		assertEquals(1, dialog.getModifierOptions().size());
@@ -161,10 +171,79 @@ class RightStuffModifierChoiceTest {
 	@Test
 	void loneSwoopReRollIsUsedWithoutAskingTheCoach() {
 		GameState state = buildState("Swoop");
-		StepRightStuff step = swoopLanding(state, 2);
+		StepRightStuff step = swoopLanding(state);
 		assertNull(state.getGame().getDialogParameter());
 		assertEquals(StepAction.REPEAT, step.getResult().getNextAction());
 		assertEquals(ReRollSources.SWOOP, step.getReRollSource());
+	}
+
+	@Test
+	void rescuedLandingIsNotLoggedAsAnotherRoll() {
+		GameState state = buildState("Consummate Professional");
+		throwTeamMate(state, 2);
+		assertEquals(1, landingRollReports(state));
+
+		chooseModifier(state);
+
+		assertTrue(landedStanding(state));
+		assertEquals(1, landingRollReports(state));
+	}
+
+	@Test
+	void offeredSwoopReRollIsUsedWhenChosen() {
+		GameState state = buildState("Swoop", "Consummate Professional");
+		StepRightStuff step = swoopLanding(state);
+		TestRolls.on(state).general(3);
+
+		useSkill(step, swoop(state), "stunty");
+
+		assertEquals(ReRollSources.SWOOP, step.getReRollSource());
+		assertEquals(StepAction.GOTO_LABEL, step.getResult().getNextAction());
+		assertFalse(state.getGame().getPlayerById("stunty").isUsed(professional(state)));
+	}
+
+	@Test
+	void skillCommandsTheStepDidNotOfferAreIgnored() {
+		GameState state = buildState("Swoop", "Consummate Professional");
+		StepRightStuff step = swoopLanding(state);
+		DialogReRollModifierChoiceParameter dialog = dialog(state);
+
+		useSkill(step, swoop(state), "thrower");
+		useSkill(step, professional(state), "stunty");
+
+		assertEquals(dialog, state.getGame().getDialogParameter());
+		assertNull(step.getReRollSource());
+		assertFalse(state.getGame().getPlayerById("stunty").isUsed(professional(state)));
+	}
+
+	@Test
+	void swoopIsNotAcceptedWhenTheDialogDidNotOfferIt() {
+		GameState state = buildState("Swoop", "Consummate Professional");
+		StepRightStuff step = landing(state, false);
+		DialogReRollModifierChoiceParameter dialog = dialog(state);
+		assertNull(dialog.getReRollSkill());
+
+		useSkill(step, swoop(state), "stunty");
+
+		assertEquals(dialog, state.getGame().getDialogParameter());
+		assertNull(step.getReRollSource());
+	}
+
+	private Skill swoop(GameState state) {
+		return state.getGame().getRules().getSkillFactory().forName("Swoop");
+	}
+
+	private void useSkill(StepRightStuff step, Skill skill, String playerId) {
+		step.handleCommand(new ReceivedCommand(
+			new ClientCommandUseSkill(skill, true, playerId, ReRolledActions.RIGHT_STUFF, false), null));
+	}
+
+	private long landingRollReports(GameState state) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportRightStuffRoll)
+			.count();
 	}
 
 	@Test
