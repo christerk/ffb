@@ -583,7 +583,9 @@ public class StepMoveDodge extends AbstractStepWithReRoll {
 	protected ReRollSource findSkillReRollSource(ReRolledAction reRolledAction) {
 		Game game = getGameState().getGame();
 		ReRollSource skillRerollSource = null;
-		if (TurnMode.REGULAR == game.getTurnMode() || game.getTurnMode() == TurnMode.BLITZ) {
+		// On The Ball allows skill re-rolls when moving during a pass (pass block) but not during the kick-off
+		if (TurnMode.REGULAR == game.getTurnMode() || game.getTurnMode() == TurnMode.BLITZ
+			|| game.getTurnMode() == TurnMode.PASS_BLOCK) {
 			skillRerollSource = UtilCards.getUnusedRerollSource(game.getActingPlayer(), reRolledAction);
 		}
 		return skillRerollSource;
