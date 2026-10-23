@@ -11,6 +11,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseReRoll;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportCatchRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.step.bb2025.shared.StepCatchScatterThrowIn;
@@ -22,6 +24,8 @@ import com.fumbbl.ffb.test.TestServer;
 import com.fumbbl.ffb.util.UtilPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -142,6 +146,28 @@ class CatchModifierChoiceTest {
 		assertTrue(state.getGame().getPlayerById("receiver").isUsed(professional));
 		assertEquals(1, IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS
 			.getFrom(state.getGame().getRules(), step.toJsonValue()).size());
+	}
+
+	@Test
+	void rescuedCatchIsNotLoggedAsAnotherRoll() {
+		GameState state = looseBall("Consummate Professional");
+		throwHandOff(state, 1, 1, 3);
+		long rollsBefore = catchRollReports(state);
+		assertEquals(1, rollsBefore);
+
+		chooseModifier(state, "receiver");
+
+		assertTrue(hasBall(state, "receiver"));
+		assertEquals(rollsBefore, catchRollReports(state));
+	}
+
+	private long catchRollReports(GameState state) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportCatchRoll
+				&& "receiver".equals(((ReportCatchRoll) report).getPlayerId()))
+			.count();
 	}
 
 	@Test
