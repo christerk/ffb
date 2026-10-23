@@ -643,9 +643,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				roll = getGameState().getDiceRoller().rollSkill();
 			}
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			getResult().addReport(
-				new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRollUsed || evaluate,
-					catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
+			// a die rescued by optional modifiers is not rolled again, the skill use report already explains the outcome
+			if (!modifierSelected) {
+				getResult().addReport(
+					new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRollUsed || evaluate,
+						catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
+			}
 			evaluate = false;
 
 			if (successful) {
