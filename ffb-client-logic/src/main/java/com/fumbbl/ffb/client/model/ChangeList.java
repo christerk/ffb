@@ -10,11 +10,13 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
 			.addBugfix(
 				"Bombardier: A team-mate avoiding the knock down with Steady Footing could cancel the turnover caused by other team-mates hit by the same bomb")
 			.addBugfix("Joining a running game could leave a second ball icon on the pitch")
+			.addBugfix("Menu bar could show leftover fragments of menu names (e.g. \"elp\" next to the Help menu) until a menu was opened")
 			.addImprovement("Player choice dialogs now grow with the number of listed players (up to 90% of the client height) instead of always showing at most 5 rows")
 			.addBugfix("Tentacles: Being held did not end the player action, allowing the held player to still pass, hand off, foul or block")
 			.addImprovement("Dialogs no longer react to key presses that were made before they popped up, e.g. while typing in the chat. The delay can be configured under Client Settings > Dialog Key Delay")
