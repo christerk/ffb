@@ -43,6 +43,10 @@ public class InducementMessage extends ReportMessageBase<ReportInducement> {
 				print(getIndent(), " use ");
 				print(getIndent(), TextStyle.BOLD, inducementType.getDescription());
 				println(getIndent(), " to re-roll the failed Regeneration.");
+			} else if (inducementType.hasUsage(Usage.KNOCKOUT_RESERVE)) {
+				print(getIndent(), " use ");
+				print(getIndent(), TextStyle.BOLD, inducementType.getDescription());
+				println(getIndent(), " on a Knocked Out player.");
 			}
 		}
 	}

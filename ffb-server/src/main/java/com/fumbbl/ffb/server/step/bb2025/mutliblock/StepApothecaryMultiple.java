@@ -53,6 +53,7 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
+import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -134,7 +135,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement clientCommandUseInducement =
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
+					Optional<InjuryResult> knockoutReserveResult = injuryWaitingForKnockoutReserve();
+					if (knockoutReserveResult.isPresent()) {
+						handleKnockoutReserve(knockoutReserveResult.get(), clientCommandUseInducement.getInducementType());
+					} else if (ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
 						regenerationFailedResults.stream().filter(
 								result -> result.injuryContext().getDefenderId().equals(clientCommandUseInducement.getPlayerIds()[0]))
 							.findFirst().ifPresent(result -> {
@@ -430,6 +434,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 		}
 
 
+		if (offerKnockoutReserve()) {
+			return;
+		}
+
 		boolean doubleAttackerDown = injuryResults.size() == 2 && game.getTeamById(teamId) == game.getActingTeam();
 		// this only happens in case of a double attacker down
 		if (doubleAttackerDown) {
@@ -538,6 +546,61 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 			checkRaiseDead();
 		}
+	}
+
+	private boolean offerKnockoutReserve() {
+		Optional<InducementType> inducementType = knockoutReserveInducementType();
+		if (!inducementType.isPresent()) {
+			return false;
+		}
+		Optional<InjuryResult> knockedOutResult = regenerationFailedResults.stream().filter(result -> {
+			ApothecaryStatus apothecaryStatus = result.injuryContext().getApothecaryStatus();
+			return result.injuryContext().isKnockedOut() && ((apothecaryStatus == ApothecaryStatus.NO_APOTHECARY)
+				|| (apothecaryStatus == ApothecaryStatus.DO_NOT_USE_APOTHECARY));
+		}).findFirst();
+		if (knockedOutResult.isPresent()) {
+			InjuryResult result = knockedOutResult.get();
+			UtilServerDialog.showDialog(getGameState(), new DialogUseInducementParameter(teamId,
+				new InducementType[]{inducementType.get()}, result.injuryContext().getDefenderId()), true);
+			result.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_PASTRIES_USE);
+			getResult().setNextAction(StepAction.CONTINUE);
+			return true;
+		}
+		return false;
+	}
+
+	private Optional<InjuryResult> injuryWaitingForKnockoutReserve() {
+		if (regenerationFailedResults == null) {
+			return Optional.empty();
+		}
+		return regenerationFailedResults.stream()
+			.filter(result -> result.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)
+			.findFirst();
+	}
+
+	private void handleKnockoutReserve(InjuryResult result, InducementType inducementType) {
+		result.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_PASTRIES);
+		if (inducementType != null && inducementType.hasUsage(Usage.KNOCKOUT_RESERVE)
+			&& UtilServerInducementUse.useInducement(inducementType, 1, getTurnData().getInducementSet())) {
+			Player<?> player = injuredPlayer(result, getGameState().getGame());
+			getResult().addReport(new ReportInducement(player.getTeam().getId(), inducementType, 1));
+			int roll = getGameState().getDiceRoller().rollDice(6);
+			boolean successful = roll >= ReportBretonnianPastriesRoll.MINIMUM_ROLL;
+			getResult().addReport(new ReportBretonnianPastriesRoll(teamId, player.getId(), roll, successful));
+			result.injuryContext().setApothecaryStatus(ApothecaryStatus.USE_PASTRIES);
+			if (successful) {
+				result.injuryContext().setInjury(new PlayerState(PlayerState.RESERVE));
+				// treated like an apothecary result, so it must not override another injury of the same player
+				regenerationFailedResults.remove(result);
+			}
+		}
+	}
+
+	private Optional<InducementType> knockoutReserveInducementType() {
+		InducementSet inducementSet = getTurnData().getInducementSet();
+		return inducementSet.getInducementMapping().keySet().stream()
+			.filter(type -> type.hasUsage(Usage.KNOCKOUT_RESERVE) && inducementSet.hasUsesLeft(type))
+			.findFirst();
 	}
 
 	private void checkRaiseDead() {

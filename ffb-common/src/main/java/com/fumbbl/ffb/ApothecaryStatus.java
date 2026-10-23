@@ -6,7 +6,8 @@ public enum ApothecaryStatus implements INamedObject {
 	WAIT_FOR_APOTHECARY_CHOICE("waitForApothecaryChoice"),
 	USE_APOTHECARY("useApothecary"), DO_NOT_USE_APOTHECARY("doNotUseApothecary"), RESULT_CHOICE("resultChoice"),
 	WAIT_FOR_IGOR_USE("waitForIgorUse"), USE_IGOR("useIgor"), DO_NOT_USE_IGOR("doNotUseIgor"),
-	WAIT_FOR_GETTING_EVEN("waitForGettingEven");
+	WAIT_FOR_GETTING_EVEN("waitForGettingEven"),
+	WAIT_FOR_PASTRIES_USE("waitForPastriesUse"), USE_PASTRIES("usePastries"), DO_NOT_USE_PASTRIES("doNotUsePastries");
 
 	private final String fName;
 
