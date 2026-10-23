@@ -9,6 +9,8 @@ import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
+import com.fumbbl.ffb.modifiers.InterceptionContext;
+import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpContext;
@@ -49,6 +51,12 @@ public class ConsummateProfessional extends Skill {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpUpContext context) {
 				return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new InterceptionModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, InterceptionContext context) {
+        return context.isSkillSelected(skill);
 			}
 		});
 		registerModifier(new RightStuffModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {

@@ -77,10 +77,6 @@ class JumpUpModifierSelectionTest {
 			new com.fumbbl.ffb.skill.bb2020.special.ConsummateProfessional();
 		oldSkill.postConstruct();
 		assertTrue(oldSkill.getJumpUpModifiers().isEmpty());
-	}
-
-	@Test
-	void jumpUpModifierDoesNotEnableUnimplementedAgilityRolls() {
-		assertTrue(skill.getInterceptionModifiers().isEmpty());
+		assertTrue(oldSkill.getInterceptionModifiers().isEmpty());
 	}
 }
