@@ -395,6 +395,7 @@ public class UtilServerInjury {
 							endTurn = game.getTeamAway().hasPlayer(pPlayer);
 							break;
 						case PASS_BLOCK:
+						case DUMP_OFF_PASS_BLOCK:
 							endTurn = false;
 							break;
 						default:

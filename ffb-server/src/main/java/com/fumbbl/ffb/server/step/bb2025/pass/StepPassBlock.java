@@ -17,6 +17,7 @@ import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.TargetSelectionState;
 import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.report.ReportPassBlock;
 import com.fumbbl.ffb.server.GameState;
@@ -43,8 +44,8 @@ import java.util.Set;
  * Needs to be initialized with stepParameter GOTO_LABEL_ON_END.
  * <p>
  * Expects stepParameter END_PLAYER_ACTION to be set by a preceding step.
- * (parameter is consumed on TurnMode.PASS_BLOCK) Expects stepParameter END_TURN
- * to be set by a preceding step. (parameter is consumed on TurnMode.PASS_BLOCK)
+ * (parameter is consumed during a pass block turn mode) Expects stepParameter END_TURN
+ * to be set by a preceding step. (parameter is consumed during a pass block turn mode)
  *
  * @author Kalimar
  */
@@ -59,6 +60,7 @@ public class StepPassBlock extends AbstractStep {
 	private int currentMove = -1;
 	private ActingPlayer oldActingPlayer;
 	private String oldDefenderId;
+	private TargetSelectionState oldTargetSelectionState;
 
 	public StepPassBlock(GameState pGameState) {
 		super(pGameState);
@@ -94,13 +96,13 @@ public class StepPassBlock extends AbstractStep {
 			switch (parameter.getKey()) {
 				case END_PLAYER_ACTION:
 					fEndPlayerAction = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+					if (game.getTurnMode().isPassBlock()) {
 						consume(parameter);
 					}
 					return true;
 				case END_TURN:
 					fEndTurn = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
-					if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+					if (game.getTurnMode().isPassBlock()) {
 						consume(parameter);
 					}
 					return true;
@@ -146,7 +148,7 @@ public class StepPassBlock extends AbstractStep {
 		Select selectGenerator = (Select) factory.forName(SequenceGenerator.Type.Select.name());
 		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), false);
 
-		if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+		if (game.getTurnMode().isPassBlock()) {
 			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
@@ -191,6 +193,7 @@ public class StepPassBlock extends AbstractStep {
 					// the dump-off interrupted the action of the active player, which has to be continued after the pass
 					actingPlayer.restoreFrom(oldActingPlayer);
 					game.setDefenderId(oldDefenderId);
+					game.getFieldModel().setTargetSelectionState(oldTargetSelectionState);
 				} else {
 					actingPlayer.setPlayer(game.getThrower());
 					actingPlayer.setOldPlayerState(fOldActingPlayerState);
@@ -232,15 +235,18 @@ public class StepPassBlock extends AbstractStep {
 			} else {
 
 				fOldTurnMode = game.getTurnMode();
-				game.setTurnMode(TurnMode.PASS_BLOCK);
 
 				if (fOldTurnMode == TurnMode.DUMP_OFF) {
-					// pass blockers belong to the active team, so it keeps playing
+					// pass blockers belong to the active team, so it keeps playing (and may use team re-rolls)
+					game.setTurnMode(TurnMode.DUMP_OFF_PASS_BLOCK);
 					oldActingPlayer = actingPlayer.snapshot();
+					// the interrupted action must not affect the moves of the pass blockers (e.g. Dump-off or Foul Appearance)
 					oldDefenderId = game.getDefenderId();
-					// otherwise the move sequence of a pass blocker would offer Dump-off to the ball carrier again
 					game.setDefenderId(null);
+					oldTargetSelectionState = game.getFieldModel().getTargetSelectionState();
+					game.getFieldModel().setTargetSelectionState(null);
 				} else {
+					game.setTurnMode(TurnMode.PASS_BLOCK);
 					game.setHomePlaying(!game.isHomePlaying());
 				}
 				currentMove = game.getActingPlayer().getCurrentMove();
@@ -334,6 +340,9 @@ public class StepPassBlock extends AbstractStep {
 			IJsonOption.ACTING_PLAYER.addTo(jsonObject, oldActingPlayer.toJsonValue());
 		}
 		IJsonOption.DEFENDER_ID.addTo(jsonObject, oldDefenderId);
+		if (oldTargetSelectionState != null) {
+			IJsonOption.TARGET_SELECTION_STATE.addTo(jsonObject, oldTargetSelectionState.toJsonValue());
+		}
 		return jsonObject;
 	}
 
@@ -365,6 +374,10 @@ public class StepPassBlock extends AbstractStep {
 			oldActingPlayer = new ActingPlayer(getGameState().getGame()).initFrom(source, IJsonOption.ACTING_PLAYER.getFrom(source, jsonObject));
 		}
 		oldDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
+		oldTargetSelectionState = null;
+		if (IJsonOption.TARGET_SELECTION_STATE.isDefinedIn(jsonObject)) {
+			oldTargetSelectionState = new TargetSelectionState().initFrom(source, IJsonOption.TARGET_SELECTION_STATE.getFrom(source, jsonObject));
+		}
 		return this;
 	}
 

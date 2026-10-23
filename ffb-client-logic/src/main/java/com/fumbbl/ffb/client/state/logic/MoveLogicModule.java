@@ -293,7 +293,7 @@ public class MoveLogicModule extends LogicModule {
 		if ((actingPlayer != null) && (actingPlayer.getPlayerAction() != null)
 			&& actingPlayer.getPlayerAction().isMoving() && ArrayTool.isProvided(game.getFieldModel().getMoveSquares())
 			&& !IClientPropertyValue.SETTING_AUTOMOVE_OFF.equals(automoveProperty)
-			&& (game.getTurnMode() != TurnMode.PASS_BLOCK) && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
+			&& !game.getTurnMode().isPassBlock() && (game.getTurnMode() != TurnMode.KICKOFF_RETURN)
 			&& (game.getTurnMode() != TurnMode.SWARMING)
 			&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.preventAutoMove)) {
 			return PathFinderWithPassBlockSupport.INSTANCE.getShortestPath(game, coordinate);
