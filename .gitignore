@@ -1,5 +1,6 @@
 .metadata/
 .idea/
+.worktreeinclude
 **/*.iml
 /ffb-tools/target/
 /ffb-server/dependency-reduced-pom.xml
