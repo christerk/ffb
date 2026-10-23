@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed.pass;
+package com.fumbbl.ffb.server.step.bb2020.pass;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -10,7 +10,6 @@ import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogPassBlockParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.OnTheBallMechanic;
@@ -49,7 +48,6 @@ import java.util.Set;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepPassBlock extends AbstractStep {
 
 	private String fGotoLabelOnEnd;
@@ -58,8 +56,6 @@ public class StepPassBlock extends AbstractStep {
 	private PlayerState[] fOldPlayerStates;
 	private PlayerState fOldActingPlayerState;
 	private int currentMove = -1;
-	private ActingPlayer oldActingPlayer;
-	private String oldDefenderId;
 
 	public StepPassBlock(GameState pGameState) {
 		super(pGameState);
@@ -125,8 +121,10 @@ public class StepPassBlock extends AbstractStep {
 			return;
 		}
 
-		// no pass block for bombs or hand over
-		if (game.getTurnMode().isBombTurn()
+		// TODO: pass block on dump off (ends the turn AFTER the block)
+
+		// no pass block for bombs or hand over or dump off (atm)
+		if (game.getTurnMode().isBombTurn() || (game.getThrowerAction() == PlayerAction.DUMP_OFF)
 			|| (game.getThrowerAction() == PlayerAction.HAND_OVER)
 			|| (game.getThrowerAction() == PlayerAction.HAND_OVER_MOVE)) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
@@ -136,7 +134,7 @@ public class StepPassBlock extends AbstractStep {
 		OnTheBallMechanic mechanic = (OnTheBallMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
 
 		Team opposingTeam = UtilPlayer.findOtherTeam(game, game.getThrower());
-		Set<Player<?>> passBlockers = findPassBlockers(mechanic, opposingTeam, false);
+		Set<Player<?>> passBlockers = mechanic.findPassBlockers(game, opposingTeam, false);
 		if (passBlockers.size() == 0 && fOldTurnMode == null) {
 			getResult().setNextAction(StepAction.NEXT_STEP);
 			return;
@@ -188,19 +186,13 @@ public class StepPassBlock extends AbstractStep {
 					}
 				}
 
-				if (fOldTurnMode == TurnMode.DUMP_OFF) {
-					// the dump-off interrupted the action of the active player, which has to be continued after the pass
-					actingPlayer.restoreFrom(oldActingPlayer);
-					game.setDefenderId(oldDefenderId);
-				} else {
-					actingPlayer.setPlayer(game.getThrower());
-					actingPlayer.setOldPlayerState(fOldActingPlayerState);
-					actingPlayer.setPlayerAction(game.getThrowerAction());
-					actingPlayer.setHasPassed(true);
-					if (currentMove >= 0) {
-						actingPlayer.setCurrentMove(currentMove);
-						actingPlayer.setGoingForIt(isGoingForIt);
-					}
+				actingPlayer.setPlayer(game.getThrower());
+				actingPlayer.setOldPlayerState(fOldActingPlayerState);
+				actingPlayer.setPlayerAction(game.getThrowerAction());
+				actingPlayer.setHasPassed(true);
+				if (currentMove >= 0) {
+					actingPlayer.setCurrentMove(currentMove);
+					actingPlayer.setGoingForIt(isGoingForIt);
 				}
 
 				game.setTurnMode(fOldTurnMode);
@@ -225,7 +217,7 @@ public class StepPassBlock extends AbstractStep {
 
 		} else {
 
-			Set<Player<?>> availablePassBlockers = findPassBlockers(mechanic, opposingTeam, true);
+			Set<Player<?>> availablePassBlockers = mechanic.findPassBlockers(game, opposingTeam, true);
 			if (availablePassBlockers.size() == 0) {
 
 				getResult().addReport(new ReportPassBlock(opposingTeam.getId(), false));
@@ -235,13 +227,7 @@ public class StepPassBlock extends AbstractStep {
 				fOldTurnMode = game.getTurnMode();
 				game.setTurnMode(TurnMode.PASS_BLOCK);
 
-				if (fOldTurnMode == TurnMode.DUMP_OFF) {
-					// pass blockers belong to the active team, so it keeps playing
-					oldActingPlayer = actingPlayer.snapshot();
-					oldDefenderId = game.getDefenderId();
-				} else {
-					game.setHomePlaying(!game.isHomePlaying());
-				}
+				game.setHomePlaying(!game.isHomePlaying());
 				currentMove = game.getActingPlayer().getCurrentMove();
 				isGoingForIt = game.getActingPlayer().isGoingForIt();
 				fOldActingPlayerState = game.getActingPlayer().getOldPlayerState();
@@ -283,17 +269,6 @@ public class StepPassBlock extends AbstractStep {
 
 	}
 
-	private Set<Player<?>> findPassBlockers(OnTheBallMechanic mechanic, Team team, boolean checkCanReach) {
-		Game game = getGameState().getGame();
-		Set<Player<?>> passBlockers = mechanic.findPassBlockers(game, team, checkCanReach);
-		if (game.getThrowerAction() == PlayerAction.DUMP_OFF) {
-			// the player whose action triggered the dump-off is still in the middle of that action
-			Player<?> interruptedPlayer = (oldActingPlayer != null) ? oldActingPlayer.getPlayer() : game.getActingPlayer().getPlayer();
-			passBlockers.remove(interruptedPlayer);
-		}
-		return passBlockers;
-	}
-
 	private boolean checkNoPlayerActive(Set<Player<?>> pPlayers) {
 		Game game = getGameState().getGame();
 		for (Player<?> player : pPlayers) {
@@ -329,10 +304,6 @@ public class StepPassBlock extends AbstractStep {
 			IServerJsonOption.OLD_PLAYER_STATES.addTo(jsonObject, playerStateIds);
 		}
 		IServerJsonOption.PLAYER_STATE_OLD.addTo(jsonObject, fOldActingPlayerState);
-		if (oldActingPlayer != null) {
-			IJsonOption.ACTING_PLAYER.addTo(jsonObject, oldActingPlayer.toJsonValue());
-		}
-		IJsonOption.DEFENDER_ID.addTo(jsonObject, oldDefenderId);
 		return jsonObject;
 	}
 
@@ -359,11 +330,6 @@ public class StepPassBlock extends AbstractStep {
 			}
 		}
 		fOldActingPlayerState = IServerJsonOption.PLAYER_STATE_OLD.getFrom(source, jsonObject);
-		oldActingPlayer = null;
-		if (IJsonOption.ACTING_PLAYER.isDefinedIn(jsonObject)) {
-			oldActingPlayer = new ActingPlayer(getGameState().getGame()).initFrom(source, IJsonOption.ACTING_PLAYER.getFrom(source, jsonObject));
-		}
-		oldDefenderId = IJsonOption.DEFENDER_ID.getFrom(source, jsonObject);
 		return this;
 	}
 
