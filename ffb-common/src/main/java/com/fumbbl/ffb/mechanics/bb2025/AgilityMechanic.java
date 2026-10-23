@@ -58,16 +58,38 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 																		 FieldCoordinate to) {
 		OptionalDodgeModifierService optionalModifierService = new OptionalDodgeModifierService();
 		List<OptionalDodgeModifier> optionalModifiers = optionalModifierService.availableFor(game, actingPlayer, from, to);
-		Set<Skill> selectedSkills = optionalModifiers.stream().map(OptionalDodgeModifier::getSkill)
+		// only skills improving the roll are declared, and only when they can be used in every turn, skills limited to
+		// one use per drive, half or game would promise a roll the player cannot reach again
+		Set<Skill> selectedSkills = optionalModifiers.stream()
+			.filter(optionalModifier -> isBonus(optionalModifier.getModifier())
+				&& isUsableEveryTurn(optionalModifier.getSkill()))
+			.map(OptionalDodgeModifier::getSkill)
 			.collect(Collectors.toSet());
 		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
 		Set<DodgeModifier> dodgeModifiers =
 			modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, from, to, selectedSkills));
+		// the same goes for bonuses applying on their own, penalties are always part of the roll
+		for (Skill skill : actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes()) {
+			if (!isUsableEveryTurn(skill)) {
+				dodgeModifiers.removeIf(modifier -> isBonus(modifier) && skill.getDodgeModifiers().contains(modifier));
+			}
+		}
 		if (ArrayTool.isProvided(UtilPlayer.findEligibleDivingTacklers(game, from, to,
 			NamedProperties.canAttemptToTackleDodgingPlayer))) {
 			dodgeModifiers.addAll(modifierFactory.forType(ModifierType.DIVING_TACKLE));
 		}
 		return minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
+	}
+
+	/**
+	 * @return whether the modifier makes the roll easier
+	 */
+	private boolean isBonus(DodgeModifier modifier) {
+		return modifier.getModifier() < 0;
+	}
+
+	private boolean isUsableEveryTurn(Skill skill) {
+		return skill.getSkillUsageType() != null && skill.getSkillUsageType().isUsableEveryTurn();
 	}
 
 	@Override

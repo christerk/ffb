@@ -20,12 +20,17 @@ import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
+import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 
 import java.util.Arrays;
 
 public class Commands {
 	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action) {
-		return new ClientCommandActingPlayer(playerId, action, false);
+		return selectPlayer(playerId, action, false);
+	}
+
+	public static ClientCommandActingPlayer selectPlayer(String playerId, PlayerAction action, boolean jumping) {
+		return new ClientCommandActingPlayer(playerId, action, jumping);
 	}
 
 	public static ClientCommandBlock block(String attackerId, String defenderId) {
@@ -55,6 +60,14 @@ public class Commands {
 	public static ClientCommandMove move(String playerId, FieldCoordinate coordinateFrom,
 		FieldCoordinate... coordinatesTo) {
 		return new ClientCommandMove(playerId, coordinateFrom, coordinatesTo, null);
+	}
+
+	public static ClientCommandThrowTeamMate pickUpTeamMate(String throwerId, String thrownPlayerId) {
+		return new ClientCommandThrowTeamMate(throwerId, thrownPlayerId);
+	}
+
+	public static ClientCommandThrowTeamMate throwTeamMate(String throwerId, FieldCoordinate target) {
+		return new ClientCommandThrowTeamMate(throwerId, target);
 	}
 
 	public static ClientCommandEndTurn endTurn(TurnMode turnMode) {
