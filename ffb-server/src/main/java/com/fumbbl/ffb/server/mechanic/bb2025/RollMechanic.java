@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.mechanic.bb2025;
 
-import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerAction;
@@ -15,7 +15,6 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
-import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.mixed.CasualtyModifierFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
@@ -40,7 +39,10 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.util.ReRollDialogParameterFactory;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
+import com.fumbbl.ffb.server.util.bb2025.ReRollPropertiesDialogParameterFactory;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.util.UtilCards;
@@ -246,32 +248,36 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
 	}
 
+	private static final ReRollDialogParameterFactory DEFAULT_DIALOG_PARAMETER_FACTORY
+		= new ReRollPropertiesDialogParameterFactory();
+
 	@Override
 	public int minimumProRoll() {
 		return 3;
 	}
 
 	@Override
-	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-		int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill, CommonProperty menuProperty,
-		String defaultValueKey, List<String> messages) {
-		boolean dialogShown = false;
+	public boolean askForReRollIfAvailable(ReRollRequest request) {
+		GameState gameState = request.getGameState();
+		Player<?> player = request.getPlayer();
 		Game game = gameState.getGame();
-		if (minimumRoll >= 0) {
-			ReRollOptions reRollOptions = findReRollOptions(gameState, player, reRolledAction, reRollSkill);
-
-			dialogShown =
-				(reRollOptions.canActuallyReRoll() || modificationSkill != null);
-			if (dialogShown) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				String playerId = player.getId();
-				UtilServerDialog.showDialog(gameState,
-					new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, reRollOptions.getProperties(),
-						fumble, reRollOptions.getReRollSkill(), modificationSkill, menuProperty, defaultValueKey, messages),
-					!actingTeam.hasPlayer(player));
-			}
+		if (request.getMinimumRoll() < 0) {
+			return false;
 		}
-		return dialogShown;
+		ReRollOptions reRollOptions = findReRollOptions(gameState, player, request.getReRolledAction(),
+			request.getReRollSkill());
+
+		ReRollDialogParameterFactory dialogParameterFactory = request.getDialogParameterFactory();
+		if (dialogParameterFactory == null) {
+			dialogParameterFactory = DEFAULT_DIALOG_PARAMETER_FACTORY;
+		}
+		IDialogParameter dialogParameter = dialogParameterFactory.create(request, reRollOptions);
+		if (dialogParameter == null) {
+			return false;
+		}
+		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		UtilServerDialog.showDialog(gameState, dialogParameter, !actingTeam.hasPlayer(player));
+		return true;
 	}
 
 	public boolean useReRoll(IStep pStep, ReRollSource reRollSource, Player<?> pPlayer) {

@@ -1,6 +1,10 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
-import com.fumbbl.ffb.*;
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.PlayerAction;
+import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRolledActions;
+import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.factory.JumpUpModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -18,8 +22,8 @@ import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
-import com.fumbbl.ffb.server.step.action.select.StepJumpUp;
-import com.fumbbl.ffb.server.step.action.select.StepJumpUp.StepState;
+import com.fumbbl.ffb.server.step.mixed.action.select.StepJumpUp;
+import com.fumbbl.ffb.server.step.mixed.action.select.StepJumpUp.StepState;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.common.JumpUp;
 import com.fumbbl.ffb.util.UtilCards;
@@ -27,7 +31,6 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.Set;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class JumpUpBehaviour extends SkillBehaviour<JumpUp> {
 	public JumpUpBehaviour() {
 		super();

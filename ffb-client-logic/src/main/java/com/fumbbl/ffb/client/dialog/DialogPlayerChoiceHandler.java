@@ -69,7 +69,8 @@ public class DialogPlayerChoiceHandler extends DialogHandler {
 			DialogPlayerChoice choiceDialog = (DialogPlayerChoice) pDialog;
 			Player<?>[] selectedPlayers = choiceDialog.getSelectedPlayers();
 			hideDialog();
-			if (choiceDialog.isSkipped()) {
+			// skipping is only confirmed when several players could be selected, a single choice is skipped right away
+			if (choiceDialog.isSkipped() && fDialogParameter.getMaxSelects() > 1) {
 				setDialog(new DialogConfirmSkipPlayerChoice(getClient(), dialogHeader));
 				getDialog().showDialog(this);
 			} else {

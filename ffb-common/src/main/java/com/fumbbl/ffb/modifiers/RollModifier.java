@@ -5,6 +5,20 @@ import com.fumbbl.ffb.model.skill.Skill;
 
 public abstract class RollModifier<C extends ModifierContext> implements INamedObject {
 
+	private final boolean optional;
+
+	protected RollModifier() {
+		this(false);
+	}
+
+	protected RollModifier(boolean optional) {
+		this.optional = optional;
+	}
+
+	public boolean isOptional() {
+		return optional;
+	}
+
 	public abstract int getModifier();
 
 	public abstract boolean isModifierIncluded();
