@@ -238,6 +238,8 @@ public class StepPassBlock extends AbstractStep {
 					// pass blockers belong to the active team, so it keeps playing
 					oldActingPlayer = actingPlayer.snapshot();
 					oldDefenderId = game.getDefenderId();
+					// otherwise the move sequence of a pass blocker would offer Dump-off to the ball carrier again
+					game.setDefenderId(null);
 				} else {
 					game.setHomePlaying(!game.isHomePlaying());
 				}
