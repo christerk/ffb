@@ -131,13 +131,21 @@ class OfferedSkillServiceTest {
 	}
 
 	@Test
-	void modifierOptionRejectsEmptyAndDuplicateSelections() {
+	void modifierOptionCountsRepeatedSkillsOnce() {
+		modifierChoiceDialog(Collections.singletonList(skill));
+
+		assertTrue(service.isOfferedModifierOption(game, "playerId", ReRolledActions.JUMP, 2,
+			Arrays.asList(skill, skill)));
+	}
+
+	@Test
+	void modifierOptionRejectsEmptySelections() {
 		modifierChoiceDialog(Collections.singletonList(skill));
 
 		assertFalse(service.isOfferedModifierOption(game, "playerId", ReRolledActions.JUMP, 2, Collections.emptyList()));
 		assertFalse(service.isOfferedModifierOption(game, "playerId", ReRolledActions.JUMP, 2, null));
 		assertFalse(service.isOfferedModifierOption(game, "playerId", ReRolledActions.JUMP, 2,
-			Arrays.asList(skill, skill)));
+			Arrays.asList(skill, null)));
 	}
 
 	@Test

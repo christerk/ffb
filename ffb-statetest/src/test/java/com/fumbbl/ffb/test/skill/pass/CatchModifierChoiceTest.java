@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CatchModifierChoiceTest {
-	private static final FieldCoordinate BOUNCE_TARGET = new FieldCoordinate(11, 6);
 
 	private TestServer server;
 
@@ -127,6 +126,22 @@ class CatchModifierChoiceTest {
 
 		assertTrue(hasBall(state, "receiver"));
 		assertTrue(state.getGame().getPlayerById("receiver").isUsed(professional(state)));
+	}
+
+	@Test
+	void repeatedSkillInChoiceRescuesCatchAndIsSpentOnce() {
+		GameState state = looseBall("Consummate Professional");
+		throwHandOff(state, 1, 1, 3);
+		StepCatchScatterThrowIn step = (StepCatchScatterThrowIn) state.getCurrentStep();
+		Skill professional = professional(state);
+
+		StepEngine.respond(state,
+			Commands.reRollModifierChoice("receiver", ReRolledActions.CATCH, professional, professional));
+
+		assertTrue(hasBall(state, "receiver"));
+		assertTrue(state.getGame().getPlayerById("receiver").isUsed(professional));
+		assertEquals(1, IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS
+			.getFrom(state.getGame().getRules(), step.toJsonValue()).size());
 	}
 
 	@Test

@@ -71,20 +71,20 @@ public class OfferedSkillService {
 	}
 
 	/**
-	 * @return true if the currently shown dialog offers exactly the given combination of optional modifier skills as
-	 * one of its options for the given player, action and roll
+	 * @return true if the currently shown dialog offers the given combination of optional modifier skills as one of
+	 * its options for the given player, action and roll. A skill listed more than once counts only once.
 	 */
 	public boolean isOfferedModifierOption(Game game, String playerId, ReRolledAction reRolledAction, int roll,
 	                                       Collection<Skill> skills) {
 		IDialogParameter dialogParameter = game.getDialogParameter();
 		if (!(dialogParameter instanceof DialogReRollModifierChoiceParameter) || playerId == null || skills == null
-			|| skills.isEmpty()) {
+			|| skills.isEmpty() || skills.contains(null)) {
 			return false;
 		}
 		DialogReRollModifierChoiceParameter dialog = (DialogReRollModifierChoiceParameter) dialogParameter;
 		Set<Skill> skillSet = new HashSet<>(skills);
-		if (skillSet.size() != skills.size() || dialog.getReRolledAction() != reRolledAction
-			|| dialog.getRoll() != roll || !playerId.equals(dialog.getPlayerId())) {
+		if (dialog.getReRolledAction() != reRolledAction || dialog.getRoll() != roll
+			|| !playerId.equals(dialog.getPlayerId())) {
 			return false;
 		}
 		return dialog.getModifierOptions().stream().anyMatch(option -> new HashSet<>(option.getSkills()).equals(skillSet));
