@@ -12,7 +12,6 @@ import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.json.UtilJson;
-import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -31,9 +30,9 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
-import com.fumbbl.ffb.server.util.bb2025.JumpUpModifierSelectionService;
 import com.fumbbl.ffb.util.StringTool;
 
 import java.util.LinkedHashSet;
@@ -52,7 +51,6 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 	}
 
 	private final StepState state = new StepState();
-	private final JumpUpModifierSelectionService selectionService = new JumpUpModifierSelectionService();
 
 	public StepJumpUp(GameState gameState) {
 		super(gameState);
@@ -102,16 +100,16 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		switch (receivedCommand.getId()) {
 			case CLIENT_RE_ROLL_MODIFIER_CHOICE:
 				ClientCommandReRollModifierChoice choice = (ClientCommandReRollModifierChoice) receivedCommand.getCommand();
-				if (isNotAwaitingChoice() || choice.getReRolledAction() != ReRolledActions.JUMP_UP
-					|| !game.getActingPlayer().getPlayerId().equals(choice.getPlayerId())) {
+				Player<?> player = game.getActingPlayer().getPlayer();
+				OfferedSkillService offeredSkillService = new OfferedSkillService();
+				if (!state.awaitingRescue || player == null || choice.getReRolledAction() != ReRolledActions.JUMP_UP
+					|| !player.getId().equals(choice.getPlayerId())
+					|| !offeredSkillService.isOfferedModifierOption(game, player.getId(), ReRolledActions.JUMP_UP, state.roll,
+					choice.getSkills())
+					|| choice.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, player, skill))) {
 					return StepCommandStatus.UNHANDLED_COMMAND;
 				}
 				Set<Skill> skills = new LinkedHashSet<>(choice.getSkills());
-				if (skills.size() != choice.getSkills().size()
-					|| selectionService.findOptions(game, state.roll).stream()
-					.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-					return StepCommandStatus.UNHANDLED_COMMAND;
-				}
 				for (Skill skill : skills) {
 					state.selectedModifierSkills.add(skill);
 					game.getActingPlayer().markSkillUsed(skill);
@@ -145,11 +143,10 @@ public final class StepJumpUp extends AbstractStepWithReRoll {
 		if (skill == null || !command.isSkillUsed() || isNotAwaitingChoice()) {
 			return false;
 		}
-		ActingPlayer actingPlayer = getGameState().getGame().getActingPlayer();
-		DialogReRollModifierChoiceParameter dialog =
-			(DialogReRollModifierChoiceParameter) getGameState().getGame().getDialogParameter();
-		return skill.equals(dialog.getReRollSkill()) && !actingPlayer.isSkillUsed(skill)
-			&& actingPlayer.getPlayer().getSkillsIncludingTemporaryOnes().contains(skill);
+		Game game = getGameState().getGame();
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		return offeredSkillService.isOffered(game, skill)
+			&& offeredSkillService.hasUnused(game, game.getActingPlayer().getPlayer(), skill);
 	}
 
 	public void failJumpUp() {

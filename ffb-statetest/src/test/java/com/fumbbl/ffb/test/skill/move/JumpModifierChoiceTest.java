@@ -13,8 +13,11 @@ import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.test.Commands;
 import com.fumbbl.ffb.test.GameStateBuilder;
@@ -127,7 +130,7 @@ public class JumpModifierChoiceTest {
 	}
 
 	private List<String> labels(DialogReRollModifierChoiceParameter parameter) {
-		return parameter.getModifierOptions().stream().map(option -> option.getLabel()).collect(Collectors.toList());
+		return parameter.getModifierOptions().stream().map(ModifierChoiceOption::getLabel).collect(Collectors.toList());
 	}
 
 	@Test
@@ -171,6 +174,50 @@ public class JumpModifierChoiceTest {
 
 		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
 		assertTrue(game.getActingPlayer().isSkillUsed(consummateProfessional));
+	}
+
+	@Test
+	public void repeatedSkillInChoiceRescuesTheJumpAndIsSpentOnce() {
+		GameState state = buildState("Consummate Professional");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		Skill consummateProfessional = game.getRules().getSkillFactory().forName("Consummate Professional");
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, consummateProfessional,
+			consummateProfessional));
+
+		assertEquals(TO, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertTrue(game.getActingPlayer().isSkillUsed(consummateProfessional));
+		assertEquals(1, skillUseReports(state, consummateProfessional));
+	}
+
+	@Test
+	public void choiceThatWasNotOfferedIsIgnored() {
+		GameState state = buildState("Consummate Professional", "Swift As The Breeze");
+		Game game = state.getGame();
+
+		jump(state, 3);
+
+		DialogReRollModifierChoiceParameter parameter = (DialogReRollModifierChoiceParameter) game.getDialogParameter();
+		Skill consummateProfessional = game.getRules().getSkillFactory().forName("Consummate Professional");
+		Skill swiftAsTheBreeze = game.getRules().getSkillFactory().forName("Swift As The Breeze");
+		// the combination of both skills is not an option, each of them rescues the jump on its own
+		assertTrue(parameter.getModifierOptions().stream().noneMatch(option -> option.getSkills().size() > 1));
+		StepEngine.respond(state, Commands.reRollModifierChoice("runner", ReRolledActions.JUMP, consummateProfessional,
+			swiftAsTheBreeze));
+
+		assertEquals(parameter, game.getDialogParameter());
+		assertFalse(game.getActingPlayer().isSkillUsed(consummateProfessional));
+		assertFalse(game.getActingPlayer().isSkillUsed(swiftAsTheBreeze));
+	}
+
+	private long skillUseReports(GameState state, Skill skill) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportSkillUse && skill.equals(((ReportSkillUse) report).getSkill()))
+			.count();
 	}
 
 	@Test

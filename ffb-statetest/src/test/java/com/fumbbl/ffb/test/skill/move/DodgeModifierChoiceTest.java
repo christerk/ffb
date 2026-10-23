@@ -14,6 +14,8 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
+import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
+import com.fumbbl.ffb.report.ReportSkillUse;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.test.Commands;
 import com.fumbbl.ffb.test.GameStateBuilder;
@@ -286,6 +288,30 @@ public class DodgeModifierChoiceTest {
 
 		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
 		assertTrue(game.getActingPlayer().isSkillUsed(breakTackle));
+	}
+
+	@Test
+	public void repeatedSkillInChoiceRescuesTheDodgeAndIsSpentOnce() {
+		GameState state = buildState("Break Tackle");
+		Game game = state.getGame();
+
+		dodge(state, 3);
+
+		Skill breakTackle = game.getRules().getSkillFactory().forName("Break Tackle");
+		StepEngine.respond(state,
+			Commands.reRollModifierChoice("runner", ReRolledActions.DODGE, breakTackle, breakTackle));
+
+		assertEquals(new FieldCoordinate(11, 7), game.getFieldModel().getPlayerCoordinate(game.getPlayerById("runner")));
+		assertTrue(game.getActingPlayer().isSkillUsed(breakTackle));
+		assertEquals(1, skillUseReports(state, breakTackle));
+	}
+
+	private long skillUseReports(GameState state, Skill skill) {
+		return Arrays.stream(state.getGameLog().getServerCommands())
+			.filter(command -> command instanceof ServerCommandModelSync)
+			.flatMap(command -> Arrays.stream(((ServerCommandModelSync) command).getReportList().getReports()))
+			.filter(report -> report instanceof ReportSkillUse && skill.equals(((ReportSkillUse) report).getSkill()))
+			.count();
 	}
 
 	@Test

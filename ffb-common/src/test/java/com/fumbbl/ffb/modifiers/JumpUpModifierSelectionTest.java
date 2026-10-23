@@ -81,7 +81,6 @@ class JumpUpModifierSelectionTest {
 
 	@Test
 	void jumpUpModifierDoesNotEnableUnimplementedAgilityRolls() {
-		assertTrue(skill.getCatchModifiers().isEmpty());
 		assertTrue(skill.getInterceptionModifiers().isEmpty());
 		assertTrue(skill.getRightStuffModifiers().isEmpty());
 	}

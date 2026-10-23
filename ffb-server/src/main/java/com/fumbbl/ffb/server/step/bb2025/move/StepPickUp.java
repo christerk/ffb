@@ -43,6 +43,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.PickupModifierSelectionService;
@@ -149,16 +150,16 @@ public class StepPickUp extends AbstractStepWithReRoll {
 					ClientCommandReRollModifierChoice command = (ClientCommandReRollModifierChoice) pReceivedCommand.getCommand();
 					Game game = getGameState().getGame();
 					Player<?> player = pickupPlayer();
+					OfferedSkillService offeredSkillService = new OfferedSkillService();
 					if (!awaitingRescue || secureTheBall || player == null
 						|| command.getReRolledAction() != ReRolledActions.PICK_UP
-						|| !player.getId().equals(command.getPlayerId())) {
+						|| !player.getId().equals(command.getPlayerId())
+						|| !offeredSkillService.isOfferedModifierOption(game, player.getId(), ReRolledActions.PICK_UP,
+						pickupRoll, command.getSkills())
+						|| command.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, player, skill))) {
 						break;
 					}
 					Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
-					if (selectionService.findOptions(game, player, pickupRoll).stream()
-						.noneMatch(option -> new LinkedHashSet<>(option.getSkills()).equals(skills))) {
-						break;
-					}
 					for (Skill skill : skills) {
 						selectedModifierSkills.add(skill);
 						if (player == game.getActingPlayer().getPlayer()) {
