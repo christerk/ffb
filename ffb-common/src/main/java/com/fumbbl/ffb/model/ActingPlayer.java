@@ -526,6 +526,79 @@ public class ActingPlayer implements IJsonSerializable {
 		notifyObservers(ModelChangeId.ACTING_PLAYER_SET_INITIAL_ADJACENT_PARTNER_IDS, getInitialAdjacentPartnerIds());
 	}
 
+	/**
+	 * Creates a detached copy of the current state, e.g. to restore it after an interruption by the opposing team.
+	 */
+	public ActingPlayer snapshot() {
+		ActingPlayer snapshot = new ActingPlayer(fGame);
+		snapshot.fPlayerId = fPlayerId;
+		snapshot.fStrength = fStrength;
+		snapshot.fCurrentMove = fCurrentMove;
+		snapshot.fGoingForIt = fGoingForIt;
+		snapshot.fDodging = fDodging;
+		snapshot.jumping = jumping;
+		snapshot.fHasBlocked = fHasBlocked;
+		snapshot.fHasFouled = fHasFouled;
+		snapshot.fHasPassed = fHasPassed;
+		snapshot.fHasMoved = fHasMoved;
+		snapshot.fHasFed = fHasFed;
+		snapshot.hasJumped = hasJumped;
+		snapshot.fumblerooskiePending = fumblerooskiePending;
+		snapshot.fPlayerAction = fPlayerAction;
+		snapshot.fUsedSkills.addAll(fUsedSkills);
+		snapshot.fStandingUp = fStandingUp;
+		snapshot.fSufferingBloodLust = fSufferingBloodLust;
+		snapshot.fSufferingAnimosity = fSufferingAnimosity;
+		snapshot.wasProne = wasProne;
+		snapshot.jumpsWithoutModifiers = jumpsWithoutModifiers;
+		snapshot.heldInPlace = heldInPlace;
+		snapshot.mustCompleteAction = mustCompleteAction;
+		snapshot.fellFromRush = fellFromRush;
+		snapshot.hasTriggeredEffect = hasTriggeredEffect;
+		snapshot.forgone = forgone;
+		snapshot.oldPlayerState = oldPlayerState;
+		snapshot.initialAdjacentPartnerIds.addAll(initialAdjacentPartnerIds);
+		skillsGrantedBy.forEach((skill, players) -> snapshot.skillsGrantedBy.put(skill, new ArrayList<>(players)));
+		return snapshot;
+	}
+
+	/**
+	 * Restores the state of a snapshot, notifying observers about all changes.
+	 */
+	public void restoreFrom(ActingPlayer snapshot) {
+		setPlayerId(snapshot.fPlayerId);
+		setStrength(snapshot.fStrength);
+		setPlayerAction(snapshot.fPlayerAction);
+		setCurrentMove(snapshot.fCurrentMove);
+		setGoingForIt(snapshot.fGoingForIt);
+		setDodging(snapshot.fDodging);
+		setHasBlocked(snapshot.fHasBlocked);
+		setHasFouled(snapshot.fHasFouled);
+		setHasPassed(snapshot.fHasPassed);
+		setHasMoved(snapshot.fHasMoved);
+		setHasFed(snapshot.fHasFed);
+		setHasJumped(snapshot.hasJumped);
+		setStandingUp(snapshot.fStandingUp);
+		setWasProne(snapshot.wasProne);
+		setJumping(snapshot.jumping);
+		setJumpsWithoutModifiers(snapshot.jumpsWithoutModifiers);
+		setSufferingBloodLust(snapshot.fSufferingBloodLust);
+		setSufferingAnimosity(snapshot.fSufferingAnimosity);
+		setFumblerooskiePending(snapshot.fumblerooskiePending);
+		setHeldInPlace(snapshot.heldInPlace);
+		setMustCompleteAction(snapshot.mustCompleteAction);
+		setFellFromRush(snapshot.fellFromRush);
+		setHasTriggeredEffect(snapshot.hasTriggeredEffect);
+		setForgone(snapshot.forgone);
+		setOldPlayerState(snapshot.oldPlayerState);
+		setInitialAdjacentPartnerIds(snapshot.getInitialAdjacentPartnerIds());
+		for (Skill skill : snapshot.getUsedSkills()) {
+			markSkillUsed(skill);
+		}
+		skillsGrantedBy.clear();
+		snapshot.skillsGrantedBy.forEach((skill, players) -> skillsGrantedBy.put(skill, new ArrayList<>(players)));
+	}
+
 	// change tracking
 
 	private void notifyObservers(ModelChangeId pChangeId, Object pValue) {
