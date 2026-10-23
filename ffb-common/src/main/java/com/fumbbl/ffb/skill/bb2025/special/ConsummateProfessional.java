@@ -9,6 +9,8 @@ import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
+import com.fumbbl.ffb.modifiers.InterceptionContext;
+import com.fumbbl.ffb.modifiers.InterceptionModifier;
 import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.JumpUpContext;
@@ -16,6 +18,8 @@ import com.fumbbl.ffb.modifiers.JumpUpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.modifiers.PickupContext;
 import com.fumbbl.ffb.modifiers.PickupModifier;
+import com.fumbbl.ffb.modifiers.RightStuffContext;
+import com.fumbbl.ffb.modifiers.RightStuffModifier;
 
 /**
  * Once per game, this player may apply a +1 modifier to an Agility Test they have made.
@@ -47,6 +51,18 @@ public class ConsummateProfessional extends Skill {
 			@Override
 			public boolean appliesToContext(Skill skill, JumpUpContext context) {
 				return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new InterceptionModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, InterceptionContext context) {
+        return context.isSkillSelected(skill);
+			}
+		});
+		registerModifier(new RightStuffModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, RightStuffContext context) {
+        return context.isSkillSelected(skill);
 			}
 		});
 		registerModifier(new CatchModifier("Consummate Professional", -1, ModifierType.REGULAR, true) {

@@ -15,10 +15,12 @@ import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandEndTurn;
 import com.fumbbl.ffb.net.commands.ClientCommandFollowupChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandHandOver;
+import com.fumbbl.ffb.net.commands.ClientCommandInterceptorChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandMove;
 import com.fumbbl.ffb.net.commands.ClientCommandPass;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandPushback;
+import com.fumbbl.ffb.net.commands.ClientCommandThrowTeamMate;
 
 import java.util.Arrays;
 
@@ -60,6 +62,14 @@ public class Commands {
 		return new ClientCommandMove(playerId, coordinateFrom, coordinatesTo, null);
 	}
 
+	public static ClientCommandThrowTeamMate pickUpTeamMate(String throwerId, String thrownPlayerId) {
+		return new ClientCommandThrowTeamMate(throwerId, thrownPlayerId);
+	}
+
+	public static ClientCommandThrowTeamMate throwTeamMate(String throwerId, FieldCoordinate target) {
+		return new ClientCommandThrowTeamMate(throwerId, target);
+	}
+
 	public static ClientCommandEndTurn endTurn(TurnMode turnMode) {
 		return new ClientCommandEndTurn(turnMode, null);
 	}
@@ -67,6 +77,10 @@ public class Commands {
 	public static ClientCommandReRollModifierChoice reRollModifierChoice(String playerId, ReRolledAction reRolledAction,
 		Skill... skills) {
 		return new ClientCommandReRollModifierChoice(playerId, Arrays.asList(skills), reRolledAction);
+	}
+
+	public static ClientCommandInterceptorChoice interceptorChoice(String interceptorId) {
+		return new ClientCommandInterceptorChoice(interceptorId, null);
 	}
 
 	public static ClientCommandPlayerChoice playerChoice(PlayerChoiceMode mode, Player<?>... players) {
