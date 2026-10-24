@@ -256,11 +256,16 @@ public class StepPassBlock extends AbstractStep {
 
 				Player<?>[] players = opposingTeam.getPlayers();
 				fOldPlayerStates = new PlayerState[players.length];
+				Player<?> interruptedPlayer = (oldActingPlayer != null) ? oldActingPlayer.getPlayer() : null;
 				for (int i = 0; i < players.length; i++) {
 					PlayerState playerState = game.getFieldModel().getPlayerState(players[i]);
 					FieldCoordinate playerPosition = game.getFieldModel().getPlayerCoordinate(players[i]);
 					if ((playerPosition != null) && !playerPosition.isBoxCoordinate()) {
 						fOldPlayerStates[i] = playerState;
+						// the interrupted player keeps being shown as acting, selecting it is prevented by its moving state
+						if (players[i] == interruptedPlayer) {
+							continue;
+						}
 						game.getFieldModel().setPlayerState(players[i],
 							playerState.changeActive(availablePassBlockers.contains(players[i])));
 					}

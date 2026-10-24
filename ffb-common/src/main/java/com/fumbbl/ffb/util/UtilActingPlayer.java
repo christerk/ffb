@@ -3,6 +3,7 @@ package com.fumbbl.ffb.util;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.mechanics.GameMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -102,8 +103,10 @@ public class UtilActingPlayer {
 			Player<?>[] players = pGame.getPlayers();
 			for (Player<?> value : players) {
 				PlayerState playerState = fieldModel.getPlayerState(value);
+				// during a pass block on dump-off the player of the interrupted action keeps moving
 				if ((playerState.getBase() == PlayerState.BLOCKED) || ((playerState.getBase() == PlayerState.MOVING)
-					&& (value != actingPlayer.getPlayer()) && (value != pGame.getThrower()))) {
+					&& (value != actingPlayer.getPlayer()) && (value != pGame.getThrower())
+					&& (pGame.getTurnMode() != TurnMode.DUMP_OFF_PASS_BLOCK))) {
 					fieldModel.setPlayerState(value, playerState.changeBase(PlayerState.STANDING));
 				}
 			}
