@@ -67,7 +67,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Step in move sequence to handle jumps.
@@ -649,11 +648,7 @@ public class StepJump extends AbstractStepWithReRoll {
 		if (tripsJumper) {
 			return "This will trip the jumper.";
 		}
-		if (selectedModifierSkills.isEmpty()) {
-			return "This will NOT trip the jumper, the jump will still succeed.";
-		}
-		return "This will NOT trip the jumper, but will force the use of "
-			+ selectedModifierSkills.stream().map(Skill::getName).collect(Collectors.joining(" + ")) + ".";
+		return "This will NOT trip the jumper, the jump will still succeed.";
 	}
 
 	// JSON serialization

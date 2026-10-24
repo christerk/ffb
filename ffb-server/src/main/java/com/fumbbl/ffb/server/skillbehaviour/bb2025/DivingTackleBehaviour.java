@@ -11,7 +11,6 @@ import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.ModifierType;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.ReportSkillUse;
@@ -30,7 +29,6 @@ import com.fumbbl.ffb.skill.mixed.DivingTackle;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
-import java.util.stream.Collectors;
 
 @RulesCollection(Rules.BB2025)
 public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
@@ -67,7 +65,7 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 							boolean tripsDodger = !DiceInterpreter.getInstance()
 								.isSkillRollSuccessful(state.dodgeRoll, minimumRollWithDivingTackle);
 
-							promptForDT(game, step, divingTacklers, new String[]{description(state, tripsDodger)}, state);
+							promptForDT(game, step, divingTacklers, new String[]{description(tripsDodger)}, state);
 						}
 					}
 				}
@@ -84,16 +82,11 @@ public class DivingTackleBehaviour extends SkillBehaviour<DivingTackle> {
 				return false;
 			}
 
-			private String description(StepState state, boolean tripsDodger) {
+			private String description(boolean tripsDodger) {
 				if (tripsDodger) {
 					return "This will trip the dodger.";
 				}
-				if (state.selectedModifierSkills.isEmpty()
-					|| state.selectedModifierSkills.stream().anyMatch(selectionService::isModifierIgnoringSkill)) {
-					return "This will NOT trip the dodger, the dodge will still succeed.";
-				}
-				return "This will NOT trip the dodger, but will force the use of "
-					+ state.selectedModifierSkills.stream().map(Skill::getName).collect(Collectors.joining(" + ")) + ".";
+				return "This will NOT trip the dodger, the dodge will still succeed.";
 			}
 
 			private void promptForDT(Game game, StepDivingTackle step, Player<?>[] divingTacklers, String[] descriptions,
