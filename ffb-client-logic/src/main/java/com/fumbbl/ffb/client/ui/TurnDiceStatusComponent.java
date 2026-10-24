@@ -176,6 +176,7 @@ public class TurnDiceStatusComponent extends JPanel
 			case KICKOFF_RETURN:
 			case SWARMING:
 			case PASS_BLOCK:
+			case DUMP_OFF_PASS_BLOCK:
 			case ILLEGAL_SUBSTITUTION:
 				drawButton(_LABEL_CONTINUE);
 				fEndTurnButtonShown = true;

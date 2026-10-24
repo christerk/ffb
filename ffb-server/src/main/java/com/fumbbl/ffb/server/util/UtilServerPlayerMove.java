@@ -106,7 +106,7 @@ public class UtilServerPlayerMove {
 					OnTheBallMechanic onTheBallMechanic = (OnTheBallMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
 					for (FieldCoordinate coordinate : adjacentCoordinates) {
 						if (fieldModel.getPlayer(coordinate) == null) {
-							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+							if (game.getTurnMode().isPassBlock()) {
 								int distance = coordinate.distanceInSteps(playerCoordinate);
 								if (onTheBallMechanic.validPassBlockMove(game, actingPlayer, playerCoordinate, coordinate,
 									validPassBlockCoordinates, canStillJump, distance)) {
@@ -277,7 +277,7 @@ public class UtilServerPlayerMove {
 
 	private static boolean simulatedGoForIt(Game game, ActingPlayer actingPlayer, int simulatedCurrentMove) {
 		Player<?> player = actingPlayer.getPlayer();
-		if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+		if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || game.getTurnMode().isPassBlock()) {
 			return false;
 		}
 		if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()

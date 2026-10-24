@@ -112,7 +112,9 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
-						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()) {
+						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()
+						// the moving player of a pass block is the one whose action was interrupted by a dump-off
+						&& !(game.getTurnMode().isPassBlock() && playerState.getBase() == PlayerState.MOVING)) {
 						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
 						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;

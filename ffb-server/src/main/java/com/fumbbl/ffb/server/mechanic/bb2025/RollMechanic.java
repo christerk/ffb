@@ -39,6 +39,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ReRollDialogParameterFactory;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
@@ -516,6 +517,12 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	@Override
 	public boolean allowsTeamReRoll(TurnMode turnMode) {
 		return !modesProhibitingReRolls.contains(turnMode);
+	}
+
+	@Override
+	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
+		// a pass block during a dump-off is not an activation, so Pro cannot be used
+		return game.getTurnMode() != TurnMode.DUMP_OFF_PASS_BLOCK && super.isProReRollAvailable(player, game, passState);
 	}
 
 
