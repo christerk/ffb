@@ -380,7 +380,7 @@ public class JumpModifierChoiceTest {
 	}
 
 	@Test
-	public void divingTackleDialogNamesTheModifiersItWouldForce() {
+	public void divingTackleDialogDoesNotClaimTheChosenModifiersAreForced() {
 		GameState state = buildStateWithDivingTackler("Consummate Professional");
 		Game game = state.getGame();
 
@@ -393,7 +393,7 @@ public class JumpModifierChoiceTest {
 		assertEquals(DialogId.PLAYER_CHOICE, game.getDialogParameter().getId());
 		DialogPlayerChoiceParameter parameter = (DialogPlayerChoiceParameter) game.getDialogParameter();
 		assertEquals(Collections.singletonList(
-				"This will NOT trip the jumper, but will force the use of Consummate Professional."),
+				"This will NOT trip the jumper, the jump will still succeed."),
 			Arrays.asList(parameter.getDescriptions()));
 	}
 
