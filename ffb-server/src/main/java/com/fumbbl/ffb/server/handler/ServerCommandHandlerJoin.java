@@ -7,6 +7,7 @@ import com.fumbbl.ffb.net.ServerStatus;
 import com.fumbbl.ffb.net.commands.ClientCommandJoin;
 import com.fumbbl.ffb.server.FantasyFootballServer;
 import com.fumbbl.ffb.server.GameCache;
+import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.ServerMode;
 import com.fumbbl.ffb.server.db.DbQueryFactory;
 import com.fumbbl.ffb.server.db.DbStatementId;
@@ -37,6 +38,11 @@ public class ServerCommandHandlerJoin extends ServerCommandHandler {
 
 		ClientCommandJoin joinCommand = (ClientCommandJoin) pReceivedCommand.getCommand();
 		ServerCommunication communication = getServer().getCommunication();
+
+		getServer().getDebugLog().log(IServerLogLevel.INFO, joinCommand.getGameId(),
+			"Join request from coach " + joinCommand.getCoach() + " as " + joinCommand.getClientMode().getName()
+				+ " with client " + joinCommand.getClientName() + " " + joinCommand.getClientVersion()
+				+ " (protocol " + joinCommand.getProtocolVersion() + ")");
 
 		if ((joinCommand.getGameId() > 0) || StringTool.isProvided(joinCommand.getGameName()) || joinCommand.getClientMode() == ClientMode.REPLAY) {
 
