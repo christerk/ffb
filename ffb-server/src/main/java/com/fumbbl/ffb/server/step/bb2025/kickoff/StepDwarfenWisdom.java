@@ -270,6 +270,9 @@ public class StepDwarfenWisdom extends AbstractStep {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.getBase() == PlayerState.PRONE) {
 				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+			} else if (eligiblePlayers.contains(player) && !selectedPlayers.contains(player) && !playerState.isActive()) {
+				// players not selected for re-setup were deactivated to lock them in place, restore them for kickoff events
+				game.getFieldModel().setPlayerState(player, playerState.changeActive(true));
 			}
 		}
 
