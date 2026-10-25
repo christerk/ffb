@@ -9,7 +9,6 @@ import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
@@ -96,21 +95,6 @@ public abstract class ModificationAwareInjuryTypeServer<T extends InjuryType> ex
 		} else {
 			savedByArmour(currentInjuryContext);
 		}
-	}
-
-	/**
-	 * @return whether the given context is the alternate context of a modification that forbids foul assists
-	 */
-	protected boolean ignoresFoulAssists(InjuryContext injuryContext) {
-		if (!(injuryContext instanceof ModifiedInjuryContext)) {
-			return false;
-		}
-		Skill usedSkill = ((ModifiedInjuryContext) injuryContext).getUsedSkill();
-		if (usedSkill == null || usedSkill.getSkillBehaviour() == null) {
-			return false;
-		}
-		IInjuryContextModification modification = usedSkill.getSkillBehaviour().getInjuryContextModification();
-		return modification != null && modification.ignoresFoulAssists();
 	}
 
 	protected void savedByArmour(InjuryContext injuryContext) {

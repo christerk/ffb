@@ -1,32 +1,42 @@
 package com.fumbbl.ffb.server.injury.modification.bb2025;
 
+import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.factory.INamedObjectFactory;
 import com.fumbbl.ffb.injury.Foul;
 import com.fumbbl.ffb.injury.context.ModifiedInjuryContext;
+import com.fumbbl.ffb.mechanics.Mechanic;
+import com.fumbbl.ffb.mechanics.SkillMechanic;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.modifiers.ArmorModifier;
-import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
+import com.fumbbl.ffb.util.UtilPlayer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 class LoneFoulerModificationTest {
 
-	private static final String ATTACKER_ID = "attacker";
+	private static final String DEFENDER_ID = "defender";
 
 	private GameState gameState;
 	private Game game;
 	private Player<?> attacker;
+	private Player<?> defender;
 	private StallingExtension stallingExtension;
+	private MockedStatic<UtilPlayer> utilPlayer;
 	private LoneFoulerModification modification;
 
 	@BeforeEach
@@ -34,15 +44,38 @@ class LoneFoulerModificationTest {
 		gameState = mock(GameState.class);
 		game = mock(Game.class);
 		attacker = mock(Player.class);
+		defender = mock(Player.class);
 		stallingExtension = mock(StallingExtension.class);
+
+		ActingPlayer actingPlayer = mock(ActingPlayer.class);
+		when(actingPlayer.getPlayer()).thenAnswer(invocation -> attacker);
+		when(game.getActingPlayer()).thenReturn(actingPlayer);
+		when(game.getPlayerById(DEFENDER_ID)).thenAnswer(invocation -> defender);
 		when(gameState.getGame()).thenReturn(game);
-		when(game.getPlayerById(ATTACKER_ID)).thenAnswer(invocation -> attacker);
+
+		INamedObjectFactory<?> mechanicFactory = mock(INamedObjectFactory.class);
+		doReturn(mock(SkillMechanic.class)).when(mechanicFactory).forName(Mechanic.Type.SKILL.name());
+		doReturn(mechanicFactory).when(game).getFactory(FactoryType.Factory.MECHANIC);
+
+		utilPlayer = mockStatic(UtilPlayer.class);
+		givenAssists(0, 0);
+
 		modification = new LoneFoulerModification(stallingExtension);
+	}
+
+	@AfterEach
+	void tearDown() {
+		utilPlayer.close();
+	}
+
+	private void givenAssists(int offensive, int defensive) {
+		utilPlayer.when(() -> UtilPlayer.findOffensiveFoulAssists(any(), any(), any(), any())).thenReturn(offensive);
+		utilPlayer.when(() -> UtilPlayer.findDefensiveFoulAssists(any(), any(), any())).thenReturn(defensive);
 	}
 
 	private ModificationParams params(boolean armourBroken, int... armourRoll) {
 		ModifiedInjuryContext context = new ModifiedInjuryContext();
-		context.fAttackerId = ATTACKER_ID;
+		context.fDefenderId = DEFENDER_ID;
 		context.setArmorBroken(armourBroken);
 		if (armourRoll.length > 0) {
 			context.setArmorRoll(armourRoll);
@@ -73,29 +106,32 @@ class LoneFoulerModificationTest {
 	}
 
 	@Test
+	void notOfferedWithOffensiveAssist() {
+		givenAssists(1, 0);
+
+		assertFalse(modification.tryArmourRollModification(params(false, 2, 3)));
+	}
+
+	@Test
+	void notOfferedWithDefensiveAssistEvenWhenArmourBreaksWithDouble() {
+		givenAssists(0, 1);
+
+		assertFalse(modification.tryArmourRollModification(params(true, 5, 5)));
+	}
+
+	@Test
+	void notOfferedWithAssistsEvenWhenTeamMateWouldBeStalling() {
+		givenAssists(1, 1);
+		when(stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, attacker)).thenReturn(true);
+
+		assertFalse(modification.tryArmourRollModification(params(false, 2, 3)));
+	}
+
+	@Test
 	void notOfferedWhenFoulBreaksArmourWithoutRoll() {
 		when(game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)).thenReturn(true);
 		when(stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, attacker)).thenReturn(true);
 
 		assertFalse(modification.tryArmourRollModification(params(true)));
-	}
-
-	@Test
-	void reRollDropsModifiersOfFirstRoll() {
-		DiceRoller diceRoller = mock(DiceRoller.class);
-		when(gameState.getDiceRoller()).thenReturn(diceRoller);
-		when(diceRoller.rollArmour()).thenReturn(new int[]{4, 6});
-		ModificationParams params = params(false, 2, 3);
-		params.getNewContext().addArmorModifier(mock(ArmorModifier.class));
-
-		assertTrue(modification.modifyArmourInternal(params));
-
-		assertArrayEquals(new int[]{4, 6}, params.getNewContext().getArmorRoll());
-		assertTrue(params.getNewContext().fArmorModifiers.isEmpty());
-	}
-
-	@Test
-	void reRollIgnoresFoulAssists() {
-		assertTrue(modification.ignoresFoulAssists());
 	}
 }
