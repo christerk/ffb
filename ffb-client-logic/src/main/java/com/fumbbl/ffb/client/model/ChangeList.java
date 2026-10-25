@@ -10,6 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning additional prayers to the underdog")
+			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning prayers in the 2020 ruleset")
 			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
