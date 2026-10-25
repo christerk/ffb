@@ -24,6 +24,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.bb2025.TurnActionLimitService;
 import com.fumbbl.ffb.util.StringTool;
 
 /**
@@ -45,6 +46,7 @@ public class StepInitFouling extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean usingChainsaw;
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 
 	public StepInitFouling(GameState pGameState) {
 		super(pGameState);
@@ -101,6 +103,12 @@ public class StepInitFouling extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+						Game game = getGameState().getGame();
+						if (!turnActionLimitService.isActionAvailable(game, game.getPlayerById(actingPlayerCommand.getPlayerId()),
+							actingPlayerCommand.getPlayerAction())) {
+							commandStatus = StepCommandStatus.SKIP_STEP;
+							break;
+						}
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {

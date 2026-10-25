@@ -24,6 +24,7 @@ import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
+import com.fumbbl.ffb.server.util.bb2025.TurnActionLimitService;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilRangeRuler;
 
@@ -47,6 +48,7 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 	private String gotoLabelOnEnd, thrownPlayerId;
 	private FieldCoordinate targetCoordinate;
 	private boolean endTurn, endPlayerAction, kicked;
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 
 	public StepInitThrowTeamMate(GameState pGameState) {
 		super(pGameState);
@@ -122,6 +124,11 @@ public final class StepInitThrowTeamMate extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+						if (!turnActionLimitService.isActionAvailable(game, game.getPlayerById(actingPlayerCommand.getPlayerId()),
+							actingPlayerCommand.getPlayerAction())) {
+							commandStatus = StepCommandStatus.SKIP_STEP;
+							break;
+						}
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {

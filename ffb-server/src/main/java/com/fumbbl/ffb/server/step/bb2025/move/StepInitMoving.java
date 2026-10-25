@@ -48,6 +48,7 @@ import com.fumbbl.ffb.server.step.generator.Move;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.util.ServerUtilBlock;
 import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
+import com.fumbbl.ffb.server.util.bb2025.TurnActionLimitService;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -81,6 +82,7 @@ public class StepInitMoving extends AbstractStep {
 	private FieldCoordinate[] fMoveStack;
 	private String fGazeVictimId, ballAndChainRrSetting;
 	private boolean fEndTurn, fEndPlayerAction;
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 
 	public StepInitMoving(GameState pGameState) {
 		super(pGameState);
@@ -224,14 +226,15 @@ public class StepInitMoving extends AbstractStep {
 					break;
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
+					PlayerAction ttmAction =
+						throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
 						&& (actingPlayer.getPlayerAction() == PlayerAction.THROW_TEAM_MATE_MOVE ||
-						actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)) {
+						actingPlayer.getPlayerAction() == PlayerAction.KICK_TEAM_MATE_MOVE)
+						&& turnActionLimitService.isActionAvailable(game, actingPlayer.getPlayer(), ttmAction)) {
 
 						publishParameter(
 							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
-						PlayerAction ttmAction =
-							throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 						commandStatus = dispatchPlayerAction(ttmAction);
 					}
 					break;
@@ -245,6 +248,11 @@ public class StepInitMoving extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+						if (!turnActionLimitService.isActionAvailable(game, game.getPlayerById(actingPlayerCommand.getPlayerId()),
+							actingPlayerCommand.getPlayerAction())) {
+							commandStatus = StepCommandStatus.SKIP_STEP;
+							break;
+						}
 
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 
