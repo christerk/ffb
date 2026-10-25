@@ -6,8 +6,8 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.model.skill.SkillUsageType;
 
 /**
- * When this player performs a Foul Action, if there are no players providing
- * an Offensive or Defensive Assist, this player may re-roll a failed Armour Roll.
+ * When this player performs a Foul Action, this player may re-roll the Armour Roll.
+ * No Offensive or Defensive Assists are applied to the re-rolled Armour Roll.
  */
 
 @RulesCollection(RulesCollection.Rules.BB2025)

@@ -10,6 +10,8 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addBugfix("Lone Fouler: The re-rolled armour roll still applied foul assists and the skill could only be used when no assists were present")
+			.addImprovement("Lone Fouler: Is also offered when the armour roll breaks armour with a double, or when ending the turn would make a stalling team-mate get hit by a rock")
 			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")

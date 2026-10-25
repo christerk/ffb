@@ -69,9 +69,11 @@ public class InjuryTypeFoul extends ModificationAwareInjuryTypeServer<Foul> {
 			}
 
 			ArmorModifierFactory armorModifierFactory = game.getFactory(FactoryType.Factory.ARMOUR_MODIFIER);
-			ArmorModifierContext context = new ArmorModifierContext(game, pAttacker, pDefender, false, true, UtilPlayer.findFoulAssists(game, pAttacker, pDefender));
+			if (!ignoresFoulAssists(injuryContext)) {
+				ArmorModifierContext context = new ArmorModifierContext(game, pAttacker, pDefender, false, true, UtilPlayer.findFoulAssists(game, pAttacker, pDefender));
 
-			armorModifierFactory.getFoulAssist(context).forEach(injuryContext::addArmorModifier);
+				armorModifierFactory.getFoulAssist(context).forEach(injuryContext::addArmorModifier);
+			}
 
 			injuryContext.setArmorBroken(diceInterpreter.isArmourBroken(gameState, injuryContext));
 
