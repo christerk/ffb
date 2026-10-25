@@ -65,6 +65,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		public Boolean usingSaboteurAttacker;
 		public boolean saboteurTriggeredDefender;
 		public Boolean usingSaboteurDefender;
+		public boolean ballKnockedLoose;
 	}
 
 	private final StepState state;
@@ -82,9 +83,16 @@ public class StepDropFallingPlayers extends AbstractStep {
 	@Override
 	public boolean setParameter(StepParameter parameter) {
 		if ((parameter != null) && !super.setParameter(parameter)) {
-			if (parameter.getKey() == StepParameterKey.OLD_DEFENDER_STATE) {
-				state.oldDefenderState = (PlayerState) parameter.getValue();
-				return true;
+			switch (parameter.getKey()) {
+				case OLD_DEFENDER_STATE:
+					state.oldDefenderState = (PlayerState) parameter.getValue();
+					return true;
+				case BALL_KNOCKED_LOSE:
+					// not consumed, Steady Footing still needs it
+					state.ballKnockedLoose = toPrimitive((Boolean) parameter.getValue());
+					return true;
+				default:
+					break;
 			}
 		}
 		return false;
@@ -165,7 +173,8 @@ public class StepDropFallingPlayers extends AbstractStep {
 
 		if (state.injuryResultDefender != null) {
 			DropPlayerContext dropPlayerContext =
-				new DropPlayerContext(state.injuryResultDefender, droppedOwnTeam, true, null, game.getDefenderId(),
+				// ball stripped during pushback bounces like on a regular push, so Safe Pair of Hands does not apply
+				new DropPlayerContext(state.injuryResultDefender, droppedOwnTeam, !state.ballKnockedLoose, null, game.getDefenderId(),
 					ApothecaryMode.DEFENDER, false);
 
 			if (state.saboteurTriggeredDefender) {
@@ -232,6 +241,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		IServerJsonOption.USING_SABOTEUR_DEFENDER.addTo(jsonObject, state.usingSaboteurDefender);
 		IServerJsonOption.SABOTEUR_TRIGGERED_ATTACKER.addTo(jsonObject, state.saboteurTriggeredAttacker);
 		IServerJsonOption.USING_SABOTEUR_ATTACKER.addTo(jsonObject, state.usingSaboteurAttacker);
+		IServerJsonOption.BALL_KNOCKED_LOOSE.addTo(jsonObject, state.ballKnockedLoose);
 		return jsonObject;
 	}
 
@@ -249,6 +259,7 @@ public class StepDropFallingPlayers extends AbstractStep {
 		state.usingSaboteurDefender = IServerJsonOption.USING_SABOTEUR_DEFENDER.getFrom(source, jsonObject);
 		state.saboteurTriggeredAttacker = IServerJsonOption.SABOTEUR_TRIGGERED_ATTACKER.getFrom(source, jsonObject);
 		state.usingSaboteurAttacker = IServerJsonOption.USING_SABOTEUR_ATTACKER.getFrom(source, jsonObject);
+		state.ballKnockedLoose = toPrimitive(IServerJsonOption.BALL_KNOCKED_LOOSE.getFrom(source, jsonObject));
 		return this;
 	}
 
