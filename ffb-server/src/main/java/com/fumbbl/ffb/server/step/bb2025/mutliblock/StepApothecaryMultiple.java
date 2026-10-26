@@ -67,6 +67,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -228,7 +229,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 					if (game.getDialogParameter() instanceof DialogApothecaryChoiceParameter) {
 						DialogApothecaryChoiceParameter dialogParameter =
 							(DialogApothecaryChoiceParameter) game.getDialogParameter();
-						if (StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), dialogParameter.getPlayerId())) {
+						Player<?> defender = game.getPlayerById(dialogParameter.getPlayerId());
+						if (StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), dialogParameter.getPlayerId())
+							&& UtilServerSteps.checkCommandIsFromPlayerTeam(getGameState(), pReceivedCommand, defender)) {
 							Optional<InjuryResult> choiceResult = findApothecaryChoiceResult(dialogParameter);
 							if (choiceResult.isPresent()) {
 								handleApothecaryChoice(choiceResult.get(), dialogParameter,

@@ -59,6 +59,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -142,8 +143,11 @@ public class StepApothecary extends AbstractStep {
 						if (fInjuryResult != null
 							&& StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), dialogParameter.getPlayerId())
 							&& StringTool.isEqual(dialogParameter.getPlayerId(), fInjuryResult.injuryContext().getDefenderId())) {
-							handleApothecaryChoice(dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
-							commandStatus = StepCommandStatus.EXECUTE_STEP;
+							Player<?> defender = game.getPlayerById(dialogParameter.getPlayerId());
+							if (UtilServerSteps.checkCommandIsFromPlayerTeam(getGameState(), pReceivedCommand, defender)) {
+								handleApothecaryChoice(dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
 						}
 					}
 					break;
