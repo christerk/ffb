@@ -14,6 +14,16 @@ public class InterceptionModifier extends RollModifier<InterceptionContext> {
 		this(name, reportString, pModifier, pModifier, type);
 	}
 	public InterceptionModifier(String name, String reportString, int pModifier, int multiplier, ModifierType type) {
+		this(name, reportString, pModifier, multiplier, type, false);
+	}
+
+	public InterceptionModifier(String name, int pModifier, ModifierType type, boolean optional) {
+		this(name, name, pModifier, pModifier, type, optional);
+	}
+
+	public InterceptionModifier(String name, String reportString, int pModifier, int multiplier, ModifierType type,
+															boolean optional) {
+		super(optional);
 		this.reportString = reportString;
 		this.multiplier = multiplier;
 		this.name = name;

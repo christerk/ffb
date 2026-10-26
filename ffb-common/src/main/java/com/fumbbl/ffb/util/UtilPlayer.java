@@ -583,7 +583,7 @@ public class UtilPlayer {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
 		if (player != null) {
-			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || pGame.getTurnMode().isPassBlock()) {
 				return false;
 			} else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
@@ -613,7 +613,7 @@ public class UtilPlayer {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if ((playerState != null) && playerState.isAbleToMove()) {
-			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || pGame.getTurnMode().isPassBlock()) {
 				movePossible = jumping ? (actingPlayer.getCurrentMove() < 2) : (actingPlayer.getCurrentMove() < 3);
 			} else {
 				int extraMove = 0;

@@ -6,7 +6,6 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.FieldCoordinateBounds;
 import com.fumbbl.ffb.MoveSquare;
 import com.fumbbl.ffb.TurnMode;
-import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.factory.JumpModifierFactory;
 import com.fumbbl.ffb.factory.common.GoForItModifierFactory;
 import com.fumbbl.ffb.mechanics.AgilityMechanic;
@@ -18,8 +17,6 @@ import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
-import com.fumbbl.ffb.modifiers.DodgeContext;
-import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GoForItContext;
 import com.fumbbl.ffb.modifiers.GoForItModifier;
 import com.fumbbl.ffb.modifiers.JumpContext;
@@ -109,7 +106,7 @@ public class UtilServerPlayerMove {
 					OnTheBallMechanic onTheBallMechanic = (OnTheBallMechanic) game.getFactory(Factory.MECHANIC).forName(Mechanic.Type.ON_THE_BALL.name());
 					for (FieldCoordinate coordinate : adjacentCoordinates) {
 						if (fieldModel.getPlayer(coordinate) == null) {
-							if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+							if (game.getTurnMode().isPassBlock()) {
 								int distance = coordinate.distanceInSteps(playerCoordinate);
 								if (onTheBallMechanic.validPassBlockMove(game, actingPlayer, playerCoordinate, coordinate,
 									validPassBlockCoordinates, canStillJump, distance)) {
@@ -163,10 +160,7 @@ public class UtilServerPlayerMove {
 		} else {
 			goForIt = UtilPlayer.isNextMoveGoingForIt(game);
 			if (dodging) {
-				DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
-				Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, playerCoordinate, pCoordinate));
-				minimumRollDodge = mechanic.minimumRollDodge(game, actingPlayer.getPlayer(),
-						dodgeModifiers);
+				minimumRollDodge = mechanic.minimumRollDodgePreview(game, actingPlayer, playerCoordinate, pCoordinate);
 			}
 		}
 		int minimumRollGoForIt = 0;
@@ -283,7 +277,7 @@ public class UtilServerPlayerMove {
 
 	private static boolean simulatedGoForIt(Game game, ActingPlayer actingPlayer, int simulatedCurrentMove) {
 		Player<?> player = actingPlayer.getPlayer();
-		if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+		if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || game.getTurnMode().isPassBlock()) {
 			return false;
 		}
 		if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()

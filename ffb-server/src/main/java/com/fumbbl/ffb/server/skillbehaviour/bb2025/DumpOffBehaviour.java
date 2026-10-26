@@ -45,7 +45,11 @@ public class DumpOffBehaviour extends SkillBehaviour<DumpOff> {
 				Game game = step.getGameState().getGame();
 				UtilServerDialog.hideDialog(step.getGameState());
 
-				if (game.getTurnMode() == TurnMode.DUMP_OFF) {
+				if (game.getTurnMode() == TurnMode.DUMP_OFF_PASS_BLOCK) {
+					// pass blockers moving during a dump-off must not trigger another dump-off
+					step.getResult().setNextAction(StepAction.NEXT_STEP);
+
+				} else if (game.getTurnMode() == TurnMode.DUMP_OFF) {
 					game.setTurnMode(state.oldTurnMode);
 					game.setThrowerId(null);
 					step.getResult().setNextAction(StepAction.NEXT_STEP);

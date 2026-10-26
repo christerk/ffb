@@ -11,6 +11,11 @@ public class RightStuffModifier extends RollModifier<RightStuffContext> {
 	private final ModifierType type;
 
 	public RightStuffModifier(String pName, int pModifier, ModifierType type) {
+		this(pName, pModifier, type, false);
+	}
+
+	public RightStuffModifier(String pName, int pModifier, ModifierType type, boolean optional) {
+		super(optional);
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;

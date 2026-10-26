@@ -16,6 +16,15 @@ public class PickupModifier extends RollModifier<PickupContext> {
 	}
 
 	public PickupModifier(String pName, String reportString, int pModifier, ModifierType type) {
+		this(pName, reportString, pModifier, type, false);
+	}
+
+	public PickupModifier(String name, int modifier, ModifierType type, boolean optional) {
+		this(name, name, modifier, type, optional);
+	}
+
+	public PickupModifier(String pName, String reportString, int pModifier, ModifierType type, boolean optional) {
+		super(optional);
 		fName = pName;
 		fModifier = pModifier;
 		this.type = type;

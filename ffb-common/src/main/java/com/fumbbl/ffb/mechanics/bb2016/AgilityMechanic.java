@@ -1,10 +1,15 @@
 package com.fumbbl.ffb.mechanics.bb2016;
 
+import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.factory.DodgeModifierFactory;
 import com.fumbbl.ffb.mechanics.Wording;
+import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.modifiers.CatchModifier;
+import com.fumbbl.ffb.modifiers.DodgeContext;
 import com.fumbbl.ffb.modifiers.DodgeModifier;
 import com.fumbbl.ffb.modifiers.GazeModifier;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
@@ -50,6 +55,14 @@ public class AgilityMechanic extends com.fumbbl.ffb.mechanics.AgilityMechanic {
 	@Override
 	public int minimumRollDodge(Game pGame, Player<?> pPlayer, Set<DodgeModifier> pDodgeModifiers, StatBasedRollModifier statBasedRollModifier) {
 		return minimumRollDodge(pGame, pPlayer, pDodgeModifiers);
+	}
+
+	@Override
+	public int minimumRollDodgePreview(Game game, ActingPlayer actingPlayer, FieldCoordinate from,
+																		 FieldCoordinate to) {
+		DodgeModifierFactory modifierFactory = game.getFactory(Factory.DODGE_MODIFIER);
+		Set<DodgeModifier> dodgeModifiers = modifierFactory.findModifiers(new DodgeContext(game, actingPlayer, from, to));
+		return minimumRollDodge(game, actingPlayer.getPlayer(), dodgeModifiers);
 	}
 
 	@Override

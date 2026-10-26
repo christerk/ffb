@@ -33,7 +33,8 @@ public class PassBlockLogicModule extends MoveLogicModule {
 	public InteractionResult playerInteraction(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		if (game.getTeamHome().hasPlayer(player) && playerState.isActive()) {
+		// a moving player is the one whose action was interrupted by a dump-off
+		if (game.getTeamHome().hasPlayer(player) && playerState.isActive() && (playerState.getBase() != PlayerState.MOVING)) {
 			return InteractionResult.selectAction(actionContext(player));
 		}
 		return InteractionResult.ignore();
