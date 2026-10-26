@@ -384,8 +384,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury, playerState));
 	}
 
-	public void sendApothecaryChoice(boolean pChoiceNewInjury) {
-		send(new ClientCommandApothecaryChoice(pChoiceNewInjury));
+	public void sendApothecaryChoice(String playerId, boolean choiceNewInjury) {
+		send(new ClientCommandApothecaryChoice(playerId, choiceNewInjury));
 	}
 
 	public void sendUserSettings(CommonProperty[] pSettingNames, String[] pSettingValues) {

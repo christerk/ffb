@@ -10,7 +10,6 @@ import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.PlayerType;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.bb2020.InjuryDescription;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogUseApothecariesParameter;
@@ -51,6 +50,7 @@ import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
+import com.fumbbl.ffb.util.StringTool;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,18 +110,18 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_APOTHECARY_CHOICE:
 					ClientCommandApothecaryChoice apothecaryChoiceCommand = (ClientCommandApothecaryChoice) pReceivedCommand
 						.getCommand();
-					DialogApothecaryChoiceParameter dialogParameter =
-						(DialogApothecaryChoiceParameter) getGameState().getGame().getDialogParameter();
-
-					Optional<InjuryResult> choiceResult = injuryResults.stream().filter(injuryResult ->
-							injuryResult.injuryContext().getDefenderId().equals(dialogParameter.getPlayerId())
-								&& injuryResult.injuryContext().getPlayerState().equals(dialogParameter.getPlayerStateOld())
-								&& injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE
-						)
-						.findFirst();
-					if (choiceResult.isPresent()) {
-						handleApothecaryChoice(choiceResult.get(), dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					Game currentGame = getGameState().getGame();
+					if (currentGame.getDialogParameter() instanceof DialogApothecaryChoiceParameter) {
+						DialogApothecaryChoiceParameter dialogParameter =
+							(DialogApothecaryChoiceParameter) currentGame.getDialogParameter();
+						if (StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), dialogParameter.getPlayerId())) {
+							Optional<InjuryResult> choiceResult = findApothecaryChoiceResult(dialogParameter);
+							if (choiceResult.isPresent()) {
+								handleApothecaryChoice(choiceResult.get(), dialogParameter,
+									apothecaryChoiceCommand.isChoiceNewInjury());
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
+						}
 					}
 					break;
 				case CLIENT_USE_APOTHECARIES:
@@ -449,16 +449,19 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 	private void handleApothecaryChoice(InjuryResult injuryResult,
 		DialogApothecaryChoiceParameter dialogParameter, boolean choiceNewInjury) {
-
-		if (choiceNewInjury) {
-			injuryResult.injuryContext().setInjury(dialogParameter.getPlayerStateNew());
-			injuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjuryNew());
-		} else {
-			injuryResult.injuryContext().setInjury(dialogParameter.getPlayerStateOld());
-			injuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjuryOld());
-		}
+		injuryResult.injuryContext().setInjury(dialogParameter.getPlayerState(choiceNewInjury));
+		injuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjury(choiceNewInjury));
 
 		injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+	}
+
+	private Optional<InjuryResult> findApothecaryChoiceResult(DialogApothecaryChoiceParameter dialogParameter) {
+		return injuryResults.stream().filter(injuryResult ->
+				injuryResult.injuryContext().getDefenderId().equals(dialogParameter.getPlayerId())
+					&& injuryResult.injuryContext().getPlayerState().equals(dialogParameter.getPlayerStateOld())
+					&& injuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE
+			)
+			.findFirst();
 	}
 
 	// JSON serialization
