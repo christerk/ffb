@@ -44,12 +44,10 @@ public class UtilServerSetup {
 				}
 
 			} else {
-				DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-					.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
-				String[] setupNames = allSetupNamesQuery.execute(team);
-				Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-					: server.getSessionManager().getSessionOfAwayCoach(game.getId());
-				server.getCommunication().sendTeamSetupList(session, setupNames);
+				// queue the list query behind pending setup updates so it does not miss a recent save or delete
+				DbTransaction dbTransaction = new DbTransaction();
+				dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, game.getId(), game.isHomePlaying(), team));
+				server.getDbUpdater().add(dbTransaction);
 			}
 
 		}
@@ -95,21 +93,25 @@ public class UtilServerSetup {
 			Game game = gameState.getGame();
 			Team team = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
 
+			// send the list only after the delete has been executed, otherwise it may still contain the deleted setup
+			DbTransaction dbTransaction = new DbTransaction();
 			if (StringTool.isProvided(pSetupName)) {
-				DbTransaction dbTransaction = new DbTransaction();
 				dbTransaction.add(new DbTeamSetupsDeleteParameter(team.getId(), pSetupName));
-				server.getDbUpdater().add(dbTransaction);
 			}
-
-			DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
-				.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
-			String[] setupNames = allSetupNamesQuery.execute(team);
-			Session session = game.isHomePlaying() ? server.getSessionManager().getSessionOfHomeCoach(game.getId())
-				: server.getSessionManager().getSessionOfAwayCoach(game.getId());
-			server.getCommunication().sendTeamSetupList(session, setupNames);
+			dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, game.getId(), game.isHomePlaying(), team));
+			server.getDbUpdater().add(dbTransaction);
 
 		}
 
+	}
+
+	private static void sendTeamSetupList(FantasyFootballServer server, long gameId, boolean homePlaying, Team team) {
+		DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
+			.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
+		String[] setupNames = allSetupNamesQuery.execute(team);
+		Session session = homePlaying ? server.getSessionManager().getSessionOfHomeCoach(gameId)
+			: server.getSessionManager().getSessionOfAwayCoach(gameId);
+		server.getCommunication().sendTeamSetupList(session, setupNames);
 	}
 
 	public static void setupPlayer(GameState gameState, String pPlayerId, FieldCoordinate pCoordinate) {

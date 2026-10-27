@@ -15,6 +15,7 @@ public class DbTransaction implements IDbUpdateParameter {
 
 	private int fUpdatedRows;
 	private final List<IDbUpdateParameter> fDbUpdateParameters;
+	private Runnable onCompletion;
 
 	public DbTransaction() {
 		fDbUpdateParameters = new ArrayList<>();
@@ -32,6 +33,13 @@ public class DbTransaction implements IDbUpdateParameter {
 				fDbUpdateParameters.add(parameter);
 			}
 		}
+	}
+
+	/**
+	 * Sets an action that is run on the db updater thread after this transaction has been committed or rolled back.
+	 */
+	public void setOnCompletion(Runnable onCompletion) {
+		this.onCompletion = onCompletion;
 	}
 
 	public IDbUpdateParameter[] getDbUpdateParameters() {
@@ -74,6 +82,13 @@ public class DbTransaction implements IDbUpdateParameter {
 			}
 		} catch (SQLException pCommitException) {
 			pServer.getDebugLog().logWithOutGameId(pCommitException);
+		}
+		if (onCompletion != null) {
+			try {
+				onCompletion.run();
+			} catch (Exception completionException) {
+				pServer.getDebugLog().logWithOutGameId(completionException);
+			}
 		}
 	}
 
