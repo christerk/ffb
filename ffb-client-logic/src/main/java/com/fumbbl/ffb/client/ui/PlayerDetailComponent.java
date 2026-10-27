@@ -193,7 +193,7 @@ public class PlayerDetailComponent extends JPanel {
 			}
 			String positionNameString = positionName.toString();
 			String keywords = "(" + getPlayer().getPosition().getKeywords().stream()
-				.map(Keyword::getName).sorted().collect(Collectors.joining(", ")) + ")";
+				.sorted().map(Keyword::getDisplayName).collect(Collectors.joining(", ")) + ")";
 			g2d.setFont(positionFont);
 			GraphicsEnhancer.applyAAHints(g2d);
 			FontMetrics metrics = g2d.getFontMetrics();

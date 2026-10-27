@@ -432,7 +432,7 @@ public class FieldModel implements IJsonSerializable {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		Skill skill = factory.forProperty(NamedProperties.canBeGainedByGettingEven);
 
-		player.addEnhancement("Getting Even " + keyword.getName(), new TemporaryEnhancements().withSkills(
+		player.addEnhancement("Getting Even " + keyword.getDisplayName(), new TemporaryEnhancements().withSkills(
 			Collections.singleton(new SkillClassWithValue(skill.getClass(), keyword.getName()))), factory);
 
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_HATRED, player.getId(), keyword.getName());
