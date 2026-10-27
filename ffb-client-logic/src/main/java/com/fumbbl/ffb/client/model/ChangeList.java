@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addImprovement("Getting Even: Custom keywords of league positionals are supported and no longer all treated as the same \"Unknown\" keyword")
 			.addBugfix("Dump-off: The tackle zone of a blocker who stood up to block or blitz was ignored for the pass")
 			.addImprovement("Lone Fouler: Is also offered when the armour roll breaks armour with a double, or when ending the turn would make a stalling team-mate get hit by a rock")
 			.addBugfix("Safe Pair of Hands: Could be used when knocked down by a player with Strip Ball instead of the ball bouncing")

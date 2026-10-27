@@ -52,9 +52,9 @@ public class Animosity extends Skill {
 
 		@Override
 		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
-			Set<String> skillValues =
-				map(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse(allValue()));
-			Set<String> tempSkillValues = map(player.temporarySkillValues(skill).toArray(new String[0]));
+			Set<Keyword> skillValues =
+				keywords(Optional.ofNullable(player.getSkillValueExcludingTemporaryOnes(skill)).orElse(allValue()));
+			Set<Keyword> tempSkillValues = keywords(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
 			return Stream.concat(
 				skillValues.stream()
@@ -76,16 +76,20 @@ public class Animosity extends Skill {
 			return map(values.toArray(new String[0]));
 		}
 
-		private String sanitize(Skill skill, String value) {
-			if (value.equalsIgnoreCase(allValue())) {
+		private String sanitize(Skill skill, Keyword value) {
+			if (value.getName().equalsIgnoreCase(allValue())) {
 				return skill.getName();
 			}
-			return skill.getName() + " (" + value + ")";
+			return skill.getName() + " (" + value.getDisplayName() + ")";
 		}
 
 		private Set<String> map(String... values) {
+			return keywords(values).stream().map(Keyword::getName).collect(Collectors.toSet());
+		}
+
+		private Set<Keyword> keywords(String... values) {
 			return Arrays.stream(values).flatMap(value -> Arrays.stream(value.split(";")))
-				.map(value -> Keyword.forName(value).getName()).collect(Collectors.toSet());
+				.map(Keyword::forName).collect(Collectors.toSet());
 		}
 
 		@Override

@@ -45,18 +45,18 @@ public class Hatred extends Skill {
 
 		@Override
 		public Set<SkillDisplayInfo> info(Skill skill, Player<?> player) {
-			Set<String> skillValues = new HashSet<>();
+			Set<Keyword> skillValues = new HashSet<>();
 			String skillValue = player.getSkillValueExcludingTemporaryOnes(skill);
 			if (StringTool.isProvided(skillValue)) {
-				skillValues.addAll(map(skillValue));
+				skillValues.addAll(keywords(skillValue));
 			}
-			Set<String> tempSkillValues = map(player.temporarySkillValues(skill).toArray(new String[0]));
+			Set<Keyword> tempSkillValues = keywords(player.temporarySkillValues(skill).toArray(new String[0]));
 			tempSkillValues.removeAll(skillValues);
 
-			Set<String> rosterSkillValues = new HashSet<>();
+			Set<Keyword> rosterSkillValues = new HashSet<>();
 			String skillValueRoster = player.getPosition().getSkillValue(skill);
 			if (StringTool.isProvided(skillValueRoster)) {
-				rosterSkillValues.addAll(map(skillValueRoster));
+				rosterSkillValues.addAll(keywords(skillValueRoster));
 				skillValues.removeAll(rosterSkillValues);
 			}
 
@@ -85,13 +85,17 @@ public class Hatred extends Skill {
 			return map(values.toArray(new String[0]));
 		}
 
-		private String sanitize(Skill skill, String value) {
-			return skill.getName() + " (" + value + ")";
+		private String sanitize(Skill skill, Keyword value) {
+			return skill.getName() + " (" + value.getDisplayName() + ")";
 		}
 
 		private Set<String> map(String... values) {
+			return keywords(values).stream().map(Keyword::getName).collect(Collectors.toSet());
+		}
+
+		private Set<Keyword> keywords(String... values) {
 			return Arrays.stream(values).flatMap(value -> Arrays.stream(value.split(";")))
-				.map(value -> Keyword.forName(value).getName()).collect(Collectors.toSet());
+				.map(Keyword::forName).collect(Collectors.toSet());
 		}
 	}
 }
