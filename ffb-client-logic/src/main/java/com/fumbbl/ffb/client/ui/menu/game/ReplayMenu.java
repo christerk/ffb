@@ -127,15 +127,15 @@ public class ReplayMenu extends GameModeMenu {
 		String addPointKey = client.getProperty(CommonProperty.SETTING_CLICK_ADD_POINT);
 		String endSketchKey = client.getProperty(CommonProperty.SETTING_CLICK_END_SKETCH);
 
-		if (startSketchKey == null) {
+		if (clickStrategyRegistry.getStrategyByKey(startSketchKey) == null) {
 			startSketchKey = IClientPropertyValue.SETTING_CLICK_LEFT;
 			client.setProperty(CommonProperty.SETTING_CLICK_START_SKETCH, startSketchKey);
 		}
-		if (addPointKey == null) {
+		if (clickStrategyRegistry.getStrategyByKey(addPointKey) == null) {
 			addPointKey = IClientPropertyValue.SETTING_CLICK_LEFT;
 			client.setProperty(CommonProperty.SETTING_CLICK_ADD_POINT, addPointKey);
 		}
-		if (endSketchKey == null) {
+		if (clickStrategyRegistry.getStrategyByKey(endSketchKey) == null) {
 			endSketchKey = IClientPropertyValue.SETTING_CLICK_DOUBLE;
 			client.setProperty(CommonProperty.SETTING_CLICK_END_SKETCH, endSketchKey);
 		}
