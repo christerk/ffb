@@ -28,6 +28,7 @@ public class ChangeList {
 			.addImprovement("Active players can now show which action is being performed")
 			.addBugfix("Krump and Smash: Was offered when Varag was blocked and the opposing player knocked themselves down")
 			.addBugfix("Foul Appearance: Was rolled on the next move after being successfully shadowed by a player with Foul Appearance")
+			.addBehaviorChange("Replay: Removed the \"Left Click + Shift\" draw tool click behaviour, as Shift + Left Click opens the marker popup")
 			.addBugfix("Stunty: Still applied a -1 modifier to interceptions for passes from stunty players")
 			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addBugfix("Diving Tackle: The prompt no longer claims that declaring Diving Tackle forces the dodging or jumping player to use skills like Break Tackle")
