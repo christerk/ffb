@@ -29,6 +29,7 @@ import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.util.StringTool;
+import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 /**
  * Step to init the block sequence.
@@ -55,6 +56,7 @@ public class StepInitBlocking extends AbstractStep {
 	private boolean fEndTurn;
 	private boolean fEndPlayerAction;
 	private boolean askForBlockKind, publishDefender;
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 
 	public StepInitBlocking(GameState pGameState) {
 		super(pGameState);
@@ -166,6 +168,12 @@ public class StepInitBlocking extends AbstractStep {
 				case CLIENT_ACTING_PLAYER:
 					ClientCommandActingPlayer actingPlayerCommand = (ClientCommandActingPlayer) pReceivedCommand.getCommand();
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())) {
+						Game game = getGameState().getGame();
+						if (!turnActionLimitService.isActionAvailable(game, game.getPlayerById(actingPlayerCommand.getPlayerId()),
+							actingPlayerCommand.getPlayerAction())) {
+							commandStatus = StepCommandStatus.SKIP_STEP;
+							break;
+						}
 						UtilServerSteps.changePlayerAction(this, actingPlayerCommand.getPlayerId(),
 							actingPlayerCommand.getPlayerAction(), actingPlayerCommand.isJumping());
 					} else {
