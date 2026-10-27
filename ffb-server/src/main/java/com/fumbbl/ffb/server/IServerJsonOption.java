@@ -39,6 +39,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
     JsonStringListMapOption AVAILABLE_KEYWORDS_MAP = new JsonStringListMapOption("availableKeywordsMap");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
+    JsonBooleanOption BALL_KNOCKED_LOOSE = new JsonBooleanOption("ballKnockedLoose");
     JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
     JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
     JsonBooleanOption BRIBES_CHOICE = new JsonBooleanOption("bribesChoice");
