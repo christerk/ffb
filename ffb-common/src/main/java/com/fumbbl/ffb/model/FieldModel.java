@@ -57,8 +57,6 @@ import java.util.stream.Collectors;
  */
 public class FieldModel implements IJsonSerializable {
 
-	public static final String GETTING_EVEN_ENHANCEMENT_PREFIX = "Getting Even ";
-
 	private boolean fBallMoving;
 	private boolean fBallInPlay;
 	private FieldCoordinate fBallCoordinate;
@@ -434,7 +432,7 @@ public class FieldModel implements IJsonSerializable {
 		SkillFactory factory = getGame().getFactory(Factory.SKILL);
 		Skill skill = factory.forProperty(NamedProperties.canBeGainedByGettingEven);
 
-		player.addEnhancement(GETTING_EVEN_ENHANCEMENT_PREFIX + keyword.getName(), new TemporaryEnhancements().withSkills(
+		player.addEnhancement("Getting Even " + keyword.getDisplayName(), new TemporaryEnhancements().withSkills(
 			Collections.singleton(new SkillClassWithValue(skill.getClass(), keyword.getName()))), factory);
 
 		notifyObservers(ModelChangeId.FIELD_MODEL_ADD_HATRED, player.getId(), keyword.getName());

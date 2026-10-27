@@ -24,7 +24,6 @@ import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.mechanics.StatsDrawingModifier;
 import com.fumbbl.ffb.mechanics.StatsMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
-import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
@@ -445,8 +444,7 @@ public class PlayerDetailComponent extends JPanel {
 				modifications.add(cardEffect.getName());
 			}
 			modifications.addAll(
-				getPlayer().getEnhancementSources().stream().map(this::enhancementDisplayName).sorted(Comparator.naturalOrder())
-					.collect(Collectors.toList()));
+				getPlayer().getEnhancementSources().stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList()));
 
 			acquiredSkills.removeAll(modifications);
 			rosterSkills.removeAll(modifications);
@@ -465,14 +463,6 @@ public class PlayerDetailComponent extends JPanel {
 			drawPlayerSkills(g2d, x, y + height, rosterSkills, usedSkills);
 			g2d.dispose();
 		}
-	}
-
-	private String enhancementDisplayName(String source) {
-		if (source.startsWith(FieldModel.GETTING_EVEN_ENHANCEMENT_PREFIX)) {
-			return FieldModel.GETTING_EVEN_ENHANCEMENT_PREFIX
-				+ Keyword.forName(source.substring(FieldModel.GETTING_EVEN_ENHANCEMENT_PREFIX.length())).getDisplayName();
-		}
-		return source;
 	}
 
 	private int drawPlayerSkills(Graphics2D pG2d, int pX, int pY, Set<String> pSkills, Set<String> pUsedSkills) {
