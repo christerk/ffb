@@ -69,14 +69,14 @@ class KeywordTest {
 	}
 
 	@Test
-	void sortsOfficialKeywordsInDefinedOrderBeforeCustomOnes() {
-		List<Keyword> keywords = Arrays.asList(Keyword.forName("zebra"), Keyword.ORC, Keyword.forName("Aardvark"),
-			Keyword.ANIMAL);
+	void sortsOfficialAndCustomKeywordsAlphabeticallyIgnoringCase() {
+		List<Keyword> keywords = Arrays.asList(Keyword.forName("zebra"), Keyword.ORC, Keyword.forName("aardvark"),
+			Keyword.VAMPIRE_LORD, Keyword.ANIMAL, Keyword.forName("Nurgle"));
 
 		Collections.sort(keywords);
 
-		assertEquals(Arrays.asList(Keyword.ANIMAL, Keyword.ORC, Keyword.forName("Aardvark"), Keyword.forName("zebra")),
-			keywords);
+		assertEquals(Arrays.asList(Keyword.forName("aardvark"), Keyword.ANIMAL, Keyword.forName("Nurgle"), Keyword.ORC,
+			Keyword.VAMPIRE_LORD, Keyword.forName("zebra")), keywords);
 	}
 
 	@Test

@@ -1,9 +1,7 @@
 package com.fumbbl.ffb.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,7 +14,6 @@ import java.util.stream.Collectors;
 public final class Keyword implements Comparable<Keyword> {
 
 	private static final Map<String, Keyword> OFFICIAL = new HashMap<>();
-	private static final List<Keyword> OFFICIAL_ORDER = new ArrayList<>();
 
 	// team level
 	public static final Keyword MASTER_CHEF = official("Master Chef");
@@ -86,7 +83,6 @@ public final class Keyword implements Comparable<Keyword> {
 	private static Keyword official(String name, boolean canGetEvenWith) {
 		Keyword keyword = new Keyword(name, canGetEvenWith, false);
 		OFFICIAL.put(key(name), keyword);
-		OFFICIAL_ORDER.add(keyword);
 		return keyword;
 	}
 
@@ -137,16 +133,10 @@ public final class Keyword implements Comparable<Keyword> {
 	}
 
 	/**
-	 * Official keywords first in their defined order, followed by custom keywords sorted by name.
+	 * Alphabetical by name ignoring case, official and custom keywords mixed.
 	 */
 	@Override
 	public int compareTo(Keyword other) {
-		if (!custom && !other.custom) {
-			return Integer.compare(OFFICIAL_ORDER.indexOf(this), OFFICIAL_ORDER.indexOf(other));
-		}
-		if (custom != other.custom) {
-			return custom ? 1 : -1;
-		}
 		return key(name).compareTo(key(other.name));
 	}
 
