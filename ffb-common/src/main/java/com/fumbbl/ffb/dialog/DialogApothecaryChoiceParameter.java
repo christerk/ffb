@@ -58,6 +58,14 @@ public class DialogApothecaryChoiceParameter implements IDialogParameter {
 		return fSeriousInjuryNew;
 	}
 
+	public PlayerState getPlayerState(boolean choiceNewInjury) {
+		return choiceNewInjury ? getPlayerStateNew() : getPlayerStateOld();
+	}
+
+	public SeriousInjury getSeriousInjury(boolean choiceNewInjury) {
+		return choiceNewInjury ? getSeriousInjuryNew() : getSeriousInjuryOld();
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {

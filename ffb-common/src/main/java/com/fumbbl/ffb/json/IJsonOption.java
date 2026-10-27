@@ -112,6 +112,7 @@ public interface IJsonOption {
 	JsonIntOption CHEERING_FANS_BLOCK_ASSIST = new JsonIntOption("cheeringFansBlockAssist");
 	JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
+	JsonBooleanOption CHOICE_NEW_INJURY = new JsonBooleanOption("choiceNewInjury");
 	JsonBooleanOption CHOICE_PICK_UP = new JsonBooleanOption("choicePickUp");
 	JsonBooleanOption CHOICE_RECEIVE = new JsonBooleanOption("choiceReceive");
 	JsonStringListMapOption CHOMPED = new JsonStringListMapOption("chomped");
