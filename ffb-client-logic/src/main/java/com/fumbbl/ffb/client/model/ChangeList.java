@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addImprovement("Lone Fouler: Is also offered when the armour roll breaks armour with a double, or when ending the turn would make a stalling team-mate get hit by a rock")
 			.addBugfix("Safe Pair of Hands: Could be used when knocked down by a player with Strip Ball instead of the ball bouncing")
 			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning additional prayers to the underdog")
 			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning prayers in the 2020 ruleset")
