@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.util.bb2025;
+package com.fumbbl.ffb.util.bb2025;
 
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.model.ActingPlayer;
