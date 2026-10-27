@@ -9,17 +9,21 @@ import com.fumbbl.ffb.net.NetCommandId;
 
 public class ClientCommandJoinReplay extends ClientCommand {
 
-	private String replayName, coach;
+	private String replayName, coach, protocolVersion, clientName, clientVersion;
 	private long gameId;
 
 	public ClientCommandJoinReplay() {
 		super();
 	}
 
-	public ClientCommandJoinReplay(String replayName, String coach, long gameId) {
+	public ClientCommandJoinReplay(String replayName, String coach, long gameId, String protocolVersion,
+																 String clientName, String clientVersion) {
 		this.replayName = replayName;
 		this.coach = coach;
 		this.gameId = gameId;
+		this.protocolVersion = protocolVersion;
+		this.clientName = clientName;
+		this.clientVersion = clientVersion;
 	}
 
 	public NetCommandId getId() {
@@ -37,6 +41,19 @@ public class ClientCommandJoinReplay extends ClientCommand {
 	public long getGameId() {
 		return gameId;
 	}
+
+	public String getProtocolVersion() {
+		return protocolVersion;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public String getClientVersion() {
+		return clientVersion;
+	}
+
 // JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -44,6 +61,9 @@ public class ClientCommandJoinReplay extends ClientCommand {
 		IJsonOption.NAME.addTo(jsonObject, replayName);
 		IJsonOption.COACH.addTo(jsonObject, coach);
 		IJsonOption.GAME_ID.addTo(jsonObject, gameId);
+		IJsonOption.PROTOCOL_VERSION.addTo(jsonObject, protocolVersion);
+		IJsonOption.CLIENT_NAME.addTo(jsonObject, clientName);
+		IJsonOption.CLIENT_VERSION.addTo(jsonObject, clientVersion);
 		return jsonObject;
 	}
 
@@ -53,6 +73,9 @@ public class ClientCommandJoinReplay extends ClientCommand {
 		replayName = IJsonOption.NAME.getFrom(source, jsonObject);
 		coach = IJsonOption.COACH.getFrom(source, jsonObject);
 		gameId = IJsonOption.GAME_ID.getFrom(source, jsonObject);
+		protocolVersion = IJsonOption.PROTOCOL_VERSION.getFrom(source, jsonObject);
+		clientName = IJsonOption.CLIENT_NAME.getFrom(source, jsonObject);
+		clientVersion = IJsonOption.CLIENT_VERSION.getFrom(source, jsonObject);
 		return this;
 	}
 }

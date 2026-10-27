@@ -25,6 +25,7 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
+import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.ISkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -323,7 +324,7 @@ public abstract class LogicModule {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		return ((playerState != null)
 			&& mechanic.isBombActionAllowed(game.getTurnMode())
-			&& !game.getTurnData().isBombUsed()
+			&& isTurnActionAvailable(player, PlayerAction.THROW_BOMB)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& !playerState.isProneOrStunned()
 			&& player.hasSkillProperty(NamedProperties.enableThrowBombAction));
@@ -336,16 +337,52 @@ public abstract class LogicModule {
 		Player<?>[] opponents =
 			UtilPlayer.findPlayersWithTackleZonesTwoSquaresAway(game, game.getTeamAway(), ballCoordinate);
 
-		return fieldModel.isBallInPlay() && fieldModel.isBallMoving() && !game.getTurnData().isSecureTheBallUsed()
+		return fieldModel.isBallInPlay() && fieldModel.isBallMoving() && isTurnActionAvailable(player, PlayerAction.SECURE_THE_BALL)
 			&& !player.hasSkillProperty(NamedProperties.preventSecureTheBallAction)
 			&& !player.getPosition().getKeywords().contains(Keyword.BIG_GUY)
 			&& !ArrayTool.isProvided(opponents);
 	}
 
+	/**
+	 * Checks the once per turn limit of an action the player wants to declare, e.g. whether the blitz of this turn is
+	 * still unused.
+	 */
+	protected boolean isTurnActionAvailable(Player<?> player, PlayerAction playerAction) {
+		Game game = client.getGame();
+		TurnData turnData = game.getTurnData();
+		TtmMechanic ttmMechanic =
+			(TtmMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.TTM.name());
+		switch (playerAction) {
+			case BLITZ_MOVE:
+			case KICK_EM_BLITZ:
+			case STAND_UP_BLITZ:
+			case FURIOUS_OUTPBURST:
+				return !turnData.isBlitzUsed();
+			case FOUL_MOVE:
+				return !turnData.isFoulUsed() || player.hasSkillProperty(NamedProperties.allowsAdditionalFoul);
+			case PASS_MOVE:
+				return !turnData.isPassUsed();
+			case HAND_OVER_MOVE:
+				return !turnData.isHandOverUsed();
+			case THROW_TEAM_MATE_MOVE:
+				return ttmMechanic.isTtmAvailable(turnData);
+			case KICK_TEAM_MATE_MOVE:
+				return ttmMechanic.isKtmAvailable(turnData);
+			case THROW_BOMB:
+				return !turnData.isBombUsed();
+			case SECURE_THE_BALL:
+				return !turnData.isSecureTheBallUsed();
+			case PUNT_MOVE:
+				return !turnData.isPuntUsed();
+			default:
+				return true;
+		}
+	}
+
 	public boolean isBlitzActionAvailable(Player<?> player) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getTurnData().isBlitzUsed()
+		return (isTurnActionAvailable(player, PlayerAction.BLITZ_MOVE)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED) &&
 			(playerState != null)
 			&& playerState.isActive() && (playerState.isAbleToMove() || plugin().playerCanNotMove(playerState))
@@ -359,8 +396,7 @@ public abstract class LogicModule {
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
 		if ((playerState != null) && !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& mechanic.isFoulActionAllowed(game.getTurnMode())
-			&& playerState.isActive() &&
-			(!game.getTurnData().isFoulUsed() || player.hasSkillProperty(NamedProperties.allowsAdditionalFoul))
+			&& playerState.isActive() && isTurnActionAvailable(player, PlayerAction.FOUL_MOVE)
 			&& !player.hasSkillProperty(NamedProperties.preventRegularFoulAction)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
 				PlayerState opponentState = game.getFieldModel().getPlayerState(opponent);
@@ -375,7 +411,7 @@ public abstract class LogicModule {
 	public boolean isPassActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getTurnData().isPassUsed()
+		return (isTurnActionAvailable(player, PlayerAction.PASS_MOVE)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
@@ -385,7 +421,7 @@ public abstract class LogicModule {
 	public boolean isPuntActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getTurnData().isPuntUsed()
+		return (isTurnActionAvailable(player, PlayerAction.PUNT_MOVE)
 			&& player.hasSkillProperty(NamedProperties.canPunt)
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
@@ -397,7 +433,7 @@ public abstract class LogicModule {
 	public boolean isHandOverActionAvailable(Player<?> player, boolean treacherousAvailable) {
 		Game game = client.getGame();
 		PlayerState playerState = game.getFieldModel().getPlayerState(player);
-		return (!game.getTurnData().isHandOverUsed()
+		return (isTurnActionAvailable(player, PlayerAction.HAND_OVER_MOVE)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& (UtilPlayer.isBallAvailable(game, player) || treacherousAvailable) && (playerState != null)
 			&& (playerState.isAbleToMove() || (UtilPlayer.hasBall(game, player) || treacherousAvailable))
@@ -428,7 +464,7 @@ public abstract class LogicModule {
 
 		boolean rightStuffAdjacent = ArrayTool.isProvided(mechanic.findThrowableTeamMates(game, player));
 
-		return (mechanic.isTtmAvailable(game.getTurnData())
+		return (isTurnActionAvailable(player, PlayerAction.THROW_TEAM_MATE_MOVE)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& mechanic.canThrow(game, player) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
@@ -469,7 +505,7 @@ public abstract class LogicModule {
 			}
 		}
 
-		return (mechanic.isKtmAvailable(game.getTurnData())
+		return (isTurnActionAvailable(player, PlayerAction.KICK_TEAM_MATE_MOVE)
 			&& !game.getFieldModel().hasCardEffect(player, CardEffect.ILLEGALLY_SUBSTITUTED)
 			&& player.hasSkillProperty(NamedProperties.canKickTeamMates) && rightStuffAvailable
 			&& (playerState.isAbleToMove() || rightStuffAdjacent));
@@ -523,7 +559,8 @@ public abstract class LogicModule {
 		FieldModel fieldModel = game.getFieldModel();
 		FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(player);
 		PlayerState playerState = fieldModel.getPlayerState(player);
-		if ((playerState != null) && playerState.isActive() && (!game.getTurnData().isBlitzUsed() || !moveAllowed)
+		if ((playerState != null) && playerState.isActive()
+			&& (!moveAllowed || isTurnActionAvailable(player, PlayerAction.KICK_EM_BLITZ))
 			&& UtilCards.hasUnusedSkillWithProperty(player, NamedProperties.canUseChainsawOnDownedOpponents) &&
 			player.hasSkill(NamedProperties.blocksLikeChainsaw)) {
 			for (Player<?> opponent : game.getTeamAway().getPlayers()) {
@@ -660,7 +697,7 @@ public abstract class LogicModule {
 
 		return (playerState != null) && playerState.isActive()
 			&& playerState.getBase() == PlayerState.STANDING
-			&& !game.getTurnData().isBlitzUsed()
+			&& isTurnActionAvailable(player, PlayerAction.FURIOUS_OUTPBURST)
 			&& player.hasUnusedSkillProperty(NamedProperties.canTeleportBeforeAndAfterAvRollAttack)
 			&& ArrayTool.isProvided(
 			UtilPlayer.findBlockablePlayers(game, opponentTeam, game.getFieldModel().getPlayerCoordinate(player),
