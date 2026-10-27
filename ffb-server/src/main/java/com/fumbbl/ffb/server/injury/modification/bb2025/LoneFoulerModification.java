@@ -11,7 +11,6 @@ import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
 import com.fumbbl.ffb.util.UtilPlayer;
@@ -41,7 +40,7 @@ public class LoneFoulerModification extends RerollArmourModification {
 		Game game = params.getGameState().getGame();
 		ModifiedInjuryContext context = params.getNewContext();
 
-		if (game.isActive(NamedProperties.foulBreaksArmourWithoutRoll) || context.fArmorRoll == null) {
+		if (context.fArmorRoll == null) {
 			return false;
 		}
 

@@ -9,7 +9,6 @@ import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
-import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
 import com.fumbbl.ffb.server.step.bb2025.shared.StallingExtension;
@@ -125,13 +124,5 @@ class LoneFoulerModificationTest {
 		when(stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, attacker)).thenReturn(true);
 
 		assertFalse(modification.tryArmourRollModification(params(false, 2, 3)));
-	}
-
-	@Test
-	void notOfferedWhenFoulBreaksArmourWithoutRoll() {
-		when(game.isActive(NamedProperties.foulBreaksArmourWithoutRoll)).thenReturn(true);
-		when(stallingExtension.wouldEndOfTurnTriggerStallingRoll(game, attacker)).thenReturn(true);
-
-		assertFalse(modification.tryArmourRollModification(params(true)));
 	}
 }
