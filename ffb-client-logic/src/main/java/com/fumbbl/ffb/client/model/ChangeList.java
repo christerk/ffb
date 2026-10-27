@@ -11,6 +11,10 @@ public class ChangeList {
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("Dump-off: The tackle zone of a blocker who stood up to block or blitz was ignored for the pass")
+			.addImprovement("Lone Fouler: Is also offered when the armour roll breaks armour with a double, or when ending the turn would make a stalling team-mate get hit by a rock")
+			.addBugfix("Safe Pair of Hands: Could be used when knocked down by a player with Strip Ball instead of the ball bouncing")
+			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning additional prayers to the underdog")
+			.addBugfix("Prayers to Nuffle: A prayer cost of zero caused an error when assigning prayers in the 2020 ruleset")
 			.addBugfix("On The Ball: Dodge could not be used to re-roll a failed dodge when moving during a pass")
 			.addBugfix("B&C: If stunned by a pitch invasion no injury was applied")
 			.addBugfix("Wizard: Fireball did not affect prone or stunned players, and Fireball/Zap could not target own-team players in the 2025 ruleset")
@@ -28,6 +32,7 @@ public class ChangeList {
 			.addBugfix("Swarming: A double clicked end turn button during setup could skip the swarming setup")
 			.addBugfix("Diving Tackle: The prompt no longer claims that declaring Diving Tackle forces the dodging or jumping player to use skills like Break Tackle")
 			.addImprovement("Skipping a player choice dialog that allows selecting more than one player now asks for confirmation and reopens the dialog if the skip is not confirmed")
+			.addBugfix("Josef Bugman: Players not chosen for the Dwarfen Wisdom re-setup stayed marked as moved, so they could not be activated by kick-off events like Charge or Quick Snap")
 			.addBugfix("Diving Catch: Now follows NAF recommendation, active team gets first pick to choose catcher with DC (or without if a player is in the target square), then passive team, then default catch rules.")
 			.addBugfix("On The Ball: Players on LoS could not use OtB during kick-off even if they were open")
 			.addImprovement("Move paths sent by the client are sanitized to ensure a client does not send invalid move sequences")
@@ -51,6 +56,7 @@ public class ChangeList {
       .addFeature("Consummate Professional")
 			.addBehaviorChange("Catch: The re-roll is no longer used automatically when catching a bouncing ball, an inaccurate pass or a scattered bomb, it is offered as a choice instead")
 			.addBehaviorChange("On The Ball: Can now be used when an opposing player uses Dump-off. Team re-rolls are available for these moves, Pro is not. The interrupted action continues afterwards")
+			.addBugfix("Actions limited to once per turn (Blitz, Foul, Pass, Hand-off, Throw/Kick Team-Mate, Bomb, Punt, Secure the Ball) could be declared a second time in the same turn by clients that did not hide the used action")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")

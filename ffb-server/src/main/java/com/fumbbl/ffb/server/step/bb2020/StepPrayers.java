@@ -62,7 +62,8 @@ public class StepPrayers extends AbstractStep {
 
 		Game game = getGameState().getGame();
 		int maxPrayers = ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_MAX)).getValue();
-		int prayerAmount = Math.abs(tvAway - tvHome) / ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_COST)).getValue();
+		int prayerCost = ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_COST)).getValue();
+		int prayerAmount = prayerCost > 0 ? Math.abs(tvAway - tvHome) / prayerCost : 0;
 
 		if (maxPrayers > 0) {
 			prayerAmount = Math.min(maxPrayers, prayerAmount);
