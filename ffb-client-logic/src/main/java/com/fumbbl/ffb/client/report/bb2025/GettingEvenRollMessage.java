@@ -23,13 +23,13 @@ public class GettingEvenRollMessage extends ReportMessageBase<ReportGettingEvenR
   		print(getIndent() + 1, false, player);
 	    status = new StringBuilder();
 	    if (report.isSuccessful()) {
-  			status.append(" gains hatred towards players of type '").append(report.getKeyword().getName()).append("'.");
+  			status.append(" gains hatred towards players of type '").append(report.getKeyword().getDisplayName()).append("'.");
   			println(getIndent() + 1, status.toString());
   			if (!report.isReRolled()) {
   				neededRoll = new StringBuilder().append("Succeeded on a roll of ").append(report.getMinimumRoll()).append("+");
   			}
   		} else {
-				status.append(" remains peaceful towards players of type '").append(report.getKeyword().getName()).append("'.");
+				status.append(" remains peaceful towards players of type '").append(report.getKeyword().getDisplayName()).append("'.");
   			println(getIndent() + 1, status.toString());
   			if (!report.isReRolled()) {
   				neededRoll = new StringBuilder().append("Roll a ").append(report.getMinimumRoll()).append("+ to succeed");
