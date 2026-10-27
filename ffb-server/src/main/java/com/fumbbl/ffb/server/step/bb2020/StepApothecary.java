@@ -117,8 +117,7 @@ public class StepApothecary extends AbstractStep {
 						DialogApothecaryChoiceParameter dialogParameter =
 							(DialogApothecaryChoiceParameter) game.getDialogParameter();
 						if (fInjuryResult != null
-							&& StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), dialogParameter.getPlayerId())
-							&& StringTool.isEqual(dialogParameter.getPlayerId(), fInjuryResult.injuryContext().getDefenderId())) {
+							&& StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), fInjuryResult.injuryContext().getDefenderId())) {
 							handleApothecaryChoice(dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
