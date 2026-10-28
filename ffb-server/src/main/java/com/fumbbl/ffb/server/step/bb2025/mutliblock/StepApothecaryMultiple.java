@@ -98,6 +98,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 	private static final Set<ApothecaryStatus> KNOCKOUT_RESERVE_STATUSES = EnumSet.of(
 		ApothecaryStatus.WAIT_FOR_PASTRIES_USE, ApothecaryStatus.DO_NOT_USE_PASTRIES, ApothecaryStatus.USE_PASTRIES);
+	private static final Set<ApothecaryStatus> APOTHECARY_TREATED_STATUSES = EnumSet.of(
+		ApothecaryStatus.USE_APOTHECARY, ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE, ApothecaryStatus.RESULT_CHOICE);
 
 	private List<InjuryResult> injuryResults = new ArrayList<>(), regenerationFailedResults,
 		gettingEvenResults = new ArrayList<>(), deadResults = new ArrayList<>();
@@ -450,7 +452,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 			if (regenerationFailedResults.isEmpty()) {
 				Optional<InjuryResult> knockoutReserveResult = successfulKnockoutReserve();
 				if (knockoutReserveResult.isPresent()) {
-					// successful pastries win over every other non casualty injury of the same player
+					// successful pastries decide the outcome for the player
 					knockoutReserveResult.get().applyTo(this, true);
 					UtilServerGame.syncGameModel(this);
 				} else if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
@@ -566,10 +568,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 		if (!inducementType.isPresent()) {
 			return false;
 		}
-		// a player is offered the pastries only once per injury event, even if he was knocked out twice
 		Optional<InjuryResult> knockedOutResult = regenerationFailedResults.stream()
 			.filter(result -> knockoutReserveService.isEligible(result)
-				&& !knockoutReserveHandled(result.injuryContext().getDefenderId()))
+				&& canBeMovedToReserves(result))
 			.findFirst();
 		if (knockedOutResult.isPresent()) {
 			InjuryResult result = knockedOutResult.get();
@@ -593,26 +594,32 @@ public class StepApothecaryMultiple extends AbstractStep {
 		boolean successful = new KnockoutReserveService().use(this, result, injuredPlayer(result, getGameState().getGame()),
 			inducementType, getTurnData().getInducementSet());
 		if (successful) {
-			// the player goes to the Reserves box unless another injury of the same player is a casualty,
-			// so drop every other non casualty injury of that player from the injuries re-applied afterwards
+			// the pastries decide the outcome for that player, so none of his other injuries is re-applied afterwards
 			String defenderId = result.injuryContext().getDefenderId();
-			regenerationFailedResults.removeIf(other -> defenderId.equals(other.injuryContext().getDefenderId())
-				&& !other.injuryContext().isCasualty());
+			regenerationFailedResults.removeIf(other -> defenderId.equals(other.injuryContext().getDefenderId()));
 		}
 	}
 
-	private boolean knockoutReserveHandled(String defenderId) {
-		return allInjuryResults().anyMatch(result -> defenderId.equals(result.injuryContext().getDefenderId())
-			&& KNOCKOUT_RESERVE_STATUSES.contains(result.injuryContext().getApothecaryStatus()));
+	/**
+	 * The pastries are offered for a knocked out player at most once in this step, and not at all if the apothecary
+	 * treated one of his injuries or if another of his injuries is a casualty that decides his outcome anyway.
+	 */
+	private boolean canBeMovedToReserves(InjuryResult knockedOutResult) {
+		String defenderId = knockedOutResult.injuryContext().getDefenderId();
+		return allInjuryResults()
+			.filter(result -> defenderId.equals(result.injuryContext().getDefenderId()))
+			.noneMatch(result -> {
+				ApothecaryStatus status = result.injuryContext().getApothecaryStatus();
+				return KNOCKOUT_RESERVE_STATUSES.contains(status) || APOTHECARY_TREATED_STATUSES.contains(status)
+					|| ((result != knockedOutResult) && regenerationFailedResults.contains(result)
+					&& result.injuryContext().isCasualty());
+			});
 	}
 
 	private Optional<InjuryResult> successfulKnockoutReserve() {
 		return allInjuryResults().filter(result ->
 				result.injuryContext().getApothecaryStatus() == ApothecaryStatus.USE_PASTRIES
 					&& result.injuryContext().isReserve())
-			.filter(result -> injuryResults.stream().noneMatch(other ->
-				other.injuryContext().getDefenderId().equals(result.injuryContext().getDefenderId())
-					&& other.injuryContext().isCasualty()))
 			.findFirst();
 	}
 

@@ -4,6 +4,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.ApothecaryStatus;
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
@@ -17,6 +18,7 @@ import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.server.GameState;
@@ -217,27 +219,48 @@ public class BretonnianPastriesMultipleTest {
 	}
 
 	@Test
-	public void successfulPastriesDoNotOverrideCasualtyWhenKnockOutComesFirst() {
+	public void pastriesAreNotOfferedWhenACasualtyFollowsTheKnockOut() {
+		falling("home1");
 		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), badlyHurt("home1"));
 		step.start();
 
-		TestRolls.on(state).general(6);
-		accept(step, "home1");
-
-		assertEquals(PlayerState.BADLY_HURT, playerState("home1"));
-		assertFalse(homeInducements().hasUsesLeft(pastries()));
+		assertCasualtyWithoutPastries();
 	}
 
 	@Test
-	public void successfulPastriesDoNotOverrideCasualtyWhenCasualtyComesFirst() {
+	public void pastriesAreNotOfferedWhenACasualtyPrecedesTheKnockOut() {
+		falling("home1");
 		StepApothecaryMultiple step = attackerStep(badlyHurt("home1"), knockedOut("home1"));
 		step.start();
 
-		TestRolls.on(state).general(6);
-		accept(step, "home1");
+		assertCasualtyWithoutPastries();
+	}
 
-		assertEquals(PlayerState.BADLY_HURT, playerState("home1"));
-		assertFalse(homeInducements().hasUsesLeft(pastries()));
+	@Test
+	public void pastriesAreNotOfferedForAPlayerTheApothecaryTreated() {
+		state.getGame().getTurnDataHome().setApothecaries(1);
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(requestApothecary(knockedOut("home1")),
+			requestApothecary(knockedOut("home1")));
+		step.start();
+
+		useApothecary(step, "home1");
+
+		assertNotEquals(DialogId.USE_INDUCEMENT, dialogId());
+		assertTrue(pastriesReports().isEmpty());
+		assertEquals(0, homeInducements().getInducementMapping().get(pastries()).getUses());
+	}
+
+	@Test
+	public void pastriesAreOfferedForAnotherPlayerThanTheOneTheApothecaryTreated() {
+		state.getGame().getTurnDataAway().setApothecaries(1);
+		StepApothecaryMultiple step = defenderStep(requestApothecary(knockedOut("away1")),
+			requestApothecary(knockedOut("away2")));
+		step.start();
+
+		useApothecary(step, "away1");
+
+		assertEquals("away2", pastriesDialog().getPlayerId());
 	}
 
 	@Test
@@ -307,6 +330,15 @@ public class BretonnianPastriesMultipleTest {
 		assertTrue(awayInducements().hasUsesLeft(pastries()));
 	}
 
+	private void assertCasualtyWithoutPastries() {
+		Game game = state.getGame();
+		assertNotEquals(DialogId.USE_INDUCEMENT, dialogId());
+		assertEquals(PlayerState.BADLY_HURT, playerState("home1"));
+		assertEquals(FieldCoordinate.BH_HOME_X, game.getFieldModel().getPlayerCoordinate(game.getPlayerById("home1")).getX());
+		assertTrue(pastriesReports().isEmpty());
+		assertEquals(0, homeInducements().getInducementMapping().get(pastries()).getUses());
+	}
+
 	private StepApothecaryMultiple reload(StepApothecaryMultiple step) {
 		step.start();
 		assertEquals(DialogId.USE_INDUCEMENT, dialogId());
@@ -315,6 +347,16 @@ public class BretonnianPastriesMultipleTest {
 			.initFrom(state.getGame().getRules(), Json.parse(saved.toString()));
 		assertEquals(saved, restored.toJsonValue());
 		return restored;
+	}
+
+	private void useApothecary(IStep step, String playerId) {
+		step.handleCommand(new ReceivedCommand(new ClientCommandUseApothecary(playerId, true, ApothecaryType.TEAM, null,
+			new PlayerState(PlayerState.KNOCKED_OUT)), null));
+	}
+
+	private InjuryResult requestApothecary(InjuryResult injuryResult) {
+		injuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
+		return injuryResult;
 	}
 
 	private StepApothecaryMultiple defenderStep(InjuryResult... injuryResults) {
