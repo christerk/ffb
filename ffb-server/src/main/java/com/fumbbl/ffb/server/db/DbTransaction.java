@@ -86,7 +86,8 @@ public class DbTransaction implements IDbUpdateParameter {
 		if (onCompletion != null) {
 			try {
 				onCompletion.run();
-			} catch (Exception completionException) {
+			} catch (Throwable completionException) {
+				// also catch errors, an uncaught one would silently end the db updater thread
 				pServer.getDebugLog().logWithOutGameId(completionException);
 			}
 		}

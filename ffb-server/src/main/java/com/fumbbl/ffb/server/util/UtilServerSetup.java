@@ -45,9 +45,7 @@ public class UtilServerSetup {
 
 			} else {
 				// queue the list query behind pending setup updates so it does not miss a recent save or delete
-				DbTransaction dbTransaction = new DbTransaction();
-				dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, game.getId(), game.isHomePlaying(), team));
-				server.getDbUpdater().add(dbTransaction);
+				queueTeamSetupList(server, game, team, new DbTransaction());
 			}
 
 		}
@@ -98,11 +96,18 @@ public class UtilServerSetup {
 			if (StringTool.isProvided(pSetupName)) {
 				dbTransaction.add(new DbTeamSetupsDeleteParameter(team.getId(), pSetupName));
 			}
-			dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, game.getId(), game.isHomePlaying(), team));
-			server.getDbUpdater().add(dbTransaction);
+			queueTeamSetupList(server, game, team, dbTransaction);
 
 		}
 
+	}
+
+	private static void queueTeamSetupList(FantasyFootballServer server, Game game, Team team, DbTransaction dbTransaction) {
+		// capture the recipient now, the playing side may change before the db updater runs the callback
+		long gameId = game.getId();
+		boolean homePlaying = game.isHomePlaying();
+		dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, gameId, homePlaying, team));
+		server.getDbUpdater().add(dbTransaction);
 	}
 
 	private static void sendTeamSetupList(FantasyFootballServer server, long gameId, boolean homePlaying, Team team) {
