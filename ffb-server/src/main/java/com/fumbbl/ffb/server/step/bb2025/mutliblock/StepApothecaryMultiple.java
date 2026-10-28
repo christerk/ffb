@@ -78,9 +78,11 @@ import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.server.util.bb2025.KnockoutReserveService;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.RaiseType;
+import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -900,6 +902,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 		}
 		IServerJsonOption.INJURY_RESULT_INDEXES_DEAD.addTo(jsonObject, injuryIndexes(deadResults));
 		IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN.addTo(jsonObject, injuryIndexes(gettingEvenResults));
+		// the lists are also written in the previous format so servers not knowing the indexes can still read them
+		if (regenerationFailedResults != null) {
+			addInjuriesToJson(regenerationFailedResults, IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, jsonObject);
+		}
+		addInjuriesToJson(deadResults, IServerJsonOption.INJURY_RESULTS_DEAD, jsonObject);
+		addInjuriesToJson(gettingEvenResults, IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, jsonObject);
 
 		IServerJsonOption.AVAILABLE_KEYWORDS_MAP.addTo(jsonObject, availableKeyWordsMap.entrySet().stream().collect(
 			Collectors.toMap(Map.Entry::getKey,
@@ -969,7 +977,7 @@ public class StepApothecaryMultiple extends AbstractStep {
 
 	/**
 	 * @return the injuries referenced by index, or for steps saved before indexes were used the separately serialized
-	 * injuries, null if neither is defined
+	 * injuries mapped onto the main list, null if neither is defined
 	 */
 	private List<InjuryResult> initInjuries(JsonIntArrayOption indexOption, JsonArrayOption legacyOption,
 		IFactorySource source, JsonObject jsonObject) {
@@ -977,9 +985,58 @@ public class StepApothecaryMultiple extends AbstractStep {
 			return injuriesAt(indexOption.getFrom(source, jsonObject));
 		}
 		if (legacyOption.isDefinedIn(jsonObject)) {
-			return initInjuries(legacyOption, source, jsonObject);
+			return reconcileWithInjuryResults(initInjuries(legacyOption, source, jsonObject));
 		}
 		return null;
+	}
+
+	/**
+	 * Steps saved before injuries were referenced by index hold a separate copy of each injury per list. Every copy
+	 * is mapped onto the injury of the main list it was copied from: an identical injury of the same player if there
+	 * is one, otherwise the next unmatched injury of that player, which is then replaced by the copy so the copy's
+	 * more advanced state is kept. A copy without any counterpart is added to the main list, so nothing is dropped.
+	 */
+	private List<InjuryResult> reconcileWithInjuryResults(List<InjuryResult> copies) {
+		List<InjuryResult> results = new ArrayList<>();
+		Set<Integer> matchedIndexes = new HashSet<>();
+		for (InjuryResult copy : copies) {
+			JsonObject copyAsJson = copy.toJsonValue();
+			String defenderId = copy.injuryContext().getDefenderId();
+			int identicalIndex = -1;
+			int samePlayerIndex = -1;
+			for (int index = 0; index < injuryResults.size() && identicalIndex < 0; index++) {
+				InjuryResult candidate = injuryResults.get(index);
+				if (!matchedIndexes.contains(index)
+					&& StringTool.isEqual(defenderId, candidate.injuryContext().getDefenderId())) {
+					if (copyAsJson.equals(candidate.toJsonValue())) {
+						identicalIndex = index;
+					} else if (samePlayerIndex < 0) {
+						samePlayerIndex = index;
+					}
+				}
+			}
+			int index = identicalIndex;
+			if (index < 0 && samePlayerIndex >= 0) {
+				index = samePlayerIndex;
+				replaceInjury(injuryResults.get(index), copy);
+			}
+			if (index < 0) {
+				injuryResults.add(copy);
+				index = injuryResults.size() - 1;
+			}
+			matchedIndexes.add(index);
+			results.add(injuryResults.get(index));
+		}
+		return results;
+	}
+
+	private void replaceInjury(InjuryResult oldResult, InjuryResult newResult) {
+		for (List<InjuryResult> results : Arrays.asList(injuryResults, regenerationFailedResults, deadResults,
+			gettingEvenResults)) {
+			if (results != null) {
+				results.replaceAll(result -> result == oldResult ? newResult : result);
+			}
+		}
 	}
 
 	private List<InjuryResult> initInjuries(JsonArrayOption injuryResultsGettingEven, IFactorySource source,
