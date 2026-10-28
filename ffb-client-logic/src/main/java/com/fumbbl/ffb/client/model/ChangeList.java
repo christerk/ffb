@@ -10,6 +10,7 @@ public class ChangeList {
 
 	public ChangeList() {
 		versions.add(new VersionChangeList("3.4.0")
+			.addImprovement("Team Setup: Saving a setup under the name of an existing one now asks for confirmation before overwriting it")
 			.addBugfix("Team Setup: The setup list could still show a deleted setup or miss a just saved one")
 			.addImprovement("Getting Even: Custom keywords of league positionals are supported and no longer all treated as the same \"Unknown\" keyword")
 			.addBugfix("Dump-off: The tackle zone of a blocker who stood up to block or blitz was ignored for the pass")
