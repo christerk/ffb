@@ -1,8 +1,11 @@
 package com.fumbbl.ffb.test.inducement;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.ApothecaryStatus;
 import com.fumbbl.ffb.FactoryType;
+import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -237,6 +240,83 @@ public class BretonnianPastriesMultipleTest {
 		assertFalse(homeInducements().hasUsesLeft(pastries()));
 	}
 
+	@Test
+	public void defenderReloadedWhileThePastriesDialogIsOpenGoesToReserves() {
+		StepApothecaryMultiple step = reload(defenderStep(knockedOut("away1"), knockedOut("away2")));
+
+		TestRolls.on(state).general(3);
+		accept(step, "away1");
+
+		assertEquals(Arrays.asList("used:awayTeam:1", "roll:away1:3"), pastriesReports());
+		assertInReserves("away1");
+		assertEquals(PlayerState.KNOCKED_OUT, playerState("away2"));
+		assertFalse(awayInducements().hasUsesLeft(pastries()));
+	}
+
+	@Test
+	public void attackerKnockedOutTwiceReloadedWhileThePastriesDialogIsOpenGoesToReserves() {
+		falling("home1");
+		StepApothecaryMultiple step = reload(attackerStep(knockedOut("home1"), knockedOut("home1")));
+
+		TestRolls.on(state).general(6);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:6"), pastriesReports());
+		assertInReserves("home1");
+	}
+
+	@Test
+	public void attackerKnockedOutAndStunnedReloadedWhileThePastriesDialogIsOpenGoesToReserves() {
+		falling("home1");
+		StepApothecaryMultiple step = reload(attackerStep(knockedOut("home1"), stunned("home1")));
+
+		TestRolls.on(state).general(4);
+		accept(step, "home1");
+
+		assertInReserves("home1");
+	}
+
+	@Test
+	public void reloadedHomeOfferUsesHomePastriesWhenAwayHasNoneLeft() {
+		Inducement awayPastries = new Inducement(pastries(), 1);
+		awayPastries.setUses(1);
+		awayInducements().addInducement(awayPastries);
+		falling("home1");
+		StepApothecaryMultiple step = reload(attackerStep(knockedOut("home1")));
+
+		TestRolls.on(state).general(5);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:5"), pastriesReports());
+		assertInReserves("home1");
+		assertFalse(homeInducements().hasUsesLeft(pastries()));
+		assertEquals(1, awayInducements().getInducementMapping().get(pastries()).getUses());
+	}
+
+	@Test
+	public void reloadedHomeOfferUsesHomePastriesWhenAwayHasOneLeft() {
+		falling("home1");
+		StepApothecaryMultiple step = reload(attackerStep(knockedOut("home1")));
+
+		TestRolls.on(state).general(5);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:5"), pastriesReports());
+		assertInReserves("home1");
+		assertFalse(homeInducements().hasUsesLeft(pastries()));
+		assertTrue(awayInducements().hasUsesLeft(pastries()));
+	}
+
+	private StepApothecaryMultiple reload(StepApothecaryMultiple step) {
+		step.start();
+		assertEquals(DialogId.USE_INDUCEMENT, dialogId());
+		JsonObject saved = step.toJsonValue();
+		StepApothecaryMultiple restored = new StepApothecaryMultiple(state)
+			.initFrom(state.getGame().getRules(), Json.parse(saved.toString()));
+		assertEquals(saved, restored.toJsonValue());
+		return restored;
+	}
+
 	private StepApothecaryMultiple defenderStep(InjuryResult... injuryResults) {
 		return step(false, injuryResults);
 	}
@@ -314,7 +394,8 @@ public class BretonnianPastriesMultipleTest {
 		Game game = state.getGame();
 		Player<?> player = game.getPlayerById(playerId);
 		assertEquals(PlayerState.RESERVE, playerState(playerId));
-		assertTrue(game.getFieldModel().getPlayerCoordinate(player).isBoxCoordinate());
+		int reservesBox = game.getTeamHome().hasPlayer(player) ? FieldCoordinate.RSV_HOME_X : FieldCoordinate.RSV_AWAY_X;
+		assertEquals(reservesBox, game.getFieldModel().getPlayerCoordinate(player).getX());
 	}
 
 	private DialogId dialogId() {

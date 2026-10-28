@@ -26,6 +26,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.JsonArrayOption;
+import com.fumbbl.ffb.json.JsonIntArrayOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -882,12 +883,16 @@ public class StepApothecaryMultiple extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
-		if (regenerationFailedResults != null) {
-			addInjuriesToJson(regenerationFailedResults, IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, jsonObject);
-		}
+		IServerJsonOption.TEAM_ID.addTo(jsonObject, teamId);
+		// every injury is serialized once, the other lists refer to it by index so they share the same objects
+		// after a reload
 		addInjuriesToJson(injuryResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
-		addInjuriesToJson(deadResults, IServerJsonOption.INJURY_RESULTS_DEAD, jsonObject);
-		addInjuriesToJson(gettingEvenResults, IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, jsonObject);
+		if (regenerationFailedResults != null) {
+			IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED.addTo(jsonObject,
+				injuryIndexes(regenerationFailedResults));
+		}
+		IServerJsonOption.INJURY_RESULT_INDEXES_DEAD.addTo(jsonObject, injuryIndexes(deadResults));
+		IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN.addTo(jsonObject, injuryIndexes(gettingEvenResults));
 
 		IServerJsonOption.AVAILABLE_KEYWORDS_MAP.addTo(jsonObject, availableKeyWordsMap.entrySet().stream().collect(
 			Collectors.toMap(Map.Entry::getKey,
@@ -902,23 +907,72 @@ public class StepApothecaryMultiple extends AbstractStep {
 		jsonOption.addTo(jsonObject, injuriesAsJson);
 	}
 
+	private int[] injuryIndexes(List<InjuryResult> results) {
+		return results.stream().mapToInt(this::injuryIndex).filter(index -> index >= 0).toArray();
+	}
+
+	private int injuryIndex(InjuryResult result) {
+		for (int index = 0; index < injuryResults.size(); index++) {
+			if (injuryResults.get(index) == result) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	private List<InjuryResult> injuriesAt(int[] indexes) {
+		List<InjuryResult> results = new ArrayList<>();
+		for (int index : indexes) {
+			results.add(injuryResults.get(index));
+		}
+		return results;
+	}
+
 	@Override
 	public StepApothecaryMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		if (IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.isDefinedIn(jsonObject)) {
-			regenerationFailedResults =
-				initInjuries(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, source, jsonObject);
-		}
 		injuryResults = initInjuries(IServerJsonOption.INJURY_RESULTS, source, jsonObject);
-		deadResults = initInjuries(IServerJsonOption.INJURY_RESULTS_DEAD, source, jsonObject);
-		gettingEvenResults = initInjuries(IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, source, jsonObject);
+		regenerationFailedResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED,
+			IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, source, jsonObject);
+		deadResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_DEAD, IServerJsonOption.INJURY_RESULTS_DEAD,
+			source, jsonObject);
+		if (deadResults == null) {
+			deadResults = new ArrayList<>();
+		}
+		gettingEvenResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN,
+			IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, source, jsonObject);
+		if (gettingEvenResults == null) {
+			gettingEvenResults = new ArrayList<>();
+		}
+
+		teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		if (teamId == null && !injuryResults.isEmpty()) {
+			// steps saved before the team id was serialized only hold injuries of the handled team
+			teamId = getGameState().getGame().getPlayerById(injuryResults.get(0).injuryContext().getDefenderId())
+				.getTeam().getId();
+		}
 
 		availableKeyWordsMap = IServerJsonOption.AVAILABLE_KEYWORDS_MAP.getFrom(source, jsonObject).entrySet().stream()
 			.collect(
 				Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(Keyword::forName).collect(
 					Collectors.toList())));
 		return this;
+	}
+
+	/**
+	 * @return the injuries referenced by index, or for steps saved before indexes were used the separately serialized
+	 * injuries, null if neither is defined
+	 */
+	private List<InjuryResult> initInjuries(JsonIntArrayOption indexOption, JsonArrayOption legacyOption,
+		IFactorySource source, JsonObject jsonObject) {
+		if (indexOption.isDefinedIn(jsonObject)) {
+			return injuriesAt(indexOption.getFrom(source, jsonObject));
+		}
+		if (legacyOption.isDefinedIn(jsonObject)) {
+			return initInjuries(legacyOption, source, jsonObject);
+		}
+		return null;
 	}
 
 	private List<InjuryResult> initInjuries(JsonArrayOption injuryResultsGettingEven, IFactorySource source,
