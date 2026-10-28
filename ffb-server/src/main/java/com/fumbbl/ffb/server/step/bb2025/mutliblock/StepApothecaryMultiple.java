@@ -985,7 +985,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 			return injuriesAt(indexOption.getFrom(source, jsonObject));
 		}
 		if (legacyOption.isDefinedIn(jsonObject)) {
-			return reconcileWithInjuryResults(initInjuries(legacyOption, source, jsonObject));
+			List<InjuryResult> results = reconcileWithInjuryResults(initInjuries(legacyOption, source, jsonObject));
+			if (legacyOption == IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED) {
+				// a decided apothecary result always leaves this list, a stale copy may still have kept it there
+				results.removeIf(result -> result.injuryContext().getApothecaryStatus() == ApothecaryStatus.RESULT_CHOICE);
+			}
+			return results;
 		}
 		return null;
 	}
@@ -993,8 +998,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 	/**
 	 * Steps saved before injuries were referenced by index hold a separate copy of each injury per list. Every copy
 	 * is mapped onto the injury of the main list it was copied from: an identical injury of the same player if there
-	 * is one, otherwise the next unmatched injury of that player, which is then replaced by the copy so the copy's
-	 * more advanced state is kept. A copy without any counterpart is added to the main list, so nothing is dropped.
+	 * is one, otherwise the next unmatched injury of that player. If the two disagree, the one further along in the
+	 * apothecary / pastries handling is kept (see {@link #progress(InjuryResult)}), on a tie the copy. A copy without
+	 * any counterpart is added to the main list, so nothing is dropped.
 	 */
 	private List<InjuryResult> reconcileWithInjuryResults(List<InjuryResult> copies) {
 		List<InjuryResult> results = new ArrayList<>();
@@ -1018,7 +1024,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 			int index = identicalIndex;
 			if (index < 0 && samePlayerIndex >= 0) {
 				index = samePlayerIndex;
-				replaceInjury(injuryResults.get(index), copy);
+				InjuryResult mainResult = injuryResults.get(index);
+				if (progress(copy) >= progress(mainResult)) {
+					replaceInjury(mainResult, copy);
+				}
 			}
 			if (index < 0) {
 				injuryResults.add(copy);
@@ -1028,6 +1037,38 @@ public class StepApothecaryMultiple extends AbstractStep {
 			results.add(injuryResults.get(index));
 		}
 		return results;
+	}
+
+	/**
+	 * @return how far the injury got in this step: undecided apothecary use, apothecary used, apothecary decided
+	 * (used with a pending choice, not used or not available) or pastries offered, final result (apothecary result
+	 * chosen, pastries used or declined); a passed regeneration counts as a little further
+	 */
+	private static int progress(InjuryResult injuryResult) {
+		ApothecaryStatus status = injuryResult.injuryContext().getApothecaryStatus();
+		int stage;
+		switch (status == null ? ApothecaryStatus.NO_APOTHECARY : status) {
+			case DO_REQUEST:
+			case WAIT_FOR_APOTHECARY_USE:
+			case WAIT_FOR_IGOR_USE:
+				stage = 0;
+				break;
+			case USE_IGOR:
+			case DO_NOT_USE_IGOR:
+			case NO_APOTHECARY:
+			case DO_NOT_USE_APOTHECARY:
+			case USE_APOTHECARY:
+				stage = 1;
+				break;
+			case WAIT_FOR_APOTHECARY_CHOICE:
+			case WAIT_FOR_PASTRIES_USE:
+				stage = 2;
+				break;
+			default:
+				stage = 3;
+				break;
+		}
+		return 2 * stage + (injuryResult.isPreRegeneration() ? 0 : 1);
 	}
 
 	private void replaceInjury(InjuryResult oldResult, InjuryResult newResult) {

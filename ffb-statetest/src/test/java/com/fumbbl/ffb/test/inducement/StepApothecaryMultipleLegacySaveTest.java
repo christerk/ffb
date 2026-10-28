@@ -2,6 +2,7 @@ package com.fumbbl.ffb.test.inducement;
 
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.ApothecaryStatus;
+import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.IDialogParameter;
@@ -15,7 +16,9 @@ import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Keyword;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.net.commands.ClientCommandApothecaryChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandKeywordSelection;
+import com.fumbbl.ffb.net.commands.ClientCommandUseApothecary;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -33,6 +36,7 @@ import com.fumbbl.ffb.test.TestServer;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -165,6 +169,53 @@ public class StepApothecaryMultipleLegacySaveTest {
 		assertEquals(ApothecaryStatus.NO_APOTHECARY,
 			new InjuryResult().initFrom(state.getGame().getRules(), mainInjuries.get(0)).injuryContext()
 				.getApothecaryStatus());
+	}
+
+	@Test
+	public void staleLegacyCopyDoesNotUndoACompletedApothecaryChoice() {
+		Game game = state.getGame();
+		game.getTurnDataAway().setApothecaries(1);
+		addInducement(false, "bretonnianPastries");
+		InjuryResult dead = injury("away1", PlayerState.RIP);
+		dead.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_REQUEST);
+		StepApothecaryMultiple step = defenderStep(dead, injury("away2", PlayerState.KNOCKED_OUT));
+		step.start();
+
+		assertEquals(DialogId.USE_APOTHECARIES, dialog().getId());
+		TestRolls.on(state).general(10, 1);
+		step.handleCommand(new ReceivedCommand(new ClientCommandUseApothecary("away1", true, ApothecaryType.TEAM, null,
+			new PlayerState(PlayerState.RIP)), null));
+		assertEquals(DialogId.APOTHECARY_CHOICE, dialog().getId());
+		// the copy an older server kept in the regeneration list while the choice was open
+		JsonValue staleCopy = step.toJsonValue().get(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.getKey())
+			.asArray().get(0);
+		assertEquals(ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE,
+			new InjuryResult().initFrom(game.getRules(), staleCopy).injuryContext().getApothecaryStatus());
+
+		// the coach keeps the Seriously Injured result of the apothecary roll, then the pastries are offered for away2
+		step.handleCommand(new ReceivedCommand(new ClientCommandApothecaryChoice("away1",
+			new PlayerState(PlayerState.SERIOUS_INJURY), null, new PlayerState(PlayerState.RIP)), null));
+		assertEquals("away2", ((DialogUseInducementParameter) dialog()).getPlayerId());
+		assertEquals(0, game.getTurnDataAway().getApothecaries());
+
+		// an older server lost the shared objects on a reload, so its save still lists the stale copy
+		JsonObject legacy = step.toJsonValue();
+		JsonArray regenerationFailed = legacy.get(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.getKey()).asArray();
+		assertEquals(1, regenerationFailed.size());
+		JsonArray staleRegenerationFailed = new JsonArray().add(staleCopy).add(regenerationFailed.get(0));
+		legacy.set(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.getKey(), copy(staleRegenerationFailed));
+		stripIndexes(legacy);
+
+		StepApothecaryMultiple restored = reloadTwice(legacy, new int[]{1}, new int[0], new int[0]);
+
+		TestRolls.on(state).general(3);
+		restored.handleCommand(new ReceivedCommand(
+			new ClientCommandUseInducement(inducement("bretonnianPastries"), new String[]{"away2"}), null));
+
+		assertEquals(PlayerState.SERIOUS_INJURY, playerState("away1"));
+		assertEquals(FieldCoordinate.SI_AWAY_X, coordinate("away1").getX());
+		assertEquals(PlayerState.RESERVE, playerState("away2"));
+		assertEquals(0, game.getTurnDataAway().getApothecaries());
 	}
 
 	@Test
