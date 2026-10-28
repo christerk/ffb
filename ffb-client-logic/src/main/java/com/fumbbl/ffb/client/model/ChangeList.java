@@ -53,7 +53,7 @@ public class ChangeList {
       .addFeature("Consummate Professional")
 			.addBehaviorChange("Catch: The re-roll is no longer used automatically when catching a bouncing ball, an inaccurate pass or a scattered bomb, it is offered as a choice instead")
 			.addBehaviorChange("On The Ball: Can now be used when an opposing player uses Dump-off. Team re-rolls are available for these moves, Pro is not. The interrupted action continues afterwards")
-			.addFeature("Bretonnian Pastries inducement (2025 ruleset): once per game, a Knocked Out player is moved to the Reserves box on a 2+")
+			.addFeature("Bretonnian Pastries inducement: once per game, a Knocked Out player is moved to the Reserves box on a 2+")
 		);
 
 		versions.add(new VersionChangeList("3.3.2")
