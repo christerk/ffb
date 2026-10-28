@@ -13,6 +13,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.injury.Block;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.InducementSet;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.net.commands.ClientCommandUseInducement;
 import com.fumbbl.ffb.net.commands.ServerCommandModelSync;
 import com.fumbbl.ffb.server.GameState;
@@ -126,7 +127,8 @@ public class BretonnianPastriesMultipleTest {
 	}
 
 	@Test
-	public void attackerKnockedOutTwiceStaysKnockedOutAfterSuccessfulPastries() {
+	public void attackerKnockedOutTwiceIsPlacedInReservesAfterSuccessfulPastries() {
+		falling("home1");
 		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), knockedOut("home1"));
 		step.start();
 
@@ -134,8 +136,81 @@ public class BretonnianPastriesMultipleTest {
 		accept(step, "home1");
 
 		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:6"), pastriesReports());
-		assertEquals(PlayerState.KNOCKED_OUT, playerState("home1"));
+		assertInReserves("home1");
 		assertFalse(homeInducements().hasUsesLeft(pastries()));
+	}
+
+	@Test
+	public void attackerKnockedOutAndStunnedIsPlacedInReservesAfterSuccessfulPastries() {
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), stunned("home1"));
+		step.start();
+
+		TestRolls.on(state).general(2);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:2"), pastriesReports());
+		assertInReserves("home1");
+		assertFalse(homeInducements().hasUsesLeft(pastries()));
+	}
+
+	@Test
+	public void attackerStunnedAndKnockedOutIsPlacedInReservesAfterSuccessfulPastries() {
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(stunned("home1"), knockedOut("home1"));
+		step.start();
+
+		TestRolls.on(state).general(5);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:5"), pastriesReports());
+		assertInReserves("home1");
+	}
+
+	@Test
+	public void attackerKnockedOutTwiceStaysKnockedOutAfterFailedPastries() {
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), knockedOut("home1"));
+		step.start();
+
+		TestRolls.on(state).general(1);
+		accept(step, "home1");
+
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:1"), pastriesReports());
+		assertEquals(PlayerState.KNOCKED_OUT, playerState("home1"));
+	}
+
+	@Test
+	public void attackerKnockedOutTwiceIsOfferedPastriesOnlyOnceWhenDeclined() {
+		addPastries(homeInducements());
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), knockedOut("home1"));
+		step.start();
+
+		assertEquals("home1", pastriesDialog().getPlayerId());
+		decline(step);
+
+		assertNotEquals(DialogId.USE_INDUCEMENT, dialogId());
+		assertTrue(pastriesReports().isEmpty());
+		assertEquals(PlayerState.KNOCKED_OUT, playerState("home1"));
+		assertEquals(0, homeInducements().get(pastries()).getUses());
+	}
+
+	@Test
+	public void attackerKnockedOutTwiceIsOfferedPastriesOnlyOnceWhenTheRollFails() {
+		addPastries(homeInducements());
+		falling("home1");
+		StepApothecaryMultiple step = attackerStep(knockedOut("home1"), knockedOut("home1"));
+		step.start();
+
+		TestRolls.on(state).general(1);
+		accept(step, "home1");
+
+		assertNotEquals(DialogId.USE_INDUCEMENT, dialogId());
+		assertEquals(Arrays.asList("used:homeTeam:1", "roll:home1:1"), pastriesReports());
+		assertEquals(PlayerState.KNOCKED_OUT, playerState("home1"));
+		assertTrue(homeInducements().hasUsesLeft(pastries()));
+		assertEquals(1, homeInducements().get(pastries()).getUses());
 	}
 
 	@Test
@@ -199,6 +274,10 @@ public class BretonnianPastriesMultipleTest {
 		return injury(playerId, PlayerState.KNOCKED_OUT);
 	}
 
+	private InjuryResult stunned(String playerId) {
+		return injury(playerId, PlayerState.STUNNED);
+	}
+
 	private InjuryResult badlyHurt(String playerId) {
 		return injury(playerId, PlayerState.BADLY_HURT);
 	}
@@ -221,7 +300,26 @@ public class BretonnianPastriesMultipleTest {
 	}
 
 	private void addPastries(InducementSet inducementSet) {
-		inducementSet.addInducement(new Inducement(pastries(), 1));
+		Inducement inducement = inducementSet.getInducementMapping().get(pastries());
+		inducementSet.addInducement(new Inducement(pastries(), inducement == null ? 1 : inducement.getValue() + 1));
+	}
+
+	private void falling(String playerId) {
+		Game game = state.getGame();
+		Player<?> player = game.getPlayerById(playerId);
+		game.getFieldModel().setPlayerState(player, game.getFieldModel().getPlayerState(player).changeBase(PlayerState.FALLING));
+	}
+
+	private void assertInReserves(String playerId) {
+		Game game = state.getGame();
+		Player<?> player = game.getPlayerById(playerId);
+		assertEquals(PlayerState.RESERVE, playerState(playerId));
+		assertTrue(game.getFieldModel().getPlayerCoordinate(player).isBoxCoordinate());
+	}
+
+	private DialogId dialogId() {
+		IDialogParameter dialogParameter = state.getGame().getDialogParameter();
+		return dialogParameter == null ? null : dialogParameter.getId();
 	}
 
 	private int playerState(String playerId) {

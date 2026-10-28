@@ -82,6 +82,7 @@ import com.fumbbl.ffb.util.UtilCards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -89,9 +90,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepApothecaryMultiple extends AbstractStep {
+
+	private static final Set<ApothecaryStatus> KNOCKOUT_RESERVE_STATUSES = EnumSet.of(
+		ApothecaryStatus.WAIT_FOR_PASTRIES_USE, ApothecaryStatus.DO_NOT_USE_PASTRIES, ApothecaryStatus.USE_PASTRIES);
 
 	private List<InjuryResult> injuryResults = new ArrayList<>(), regenerationFailedResults,
 		gettingEvenResults = new ArrayList<>(), deadResults = new ArrayList<>();
@@ -442,7 +447,12 @@ public class StepApothecaryMultiple extends AbstractStep {
 		// this only happens in case of a double attacker down
 		if (doubleAttackerDown) {
 			if (regenerationFailedResults.isEmpty()) {
-				if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
+				Optional<InjuryResult> knockoutReserveResult = successfulKnockoutReserve();
+				if (knockoutReserveResult.isPresent()) {
+					// successful pastries win over every other non casualty injury of the same player
+					knockoutReserveResult.get().applyTo(this, true);
+					UtilServerGame.syncGameModel(this);
+				} else if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
 					injuryResults.get(0).applyTo(this, true);
 					UtilServerGame.syncGameModel(this);
 				}
@@ -555,8 +565,11 @@ public class StepApothecaryMultiple extends AbstractStep {
 		if (!inducementType.isPresent()) {
 			return false;
 		}
-		Optional<InjuryResult> knockedOutResult =
-			regenerationFailedResults.stream().filter(knockoutReserveService::isEligible).findFirst();
+		// a player is offered the pastries only once per injury event, even if he was knocked out twice
+		Optional<InjuryResult> knockedOutResult = regenerationFailedResults.stream()
+			.filter(result -> knockoutReserveService.isEligible(result)
+				&& !knockoutReserveHandled(result.injuryContext().getDefenderId()))
+			.findFirst();
 		if (knockedOutResult.isPresent()) {
 			InjuryResult result = knockedOutResult.get();
 			knockoutReserveService.offer(this, result, injuredPlayer(result, getGameState().getGame()),
@@ -579,9 +592,32 @@ public class StepApothecaryMultiple extends AbstractStep {
 		boolean successful = new KnockoutReserveService().use(this, result, injuredPlayer(result, getGameState().getGame()),
 			inducementType, getTurnData().getInducementSet());
 		if (successful) {
-			// treated like an apothecary result, so it must not override another injury of the same player
-			regenerationFailedResults.remove(result);
+			// the player goes to the Reserves box unless another injury of the same player is a casualty,
+			// so drop every other non casualty injury of that player from the injuries re-applied afterwards
+			String defenderId = result.injuryContext().getDefenderId();
+			regenerationFailedResults.removeIf(other -> defenderId.equals(other.injuryContext().getDefenderId())
+				&& !other.injuryContext().isCasualty());
 		}
+	}
+
+	private boolean knockoutReserveHandled(String defenderId) {
+		return allInjuryResults().anyMatch(result -> defenderId.equals(result.injuryContext().getDefenderId())
+			&& KNOCKOUT_RESERVE_STATUSES.contains(result.injuryContext().getApothecaryStatus()));
+	}
+
+	private Optional<InjuryResult> successfulKnockoutReserve() {
+		return allInjuryResults().filter(result ->
+				result.injuryContext().getApothecaryStatus() == ApothecaryStatus.USE_PASTRIES
+					&& result.injuryContext().isReserve())
+			.filter(result -> injuryResults.stream().noneMatch(other ->
+				other.injuryContext().getDefenderId().equals(result.injuryContext().getDefenderId())
+					&& other.injuryContext().isCasualty()))
+			.findFirst();
+	}
+
+	private Stream<InjuryResult> allInjuryResults() {
+		return Stream.concat(injuryResults.stream(),
+			regenerationFailedResults == null ? Stream.empty() : regenerationFailedResults.stream());
 	}
 
 	private void checkRaiseDead() {
