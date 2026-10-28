@@ -159,7 +159,8 @@ public class StepApothecary extends AbstractStep {
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement clientCommandUseInducement =
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE) {
+					if ((fInjuryResult != null)
+						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
 						InducementType inducementType = clientCommandUseInducement.getInducementType();
 						Player<?> player = injuredPlayer();
 						if (inducementType != null && inducementType.hasUsage(Usage.REGENERATION)) {
@@ -191,7 +192,8 @@ public class StepApothecary extends AbstractStep {
 							fInjuryResult.passedRegeneration();
 						}
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
-					} else if (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE) {
+					} else if ((fInjuryResult != null)
+						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)) {
 						handleKnockoutReserve(clientCommandUseInducement.getInducementType());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
