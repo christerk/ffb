@@ -103,18 +103,18 @@ public class UtilServerSetup {
 	}
 
 	private static void queueTeamSetupList(FantasyFootballServer server, Game game, Team team, DbTransaction dbTransaction) {
-		// capture the recipient now, the playing side may change before the db updater runs the callback
+		// setups belong to the coach of the team, so send the list to that coach and not to whoever is playing then
 		long gameId = game.getId();
-		boolean homePlaying = game.isHomePlaying();
-		dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, gameId, homePlaying, team));
+		boolean homeTeam = team == game.getTeamHome();
+		dbTransaction.setOnCompletion(() -> sendTeamSetupList(server, gameId, homeTeam, team));
 		server.getDbUpdater().add(dbTransaction);
 	}
 
-	private static void sendTeamSetupList(FantasyFootballServer server, long gameId, boolean homePlaying, Team team) {
+	private static void sendTeamSetupList(FantasyFootballServer server, long gameId, boolean homeTeam, Team team) {
 		DbTeamSetupsForTeamQuery allSetupNamesQuery = (DbTeamSetupsForTeamQuery) server.getDbQueryFactory()
 			.getStatement(DbStatementId.TEAM_SETUPS_QUERY_ALL_FOR_A_TEAM);
 		String[] setupNames = allSetupNamesQuery.execute(team);
-		Session session = homePlaying ? server.getSessionManager().getSessionOfHomeCoach(gameId)
+		Session session = homeTeam ? server.getSessionManager().getSessionOfHomeCoach(gameId)
 			: server.getSessionManager().getSessionOfAwayCoach(gameId);
 		server.getCommunication().sendTeamSetupList(session, setupNames);
 	}
