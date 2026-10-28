@@ -45,7 +45,6 @@ import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.report.ReportApothecaryChoice;
 import com.fumbbl.ffb.report.ReportInducement;
-import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
 import com.fumbbl.ffb.report.mixed.ReportApothecaryRoll;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
@@ -67,6 +66,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.KnockoutReserveService;
 import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -194,7 +194,8 @@ public class StepApothecary extends AbstractStep {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					} else if ((fInjuryResult != null)
 						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)) {
-						handleKnockoutReserve(clientCommandUseInducement.getInducementType());
+						new KnockoutReserveService().use(this, fInjuryResult, injuredPlayer(),
+							clientCommandUseInducement.getInducementType(), getTurnData().getInducementSet());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -375,7 +376,7 @@ public class StepApothecary extends AbstractStep {
 		}
 
 
-		if (offerKnockoutReserve(game, defenderId)) {
+		if (offerKnockoutReserve()) {
 			return;
 		}
 
@@ -455,46 +456,17 @@ public class StepApothecary extends AbstractStep {
 			.sorted(Comparator.comparingInt(InducementType::getPriority)).collect(Collectors.toList());
 	}
 
-	private boolean offerKnockoutReserve(Game game, String defenderId) {
-		ApothecaryStatus apothecaryStatus = fInjuryResult.injuryContext().getApothecaryStatus();
-		if (!fInjuryResult.injuryContext().isKnockedOut() || ((apothecaryStatus != ApothecaryStatus.NO_APOTHECARY)
-			&& (apothecaryStatus != ApothecaryStatus.DO_NOT_USE_APOTHECARY))) {
+	private boolean offerKnockoutReserve() {
+		KnockoutReserveService knockoutReserveService = new KnockoutReserveService();
+		if (!knockoutReserveService.isEligible(fInjuryResult)) {
 			return false;
 		}
-		Optional<InducementType> inducementType = knockoutReserveInducementType();
+		Optional<InducementType> inducementType = knockoutReserveService.availableInducement(getTurnData().getInducementSet());
 		if (inducementType.isPresent()) {
-			UtilServerDialog.showDialog(getGameState(),
-				new DialogUseInducementParameter(game.getPlayerById(defenderId).getTeam().getId(),
-					new InducementType[]{inducementType.get()}, defenderId),
-				true);
-			fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_PASTRIES_USE);
-			getResult().setNextAction(StepAction.CONTINUE);
+			knockoutReserveService.offer(this, fInjuryResult, injuredPlayer(), inducementType.get());
 			return true;
 		}
 		return false;
-	}
-
-	private void handleKnockoutReserve(InducementType inducementType) {
-		fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_PASTRIES);
-		if (inducementType != null && inducementType.hasUsage(Usage.KNOCKOUT_RESERVE)
-			&& UtilServerInducementUse.useInducement(inducementType, 1, getTurnData().getInducementSet())) {
-			Player<?> player = injuredPlayer();
-			getResult().addReport(new ReportInducement(player.getTeam().getId(), inducementType, 1));
-			int roll = getGameState().getDiceRoller().rollDice(6);
-			boolean successful = roll >= ReportBretonnianPastriesRoll.MINIMUM_ROLL;
-			getResult().addReport(new ReportBretonnianPastriesRoll(player.getTeam().getId(), player.getId(), roll, successful));
-			if (successful) {
-				fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.RESERVE));
-			}
-			fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.USE_PASTRIES);
-		}
-	}
-
-	private Optional<InducementType> knockoutReserveInducementType() {
-		InducementSet inducementSet = getTurnData().getInducementSet();
-		return inducementSet.getInducementMapping().keySet().stream()
-			.filter(type -> type.hasUsage(Usage.KNOCKOUT_RESERVE) && inducementSet.hasUsesLeft(type))
-			.findFirst();
 	}
 
 	private int remainingApos() {
