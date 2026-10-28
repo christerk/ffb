@@ -12,6 +12,7 @@ import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
 import com.fumbbl.ffb.util.ArrayTool;
 
 import javax.swing.*;
@@ -167,7 +168,8 @@ public class DialogUseInducement extends Dialog implements ActionListener {
 				Player<?> player = pClient.getGame().getPlayerById(pDialogParameter.getPlayerId());
 				String buttonText = "<html>" +
 					"<b>" + type.getDescription() + "</b>" +
-					"<br>Move " + (player != null ? player.getName() : "Knocked Out player") + " to Reserves (2+ on a D6)" +
+					"<br>Move " + (player != null ? player.getName() : "Knocked Out player") + " to Reserves (" +
+					ReportBretonnianPastriesRoll.MINIMUM_ROLL + "+ on a D6)" +
 					"</html>";
 				knockoutReserveButton = new JButton(dimensionProvider(), buttonText);
 				knockoutReserveButton.setHorizontalAlignment(SwingConstants.LEFT);
