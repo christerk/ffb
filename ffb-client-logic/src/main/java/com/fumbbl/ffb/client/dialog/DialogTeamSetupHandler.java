@@ -16,6 +16,9 @@ import com.fumbbl.ffb.util.ArrayTool;
  */
 public class DialogTeamSetupHandler extends DialogHandler {
 
+	private DialogTeamSetup teamSetupDialog;
+	private String[] setupNames;
+
 	public DialogTeamSetupHandler(FantasyFootballClient pClient) {
 		super(pClient);
 	}
@@ -27,9 +30,10 @@ public class DialogTeamSetupHandler extends DialogHandler {
 
 		if (dialogTeamSetupParameter != null) {
 
-			String[] setupNames = dialogTeamSetupParameter.getSetupNames();
+			setupNames = dialogTeamSetupParameter.getSetupNames();
 			if (ArrayTool.isProvided(setupNames) || !dialogTeamSetupParameter.isLoadDialog()) {
-				setDialog(new DialogTeamSetup(getClient(), dialogTeamSetupParameter.isLoadDialog(), setupNames));
+				teamSetupDialog = new DialogTeamSetup(getClient(), dialogTeamSetupParameter.isLoadDialog(), setupNames);
+				setDialog(teamSetupDialog);
 
 			} else {
 				setDialog(new DialogInformation(getClient(), "No setups", "There are no setups available for this team.",
@@ -45,34 +49,64 @@ public class DialogTeamSetupHandler extends DialogHandler {
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.TEAM_SETUP)) {
-			DialogTeamSetup teamSetupDialog = (DialogTeamSetup) pDialog;
-			if (teamSetupDialog.getUserChoice() == DialogTeamSetup.CHOICE_LOAD) {
-				getClient().getCommunication().sendTeamSetupLoad(teamSetupDialog.getSetupName());
+			DialogTeamSetup closedDialog = (DialogTeamSetup) pDialog;
+			if (closedDialog.getUserChoice() == DialogTeamSetup.CHOICE_LOAD) {
+				getClient().getCommunication().sendTeamSetupLoad(closedDialog.getSetupName());
 			}
-			if (teamSetupDialog.getUserChoice() == DialogTeamSetup.CHOICE_DELETE) {
-				getClient().getCommunication().sendTeamSetupDelete(teamSetupDialog.getSetupName());
+			if (closedDialog.getUserChoice() == DialogTeamSetup.CHOICE_DELETE) {
+				getClient().getCommunication().sendTeamSetupDelete(closedDialog.getSetupName());
 			}
-			if (teamSetupDialog.getUserChoice() == DialogTeamSetup.CHOICE_SAVE) {
-				Game game = getClient().getGame();
-				TeamSetup teamSetup = new TeamSetup();
-				teamSetup.setName(teamSetupDialog.getSetupName());
-				teamSetup.setTeamId(game.getTeamHome().getId());
-				Player<?>[] homePlayers = game.getTeamHome().getPlayers();
-				for (int i = 0; i < homePlayers.length; i++) {
-					FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(homePlayers[i]);
-					if (FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) {
-						teamSetup.addCoordinate(playerCoordinate, homePlayers[i].getNr());
-					}
+			if (closedDialog.getUserChoice() == DialogTeamSetup.CHOICE_SAVE) {
+				// saving under an existing name replaces that setup on the server, so ask first
+				if (setupExists(closedDialog.getSetupName())) {
+					setDialog(new DialogConfirmOverwriteTeamSetup(getClient(), closedDialog.getSetupName()));
+					getDialog().showDialog(this);
+					return;
 				}
-				getClient().getCommunication().sendTeamSetupSave(teamSetup);
+				saveTeamSetup(closedDialog.getSetupName());
 			}
-			Game game = getClient().getGame();
-			game.setDialogParameter(null);
+			getClient().getGame().setDialogParameter(null);
+		} else if (testDialogHasId(pDialog, DialogId.YES_OR_NO_QUESTION)) {
+			if (((DialogConfirmOverwriteTeamSetup) pDialog).isChoiceYes()) {
+				saveTeamSetup(teamSetupDialog.getSetupName());
+				getClient().getGame().setDialogParameter(null);
+			} else {
+				setDialog(teamSetupDialog);
+				teamSetupDialog.showDialog(this);
+			}
 		}
 //    if (testDialogHasId(pDialog, DialogId.INFORMATION)) {
 //      UserInterface userInterface = getClient().getUserInterface();
 //      userInterface.getSideBarHome().showEndTurnButton();
 //    }
+	}
+
+	private boolean setupExists(String setupName) {
+		if (setupName == null || !ArrayTool.isProvided(setupNames)) {
+			return false;
+		}
+		for (String existingName : setupNames) {
+			// the database matches setup names case-insensitively
+			if (setupName.equalsIgnoreCase(existingName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void saveTeamSetup(String setupName) {
+		Game game = getClient().getGame();
+		TeamSetup teamSetup = new TeamSetup();
+		teamSetup.setName(setupName);
+		teamSetup.setTeamId(game.getTeamHome().getId());
+		Player<?>[] homePlayers = game.getTeamHome().getPlayers();
+		for (int i = 0; i < homePlayers.length; i++) {
+			FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(homePlayers[i]);
+			if (FieldCoordinateBounds.HALF_HOME.isInBounds(playerCoordinate)) {
+				teamSetup.addCoordinate(playerCoordinate, homePlayers[i].getNr());
+			}
+		}
+		getClient().getCommunication().sendTeamSetupSave(teamSetup);
 	}
 
 }
