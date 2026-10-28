@@ -1,8 +1,10 @@
 package com.fumbbl.ffb.client.report;
 
+import com.fumbbl.ffb.RulesCollection;
+import com.fumbbl.ffb.RulesCollection.Rules;
 import com.fumbbl.ffb.client.StatusReport;
 import com.fumbbl.ffb.client.report.bb2025.BretonnianPastriesRollMessage;
-import com.fumbbl.ffb.client.report.mixed.InducementMessage;
+import com.fumbbl.ffb.client.report.bb2025.InducementMessage;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.bb2025.InducementCollection;
 import com.fumbbl.ffb.model.Game;
@@ -12,6 +14,11 @@ import com.fumbbl.ffb.report.ReportInducement;
 import com.fumbbl.ffb.report.bb2025.ReportBretonnianPastriesRoll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -75,6 +82,18 @@ class BretonnianPastriesInducementMessageTest {
 		render(new InducementMessage(), new ReportInducement("homeTeam", pastries, 1));
 
 		assertEquals("Home Team use Bretonnian Pastries on a Knocked Out player.\n", log.toString());
+	}
+
+	@Test
+	void pastriesSpendNoticeIsRenderedOnlyByTheBb2025Message() {
+		assertEquals(Collections.singletonList(Rules.BB2025), rules(InducementMessage.class));
+		assertEquals(Collections.singletonList(Rules.BB2020),
+			rules(com.fumbbl.ffb.client.report.mixed.InducementMessage.class));
+	}
+
+	private List<Rules> rules(Class<?> messageClass) {
+		return Arrays.stream(messageClass.getAnnotationsByType(RulesCollection.class)).map(RulesCollection::value)
+			.collect(Collectors.toList());
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
