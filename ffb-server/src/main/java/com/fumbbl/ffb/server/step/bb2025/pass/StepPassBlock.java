@@ -33,6 +33,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -149,21 +150,23 @@ public class StepPassBlock extends AbstractStep {
 		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), false);
 
 		if (game.getTurnMode().isPassBlock()) {
-			// check if actingPlayer has dropped (failed dodge)
+			// check if actingPlayer has dropped (failed dodge), which only ends the move of that pass blocker
+			boolean actingPlayerDropped = false;
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				if (!playerState.hasTacklezones()) {
-					UtilServerSteps.changePlayerAction(this, null, null, false);
-					fEndTurn = true;
-					fEndPlayerAction = false;
+				actingPlayerDropped = !playerState.hasTacklezones();
+				if (actingPlayerDropped) {
+					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeActive(false));
 				}
 			}
 
-			if (fEndPlayerAction) {
-				if (actingPlayer.hasActed()) {
+			if (fEndPlayerAction || (actingPlayerDropped && !fEndTurn)) {
+				if (actingPlayer.hasActed() || actingPlayerDropped) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
+					// the pass block continues as long as other pass blockers can still move
 					if (checkNoPlayerActive(passBlockers)) {
 						fEndTurn = true;
+						fEndPlayerAction = false;
 					} else {
 						fEndPlayerAction = false;
 						getGameState().pushCurrentStepOnStack();
@@ -208,6 +211,12 @@ public class StepPassBlock extends AbstractStep {
 				game.setTurnMode(fOldTurnMode);
 				if (fOldTurnMode != TurnMode.DUMP_OFF) {
 					game.setHomePlaying(!game.isHomePlaying());
+				}
+
+				// remove the move squares of the last pass blocker, the interrupted action of a dump-off continues
+				game.getFieldModel().clearMoveSquares();
+				if (fOldTurnMode == TurnMode.DUMP_OFF) {
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				}
 
 				FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());
