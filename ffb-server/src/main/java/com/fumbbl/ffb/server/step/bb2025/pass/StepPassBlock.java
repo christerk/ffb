@@ -33,6 +33,7 @@ import com.fumbbl.ffb.server.step.StepParameterSet;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Select;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
+import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.UtilPlayer;
 
@@ -208,6 +209,12 @@ public class StepPassBlock extends AbstractStep {
 				game.setTurnMode(fOldTurnMode);
 				if (fOldTurnMode != TurnMode.DUMP_OFF) {
 					game.setHomePlaying(!game.isHomePlaying());
+				}
+
+				// remove the move squares of the last pass blocker, the interrupted action of a dump-off continues
+				game.getFieldModel().clearMoveSquares();
+				if (fOldTurnMode == TurnMode.DUMP_OFF) {
+					UtilServerPlayerMove.updateMoveSquares(getGameState(), actingPlayer.isJumping());
 				}
 
 				FieldCoordinate throwerCoordinate = game.getFieldModel().getPlayerCoordinate(game.getThrower());

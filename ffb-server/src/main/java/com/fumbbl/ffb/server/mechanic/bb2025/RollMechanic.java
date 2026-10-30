@@ -62,7 +62,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
 		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
 		add(TurnMode.DUMP_OFF);
 		add(TurnMode.QUICK_SNAP);
 		add(TurnMode.BETWEEN_TURNS);
@@ -289,7 +288,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		StepResult stepResult = pStep.getResult();
-		TurnData turnData = game.getTurnData();
+		TurnData turnData = findReRollTurnData(game);
 		if (reRollSource != null) {
 
 			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == reRollSource;
@@ -394,7 +393,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
 		boolean fallback, InducementType mascotType, TurnData turnData) {
 		stepResult.addReport(
-			new ReportMascotUsed(gameState.getGame().getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
+			new ReportMascotUsed(findReRollTeam(gameState.getGame()).getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
 				fallback));
 
 		if (!successful || !checkTeamCaptain(stepResult, gameState)) {
@@ -405,7 +404,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private boolean checkTeamCaptain(StepResult stepResult, GameState gameState) {
 
 		FieldModel fieldModel = gameState.getGame().getFieldModel();
-		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers())
+		Team reRollTeam = findReRollTeam(gameState.getGame());
+		if (Arrays.stream(reRollTeam.getPlayers())
 			.noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls) &&
 				FieldCoordinateBounds.FIELD.isInBounds(fieldModel.getPlayerCoordinate(player)))) {
 			return false;
@@ -414,7 +414,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		int roll = gameState.getDiceRoller().rollDice(6);
 		boolean rrSaved = roll >= TEAM_CAPTAIN_MINIMUM_ROLL;
 		stepResult.addReport(
-			new ReportTeamCaptainRoll(gameState.getGame().getActingTeam().getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
+			new ReportTeamCaptainRoll(reRollTeam.getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
 		return rrSaved;
 	}
 
@@ -529,13 +529,51 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	@Override
 	public boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer) {
 		Game game = pGameState.getGame();
-		InducementSet inducementSet = game.isHomePlaying() ?
-			game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+		InducementSet inducementSet = findReRollTurnData(game).getInducementSet();
 
 		return Arrays.stream(inducementSet.getInducements())
 			.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0)
 			&& isTeamReRollAvailable(pGameState, pPlayer, 1);
 
+	}
+
+	@Override
+	public boolean isSingleUseReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, findReRollTurnData(game).getSingleUseReRolls());
+	}
+
+	@Override
+	public boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, findReRollTurnData(game).getReRolls());
+	}
+
+	@Override
+	protected boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer, int amount) {
+		Game game = pGameState.getGame();
+		TurnMode turnMode = game.getTurnMode();
+		boolean homeHasPlayer = game.getTeamHome().hasPlayer(pPlayer);
+		boolean awayHasPlayer = game.getTeamAway().hasPlayer(pPlayer);
+		return (findReRollTeam(game).hasPlayer(pPlayer) && !findReRollTurnData(game).isReRollUsed() && (amount > 0)
+			&& allowsTeamReRoll(turnMode)
+			&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY) || awayHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
+	}
+
+	// during a pass block homePlaying is switched to the pass blocking team, but the team of the thrower is still the active one
+	private boolean isHomeTeamActive(Game game) {
+		return game.isHomePlaying() != (game.getTurnMode() == TurnMode.PASS_BLOCK);
+	}
+
+	private Team findReRollTeam(Game game) {
+		return isHomeTeamActive(game) ? game.getTeamHome() : game.getTeamAway();
+	}
+
+	private TurnData findReRollTurnData(Game game) {
+		return isHomeTeamActive(game) ? game.getTurnDataHome() : game.getTurnDataAway();
 	}
 
 	private boolean canBeReduced(InjuryAttribute attribute, int currentValue) {
@@ -634,7 +672,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (isTeamReRollAvailable(gameState, player)) {
 			properties.add(ReRollProperty.TRR);
 		}
-		findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
+		findAdditionalReRollProperty(findReRollTurnData(game)).ifPresent(properties::add);
 
 		if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			properties.add(ReRollProperty.LONER);
