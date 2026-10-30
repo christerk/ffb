@@ -88,7 +88,7 @@ class BretonnianPastriesInducementMessageTest {
 	void pastriesSpendNoticeIsRenderedOnlyByTheBb2025Message() {
 		assertEquals(Collections.singletonList(Rules.BB2025), rules(InducementMessage.class));
 		assertEquals(Collections.singletonList(Rules.BB2020),
-			rules(com.fumbbl.ffb.client.report.mixed.InducementMessage.class));
+			rules(com.fumbbl.ffb.client.report.bb2020.InducementMessage.class));
 	}
 
 	private List<Rules> rules(Class<?> messageClass) {

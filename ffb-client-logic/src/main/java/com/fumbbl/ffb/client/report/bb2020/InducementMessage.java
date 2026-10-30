@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.client.report.mixed;
+package com.fumbbl.ffb.client.report.bb2020;
 
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.RulesCollection.Rules;
