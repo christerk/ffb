@@ -150,23 +150,21 @@ public class StepPassBlock extends AbstractStep {
 		Select.SequenceParams selectParams = new Select.SequenceParams(getGameState(), false);
 
 		if (game.getTurnMode().isPassBlock()) {
-			// check if actingPlayer has dropped (failed dodge), which only ends the move of that pass blocker
-			boolean actingPlayerDropped = false;
+			// check if actingPlayer has dropped (failed dodge)
 			if (actingPlayer.getPlayer() != null) {
 				PlayerState playerState = game.getFieldModel().getPlayerState(actingPlayer.getPlayer());
-				actingPlayerDropped = !playerState.hasTacklezones();
-				if (actingPlayerDropped) {
-					game.getFieldModel().setPlayerState(actingPlayer.getPlayer(), playerState.changeActive(false));
+				if (!playerState.hasTacklezones()) {
+					UtilServerSteps.changePlayerAction(this, null, null, false);
+					fEndTurn = true;
+					fEndPlayerAction = false;
 				}
 			}
 
-			if (fEndPlayerAction || (actingPlayerDropped && !fEndTurn)) {
-				if (actingPlayer.hasActed() || actingPlayerDropped) {
+			if (fEndPlayerAction) {
+				if (actingPlayer.hasActed()) {
 					UtilServerSteps.changePlayerAction(this, null, null, false);
-					// the pass block continues as long as other pass blockers can still move
 					if (checkNoPlayerActive(passBlockers)) {
 						fEndTurn = true;
-						fEndPlayerAction = false;
 					} else {
 						fEndPlayerAction = false;
 						getGameState().pushCurrentStepOnStack();

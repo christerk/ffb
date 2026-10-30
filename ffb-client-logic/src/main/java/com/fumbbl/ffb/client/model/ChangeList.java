@@ -12,7 +12,6 @@ public class ChangeList {
 		versions.add(new VersionChangeList("3.4.0")
 			.addBugfix("Pass Block: Team re-rolls could not be used for rolls of the active team during a pass block, e.g. Shadowing a pass blocker")
 			.addBugfix("Pass Block: The move squares of the last pass blocker were still shown after the pass block ended")
-			.addBugfix("Pass Block: A pass blocker falling over ended the pass block even if other pass blockers could still move")
 			.addImprovement("Team Setup: Saving a setup under the name of an existing one now asks for confirmation before overwriting it")
 			.addBugfix("Team Setup: The setup list could still show a deleted setup or miss a just saved one")
 			.addImprovement("Getting Even: Custom keywords of league positionals are supported and no longer all treated as the same \"Unknown\" keyword")
