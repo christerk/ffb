@@ -4,6 +4,7 @@ import com.fumbbl.ffb.ApothecaryType;
 import com.fumbbl.ffb.ClientStateId;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.ConcedeGameStatus;
+import com.fumbbl.ffb.FantasyFootballConstants;
 import com.fumbbl.ffb.FantasyFootballException;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
@@ -42,6 +43,8 @@ import java.util.Map;
  * @author Kalimar
  */
 public class ClientCommunication implements Runnable, INetCommandHandler {
+
+	private static final String CLIENT_NAME = "FFB Client";
 
 	private boolean fStopped;
 	private final List<NetCommand> fCommandQueue;
@@ -147,6 +150,9 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		joinCommand.setGameName(pGameName);
 		joinCommand.setTeamId(pTeamId);
 		joinCommand.setTeamName(pTeamName);
+		joinCommand.setProtocolVersion(FantasyFootballConstants.VERSION);
+		joinCommand.setClientName(CLIENT_NAME);
+		joinCommand.setClientVersion(FantasyFootballConstants.VERSION);
 		send(joinCommand);
 	}
 
@@ -388,8 +394,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 		send(new ClientCommandUseApothecary(pPlayerId, pApothecaryUsed, apothecaryType, seriousInjury, playerState));
 	}
 
-	public void sendApothecaryChoice(String pPlayerId, PlayerState pPlayerState, SeriousInjury pSeriousInjury, PlayerState oldPlayerState) {
-		send(new ClientCommandApothecaryChoice(pPlayerId, pPlayerState, pSeriousInjury, oldPlayerState));
+	public void sendApothecaryChoice(String playerId, boolean choiceNewInjury) {
+		send(new ClientCommandApothecaryChoice(playerId, choiceNewInjury));
 	}
 
 	public void sendUserSettings(CommonProperty[] pSettingNames, String[] pSettingValues) {
@@ -536,7 +542,8 @@ public class ClientCommunication implements Runnable, INetCommandHandler {
 	}
 
 	public void sendJoinReplay(String replayName, String coach, long gameId) {
-		send(new ClientCommandJoinReplay(replayName, coach, gameId));
+		send(new ClientCommandJoinReplay(replayName, coach, gameId, FantasyFootballConstants.VERSION, CLIENT_NAME,
+			FantasyFootballConstants.VERSION));
 	}
 
 	public void sendClearSketches() {

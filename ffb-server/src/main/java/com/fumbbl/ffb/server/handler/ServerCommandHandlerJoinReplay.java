@@ -11,6 +11,7 @@ import com.fumbbl.ffb.net.commands.ServerCommandReplayControl;
 import com.fumbbl.ffb.net.commands.ServerCommandReplayStatus;
 import com.fumbbl.ffb.net.commands.ServerCommandSetPreventSketching;
 import com.fumbbl.ffb.server.FantasyFootballServer;
+import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.ReplayCache;
 import com.fumbbl.ffb.server.ReplayState;
 import com.fumbbl.ffb.server.ServerSketchManager;
@@ -49,6 +50,11 @@ public class ServerCommandHandlerJoinReplay extends ServerCommandHandler {
 			String sanitizedReplayName = plainReplayName.substring(0, Math.min(Constant.REPLAY_NAME_MAX_LENGTH, plainReplayName.length()));
 
 			String replayName = plainReplayName + "_" + clientCommandJoinReplay.getGameId();
+
+			getServer().getDebugLog().logReplay(IServerLogLevel.INFO, replayName, null,
+				"Join request from coach " + clientCommandJoinReplay.getCoach() + " with client "
+					+ clientCommandJoinReplay.getClientName() + " " + clientCommandJoinReplay.getClientVersion()
+					+ " (protocol " + clientCommandJoinReplay.getProtocolVersion() + ")");
 
 			Session session = receivedCommand.getSession();
 			sessionManager.addSession(session, replayName, clientCommandJoinReplay.getCoach());

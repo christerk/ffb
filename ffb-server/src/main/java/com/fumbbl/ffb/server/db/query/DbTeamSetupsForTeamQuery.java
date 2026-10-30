@@ -40,7 +40,7 @@ public class DbTeamSetupsForTeamQuery extends DbStatement {
 		}
 	}
 
-	public String[] execute(Team pTeam) {
+	public synchronized String[] execute(Team pTeam) {
 		String[] names = null;
 		if (pTeam != null) {
 			try {

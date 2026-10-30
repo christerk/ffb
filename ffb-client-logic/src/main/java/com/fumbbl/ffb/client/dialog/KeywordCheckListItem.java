@@ -25,7 +25,7 @@ public final class KeywordCheckListItem {
 	}
 
 	public String getText() {
-		return keyword.getName();
+		return keyword.getDisplayName();
 	}
 
 }

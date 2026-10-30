@@ -27,16 +27,20 @@ import com.fumbbl.ffb.model.sketch.Sketch;
 import com.fumbbl.ffb.model.sketch.SketchState;
 import com.fumbbl.ffb.util.StringTool;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +51,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, ControlAware {
+
+	private static final String CANCEL_SKETCH_ACTION = "cancelSketch";
 
 	private final FantasyFootballClient client;
 	private final UserInterface userInterface;
@@ -92,6 +98,15 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 		this.editLabels = new JMenuItem(pitchDimensionProvider, "Edit labels", editIcon);
 		this.editColor = new JMenuItem(pitchDimensionProvider, "Set color");
 		this.editColors = new JMenuItem(pitchDimensionProvider, "Set colors");
+
+		fieldComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+			.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_SKETCH_ACTION);
+		fieldComponent.getActionMap().put(CANCEL_SKETCH_ACTION, new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cancelActiveSketch();
+			}
+		});
 
 		this.deleteAll.addActionListener(this);
 		this.deleteMine.addActionListener(this);
@@ -198,6 +213,21 @@ public class PathSketchOverlay implements Overlay, ActionListener, OnlineAware, 
 				sketchManager.activeSketch().ifPresent(sketch ->
 					client.getCommunication().sendAddSketch(sketch));
 			}
+		}
+	}
+
+	private void cancelActiveSketch() {
+		if (client.getActiveOverlay().orElse(null) != this || (popupMenu != null && popupMenu.isVisible())) {
+			return;
+		}
+		Optional<Sketch> activeSketch = sketchManager.activeSketch();
+		if (!activeSketch.isPresent()) {
+			return;
+		}
+		sketchManager.remove(activeSketch.get());
+		drawSketches(actionTargets);
+		if (isOnline) {
+			client.getCommunication().sendRemoveSketches(Collections.singletonList(activeSketch.get().getId()));
 		}
 	}
 

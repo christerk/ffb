@@ -14,7 +14,7 @@ public interface ClickStrategy extends IKeyedItem {
 
 	/**
 	 * Returns the order for menu sorting. Left click is first (0), right click last (4),
-	 * modifier-based left clicks are ordered alphabetically by modifier: Alt (1), Ctrl (2), Shift (3).
+	 * modifier-based left clicks are ordered alphabetically by modifier: Alt (1), Ctrl (2).
 	 */
 	int getOrder();
 
