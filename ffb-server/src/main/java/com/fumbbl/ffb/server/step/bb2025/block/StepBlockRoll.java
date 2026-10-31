@@ -7,6 +7,8 @@ import com.fumbbl.ffb.FactoryType.Factory;
 import com.fumbbl.ffb.Pair;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSourceComposer;
+import com.fumbbl.ffb.ReRollSourceComposition;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -118,7 +120,7 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 				case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
 					ClientCommandUseProReRollForBlock command = (ClientCommandUseProReRollForBlock) pReceivedCommand.getCommand();
 					setReRolledAction(ReRolledActions.BLOCK);
-					setReRollSource(ReRollSources.PRO);
+					setReRollSource(command.getReRollSource() != null ? command.getReRollSource() : ReRollSources.PRO);
 					dieIndex = command.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -239,10 +241,12 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 
 		Skill reRollSkill = getReRollSource() != null ? getReRollSource().getSkill(game) : null;
 
-		if (getReRollSource() == ReRollSources.PRO ||
+		ReRollSourceComposition composition = new ReRollSourceComposer().decompose(getReRollSource());
+		boolean pro = composition != null && composition.isPro();
+		if (pro ||
 			(reRollSkill != null &&
 				reRollSkill.hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod))) {
-			if (getReRollSource() == ReRollSources.PRO) {
+			if (pro) {
 				actingPlayer.markSkillUsed(NamedProperties.canRerollOncePerTurn);
 			}
 			int[] reRolledWithPro = getGameState().getDiceRoller().rollBlockDice(1);
@@ -332,19 +336,11 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 			addReRollSourceMapping(actionToSource, ReRolledActions.MULTI_BLOCK_DICE, game);
 			addReRollSourceMapping(actionToSource, ReRolledActions.SINGLE_DIE_PER_ACTIVATION, game);
 
-			if (UtilServerReRoll.isTeamReRollAvailable(getGameState(), actingPlayer.getPlayer())) {
-				properties.add(ReRollProperty.TRR);
-			}
-
 			evaluateBrawlerAvailability(game, actingPlayer, actionToSource);
 			evaluateHatredAvailability(game, actingPlayer, actionToSource);
 
 			RollMechanic mechanic = game.getMechanic(Mechanic.Type.ROLL);
-			mechanic.findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
-
-			if (mechanic.isMascotAvailable(getGameState(), actingPlayer.getPlayer())) {
-				properties.add(ReRollProperty.MASCOT);
-			}
+			properties.addAll(mechanic.findTeamReRollProperties(getGameState(), actingPlayer.getPlayer()));
 		}
 
 		String teamId = game.isHomePlaying() ? game.getTeamHome().getId() : game.getTeamAway().getId();

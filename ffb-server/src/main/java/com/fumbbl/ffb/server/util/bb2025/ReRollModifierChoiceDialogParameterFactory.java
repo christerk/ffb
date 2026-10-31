@@ -22,7 +22,7 @@ public class ReRollModifierChoiceDialogParameterFactory implements ReRollDialogP
 
 	private static final List<ReRollProperty> TEAM_RE_ROLL_PROPERTIES = Collections.unmodifiableList(
 		Arrays.asList(ReRollProperty.TRR, ReRollProperty.MASCOT, ReRollProperty.BRILLIANT_COACHING,
-			ReRollProperty.PUMP_UP_THE_CROWD, ReRollProperty.SHOW_STAR, ReRollProperty.LONER));
+			ReRollProperty.PUMP_UP_THE_CROWD, ReRollProperty.SHOW_STAR, ReRollProperty.LEADER, ReRollProperty.LONER));
 
 	private final int roll;
 	private final List<ModifierChoiceOption> modifierOptions;

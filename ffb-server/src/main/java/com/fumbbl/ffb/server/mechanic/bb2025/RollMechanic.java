@@ -9,6 +9,8 @@ import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSourceComposer;
+import com.fumbbl.ffb.ReRollSourceComposition;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
@@ -251,6 +253,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private static final ReRollDialogParameterFactory DEFAULT_DIALOG_PARAMETER_FACTORY
 		= new ReRollPropertiesDialogParameterFactory();
 
+	private final ReRollSourceComposer reRollSourceComposer = new ReRollSourceComposer();
+
 	@Override
 	public int minimumProRoll() {
 		return 3;
@@ -284,110 +288,126 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (pPlayer == null) {
 			throw new IllegalArgumentException("Parameter player must not be null.");
 		}
-		boolean successful = false;
+		if (reRollSource == null) {
+			return false;
+		}
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		StepResult stepResult = pStep.getResult();
-		TurnData turnData = findReRollTurnData(game);
-		if (reRollSource != null) {
 
-			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == reRollSource;
-			InducementType mascotType = turnData.getInducementSet().forUsage(Usage.CONDITIONAL_REROLL);
-			boolean mascotAvailable = mascotType != null && turnData.getInducementSet().hasUsesLeft(mascotType);
-
-			boolean mascot =
-				Arrays.asList(ReRollSources.MASCOT, ReRollSources.MASCOT_TRR).contains(reRollSource) && mascotAvailable;
-
-			if (mascot) {
-				int mascotRoll = gameState.getDiceRoller().rollDice(6);
-				successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
-				boolean fallback = !successful && reRollSource == ReRollSources.MASCOT_TRR && turnData.getReRolls() > 0;
-
-				useMascot(stepResult, gameState, mascotRoll, successful, fallback, mascotType, turnData);
-
-				if (successful) {
-					return checkForLoner(pPlayer, gameState, stepResult);
-				} else if (!fallback) {
-					return false;
-				} else {
-					teamReRoll = true;
-				}
+		ReRollSourceComposition composition = reRollSourceComposer.decompose(reRollSource);
+		if (composition != null) {
+			if (composition.isPro()) {
+				return useProReRoll(composition, pPlayer, gameState, stepResult);
 			}
+			return useTeamReRolls(composition, pPlayer, gameState, stepResult);
+		}
 
-			Skill reRollSourceSkill = reRollSource.getSkill(game);
-			if (teamReRoll) {
-
-				successful = useTeamReRoll(reRollSource, pPlayer, turnData, stepResult, successful, gameState);
-
-			} else if (reRollSourceSkill != null) {
-				if (reRollSourceSkill.hasSkillProperty(NamedProperties.canRerollOncePerTurn)) {
-					PlayerState playerState = game.getFieldModel().getPlayerState(pPlayer);
-					successful = (pPlayer.hasSkillProperty(NamedProperties.canRerollOncePerTurn)
-						&& !playerState.hasUsedPro());
-					if (successful) {
-						game.getFieldModel().setPlayerState(pPlayer, playerState.changeUsedPro(true));
-						int proRoll = gameState.getDiceRoller().rollSkill();
-						successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
-						stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
-						if (!successful &&
-							Arrays.asList(ReRollSources.PRO_MASCOT, ReRollSources.PRO_TRR, ReRollSources.PRO_MASCOT_TRR)
-								.contains(reRollSource)) {
-							boolean proMascot =
-								Arrays.asList(ReRollSources.PRO_MASCOT, ReRollSources.PRO_MASCOT_TRR).contains(reRollSource) &&
-									mascotAvailable;
-							if (proMascot) {
-								int mascotRoll = gameState.getDiceRoller().rollDice(6);
-								successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
-								boolean fallback =
-									!successful && reRollSource == ReRollSources.PRO_MASCOT_TRR && turnData.getReRolls() > 0;
-
-								useMascot(stepResult, gameState, mascotRoll, successful, fallback, mascotType, turnData);
-
-								if (successful) {
-									if (checkForLoner(pPlayer, gameState, stepResult)) {
-										proRoll = gameState.getDiceRoller().rollSkill();
-										successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
-										stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
-										return successful;
-									} else {
-										return false;
-									}
-								} else if (!fallback) {
-									return false;
-								}
-							}
-
-							if (Arrays.asList(ReRollSources.PRO_TRR, ReRollSources.PRO_MASCOT_TRR).contains(reRollSource)) {
-								if (useTeamReRoll(ReRollSources.TEAM_RE_ROLL, pPlayer, turnData, stepResult, successful, gameState)) {
-									proRoll = gameState.getDiceRoller().rollSkill();
-									successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
-									stepResult.addReport(new ReportReRoll(pPlayer.getId(), ReRollSources.PRO, successful, proRoll));
-									return successful;
-								} else {
-									return false;
-								}
-							}
-						}
-					}
-				} else {
-					if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
-						successful = !pPlayer.isUsed(reRollSourceSkill);
-					} else {
-						successful = UtilCards.hasSkill(pPlayer, reRollSourceSkill);
-					}
-					stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
-				}
-				if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
-					ActingPlayer actingPlayer = game.getActingPlayer();
-					if (actingPlayer.getPlayer() == pPlayer) {
-						actingPlayer.markSkillUsed(reRollSourceSkill);
-					} else {
-						pPlayer.markUsed(reRollSourceSkill, game);
-					}
-				}
+		boolean successful = false;
+		Skill reRollSourceSkill = reRollSource.getSkill(game);
+		if (reRollSourceSkill != null) {
+			if (reRollSourceSkill.getSkillUsageType().isTrackOutsideActivation()) {
+				successful = !pPlayer.isUsed(reRollSourceSkill);
+			} else {
+				successful = UtilCards.hasSkill(pPlayer, reRollSourceSkill);
 			}
+			stepResult.addReport(new ReportReRoll(pPlayer.getId(), reRollSource, successful, 0));
+			markSkillUsed(game, pPlayer, reRollSourceSkill);
 		}
 		return successful;
+	}
+
+	private void markSkillUsed(Game game, Player<?> player, Skill skill) {
+		if (skill.getSkillUsageType().isTrackOutsideActivation()) {
+			ActingPlayer actingPlayer = game.getActingPlayer();
+			if (actingPlayer.getPlayer() == player) {
+				actingPlayer.markSkillUsed(skill);
+			} else {
+				player.markUsed(skill, game);
+			}
+		}
+	}
+
+	/**
+	 * Rolls for Pro and if that fails uses the fallback re-rolls of the composition to re-roll the Pro roll.
+	 */
+	private boolean useProReRoll(ReRollSourceComposition composition, Player<?> player, GameState gameState,
+		StepResult stepResult) {
+		Game game = gameState.getGame();
+		PlayerState playerState = game.getFieldModel().getPlayerState(player);
+		Skill proSkill = player.getSkillWithProperty(NamedProperties.canRerollOncePerTurn);
+		if (proSkill == null || playerState.hasUsedPro()) {
+			return false;
+		}
+		game.getFieldModel().setPlayerState(player, playerState.changeUsedPro(true));
+		markSkillUsed(game, player, proSkill);
+
+		boolean successful = rollPro(player, gameState, stepResult);
+		boolean hasFallback = composition.isMascot() || composition.getTeamReRollSource() != null;
+		if (!successful && hasFallback && useTeamReRolls(composition, player, gameState, stepResult)) {
+			successful = rollPro(player, gameState, stepResult);
+		}
+		return successful;
+	}
+
+	private boolean rollPro(Player<?> player, GameState gameState, StepResult stepResult) {
+		int proRoll = gameState.getDiceRoller().rollSkill();
+		boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(proRoll, minimumProRoll());
+		stepResult.addReport(new ReportReRoll(player.getId(), ReRollSources.PRO, successful, proRoll));
+		return successful;
+	}
+
+	/**
+	 * Uses the mascot and/or team re-roll of the composition. Parts that are not available count as failed.
+	 *
+	 * @return whether a re-roll was granted (including a successful Loner roll)
+	 */
+	private boolean useTeamReRolls(ReRollSourceComposition composition, Player<?> player, GameState gameState,
+		StepResult stepResult) {
+		TurnData turnData = findReRollTurnData(gameState.getGame());
+		ReRollSource teamReRollSource = composition.getTeamReRollSource();
+		boolean teamReRollAvailable =
+			teamReRollSource != null && isTeamReRollSourceAvailable(gameState, player, turnData, teamReRollSource);
+
+		if (composition.isMascot()) {
+			if (!isMascotAvailable(gameState, player)) {
+				return false;
+			}
+			InducementType mascotType = turnData.getInducementSet().forUsage(Usage.CONDITIONAL_REROLL);
+			int mascotRoll = gameState.getDiceRoller().rollDice(6);
+			boolean successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
+			useMascot(stepResult, gameState, mascotRoll, successful, !successful && teamReRollAvailable, mascotType,
+				turnData);
+			if (successful) {
+				return checkForLoner(player, gameState, stepResult);
+			}
+		}
+
+		if (!teamReRollAvailable) {
+			return false;
+		}
+		return useTeamReRoll(teamReRollSource, player, turnData, stepResult, gameState);
+	}
+
+	private boolean isTeamReRollSourceAvailable(GameState gameState, Player<?> player, TurnData turnData,
+		ReRollSource teamReRollSource) {
+		if (!isTeamReRollAvailable(gameState, player)) {
+			return false;
+		}
+		if (ReRollSources.TEAM_RE_ROLL == teamReRollSource) {
+			return LeaderState.AVAILABLE.equals(turnData.getLeaderState()) || regularReRolls(turnData) > 0;
+		}
+		return isSpecialReRollSourceAvailable(turnData, teamReRollSource);
+	}
+
+	// leader and single use re-rolls are included in the total amount of re-rolls
+	private int regularReRolls(TurnData turnData) {
+		int reRolls = turnData.getReRolls() - turnData.getReRollsBrilliantCoachingOneDrive()
+			- turnData.getReRollsPumpUpTheCrowdOneDrive() - turnData.getReRollShowStarOneDrive();
+		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+			reRolls--;
+		}
+		return reRolls;
 	}
 
 	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
@@ -419,7 +439,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	private boolean useTeamReRoll(ReRollSource reRollSource, Player<?> pPlayer, TurnData turnData, StepResult stepResult,
-		boolean successful, GameState gameState) {
+		GameState gameState) {
 
 		boolean rrSaved = checkTeamCaptain(stepResult, gameState);
 		ReRollSource usedReRollSource = findUsedTeamReRollSource(turnData, reRollSource);
@@ -428,10 +448,9 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 			updateTurnDataAfterReRollUsage(turnData, usedReRollSource);
 		}
 
-		stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedReRollSource, successful, 0));
+		stepResult.addReport(new ReportReRoll(pPlayer.getId(), usedReRollSource, false, 0));
 
-		successful = checkForLoner(pPlayer, gameState, stepResult);
-		return successful;
+		return checkForLoner(pPlayer, gameState, stepResult);
 	}
 
 	private boolean checkForLoner(Player<?> pPlayer, GameState gameState, StepResult stepResult) {
@@ -446,17 +465,10 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
+	// single use re-rolls have to be selected explicitly, a regular team re-roll uses Leader first
 	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
 		if (isSpecialReRollSourceAvailable(turnData, selectedSource)) {
 			return selectedSource;
-		}
-		if (ReRollSources.LEADER == selectedSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
-			return ReRollSources.LEADER;
-		}
-
-		ReRollSource fallbackSpecialSource = firstAvailableSpecialReRollSource(turnData);
-		if (fallbackSpecialSource != null) {
-			return fallbackSpecialSource;
 		}
 		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			return ReRollSources.LEADER;
@@ -474,20 +486,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (ReRollSources.LEADER == usedReRollSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			turnData.setLeaderState(LeaderState.USED);
 		}
-	}
-
-	private ReRollSource firstAvailableSpecialReRollSource(TurnData turnData) {
-		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			return ReRollSources.BRILLIANT_COACHING;
-		}
-		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			return ReRollSources.PUMP_UP_THE_CROWD;
-		}
-		if (turnData.getReRollShowStarOneDrive() > 0) {
-			return ReRollSources.SHOW_STAR;
-		}
-
-		return null;
 	}
 
 	private boolean isSpecialReRollSourceAvailable(TurnData turnData, ReRollSource reRollSource) {
@@ -663,16 +661,30 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public ReRollOptions findReRollOptions(GameState gameState, Player<?> player, ReRolledAction reRolledAction, Skill reRollSkill) {
-		Game game = gameState.getGame();
+	public List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player) {
+		TurnData turnData = findReRollTurnData(gameState.getGame());
 		List<ReRollProperty> properties = new ArrayList<>();
 		if (isMascotAvailable(gameState, player)) {
 			properties.add(ReRollProperty.MASCOT);
 		}
 		if (isTeamReRollAvailable(gameState, player)) {
 			properties.add(ReRollProperty.TRR);
+			reRollSourceComposer.singleUseSources().forEach((property, source) -> {
+				if (isSpecialReRollSourceAvailable(turnData, source)) {
+					properties.add(property);
+				}
+			});
+			if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
+				properties.add(ReRollProperty.LEADER);
+			}
 		}
-		findAdditionalReRollProperty(findReRollTurnData(game)).ifPresent(properties::add);
+		return properties;
+	}
+
+	@Override
+	public ReRollOptions findReRollOptions(GameState gameState, Player<?> player, ReRolledAction reRolledAction, Skill reRollSkill) {
+		Game game = gameState.getGame();
+		List<ReRollProperty> properties = new ArrayList<>(findTeamReRollProperties(gameState, player));
 
 		if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			properties.add(ReRollProperty.LONER);

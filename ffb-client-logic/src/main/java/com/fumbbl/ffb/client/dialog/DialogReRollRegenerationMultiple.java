@@ -7,7 +7,6 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.ui.swing.JButton;
-import com.fumbbl.ffb.client.ui.swing.JCheckBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
@@ -19,7 +18,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +27,7 @@ import java.util.Map;
 public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets implements MultiReRollMnemonics {
 
 	private ReRollSource reRollSource;
-	private final Map<String, CheckBoxes> checkBoxes = new HashMap<>();
+	private final Map<String, List<ReRollSource>> teamReRollSources = new HashMap<>();
 
 	public DialogReRollRegenerationMultiple(FantasyFootballClient pClient,
 	                                        DialogReRollRegenerationMultipleParameter parameter) {
@@ -83,15 +81,6 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 		DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
 
-		ReRollSource trrSource = mascotExtension.teamReRollSource(reRollOptionsList.get(0));
-
-		boolean willUseMascot = trrSource == ReRollSources.MASCOT;
-
-		String trrSourceText = trrSource.getName(getClient().getGame());
-		if (willUseMascot) {
-			trrSourceText += " (No Team Re-Roll)";
-		}
-
 		JPanel detailPanel = createDetailPanel();
 		for (int index = 0; index < parameter.getPlayerIds().size(); index++) {
 
@@ -129,67 +118,19 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 			JPanel buttonPanel = createButtonPanel();
 
-			if (willUseMascot) {
-				buttonPanel.add(createReRollButton(target, trrSourceText, trrSource,
-					currentMnemonics.getTeam()));
-				buttonPanel.add(Box.createHorizontalGlue());
-				if (options.hasProperty(ReRollProperty.TRR)) {
-					buttonPanel.add(
-						createReRollButton(target, ReRollSources.MASCOT.getName(getClient().getGame()) + " (or Team-ReRoll)",
-							ReRollSources.MASCOT_TRR,
-							currentMnemonics.getTrrFallback()));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-			} else if (options.hasProperty(ReRollProperty.TRR)) {
-				buttonPanel.add(createReRollButton(target, trrSourceText, trrSource,
-					currentMnemonics.getTeam()));
+			List<ReRollSource> targetTeamReRollSources = mascotExtension.teamReRollSources(options, true);
+			teamReRollSources.put(target, targetTeamReRollSources);
+			for (int i = 0; i < targetTeamReRollSources.size() && i < currentMnemonics.getTeam().size(); i++) {
+				ReRollSource teamReRollSource = targetTeamReRollSources.get(i);
+				buttonPanel.add(createReRollButton(target, mascotExtension.label(teamReRollSource, game), teamReRollSource,
+					currentMnemonics.getTeam().get(i)));
 				buttonPanel.add(Box.createHorizontalGlue());
 			}
 
 			if (options.hasProperty(ReRollProperty.PRO)) {
-				CheckBoxes currentCheckBoxes = new CheckBoxes();
-				checkBoxes.put(target, currentCheckBoxes);
-				if (options.hasProperty(ReRollProperty.LONER) &&
-					(willUseMascot || options.hasProperty(ReRollProperty.TRR))) {
-
-					JPanel proPanel = new JPanel();
-					proPanel.setLayout(new BoxLayout(proPanel, BoxLayout.Y_AXIS));
-					proPanel.setAlignmentX(Box.CENTER_ALIGNMENT);
-					proPanel.setAlignmentY(Box.TOP_ALIGNMENT);
-					buttonPanel.add(proPanel);
-					if (willUseMascot) {
-						currentCheckBoxes.mascotFallback = mascotExtension.checkBox("Mascot", currentMnemonics.getProFallback(),
-							Color.BLACK,
-							dimensionProvider(),
-							(event) -> handleCheckboxes(target), new PressedKeyListener(currentMnemonics.getProFallback()) {
-								@Override
-								protected void handleKey() {
-									handleCheckboxes(target);
-								}
-							});
-						proPanel.add(currentCheckBoxes.mascotFallback);
-					}
-					if (options.hasProperty(ReRollProperty.TRR)) {
-						currentCheckBoxes.trrFallback = mascotExtension.checkBox(willUseMascot ? "TRR fallback" : "ReRoll",
-							currentMnemonics.getProTrrFallback(), Color.BLACK, dimensionProvider(),
-							(event) -> handleCheckboxes(target),
-							new PressedKeyListener(currentMnemonics.getProTrrFallback()) {
-								@Override
-								protected void handleKey() {
-									handleCheckboxes(target);
-								}
-							});
-						currentCheckBoxes.trrFallback.setEnabled(!willUseMascot);
-						proPanel.add(currentCheckBoxes.trrFallback);
-					}
-					buttonPanel.add(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
-						currentMnemonics.getPro().get(0)));
-					buttonPanel.add(Box.createHorizontalGlue());
-				} else {
-					buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
-						currentMnemonics.getPro().get(0))));
-					buttonPanel.add(Box.createHorizontalStrut(5));
-				}
+				buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
+					currentMnemonics.getPro().get(0))));
+				buttonPanel.add(Box.createHorizontalStrut(5));
 			}
 			if (options.getReRollSkill() != null) {
 				Skill skill = options.getReRollSkill();
@@ -255,20 +196,12 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 		return reRollSource;
 	}
 
-	private void handleCheckboxes(String id) {
-		CheckBoxes currentCheckBoxes = checkBoxes.get(id);
-		if (currentCheckBoxes.mascotFallback != null) {
-			currentCheckBoxes.mascotFallback.setSelected(!currentCheckBoxes.mascotFallback.isSelected());
-			if (currentCheckBoxes.trrFallback != null) {
-				if (!currentCheckBoxes.mascotFallback.isSelected()) {
-					currentCheckBoxes.trrFallback.setSelected(false);
-				}
-				currentCheckBoxes.trrFallback.setEnabled(currentCheckBoxes.mascotFallback.isSelected());
-			}
-		}
+	/**
+	 * @return whether the selected re-roll source is Pro or one of the team re-roll options of the selected target
+	 */
+	public boolean isTeamReRollSelected() {
+		return reRollSource == ReRollSources.PRO || (selectedTarget != null
+			&& teamReRollSources.getOrDefault(selectedTarget, Collections.emptyList()).contains(reRollSource));
 	}
 
-	private static class CheckBoxes {
-		private JCheckBox trrFallback, mascotFallback;
-	}
 }

@@ -7,7 +7,13 @@ public interface MultiReRollMnemonics {
 
 	default List<Mnemonics> mnemonics() {
 		return new ArrayList<Mnemonics>() {{
-			add(new Mnemonics('T', 'N', 'B', 'H',
+			add(new Mnemonics(new ArrayList<Character>() {{
+				add('T');
+				add('K');
+				add('G');
+				add('D');
+				add('W');
+			}}, 'N', 'B', 'H',
 				new ArrayList<Character>() {{
 					add('P');
 					add('o');
@@ -17,13 +23,19 @@ public interface MultiReRollMnemonics {
 					add('C');
 					add('u');
 					add('m');
-				}}, 'S', 'f', 'p', 'n',
+				}}, 'S',
 				new ArrayList<Character>() {{
 					add('h');
 					add('i');
 					add('j');
 				}}));
-			add(new Mnemonics('e', 'l', 'r', 'h',
+			add(new Mnemonics(new ArrayList<Character>() {{
+				add('e');
+				add('Y');
+				add('Z');
+				add('J');
+				add('Q');
+			}}, 'l', 'r', 'h',
 				new ArrayList<Character>() {{
 					add('r');
 					add('y');
@@ -33,7 +45,7 @@ public interface MultiReRollMnemonics {
 					add('a');
 					add('f');
 					add('v');
-				}}, 'b', 'q', 's', 'u',
+				}}, 'b',
 				new ArrayList<Character>() {{
 					add('k');
 					add('l');
@@ -43,11 +55,11 @@ public interface MultiReRollMnemonics {
 	}
 
 	class Mnemonics {
-		private final char team, brawler, hatred, none, anyBlockDice, trrFallback, proFallback, proTrrFallback;
-		private final List<Character> pro, anyDie, singleBlockDie;
+		private final char brawler, hatred, none, anyBlockDice;
+		private final List<Character> team, pro, anyDie, singleBlockDie;
 
-		public Mnemonics(char team, char none, char brawler, char hatred, List<Character> pro, List<Character> anyDie,
-			char anyBlockDice, char trrFallback, char proFallback, char proTrrFallback, List<Character> singleBlockDie) {
+		public Mnemonics(List<Character> team, char none, char brawler, char hatred, List<Character> pro,
+			List<Character> anyDie, char anyBlockDice, List<Character> singleBlockDie) {
 			this.team = team;
 			this.none = none;
 			this.brawler = brawler;
@@ -55,13 +67,13 @@ public interface MultiReRollMnemonics {
 			this.pro = pro;
 			this.anyDie = anyDie;
 			this.anyBlockDice = anyBlockDice;
-			this.trrFallback = trrFallback;
-			this.proFallback = proFallback;
-			this.proTrrFallback = proTrrFallback;
 			this.singleBlockDie = singleBlockDie;
 		}
 
-		public char getTeam() {
+		/**
+		 * @return one mnemonic for each team re-roll option, in the order the options are offered
+		 */
+		public List<Character> getTeam() {
 			return team;
 		}
 
@@ -79,18 +91,6 @@ public interface MultiReRollMnemonics {
 
 		public char getAnyBlockDice() {
 			return anyBlockDice;
-		}
-
-		public char getTrrFallback() {
-			return trrFallback;
-		}
-
-		public char getProFallback() {
-			return proFallback;
-		}
-
-		public char getProTrrFallback() {
-			return proTrrFallback;
 		}
 
 		public List<Character> getPro() {

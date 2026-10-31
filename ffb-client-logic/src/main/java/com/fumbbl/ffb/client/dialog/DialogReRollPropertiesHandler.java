@@ -13,7 +13,7 @@ import com.fumbbl.ffb.model.Player;
  *
  * @author Kalimar
  */
-public class DialogReRollPropertiesHandler extends DialogHandler {
+public class DialogReRollPropertiesHandler extends AbstractReRollDialogHandler {
 
 	public DialogReRollPropertiesHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -49,14 +49,18 @@ public class DialogReRollPropertiesHandler extends DialogHandler {
 
 	}
 
-	public void dialogClosed(IDialog pDialog) {
+	@Override
+	protected void reRollDialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_PROPERTIES)) {
 			DialogReRollProperties reRollDialog = (DialogReRollProperties) pDialog;
 			if (reRollDialog.isUseSkill()) {
 				getClient().getCommunication().sendUseSkill(reRollDialog.getUsedSkill(), true, reRollDialog.getDialogParameter().getPlayerId(), reRollDialog.getReRolledAction());
+			} else if (reRollDialog.getReRollSource() != null) {
+				selectTeamReRoll(reRollDialog.getDialogParameter(), reRollDialog.getReRollSource(),
+					source -> getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), source));
 			} else {
-				getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource());
+				getClient().getCommunication().sendUseReRoll(reRollDialog.getReRolledAction(), null);
 			}
 		}
 	}
