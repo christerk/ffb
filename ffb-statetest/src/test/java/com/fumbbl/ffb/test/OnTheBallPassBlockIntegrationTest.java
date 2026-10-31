@@ -11,7 +11,6 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,7 +100,6 @@ public class OnTheBallPassBlockIntegrationTest {
 			"Expected turn mode to NOT be PASS_BLOCK when defender has no tacklezones");
 	}
 
-	@Disabled("Requires removing DUMP_OFF guard in StepPassBlock.executeStep()")
 	@Test
 	public void blockOnThrowerWithDumpOffTriggersPassBlock() {
 		GameState state = new GameStateBuilder(testServer.getGameState())
@@ -127,7 +125,11 @@ public class OnTheBallPassBlockIntegrationTest {
 		IStep step = StepEngine.respond(state, Commands.pass("away_thrower", new FieldCoordinate(14, 7)));
 		assertNotNull(step, "Expected a step after pass command");
 
-		assertEquals(TurnMode.PASS_BLOCK, game.getTurnMode(),
-			"PASS_BLOCK should be triggered during dump-off pass sequence");
+		assertEquals(TurnMode.DUMP_OFF_PASS_BLOCK, game.getTurnMode(),
+			"DUMP_OFF_PASS_BLOCK should be triggered during dump-off pass sequence");
+		assertTrue(game.isHomePlaying(),
+			"Expected home team to keep playing during DUMP_OFF_PASS_BLOCK");
+		assertTrue(game.getFieldModel().getPlayerState(game.getPlayerById("home_otb")).isActive(),
+			"Expected home player with On The Ball to be active");
 	}
 }
