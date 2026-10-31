@@ -108,16 +108,60 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void teamReRollFailsIfOnlySingleUseReRollIsLeft() {
+	void teamReRollFallsBackToSingleUseReRollIfNoOtherIsLeft() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollsPumpUpTheCrowdOneDrive(1);
 		failJumpUp(state, 1, 4, 5);
 		reRoll(state, ReRollSources.TEAM_RE_ROLL);
-		assertFalse(stoodUp(state));
-		assertEquals(1, turnData(state).getReRollsPumpUpTheCrowdOneDrive());
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRollsPumpUpTheCrowdOneDrive());
+		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void teamReRollPrefersLeaderOverSingleUseReRoll() {
+		GameState state = buildState();
+		turnData(state).setReRolls(2);
+		turnData(state).setLeaderState(LeaderState.AVAILABLE);
+		turnData(state).setReRollShowStarOneDrive(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.TEAM_RE_ROLL);
+		assertTrue(stoodUp(state));
+		assertEquals(LeaderState.USED, turnData(state).getLeaderState());
+		assertEquals(1, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
-		assertEquals(4, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void unavailableMascotFallsBackToTeamReRoll() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.MASCOT_TRR);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void unavailableMascotAfterFailedProFallsBackToTeamReRoll() {
+		GameState state = buildState("Pro");
+		turnData(state).setReRolls(1);
+		// jump up 1, pro 1, pro 3, jump up 4
+		failJumpUp(state, 1, 1, 3, 4, 5);
+		reRoll(state, ReRollSources.PRO_MASCOT_TRR);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void unavailableMascotWithoutFallbackFails() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.MASCOT);
+		assertFalse(stoodUp(state));
+		assertEquals(1, turnData(state).getReRolls());
 	}
 
 	@Test

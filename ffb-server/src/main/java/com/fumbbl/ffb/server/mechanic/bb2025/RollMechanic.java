@@ -370,10 +370,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		boolean teamReRollAvailable =
 			teamReRollSource != null && isTeamReRollSourceAvailable(gameState, player, turnData, teamReRollSource);
 
-		if (composition.isMascot()) {
-			if (!isMascotAvailable(gameState, player)) {
-				return false;
-			}
+		if (composition.isMascot() && isMascotAvailable(gameState, player)) {
 			InducementType mascotType = turnData.getInducementSet().forUsage(Usage.CONDITIONAL_REROLL);
 			int mascotRoll = gameState.getDiceRoller().rollDice(6);
 			boolean successful = mascotRoll >= MASCOT_MINIMUM_ROLL;
@@ -392,13 +389,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private boolean isTeamReRollSourceAvailable(GameState gameState, Player<?> player, TurnData turnData,
 		ReRollSource teamReRollSource) {
-		if (!isTeamReRollAvailable(gameState, player)) {
-			return false;
-		}
-		if (ReRollSources.TEAM_RE_ROLL == teamReRollSource) {
-			return LeaderState.AVAILABLE.equals(turnData.getLeaderState()) || regularReRolls(turnData) > 0;
-		}
-		return ReRollSources.SINGLE_USE_RE_ROLL == teamReRollSource && findSingleUseReRollSource(turnData) != null;
+		return isTeamReRollAvailable(gameState, player) && findUsedTeamReRollSource(turnData, teamReRollSource) != null;
 	}
 
 	// leader and single use re-rolls are included in the total amount of re-rolls
@@ -466,16 +457,22 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	// single use re-rolls have to be selected explicitly, a regular team re-roll uses Leader first
+	// single use re-rolls are selected explicitly, a regular team re-roll uses Leader first and falls back to a single
+	// use re-roll only if no other team re-roll is left (e.g. for dialogs that only offer a plain team re-roll)
 	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
 		if (ReRollSources.SINGLE_USE_RE_ROLL == selectedSource) {
 			return findSingleUseReRollSource(turnData);
 		}
+		if (ReRollSources.TEAM_RE_ROLL != selectedSource) {
+			return null;
+		}
 		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			return ReRollSources.LEADER;
 		}
-
-		return ReRollSources.TEAM_RE_ROLL;
+		if (regularReRolls(turnData) > 0) {
+			return ReRollSources.TEAM_RE_ROLL;
+		}
+		return findSingleUseReRollSource(turnData);
 	}
 
 	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource) {
