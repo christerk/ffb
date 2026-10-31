@@ -66,6 +66,7 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.KnockoutReserveService;
 import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -164,7 +165,8 @@ public class StepApothecary extends AbstractStep {
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement clientCommandUseInducement =
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE) {
+					if ((fInjuryResult != null)
+						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_IGOR_USE)) {
 						InducementType inducementType = clientCommandUseInducement.getInducementType();
 						Player<?> player = injuredPlayer();
 						if (inducementType != null && inducementType.hasUsage(Usage.REGENERATION)) {
@@ -195,6 +197,11 @@ public class StepApothecary extends AbstractStep {
 							fInjuryResult.injuryContext().setApothecaryStatus(newStatus);
 							fInjuryResult.passedRegeneration();
 						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					} else if ((fInjuryResult != null)
+						&& (fInjuryResult.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)) {
+						new KnockoutReserveService().use(this, fInjuryResult, injuredPlayer(),
+							clientCommandUseInducement.getInducementType(), getTurnData().getInducementSet());
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -375,6 +382,10 @@ public class StepApothecary extends AbstractStep {
 		}
 
 
+		if (offerKnockoutReserve()) {
+			return;
+		}
+
 		fInjuryResult.applyTo(this);
 		StateMechanic stateMechanic = game.getMechanic(Mechanic.Type.STATE);
 
@@ -449,6 +460,19 @@ public class StepApothecary extends AbstractStep {
 		return inducementSet.getInducementMapping().keySet().stream()
 			.filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSet.hasUsesLeft(type))
 			.sorted(Comparator.comparingInt(InducementType::getPriority)).collect(Collectors.toList());
+	}
+
+	private boolean offerKnockoutReserve() {
+		KnockoutReserveService knockoutReserveService = new KnockoutReserveService();
+		if (!knockoutReserveService.isEligible(fInjuryResult)) {
+			return false;
+		}
+		Optional<InducementType> inducementType = knockoutReserveService.availableInducement(getTurnData().getInducementSet());
+		if (inducementType.isPresent()) {
+			knockoutReserveService.offer(this, fInjuryResult, injuredPlayer(), inducementType.get());
+			return true;
+		}
+		return false;
 	}
 
 	private int remainingApos() {

@@ -113,6 +113,12 @@ public class GameOptionFactory {
 			case INDUCEMENT_APOS_MAX:
 				return new GameOptionInt(pOptionId).setDefault(2)
 					.setMessage("Coaches may purchase up to $1 wandering apothecarie(s).");
+			case INDUCEMENT_BRETONNIAN_PASTRIES_COST:
+				return new GameOptionInt(pOptionId).setDefault(15000)
+					.setMessage("Bretonnian Pastries can be purchased for $1 gps.");
+			case INDUCEMENT_BRETONNIAN_PASTRIES_MAX:
+				return new GameOptionInt(pOptionId).setDefault(1)
+					.setMessage("Coaches may purchase up to $1 Bretonnian Pastries.");
 			case INDUCEMENT_BRIBES_COST:
 				return new GameOptionInt(pOptionId).setDefault(100000).setMessage("Bribes can be purchased for $1 gps each.");
 			case INDUCEMENT_BRIBES_REDUCED_COST:

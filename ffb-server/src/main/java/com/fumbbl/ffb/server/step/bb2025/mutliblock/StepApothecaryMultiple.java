@@ -25,6 +25,7 @@ import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
 import com.fumbbl.ffb.injury.context.InjuryContext;
 import com.fumbbl.ffb.json.JsonArrayOption;
+import com.fumbbl.ffb.json.JsonIntArrayOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.mechanics.InjuryMechanic;
 import com.fumbbl.ffb.mechanics.Mechanic;
@@ -74,14 +75,17 @@ import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.KnockoutReserveService;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.RaiseType;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -89,9 +93,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class StepApothecaryMultiple extends AbstractStep {
+
+	private static final Set<ApothecaryStatus> KNOCKOUT_RESERVE_STATUSES = EnumSet.of(
+		ApothecaryStatus.WAIT_FOR_PASTRIES_USE, ApothecaryStatus.DO_NOT_USE_PASTRIES, ApothecaryStatus.USE_PASTRIES);
+	private static final Set<ApothecaryStatus> APOTHECARY_TREATED_STATUSES = EnumSet.of(
+		ApothecaryStatus.USE_APOTHECARY, ApothecaryStatus.WAIT_FOR_APOTHECARY_CHOICE, ApothecaryStatus.RESULT_CHOICE);
 
 	private List<InjuryResult> injuryResults = new ArrayList<>(), regenerationFailedResults,
 		gettingEvenResults = new ArrayList<>(), deadResults = new ArrayList<>();
@@ -135,7 +145,10 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_USE_INDUCEMENT:
 					ClientCommandUseInducement clientCommandUseInducement =
 						(ClientCommandUseInducement) pReceivedCommand.getCommand();
-					if (ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
+					Optional<InjuryResult> knockoutReserveResult = injuryWaitingForKnockoutReserve();
+					if (knockoutReserveResult.isPresent()) {
+						handleKnockoutReserve(knockoutReserveResult.get(), clientCommandUseInducement.getInducementType());
+					} else if (ArrayTool.isProvided(clientCommandUseInducement.getPlayerIds())) {
 						regenerationFailedResults.stream().filter(
 								result -> result.injuryContext().getDefenderId().equals(clientCommandUseInducement.getPlayerIds()[0]))
 							.findFirst().ifPresent(result -> {
@@ -433,11 +446,20 @@ public class StepApothecaryMultiple extends AbstractStep {
 		}
 
 
+		if (offerKnockoutReserve()) {
+			return;
+		}
+
 		boolean doubleAttackerDown = injuryResults.size() == 2 && game.getTeamById(teamId) == game.getActingTeam();
 		// this only happens in case of a double attacker down
 		if (doubleAttackerDown) {
 			if (regenerationFailedResults.isEmpty()) {
-				if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
+				Optional<InjuryResult> knockoutReserveResult = successfulKnockoutReserve();
+				if (knockoutReserveResult.isPresent()) {
+					// successful pastries decide the outcome for the player
+					knockoutReserveResult.get().applyTo(this, true);
+					UtilServerGame.syncGameModel(this);
+				} else if (injuryResults.stream().allMatch(result -> result.injuryContext().isReserve())) {
 					injuryResults.get(0).applyTo(this, true);
 					UtilServerGame.syncGameModel(this);
 				}
@@ -541,6 +563,73 @@ public class StepApothecaryMultiple extends AbstractStep {
 			}
 			checkRaiseDead();
 		}
+	}
+
+	private boolean offerKnockoutReserve() {
+		KnockoutReserveService knockoutReserveService = new KnockoutReserveService();
+		Optional<InducementType> inducementType =
+			knockoutReserveService.availableInducement(getTurnData().getInducementSet());
+		if (!inducementType.isPresent()) {
+			return false;
+		}
+		Optional<InjuryResult> knockedOutResult = regenerationFailedResults.stream()
+			.filter(result -> knockoutReserveService.isEligible(result)
+				&& canBeMovedToReserves(result))
+			.findFirst();
+		if (knockedOutResult.isPresent()) {
+			InjuryResult result = knockedOutResult.get();
+			knockoutReserveService.offer(this, result, injuredPlayer(result, getGameState().getGame()),
+				inducementType.get());
+			return true;
+		}
+		return false;
+	}
+
+	private Optional<InjuryResult> injuryWaitingForKnockoutReserve() {
+		if (regenerationFailedResults == null) {
+			return Optional.empty();
+		}
+		return regenerationFailedResults.stream()
+			.filter(result -> result.injuryContext().getApothecaryStatus() == ApothecaryStatus.WAIT_FOR_PASTRIES_USE)
+			.findFirst();
+	}
+
+	private void handleKnockoutReserve(InjuryResult result, InducementType inducementType) {
+		boolean successful = new KnockoutReserveService().use(this, result, injuredPlayer(result, getGameState().getGame()),
+			inducementType, getTurnData().getInducementSet());
+		if (successful) {
+			// the pastries decide the outcome for that player, so none of his other injuries is re-applied afterwards
+			String defenderId = result.injuryContext().getDefenderId();
+			regenerationFailedResults.removeIf(other -> defenderId.equals(other.injuryContext().getDefenderId()));
+		}
+	}
+
+	/**
+	 * The pastries are offered for a knocked out player at most once in this step, and not at all if the apothecary
+	 * treated one of his injuries or if another of his injuries is a casualty that decides his outcome anyway.
+	 */
+	private boolean canBeMovedToReserves(InjuryResult knockedOutResult) {
+		String defenderId = knockedOutResult.injuryContext().getDefenderId();
+		return allInjuryResults()
+			.filter(result -> defenderId.equals(result.injuryContext().getDefenderId()))
+			.noneMatch(result -> {
+				ApothecaryStatus status = result.injuryContext().getApothecaryStatus();
+				return KNOCKOUT_RESERVE_STATUSES.contains(status) || APOTHECARY_TREATED_STATUSES.contains(status)
+					|| ((result != knockedOutResult) && regenerationFailedResults.contains(result)
+					&& result.injuryContext().isCasualty());
+			});
+	}
+
+	private Optional<InjuryResult> successfulKnockoutReserve() {
+		return allInjuryResults().filter(result ->
+				result.injuryContext().getApothecaryStatus() == ApothecaryStatus.USE_PASTRIES
+					&& result.injuryContext().isReserve())
+			.findFirst();
+	}
+
+	private Stream<InjuryResult> allInjuryResults() {
+		return Stream.concat(injuryResults.stream(),
+			regenerationFailedResults == null ? Stream.empty() : regenerationFailedResults.stream());
 	}
 
 	private void checkRaiseDead() {
@@ -815,10 +904,20 @@ public class StepApothecaryMultiple extends AbstractStep {
 	@Override
 	public JsonObject toJsonValue() {
 		JsonObject jsonObject = super.toJsonValue();
+		IServerJsonOption.TEAM_ID.addTo(jsonObject, teamId);
+		// every injury is serialized once, the other lists refer to it by index so they share the same objects
+		// after a reload
+		addInjuriesToJson(injuryResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
+		if (regenerationFailedResults != null) {
+			IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED.addTo(jsonObject,
+				injuryIndexes(regenerationFailedResults));
+		}
+		IServerJsonOption.INJURY_RESULT_INDEXES_DEAD.addTo(jsonObject, injuryIndexes(deadResults));
+		IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN.addTo(jsonObject, injuryIndexes(gettingEvenResults));
+		// the lists are also written in the previous format so servers not knowing the indexes can still read them
 		if (regenerationFailedResults != null) {
 			addInjuriesToJson(regenerationFailedResults, IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, jsonObject);
 		}
-		addInjuriesToJson(injuryResults, IServerJsonOption.INJURY_RESULTS, jsonObject);
 		addInjuriesToJson(deadResults, IServerJsonOption.INJURY_RESULTS_DEAD, jsonObject);
 		addInjuriesToJson(gettingEvenResults, IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, jsonObject);
 
@@ -835,23 +934,162 @@ public class StepApothecaryMultiple extends AbstractStep {
 		jsonOption.addTo(jsonObject, injuriesAsJson);
 	}
 
+	private int[] injuryIndexes(List<InjuryResult> results) {
+		return results.stream().mapToInt(this::injuryIndex).filter(index -> index >= 0).toArray();
+	}
+
+	private int injuryIndex(InjuryResult result) {
+		for (int index = 0; index < injuryResults.size(); index++) {
+			if (injuryResults.get(index) == result) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	private List<InjuryResult> injuriesAt(int[] indexes) {
+		List<InjuryResult> results = new ArrayList<>();
+		for (int index : indexes) {
+			results.add(injuryResults.get(index));
+		}
+		return results;
+	}
+
 	@Override
 	public StepApothecaryMultiple initFrom(IFactorySource source, JsonValue jsonValue) {
 		super.initFrom(source, jsonValue);
 		JsonObject jsonObject = UtilJson.toJsonObject(jsonValue);
-		if (IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED.isDefinedIn(jsonObject)) {
-			regenerationFailedResults =
-				initInjuries(IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, source, jsonObject);
-		}
 		injuryResults = initInjuries(IServerJsonOption.INJURY_RESULTS, source, jsonObject);
-		deadResults = initInjuries(IServerJsonOption.INJURY_RESULTS_DEAD, source, jsonObject);
-		gettingEvenResults = initInjuries(IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, source, jsonObject);
+		regenerationFailedResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_REGENERATION_FAILED,
+			IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED, source, jsonObject);
+		deadResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_DEAD, IServerJsonOption.INJURY_RESULTS_DEAD,
+			source, jsonObject);
+		if (deadResults == null) {
+			deadResults = new ArrayList<>();
+		}
+		gettingEvenResults = initInjuries(IServerJsonOption.INJURY_RESULT_INDEXES_GETTING_EVEN,
+			IServerJsonOption.INJURY_RESULTS_GETTING_EVEN, source, jsonObject);
+		if (gettingEvenResults == null) {
+			gettingEvenResults = new ArrayList<>();
+		}
+
+		teamId = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
+		if (teamId == null && !injuryResults.isEmpty()) {
+			// steps saved before the team id was serialized only hold injuries of the handled team
+			teamId = getGameState().getGame().getPlayerById(injuryResults.get(0).injuryContext().getDefenderId())
+				.getTeam().getId();
+		}
 
 		availableKeyWordsMap = IServerJsonOption.AVAILABLE_KEYWORDS_MAP.getFrom(source, jsonObject).entrySet().stream()
 			.collect(
 				Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(Keyword::forName).collect(
 					Collectors.toList())));
 		return this;
+	}
+
+	/**
+	 * @return the injuries referenced by index, or for steps saved before indexes were used the separately serialized
+	 * injuries mapped onto the main list, null if neither is defined
+	 */
+	private List<InjuryResult> initInjuries(JsonIntArrayOption indexOption, JsonArrayOption legacyOption,
+		IFactorySource source, JsonObject jsonObject) {
+		if (indexOption.isDefinedIn(jsonObject)) {
+			return injuriesAt(indexOption.getFrom(source, jsonObject));
+		}
+		if (legacyOption.isDefinedIn(jsonObject)) {
+			List<InjuryResult> results = reconcileWithInjuryResults(initInjuries(legacyOption, source, jsonObject));
+			if (legacyOption == IServerJsonOption.INJURY_RESULTS_REGENERATION_FAILED) {
+				// a decided apothecary result always leaves this list, a stale copy may still have kept it there
+				results.removeIf(result -> result.injuryContext().getApothecaryStatus() == ApothecaryStatus.RESULT_CHOICE);
+			}
+			return results;
+		}
+		return null;
+	}
+
+	/**
+	 * Steps saved before injuries were referenced by index hold a separate copy of each injury per list. Every copy
+	 * is mapped onto the injury of the main list it was copied from: an identical injury of the same player if there
+	 * is one, otherwise the next unmatched injury of that player. If the two disagree, the one further along in the
+	 * apothecary / pastries handling is kept (see {@link #progress(InjuryResult)}), on a tie the copy. A copy without
+	 * any counterpart is added to the main list, so nothing is dropped.
+	 */
+	private List<InjuryResult> reconcileWithInjuryResults(List<InjuryResult> copies) {
+		List<InjuryResult> results = new ArrayList<>();
+		Set<Integer> matchedIndexes = new HashSet<>();
+		for (InjuryResult copy : copies) {
+			JsonObject copyAsJson = copy.toJsonValue();
+			String defenderId = copy.injuryContext().getDefenderId();
+			int identicalIndex = -1;
+			int samePlayerIndex = -1;
+			for (int index = 0; index < injuryResults.size() && identicalIndex < 0; index++) {
+				InjuryResult candidate = injuryResults.get(index);
+				if (!matchedIndexes.contains(index)
+					&& StringTool.isEqual(defenderId, candidate.injuryContext().getDefenderId())) {
+					if (copyAsJson.equals(candidate.toJsonValue())) {
+						identicalIndex = index;
+					} else if (samePlayerIndex < 0) {
+						samePlayerIndex = index;
+					}
+				}
+			}
+			int index = identicalIndex;
+			if (index < 0 && samePlayerIndex >= 0) {
+				index = samePlayerIndex;
+				InjuryResult mainResult = injuryResults.get(index);
+				if (progress(copy) >= progress(mainResult)) {
+					replaceInjury(mainResult, copy);
+				}
+			}
+			if (index < 0) {
+				injuryResults.add(copy);
+				index = injuryResults.size() - 1;
+			}
+			matchedIndexes.add(index);
+			results.add(injuryResults.get(index));
+		}
+		return results;
+	}
+
+	/**
+	 * @return how far the injury got in this step: undecided apothecary use, apothecary used, apothecary decided
+	 * (used with a pending choice, not used or not available) or pastries offered, final result (apothecary result
+	 * chosen, pastries used or declined); a passed regeneration counts as a little further
+	 */
+	private static int progress(InjuryResult injuryResult) {
+		ApothecaryStatus status = injuryResult.injuryContext().getApothecaryStatus();
+		int stage;
+		switch (status == null ? ApothecaryStatus.NO_APOTHECARY : status) {
+			case DO_REQUEST:
+			case WAIT_FOR_APOTHECARY_USE:
+			case WAIT_FOR_IGOR_USE:
+				stage = 0;
+				break;
+			case USE_IGOR:
+			case DO_NOT_USE_IGOR:
+			case NO_APOTHECARY:
+			case DO_NOT_USE_APOTHECARY:
+			case USE_APOTHECARY:
+				stage = 1;
+				break;
+			case WAIT_FOR_APOTHECARY_CHOICE:
+			case WAIT_FOR_PASTRIES_USE:
+				stage = 2;
+				break;
+			default:
+				stage = 3;
+				break;
+		}
+		return 2 * stage + (injuryResult.isPreRegeneration() ? 0 : 1);
+	}
+
+	private void replaceInjury(InjuryResult oldResult, InjuryResult newResult) {
+		for (List<InjuryResult> results : Arrays.asList(injuryResults, regenerationFailedResults, deadResults,
+			gettingEvenResults)) {
+			if (results != null) {
+				results.replaceAll(result -> result == oldResult ? newResult : result);
+			}
+		}
 	}
 
 	private List<InjuryResult> initInjuries(JsonArrayOption injuryResultsGettingEven, IFactorySource source,
