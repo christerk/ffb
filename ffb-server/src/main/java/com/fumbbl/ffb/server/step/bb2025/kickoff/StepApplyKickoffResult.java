@@ -760,32 +760,28 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		getResult().addReport(new ReportKickoffDodgySnack(rollHome, rollAway, playerIds));
 
-		boolean update = false;
 		if (playerHome != null) {
-			update |= dodgySnackEffect(game, playerHome);
+			dodgySnackEffect(game, playerHome);
 		}
 
 		if (playerAway != null) {
-			update |= dodgySnackEffect(game, playerAway);
+			dodgySnackEffect(game, playerAway);
 		}
 
-		if (update) {
-			getGameState().updatePlayerMarkings();
-		}
+		UtilServerGame.updatePlayerStateDependentProperties(this);
+		getGameState().updatePlayerMarkings();
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private boolean dodgySnackEffect(Game game, Player<?> player) {
+	private void dodgySnackEffect(Game game, Player<?> player) {
 		int roll = getGameState().getDiceRoller().rollDice(6);
 		getResult().addReport(new ReportDodgySnackRoll(roll, player.getId()));
 		if (roll == 1) {
 			FieldModel fieldModel = game.getFieldModel();
 			fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(PlayerState.RESERVE));
 			UtilBox.putPlayerIntoBox(game, player);
-			return false;
 		} else {
 			game.getFieldModel().addEnhancements(player, KickoffResult.DODGY_SNACK.getName());
-			return true;
 		}
 	}
 
