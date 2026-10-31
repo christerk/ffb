@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @RulesCollection(RulesCollection.Rules.BB2025)
 public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
@@ -397,7 +398,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (ReRollSources.TEAM_RE_ROLL == teamReRollSource) {
 			return LeaderState.AVAILABLE.equals(turnData.getLeaderState()) || regularReRolls(turnData) > 0;
 		}
-		return isSpecialReRollSourceAvailable(turnData, teamReRollSource);
+		return ReRollSources.SINGLE_USE_RE_ROLL == teamReRollSource && findSingleUseReRollSource(turnData) != null;
 	}
 
 	// leader and single use re-rolls are included in the total amount of re-rolls
@@ -467,8 +468,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	// single use re-rolls have to be selected explicitly, a regular team re-roll uses Leader first
 	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
-		if (isSpecialReRollSourceAvailable(turnData, selectedSource)) {
-			return selectedSource;
+		if (ReRollSources.SINGLE_USE_RE_ROLL == selectedSource) {
+			return findSingleUseReRollSource(turnData);
 		}
 		if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			return ReRollSources.LEADER;
@@ -486,6 +487,13 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (ReRollSources.LEADER == usedReRollSource && LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 			turnData.setLeaderState(LeaderState.USED);
 		}
+	}
+
+	// all single use re-rolls behave the same, so the first available one is used
+	private ReRollSource findSingleUseReRollSource(TurnData turnData) {
+		return Stream.of(ReRollSources.BRILLIANT_COACHING, ReRollSources.PUMP_UP_THE_CROWD, ReRollSources.SHOW_STAR)
+			.filter(source -> isSpecialReRollSourceAvailable(turnData, source))
+			.findFirst().orElse(null);
 	}
 
 	private boolean isSpecialReRollSourceAvailable(TurnData turnData, ReRollSource reRollSource) {
@@ -595,14 +603,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	@Override
 	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
-		if (turnData.getReRollsBrilliantCoachingOneDrive() > 0) {
-			return Optional.of(ReRollProperty.BRILLIANT_COACHING);
-		}
-		if (turnData.getReRollsPumpUpTheCrowdOneDrive() > 0) {
-			return Optional.of(ReRollProperty.PUMP_UP_THE_CROWD);
-		}
-		if (turnData.getReRollShowStarOneDrive() > 0) {
-			return Optional.of(ReRollProperty.SHOW_STAR);
+		if (findSingleUseReRollSource(turnData) != null) {
+			return Optional.of(ReRollProperty.SINGLE_USE);
 		}
 		return Optional.empty();
 	}
@@ -669,11 +671,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 		if (isTeamReRollAvailable(gameState, player)) {
 			properties.add(ReRollProperty.TRR);
-			reRollSourceComposer.singleUseSources().forEach((property, source) -> {
-				if (isSpecialReRollSourceAvailable(turnData, source)) {
-					properties.add(property);
-				}
-			});
+			findAdditionalReRollProperty(turnData).ifPresent(properties::add);
 			if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 				properties.add(ReRollProperty.LEADER);
 			}

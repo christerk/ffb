@@ -88,8 +88,8 @@ class TeamReRollSourceTest {
 		turnData(state).setReRollsBrilliantCoachingOneDrive(1);
 		failJumpUp(state, 1, 4, 5);
 		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
-		assertTrue(dialog(state).hasProperty(ReRollProperty.BRILLIANT_COACHING));
-		reRoll(state, ReRollSources.BRILLIANT_COACHING);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.SINGLE_USE));
+		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsBrilliantCoachingOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
@@ -121,11 +121,23 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
+	void singleUseReRollUsesAnyAvailableType() {
+		GameState state = buildState();
+		turnData(state).setReRolls(2);
+		turnData(state).setReRollShowStarOneDrive(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRollShowStarOneDrive());
+		assertEquals(1, turnData(state).getReRolls());
+	}
+
+	@Test
 	void unavailableSingleUseReRollFails() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
 		failJumpUp(state, 1, 4, 5);
-		reRoll(state, ReRollSources.SHOW_STAR);
+		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
 		assertFalse(stoodUp(state));
 		assertEquals(1, turnData(state).getReRolls());
 	}
@@ -151,7 +163,7 @@ class TeamReRollSourceTest {
 		turnData(state).setReRollsBrilliantCoachingOneDrive(1);
 		failJumpUp(state, 1, 3, 4, 5);
 		assertTrue(dialog(state).hasProperty(ReRollProperty.MASCOT));
-		reRoll(state, ReRollSources.MASCOT_BRILLIANT_COACHING);
+		reRoll(state, ReRollSources.MASCOT_SINGLE_USE);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsBrilliantCoachingOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
@@ -164,7 +176,7 @@ class TeamReRollSourceTest {
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollShowStarOneDrive(1);
 		failJumpUp(state, 1, 4, 4, 5);
-		reRoll(state, ReRollSources.MASCOT_SHOW_STAR);
+		reRoll(state, ReRollSources.MASCOT_SINGLE_USE);
 		assertTrue(stoodUp(state));
 		assertEquals(1, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
@@ -176,10 +188,34 @@ class TeamReRollSourceTest {
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollShowStarOneDrive(1);
 		failJumpUp(state, 1, 1, 3, 4, 5);
-		reRoll(state, ReRollSources.PRO_SHOW_STAR);
+		reRoll(state, ReRollSources.PRO_SINGLE_USE);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void teamReRollFallbackOnlyReRollsProAfterPassedLoner() {
+		GameState state = buildState("Pro", "Loner");
+		turnData(state).setReRolls(1);
+		// jump up 1, pro 1, loner 4, pro 3, jump up 4
+		failJumpUp(state, 1, 1, 4, 3, 4, 5);
+		reRoll(state, ReRollSources.PRO_TRR);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
+	}
+
+	@Test
+	void failedLonerKeepsFailedProRoll() {
+		GameState state = buildState("Pro", "Loner");
+		turnData(state).setReRolls(1);
+		// jump up 1, pro 1, loner 1: neither the pro roll nor the jump up roll is re-rolled
+		failJumpUp(state, 1, 1, 1, 5);
+		reRoll(state, ReRollSources.PRO_TRR);
+		assertFalse(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+		assertEquals(5, state.getDiceRoller().rollSkill());
 	}
 
 	@Test
@@ -189,7 +225,7 @@ class TeamReRollSourceTest {
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollsPumpUpTheCrowdOneDrive(1);
 		failJumpUp(state, 1, 1, 3, 3, 4, 5);
-		reRoll(state, ReRollSources.PRO_MASCOT_PUMP_UP_THE_CROWD);
+		reRoll(state, ReRollSources.PRO_MASCOT_SINGLE_USE);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsPumpUpTheCrowdOneDrive());
 		assertEquals(0, turnData(state).getReRolls());

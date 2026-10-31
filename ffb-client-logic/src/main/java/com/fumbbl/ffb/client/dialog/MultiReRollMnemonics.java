@@ -11,8 +11,6 @@ public interface MultiReRollMnemonics {
 				add('T');
 				add('K');
 				add('G');
-				add('D');
-				add('W');
 			}}, 'N', 'B', 'H',
 				new ArrayList<Character>() {{
 					add('P');
@@ -33,8 +31,6 @@ public interface MultiReRollMnemonics {
 				add('e');
 				add('Y');
 				add('Z');
-				add('J');
-				add('Q');
 			}}, 'l', 'r', 'h',
 				new ArrayList<Character>() {{
 					add('r');

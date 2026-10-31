@@ -34,6 +34,9 @@ public class DialogExtensionMascot {
 		if (teamReRollSource == ReRollSources.LEADER) {
 			return "Leader Re-Roll";
 		}
+		if (teamReRollSource == ReRollSources.SINGLE_USE_RE_ROLL) {
+			return "Single Use Re-Roll";
+		}
 		return teamReRollSource.getName(game);
 	}
 
@@ -41,14 +44,8 @@ public class DialogExtensionMascot {
 		if (teamReRollSource == ReRollSources.MASCOT) {
 			return KeyEvent.VK_K;
 		}
-		if (teamReRollSource == ReRollSources.BRILLIANT_COACHING) {
+		if (teamReRollSource == ReRollSources.SINGLE_USE_RE_ROLL) {
 			return KeyEvent.VK_G;
-		}
-		if (teamReRollSource == ReRollSources.PUMP_UP_THE_CROWD) {
-			return KeyEvent.VK_D;
-		}
-		if (teamReRollSource == ReRollSources.SHOW_STAR) {
-			return KeyEvent.VK_W;
 		}
 		if (teamReRollSource == ReRollSources.LEADER) {
 			return KeyEvent.VK_L;

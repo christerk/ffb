@@ -64,8 +64,8 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 	@Test
 	void stripsTeamReRollPropertiesForSkillsUsableEveryTurn() {
 		ReRollOptions reRollOptions = new ReRollOptions(
-			Arrays.asList(ReRollProperty.TRR, ReRollProperty.MASCOT, ReRollProperty.BRILLIANT_COACHING,
-				ReRollProperty.PUMP_UP_THE_CROWD, ReRollProperty.SHOW_STAR, ReRollProperty.LONER, ReRollProperty.PRO),
+			Arrays.asList(ReRollProperty.TRR, ReRollProperty.MASCOT, ReRollProperty.SINGLE_USE, ReRollProperty.LEADER,
+				ReRollProperty.LONER, ReRollProperty.PRO),
 			skill(SkillUsageType.REGULAR));
 
 		DialogReRollModifierChoiceParameter parameter = create(reRollOptions, true);
@@ -73,9 +73,8 @@ class ReRollModifierChoiceDialogParameterFactoryTest {
 		assertTrue(parameter.hasProperty(ReRollProperty.PRO));
 		assertFalse(parameter.hasProperty(ReRollProperty.TRR));
 		assertFalse(parameter.hasProperty(ReRollProperty.MASCOT));
-		assertFalse(parameter.hasProperty(ReRollProperty.BRILLIANT_COACHING));
-		assertFalse(parameter.hasProperty(ReRollProperty.PUMP_UP_THE_CROWD));
-		assertFalse(parameter.hasProperty(ReRollProperty.SHOW_STAR));
+		assertFalse(parameter.hasProperty(ReRollProperty.SINGLE_USE));
+		assertFalse(parameter.hasProperty(ReRollProperty.LEADER));
 		assertFalse(parameter.hasProperty(ReRollProperty.LONER));
 	}
 

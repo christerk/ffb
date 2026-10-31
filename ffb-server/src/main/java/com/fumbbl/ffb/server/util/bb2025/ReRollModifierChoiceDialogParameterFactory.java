@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public class ReRollModifierChoiceDialogParameterFactory implements ReRollDialogParameterFactory {
 
 	private static final List<ReRollProperty> TEAM_RE_ROLL_PROPERTIES = Collections.unmodifiableList(
-		Arrays.asList(ReRollProperty.TRR, ReRollProperty.MASCOT, ReRollProperty.BRILLIANT_COACHING,
-			ReRollProperty.PUMP_UP_THE_CROWD, ReRollProperty.SHOW_STAR, ReRollProperty.LEADER, ReRollProperty.LONER));
+		Arrays.asList(ReRollProperty.TRR, ReRollProperty.MASCOT, ReRollProperty.SINGLE_USE, ReRollProperty.LEADER,
+			ReRollProperty.LONER));
 
 	private final int roll;
 	private final List<ModifierChoiceOption> modifierOptions;

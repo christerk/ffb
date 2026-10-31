@@ -15,8 +15,8 @@ class ReRollSourceComposerTest {
 
 	private final ReRollSourceComposer composer = new ReRollSourceComposer();
 
-	private static final List<ReRollSource> TEAM_SOURCES = Arrays.asList(null, ReRollSources.TEAM_RE_ROLL,
-		ReRollSources.BRILLIANT_COACHING, ReRollSources.PUMP_UP_THE_CROWD, ReRollSources.SHOW_STAR);
+	private static final List<ReRollSource> TEAM_SOURCES =
+		Arrays.asList(null, ReRollSources.TEAM_RE_ROLL, ReRollSources.SINGLE_USE_RE_ROLL);
 
 	@Test
 	void composedSourcesDecomposeIntoTheirParts() {
@@ -92,21 +92,20 @@ class ReRollSourceComposerTest {
 
 	@Test
 	void singleUseAndLeaderAreOfferedTogether() {
-		assertEquals(Arrays.asList(ReRollSources.MASCOT, ReRollSources.BRILLIANT_COACHING, ReRollSources.SHOW_STAR,
-				ReRollSources.LEADER),
-			composer.teamReRollSources(properties(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.SHOW_STAR,
-				ReRollProperty.BRILLIANT_COACHING, ReRollProperty.LEADER), true));
+		assertEquals(Arrays.asList(ReRollSources.MASCOT, ReRollSources.SINGLE_USE_RE_ROLL, ReRollSources.LEADER),
+			composer.teamReRollSources(properties(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.SINGLE_USE,
+				ReRollProperty.LEADER), true));
 	}
 
 	@Test
 	void singleUseReplacesTeamReRoll() {
-		assertEquals(Collections.singletonList(ReRollSources.PUMP_UP_THE_CROWD),
-			composer.teamReRollSources(properties(ReRollProperty.TRR, ReRollProperty.PUMP_UP_THE_CROWD), true));
+		assertEquals(Collections.singletonList(ReRollSources.SINGLE_USE_RE_ROLL),
+			composer.teamReRollSources(properties(ReRollProperty.TRR, ReRollProperty.SINGLE_USE), true));
 	}
 
 	@Test
 	void singleUseRequiresTeamReRollAvailability() {
-		assertTrue(composer.teamReRollSources(properties(ReRollProperty.BRILLIANT_COACHING, ReRollProperty.LEADER), true)
+		assertTrue(composer.teamReRollSources(properties(ReRollProperty.SINGLE_USE, ReRollProperty.LEADER), true)
 			.isEmpty());
 	}
 
