@@ -18,7 +18,7 @@ import com.fumbbl.ffb.model.Player;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler {
+public class DialogReRollBlockForTargetsPropertiesHandler extends AbstractReRollDialogHandler {
 
 	public DialogReRollBlockForTargetsPropertiesHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -53,7 +53,8 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 		}
 	}
 
-	public void dialogClosed(IDialog pDialog) {
+	@Override
+	protected void reRollDialogClosed(IDialog pDialog) {
 		getClient().getClientData().clearBlockDiceResult();
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES)) {
@@ -62,15 +63,25 @@ public class DialogReRollBlockForTargetsPropertiesHandler extends DialogHandler 
 				getClient().getCommunication().sendUseBrawler(reRollDialog.getSelectedTarget());
 			} else if (reRollDialog.getReRollSource() == ReRollSources.HATRED) {
 				getClient().getCommunication().sendUseHatred(reRollDialog.getSelectedTarget());
+			} else if (reRollDialog.isTeamReRollSelected()) {
+				reRollDialog.getDialogParameter().getBlockRolls().stream()
+					.filter(roll -> roll.getTargetId().equals(reRollDialog.getSelectedTarget()))
+					.findFirst()
+					.ifPresent(roll -> selectTeamReRoll(roll, reRollDialog.getReRollSource(),
+						source -> sendChoice(reRollDialog, source)));
 			} else {
-				getClient().getCommunication()
-					.sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(),
-						reRollDialog.getReRollSource(), reRollDialog.getProIndex(),
-						reRollDialog.getAnyDiceIndexes().stream().mapToInt(i -> i).toArray());
+				sendChoice(reRollDialog, reRollDialog.getReRollSource());
 			}
 		}
 	}
 
+
+	private void sendChoice(DialogReRollBlockForTargetsProperties reRollDialog, ReRollSource reRollSource) {
+		getClient().getCommunication()
+			.sendBlockOrReRollChoiceForTarget(reRollDialog.getSelectedTarget(), reRollDialog.getSelectedIndex(),
+				reRollSource, reRollDialog.getProIndex(),
+				reRollDialog.getAnyDiceIndexes().stream().mapToInt(i -> i).toArray());
+	}
 
 	private Map<ReRolledAction, ReRollSource> convertToActionMap(Map<String, String> input,
 		ReRolledActionFactory actionFactory, ReRollSourceFactory sourceFactory) {

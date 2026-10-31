@@ -1,43 +1,64 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.HasReRollProperties;
-import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSourceComposer;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.client.DimensionProvider;
 import com.fumbbl.ffb.client.ui.swing.JButton;
-import com.fumbbl.ffb.client.ui.swing.JCheckBox;
+import com.fumbbl.ffb.model.Game;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.util.List;
 
 import static java.awt.Component.CENTER_ALIGNMENT;
 
 public class DialogExtensionMascot {
 
-	public ReRollSource teamReRollSource(HasReRollProperties dialogParameter) {
-		if (dialogParameter.hasProperty(ReRollProperty.BRILLIANT_COACHING)) {
-			return ReRollSources.BRILLIANT_COACHING;
+	private final ReRollSourceComposer reRollSourceComposer = new ReRollSourceComposer();
+
+	/**
+	 * @return the team re-roll options to offer as buttons, see {@link ReRollSourceComposer#teamReRollSources}
+	 */
+	public List<ReRollSource> teamReRollSources(HasReRollProperties dialogParameter, boolean includeMascot) {
+		return reRollSourceComposer.teamReRollSources(dialogParameter, includeMascot);
+	}
+
+	public String label(ReRollSource teamReRollSource, Game game) {
+		if (teamReRollSource == ReRollSources.TEAM_RE_ROLL) {
+			return "Team Re-Roll";
 		}
-
-		if (dialogParameter.hasProperty(ReRollProperty.PUMP_UP_THE_CROWD)) {
-			return ReRollSources.PUMP_UP_THE_CROWD;
+		if (teamReRollSource == ReRollSources.LEADER) {
+			return "Leader Re-Roll";
 		}
-
-		if (dialogParameter.hasProperty(ReRollProperty.SHOW_STAR)) {
-			return ReRollSources.SHOW_STAR;
+		if (teamReRollSource == ReRollSources.SINGLE_USE_RE_ROLL) {
+			return "Single Use Re-Roll";
 		}
+		return teamReRollSource.getName(game);
+	}
 
-		if (dialogParameter.hasProperty(ReRollProperty.MASCOT)) {
-			return ReRollSources.MASCOT;
+	public int mnemonic(ReRollSource teamReRollSource) {
+		if (teamReRollSource == ReRollSources.MASCOT) {
+			return KeyEvent.VK_K;
 		}
+		if (teamReRollSource == ReRollSources.SINGLE_USE_RE_ROLL) {
+			return KeyEvent.VK_G;
+		}
+		if (teamReRollSource == ReRollSources.LEADER) {
+			return KeyEvent.VK_L;
+		}
+		return KeyEvent.VK_T;
+	}
 
-		return ReRollSources.TEAM_RE_ROLL;
-
+	public JButton button(ReRollSource teamReRollSource, Game game, DimensionProvider dimensionProvider) {
+		int mnemonic = mnemonic(teamReRollSource);
+		JButton button = new JButton(dimensionProvider, label(teamReRollSource, game), mnemonic);
+		button.setMnemonic(mnemonic);
+		button.setAlignmentY(Box.TOP_ALIGNMENT);
+		return button;
 	}
 
 	public JPanel wrapperPanel(JButton button) {
@@ -48,18 +69,5 @@ public class DialogExtensionMascot {
 		panel.add(button);
 		panel.setOpaque(false);
 		return panel;
-	}
-
-	public JCheckBox checkBox(String text, int mnemonic, Color color, DimensionProvider dimensionProvider,
-		ActionListener actionListener, KeyListener keyListener) {
-		JCheckBox checkbox = new JCheckBox(dimensionProvider, text + " ( " + (char) mnemonic + " )");
-		checkbox.setMnemonic(mnemonic);
-		checkbox.addKeyListener(keyListener);
-		checkbox.addActionListener(actionListener);
-		checkbox.setAlignmentX(CENTER_ALIGNMENT);
-		checkbox.setForeground(color);
-		checkbox.setOpaque(false);
-		checkbox.setFocusPainted(false);
-		return checkbox;
 	}
 }

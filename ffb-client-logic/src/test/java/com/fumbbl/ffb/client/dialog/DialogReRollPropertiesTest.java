@@ -65,7 +65,6 @@ class DialogReRollPropertiesTest {
 		properties.add(ReRollProperty.MASCOT);
 		properties.add(ReRollProperty.PRO);
 		properties.add(ReRollProperty.LONER);
-//		properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		DialogReRollPropertiesParameter param =
 		/*	new DialogReRollPropertiesParameter("playerID", ReRolledActions.RUSH, 2, properties, false, new ThinkingMansTroll(), new StrongPassingGame(),

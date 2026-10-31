@@ -9,7 +9,7 @@ import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-public class DialogReRollRegenerationMultipleHandler extends DialogHandler {
+public class DialogReRollRegenerationMultipleHandler extends AbstractReRollDialogHandler {
 
 	public DialogReRollRegenerationMultipleHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -36,13 +36,20 @@ public class DialogReRollRegenerationMultipleHandler extends DialogHandler {
 		}
 	}
 
-	public void dialogClosed(IDialog dialog) {
+	@Override
+	protected void reRollDialogClosed(IDialog dialog) {
 		hideDialog();
 		if (testDialogHasId(dialog, DialogId.RE_ROLL_REGENERATION_MULTIPLE)) {
 			DialogReRollRegenerationMultiple reRollDialog = (DialogReRollRegenerationMultiple) dialog;
-			if (!parameter.getReRollOptions().isEmpty()) {
+			String target = reRollDialog.getSelectedTarget();
+			int targetIndex = parameter.getPlayerIds().indexOf(target);
+			if (!parameter.getReRollOptions().isEmpty() && reRollDialog.isTeamReRollSelected() && targetIndex >= 0) {
+				selectTeamReRoll(parameter.getReRollOptions().get(targetIndex), reRollDialog.getReRollSource(),
+					source -> getClient().getCommunication().sendUseReRollForTarget(ReRolledActions.REGENERATION, source,
+						target));
+			} else if (!parameter.getReRollOptions().isEmpty()) {
 				getClient().getCommunication().sendUseReRollForTarget(ReRolledActions.REGENERATION,
-					reRollDialog.getReRollSource(), reRollDialog.getSelectedTarget());
+					reRollDialog.getReRollSource(), target);
 			} else {
 				getClient().getCommunication().sendUseInducement(parameter.getInducementType(),
 					reRollDialog.getSelectedTarget());

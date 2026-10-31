@@ -23,6 +23,8 @@ import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ReRollService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class RollMechanic implements Mechanic {
@@ -67,6 +69,21 @@ public abstract class RollMechanic implements Mechanic {
 	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);
 
 	public abstract boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer);
+
+	/**
+	 * @return the properties describing which team re-rolls (including mascot) can be used for the player
+	 */
+	public List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player) {
+		List<ReRollProperty> properties = new ArrayList<>();
+		if (isTeamReRollAvailable(gameState, player)) {
+			properties.add(ReRollProperty.TRR);
+		}
+		findAdditionalReRollProperty(gameState.getGame().getTurnData()).ifPresent(properties::add);
+		if (isMascotAvailable(gameState, player)) {
+			properties.add(ReRollProperty.MASCOT);
+		}
+		return properties;
+	}
 
 	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
 		String originalBomberId = null;

@@ -33,7 +33,7 @@ public enum DialogId implements INamedObject {
 	BLOCK_ROLL_PROPERTIES("blockRollProperties"), RE_ROLL_BLOCK_FOR_TARGETS_PROPERTIES("reRollBlockForTargetsProperties"),
 	OPPONENT_BLOCK_SELECTION_PROPERTIES("opponentBlockSelectionProperties"), PICK_UP_CHOICE("pickUpChoice"), SELECT_KEYWORD("selectKeyword"),
 	SELECT_POSITION("selectPosition"), RE_ROLL_REGENERATION_MULTIPLE("reRollRegenerationMultiple"), PUNT_TO_CROWD("puntToCrowd"),
-	RE_ROLL_MODIFIER_CHOICE("reRollModifierChoice");
+	RE_ROLL_MODIFIER_CHOICE("reRollModifierChoice"), RE_ROLL_FALLBACK("reRollFallback");
 
 	private final String fName;
 

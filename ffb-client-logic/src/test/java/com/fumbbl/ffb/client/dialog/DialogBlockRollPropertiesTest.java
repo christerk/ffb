@@ -72,7 +72,6 @@ class DialogBlockRollPropertiesTest {
 		properties.add(ReRollProperty.TRR);
 		properties.add(ReRollProperty.MASCOT);
 		properties.add(ReRollProperty.PRO);
-		//properties.add(ReRollProperty.BRILLIANT_COACHING);
 
 		Map<ReRolledAction, ReRollSource> actionMap = new HashMap<>();
 		actionMap.put(ReRolledActions.SINGLE_DIE, ReRollSources.THINKING_MANS_TROLL);

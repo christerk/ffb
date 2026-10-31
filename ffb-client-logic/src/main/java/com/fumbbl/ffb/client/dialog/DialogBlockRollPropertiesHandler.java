@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DialogBlockRollPropertiesHandler extends DialogHandler {
+public class DialogBlockRollPropertiesHandler extends AbstractReRollDialogHandler {
 
 	private DialogBlockRollPropertiesParameter dialogParameter;
 
@@ -78,7 +78,8 @@ public class DialogBlockRollPropertiesHandler extends DialogHandler {
 		return input.entrySet().stream().collect(Collectors.toMap(entry -> actionFactory.forName(entry.getKey()), entry -> sourceFactory.forName(entry.getValue())));
 	}
 
-	public void dialogClosed(IDialog pDialog) {
+	@Override
+	protected void reRollDialogClosed(IDialog pDialog) {
 		hideDialog();
 		Game game = getClient().getGame();
 		ClientData clientData = getClient().getClientData();
@@ -99,7 +100,12 @@ public class DialogBlockRollPropertiesHandler extends DialogHandler {
 					} else if (blockRollDialog.getReRollSource() == ReRollSources.HATRED) {
 						communication.sendUseHatred(null);
 					} else if (blockRollDialog.getReRollSource() == ReRollSources.PRO) {
-						communication.sendUseProReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
+						int proIndex = blockRollDialog.getReRollIndexes().get(0);
+						selectTeamReRoll(dialogParameter, ReRollSources.PRO,
+							source -> communication.sendUseProReRollForBlock(proIndex, source));
+					} else if (blockRollDialog.isTeamReRollSelected()) {
+						selectTeamReRoll(dialogParameter, blockRollDialog.getReRollSource(),
+							source -> communication.sendUseReRoll(ReRolledActions.BLOCK, source));
 					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleDieReRollSource()) {
 						communication.sendUseConsummateReRollForBlock(blockRollDialog.getReRollIndexes().get(0));
 					} else if (blockRollDialog.getReRollSource() != null && blockRollDialog.getReRollSource() == blockRollDialog.getSingleBlockDieReRollSource()) {

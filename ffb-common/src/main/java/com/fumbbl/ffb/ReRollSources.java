@@ -39,6 +39,10 @@ public class ReRollSources {
 	public static final ReRollSource PRO_MASCOT = new ReRollSource("Pro Mascot", PRO);
 	public static final ReRollSource PRO_MASCOT_TRR = new ReRollSource("Pro Mascot TRR", PRO);
 	public static final ReRollSource PRO_TRR = new ReRollSource("Pro TRR", PRO);
+	public static final ReRollSource SINGLE_USE_RE_ROLL = new ReRollSource("Single Use ReRoll");
+	public static final ReRollSource MASCOT_SINGLE_USE = new ReRollSource("Mascot Single Use");
+	public static final ReRollSource PRO_SINGLE_USE = new ReRollSource("Pro Single Use", PRO);
+	public static final ReRollSource PRO_MASCOT_SINGLE_USE = new ReRollSource("Pro Mascot Single Use", PRO);
 	public static final ReRollSource SWOOP = new ReRollSource("Swoop");
 	public static final ReRollSource HATRED = new ReRollSource("Hatred");
 	public static final ReRollSource WORKING_IN_TANDEM = new ReRollSource("Working in Tandem");
