@@ -26,7 +26,7 @@ public class ReRollSourceComposition {
 
 	/**
 	 * @return {@link ReRollSources#TEAM_RE_ROLL} (Leader is used first if available),
-	 * {@link ReRollSources#SINGLE_USE_RE_ROLL} or null if no team re-roll is part of this composition
+	 * {@link ReRollSources#DRIVE_BONUS_RE_ROLL} or null if no team re-roll is part of this composition
 	 */
 	public ReRollSource getTeamReRollSource() {
 		return teamReRollSource;

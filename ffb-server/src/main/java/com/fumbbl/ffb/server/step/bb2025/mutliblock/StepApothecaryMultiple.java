@@ -174,7 +174,8 @@ public class StepApothecaryMultiple extends AbstractStep {
 					break;
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
-					if (clientCommandUseReRoll.getReRolledAction() == ReRolledActions.REGENERATION) {
+					if (clientCommandUseReRoll.getReRolledAction() == ReRolledActions.REGENERATION
+						&& isReRollSourceOffered(ReRolledActions.REGENERATION, clientCommandUseReRoll.getReRollSource(), null)) {
 						ReRollSource reRollSource = clientCommandUseReRoll.getReRollSource();
 
 						Optional<InjuryResult> preRegen =
@@ -190,7 +191,9 @@ public class StepApothecaryMultiple extends AbstractStep {
 				case CLIENT_USE_RE_ROLL_FOR_TARGET:
 					ClientCommandUseReRollForTarget clientCommandUseReRollForTarget =
 						(ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
-					if (clientCommandUseReRollForTarget.getReRolledAction() == ReRolledActions.REGENERATION) {
+					if (clientCommandUseReRollForTarget.getReRolledAction() == ReRolledActions.REGENERATION
+						&& isReRollSourceOffered(ReRolledActions.REGENERATION, clientCommandUseReRollForTarget.getReRollSource(),
+						clientCommandUseReRollForTarget.getTargetId())) {
 						String targetId = clientCommandUseReRollForTarget.getTargetId();
 						ReRollSource targetReRollSource = clientCommandUseReRollForTarget.getReRollSource();
 						if (targetId != null && targetReRollSource != null) {

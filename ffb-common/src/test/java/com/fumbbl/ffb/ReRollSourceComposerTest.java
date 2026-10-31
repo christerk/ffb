@@ -16,7 +16,7 @@ class ReRollSourceComposerTest {
 	private final ReRollSourceComposer composer = new ReRollSourceComposer();
 
 	private static final List<ReRollSource> TEAM_SOURCES =
-		Arrays.asList(null, ReRollSources.TEAM_RE_ROLL, ReRollSources.SINGLE_USE_RE_ROLL);
+		Arrays.asList(null, ReRollSources.TEAM_RE_ROLL, ReRollSources.DRIVE_BONUS_RE_ROLL);
 
 	@Test
 	void composedSourcesDecomposeIntoTheirParts() {
@@ -67,7 +67,7 @@ class ReRollSourceComposerTest {
 	}
 
 	@Test
-	void teamReRollOnlyWithoutLeaderOrSingleUse() {
+	void teamReRollOnlyWithoutLeaderOrDriveBonus() {
 		assertEquals(Collections.singletonList(ReRollSources.TEAM_RE_ROLL),
 			composer.teamReRollSources(properties(ReRollProperty.TRR), true));
 	}
@@ -91,21 +91,21 @@ class ReRollSourceComposerTest {
 	}
 
 	@Test
-	void singleUseAndLeaderAreOfferedTogether() {
-		assertEquals(Arrays.asList(ReRollSources.MASCOT, ReRollSources.SINGLE_USE_RE_ROLL, ReRollSources.LEADER),
-			composer.teamReRollSources(properties(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.SINGLE_USE,
+	void driveBonusAndLeaderAreOfferedTogether() {
+		assertEquals(Arrays.asList(ReRollSources.MASCOT, ReRollSources.DRIVE_BONUS_RE_ROLL, ReRollSources.LEADER),
+			composer.teamReRollSources(properties(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.DRIVE_BONUS,
 				ReRollProperty.LEADER), true));
 	}
 
 	@Test
-	void singleUseReplacesTeamReRoll() {
-		assertEquals(Collections.singletonList(ReRollSources.SINGLE_USE_RE_ROLL),
-			composer.teamReRollSources(properties(ReRollProperty.TRR, ReRollProperty.SINGLE_USE), true));
+	void driveBonusReplacesTeamReRoll() {
+		assertEquals(Collections.singletonList(ReRollSources.DRIVE_BONUS_RE_ROLL),
+			composer.teamReRollSources(properties(ReRollProperty.TRR, ReRollProperty.DRIVE_BONUS), true));
 	}
 
 	@Test
-	void singleUseRequiresTeamReRollAvailability() {
-		assertTrue(composer.teamReRollSources(properties(ReRollProperty.SINGLE_USE, ReRollProperty.LEADER), true)
+	void driveBonusRequiresTeamReRollAvailability() {
+		assertTrue(composer.teamReRollSources(properties(ReRollProperty.DRIVE_BONUS, ReRollProperty.LEADER), true)
 			.isEmpty());
 	}
 

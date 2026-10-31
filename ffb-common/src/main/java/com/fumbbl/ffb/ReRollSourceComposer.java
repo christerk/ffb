@@ -17,30 +17,30 @@ public class ReRollSourceComposer {
 	static {
 		Map<ReRollSource, ReRollSourceComposition> compositions = new LinkedHashMap<>();
 		compositions.put(ReRollSources.TEAM_RE_ROLL, new ReRollSourceComposition(false, false, ReRollSources.TEAM_RE_ROLL));
-		compositions.put(ReRollSources.SINGLE_USE_RE_ROLL,
-			new ReRollSourceComposition(false, false, ReRollSources.SINGLE_USE_RE_ROLL));
+		compositions.put(ReRollSources.DRIVE_BONUS_RE_ROLL,
+			new ReRollSourceComposition(false, false, ReRollSources.DRIVE_BONUS_RE_ROLL));
 
 		compositions.put(ReRollSources.MASCOT, new ReRollSourceComposition(false, true, null));
 		compositions.put(ReRollSources.MASCOT_TRR, new ReRollSourceComposition(false, true, ReRollSources.TEAM_RE_ROLL));
-		compositions.put(ReRollSources.MASCOT_SINGLE_USE,
-			new ReRollSourceComposition(false, true, ReRollSources.SINGLE_USE_RE_ROLL));
+		compositions.put(ReRollSources.MASCOT_DRIVE_BONUS,
+			new ReRollSourceComposition(false, true, ReRollSources.DRIVE_BONUS_RE_ROLL));
 
 		compositions.put(ReRollSources.PRO, new ReRollSourceComposition(true, false, null));
 		compositions.put(ReRollSources.PRO_TRR, new ReRollSourceComposition(true, false, ReRollSources.TEAM_RE_ROLL));
-		compositions.put(ReRollSources.PRO_SINGLE_USE,
-			new ReRollSourceComposition(true, false, ReRollSources.SINGLE_USE_RE_ROLL));
+		compositions.put(ReRollSources.PRO_DRIVE_BONUS,
+			new ReRollSourceComposition(true, false, ReRollSources.DRIVE_BONUS_RE_ROLL));
 
 		compositions.put(ReRollSources.PRO_MASCOT, new ReRollSourceComposition(true, true, null));
 		compositions.put(ReRollSources.PRO_MASCOT_TRR,
 			new ReRollSourceComposition(true, true, ReRollSources.TEAM_RE_ROLL));
-		compositions.put(ReRollSources.PRO_MASCOT_SINGLE_USE,
-			new ReRollSourceComposition(true, true, ReRollSources.SINGLE_USE_RE_ROLL));
+		compositions.put(ReRollSources.PRO_MASCOT_DRIVE_BONUS,
+			new ReRollSourceComposition(true, true, ReRollSources.DRIVE_BONUS_RE_ROLL));
 		COMPOSITIONS = Collections.unmodifiableMap(compositions);
 	}
 
 	/**
 	 * @param teamReRollSource null, {@link ReRollSources#TEAM_RE_ROLL}, {@link ReRollSources#LEADER} or
-	 *                         {@link ReRollSources#SINGLE_USE_RE_ROLL}
+	 *                         {@link ReRollSources#DRIVE_BONUS_RE_ROLL}
 	 * @return the source to send to the server or null if the parts do not form a re-roll
 	 */
 	public ReRollSource compose(boolean pro, boolean mascot, ReRollSource teamReRollSource) {
@@ -60,8 +60,8 @@ public class ReRollSourceComposer {
 	}
 
 	/**
-	 * @return the team re-roll options a coach can choose from, in the order they are offered: Mascot, single use
-	 * re-roll, Leader and regular team re-roll. Leader and single use re-rolls replace the regular team re-roll option.
+	 * @return the team re-roll options a coach can choose from, in the order they are offered: Mascot, drive bonus
+	 * re-roll, Leader and regular team re-roll. Leader and drive bonus re-rolls replace the regular team re-roll option.
 	 */
 	public List<ReRollSource> teamReRollSources(HasReRollProperties properties, boolean includeMascot) {
 		List<ReRollSource> sources = new ArrayList<>();
@@ -69,15 +69,15 @@ public class ReRollSourceComposer {
 			sources.add(ReRollSources.MASCOT);
 		}
 		if (properties.hasProperty(ReRollProperty.TRR)) {
-			boolean singleUse = properties.hasProperty(ReRollProperty.SINGLE_USE);
+			boolean driveBonus = properties.hasProperty(ReRollProperty.DRIVE_BONUS);
 			boolean leader = properties.hasProperty(ReRollProperty.LEADER);
-			if (singleUse) {
-				sources.add(ReRollSources.SINGLE_USE_RE_ROLL);
+			if (driveBonus) {
+				sources.add(ReRollSources.DRIVE_BONUS_RE_ROLL);
 			}
 			if (leader) {
 				sources.add(ReRollSources.LEADER);
 			}
-			if (!singleUse && !leader) {
+			if (!driveBonus && !leader) {
 				sources.add(ReRollSources.TEAM_RE_ROLL);
 			}
 		}

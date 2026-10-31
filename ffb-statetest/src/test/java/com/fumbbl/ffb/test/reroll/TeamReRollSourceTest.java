@@ -70,10 +70,20 @@ class TeamReRollSourceTest {
 		return state.getGame().getTurnData();
 	}
 
-	private void addMascot(GameState state) {
-		InducementType mascot = state.getGame().<InducementTypeFactory>getFactory(Factory.INDUCEMENT_TYPE)
+	private Inducement addMascot(GameState state) {
+		InducementType mascotType = state.getGame().<InducementTypeFactory>getFactory(Factory.INDUCEMENT_TYPE)
 			.forName("teamMascot");
-		turnData(state).getInducementSet().addInducement(new Inducement(mascot, 1));
+		Inducement mascot = new Inducement(mascotType, 1);
+		turnData(state).getInducementSet().addInducement(mascot);
+		return mascot;
+	}
+
+	/**
+	 * Makes the mascot unavailable after the dialog offered it, so only the use time check can catch it.
+	 */
+	private void loseMascot(GameState state, Inducement mascot) {
+		assertTrue(dialog(state).hasProperty(ReRollProperty.MASCOT));
+		turnData(state).getInducementSet().removeInducement(mascot);
 	}
 
 	private boolean stoodUp(GameState state) {
@@ -82,21 +92,21 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void singleUseReRollIsOfferedAndConsumedExplicitly() {
+	void driveBonusReRollIsOfferedAndConsumedExplicitly() {
 		GameState state = buildState();
 		turnData(state).setReRolls(2);
 		turnData(state).setReRollsBrilliantCoachingOneDrive(1);
 		failJumpUp(state, 1, 4, 5);
 		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
-		assertTrue(dialog(state).hasProperty(ReRollProperty.SINGLE_USE));
-		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.DRIVE_BONUS));
+		reRoll(state, ReRollSources.DRIVE_BONUS_RE_ROLL);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsBrilliantCoachingOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
 	}
 
 	@Test
-	void teamReRollDoesNotConsumeSingleUseReRoll() {
+	void teamReRollDoesNotConsumeDriveBonusReRoll() {
 		GameState state = buildState();
 		turnData(state).setReRolls(2);
 		turnData(state).setReRollShowStarOneDrive(1);
@@ -108,7 +118,7 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void teamReRollFallsBackToSingleUseReRollIfNoOtherIsLeft() {
+	void teamReRollFallsBackToDriveBonusReRollIfNoOtherIsLeft() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollsPumpUpTheCrowdOneDrive(1);
@@ -120,7 +130,7 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void teamReRollPrefersLeaderOverSingleUseReRoll() {
+	void teamReRollPrefersLeaderOverDriveBonusReRoll() {
 		GameState state = buildState();
 		turnData(state).setReRolls(2);
 		turnData(state).setLeaderState(LeaderState.AVAILABLE);
@@ -137,7 +147,9 @@ class TeamReRollSourceTest {
 	void unavailableMascotFallsBackToTeamReRoll() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
+		Inducement mascot = addMascot(state);
 		failJumpUp(state, 1, 4, 5);
+		loseMascot(state, mascot);
 		reRoll(state, ReRollSources.MASCOT_TRR);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRolls());
@@ -147,8 +159,10 @@ class TeamReRollSourceTest {
 	void unavailableMascotAfterFailedProFallsBackToTeamReRoll() {
 		GameState state = buildState("Pro");
 		turnData(state).setReRolls(1);
+		Inducement mascot = addMascot(state);
 		// jump up 1, pro 1, pro 3, jump up 4
 		failJumpUp(state, 1, 1, 3, 4, 5);
+		loseMascot(state, mascot);
 		reRoll(state, ReRollSources.PRO_MASCOT_TRR);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRolls());
@@ -158,32 +172,98 @@ class TeamReRollSourceTest {
 	void unavailableMascotWithoutFallbackFails() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
+		Inducement mascot = addMascot(state);
 		failJumpUp(state, 1, 4, 5);
+		loseMascot(state, mascot);
 		reRoll(state, ReRollSources.MASCOT);
 		assertFalse(stoodUp(state));
 		assertEquals(1, turnData(state).getReRolls());
 	}
 
 	@Test
-	void singleUseReRollUsesAnyAvailableType() {
+	void driveBonusReRollUsesAnyAvailableType() {
 		GameState state = buildState();
 		turnData(state).setReRolls(2);
 		turnData(state).setReRollShowStarOneDrive(1);
 		failJumpUp(state, 1, 4, 5);
-		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
+		reRoll(state, ReRollSources.DRIVE_BONUS_RE_ROLL);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
 	}
 
 	@Test
-	void unavailableSingleUseReRollFails() {
+	void unavailableDriveBonusReRollFails() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		turnData(state).setReRollsBrilliantCoachingOneDrive(1);
+		failJumpUp(state, 1, 4, 5);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.DRIVE_BONUS));
+		turnData(state).setReRollsBrilliantCoachingOneDrive(0);
+		reRoll(state, ReRollSources.DRIVE_BONUS_RE_ROLL);
+		assertFalse(stoodUp(state));
+		assertEquals(1, turnData(state).getReRolls());
+	}
+
+	@Test
+	void driveBonusReRollNotOfferedIsIgnored() {
 		GameState state = buildState();
 		turnData(state).setReRolls(1);
 		failJumpUp(state, 1, 4, 5);
-		reRoll(state, ReRollSources.SINGLE_USE_RE_ROLL);
-		assertFalse(stoodUp(state));
+		assertFalse(dialog(state).hasProperty(ReRollProperty.DRIVE_BONUS));
+		reRoll(state, ReRollSources.DRIVE_BONUS_RE_ROLL);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
 		assertEquals(1, turnData(state).getReRolls());
+		reRoll(state, ReRollSources.TEAM_RE_ROLL);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void mascotNotOfferedIsIgnored() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		assertFalse(dialog(state).hasProperty(ReRollProperty.MASCOT));
+		reRoll(state, ReRollSources.MASCOT_TRR);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertEquals(1, turnData(state).getReRolls());
+	}
+
+	@Test
+	void proNotOfferedIsIgnored() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.PRO_TRR);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertEquals(1, turnData(state).getReRolls());
+	}
+
+	@Test
+	void reRollForOtherActionIsIgnored() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		StepEngine.respond(state, new ClientCommandUseReRoll(ReRolledActions.DODGE, ReRollSources.TEAM_RE_ROLL));
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertEquals(1, turnData(state).getReRolls());
+		reRoll(state, ReRollSources.TEAM_RE_ROLL);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
+	}
+
+	@Test
+	void skillReRollNotOfferedIsIgnored() {
+		GameState state = buildState();
+		turnData(state).setReRolls(1);
+		failJumpUp(state, 1, 4, 5);
+		reRoll(state, ReRollSources.DODGE);
+		assertTrue(dialog(state).hasProperty(ReRollProperty.TRR));
+		assertEquals(1, turnData(state).getReRolls());
+		reRoll(state, ReRollSources.TEAM_RE_ROLL);
+		assertTrue(stoodUp(state));
+		assertEquals(0, turnData(state).getReRolls());
 	}
 
 	@Test
@@ -200,14 +280,14 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void failedMascotFallsBackToSelectedSingleUseReRoll() {
+	void failedMascotFallsBackToSelectedDriveBonusReRoll() {
 		GameState state = buildState();
 		addMascot(state);
 		turnData(state).setReRolls(2);
 		turnData(state).setReRollsBrilliantCoachingOneDrive(1);
 		failJumpUp(state, 1, 3, 4, 5);
 		assertTrue(dialog(state).hasProperty(ReRollProperty.MASCOT));
-		reRoll(state, ReRollSources.MASCOT_SINGLE_USE);
+		reRoll(state, ReRollSources.MASCOT_DRIVE_BONUS);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsBrilliantCoachingOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
@@ -220,19 +300,19 @@ class TeamReRollSourceTest {
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollShowStarOneDrive(1);
 		failJumpUp(state, 1, 4, 4, 5);
-		reRoll(state, ReRollSources.MASCOT_SINGLE_USE);
+		reRoll(state, ReRollSources.MASCOT_DRIVE_BONUS);
 		assertTrue(stoodUp(state));
 		assertEquals(1, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(1, turnData(state).getReRolls());
 	}
 
 	@Test
-	void failedProFallsBackToSelectedSingleUseReRoll() {
+	void failedProFallsBackToSelectedDriveBonusReRoll() {
 		GameState state = buildState("Pro");
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollShowStarOneDrive(1);
 		failJumpUp(state, 1, 1, 3, 4, 5);
-		reRoll(state, ReRollSources.PRO_SINGLE_USE);
+		reRoll(state, ReRollSources.PRO_DRIVE_BONUS);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollShowStarOneDrive());
 		assertEquals(0, turnData(state).getReRolls());
@@ -263,13 +343,13 @@ class TeamReRollSourceTest {
 	}
 
 	@Test
-	void failedProAndMascotFallBackToSelectedSingleUseReRoll() {
+	void failedProAndMascotFallBackToSelectedDriveBonusReRoll() {
 		GameState state = buildState("Pro");
 		addMascot(state);
 		turnData(state).setReRolls(1);
 		turnData(state).setReRollsPumpUpTheCrowdOneDrive(1);
 		failJumpUp(state, 1, 1, 3, 3, 4, 5);
-		reRoll(state, ReRollSources.PRO_MASCOT_SINGLE_USE);
+		reRoll(state, ReRollSources.PRO_MASCOT_DRIVE_BONUS);
 		assertTrue(stoodUp(state));
 		assertEquals(0, turnData(state).getReRollsPumpUpTheCrowdOneDrive());
 		assertEquals(0, turnData(state).getReRolls());

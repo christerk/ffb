@@ -14,14 +14,14 @@ import java.util.List;
 public class ReRollPropertyFactory implements INamedObjectFactory<ReRollProperty> {
 
 	/**
-	 * Former per-type single use properties, still present in replays and stored game states.
+	 * Former per-type drive bonus properties, still present in replays and stored game states.
 	 */
-	private static final List<String> LEGACY_SINGLE_USE_NAMES =
+	private static final List<String> LEGACY_DRIVE_BONUS_NAMES =
 		Arrays.asList("BRILLIANT_COACHING", "PUMP_UP_THE_CROWD", "SHOW_STAR");
 
 	public ReRollProperty forName(String pName) {
-		if (LEGACY_SINGLE_USE_NAMES.stream().anyMatch(name -> name.equalsIgnoreCase(pName))) {
-			return ReRollProperty.SINGLE_USE;
+		if (LEGACY_DRIVE_BONUS_NAMES.stream().anyMatch(name -> name.equalsIgnoreCase(pName))) {
+			return ReRollProperty.DRIVE_BONUS;
 		}
 		return Arrays.stream(ReRollProperty.values()).filter(prop -> prop.getName().equalsIgnoreCase(pName)).findFirst()
 				.orElse(null);

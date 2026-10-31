@@ -200,7 +200,8 @@ public class StepApothecary extends AbstractStep {
 					break;
 				case CLIENT_USE_RE_ROLL:
 					ClientCommandUseReRoll clientCommandUseReRoll = (ClientCommandUseReRoll) pReceivedCommand.getCommand();
-					if (clientCommandUseReRoll.getReRolledAction() == ReRolledActions.REGENERATION) {
+					if (clientCommandUseReRoll.getReRolledAction() == ReRolledActions.REGENERATION
+						&& isReRollSourceOffered(ReRolledActions.REGENERATION, clientCommandUseReRoll.getReRollSource(), null)) {
 						commandStatus = rerollRegen(clientCommandUseReRoll.getReRollSource(), game);
 					}
 					break;

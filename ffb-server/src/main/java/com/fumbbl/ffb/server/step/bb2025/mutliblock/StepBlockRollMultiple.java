@@ -157,6 +157,11 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 				case CLIENT_BLOCK_OR_RE_ROLL_CHOICE_FOR_TARGET:
 					ClientCommandBlockOrReRollChoiceForTarget command =
 						(ClientCommandBlockOrReRollChoiceForTarget) pReceivedCommand.getCommand();
+					// without a re-roll source the command is a block die choice, which can also come from the defender's dialog
+					if (command.getReRollSource() != null
+						&& !isReRollSourceOffered(ReRolledActions.BLOCK, command.getReRollSource(), command.getTargetId())) {
+						break;
+					}
 					if (reRollSourceSuccessfully(command.getReRollSource())) {
 						stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -173,12 +178,18 @@ public class StepBlockRollMultiple extends AbstractStepMultiple {
 
 				case CLIENT_USE_BRAWLER:
 					ClientCommandUseBrawler brawlerCommand = (ClientCommandUseBrawler) pReceivedCommand.getCommand();
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.BRAWLER, brawlerCommand.getTargetId())) {
+						break;
+					}
 					state.reRollSource = ReRollSources.BRAWLER;
 					state.selectedTarget = brawlerCommand.getTargetId();
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_HATRED:
 					ClientCommandUseHatred hatredCommand = (ClientCommandUseHatred) pReceivedCommand.getCommand();
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.HATRED, hatredCommand.getTargetId())) {
+						break;
+					}
 					state.reRollSource = ReRollSources.HATRED;
 					state.selectedTarget = hatredCommand.getTargetId();
 					stepCommandStatus = StepCommandStatus.EXECUTE_STEP;

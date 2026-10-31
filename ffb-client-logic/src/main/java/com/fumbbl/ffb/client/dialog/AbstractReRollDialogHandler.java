@@ -26,7 +26,7 @@ public abstract class AbstractReRollDialogHandler extends DialogHandler {
 	}
 
 	/**
-	 * @param selection the source selected in the dialog: Pro, Team Mascot, Leader, a single use re-roll or a team
+	 * @param selection the source selected in the dialog: Pro, Team Mascot, Leader, a drive bonus re-roll or a team
 	 *                  re-roll
 	 * @param sender    sends the final, possibly combined, re-roll source
 	 */

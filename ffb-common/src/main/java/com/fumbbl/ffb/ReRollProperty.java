@@ -1,7 +1,7 @@
 package com.fumbbl.ffb;
 
 public enum ReRollProperty implements INamedObject {
-	TRR(true), SINGLE_USE, MASCOT(true), PRO(true), LONER, LEADER;
+	TRR(true), DRIVE_BONUS, MASCOT(true), PRO(true), LONER, LEADER;
 
 	private final boolean actualReRoll;
 

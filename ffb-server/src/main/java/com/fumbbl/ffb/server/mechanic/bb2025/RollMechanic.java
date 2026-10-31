@@ -45,6 +45,7 @@ import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ReRollDialogParameterFactory;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
+import com.fumbbl.ffb.server.util.bb2025.OfferedReRollSourceService;
 import com.fumbbl.ffb.server.util.bb2025.ReRollPropertiesDialogParameterFactory;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
@@ -392,7 +393,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return isTeamReRollAvailable(gameState, player) && findUsedTeamReRollSource(turnData, teamReRollSource) != null;
 	}
 
-	// leader and single use re-rolls are included in the total amount of re-rolls
+	// leader and drive bonus re-rolls are included in the total amount of re-rolls
 	private int regularReRolls(TurnData turnData) {
 		int reRolls = turnData.getReRolls() - turnData.getReRollsBrilliantCoachingOneDrive()
 			- turnData.getReRollsPumpUpTheCrowdOneDrive() - turnData.getReRollShowStarOneDrive();
@@ -457,11 +458,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	// single use re-rolls are selected explicitly, a regular team re-roll uses Leader first and falls back to a single
+	// drive bonus re-rolls are selected explicitly, a regular team re-roll uses Leader first and falls back to a single
 	// use re-roll only if no other team re-roll is left (e.g. for dialogs that only offer a plain team re-roll)
 	private ReRollSource findUsedTeamReRollSource(TurnData turnData, ReRollSource selectedSource) {
-		if (ReRollSources.SINGLE_USE_RE_ROLL == selectedSource) {
-			return findSingleUseReRollSource(turnData);
+		if (ReRollSources.DRIVE_BONUS_RE_ROLL == selectedSource) {
+			return findDriveBonusReRollSource(turnData);
 		}
 		if (ReRollSources.TEAM_RE_ROLL != selectedSource) {
 			return null;
@@ -472,7 +473,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (regularReRolls(turnData) > 0) {
 			return ReRollSources.TEAM_RE_ROLL;
 		}
-		return findSingleUseReRollSource(turnData);
+		return findDriveBonusReRollSource(turnData);
 	}
 
 	private void updateTurnDataAfterReRollUsage(TurnData turnData, ReRollSource usedReRollSource) {
@@ -486,8 +487,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 	}
 
-	// all single use re-rolls behave the same, so the first available one is used
-	private ReRollSource findSingleUseReRollSource(TurnData turnData) {
+	// all drive bonus re-rolls behave the same, so the first available one is used
+	private ReRollSource findDriveBonusReRollSource(TurnData turnData) {
 		return Stream.of(ReRollSources.BRILLIANT_COACHING, ReRollSources.PUMP_UP_THE_CROWD, ReRollSources.SHOW_STAR)
 			.filter(source -> isSpecialReRollSourceAvailable(turnData, source))
 			.findFirst().orElse(null);
@@ -599,14 +600,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
-		if (findSingleUseReRollSource(turnData) != null) {
-			return Optional.of(ReRollProperty.SINGLE_USE);
-		}
-		return Optional.empty();
-	}
-
-	@Override
 	public int getTotalAttackerStrength(GameState gameState, Player<?> attacker, Player<?> defender,
 		boolean usingMultiBlock,
 		boolean successfulDauntless, boolean doubleTargetStrength, int defenderStrength) {
@@ -668,12 +661,20 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		}
 		if (isTeamReRollAvailable(gameState, player)) {
 			properties.add(ReRollProperty.TRR);
-			findAdditionalReRollProperty(turnData).ifPresent(properties::add);
+			if (findDriveBonusReRollSource(turnData) != null) {
+				properties.add(ReRollProperty.DRIVE_BONUS);
+			}
 			if (LeaderState.AVAILABLE.equals(turnData.getLeaderState())) {
 				properties.add(ReRollProperty.LEADER);
 			}
 		}
 		return properties;
+	}
+
+	@Override
+	public boolean isReRollSourceOffered(Game game, ReRolledAction reRolledAction, ReRollSource reRollSource,
+		String targetId) {
+		return new OfferedReRollSourceService().isOffered(game, reRolledAction, reRollSource, targetId);
 	}
 
 	@Override

@@ -18,10 +18,10 @@ class ReRollPropertyFactoryTest {
 	}
 
 	@Test
-	void mapsLegacySingleUsePropertiesToSingleUse() {
-		assertEquals(ReRollProperty.SINGLE_USE, factory.forName("BRILLIANT_COACHING"));
-		assertEquals(ReRollProperty.SINGLE_USE, factory.forName("PUMP_UP_THE_CROWD"));
-		assertEquals(ReRollProperty.SINGLE_USE, factory.forName("SHOW_STAR"));
+	void mapsLegacyDriveBonusPropertiesToDriveBonus() {
+		assertEquals(ReRollProperty.DRIVE_BONUS, factory.forName("BRILLIANT_COACHING"));
+		assertEquals(ReRollProperty.DRIVE_BONUS, factory.forName("PUMP_UP_THE_CROWD"));
+		assertEquals(ReRollProperty.DRIVE_BONUS, factory.forName("SHOW_STAR"));
 	}
 
 	@Test

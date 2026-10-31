@@ -76,7 +76,8 @@ public class StepDauntlessMultiple extends AbstractStepMultiple {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			if (pReceivedCommand.getId() == NetCommandId.CLIENT_USE_RE_ROLL_FOR_TARGET) {
 				ClientCommandUseReRollForTarget command = (ClientCommandUseReRollForTarget) pReceivedCommand.getCommand();
-				if (command.getReRolledAction() == ReRolledActions.DAUNTLESS) {
+				if (command.getReRolledAction() == ReRolledActions.DAUNTLESS
+					&& isReRollSourceOffered(ReRolledActions.DAUNTLESS, command.getReRollSource(), command.getTargetId())) {
 					if (reRollSourceSuccessfully(command.getReRollSource())) {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}

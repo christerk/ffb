@@ -13,7 +13,6 @@ import com.fumbbl.ffb.mechanics.SkillMechanic;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.Team;
-import com.fumbbl.ffb.model.TurnData;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.DiceRoller;
@@ -23,9 +22,7 @@ import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
 import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ReRollService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class RollMechanic implements Mechanic {
 	@Override
@@ -66,24 +63,21 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract boolean allowsTeamReRoll(TurnMode turnMode);
 
-	public abstract Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData);
-
 	public abstract boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer);
 
 	/**
 	 * @return the properties describing which team re-rolls (including mascot) can be used for the player
 	 */
-	public List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player) {
-		List<ReRollProperty> properties = new ArrayList<>();
-		if (isTeamReRollAvailable(gameState, player)) {
-			properties.add(ReRollProperty.TRR);
-		}
-		findAdditionalReRollProperty(gameState.getGame().getTurnData()).ifPresent(properties::add);
-		if (isMascotAvailable(gameState, player)) {
-			properties.add(ReRollProperty.MASCOT);
-		}
-		return properties;
-	}
+	public abstract List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player);
+
+	/**
+	 * Tells if a re-roll source sent by a client fits the dialog the game is currently waiting for.
+	 *
+	 * @param targetId the player the re-roll is used for if the dialog offers re-rolls per target, null otherwise
+	 * @return whether the dialog offers the source for the action, no source (no re-roll) only has to fit the action
+	 */
+	public abstract boolean isReRollSourceOffered(Game game, ReRolledAction reRolledAction, ReRollSource reRollSource,
+		String targetId);
 
 	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
 		String originalBomberId = null;

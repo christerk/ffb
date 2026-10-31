@@ -108,19 +108,31 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_BRAWLER:
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.BRAWLER, null)) {
+						break;
+					}
 					setReRollSource(ReRollSources.BRAWLER);
 					setReRolledAction(ReRolledActions.BLOCK);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_HATRED:
+					if (!isReRollSourceOffered(ReRolledActions.BLOCK, ReRollSources.HATRED, null)) {
+						break;
+					}
 					setReRollSource(ReRollSources.HATRED);
 					setReRolledAction(ReRolledActions.BLOCK);
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_PRO_RE_ROLL_FOR_BLOCK:
 					ClientCommandUseProReRollForBlock command = (ClientCommandUseProReRollForBlock) pReceivedCommand.getCommand();
+					ReRollSource proReRollSource = command.getReRollSource() != null ? command.getReRollSource() : ReRollSources.PRO;
+					ReRollSourceComposition proComposition = new ReRollSourceComposer().decompose(proReRollSource);
+					if (proComposition == null || !proComposition.isPro()
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, proReRollSource, null)) {
+						break;
+					}
 					setReRolledAction(ReRolledActions.BLOCK);
-					setReRollSource(command.getReRollSource() != null ? command.getReRollSource() : ReRollSources.PRO);
+					setReRollSource(proReRollSource);
 					dieIndex = command.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -130,15 +142,21 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 					setReRolledAction(ReRolledActions.BLOCK);
 					Skill skill = getGameState().getGame().getActingPlayer().getPlayer()
 						.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-					if (skill != null) {
-						setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
+					if (skill == null
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, skill.getRerollSource(ReRolledActions.SINGLE_DIE), null)) {
+						break;
 					}
+					setReRollSource(skill.getRerollSource(ReRolledActions.SINGLE_DIE));
 					dieIndex = consummateCommand.getProIndex();
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
 				case CLIENT_USE_SINGLE_BLOCK_DIE_RE_ROLL:
 					ClientCommandUseSingleBlockDieReRoll commandUseSkill =
 						(ClientCommandUseSingleBlockDieReRoll) pReceivedCommand.getCommand();
+					if (commandUseSkill.getReRollSource() == null
+						|| !isReRollSourceOffered(ReRolledActions.BLOCK, commandUseSkill.getReRollSource(), null)) {
+						break;
+					}
 					setReRolledAction(ReRolledActions.BLOCK);
 					setReRollSource(commandUseSkill.getReRollSource());
 					dieIndex = commandUseSkill.getDieIndex();
@@ -149,7 +167,8 @@ public class StepBlockRoll extends AbstractStepWithReRoll {
 						(ClientCommandUseMultiBlockDiceReRoll) pReceivedCommand.getCommand();
 					Skill anyRrSkill =
 						UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.canReRollAnyNumberOfBlockDice);
-					if (anyRrSkill != null) {
+					if (anyRrSkill != null
+						&& isReRollSourceOffered(ReRolledActions.BLOCK, anyRrSkill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE), null)) {
 						setReRolledAction(ReRolledActions.BLOCK);
 						setReRollSource(anyRrSkill.getRerollSource(ReRolledActions.MULTI_BLOCK_DICE));
 						diceIndexes = commandMultiRrr.getDiceIndexes();

@@ -5,6 +5,8 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.SoundId;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.dialog.DialogConcedeGameParameter;
@@ -31,6 +33,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.IServerLogLevel;
 import com.fumbbl.ffb.server.factory.SequenceGeneratorFactory;
+import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
@@ -297,6 +300,17 @@ public abstract class AbstractStep implements IStep {
 			UtilServerGame.syncGameModel(getGameState(), reports, null, SoundId.WHISTLE);
 		}
 		return commandStatus;
+	}
+
+	/**
+	 * Re-roll commands have to be ignored unless the dialog the game is waiting for offers the source for the action.
+	 *
+	 * @param targetId the player the re-roll is used for if the dialog offers re-rolls per target, null otherwise
+	 */
+	protected boolean isReRollSourceOffered(ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
+		Game game = getGameState().getGame();
+		RollMechanic mechanic = (RollMechanic) game.getFactory(FactoryType.Factory.MECHANIC).forName(Mechanic.Type.ROLL.name());
+		return mechanic.isReRollSourceOffered(game, reRolledAction, reRollSource, targetId);
 	}
 
 	protected boolean toPrimitive(Boolean bool) {
