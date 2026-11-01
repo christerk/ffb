@@ -467,10 +467,15 @@ public abstract class Player<T extends Position> implements IXmlSerializable, IJ
 	public abstract void resetUsedSkills(SkillUsageType type, Game game);
 
 	public Optional<IInjuryContextModification> getUnusedInjuryModification(InjuryType injuryType) {
+		return getUnusedInjuryModifications(injuryType).stream().findFirst();
+	}
+
+	public List<IInjuryContextModification> getUnusedInjuryModifications(InjuryType injuryType) {
 		return getSkillsIncludingTemporaryOnes().stream()
-			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null &&
-				skill.getSkillBehaviour().hasInjuryModifier(injuryType))
-			.map(skill -> skill.getSkillBehaviour().getInjuryContextModification()).findFirst();
+			.filter(skill -> !isUsed(skill) && skill.getSkillBehaviour() != null)
+			.flatMap(skill -> skill.getSkillBehaviour().getInjuryContextModifications().stream())
+			.filter(modification -> modification.isValidType(injuryType))
+			.collect(Collectors.toList());
 	}
 
 	public boolean canDeclareSkillAction(ISkillProperty property, PlayerState playerState) {

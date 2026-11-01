@@ -9,7 +9,12 @@ import java.util.List;
 
 public interface ISkillBehaviour<T extends Skill> extends IKeyedItem {
 
-	IInjuryContextModification getInjuryContextModification();
+	List<? extends IInjuryContextModification> getInjuryContextModifications();
+
+	default IInjuryContextModification getInjuryContextModification() {
+		List<? extends IInjuryContextModification> modifications = getInjuryContextModifications();
+		return modifications.isEmpty() ? null : modifications.get(0);
+	}
 
 	List<PlayerModifier> getPlayerModifiers();
 
