@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.LayoutSettings;
+import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.swing.JButton;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -12,6 +13,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -24,6 +26,11 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 	private final JSlider fSlider;
 	private final JSlider guiSlider;
 	private final JLabel guiLabel;
+	private final double initialFactor;
+	private final double initialGuiRatio;
+	private final Dimension initialContentSize;
+	private final Timer previewTimer;
+	private boolean previewApplied;
 	private Double appliedGuiRatio;
 	private double factor;
 
@@ -42,6 +49,11 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 		if (factor > LayoutSettings.MAX_SCALE_FACTOR) {
 			factor = LayoutSettings.MAX_SCALE_FACTOR;
 		}
+		initialFactor = dimensionProvider().getLayoutSettings().getScale();
+		initialGuiRatio = dimensionProvider().getLayoutSettings().getGuiRatio();
+		initialContentSize = new Dimension(pClient.getUserInterface().getDesktop().getSize());
+		previewTimer = new Timer(100, event -> preview());
+		previewTimer.setRepeats(false);
 
 		fSlider = new JSlider();
 		fSlider.setMinimum((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR));
@@ -52,14 +64,19 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 			(int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
 		guiSlider.setValue((int) Math.round(dimensionProvider().getLayoutSettings().getGuiRatio() * SLIDER_FACTOR));
 		guiLabel = new JLabel(dimensionProvider(), "100%");
-		guiSlider.addChangeListener(event -> updateSettingLabel());
+		guiSlider.addChangeListener(event -> {
+			updateSettingLabel();
+			queuePreview();
+		});
 
 		fSettingLabel = new JLabel(dimensionProvider(), "500%");
 
 		fSettingLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-		JButton fTestButton = new JButton(dimensionProvider(), "Apply");
+		JButton fTestButton = new JButton(dimensionProvider(), "Confirm");
 		fTestButton.addActionListener(this);
+		JButton cancelButton = new JButton(dimensionProvider(), "Cancel");
+		cancelButton.addActionListener(event -> internalFrameClosing(null));
 
 		JPanel settingPanel = new JPanel(new GridBagLayout());
 		settingPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -87,7 +104,12 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 		constraints.gridy = 1;
 		settingPanel.add(guiLabel, constraints);
 		constraints.gridy = 2;
-		settingPanel.add(fTestButton, constraints);
+		JPanel buttons = new JPanel();
+		buttons.add(cancelButton);
+		buttons.add(fTestButton);
+		constraints.gridx = 0;
+		constraints.gridwidth = 3;
+		settingPanel.add(buttons, constraints);
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(settingPanel);
@@ -107,6 +129,26 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 	public void stateChanged(ChangeEvent pE) {
 		factor = ((double)fSlider.getValue())/ SLIDER_FACTOR;
 		updateSettingLabel();
+		queuePreview();
+	}
+
+	private void queuePreview() {
+		if (!previewTimer.isRunning()) {
+			previewTimer.start();
+		}
+	}
+
+	private void preview() {
+		double ratio = (double) guiSlider.getValue() / SLIDER_FACTOR;
+		double resize = factor / initialFactor;
+		Dimension contentSize = new Dimension((int) Math.round(initialContentSize.width * resize),
+			(int) Math.round(initialContentSize.height * resize));
+		UserInterface userInterface = getClient().getUserInterface();
+		userInterface.previewScale(factor, ratio, contentSize);
+		previewApplied = true;
+		Dimension desktop = userInterface.getDesktop().getSize();
+		setLocation(Math.max(0, Math.min(getX(), desktop.width - getWidth())),
+			Math.max(0, Math.min(getY(), desktop.height - getHeight())));
 	}
 
 	private void updateSettingLabel() {
@@ -116,9 +158,21 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 	}
 
 	public void actionPerformed(ActionEvent pE) {
+		previewTimer.stop();
+		preview();
 		appliedFactor = factor;
 		appliedGuiRatio = (double) guiSlider.getValue() / SLIDER_FACTOR;
 		internalFrameClosing(null);
+	}
+
+	@Override
+	public void hideDialog() {
+		previewTimer.stop();
+		if (appliedFactor == null && previewApplied) {
+			getClient().getUserInterface().previewScale(initialFactor, initialGuiRatio, initialContentSize);
+			previewApplied = false;
+		}
+		super.hideDialog();
 	}
 
 	public void internalFrameClosing(InternalFrameEvent pE) {

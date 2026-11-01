@@ -266,6 +266,19 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 	}
 
+	public void previewScale(double scale, double guiRatio, Dimension contentSize) {
+		layoutSettings.setScale(scale);
+		layoutSettings.setGuiRatio(guiRatio);
+		Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
+		int frameWidth = getWidth() - fDesktop.getWidth();
+		int frameHeight = getHeight() - fDesktop.getHeight();
+		setMinimumSize(new Dimension(minimum.width + frameWidth, minimum.height + frameHeight));
+		setSize(Math.max(contentSize.width, minimum.width) + frameWidth,
+			Math.max(contentSize.height, minimum.height) + frameHeight);
+		validate();
+		resizeClient();
+	}
+
 	public ClientSketchManager getSketchManager() {
 		return sketchManager;
 	}
