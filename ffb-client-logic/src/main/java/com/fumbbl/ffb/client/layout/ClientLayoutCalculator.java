@@ -27,11 +27,15 @@ public class ClientLayoutCalculator {
 	}
 
 	public ClientLayoutResult calculate(LayoutSettings layoutSettings, Dimension availableSize) {
-		Dimension naturalSize = naturalContentSize(layoutSettings);
+		Dimension naturalSize = referenceContentSize(layoutSettings);
 		double resizeScale = Math.min((double) availableSize.width / naturalSize.width,
 			(double) availableSize.height / naturalSize.height);
-		double guiScale = layoutSettings.getGuiScale() * resizeScale;
-		double dugoutScale = layoutSettings.getDugoutScale() * resizeScale;
+		double effectiveRatio = Math.max(LayoutSettings.MIN_GUI_RATIO,
+			Math.min(layoutSettings.getGuiRatio(), LayoutSettings.MAX_GUI_RATIO));
+		double guiScale = layoutSettings.getScale() * effectiveRatio * resizeScale;
+		double dugoutScale = layoutSettings.getGuiRatio() > 0
+			? layoutSettings.getDugoutScale() * effectiveRatio / layoutSettings.getGuiRatio() * resizeScale
+			: 0;
 
 		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR, guiScale);
 		Dimension reserveBox = dimension(layoutSettings, Component.BOX, guiScale);
@@ -40,8 +44,7 @@ public class ClientLayoutCalculator {
 		Dimension chat = dimension(layoutSettings, Component.CHAT, guiScale);
 		Dimension pitch = unscaledDimension(layoutSettings, Component.FIELD);
 
-		Dimension layoutSize = LayoutAreas.naturalSize(layoutSettings.getLayout(), sidebar,
-			scale(pitch, layoutSettings.getPitchScale() * resizeScale), score, log, chat);
+		Dimension layoutSize = scale(naturalSize, resizeScale);
 		Rectangle content = new Rectangle((availableSize.width - layoutSize.width) / 2,
 			(availableSize.height - layoutSize.height) / 2, layoutSize.width, layoutSize.height);
 
@@ -87,8 +90,14 @@ public class ClientLayoutCalculator {
 
 	public Dimension minimumContentSize(LayoutSettings layoutSettings) {
 		LayoutSettings minimum = new LayoutSettings(layoutSettings.getLayout(), LayoutSettings.MIN_SCALE_FACTOR);
-		minimum.setGuiRatio(layoutSettings.getGuiRatio());
+		minimum.setGuiRatio(Math.max(LayoutSettings.MIN_GUI_RATIO,
+			Math.min(layoutSettings.getGuiRatio(), LayoutSettings.MAX_GUI_RATIO)));
 		return naturalContentSize(minimum);
+	}
+
+	private Dimension referenceContentSize(LayoutSettings settings) {
+		LayoutSettings reference = new LayoutSettings(settings.getLayout(), settings.getScale());
+		return naturalContentSize(reference);
 	}
 
 	private Dimension dimension(LayoutSettings layoutSettings, Component component) {

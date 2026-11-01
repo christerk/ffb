@@ -60,8 +60,8 @@ public class DialogScalingFactor extends Dialog implements ChangeListener, Actio
 		fSlider.setMaximum((int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
 		fSlider.setValue((int) (factor * SLIDER_FACTOR));
 		fSlider.addChangeListener(this);
-		guiSlider = new JSlider((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR),
-			(int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
+		guiSlider = new JSlider((int) (LayoutSettings.MIN_GUI_RATIO * SLIDER_FACTOR),
+			(int) (LayoutSettings.MAX_GUI_RATIO * SLIDER_FACTOR));
 		guiSlider.setValue((int) Math.round(dimensionProvider().getLayoutSettings().getGuiRatio() * SLIDER_FACTOR));
 		guiLabel = new JLabel(dimensionProvider(), "100%");
 		guiSlider.addChangeListener(event -> {

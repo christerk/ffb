@@ -32,6 +32,20 @@ import static org.mockito.Mockito.when;
 
 class DialogScalingFactorTest {
 	@Test
+	void guiSliderUsesFixedRangeFrom25To100Percent() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		SwingUtilities.invokeAndWait(() -> {
+			DialogScalingFactor dialog = dialog(userInterface);
+			JSlider guiSlider = sliders(dialog).get(1);
+			assertEquals(5, guiSlider.getMinimum());
+			assertEquals(20, guiSlider.getMaximum());
+			guiSlider.setValue(30);
+			assertEquals(20, guiSlider.getValue());
+			dialog.hideDialog();
+		});
+	}
+
+	@Test
 	void cancelRestoresOriginalScaleAndWindowAfterPreview() throws Exception {
 		UserInterface userInterface = mock(UserInterface.class);
 		DialogScalingFactor[] dialog = new DialogScalingFactor[1];

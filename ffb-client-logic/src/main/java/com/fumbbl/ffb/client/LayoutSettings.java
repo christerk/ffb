@@ -5,6 +5,8 @@ public class LayoutSettings {
 	public static final double MIN_SCALE_FACTOR = 0.5;
 	public static final double MAX_SCALE_FACTOR = 3;
 	public static final double BASE_SCALE_FACTOR = 1.0;
+	public static final double MIN_GUI_RATIO = 0.25;
+	public static final double MAX_GUI_RATIO = 1.0;
 	public static final int SIDEBAR_WIDTH_L = 145;
 	public static final int SIDEBAR_WIDTH_P = 165;
 	public static final int BASE_SQUARE_SIZE = 30;

@@ -121,9 +121,8 @@ class ClientLayoutCalculatorTest {
 		for (ClientLayout layout : new ClientLayout[] {
 			ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT, ClientLayout.SQUARE, ClientLayout.WIDE
 		}) {
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.0);
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.5, 1.0);
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.5);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 0.25);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0);
 		}
 	}
 
@@ -131,9 +130,9 @@ class ClientLayoutCalculatorTest {
 	void resizingPreservesGuiAndPitchProportionsAcrossLayoutsAndWindowShapes() {
 		for (ClientLayout layout : ClientLayout.values()) {
 			LayoutSettings settings = new LayoutSettings(layout, 1.0);
-			settings.setGuiRatio(1.5);
+			settings.setGuiRatio(0.75);
 			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-			Dimension natural = calculator.naturalContentSize(settings);
+			Dimension natural = calculator.naturalContentSize(new LayoutSettings(layout, 1.0));
 			ClientLayoutResult base = calculator.calculate(settings, natural);
 			ClientLayoutResult enlarged = calculator.calculate(settings,
 				new Dimension(natural.width * 2, natural.height * 2));
@@ -157,7 +156,7 @@ class ClientLayoutCalculatorTest {
 	@Test
 	void minimumContentSizePreservesGuiRatioWhenOverallScaleChanges() {
 		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
-		settings.setGuiRatio(1.5);
+		settings.setGuiRatio(0.75);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
 		Dimension minimum = calculator.minimumContentSize(settings);
 		settings.setScale(2.0);
@@ -170,22 +169,80 @@ class ClientLayoutCalculatorTest {
 		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
 		Dimension content = new Dimension(1500, 1000);
+		settings.setGuiRatio(0.5);
 		ClientLayoutResult normal = calculator.calculate(settings, content);
-		settings.setGuiRatio(1.5);
+		settings.setGuiRatio(1.0);
 		ClientLayoutResult largerGui = calculator.calculate(settings, content);
 
 		assertTrue(largerGui.runtimeGuiScale() / largerGui.pitchScale()
 			> normal.runtimeGuiScale() / normal.pitchScale());
 	}
 
-	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale,
-		double pitchScale) {
-		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
-		layoutSettings.setGuiScale(guiScale);
-		layoutSettings.setPitchScale(pitchScale);
+	@Test
+	void guiLimitKeepsPanelsInsideTheLayoutAndLeavesAtLeastHalfSizePitch() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, 1.0);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			Dimension content = calculator.naturalContentSize(settings);
+			double limit = LayoutSettings.MAX_GUI_RATIO;
+			settings.setGuiRatio(limit);
+			ClientLayoutResult result = calculator.calculate(settings, content);
 
+			assertTrue(result.pitchScale() >= 0.5 - 0.01, layout.toString());
+			Rectangle bounds = new Rectangle(content);
+			assertTrue(bounds.contains(result.fieldBounds()), layout.toString());
+			assertTrue(bounds.contains(result.homeSidebarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.awaySidebarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.scoreBarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.logBounds()), layout.toString());
+			assertTrue(bounds.contains(result.chatBounds()), layout.toString());
+
+			settings.setGuiRatio(limit + 0.5);
+			ClientLayoutResult aboveLimit = calculator.calculate(settings, content);
+			assertEquals(result.runtimeGuiScale(), aboveLimit.runtimeGuiScale(), 0.0001, layout.toString());
+			assertEquals(result.fieldBounds(), aboveLimit.fieldBounds(), layout.toString());
+		}
+	}
+
+	@Test
+	void guiRatioChangesGuiSizeWithoutResizingTheClient() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, 1.0);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			Dimension content = calculator.naturalContentSize(settings);
+			settings.setGuiRatio(0.25);
+			ClientLayoutResult small = calculator.calculate(settings, content);
+			settings.setGuiRatio(LayoutSettings.MAX_GUI_RATIO);
+			ClientLayoutResult large = calculator.calculate(settings, content);
+
+			assertEquals(content, large.contentSize());
+			assertTrue(large.runtimeGuiScale() > small.runtimeGuiScale(), layout.toString());
+			assertTrue(large.pitchScale() < small.pitchScale(), layout.toString());
+		}
+	}
+
+	@Test
+	void smallestGuiRatioProducesPositiveComponentSizesInEveryLayout() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, LayoutSettings.MIN_SCALE_FACTOR);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			Dimension content = calculator.naturalContentSize(settings);
+			settings.setGuiRatio(LayoutSettings.MIN_GUI_RATIO);
+			ClientLayoutResult result = calculator.calculate(settings, content);
+
+			assertEquals(0.125, result.runtimeGuiScale(), 0.0001, layout.toString());
+			assertTrue(result.homeSidebarBounds().width > 0, layout.toString());
+			assertTrue(result.scoreBarBounds().height > 0, layout.toString());
+			assertTrue(result.logBounds().width > 0 && result.logBounds().height > 0, layout.toString());
+			assertTrue(result.chatBounds().width > 0 && result.chatBounds().height > 0, layout.toString());
+		}
+	}
+
+	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale) {
+		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
 		Dimension naturalContentSize = calculator.naturalContentSize(layoutSettings);
+		layoutSettings.setGuiRatio(guiScale);
 		ClientLayoutResult result = calculator.calculate(layoutSettings, naturalContentSize);
 
 		assertEquals(layoutSettings.getGuiScale(), result.runtimeGuiScale(), 0.0001);
