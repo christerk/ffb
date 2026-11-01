@@ -1,6 +1,6 @@
 # BB2025: Chained Armour and Injury Modifications
 
-Status: **in progress**, steps 1, 2 and 4 implemented (not used by the game flow yet).
+Status: **in progress**, steps 1, 2 and 4 implemented in #351 (not used by the game flow yet).
 Scope: **BB2025 only**. `bb2016` and `bb2020` keep the current "one precomputed alternative" behaviour untouched.
 
 ---
