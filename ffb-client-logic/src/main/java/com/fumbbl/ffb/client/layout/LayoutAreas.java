@@ -8,8 +8,7 @@ import java.awt.Rectangle;
 /**
  * Describes the major regions of a client layout.
  *
- * This class owns layout topology: side rails, pitch area, and panel area.
- * It does not place individual Swing components inside those regions.
+ * This class owns layout topology and HUD component placement.
  */
 
 class LayoutAreas {
@@ -26,6 +25,26 @@ class LayoutAreas {
 	final Rectangle pitchArea;
 	final Rectangle infoArea;
 	final InfoPosition infoPosition;
+
+	static class HudBounds {
+
+		final Rectangle homeRail;
+		final Rectangle homeReserveBox;
+		final Rectangle awayRail;
+		final Rectangle score;
+		final Rectangle log;
+		final Rectangle chat;
+
+		HudBounds(Rectangle homeRail, Rectangle homeReserveBox, Rectangle awayRail, Rectangle score, Rectangle log,
+			Rectangle chat) {
+			this.homeRail = homeRail;
+			this.homeReserveBox = homeReserveBox;
+			this.awayRail = awayRail;
+			this.score = score;
+			this.log = log;
+			this.chat = chat;
+		}
+	}
 
 	private LayoutAreas(Rectangle homeRail, Rectangle awayRail, Rectangle pitchArea, Rectangle infoArea,
 		InfoPosition infoPosition) {
@@ -61,41 +80,49 @@ class LayoutAreas {
 	}
 
 	private static LayoutAreas landscape(Rectangle content, int railWidth, Dimension infoSize) {
-		Rectangle centerColumn = new Rectangle(content.x + railWidth, content.y,
-			Math.max(1, content.width - (2 * railWidth)), content.height);
-		int pitchAreaHeight = Math.max(1, centerColumn.height - infoSize.height);
+		Rectangle homeRail = leftStrip(content, railWidth);
+		Rectangle awayRail = rightStrip(content, railWidth);
+		Rectangle centerColumn = betweenHorizontal(homeRail, awayRail, content);
+		Rectangle infoArea = bottomStrip(centerColumn, infoSize.height);
+		Rectangle pitchArea = above(centerColumn, infoArea);
 
 		return new LayoutAreas(
-			new Rectangle(content.x, content.y, railWidth, content.height),
-			new Rectangle(content.x + content.width - railWidth, content.y, railWidth, content.height),
-			new Rectangle(centerColumn.x, centerColumn.y, centerColumn.width, pitchAreaHeight),
-			new Rectangle(centerColumn.x, centerColumn.y + pitchAreaHeight, centerColumn.width, infoSize.height),
+			homeRail,
+			awayRail,
+			pitchArea,
+			infoArea,
 			InfoPosition.BOTTOM
 		);
 	}
 
 	private static LayoutAreas portrait(Rectangle content, int railWidth, Dimension infoSize) {
-		int gameHeight = Math.max(1, content.height - infoSize.height);
-		Rectangle gameArea = new Rectangle(content.x, content.y, content.width, gameHeight);
+		Rectangle infoArea = bottomStrip(content, infoSize.height);
+		Rectangle gameArea = above(content, infoArea);
+		Rectangle homeRail = leftStrip(gameArea, railWidth);
+		Rectangle awayRail = rightStrip(gameArea, railWidth);
+		Rectangle pitchArea = betweenHorizontal(homeRail, awayRail, gameArea);
 
 		return new LayoutAreas(
-			new Rectangle(gameArea.x, gameArea.y, railWidth, gameArea.height),
-			new Rectangle(gameArea.x + gameArea.width - railWidth, gameArea.y, railWidth, gameArea.height),
-			new Rectangle(gameArea.x + railWidth, gameArea.y, Math.max(1, gameArea.width - (2 * railWidth)), gameArea.height),
-			new Rectangle(content.x, content.y + gameHeight, content.width, infoSize.height),
+			homeRail,
+			awayRail,
+			pitchArea,
+			infoArea,
 			InfoPosition.BOTTOM
 		);
 	}
 
 	private static LayoutAreas square(Rectangle content, int railWidth, Dimension infoSize) {
-		int gameWidth = Math.max(1, content.width - infoSize.width);
-		Rectangle gameArea = new Rectangle(content.x, content.y, gameWidth, content.height);
+		Rectangle infoArea = rightStrip(content, infoSize.width);
+		Rectangle gameArea = leftOf(content, infoArea);
+		Rectangle homeRail = leftStrip(gameArea, railWidth);
+		Rectangle awayRail = rightStrip(gameArea, railWidth);
+		Rectangle pitchArea = betweenHorizontal(homeRail, awayRail, gameArea);
 
 		return new LayoutAreas(
-			new Rectangle(gameArea.x, gameArea.y, railWidth, gameArea.height),
-			new Rectangle(gameArea.x + gameArea.width - railWidth, gameArea.y, railWidth, gameArea.height),
-			new Rectangle(gameArea.x + railWidth, gameArea.y, Math.max(1, gameArea.width - (2 * railWidth)), gameArea.height),
-			new Rectangle(content.x + gameWidth, content.y, infoSize.width, content.height),
+			homeRail,
+			awayRail,
+			pitchArea,
+			infoArea,
 			InfoPosition.RIGHT
 		);
 	}
@@ -118,13 +145,6 @@ class LayoutAreas {
 		return new Dimension(gameWidth + infoSize.width, Math.max(gameHeight, infoSize.height));
 	}
 
-	Rectangle finalInfoArea(Rectangle pitchBounds) {
-		if (infoPosition == InfoPosition.BOTTOM) {
-			return new Rectangle(infoArea.x, pitchBounds.y + pitchBounds.height, infoArea.width, infoArea.height);
-		}
-		return new Rectangle(infoArea);
-	}
-
 	private static Dimension bottomInfoSize(Dimension score, Dimension log, Dimension chat) {
 		Dimension logChat = logChatSize(log, chat);
 		return new Dimension(Math.max(score.width, logChat.width), score.height + logChat.height);
@@ -139,4 +159,83 @@ class LayoutAreas {
 		return new Dimension(log.width + LOG_CHAT_GAP + chat.width + (2 * PANEL_BORDER),
 			Math.max(log.height, chat.height) + (2 * PANEL_BORDER));
 	}
+
+	Rectangle finalInfoArea(Rectangle pitchBounds) {
+		if (infoPosition == InfoPosition.BOTTOM) {
+			return new Rectangle(infoArea.x, pitchBounds.y + pitchBounds.height, infoArea.width, infoArea.height);
+		}
+		return new Rectangle(infoArea);
+	}
+
+	HudBounds placeHud(Rectangle pitchBounds, Dimension reserveBox, Dimension score, Dimension log, Dimension chat) {
+		Rectangle infoArea = finalInfoArea(pitchBounds);
+		Rectangle homeReserveBox = new Rectangle(homeRail.x, homeRail.y, reserveBox.width, reserveBox.height);
+		if (infoPosition == InfoPosition.RIGHT) {
+			return placeRightHud(infoArea, homeReserveBox, score, log, chat);
+		}
+		return placeBottomHud(infoArea, homeReserveBox, score, log, chat);
+	}
+
+	private HudBounds placeRightHud(Rectangle infoArea, Rectangle homeReserveBox, Dimension score, Dimension log,
+		Dimension chat) {
+		Rectangle logBounds = topLeft(infoArea, log, PANEL_BORDER, PANEL_BORDER);
+		Rectangle scoreBounds = below(logBounds, score);
+		Rectangle chatBounds = below(scoreBounds, chat);
+		return new HudBounds(homeRail, homeReserveBox, awayRail, scoreBounds, logBounds, chatBounds);
+	}
+
+	private HudBounds placeBottomHud(Rectangle infoArea, Rectangle homeReserveBox, Dimension score, Dimension log,
+		Dimension chat) {
+		Rectangle scoreBounds = topCenter(infoArea, score);
+		Rectangle logChatArea = below(scoreBounds, logChatSize(log, chat), PANEL_BORDER);
+		Rectangle logBounds = topLeft(logChatArea, log, PANEL_BORDER, 0);
+		Rectangle chatBounds = rightOf(logBounds, chat, LOG_CHAT_GAP);
+		return new HudBounds(homeRail, homeReserveBox, awayRail, scoreBounds, logBounds, chatBounds);
+	}
+
+	private static Rectangle leftStrip(Rectangle rectangle, int width) {
+		return new Rectangle(rectangle.x, rectangle.y, width, rectangle.height);
+	}
+
+	private static Rectangle rightStrip(Rectangle rectangle, int width) {
+		return new Rectangle(rectangle.x + rectangle.width - width, rectangle.y, width, rectangle.height);
+	}
+
+	private static Rectangle bottomStrip(Rectangle rectangle, int height) {
+		int availableHeight = Math.max(1, rectangle.height - height);
+		return new Rectangle(rectangle.x, rectangle.y + availableHeight, rectangle.width, height);
+	}
+
+	private static Rectangle leftOf(Rectangle rectangle, Rectangle rightStrip) {
+		return new Rectangle(rectangle.x, rectangle.y, Math.max(1, rightStrip.x - rectangle.x), rectangle.height);
+	}
+
+	private static Rectangle rightOf(Rectangle rectangle, Dimension size, int gap) {
+		return new Rectangle(rectangle.x + rectangle.width + gap, rectangle.y, size.width, size.height);
+	}
+
+	private static Rectangle above(Rectangle rectangle, Rectangle bottomStrip) {
+		return new Rectangle(rectangle.x, rectangle.y, rectangle.width, Math.max(1, bottomStrip.y - rectangle.y));
+	}
+
+	private static Rectangle betweenHorizontal(Rectangle left, Rectangle right, Rectangle bounds) {
+		return new Rectangle(left.x + left.width, bounds.y, Math.max(1, right.x - (left.x + left.width)), bounds.height);
+	}
+
+	private static Rectangle topLeft(Rectangle area, Dimension size, int insetX, int insetY) {
+		return new Rectangle(area.x + insetX, area.y + insetY, size.width, size.height);
+	}
+
+	private static Rectangle topCenter(Rectangle area, Dimension size) {
+		return new Rectangle(area.x + ((area.width - size.width) / 2), area.y, size.width, size.height);
+	}
+
+	private static Rectangle below(Rectangle rectangle, Dimension size) {
+		return new Rectangle(rectangle.x, rectangle.y + rectangle.height, size.width, size.height);
+	}
+
+	private static Rectangle below(Rectangle rectangle, Dimension size, int gap) {
+		return new Rectangle(rectangle.x, rectangle.y + rectangle.height + gap, size.width, size.height);
+	}
+
 }

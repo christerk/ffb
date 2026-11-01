@@ -78,6 +78,17 @@ public class BoxComponent extends JPanel implements MouseListener, MouseMotionLi
 		setMaximumSize(size);
 	}
 
+	public boolean resizeIfNeeded() {
+		Dimension currentSize = uiDimensionProvider.dimension(Component.BOX);
+		if (fImage != null && currentSize.equals(size)) {
+			return false;
+		}
+
+		initLayout();
+		refresh();
+		return true;
+	}
+
 	public void initObserver() {
 		fSideBar.getClient().getGame().addObserver(this);
 	}

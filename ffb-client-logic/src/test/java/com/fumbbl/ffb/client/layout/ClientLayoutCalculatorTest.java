@@ -87,6 +87,7 @@ class ClientLayoutCalculatorTest {
 		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
 		assertEquals(1.0, result.pitchScale(), 0.0001);
 		assertEquals(1.0, result.runtimeGuiScale(), 0.0001);
+		assertEquals(1.0, result.runtimeDugoutScale(), 0.0001);
 	}
 
 	@Test
@@ -173,6 +174,16 @@ class ClientLayoutCalculatorTest {
 		ClientLayoutResult result = new ClientLayoutCalculator().calculate(layoutSettings, new Dimension(1272, 812));
 
 		assertEquals(1.5, result.runtimeGuiScale(), 0.0001);
+	}
+
+	@Test
+	void returnsConfiguredDugoutScaleAsTheRuntimeDugoutScaleForDynamicPitch() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		layoutSettings.setDugoutScale(1.5);
+
+		ClientLayoutResult result = new ClientLayoutCalculator().calculate(layoutSettings, new Dimension(1272, 812));
+
+		assertEquals(1.5, result.runtimeDugoutScale(), 0.0001);
 	}
 
 	@Test

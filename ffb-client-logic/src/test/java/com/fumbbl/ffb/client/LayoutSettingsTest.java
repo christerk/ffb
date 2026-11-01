@@ -3,6 +3,8 @@ package com.fumbbl.ffb.client;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LayoutSettingsTest {
 
@@ -57,5 +59,16 @@ class LayoutSettingsTest {
 
 		assertEquals(LayoutSettings.MAX_SCALE_FACTOR, max.largerScale());
 		assertEquals(LayoutSettings.MIN_SCALE_FACTOR, min.smallerScale());
+	}
+
+	@Test
+	void dynamicPitchScalingDefaultsToOnAndCanBeChanged() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+
+		assertTrue(layoutSettings.isDynamicPitchScaling());
+
+		layoutSettings.setDynamicPitchScaling(false);
+
+		assertFalse(layoutSettings.isDynamicPitchScaling());
 	}
 }

@@ -54,6 +54,16 @@ public class LogComponent extends JPanel implements MouseMotionListener, IReplay
 		fLogTextPane.update();
 	}
 
+	public boolean resizeIfNeeded() {
+		Dimension size = dimensionProvider.dimension(Component.LOG);
+		if (size.equals(getPreferredSize())) {
+			return false;
+		}
+
+		initLayout();
+		return true;
+	}
+
 	public void append(ParagraphStyle pTextIndent, TextStyle pStyle, String pText) {
 		fLogTextPane.append(pTextIndent, pStyle, pText);
 	}

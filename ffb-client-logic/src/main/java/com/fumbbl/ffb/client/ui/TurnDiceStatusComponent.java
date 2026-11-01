@@ -115,6 +115,7 @@ public class TurnDiceStatusComponent extends JPanel
 		setMaximumSize(size);
 		Dimension buttonDimension = dimensionProvider.dimension(Component.END_TURN_BUTTON);
 		buttonArea = new Rectangle(1, 1, buttonDimension.width, buttonDimension.height);
+		fRefreshNecessary = true;
 	}
 
 	public SideBarComponent getSideBar() {

@@ -15,6 +15,16 @@ class DimensionProviderTest {
 	}
 
 	@Test
+	void uiProviderUsesRuntimeGuiScale() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.WIDE, 2.0);
+		UiDimensionProvider provider = new UiDimensionProvider(layoutSettings);
+
+		provider.setRuntimeGuiScale(0.75);
+
+		assertEquals(0.75, provider.effectiveScale(), 0.0001);
+	}
+
+	@Test
 	void pitchProviderUsesPitchScaleAndLayoutPitchMultiplier() {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.WIDE, 2.0);
 
@@ -26,6 +36,16 @@ class DimensionProviderTest {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.WIDE, 2.0);
 
 		assertEquals(2.5, new DugoutDimensionProvider(layoutSettings).effectiveScale(), 0.0001);
+	}
+
+	@Test
+	void dugoutProviderUsesRuntimeDugoutScaleAndLayoutDugoutMultiplier() {
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.WIDE, 2.0);
+		DugoutDimensionProvider provider = new DugoutDimensionProvider(layoutSettings);
+
+		provider.setRuntimeDugoutScale(0.75);
+
+		assertEquals(0.9375, provider.effectiveScale(), 0.0001);
 	}
 
 	@Test

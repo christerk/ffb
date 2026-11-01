@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
+import static com.fumbbl.ffb.CommonProperty.SETTING_DYNAMIC_PITCH_SCALING;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE_PATH;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOG;
@@ -62,6 +63,8 @@ public class ClientSettingsMenu extends FfbMenu {
 	private JRadioButtonMenuItem pitchPortraitMenuItem;
 	private JRadioButtonMenuItem layoutSquareMenuItem;
 	private JRadioButtonMenuItem layoutWideMenuItem;
+	private JRadioButtonMenuItem dynamicPitchScalingOnMenuItem;
+	private JRadioButtonMenuItem dynamicPitchScalingOffMenuItem;
 
 	private JRadioButtonMenuItem logOnMenuItem;
 	private JRadioButtonMenuItem logOffMenuItem;
@@ -85,6 +88,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		createSoundMenu();
 		createMarkingMenu();
 		createClientUiMenu();
+		createDynamicPitchScalingMenu();
 		createScaleItem();
 		createLogMenu();
 		createLocalIconCacheMenu();
@@ -115,6 +119,10 @@ public class ClientSettingsMenu extends FfbMenu {
 		layoutSquareMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_SQUARE.equals(orientationSetting));
 		layoutWideMenuItem.setSelected(IClientPropertyValue.SETTING_LAYOUT_WIDE.equals(orientationSetting));
 
+		String dynamicPitchScalingSetting = client.getProperty(SETTING_DYNAMIC_PITCH_SCALING);
+		dynamicPitchScalingOnMenuItem.setSelected(true);
+		dynamicPitchScalingOffMenuItem.setSelected(IClientPropertyValue.SETTING_DYNAMIC_PITCH_SCALING_OFF.equals(dynamicPitchScalingSetting));
+
 		String logModeSetting = client.getProperty(SETTING_LOG_MODE);
 		logOnMenuItem.setSelected(true);
 		logOffMenuItem.setSelected(IClientPropertyValue.SETTING_LOG_OFF.equals(logModeSetting));
@@ -129,6 +137,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
+		refreshUi |= updateDynamicPitchScaling();
 
 		return refreshUi;
 	}
@@ -200,6 +209,14 @@ public class ClientSettingsMenu extends FfbMenu {
 		}
 		if (source == layoutWideMenuItem) {
 			client.setProperty(CommonProperty.SETTING_UI_LAYOUT, IClientPropertyValue.SETTING_LAYOUT_WIDE);
+			client.saveUserSettings(true);
+		}
+		if (source == dynamicPitchScalingOnMenuItem) {
+			client.setProperty(SETTING_DYNAMIC_PITCH_SCALING, IClientPropertyValue.SETTING_DYNAMIC_PITCH_SCALING_ON);
+			client.saveUserSettings(true);
+		}
+		if (source == dynamicPitchScalingOffMenuItem) {
+			client.setProperty(SETTING_DYNAMIC_PITCH_SCALING, IClientPropertyValue.SETTING_DYNAMIC_PITCH_SCALING_OFF);
 			client.saveUserSettings(true);
 		}
 
@@ -460,6 +477,24 @@ public class ClientSettingsMenu extends FfbMenu {
 		orientationMenu.add(layoutWideMenuItem);
 	}
 
+	private void createDynamicPitchScalingMenu() {
+		JMenu dynamicPitchScalingMenu = new JMenu(dimensionProvider, SETTING_DYNAMIC_PITCH_SCALING);
+		dynamicPitchScalingMenu.setMnemonic(KeyEvent.VK_D);
+		add(dynamicPitchScalingMenu);
+
+		ButtonGroup dynamicPitchScalingGroup = new ButtonGroup();
+
+		dynamicPitchScalingOnMenuItem = new JRadioButtonMenuItem(dimensionProvider, "On");
+		dynamicPitchScalingOnMenuItem.addActionListener(this);
+		dynamicPitchScalingGroup.add(dynamicPitchScalingOnMenuItem);
+		dynamicPitchScalingMenu.add(dynamicPitchScalingOnMenuItem);
+
+		dynamicPitchScalingOffMenuItem = new JRadioButtonMenuItem(dimensionProvider, "Off");
+		dynamicPitchScalingOffMenuItem.addActionListener(this);
+		dynamicPitchScalingGroup.add(dynamicPitchScalingOffMenuItem);
+		dynamicPitchScalingMenu.add(dynamicPitchScalingOffMenuItem);
+	}
+
 	private boolean updateOrientation() {
 
 		ClientLayout layout = ClientLayout.LANDSCAPE;
@@ -490,6 +525,18 @@ public class ClientSettingsMenu extends FfbMenu {
 				fontCache.clear();
 				UIManager.put("ToolTip.font", fontCache.font(Font.PLAIN, 14, dimensionProvider));
 			}
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean updateDynamicPitchScaling() {
+		String value = client.getProperty(SETTING_DYNAMIC_PITCH_SCALING);
+		boolean dynamicPitchScaling = !IClientPropertyValue.SETTING_DYNAMIC_PITCH_SCALING_OFF.equals(value);
+
+		if (dynamicPitchScaling != layoutSettings.isDynamicPitchScaling()) {
+			layoutSettings.setDynamicPitchScaling(dynamicPitchScaling);
 			return true;
 		}
 

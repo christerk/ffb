@@ -181,6 +181,16 @@ public class ChatComponent extends JPanel implements MouseMotionListener {
 
 	}
 
+	public boolean resizeIfNeeded() {
+		Dimension size = dimensionProvider.dimension(Component.CHAT);
+		if (size.equals(getPreferredSize())) {
+			return false;
+		}
+
+		initLayout();
+		return true;
+	}
+
 	public void append(TextStyle pStyle, String pText) {
 		fChatTextPane.append(null, pStyle, pText);
 		fChatTextPane.append(null, null, null);

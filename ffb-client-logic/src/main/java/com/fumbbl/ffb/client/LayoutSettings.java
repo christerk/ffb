@@ -14,6 +14,7 @@ public class LayoutSettings {
 	private double guiScale;
 	private double pitchScale;
 	private double dugoutScale;
+	private boolean dynamicPitchScaling = true;
 	private ClientLayout layout;
 
 	public LayoutSettings(ClientLayout layout, double scale) {
@@ -61,6 +62,14 @@ public class LayoutSettings {
 
 	public void setDugoutScale(double dugoutScale) {
 		this.dugoutScale = dugoutScale;
+	}
+
+	public boolean isDynamicPitchScaling() {
+		return dynamicPitchScaling;
+	}
+
+	public void setDynamicPitchScaling(boolean dynamicPitchScaling) {
+		this.dynamicPitchScaling = dynamicPitchScaling;
 	}
 
 	public double effectivePitchScale() {
