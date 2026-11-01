@@ -9,6 +9,7 @@ import com.fumbbl.ffb.model.PlayerModifier;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.server.injury.modification.InjuryContextModification;
 import com.fumbbl.ffb.server.injury.modification.ModificationParams;
+import com.fumbbl.ffb.server.injury.modification.bb2025.chain.ChainableInjuryModification;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepId;
 
@@ -36,6 +37,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	private final List<StepModifier<? extends IStep, ?>> stepModifiers;
 	private final Map<StepId, Class<? extends IStep>> steps;
 	private final List<InjuryContextModification<? extends ModificationParams>> injuryContextModifications;
+	private final List<ChainableInjuryModification> chainableInjuryModifications;
 
 
 	public SkillBehaviour() {
@@ -43,6 +45,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		stepModifiers = new ArrayList<>();
 		steps = new HashMap<>();
 		injuryContextModifications = new ArrayList<>();
+		chainableInjuryModifications = new ArrayList<>();
 
 		List<RulesCollection.Rules> skillRules = getRules(skillClass);
 		List<RulesCollection.Rules> behaviourRules = getRules(getClass());
@@ -68,6 +71,7 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		this.skill = skill;
 		this.skill.setBehaviour(this);
 		injuryContextModifications.forEach(modification -> modification.setSkill(skill));
+		chainableInjuryModifications.forEach(modification -> modification.setSkill(skill));
 	}
 
 	protected void registerModifier(StepModifier<?, ?> stepModifier) {
@@ -82,6 +86,13 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 		injuryContextModifications.add(injuryContextModification);
 		if (skill != null) {
 			injuryContextModification.setSkill(skill);
+		}
+	}
+
+	protected void registerModifier(ChainableInjuryModification chainableInjuryModification) {
+		chainableInjuryModifications.add(chainableInjuryModification);
+		if (skill != null) {
+			chainableInjuryModification.setSkill(skill);
 		}
 	}
 
@@ -100,6 +111,10 @@ public abstract class SkillBehaviour<T extends Skill> implements ISkillBehaviour
 	@Override
 	public List<InjuryContextModification<? extends ModificationParams>> getInjuryContextModifications() {
 		return injuryContextModifications;
+	}
+
+	public List<ChainableInjuryModification> getChainableInjuryModifications() {
+		return chainableInjuryModifications;
 	}
 
 	@Override
