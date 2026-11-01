@@ -14,7 +14,7 @@ public class LayoutSettings {
 	private double guiScale;
 	private double pitchScale;
 	private double dugoutScale;
-	private boolean dynamicPitchScaling = true;
+	private double guiRatio = 1.0;
 	private ClientLayout layout;
 
 	public LayoutSettings(ClientLayout layout, double scale) {
@@ -31,13 +31,22 @@ public class LayoutSettings {
 	}
 
 	public double getScale() {
-		return getGuiScale();
+		return getPitchScale();
 	}
 
 	public void setScale(double scale) {
-		setGuiScale(scale);
 		setPitchScale(scale);
-		setDugoutScale(scale);
+		setGuiRatio(guiRatio);
+	}
+
+	public double getGuiRatio() {
+		return guiRatio;
+	}
+
+	public void setGuiRatio(double guiRatio) {
+		this.guiRatio = guiRatio;
+		setGuiScale(pitchScale * guiRatio);
+		setDugoutScale(pitchScale * guiRatio);
 	}
 
 	public double getGuiScale() {
@@ -64,14 +73,6 @@ public class LayoutSettings {
 		this.dugoutScale = dugoutScale;
 	}
 
-	public boolean isDynamicPitchScaling() {
-		return dynamicPitchScaling;
-	}
-
-	public void setDynamicPitchScaling(boolean dynamicPitchScaling) {
-		this.dynamicPitchScaling = dynamicPitchScaling;
-	}
-
 	public double effectivePitchScale() {
 		return pitchScale * layout.getPitchScale();
 	}
@@ -81,11 +82,11 @@ public class LayoutSettings {
 	}
 
 	public double largerScale() {
-		return Math.min(MAX_SCALE_FACTOR, guiScale + scaleStep);
+		return Math.min(MAX_SCALE_FACTOR, pitchScale + scaleStep);
 	}
 
 	public double smallerScale() {
-		return Math.max(MIN_SCALE_FACTOR, guiScale - scaleStep);
+		return Math.max(MIN_SCALE_FACTOR, pitchScale - scaleStep);
 	}
 
 }

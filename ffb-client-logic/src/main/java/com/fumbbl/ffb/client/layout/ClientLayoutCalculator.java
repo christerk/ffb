@@ -27,9 +27,11 @@ public class ClientLayoutCalculator {
 	}
 
 	public ClientLayoutResult calculate(LayoutSettings layoutSettings, Dimension availableSize) {
-		double runtimeResizeScale = runtimeResizeScale(layoutSettings, availableSize);
-		double guiScale = layoutSettings.getGuiScale() * runtimeResizeScale;
-		double dugoutScale = layoutSettings.getDugoutScale() * runtimeResizeScale;
+		Dimension naturalSize = naturalContentSize(layoutSettings);
+		double resizeScale = Math.min((double) availableSize.width / naturalSize.width,
+			(double) availableSize.height / naturalSize.height);
+		double guiScale = layoutSettings.getGuiScale() * resizeScale;
+		double dugoutScale = layoutSettings.getDugoutScale() * resizeScale;
 
 		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR, guiScale);
 		Dimension reserveBox = dimension(layoutSettings, Component.BOX, guiScale);
@@ -38,13 +40,11 @@ public class ClientLayoutCalculator {
 		Dimension chat = dimension(layoutSettings, Component.CHAT, guiScale);
 		Dimension pitch = unscaledDimension(layoutSettings, Component.FIELD);
 
-		Dimension layoutSize = layoutSettings.isDynamicPitchScaling()
-			? new Dimension(availableSize)
-			: LayoutAreas.naturalSize(layoutSettings.getLayout(), sidebar,
-				scale(pitch, layoutSettings.getPitchScale() * runtimeResizeScale), score, log, chat);
+		Dimension layoutSize = LayoutAreas.naturalSize(layoutSettings.getLayout(), sidebar,
+			scale(pitch, layoutSettings.getPitchScale() * resizeScale), score, log, chat);
+		Rectangle content = new Rectangle((availableSize.width - layoutSize.width) / 2,
+			(availableSize.height - layoutSize.height) / 2, layoutSize.width, layoutSize.height);
 
-		Rectangle content = centered(layoutSize, availableSize);
-		
 		LayoutAreas areas = LayoutAreas.arrange(layoutSettings.getLayout(), content, sidebar.width, score, log, chat);
 		PitchFit pitchFit = fitPitch(areas.pitchArea, pitch);
 		LayoutAreas.HudBounds hudBounds = areas.placeHud(pitchFit.bounds, reserveBox, score, log, chat);
@@ -76,14 +76,6 @@ public class ClientLayoutCalculator {
 		return (int) (size * scale);
 	}
 
-	private Rectangle centered(Dimension size, Dimension availableSize) {
-		return new Rectangle(
-			(availableSize.width - size.width) / 2,
-			(availableSize.height - size.height) / 2,
-			size.width,
-			size.height);
-	}
-
 	public Dimension naturalContentSize(LayoutSettings layoutSettings) {
 		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR);
 		Dimension score = dimension(layoutSettings, Component.SCORE_BOARD);
@@ -91,6 +83,12 @@ public class ClientLayoutCalculator {
 		Dimension chat = dimension(layoutSettings, Component.CHAT);
 		Dimension pitch = scale(unscaledDimension(layoutSettings, Component.FIELD), layoutSettings.getPitchScale());
 		return LayoutAreas.naturalSize(layoutSettings.getLayout(), sidebar, pitch, score, log, chat);
+	}
+
+	public Dimension minimumContentSize(LayoutSettings layoutSettings) {
+		LayoutSettings minimum = new LayoutSettings(layoutSettings.getLayout(), LayoutSettings.MIN_SCALE_FACTOR);
+		minimum.setGuiRatio(layoutSettings.getGuiRatio());
+		return naturalContentSize(minimum);
 	}
 
 	private Dimension dimension(LayoutSettings layoutSettings, Component component) {
@@ -107,16 +105,6 @@ public class ClientLayoutCalculator {
 
 	private Dimension scale(Dimension dimension, double scale) {
 		return new Dimension(scaled(dimension.width, scale), scaled(dimension.height, scale));
-	}
-
-	private double runtimeResizeScale(LayoutSettings layoutSettings, Dimension availableSize) {
-		if (layoutSettings.isDynamicPitchScaling()) {
-			return 1.0;
-		}
-
-		Dimension naturalSize = naturalContentSize(layoutSettings);
-		return Math.min((double) availableSize.width / naturalSize.width,
-			(double) availableSize.height / naturalSize.height);
 	}
 
 }

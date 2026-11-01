@@ -76,6 +76,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final ClientLayoutCalculator layoutCalculator;
 	private final ClientLayoutPanel layoutPanel;
 	private final Timer resizeRelayoutTimer;
+	private Dimension nextContentSize;
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 
@@ -94,6 +95,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			}
 		}
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+		String guiRatio = pClient.getProperty(CommonProperty.SETTING_GUI_SCALE_FACTOR);
+		if (StringTool.isProvided(guiRatio)) {
+			try {
+				layoutSettings.setGuiRatio(Double.parseDouble(guiRatio));
+			} catch (NumberFormatException ignored) {
+			}
+		}
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
@@ -168,7 +176,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
 		setMinimumSize(null);
 		pack();
-		setMinimumSize(getSize());
+		Dimension minimumContent = layoutCalculator.minimumContentSize(layoutSettings);
+		setMinimumSize(new Dimension(minimumContent.width + getWidth() - fDesktop.getWidth(),
+			minimumContent.height + getHeight() - fDesktop.getHeight()));
 
 		if (callInit) {
 			init(null);
@@ -235,10 +245,25 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private Dimension availableClientContentSize() {
+		if (nextContentSize != null) {
+			Dimension size = nextContentSize;
+			nextContentSize = null;
+			Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
+			size.width = Math.max(size.width, minimum.width);
+			size.height = Math.max(size.height, minimum.height);
+			return size;
+		}
 		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
 			return fDesktop.getSize();
 		}
 		return layoutCalculator.naturalContentSize(layoutSettings);
+	}
+
+	public void prepareScaleChange(double factor) {
+		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
+			nextContentSize = new Dimension((int) Math.round(fDesktop.getWidth() * factor),
+				(int) Math.round(fDesktop.getHeight() * factor));
+		}
 	}
 
 	public ClientSketchManager getSketchManager() {
