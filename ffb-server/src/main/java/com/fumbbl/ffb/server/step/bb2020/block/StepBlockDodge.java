@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.step.mixed;
+package com.fumbbl.ffb.server.step.bb2020.block;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -27,7 +27,6 @@ import com.fumbbl.ffb.util.ArrayTool;
  * @author Kalimar
  */
 @RulesCollection(RulesCollection.Rules.BB2020)
-@RulesCollection(RulesCollection.Rules.BB2025)
 public class StepBlockDodge extends AbstractStep {
 
 	public static class StepState {

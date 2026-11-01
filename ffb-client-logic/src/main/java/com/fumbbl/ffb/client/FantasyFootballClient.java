@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -119,6 +120,25 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 
 	public abstract void setProperty(String pProperty, String pValue);
 
+	/**
+	 * Informs the server about the settings it needs to respect for this coach during the game.
+	 */
+	public void sendGameplaySettings() {
+		if (getMode() != ClientMode.PLAYER) {
+			return;
+		}
+		Map<CommonProperty, String> settings = new LinkedHashMap<>();
+		for (CommonProperty setting : CommonProperty._SERVER_GAMEPLAY_SETTINGS) {
+			String value = getProperty(setting);
+			if (StringTool.isProvided(value)) {
+				settings.put(setting, value);
+			}
+		}
+		if (!settings.isEmpty()) {
+			getCommunication().sendGameplaySettings(settings);
+		}
+	}
+
 	public void saveUserSettings(boolean pUserinterfaceInit) {
 		List<CommonProperty> localProperties = getLocallyStoredPropertyKeys();
 
@@ -130,6 +150,7 @@ public abstract class FantasyFootballClient implements IConnectionListener, IDia
 			settingValues[i] = getProperty(remoteProperties.get(i));
 		}
 		getCommunication().sendUserSettings(remoteProperties.toArray(new CommonProperty[0]), settingValues);
+		sendGameplaySettings();
 
 		updateLocalPropertiesStore();
 

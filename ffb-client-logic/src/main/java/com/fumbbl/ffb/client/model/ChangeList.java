@@ -58,6 +58,8 @@ public class ChangeList {
 			.addBehaviorChange("Swift As The Breeze: On a jump the skill is now offered together with the other optional modifiers and re-rolls instead of in a dialog of its own")
 			.addBehaviorChange("Swift As The Breeze: On a dodge the skill is now offered together with the other optional modifiers and re-rolls instead of in a dialog of its own")
 			.addBugfix("Swift As The Breeze: A Diving Tackle declared after the skill was used on a dodge still tripped the dodger")
+			.addFeature("Dodge and Watch Out!: New setting Gameplay > Ask for Dodge on Stumble (Always, Situational (whole wide zone), Situational, Never) to choose when you are asked whether to use the skill against a Stumble. The setting can also be changed directly in the dialog")
+			.addBehaviorChange("Dodge and Watch Out!: By default you are now always asked whether to use the skill against a Stumble")
 			.addBugfix("Client could freeze during startup, for example when the window was moved while a replay was loading")
 			.addImprovement("Replays load noticeably faster, progress dialogs no longer slow down loading")
       .addFeature("Consummate Professional")

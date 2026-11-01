@@ -16,6 +16,7 @@ public enum CommonProperty {
 	HTTPCLIENT_TIMEOUT_SOCKET("httpclient.timeout.socket"),
 
 	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain", "Ask for Whirling Dervish", "Gameplay"),
+	SETTING_DODGE_BLOCK("setting.dodgeBlock", "Ask for Dodge on Stumble", "Gameplay"),
 	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking", "Configuration"),
 
 	SETTING_SOUND_MODE("setting.sound.mode", "Sound", "Configuration", "Sound On/Mute Specs/Off"),
@@ -110,8 +111,13 @@ public enum CommonProperty {
 		SETTING_TACKLEZONES_SPECTATOR_MODE, SETTING_TACKLEZONES_CONTOUR, SETTING_TZ_COLOR_HOME, SETTING_TZ_COLOR_AWAY,
 		SETTING_CLICK_START_SKETCH, SETTING_CLICK_ADD_POINT, SETTING_CLICK_END_SKETCH, SETTING_BACKGROUND_MENTION,
 		SETTING_FONT_COLOR_MENTION, SETTING_AUTOCOMPLETE, SETTING_SOUND_SPECTATOR_CAPTIONS,
-		SETTING_DIALOG_KEY_DELAY
+		SETTING_DIALOG_KEY_DELAY, SETTING_DODGE_BLOCK
 	};
+
+	/**
+	 * Settings the server needs to know during a game, sent by the coaches via ClientCommandGameplaySettings.
+	 */
+	public static final CommonProperty[] _SERVER_GAMEPLAY_SETTINGS = {SETTING_DODGE_BLOCK};
 
 	public static final CommonProperty[] COLOR_SETTINGS = {
 		SETTING_BACKGROUND_CHAT, SETTING_BACKGROUND_LOG,
