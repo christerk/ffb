@@ -16,7 +16,7 @@ public enum CommonProperty {
 	HTTPCLIENT_TIMEOUT_SOCKET("httpclient.timeout.socket"),
 
 	SETTING_RE_ROLL_BALL_AND_CHAIN("setting.reRollBallAndChain", "Ask for Whirling Dervish", "Gameplay"),
-	SETTING_DODGE_BLOCK("setting.dodgeBlock", "Ask for Dodge on Stumble", "Gameplay"),
+	SETTING_DODGE_BLOCK("setting.dodgeBlock", "Ask for Dodge on Stumble", "Gameplay", "Ask for Dodge on Stumble", true),
 	SETTING_PLAYER_MARKING_TYPE("setting.playerMarkingType", "Player Marking", "Configuration"),
 
 	SETTING_SOUND_MODE("setting.sound.mode", "Sound", "Configuration", "Sound On/Mute Specs/Off"),
@@ -115,7 +115,8 @@ public enum CommonProperty {
 	};
 
 	/**
-	 * Settings the server needs to know during a game, sent by the coaches via ClientCommandGameplaySettings.
+	 * User settings the server keeps in the game state of a running game, so steps can respect them.
+	 * They must be stored remotely, otherwise the server never receives them.
 	 */
 	public static final CommonProperty[] _SERVER_GAMEPLAY_SETTINGS = {SETTING_DODGE_BLOCK};
 

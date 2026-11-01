@@ -54,8 +54,6 @@ public class ClientCommandHandlerGameState extends ClientCommandHandler implemen
 
 		Game game = subHandler.handleNetCommand(gameStateCommand);
 
-		getClient().sendGameplaySettings();
-
 		IconCache iconCache = getClient().getUserInterface().getIconCache();
 
 		// update player icons and collect all icon urls needed for the game

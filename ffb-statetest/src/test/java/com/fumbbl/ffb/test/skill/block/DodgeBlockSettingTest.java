@@ -21,6 +21,8 @@ import com.fumbbl.ffb.test.TestServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -225,6 +227,28 @@ public class DodgeBlockSettingTest {
 		assertEquals(CommonPropertyValue.SETTING_DODGE_BLOCK_WIDE_ZONE,
 			copy.getGameplaySetting(false, CommonProperty.SETTING_DODGE_BLOCK));
 		assertNull(copy.getGameplaySetting(true, CommonProperty.SETTING_DODGE_BLOCK));
+	}
+
+	@Test
+	public void userSettingsWithoutValueResetToAlways() {
+		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+		setting(state, CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER);
+
+		state.setGameplaySettings(false, Collections.emptyMap());
+
+		assertDialogShown(state, stumble(state, "home1", "away1"));
+	}
+
+	@Test
+	public void userSettingsUpdateOnlyGivenSide() {
+		GameState state = buildState("BB2025", OPEN_FIELD_Y, false, true);
+
+		state.setGameplaySettings(true,
+			Collections.singletonMap(CommonProperty.SETTING_DODGE_BLOCK, CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER));
+
+		assertEquals(CommonPropertyValue.SETTING_DODGE_BLOCK_NEVER,
+			state.getGameplaySetting(true, CommonProperty.SETTING_DODGE_BLOCK));
+		assertNull(state.getGameplaySetting(false, CommonProperty.SETTING_DODGE_BLOCK));
 	}
 
 	private GameState buildState(String rules, int y, boolean chainPush, boolean defenderHasTackleZones) {

@@ -262,6 +262,15 @@ public class GameState implements IModelChangeObserver, IJsonSerializable {
 	}
 
 	/**
+	 * Replaces all gameplay settings of the given side, settings missing from the map are reset to their default.
+	 */
+	public void setGameplaySettings(boolean home, Map<CommonProperty, String> settings) {
+		for (CommonProperty setting : CommonProperty._SERVER_GAMEPLAY_SETTINGS) {
+			setGameplaySetting(home, setting, settings.get(setting));
+		}
+	}
+
+	/**
 	 * @return the value the coach of the given side sent for the setting, or null if none was received
 	 */
 	public String getGameplaySetting(boolean home, CommonProperty setting) {
