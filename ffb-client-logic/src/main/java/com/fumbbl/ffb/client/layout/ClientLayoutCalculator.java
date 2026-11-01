@@ -33,9 +33,6 @@ public class ClientLayoutCalculator {
 		double effectiveRatio = Math.max(LayoutSettings.MIN_GUI_RATIO,
 			Math.min(layoutSettings.getGuiRatio(), LayoutSettings.MAX_GUI_RATIO));
 		double guiScale = layoutSettings.getScale() * effectiveRatio * resizeScale;
-		double dugoutScale = layoutSettings.getGuiRatio() > 0
-			? layoutSettings.getDugoutScale() * effectiveRatio / layoutSettings.getGuiRatio() * resizeScale
-			: 0;
 
 		Dimension sidebar = dimension(layoutSettings, Component.SIDEBAR, guiScale);
 		Dimension reserveBox = dimension(layoutSettings, Component.BOX, guiScale);
@@ -63,7 +60,7 @@ public class ClientLayoutCalculator {
 			hudBounds.chat,
 			pitchFit.scale,
 			guiScale,
-			dugoutScale);
+			guiScale);
 	}
 
 	private PitchFit fitPitch(Rectangle pitchArea, Dimension pitch) {

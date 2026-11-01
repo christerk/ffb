@@ -146,7 +146,6 @@ public class ClientSettingsMenu extends FfbMenu {
 	@Override
 	public void dialogClosed(IDialog dialog) {
 		super.dialogClosed(dialog);
-		client.getUserInterface().dialogClosed(dialog);
 		switch (dialog.getId()) {
 			case SOUND_VOLUME:
 				DialogSoundVolume volumeDialog = (DialogSoundVolume) dialog;

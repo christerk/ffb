@@ -13,9 +13,7 @@ public class LayoutSettings {
 	public static final int TITLE_BAR_HEIGHT = 29;
 
 	private final double scaleStep = 0.05;
-	private double guiScale;
-	private double pitchScale;
-	private double dugoutScale;
+	private double scale;
 	private double guiRatio = 1.0;
 	private ClientLayout layout;
 
@@ -33,12 +31,11 @@ public class LayoutSettings {
 	}
 
 	public double getScale() {
-		return getPitchScale();
+		return scale;
 	}
 
 	public void setScale(double scale) {
-		setPitchScale(scale);
-		setGuiRatio(guiRatio);
+		this.scale = scale;
 	}
 
 	public double getGuiRatio() {
@@ -47,48 +44,34 @@ public class LayoutSettings {
 
 	public void setGuiRatio(double guiRatio) {
 		this.guiRatio = guiRatio;
-		setGuiScale(pitchScale * guiRatio);
-		setDugoutScale(pitchScale * guiRatio);
 	}
 
 	public double getGuiScale() {
-		return guiScale;
-	}
-
-	public void setGuiScale(double guiScale) {
-		this.guiScale = guiScale;
+		return scale * guiRatio;
 	}
 
 	public double getPitchScale() {
-		return pitchScale;
-	}
-
-	public void setPitchScale(double pitchScale) {
-		this.pitchScale = pitchScale;
+		return scale;
 	}
 
 	public double getDugoutScale() {
-		return dugoutScale;
-	}
-
-	public void setDugoutScale(double dugoutScale) {
-		this.dugoutScale = dugoutScale;
+		return getGuiScale();
 	}
 
 	public double effectivePitchScale() {
-		return pitchScale * layout.getPitchScale();
+		return scale * layout.getPitchScale();
 	}
 
 	public double effectiveDugoutScale() {
-		return dugoutScale * layout.getDugoutScale();
+		return getDugoutScale() * layout.getDugoutScale();
 	}
 
 	public double largerScale() {
-		return Math.min(MAX_SCALE_FACTOR, pitchScale + scaleStep);
+		return Math.min(MAX_SCALE_FACTOR, scale + scaleStep);
 	}
 
 	public double smallerScale() {
-		return Math.max(MIN_SCALE_FACTOR, pitchScale - scaleStep);
+		return Math.max(MIN_SCALE_FACTOR, scale - scaleStep);
 	}
 
 }

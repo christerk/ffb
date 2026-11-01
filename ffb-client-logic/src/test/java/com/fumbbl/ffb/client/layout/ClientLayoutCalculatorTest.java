@@ -110,8 +110,8 @@ class ClientLayoutCalculatorTest {
 
 	@Test
 	void naturalSquareSizeUsesConfiguredPitchScaleIndependentlyFromGuiScale() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.SQUARE, 1.0);
-		layoutSettings.setPitchScale(0.5);
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.SQUARE, 0.5);
+		layoutSettings.setGuiRatio(2.0);
 
 		assertEquals(new Dimension(818, 784), new ClientLayoutCalculator().naturalContentSize(layoutSettings));
 	}
@@ -219,6 +219,20 @@ class ClientLayoutCalculatorTest {
 			assertTrue(large.runtimeGuiScale() > small.runtimeGuiScale(), layout.toString());
 			assertTrue(large.pitchScale() < small.pitchScale(), layout.toString());
 		}
+	}
+
+	@Test
+	void outOfRangeGuiRatioIsClampedForBothGuiAndDugoutWithoutChangingSettings() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		settings.setGuiRatio(0.0);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+		Dimension content = calculator.naturalContentSize(new LayoutSettings(ClientLayout.LANDSCAPE, 1.0));
+
+		ClientLayoutResult result = calculator.calculate(settings, content);
+
+		assertEquals(LayoutSettings.MIN_GUI_RATIO, result.runtimeGuiScale(), 0.0001);
+		assertEquals(result.runtimeGuiScale(), result.runtimeDugoutScale(), 0.0001);
+		assertEquals(0.0, settings.getGuiRatio());
 	}
 
 	@Test

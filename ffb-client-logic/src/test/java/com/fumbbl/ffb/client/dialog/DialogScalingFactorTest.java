@@ -10,6 +10,7 @@ import com.fumbbl.ffb.client.UserInterface;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JButton;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
@@ -71,7 +72,7 @@ class DialogScalingFactorTest {
 			List<JSlider> sliders = sliders(dialog);
 			sliders.get(0).setValue(30);
 			sliders.get(1).setValue(15);
-			dialog.actionPerformed(null);
+			button(dialog, "Confirm").doClick();
 			assertEquals(1.5, dialog.getFactor());
 			assertEquals(0.75, dialog.getGuiRatio());
 			dialog.hideDialog();
@@ -79,6 +80,45 @@ class DialogScalingFactorTest {
 
 		verify(userInterface, times(1)).previewScale(anyDouble(), anyDouble(), any(Dimension.class));
 		verify(userInterface).previewScale(1.5, 0.75, new Dimension(1200, 900));
+	}
+
+	@Test
+	void previewScalesFromWindowSizeChangedWhileDialogIsOpen() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		SwingUtilities.invokeAndWait(() -> {
+			DialogScalingFactor dialog = dialog(userInterface);
+			userInterface.getDesktop().setSize(1000, 750);
+			sliders(dialog).get(0).setValue(30);
+			button(dialog, "Confirm").doClick();
+			dialog.hideDialog();
+		});
+
+		verify(userInterface).previewScale(1.5, 1.0, new Dimension(1500, 1125));
+	}
+
+	@Test
+	void previewUsesTheLastScaleWhenWindowIsResizedAfterAPreview() throws Exception {
+		UserInterface userInterface = mock(UserInterface.class);
+		DialogScalingFactor[] dialog = new DialogScalingFactor[1];
+		CountDownLatch previewed = new CountDownLatch(1);
+		doAnswer(invocation -> {
+			userInterface.getDesktop().setSize(invocation.getArgument(2));
+			previewed.countDown();
+			return null;
+		}).when(userInterface).previewScale(anyDouble(), anyDouble(), any(Dimension.class));
+		SwingUtilities.invokeAndWait(() -> {
+			dialog[0] = dialog(userInterface);
+			sliders(dialog[0]).get(0).setValue(30);
+		});
+		assertTrue(previewed.await(5, TimeUnit.SECONDS));
+		SwingUtilities.invokeAndWait(() -> {
+			userInterface.getDesktop().setSize(1500, 900);
+			sliders(dialog[0]).get(0).setValue(40);
+			button(dialog[0], "Confirm").doClick();
+			dialog[0].hideDialog();
+		});
+
+		verify(userInterface).previewScale(2.0, 1.0, new Dimension(2000, 1200));
 	}
 
 	private DialogScalingFactor dialog(UserInterface userInterface) {
@@ -105,5 +145,20 @@ class DialogScalingFactorTest {
 			}
 		}
 		return result;
+	}
+
+	private JButton button(Container container, String text) {
+		for (Component component : container.getComponents()) {
+			if (component instanceof JButton && text.equals(((JButton) component).getText())) {
+				return (JButton) component;
+			}
+			if (component instanceof Container) {
+				JButton found = button((Container) component, text);
+				if (found != null) {
+					return found;
+				}
+			}
+		}
+		return null;
 	}
 }
