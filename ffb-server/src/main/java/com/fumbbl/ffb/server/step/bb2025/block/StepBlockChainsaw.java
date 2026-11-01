@@ -187,7 +187,7 @@ public class StepBlockChainsaw extends AbstractStepWithReRoll {
 
 				DropPlayerContext dropPlayerContext =
 					new DropPlayerContext(injuryResultAttacker, causesTurnOver, true, fGotoLabelOnFailure,
-						actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, true, false, null, modifiedInjuryCausesTurnover,
+						actingPlayer.getPlayer().getId(), ApothecaryMode.ATTACKER, false, false, null, modifiedInjuryCausesTurnover,
 						GameOptionString.CHAINSAW_TURNOVER_KICKBACK.equals(chainsawOption), null);
 				publishParameter(new StepParameter(StepParameterKey.STEADY_FOOTING_CONTEXT, new SteadyFootingContext(dropPlayerContext)));
 				getResult().setNextAction(StepAction.NEXT_STEP);

@@ -1,5 +1,8 @@
 .metadata/
 .idea/
+.worktreeinclude
+.run/
+.idea/runConfigurations/
 **/*.iml
 /ffb-tools/target/
 /ffb-server/dependency-reduced-pom.xml
@@ -14,3 +17,5 @@
 /ffb-server/pom.xml.versionsBackup
 /ffb-tools/pom.xml.versionsBackup
 /pom.xml.versionsBackup
+/ffb-statetest/pom.xml.versionsBackup
+.claude/

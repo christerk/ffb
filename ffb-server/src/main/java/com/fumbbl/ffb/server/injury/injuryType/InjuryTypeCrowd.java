@@ -30,7 +30,9 @@ public abstract class InjuryTypeCrowd<T extends InjuryType> extends InjuryTypeSe
 
 		injuryContext.setInjuryRoll(diceRoller.rollInjury());
 		InjuryModifierFactory factory = game.getFactory(FactoryType.Factory.INJURY_MODIFIER);
-		factory.findInjuryModifiers(game, injuryContext, pAttacker,
+		// the crowd causes the injury, so skills of the player causing the push (who is only
+		// tracked for spp purposes) must not modify the roll
+		factory.findInjuryModifiers(game, injuryContext, null,
 			pDefender, isStab(), isFoul(), isVomitLike()).forEach(injuryModifier -> injuryContext.addInjuryModifier(injuryModifier));
 		setInjury(pDefender, gameState, diceRoller);
 

@@ -80,7 +80,7 @@ public class TtmMechanic extends com.fumbbl.ffb.mechanics.TtmMechanic {
 		boolean canDeclare = game.getFieldModel().getPlayerState(player).getBase() != PlayerState.PRONE
 			|| UtilGameOption.isOptionEnabled(game, GameOptionId.ALLOW_SPECIAL_ACTIONS_FROM_PRONE);
 
-		return canDeclare && player.hasSkillProperty(NamedProperties.canThrowTeamMates) && player.getStrengthWithModifiers() >= 5;
+		return canDeclare && player.hasSkillProperty(NamedProperties.canThrowTeamMates);
 	}
 
 	private int calculateModifiers(Collection<PassModifier> pPassModifiers) {

@@ -30,6 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.fumbbl.ffb.CommonProperty.SETTING_DYNAMIC_PITCH_SCALING;
 import static com.fumbbl.ffb.CommonProperty.SETTING_LOCAL_ICON_CACHE;
@@ -77,6 +79,10 @@ public class ClientSettingsMenu extends FfbMenu {
 
 	private JRadioButtonMenuItem autocompleteOnMenuItem;
 	private JRadioButtonMenuItem autocompleteOffMenuItem;
+
+	private static final String[] DIALOG_KEY_DELAYS = {"0", "100", "250", "500", "1000"};
+	private final Map<JRadioButtonMenuItem, String> dialogKeyDelayMenuItems = new LinkedHashMap<>();
+
 	
 	protected ClientSettingsMenu(FantasyFootballClient client, DimensionProvider dimensionProvider, StyleProvider styleProvider, LayoutSettings layoutSettings) {
 		super("Client Settings", client, dimensionProvider, styleProvider, layoutSettings);
@@ -93,6 +99,7 @@ public class ClientSettingsMenu extends FfbMenu {
 		createLogMenu();
 		createLocalIconCacheMenu();
 		createAutocompleteMenu();
+		createDialogKeyDelayMenu();
 	}
 
 	@Override
@@ -135,6 +142,9 @@ public class ClientSettingsMenu extends FfbMenu {
 		autocompleteOnMenuItem.setSelected(true);
 		autocompleteOffMenuItem.setSelected(IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF.equals(autocompleteSetting));
 		
+		String dialogKeyDelaySetting = dialogKeyDelaySetting();
+		dialogKeyDelayMenuItems.forEach((item, value) -> item.setSelected(value.equals(dialogKeyDelaySetting)));
+
 		boolean refreshUi = updateScaling();
 		refreshUi |= updateOrientation();
 		refreshUi |= updateDynamicPitchScaling();
@@ -292,6 +302,12 @@ public class ClientSettingsMenu extends FfbMenu {
 		}
 		if (source == autocompleteOffMenuItem) {
 			client.setProperty(CommonProperty.SETTING_AUTOCOMPLETE, IClientPropertyValue.SETTING_AUTOCOMPLETE_OFF);
+			client.saveUserSettings(true);
+		}
+
+		String dialogKeyDelay = dialogKeyDelayMenuItems.get(source);
+		if (dialogKeyDelay != null) {
+			client.setProperty(CommonProperty.SETTING_DIALOG_KEY_DELAY, dialogKeyDelay);
 			client.saveUserSettings(true);
 		}
 	}
@@ -642,6 +658,29 @@ public class ClientSettingsMenu extends FfbMenu {
 		autocompleteMenu.add(autocompleteOffMenuItem);
 	}
 	
+	private void createDialogKeyDelayMenu() {
+		JMenu dialogKeyDelayMenu = new JMenu(dimensionProvider, CommonProperty.SETTING_DIALOG_KEY_DELAY);
+		dialogKeyDelayMenu.setMnemonic(KeyEvent.VK_D);
+		add(dialogKeyDelayMenu);
+
+		ButtonGroup group = new ButtonGroup();
+
+		dialogKeyDelayMenuItems.clear();
+		for (String delay : DIALOG_KEY_DELAYS) {
+			String label = "0".equals(delay) ? "Off" : delay + " ms";
+			JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(dimensionProvider, label);
+			menuItem.addActionListener(this);
+			group.add(menuItem);
+			dialogKeyDelayMenu.add(menuItem);
+			dialogKeyDelayMenuItems.put(menuItem, delay);
+		}
+	}
+
+	private String dialogKeyDelaySetting() {
+		String setting = client.getProperty(CommonProperty.SETTING_DIALOG_KEY_DELAY);
+		return StringTool.isProvided(setting) ? setting.trim() : IClientPropertyValue.SETTING_DIALOG_KEY_DELAY_DEFAULT;
+	}
+
 	private void showError(String title, String[] error) {
 		DialogInformation messageDialog = new DialogInformation(client, title,
 			error, DialogInformation.OK_DIALOG, false);

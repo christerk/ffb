@@ -1,5 +1,6 @@
 package com.fumbbl.ffb.server.step.bb2025.shared;
 
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
@@ -20,6 +21,7 @@ import com.fumbbl.ffb.dialog.DialogPlayerChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
 import com.fumbbl.ffb.factory.CatchModifierFactory;
 import com.fumbbl.ffb.factory.IFactorySource;
+import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.inducement.Card;
 import com.fumbbl.ffb.inducement.InducementDuration;
 import com.fumbbl.ffb.json.UtilJson;
@@ -29,13 +31,17 @@ import com.fumbbl.ffb.mechanics.ThrowInMechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Animation;
 import com.fumbbl.ffb.model.AnimationType;
+import com.fumbbl.ffb.model.FieldModel;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.ModifierChoiceOption;
 import com.fumbbl.ffb.model.Player;
+import com.fumbbl.ffb.model.Team;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.CatchContext;
 import com.fumbbl.ffb.modifiers.CatchModifier;
 import com.fumbbl.ffb.net.commands.ClientCommandPlayerChoice;
+import com.fumbbl.ffb.net.commands.ClientCommandReRollModifierChoice;
 import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.option.GameOptionBoolean;
 import com.fumbbl.ffb.option.GameOptionId;
@@ -64,12 +70,15 @@ import com.fumbbl.ffb.server.step.generator.QuickBite;
 import com.fumbbl.ffb.server.step.generator.SequenceGenerator;
 import com.fumbbl.ffb.server.step.generator.common.SpikedBallApo;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.UtilServerCards;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
-import com.fumbbl.ffb.server.util.UtilServerGame;
 import com.fumbbl.ffb.server.util.UtilServerInjury;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
+import com.fumbbl.ffb.server.util.bb2025.CatchModifierSelectionService;
+import com.fumbbl.ffb.server.util.bb2025.ReRollModifierChoiceDialogParameterFactory;
 import com.fumbbl.ffb.util.ArrayTool;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
@@ -77,7 +86,9 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -110,10 +121,12 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	private CatchScatterThrowInMode fCatchScatterThrowInMode;
 	private FieldCoordinate fThrowInCoordinate;
 	private boolean fBombMode, evaluate;
-	private DivingCatchPhase phase = DivingCatchPhase.ASK_HOME;
-	private final List<String> divingCatchers = new ArrayList<>();
-	private String divingCatchControlTeam;
+	private DivingCatchPhase phase = DivingCatchPhase.ASK_ACTIVE;
+	private List<String> divingCatchers;
 	private int roll;
+	private boolean reRollUsed, awaitingRescue, modifierChosen;
+	private final Set<Skill> selectedModifierSkills = new LinkedHashSet<>();
+	private final CatchModifierSelectionService selectionService = new CatchModifierSelectionService();
 	private Boolean usingModifyingSkill;
 	private ReportList reports = new ReportList();
 
@@ -144,23 +157,31 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					ClientCommandPlayerChoice playerChoiceCommand = (ClientCommandPlayerChoice) pReceivedCommand.getCommand();
 					List<String> selected = Arrays.stream(playerChoiceCommand.getPlayerIds()).collect(Collectors.toList());
 					switch (phase) {
-						case ASK_HOME:
-							divingCatchers.addAll(selected);
-							phase = DivingCatchPhase.ASK_AWAY;
-							if (!selected.isEmpty()) {
-								divingCatchControlTeam = game.getTeamHome().getId();
+						case ASK_ACTIVE:
+							if (selected.isEmpty()) {
+								phase = DivingCatchPhase.ASK_PASSIVE;
+							} else {
+								fCatcherId = selected.get(0);
+								phase = DivingCatchPhase.PROCESS;
 							}
 							break;
-						case ASK_AWAY:
-							divingCatchers.addAll(selected);
-							phase = DivingCatchPhase.PROCESS;
+						case ASK_PASSIVE:
 							if (!selected.isEmpty()) {
-								divingCatchControlTeam = divingCatchControlTeam == null ? game.getTeamAway().getId() : game.getActingTeam().getId();
+								fCatcherId = selected.get(0);
 							}
+							phase = DivingCatchPhase.PROCESS;
 							break;
 						default:
-							fCatcherId = selected.get(0);
 							break;
+					}
+					if (StringTool.isProvided(fCatcherId)) {
+						FieldModel fieldModel = getGameState().getGame().getFieldModel();
+						FieldCoordinate playerCoordinate = fieldModel.getPlayerCoordinate(game.getPlayerById(fCatcherId));
+						if (fCatchScatterThrowInMode.isBomb()) {
+							fieldModel.setBombCoordinate(playerCoordinate);
+						} else {
+							fieldModel.setBallCoordinate(playerCoordinate);
+						}
 					}
 					commandStatus = StepCommandStatus.EXECUTE_STEP;
 					break;
@@ -168,26 +189,42 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
 					PassState passState = getGameState().getPassState();
 					ActingPlayer actingPlayer = game.getActingPlayer();
-					if (commandUseSkill.getSkill().hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
-						if (passState != null) {
+					Skill commandSkill = commandUseSkill.getSkill();
+					// a skill the step does not actually offer right now is ignored
+					if (commandSkill == null) {
+						break;
+					}
+					if (commandSkill.hasSkillProperty(NamedProperties.grantsCatchBonusToReceiver)) {
+						if (isCatchBonusSkillAvailable(commandSkill)) {
 							passState.setUsingBlastIt(commandUseSkill.isSkillUsed());
 							if (commandUseSkill.isSkillUsed()) {
 								evaluate = true;
 								actingPlayer.markSkillUsed(commandUseSkill.getSkill());
 							}
 							setReRollSource(null);
-							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
+							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(), commandUseSkill.getSkill(),
+								commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
 							commandStatus = StepCommandStatus.EXECUTE_STEP;
 						}
-					} else if (commandUseSkill.getSkill().getRerollSource(getReRolledAction()) != null) {
+					} else if (isCatchReRollSkillAvailable(commandSkill)) {
 						if (commandUseSkill.isSkillUsed()) {
 							setReRollSource(commandUseSkill.getSkill().getRerollSource(getReRolledAction()));
 						} else if (passState != null) {
 							setReRollSource(null);
 							passState.setUsingBlastIt(false);
-							reports.add(new ReportSkillUse(fCatcherId, commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(), SkillUse.RE_ROLL_CATCH));
-							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(), UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.grantsCatchBonusToReceiver), commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
+							reports.add(new ReportSkillUse(fCatcherId, commandUseSkill.getSkill(), commandUseSkill.isSkillUsed(),
+								SkillUse.RE_ROLL_CATCH));
+							reports.add(new ReportSkillUse(actingPlayer.getPlayerId(),
+								UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.grantsCatchBonusToReceiver),
+								commandUseSkill.isSkillUsed(), SkillUse.GRANT_CATCH_BONUS));
 						}
+						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					}
+					break;
+				case CLIENT_RE_ROLL_MODIFIER_CHOICE:
+					ClientCommandReRollModifierChoice modifierChoiceCommand =
+						(ClientCommandReRollModifierChoice) pReceivedCommand.getCommand();
+					if (handleModifierChoice(modifierChoiceCommand)) {
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
 					break;
@@ -200,6 +237,63 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			executeStep();
 		}
 		return commandStatus;
+	}
+
+	private boolean handleModifierChoice(ClientCommandReRollModifierChoice command) {
+		Game game = getGameState().getGame();
+		Player<?> catcher = game.getPlayerById(fCatcherId);
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		if (!awaitingRescue || catcher == null || command.getReRolledAction() != ReRolledActions.CATCH
+			|| !catcher.getId().equals(command.getPlayerId())
+			|| !offeredSkillService.isOfferedModifierOption(game, catcher.getId(), ReRolledActions.CATCH, roll,
+			command.getSkills())
+			|| command.getSkills().stream().anyMatch(skill -> !offeredSkillService.hasUnused(game, catcher, skill))) {
+			return false;
+		}
+		Set<Skill> skills = new LinkedHashSet<>(command.getSkills());
+		for (Skill skill : skills) {
+			selectedModifierSkills.add(skill);
+			if (catcher == game.getActingPlayer().getPlayer()) {
+				game.getActingPlayer().markSkillUsed(skill);
+			} else {
+				catcher.markUsed(skill, game);
+			}
+			reports.add(new ReportSkillUse(catcher.getId(), skill, true, SkillUse.ADD_AGILITY_MODIFIER));
+		}
+		awaitingRescue = false;
+		modifierChosen = true;
+		return true;
+	}
+
+	/**
+	 * The thrower's catch bonus skill can only be decided on once during a Hail Mary Pass, only if the thrower still
+	 * has it unused and only while a dialog offers it.
+	 */
+	private boolean isCatchBonusSkillAvailable(Skill skill) {
+		Game game = getGameState().getGame();
+		PassState passState = getGameState().getPassState();
+		ActingPlayer actingPlayer = game.getActingPlayer();
+		return passState != null && passState.getUsingBlastIt() == null
+			&& actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS
+			&& skill.equals(UtilCards.getUnusedSkillWithProperty(actingPlayer, NamedProperties.grantsCatchBonusToReceiver))
+			&& new OfferedSkillService().isOffered(game, skill);
+	}
+
+	/**
+	 * A catch re-roll skill can only be used by the catcher owning it while a dialog offers the not yet used
+	 * re-roll of a failed catch.
+	 */
+	private boolean isCatchReRollSkillAvailable(Skill skill) {
+		Game game = getGameState().getGame();
+		Player<?> catcher = game.getPlayerById(fCatcherId);
+		if (getReRolledAction() != ReRolledActions.CATCH || reRollUsed || fCatchScatterThrowInMode == null ||
+			skill.getRerollSource(ReRolledActions.CATCH) == null
+			|| !UtilCards.hasSkill(catcher, skill) || !new OfferedSkillService().isOffered(game, skill)) {
+			return false;
+		}
+		GameOptionBoolean catchForBombs = (GameOptionBoolean) game.getOptions()
+			.getOptionWithDefault(GameOptionId.CATCH_WORKS_FOR_BOMBS);
+		return !fCatchScatterThrowInMode.isBomb() || catchForBombs.isEnabled();
 	}
 
 	@Override
@@ -249,86 +343,79 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		} else {
 			fScatterBounds = FieldCoordinateBounds.FIELD;
 		}
-		Player<?> playerUnderBall = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
-		boolean deflectedBomb = false;
-		boolean deflectedPass = false;
+		FieldModel fieldModel = game.getFieldModel();
+
 		switch (fCatchScatterThrowInMode) {
-			case DEFLECTED_BOMB:
-				deflectedBomb = true;
-				// fall through
 			case CATCH_BOMB:
 			case CATCH_ACCURATE_BOMB_EMPTY_SQUARE:
 			case CATCH_ACCURATE_BOMB:
+				if (askForDivingCatch(fieldModel, game)) {
+					return;
+				}
 				fBombMode = true;
 				if (!StringTool.isProvided(fCatcherId)) {
-					Player<?> playerUnderBomb = game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate());
-					fCatcherId = (playerUnderBomb != null) ? playerUnderBomb.getId() : null;
+					Player<?> directCatcher = directCatcher(fieldModel);
+					fCatcherId = (directCatcher != null) ? directCatcher.getId() : null;
 				}
 				if (StringTool.isProvided(fCatcherId)) {
-					PlayerState catcherState = game.getFieldModel().getPlayerState(game.getPlayerById(fCatcherId));
-					if ((catcherState != null) && catcherState.hasTacklezones() && game.getFieldModel().isBombMoving()) {
+					PlayerState catcherState = fieldModel.getPlayerState(game.getPlayerById(fCatcherId));
+					if ((catcherState != null) && catcherState.hasTacklezones() && fieldModel.isBombMoving()) {
 						fCatchScatterThrowInMode = catchBall();
 					} else {
 						fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 					}
 				} else {
-					if (CatchScatterThrowInMode.CATCH_ACCURATE_BOMB == fCatchScatterThrowInMode) {
-						fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_BOMB;
-					}
-					fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBombCoordinate());
+					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				if ((fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH)
 					|| (fCatchScatterThrowInMode == CatchScatterThrowInMode.SCATTER_BALL)) {
-					if (deflectedBomb) {
-						fCatchScatterThrowInMode = scatterBomb();
-					} else {
-						game.getFieldModel().setBombMoving(true);
-						fCatchScatterThrowInMode = null;
-					}
+					fieldModel.setBombMoving(true);
+					fCatchScatterThrowInMode = null;
 				}
 				break;
-			case DEFLECTED:
-				deflectedPass = true;
-				// fall through
-			case CATCH_ACCURATE_PASS:
-			case CATCH_HAND_OFF:
 			case CATCH_KICKOFF:
+			case CATCH_ACCURATE_PASS:
+				if (askForDivingCatch(fieldModel, game)) {
+					return;
+				}
+				// fall through
+			case CATCH_HAND_OFF:
 			case CATCH_SCATTER:
 			case CATCH_PUNT:
 				fBombMode = false;
 				if (!StringTool.isProvided(fCatcherId)) {
-					fCatcherId = (playerUnderBall != null) ? playerUnderBall.getId() : null;
+					Player<?> directCatcher = directCatcher(fieldModel);
+					fCatcherId = (directCatcher != null) ? directCatcher.getId() : null;
 				}
 				if (StringTool.isProvided(fCatcherId)) {
-					PlayerState catcherState = game.getFieldModel().getPlayerState(game.getPlayerById(fCatcherId));
-					if ((catcherState != null) && game.getFieldModel().isBallInPlay() && game.getFieldModel().isBallMoving()) {
+					PlayerState catcherState = fieldModel.getPlayerState(game.getPlayerById(fCatcherId));
+					if ((catcherState != null) && fieldModel.isBallInPlay() && fieldModel.isBallMoving()) {
 						if (catcherState.hasTacklezones()) {
 							fCatchScatterThrowInMode = catchBall();
 						} else {
 							fCatchScatterThrowInMode = CatchScatterThrowInMode.FAILED_CATCH;
 						}
-						if (fCatchScatterThrowInMode == null && deflectedPass && getGameState().getPassState().isDeflectionSuccessful()) {
+						if (fCatchScatterThrowInMode == null && getGameState().getPassState().isDeflectionSuccessful()) {
 							getGameState().getPassState().setInterceptionSuccessful(true);
-						} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.FAILED_CATCH && deflectedPass) {
-							fCatchScatterThrowInMode = CatchScatterThrowInMode.FAILED_DEFLECTION_CONVERSION;
 						}
 					} else {
 						fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 					}
-				} else if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_KICKOFF) {
-					fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
-				}else {
+				} else {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
 			case CATCH_THROW_IN:
 			case CATCH_ACCURATE_PASS_EMPTY_SQUARE:
 			case CATCH_MISSED_PASS:
+				if (askForDivingCatch(fieldModel, game)) {
+					return;
+				}
 				fBombMode = false;
-				if (playerUnderBall != null) {
+				if (directCatcher(fieldModel) != null) {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.CATCH_SCATTER;
 				} else {
-					fCatchScatterThrowInMode = divingCatch(game.getFieldModel().getBallCoordinate());
+					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
 			case THROW_IN:
@@ -339,36 +426,31 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 				}
 				break;
-			case FAILED_DEFLECTION_CONVERSION:
-				deflectedPass = true;
-				// fall through
 			case FAILED_CATCH:
 			case FAILED_PICK_UP:
 				fBombMode = false;
-				if ((playerUnderBall != null) && game.getFieldModel().isBallInPlay()
+				Player<?> playerUnderBall = directCatcher(fieldModel);
+				if ((playerUnderBall != null) && fieldModel.isBallInPlay()
 					&& (UtilGameOption.isOptionEnabled(game, GameOptionId.SPIKED_BALL)
 					|| game.isActive(NamedProperties.droppedBallCausesArmourRoll))) {
 					InjuryResult injuryResultCatcher = UtilServerInjury.handleInjury(this, new InjuryTypeStab(true), null,
-						playerUnderBall, game.getFieldModel().getBallCoordinate(), null, null, ApothecaryMode.CATCHER);
+						playerUnderBall, catchCoordinate(fieldModel), null, null, ApothecaryMode.CATCHER);
 					getGameState().pushCurrentStepOnStack();
 					SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
 					((SpikedBallApo) factory.forName(SequenceGenerator.Type.SpikedBallApo.name()))
 						.pushSequence(new SequenceGenerator.SequenceParams(getGameState()));
-					fCatchScatterThrowInMode = deflectedPass ? CatchScatterThrowInMode.THREE_SQUARE_SCATTER : CatchScatterThrowInMode.SCATTER_BALL;
+					fCatchScatterThrowInMode = CatchScatterThrowInMode.SCATTER_BALL;
 					getResult().setNextAction(StepAction.NEXT_STEP);
 					if (injuryResultCatcher.injuryContext().isArmorBroken()) {
 						publishParameters(UtilServerInjury.dropPlayer(this, playerUnderBall, ApothecaryMode.CATCHER));
 					}
 					publishParameter(new StepParameter(StepParameterKey.INJURY_RESULT, injuryResultCatcher));
 					return;
-				} else if (deflectedPass) {
-					fCatchScatterThrowInMode = CatchScatterThrowInMode.THREE_SQUARE_SCATTER;
-					break;
 				}
 				// drop through to regular scatter
 			case SCATTER_BALL:
 				fBombMode = false;
-				if (game.getFieldModel().isBallInPlay()) {
+				if (fieldModel.isBallInPlay()) {
 					fCatchScatterThrowInMode = bounceBall();
 				} else {
 					fCatchScatterThrowInMode = null;
@@ -376,7 +458,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				break;
 			case THREE_SQUARE_SCATTER:
 				fBombMode = false;
-				if (game.getFieldModel().isBallInPlay()) {
+				if (fieldModel.isBallInPlay()) {
 					fCatchScatterThrowInMode = scatterBall();
 				} else {
 					fCatchScatterThrowInMode = null;
@@ -400,14 +482,14 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			} else {
 				Player<?> catcher;
 				if (fBombMode) {
-					catcher = !game.getFieldModel().isBombMoving()
-						? game.getFieldModel().getPlayer(game.getFieldModel().getBombCoordinate())
+					catcher = !fieldModel.isBombMoving()
+						? fieldModel.getPlayer(fieldModel.getBombCoordinate())
 						: null;
 				} else {
-					catcher = game.getFieldModel().getPlayer(game.getFieldModel().getBallCoordinate());
+					catcher = fieldModel.getPlayer(fieldModel.getBallCoordinate());
 					if (catcher != null) {
-						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher, game.getFieldModel().getBallCoordinate(),
-							NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
+						Player<?>[] opponents = UtilPlayer.findAdjacentOpposingPlayersWithProperty(game, catcher,
+							fieldModel.getBallCoordinate(), NamedProperties.canAttackOpponentForBallAfterCatch, false, true);
 						if (ArrayTool.isProvided(opponents)) {
 							SequenceGeneratorFactory factory = game.getFactory(Factory.SEQUENCE_GENERATOR);
 							((QuickBite) factory.forName(SequenceGenerator.Type.QuickBite.name()))
@@ -420,13 +502,93 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 				// Diving Catch during kickoff might take the ball out of bounds
 				if (game.getTurnMode() == TurnMode.KICKOFF
-					&& !fScatterBounds.isInBounds(game.getFieldModel().getBallCoordinate())) {
+					&& !fScatterBounds.isInBounds(fieldModel.getBallCoordinate())) {
 					publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
 				}
 
 			}
 			getResult().setNextAction(StepAction.NEXT_STEP);
 		}
+	}
+
+	private boolean askForDivingCatch(FieldModel fieldModel, Game game) {
+		if (divingCatchers == null) {
+			divingCatchers = divingCatchers(fieldModel, catchCoordinate(fieldModel));
+		}
+
+		Player<?> directCatcher = directCatcher(fieldModel);
+		if (divingCatchers.isEmpty()) {
+			if (directCatcher != null) {
+				fCatcherId = directCatcher.getId();
+			}
+			return false;
+		} else {
+			List<Player<?>> potentialCatchers = new ArrayList<>();
+			while (phase != DivingCatchPhase.PROCESS) {
+				List<String> descriptions = new ArrayList<>();
+				Team team;
+				boolean stopTimer = false;
+				switch (phase) {
+					case ASK_ACTIVE:
+						team = game.getActingTeam();
+						break;
+					case ASK_PASSIVE:
+						team = game.getOtherTeam(game.getActingTeam());
+						stopTimer = true;
+						break;
+					default:
+						return false;
+				}
+
+				if (team != null) {
+					potentialCatchers.addAll(divingCatchers.stream().map(game::getPlayerById)
+						.filter(team::hasPlayer).collect(Collectors.toList()));
+					for (Player<?> ignored : potentialCatchers) {
+						descriptions.add(" ");
+					}
+					if (team.hasPlayer(directCatcher)) {
+						potentialCatchers.add(0, directCatcher);
+						descriptions.add(0, "Will be forced to catch if neither team uses Diving Catch");
+					}
+					if (!potentialCatchers.isEmpty()) {
+
+						UtilServerDialog.showDialog(getGameState(),
+							new DialogPlayerChoiceParameter(team.getId(), PlayerChoiceMode.CATCH,
+								potentialCatchers.toArray(new Player[0]),
+								descriptions.toArray(new String[0]), 1), stopTimer);
+						return true;
+					}
+				}
+
+				switch (phase) {
+					case ASK_ACTIVE:
+						phase = DivingCatchPhase.ASK_PASSIVE;
+						break;
+					case ASK_PASSIVE:
+						phase = DivingCatchPhase.PROCESS;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		return false;
+	}
+
+	private FieldCoordinate catchCoordinate(FieldModel fieldModel) {
+		return fCatchScatterThrowInMode.isBomb() ? fieldModel.getBombCoordinate() : fieldModel.getBallCoordinate();
+	}
+
+	private Player<?> directCatcher(FieldModel fieldModel) {
+		return fieldModel.getPlayer(catchCoordinate(fieldModel));
+	}
+
+	private List<String> divingCatchers(FieldModel fieldModel, FieldCoordinate coordinate) {
+		return Arrays.stream(fieldModel.findAdjacentCoordinates(coordinate, fScatterBounds, 1, false))
+			.map(fieldModel::getPlayer).filter(Objects::nonNull)
+			.filter(player -> player.hasUsableSkillProperty(NamedProperties.canAttemptCatchInAdjacentSquares,
+				fieldModel.getPlayerState(player))).map(Player::getId)
+			.collect(Collectors.toList());
 	}
 
 	private void deactivateCards() {
@@ -438,66 +600,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 				}
 			}
 		}
-	}
-
-	private CatchScatterThrowInMode divingCatch(FieldCoordinate pCoordinate) {
-		Game game = getGameState().getGame();
-		if (phase == DivingCatchPhase.ASK_HOME) {
-			Player<?>[] divingCatchers = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamHome(),
-				pCoordinate);
-			if (ArrayTool.isProvided(divingCatchers)) {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamHome().getId(),
-					PlayerChoiceMode.DECLARE_DIVING_CATCH, divingCatchers, null, divingCatchers.length), !game.isHomePlaying());
-			} else {
-				phase = DivingCatchPhase.ASK_AWAY;
-			}
-		}
-		if (phase == DivingCatchPhase.ASK_AWAY) {
-			Player<?>[] divingCatchers = UtilServerCatchScatterThrowIn.findDivingCatchers(getGameState(), game.getTeamAway(),
-				pCoordinate);
-			if (ArrayTool.isProvided(divingCatchers)) {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(game.getTeamAway().getId(),
-					PlayerChoiceMode.DECLARE_DIVING_CATCH, divingCatchers, null, divingCatchers.length), game.isHomePlaying());
-			} else {
-				phase = DivingCatchPhase.PROCESS;
-			}
-		}
-
-		if (phase == DivingCatchPhase.PROCESS) {
-
-			if ((fCatcherId != null && (getReRollSource() != null || divingCatchers.contains(fCatcherId))) || evaluate) {
-				Player<?> divingCatcher = game.getPlayerById(fCatcherId);
-				divingCatchers.remove(fCatcherId);
-				if (getReRollSource() == null && !evaluate) {
-					setReRolledAction(null);
-					Skill skill = divingCatcher.getSkillWithProperty(NamedProperties.canAttemptCatchInAdjacentSquares);
-					getResult().addReport(
-						new ReportSkillUse(divingCatcher.getId(), skill, true, SkillUse.CATCH_BALL));
-				}
-				CatchScatterThrowInMode mode = catchBall();
-
-				if (mode == null || mode == fCatchScatterThrowInMode) {
-					return mode;
-				}
-
-				setReRolledAction(null);
-				setReRollSource(null);
-			}
-			setReRolledAction(null);
-			if (divingCatchers.isEmpty()) {
-				return CatchScatterThrowInMode.SCATTER_BALL;
-			}
-			UtilServerGame.syncGameModel(this);
-			if (divingCatchers.size() == 1) {
-				repeat = true;
-				fCatcherId = divingCatchers.get(0);
-			} else {
-				UtilServerDialog.showDialog(getGameState(), new DialogPlayerChoiceParameter(divingCatchControlTeam,
-					PlayerChoiceMode.DIVING_CATCH, divingCatchers.toArray(new String[0]), null, 1, 1), !game.getActingTeam().getId().equals(divingCatchControlTeam));
-			}
-
-		}
-		return fCatchScatterThrowInMode;
 	}
 
 	private CatchScatterThrowInMode catchBall() {
@@ -512,26 +614,41 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		}
 		FieldCoordinate catcherCoordinate = game.getFieldModel().getPlayerCoordinate(state.catcher);
 
+		boolean modifierSelected = modifierChosen;
+		modifierChosen = false;
 		boolean doRoll = true;
-		if (ReRolledActions.CATCH == getReRolledAction()) {
-			if ((getReRollSource() == null) || !UtilServerReRoll.useReRoll(this, getReRollSource(), state.catcher)) {
+		if (modifierSelected) {
+			// the coach rescued the die with an optional modifier, it is evaluated again instead of being re-rolled
+			doRoll = false;
+		} else if (ReRolledActions.CATCH == getReRolledAction()) {
+			if (reRollUsed || (getReRollSource() == null)
+				|| !UtilServerReRoll.useReRoll(this, getReRollSource(), state.catcher)) {
 				doRoll = false;
+			} else {
+				reRollUsed = true;
 			}
 		}
 
-		if (doRoll || evaluate) {
-			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC).forName(Mechanic.Type.AGILITY.name());
+		if (doRoll || evaluate || modifierSelected) {
+			awaitingRescue = false;
+			AgilityMechanic mechanic = (AgilityMechanic) game.getRules().getFactory(Factory.MECHANIC)
+				.forName(Mechanic.Type.AGILITY.name());
 			CatchModifierFactory modifierFactory = game.getFactory(Factory.CATCH_MODIFIER);
 			PassState passState = getGameState().getPassState();
-			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, passState != null ? passState.getUsingBlastIt() : null));
+			Boolean usingBlastIt = passState != null ? passState.getUsingBlastIt() : null;
+			Set<CatchModifier> catchModifiers = modifierFactory.findModifiers(
+				new CatchContext(game, state.catcher, fCatchScatterThrowInMode, usingBlastIt, selectedModifierSkills));
 			int minimumRoll = mechanic.minimumRollCatch(state.catcher, catchModifiers);
-			boolean reRolled = ((getReRolledAction() == ReRolledActions.CATCH) && (getReRollSource() != null));
 			if (doRoll) {
 				roll = getGameState().getDiceRoller().rollSkill();
 			}
 			boolean successful = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, minimumRoll);
-			getResult().addReport(new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRolled || evaluate,
-				catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
+			// a die rescued by optional modifiers is not rolled again, the skill use report already explains the outcome
+			if (!modifierSelected) {
+				getResult().addReport(
+					new ReportCatchRoll(state.catcher.getId(), successful, roll, minimumRoll, reRollUsed || evaluate,
+						catchModifiers.toArray(new CatchModifier[0]), fCatchScatterThrowInMode.isBomb()));
+			}
 			evaluate = false;
 
 			if (successful) {
@@ -558,48 +675,76 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			} else {
 				boolean successfulWithBlastIt = false;
 
-				if (getGameState().getPassState() != null && game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
-					Boolean usingBlastIt = getGameState().getPassState().getUsingBlastIt();
+				if (getGameState().getPassState() != null &&
+					game.getActingPlayer().getPlayerAction() == PlayerAction.HAIL_MARY_PASS) {
+					Boolean usingBlastItSkill = getGameState().getPassState().getUsingBlastIt();
 
-					if (UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.grantsCatchBonusToReceiver) && usingBlastIt == null) {
-						Set<CatchModifier> catchModifiersWithBlastIt = modifierFactory.findModifiers(new CatchContext(game, state.catcher, fCatchScatterThrowInMode, true));
-						successfulWithBlastIt = DiceInterpreter.getInstance().isSkillRollSuccessful(roll, mechanic.minimumRollCatch(state.catcher, catchModifiersWithBlastIt));
+					if (
+						UtilCards.hasUnusedSkillWithProperty(game.getActingPlayer(), NamedProperties.grantsCatchBonusToReceiver) &&
+							usingBlastItSkill == null) {
+						Set<CatchModifier> catchModifiersWithBlastIt = modifierFactory.findModifiers(
+							new CatchContext(game, state.catcher, fCatchScatterThrowInMode, true, selectedModifierSkills));
+						successfulWithBlastIt = DiceInterpreter.getInstance()
+							.isSkillRollSuccessful(roll, mechanic.minimumRollCatch(state.catcher, catchModifiersWithBlastIt));
 					}
 				}
-				Optional<Skill> catchSkill = catcher.getSkillsIncludingTemporaryOnes().stream().filter(skill -> skill.getRerollSource(ReRolledActions.CATCH) != null).findFirst();
+				Optional<Skill> catchSkill = catcher.getSkillsIncludingTemporaryOnes().stream()
+					.filter(skill -> skill.getRerollSource(ReRolledActions.CATCH) != null).findFirst();
 
-				if (getReRolledAction() != ReRolledActions.CATCH) {
+				boolean firstAttempt = getReRolledAction() != ReRolledActions.CATCH;
+				boolean catchReRollAvailable = false;
+				boolean skillReRollHandled = false;
 
-					boolean stopProcessing = getGameState().executeStepHooks(this, state);
-					GameOptionBoolean catchForBombs = (GameOptionBoolean) game.getOptions().getOptionWithDefault(GameOptionId.CATCH_WORKS_FOR_BOMBS);
-					if (state.rerollCatch && (!fCatchScatterThrowInMode.isBomb() || catchForBombs.isEnabled())) {
-						if (successfulWithBlastIt) {
-							UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(fCatcherId, catchSkill.orElse(null),
-								minimumRoll, game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver)), false);
+				if (firstAttempt) {
+
+					skillReRollHandled = getGameState().executeStepHooks(this, state);
+					GameOptionBoolean catchForBombs = (GameOptionBoolean) game.getOptions()
+						.getOptionWithDefault(GameOptionId.CATCH_WORKS_FOR_BOMBS);
+					catchReRollAvailable =
+						state.rerollCatch && (!fCatchScatterThrowInMode.isBomb() || catchForBombs.isEnabled());
+
+					// Blast It! changes the roll that is needed, so it keeps its own prompts
+					if (successfulWithBlastIt) {
+						if (catchReRollAvailable) {
+							UtilServerDialog.showDialog(getGameState(),
+								new DialogSkillUseParameter(fCatcherId, catchSkill.orElse(null),
+									minimumRoll, game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver)),
+								false);
 							return fCatchScatterThrowInMode;
-						} else {
-							return catchBall();
 						}
-					}
-					if (!stopProcessing) {
-						if ((successfulWithBlastIt
-							&& UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher, ReRolledActions.CATCH, 0, false,
-							game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver), null))
-							|| UtilServerReRoll.askForReRollIfAvailable(getGameState(), state.catcher, ReRolledActions.CATCH, minimumRoll,
-							false)) {
+						if (!skillReRollHandled && UtilServerReRoll.askForReRollIfAvailable(getGameState(), catcher,
+							ReRolledActions.CATCH, 0, false,
+							game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver), null)) {
 							setReRolledAction(ReRolledActions.CATCH);
 							return fCatchScatterThrowInMode;
 						}
 					}
 				} else if (successfulWithBlastIt) {
-					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(), game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver),
+					UtilServerDialog.showDialog(getGameState(), new DialogSkillUseParameter(game.getThrowerId(),
+						game.getThrower().getSkillWithProperty(NamedProperties.grantsCatchBonusToReceiver),
 						0), false);
+					return fCatchScatterThrowInMode;
+				}
+
+				List<ModifierChoiceOption> options =
+					selectionService.findOptions(game, state.catcher, fCatchScatterThrowInMode, usingBlastIt, roll);
+
+				if (catchReRollAvailable && options.isEmpty() && mayUseSkillReRollAutomatically()) {
+					return catchBall();
+				}
+
+				boolean reRollAllowed = firstAttempt && !reRollUsed && (!skillReRollHandled || catchReRollAvailable);
+				if ((!options.isEmpty() || reRollAllowed)
+					&& offerRescue(minimumRoll, options, reRollAllowed,
+					catchReRollAvailable ? catchSkill.orElse(null) : null)) {
+					setReRolledAction(ReRolledActions.CATCH);
 					return fCatchScatterThrowInMode;
 				}
 			}
 
 		}
 
+		awaitingRescue = false;
 		setReRolledAction(null);
 		if (catcherCoordinate != null && phase != DivingCatchPhase.PROCESS) {
 			if (fCatchScatterThrowInMode.isBomb()) {
@@ -617,6 +762,47 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 	}
 
+	/**
+	 * A free skill re-roll is used without asking, unless the coach may want to fail the catch on purpose.
+	 * <p>
+	 * On a loose ball the coach may prefer not to hold the ball in that square, so the re-roll is always a choice.
+	 * For a deliberate delivery it is only a choice when failing would get a rock thrown at a team mate.
+	 */
+	private boolean mayUseSkillReRollAutomatically() {
+		if (fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_SCATTER
+			|| fCatchScatterThrowInMode == CatchScatterThrowInMode.CATCH_BOMB) {
+			return false;
+		}
+		Game game = getGameState().getGame();
+		return !new StallingExtension().wouldEndOfTurnTriggerStallingRoll(game, game.getActingPlayer().getPlayer());
+	}
+
+	private boolean offerRescue(int minimumRoll, List<ModifierChoiceOption> options, boolean reRollAllowed,
+	                            Skill reRollSkill) {
+		Game game = getGameState().getGame();
+		PassState passState = getGameState().getPassState();
+		List<ModifierChoiceOption> combinations = selectionService.findCombinations(game, state.catcher,
+			fCatchScatterThrowInMode, passState != null ? passState.getUsingBlastIt() : null);
+		awaitingRescue = getGameState().getReRollService().askForReRollIfAvailable(
+			ReRollRequest.forPlayer(getGameState(), state.catcher, ReRolledActions.CATCH, minimumRoll)
+				.reRollSkill(reRollSkill)
+				.dialogParameter(new ReRollModifierChoiceDialogParameterFactory(roll, options, combinations, reRollAllowed))
+				.build());
+		return awaitingRescue;
+	}
+
+	/**
+	 * Resets everything that belongs to a single catch attempt, the ball is on its way to another square.
+	 */
+	private void resetCatchAttempt() {
+		state = new StepState();
+		roll = 0;
+		reRollUsed = false;
+		awaitingRescue = false;
+		modifierChosen = false;
+		selectedModifierSkills.clear();
+	}
+
 	private CatchScatterThrowInMode scatterBall() {
 
 		Game game = getGameState().getGame();
@@ -624,7 +810,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		setReRolledAction(null);
 		setReRollSource(null);
-		state = new StepState();
+		resetCatchAttempt();
 
 		List<FieldCoordinate> scatterCoordinates = new ArrayList<>();
 		List<Integer> rolls = new ArrayList<>();
@@ -649,7 +835,8 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			}
 		}
 
-		getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(i -> i).toArray(), false));
+		getResult().addReport(
+			new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(i -> i).toArray(), false));
 
 		game.getFieldModel().setBallCoordinate(lastValidCoordinate);
 		game.getFieldModel().setBallMoving(true);
@@ -679,7 +866,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		setReRolledAction(null);
 		setReRollSource(null);
-		state = new StepState();
+		resetCatchAttempt();
 
 		int roll = getGameState().getDiceRoller().rollScatterDirection();
 		Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
@@ -713,6 +900,7 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 			game.getFieldModel().setOutOfBounds(true);
 			if (fScatterBounds.equals(FieldCoordinateBounds.FIELD)) {
 				fThrowInCoordinate = lastValidCoordinate;
+				publishParameter(new StepParameter(StepParameterKey.BALL_OUT_OF_BOUNDS, true));
 				return CatchScatterThrowInMode.THROW_IN;
 			} else {
 				publishParameter(new StepParameter(StepParameterKey.TOUCHBACK, true));
@@ -721,59 +909,6 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 
 		return null;
 
-	}
-
-	private CatchScatterThrowInMode scatterBomb() {
-
-		Game game = getGameState().getGame();
-		getGameState().getServer().getDebugLog().log(IServerLogLevel.DEBUG, game.getId(), "scatterBomb()");
-
-		setReRolledAction(null);
-		setReRollSource(null);
-		state = new StepState();
-
-		List<FieldCoordinate> scatterCoordinates = new ArrayList<>();
-		List<Integer> rolls = new ArrayList<>();
-		List<Direction> directions = new ArrayList<>();
-
-		boolean inBounds = true;
-
-		FieldCoordinate lastValidCoordinate = game.getFieldModel().getBombCoordinate();
-
-		while (inBounds && scatterCoordinates.size() < 3) {
-			int roll = getGameState().getDiceRoller().rollScatterDirection();
-			Direction direction = DiceInterpreter.getInstance().interpretScatterDirectionRoll(game, roll);
-			FieldCoordinate bombCoordinateEnd = UtilServerCatchScatterThrowIn.findScatterCoordinate(lastValidCoordinate,
-				direction, 1);
-			if (fScatterBounds.isInBounds(bombCoordinateEnd)) {
-				lastValidCoordinate = bombCoordinateEnd;
-				scatterCoordinates.add(lastValidCoordinate);
-				rolls.add(roll);
-				directions.add(direction);
-			} else {
-				inBounds = false;
-			}
-		}
-
-		getResult().addReport(new ReportScatterBall(directions.toArray(new Direction[0]), rolls.stream().mapToInt(i -> i).toArray(), false));
-
-		game.getFieldModel().setBombCoordinate(lastValidCoordinate);
-		game.getFieldModel().setBombMoving(true);
-
-		if (inBounds) {
-			Player<?> player = game.getFieldModel().getPlayer(lastValidCoordinate);
-			if (player != null) {
-				PlayerState playerState = game.getFieldModel().getPlayerState(player);
-				if (playerState.hasTacklezones()) {
-					fCatcherId = player.getId();
-					return CatchScatterThrowInMode.CATCH_BOMB;
-				}
-			}
-		} else {
-			game.getFieldModel().setBombCoordinate(null);
-			game.getFieldModel().setBombMoving(false);
-		}
-		return null;
 	}
 
 	private CatchScatterThrowInMode throwInBall() {
@@ -831,9 +966,15 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		IServerJsonOption.THROW_IN_COORDINATE.addTo(jsonObject, fThrowInCoordinate);
 		IServerJsonOption.BOMB_MODE.addTo(jsonObject, fBombMode);
 		IServerJsonOption.STEP_PHASE.addTo(jsonObject, phase.name());
-		IServerJsonOption.TEAM_ID.addTo(jsonObject, divingCatchControlTeam);
-		IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
+		if (divingCatchers != null) {
+			IServerJsonOption.PLAYER_IDS.addTo(jsonObject, divingCatchers);
+		}
 		IServerJsonOption.ROLL.addTo(jsonObject, roll);
+		IServerJsonOption.RE_ROLL_USED.addTo(jsonObject, reRollUsed);
+		IServerJsonOption.AWAITING_RESCUE.addTo(jsonObject, awaitingRescue);
+		JsonArray selectedSkills = new JsonArray();
+		selectedModifierSkills.forEach(skill -> selectedSkills.add(skill.getName()));
+		IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.addTo(jsonObject, selectedSkills);
 		IServerJsonOption.USING_MODIFYING_SKILL.addTo(jsonObject, usingModifyingSkill);
 		IServerJsonOption.EVALUATE.addTo(jsonObject, evaluate);
 		IServerJsonOption.REPORT_LIST.addTo(jsonObject, reports.toJsonValue());
@@ -855,11 +996,27 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 		fThrowInCoordinate = IServerJsonOption.THROW_IN_COORDINATE.getFrom(source, jsonObject);
 		fBombMode = IServerJsonOption.BOMB_MODE.getFrom(source, jsonObject);
 		phase = DivingCatchPhase.valueOf(IServerJsonOption.STEP_PHASE.getFrom(source, jsonObject));
-		divingCatchControlTeam = IServerJsonOption.TEAM_ID.getFrom(source, jsonObject);
-		divingCatchers.addAll(Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList()));
+
+		if (IServerJsonOption.PLAYER_IDS.isDefinedIn(jsonObject)) {
+			divingCatchers = new ArrayList<>();
+			divingCatchers.addAll(
+				Arrays.stream(IServerJsonOption.PLAYER_IDS.getFrom(source, jsonObject)).collect(Collectors.toList()));
+		}
 
 		if (IServerJsonOption.ROLL.isDefinedIn(jsonObject)) {
 			roll = IServerJsonOption.ROLL.getFrom(source, jsonObject);
+		}
+
+		reRollUsed = toPrimitive(IServerJsonOption.RE_ROLL_USED.getFrom(source, jsonObject));
+		awaitingRescue = toPrimitive(IServerJsonOption.AWAITING_RESCUE.getFrom(source, jsonObject));
+		modifierChosen = false;
+		selectedModifierSkills.clear();
+		JsonArray selectedSkills = IServerJsonOption.SELECTED_AGILITY_MODIFIER_SKILLS.getFrom(source, jsonObject);
+		if (selectedSkills != null) {
+			SkillFactory skillFactory = source.getFactory(Factory.SKILL);
+			for (JsonValue skill : selectedSkills) {
+				selectedModifierSkills.add(skillFactory.forName(skill.asString()));
+			}
 		}
 
 		usingModifyingSkill = IServerJsonOption.USING_MODIFYING_SKILL.getFrom(source, jsonObject);
@@ -872,6 +1029,10 @@ public class StepCatchScatterThrowIn extends AbstractStepWithReRoll {
 	}
 
 	private enum DivingCatchPhase {
-		ASK_HOME, ASK_AWAY, PROCESS
+		ASK_ACTIVE, ASK_PASSIVE, PROCESS,
+		@Deprecated
+		ASK_HOME,
+		@Deprecated
+		ASK_AWAY // legacy, kept around to maintain compatibility with older replays
 	}
 }

@@ -14,8 +14,10 @@ public class ModifiedDodgeResultSuccessfulMessage extends ReportMessageBase<Repo
 
 	@Override
 	protected void render(ReportModifiedDodgeResultSuccessful report) {
-		println(getIndent() + 1, TextStyle.EXPLANATION, "Using " + report.getSkill().getName() +
-			" would result in a successful dodge");
+		if (report.getSkill() != null) { // necessary as some replays have reports with null skill stored
+			println(getIndent() + 1, TextStyle.EXPLANATION, "Using " + report.getSkill().getName() +
+				" would result in a successful dodge");
+		}
 	}
 }
 

@@ -1,6 +1,5 @@
 package com.fumbbl.ffb.server.mechanic;
 
-import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.ReRollProperty;
@@ -21,8 +20,9 @@ import com.fumbbl.ffb.server.DiceRoller;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.ReRollRequest;
+import com.fumbbl.ffb.server.util.ReRollService;
 
-import java.util.List;
 import java.util.Optional;
 
 public abstract class RollMechanic implements Mechanic {
@@ -52,12 +52,13 @@ public abstract class RollMechanic implements Mechanic {
 
 	public abstract int minimumProRoll();
 
-	public abstract boolean askForReRollIfAvailable(GameState gameState, Player<?> player,
-		ReRolledAction reRolledAction,
-		int minimumRoll, boolean fumble, Skill modificationSkill,
-		Skill reRollSkill,
-		CommonProperty menuProperty, String defaultValueKey,
-		List<String> messages);
+	/**
+	 * Shows the re-roll dialog described by the request, if the coach has anything to decide.
+	 *
+	 * @param request a request with player and re-roll skill resolved by the {@link ReRollService}
+	 * @return whether a dialog was shown
+	 */
+	public abstract boolean askForReRollIfAvailable(ReRollRequest request);
 
 	public abstract boolean useReRoll(IStep pStep, ReRollSource pReRollSource, Player<?> pPlayer);
 

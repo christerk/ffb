@@ -117,6 +117,10 @@ public class FantasyFootballServer implements IFactorySource {
 		return fDebugLog;
 	}
 
+	public void setDebugLog(DebugLog debugLog) {
+		this.fDebugLog = debugLog;
+	}
+
 	public void run() throws Exception {
 
 		fServerGameTimeTimer = new Timer(true);
@@ -277,6 +281,10 @@ public class FantasyFootballServer implements IFactorySource {
 		return fCommunication;
 	}
 
+	public void setCommunication(ServerCommunication communication) {
+		this.fCommunication = communication;
+	}
+
 	public ServerCommandHandlerFactory getCommandHandlerFactory() {
 		return fCommandHandlerFactory;
 	}
@@ -285,12 +293,24 @@ public class FantasyFootballServer implements IFactorySource {
 		return fGameCache;
 	}
 
+	public void setGameCache(GameCache gameCache) {
+		this.fGameCache = gameCache;
+	}
+
 	public SessionManager getSessionManager() {
 		return fSessionManager;
 	}
 
+	public void setSessionManager(SessionManager sessionManager) {
+		this.fSessionManager = sessionManager;
+	}
+
 	public Fortuna getFortuna() {
 		return fFortuna;
+	}
+
+	public void setFortuna(Fortuna fortuna) {
+		this.fFortuna = fortuna;
 	}
 
 	public static void main(String[] origArgs) throws IOException {
@@ -352,6 +372,10 @@ public class FantasyFootballServer implements IFactorySource {
 
 	public DbUpdater getDbUpdater() {
 		return fDbUpdater;
+	}
+
+	public void setDbUpdater(DbUpdater dbUpdater) {
+		this.fDbUpdater = dbUpdater;
 	}
 
 	public DbUpdateFactory getDbUpdateFactory() {

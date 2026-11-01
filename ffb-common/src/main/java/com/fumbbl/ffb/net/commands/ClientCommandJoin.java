@@ -21,6 +21,9 @@ public class ClientCommandJoin extends ClientCommand {
 	private ClientMode fClientMode;
 	private String fTeamId;
 	private String fTeamName;
+	private String protocolVersion;
+	private String clientName;
+	private String clientVersion;
 
 	public ClientCommandJoin() {
 		super();
@@ -90,6 +93,30 @@ public class ClientCommandJoin extends ClientCommand {
 		fTeamName = pTeamName;
 	}
 
+	public String getProtocolVersion() {
+		return protocolVersion;
+	}
+
+	public void setProtocolVersion(String protocolVersion) {
+		this.protocolVersion = protocolVersion;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getClientVersion() {
+		return clientVersion;
+	}
+
+	public void setClientVersion(String clientVersion) {
+		this.clientVersion = clientVersion;
+	}
+
 	// JSON serialization
 
 	public JsonObject toJsonValue() {
@@ -101,6 +128,9 @@ public class ClientCommandJoin extends ClientCommand {
 		IJsonOption.GAME_NAME.addTo(jsonObject, fGameName);
 		IJsonOption.TEAM_ID.addTo(jsonObject, fTeamId);
 		IJsonOption.TEAM_NAME.addTo(jsonObject, fTeamName);
+		IJsonOption.PROTOCOL_VERSION.addTo(jsonObject, protocolVersion);
+		IJsonOption.CLIENT_NAME.addTo(jsonObject, clientName);
+		IJsonOption.CLIENT_VERSION.addTo(jsonObject, clientVersion);
 		return jsonObject;
 	}
 
@@ -114,6 +144,9 @@ public class ClientCommandJoin extends ClientCommand {
 		fGameName = IJsonOption.GAME_NAME.getFrom(source, jsonObject);
 		fTeamId = IJsonOption.TEAM_ID.getFrom(source, jsonObject);
 		fTeamName = IJsonOption.TEAM_NAME.getFrom(source, jsonObject);
+		protocolVersion = IJsonOption.PROTOCOL_VERSION.getFrom(source, jsonObject);
+		clientName = IJsonOption.CLIENT_NAME.getFrom(source, jsonObject);
+		clientVersion = IJsonOption.CLIENT_VERSION.getFrom(source, jsonObject);
 		return this;
 	}
 

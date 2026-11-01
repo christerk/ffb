@@ -30,18 +30,38 @@ public class PlayerIconFactory {
 	private static BufferedImage decorateIcon(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
 		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = resultingIcon.createGraphics();
-		if (pIcon != null) {
-			int x = (resultingIcon.getWidth() - pIcon.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pIcon.getHeight()) / 2;
-			g2d.drawImage(pIcon, x, y, null);
-		}
-		if (pDecoration != null) {
-			int x = (resultingIcon.getWidth() - pDecoration.getWidth()) / 2;
-			int y = (resultingIcon.getHeight() - pDecoration.getHeight()) / 2;
-			g2d.drawImage(pDecoration, x, y, null);
-		}
+
+		drawCentered(g2d, pIcon, resultingIcon);
+		drawCentered(g2d, pDecoration, resultingIcon);
+
 		g2d.dispose();
 		return resultingIcon;
+	}
+
+	private static BufferedImage decorateIconTopRight(BufferedImage pIcon, BufferedImage pDecoration, Dimension maxIconSize) {
+		BufferedImage resultingIcon = new BufferedImage(maxIconSize.width, maxIconSize.height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = resultingIcon.createGraphics();
+
+		drawCentered(g2d, pIcon, resultingIcon);
+		drawTopRight(g2d, pDecoration, resultingIcon);
+
+		g2d.dispose();
+		return resultingIcon;
+	}
+
+	private static void drawCentered(Graphics2D g2d, BufferedImage image, BufferedImage target) {
+		if (image != null) {
+			int x = (target.getWidth() - image.getWidth()) / 2;
+			int y = (target.getHeight() - image.getHeight()) / 2;
+			g2d.drawImage(image, x, y, null);
+		}
+	}
+
+	private static void drawTopRight(Graphics2D g2d, BufferedImage image, BufferedImage target) {
+		if (image != null) {
+			int x = target.getWidth() - image.getWidth();
+			g2d.drawImage(image, x, 0, null);
+		}
 	}
 
 	private static void markIcon(BufferedImage pIcon, String pText, FontCache fontCache, StyleProvider styleProvider,
@@ -339,13 +359,16 @@ public class PlayerIconFactory {
 			decorationProperty3 = IIconProperty.DECORATION_CHOMPED;
 		}
 
-		PlayerAction playerAction = actingPlayer.getPlayerAction();
-		if ((actingPlayer.getPlayer() == pPlayer) && (playerState.getBase() == PlayerState.MOVING)
-				&& (playerAction != null) && playerAction.isBlitzing()
-				&& IClientPropertyValue.SETTING_MARK_BLITZING_PLAYER_ON.equals(
-					pClient.getProperty(CommonProperty.SETTING_MARK_BLITZING_PLAYER))) {
-			decorationProperty4 = IIconProperty.DECORATION_CHECK_ICON_BLITZ;
+		if ((actingPlayer.getPlayer() == pPlayer)
+			&& (playerState.getBase() == PlayerState.MOVING)
+			&& IClientPropertyValue.SETTING_MARK_ACTING_PLAYER_ACTION_ON.equals(
+				pClient.getProperty(CommonProperty.SETTING_MARK_ACTING_PLAYER_ACTION))) {
+			PlayerAction playerAction = actingPlayer.getPlayerAction();
+			if (playerAction != null) {
+				decorationProperty4 = playerAction.getIconProperty();
+			}
 		}
+		
 
 		Dimension maxIconSize = dimensionProvider.dimension(Component.MAX_ICON);
 
@@ -359,7 +382,7 @@ public class PlayerIconFactory {
 			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty3, dimensionProvider), maxIconSize);
 		}
 		if (decorationProperty4 != null) {
-			icon = decorateIcon(icon, iconCache.getIconByProperty(decorationProperty4, dimensionProvider), maxIconSize);
+			icon = decorateIconTopRight(icon, iconCache.getIconByProperty(decorationProperty4, dimensionProvider), maxIconSize);
 		}
 
 		if (fadeIcon) {

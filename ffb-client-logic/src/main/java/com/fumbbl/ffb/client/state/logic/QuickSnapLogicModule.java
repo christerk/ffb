@@ -21,9 +21,4 @@ public class QuickSnapLogicModule extends SetupLogicModule {
 	public boolean squaresAreSameOrAdjacent(FieldCoordinate start, FieldCoordinate end) {
 		return start != null && end != null && (start.equals(end) || start.isAdjacent(end));
 	}
-
-	@Override
-	protected boolean useTurnMode() {
-		return true;
-	}
 }

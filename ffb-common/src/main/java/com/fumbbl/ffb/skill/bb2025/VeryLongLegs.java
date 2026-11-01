@@ -7,6 +7,7 @@ import com.fumbbl.ffb.model.property.CancelSkillProperty;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.modifiers.InterceptionModifier;
+import com.fumbbl.ffb.modifiers.JumpContext;
 import com.fumbbl.ffb.modifiers.JumpModifier;
 import com.fumbbl.ffb.modifiers.ModifierType;
 
@@ -27,7 +28,12 @@ public class VeryLongLegs extends Skill {
 	public void postConstruct() {
 		registerProperty(new CancelSkillProperty(NamedProperties.passesAreNotIntercepted));
 
-		registerModifier(new JumpModifier("Very Long Legs", -1, ModifierType.REGULAR));
+		registerModifier(new JumpModifier("Very Long Legs", -1, ModifierType.REGULAR, true) {
+			@Override
+			public boolean appliesToContext(Skill skill, JumpContext context) {
+				return !context.areFreeModifiersOptional() || context.isSkillSelected(skill);
+			}
+		});
 
 		registerModifier(new InterceptionModifier("Very Long Legs", -2, ModifierType.REGULAR));
 	}

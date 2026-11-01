@@ -20,6 +20,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.util.OfferedSkillService;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.util.UtilCards;
 
@@ -60,7 +61,9 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 					break;
 				case CLIENT_USE_SKILL:
 					ClientCommandUseSkill commandUseSkill = (ClientCommandUseSkill) pReceivedCommand.getCommand();
-					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)) {
+					if (commandUseSkill.isSkillUsed() && commandUseSkill.getSkill() != null
+						&& commandUseSkill.getSkill().hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)
+						&& isSingleDieReRollSkillAvailable(commandUseSkill)) {
 						setReRolledAction(commandUseSkill.getReRolledAction());
 						setReRollSource(commandUseSkill.getSkill().getRerollSource(ReRolledActions.SINGLE_DIE));
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -71,6 +74,18 @@ public abstract class AbstractStepWithReRoll extends AbstractStep implements Has
 			}
 		}
 		return commandStatus;
+	}
+
+	/**
+	 * The single die re-roll skill is only accepted if the current dialog offers it, the command is sent for the
+	 * player the dialog is addressed to and that player still has the skill unused, otherwise the command is ignored.
+	 */
+	private boolean isSingleDieReRollSkillAvailable(ClientCommandUseSkill commandUseSkill) {
+		Game game = getGameState().getGame();
+		OfferedSkillService offeredSkillService = new OfferedSkillService();
+		String playerId = offeredSkillService.offeringPlayerId(game, commandUseSkill.getSkill());
+		return playerId != null && playerId.equals(commandUseSkill.getPlayerId())
+			&& offeredSkillService.hasUnused(game, game.getPlayerById(playerId), commandUseSkill.getSkill());
 	}
 
 	public ReRolledAction getReRolledAction() {

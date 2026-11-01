@@ -21,6 +21,7 @@ public enum StepParameterKey {
 	BALL_AND_CHAIN_GFI, // Boolean
 	BALL_AND_CHAIN_RE_ROLL_SETTING, // String
 	BALL_KNOCKED_LOSE, // Boolean
+	BALL_OUT_OF_BOUNDS, // Boolean
 	BLOCK_DEFENDER_ID, // String
 	BLOCK_TARGETS, // List<Target>
 	BLOCK_RESULT, // BlockResult
@@ -158,6 +159,8 @@ public enum StepParameterKey {
 	UPDATE_PERSISTENCE, // Boolean
 	USE_ALTERNATE_LABEL, // Boolean
 	USING_BREAK_TACKLE, // Boolean
+	SELECTED_DODGE_MODIFIER_SKILLS, // Set<Skill>
+	MODIFIER_CHOICE_OFFERED, // Boolean
 	USING_BREATHE_FIRE, // Boolean
 	USING_BULLSEYE, // Boolean
 	USING_CHAINSAW, // Boolean

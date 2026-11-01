@@ -72,4 +72,9 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 		return false;
 	}
 
+	@Override
+	public int countAdvancements(Player<?> player) {
+		return 0;
+	}
+
 }

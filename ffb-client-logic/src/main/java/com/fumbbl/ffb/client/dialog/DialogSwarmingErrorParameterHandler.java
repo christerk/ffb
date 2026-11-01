@@ -41,5 +41,9 @@ public class DialogSwarmingErrorParameterHandler extends DialogHandler {
 	@Override
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
+		if ((ClientMode.PLAYER == getClient().getMode()) && getClient().getGame().isHomePlaying()) {
+			SideBarComponent sideBarHome = getClient().getUserInterface().getSideBarHome();
+			sideBarHome.getTurnDiceStatusComponent().enableButton();
+		}
 	}
 }

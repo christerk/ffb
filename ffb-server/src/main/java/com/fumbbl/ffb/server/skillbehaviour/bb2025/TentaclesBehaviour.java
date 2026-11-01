@@ -122,6 +122,7 @@ public class TentaclesBehaviour extends SkillBehaviour<Tentacles> {
 							game.getFieldModel().updatePlayerAndBallPosition(actingPlayer.getPlayer(), state.coordinateFrom);
 							step.publishParameter(StepParameter.from(StepParameterKey.COORDINATE_FROM, null));
 							step.publishParameter(StepParameter.from(StepParameterKey.SKIP, true));
+							step.publishParameter(StepParameter.from(StepParameterKey.END_PLAYER_ACTION, true));
 						}
 						if (StringTool.isProvided(game.getLastDefenderId())) {
 							game.setDefenderId(game.getLastDefenderId());

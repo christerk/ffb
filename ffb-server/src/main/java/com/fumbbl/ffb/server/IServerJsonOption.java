@@ -35,9 +35,11 @@ public interface IServerJsonOption extends IJsonOption {
     JsonStringOption ARM_BAR_PLAYER_ID = new JsonStringOption("armBarPlayerId");
     JsonBooleanOption ASK_FOR_BLOCK_KIND = new JsonBooleanOption("askForBlockKind");
     JsonBooleanOption ATTEMPT_PICK_UP = new JsonBooleanOption("attemptPickup");
+    JsonBooleanOption AWAITING_RESCUE = new JsonBooleanOption("awaitingRescue");
     JsonBooleanOption ATTACK_OPPONENT = new JsonBooleanOption("attackOpponent");
     JsonStringListMapOption AVAILABLE_KEYWORDS_MAP = new JsonStringListMapOption("availableKeywordsMap");
     JsonStringOption BLOCK_DEFENDER_ID = new JsonStringOption("blockDefenderId");
+    JsonBooleanOption BALL_KNOCKED_LOOSE = new JsonBooleanOption("ballKnockedLoose");
     JsonBooleanOption BOMB_MODE = new JsonBooleanOption("bombMode");
     JsonIntOption BRAWLER_INDEX = new JsonIntOption("brawlerIndex");
     JsonBooleanOption BRIBES_CHOICE = new JsonBooleanOption("bribesChoice");
@@ -69,6 +71,16 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption DONT_DROP_FUMBLE = new JsonBooleanOption("dontDropFumble");
     JsonBooleanOption DO_ROLL = new JsonBooleanOption("doRoll");
     JsonBooleanOption DT_REROLL_ASKED = new JsonBooleanOption("dtRerollAsked");
+    JsonArrayOption SELECTED_DODGE_MODIFIER_SKILLS = new JsonArrayOption("selectedDodgeModifierSkills");
+    JsonArrayOption SELECTED_AGILITY_MODIFIER_SKILLS = new JsonArrayOption("selectedAgilityModifierSkills");
+    JsonArrayOption DECLINED_AGILITY_MODIFIER_SKILLS = new JsonArrayOption("declinedAgilityModifierSkills");
+    JsonStringOption PENDING_AGILITY_MODIFIER_SKILL = new JsonStringOption("pendingAgilityModifierSkill");
+    JsonIntOption PICKUP_ROLL = new JsonIntOption("pickupRoll");
+    JsonIntOption JUMP_UP_ROLL = new JsonIntOption("jumpUpRoll");
+    JsonIntOption INTERCEPTION_ROLL = new JsonIntOption("interceptionRoll");
+    JsonIntOption RIGHT_STUFF_ROLL = new JsonIntOption("rightStuffRoll");
+    JsonBooleanOption MODIFIER_CHOICE_OFFERED = new JsonBooleanOption("modifierChoiceOffered");
+    JsonBooleanOption FREE_MODIFIERS_OPTIONAL = new JsonBooleanOption("freeModifiersOptional");
     JsonBooleanOption ELIGIBLE_FOR_SAFE_PAIR_OF_HANDS = new JsonBooleanOption("eligibleForSafePairOfHands");
     JsonBooleanOption END_PLAYER_ACTION = new JsonBooleanOption("endPlayerAction");
     JsonBooleanOption END_GAME = new JsonBooleanOption("endGame");
@@ -173,6 +185,7 @@ public interface IServerJsonOption extends IJsonOption {
     JsonBooleanOption RE_ROLLING = new JsonBooleanOption("reRolling");
     JsonBooleanOption RESET_FOR_FAILED_BLOCK = new JsonBooleanOption("resetForFailedBlock");
     JsonBooleanOption RETAIN_MODEL_DATA = new JsonBooleanOption("retainModelData");
+    JsonBooleanOption REVERT_END_TURN = new JsonBooleanOption("revertEndTurn");
     JsonBooleanOption ROLL_FOR_EFFECT = new JsonBooleanOption("rollForEffect");
     JsonBooleanOption SABOTEUR_TRIGGERED_ATTACKER = new JsonBooleanOption("saboteurTriggeredAttacker");
     JsonBooleanOption SABOTEUR_TRIGGERED_DEFENDER = new JsonBooleanOption("saboteurTriggeredDefender");

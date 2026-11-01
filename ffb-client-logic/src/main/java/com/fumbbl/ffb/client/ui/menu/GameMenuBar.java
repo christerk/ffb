@@ -123,6 +123,10 @@ public class GameMenuBar extends JMenuBar implements ActionListener, IDialogClos
 		subMenus.forEach(FfbMenu::init);
 
 		refresh();
+
+		// menus were replaced, so areas of the old menus not covered by the new ones have to be repainted
+		revalidate();
+		repaint();
 	}
 
 	public FantasyFootballClient getClient() {

@@ -61,10 +61,7 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 
 	@Override
 	public String calculatePlayerLevel(Game game, Player<?> player) {
-		int gainedSkills = (int) player.skillInfos().stream()
-			.filter(info -> info.getCategory() == SkillDisplayInfo.Category.PLAYER
-				&& info.getSkill().getCategory() != SkillCategory.STAT_DECREASE
-				&& !info.getSkill().hasSkillProperty(NamedProperties.doesNotCountAsAdvancement)).count();
+		int gainedSkills = countAdvancements(player);
 
 		switch (gainedSkills) {
 			case 0:
@@ -82,6 +79,25 @@ public class SkillMechanic extends com.fumbbl.ffb.mechanics.SkillMechanic {
 			default:
 				return "Legend";
 		}
+	}
+
+	@Override
+	public int countAdvancements(Player<?> player) {
+		int offset = 0;
+
+		Set<Skill> gainedSkills = player.skillInfos().stream()
+			.filter(info -> info.getSkill().getCategory() != SkillCategory.STAT_DECREASE
+				&& info.getCategory() == SkillDisplayInfo.Category.PLAYER).map(SkillDisplayInfo::getSkill)
+			.collect(Collectors.toSet());
+
+		// Team Captain is excluded via doesNotCountAsAdvancement, but it also grants Pro which must not count either
+		if (gainedSkills.stream().anyMatch(skill -> skill.hasSkillProperty(NamedProperties.canSaveReRolls))) {
+			offset = 1;
+		}
+
+		return (int) (
+			gainedSkills.stream().filter(skill -> !skill.hasSkillProperty(NamedProperties.doesNotCountAsAdvancement))
+				.count() - offset);
 	}
 
 	@Override

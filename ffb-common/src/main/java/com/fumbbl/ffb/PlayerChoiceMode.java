@@ -15,7 +15,7 @@ public enum PlayerChoiceMode implements INamedObject {
 	RAIDING_PARTY("raidingParty", false), BALEFUL_HEX("balefulHex"), BLACK_INK("blackInk"),
 	QUICK_BITE("quickBite"), FURIOUS_OUTBURST("furiousOutburst"), SOLID_DEFENCE("solidDefence", false), CHARGE("charge", false),
 	ARM_BAR("armBar"), AUTO_GAZE_ZOAT("autoGazeZoat"), DWARFEN_WISDOM("dwarfenWisdom", false),
-	ILL_CARRY_YOU("illCarryYou");
+	ILL_CARRY_YOU("illCarryYou"), CATCH("catch");
 
 	private final String name;
 	private final boolean usePlayerPosition, preselect;
@@ -139,6 +139,9 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ILL_CARRY_YOU:
 				header.append("Select player to carry");
 				break;
+			case CATCH:
+				header.append("Select a player that should catch");
+				break;
 			default:
 				break;
 		}
@@ -238,6 +241,8 @@ public enum PlayerChoiceMode implements INamedObject {
 			case ILL_CARRY_YOU:
 				title.append("I'll Carry You");
 				break;
+			case CATCH:
+				title.append("Catch");
 			default:
 				break;
 		}
@@ -336,6 +341,9 @@ public enum PlayerChoiceMode implements INamedObject {
 				break;
 			case ILL_CARRY_YOU:
 				message.append("Waiting for coach to select player to carry.");
+				break;
+			case CATCH:
+				message.append("Waiting for coach to select a player that should catch.");
 				break;
 			default:
 				break;

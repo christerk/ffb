@@ -80,7 +80,7 @@ public final class StepThrowTeamMate extends AbstractStepWithReRoll {
 				state.thrownPlayerState = (PlayerState) parameter.getValue();
 				return true;
 			case THROWN_PLAYER_HAS_BALL:
-				state.thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+				state.thrownPlayerHasBall = parameter.getValue() != null && (Boolean) parameter.getValue();
 				return true;
 			default:
 				break;

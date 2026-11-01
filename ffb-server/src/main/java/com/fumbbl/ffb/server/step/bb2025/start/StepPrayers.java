@@ -72,8 +72,8 @@ public class StepPrayers extends AbstractStep {
 
 		Game game = getGameState().getGame();
 
-		int additionalPrayerAmount = Math.abs(tvAway - tvHome) /
-			((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_COST)).getValue();
+		int prayerCost = ((GameOptionInt) game.getOptions().getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_COST)).getValue();
+		int additionalPrayerAmount = prayerCost > 0 ? Math.abs(tvAway - tvHome) / prayerCost : 0;
 		boolean addPrayersToUnderdog = ((GameOptionBoolean) getGameState().getGame().getOptions()
 			.getOptionWithDefault(GameOptionId.INDUCEMENT_PRAYERS_AVAILABLE_FOR_UNDERDOG)).isEnabled();
 

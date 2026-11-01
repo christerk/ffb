@@ -21,7 +21,9 @@ public enum TurnMode implements INamedObject {
 	SELECT_BLOCK_KIND("selectBlockKind"), BETWEEN_TURNS("betweenTurns", true),
 	TRICKSTER("trickster"),
 	RAIDING_PARTY("raidingParty"), HIT_AND_RUN("hitAndRun"), THEN_I_STARTED_BLASTIN("thenIStartedBlastin"),
-	PLACE_CARRIED_PLAYER("placeCarriedPlayer");
+	PLACE_CARRIED_PLAYER("placeCarriedPlayer"),
+	// pass block of the active team during an opposing dump-off
+	DUMP_OFF_PASS_BLOCK("dumpOffPassBlock");
 
 	private final String fName;
 	private final boolean checkForActivePlayers;
@@ -40,7 +42,11 @@ public enum TurnMode implements INamedObject {
 	}
 
 	public boolean checkNegatraits() {
-		return ((this != KICKOFF_RETURN) && (this != PASS_BLOCK) && !isBombTurn());
+		return ((this != KICKOFF_RETURN) && !isPassBlock() && !isBombTurn());
+	}
+
+	public boolean isPassBlock() {
+		return (this == PASS_BLOCK) || (this == DUMP_OFF_PASS_BLOCK);
 	}
 
 	public boolean isBombTurn() {

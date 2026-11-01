@@ -31,6 +31,7 @@ import com.fumbbl.ffb.server.util.UtilServerPlayerMove;
 import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 import com.fumbbl.ffb.util.UtilPlayer;
+import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 /**
  * Step to init the select sequence.
@@ -61,6 +62,7 @@ public final class StepInitSelecting extends AbstractStep {
 	private transient boolean fUpdatePersistence;
 
 	private final StallingExtension stallingExtension = new StallingExtension();
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
 
 	public StepInitSelecting(GameState pGameState) {
 		super(pGameState);
@@ -112,7 +114,10 @@ public final class StepInitSelecting extends AbstractStep {
 					Player<?> selectedPlayer = game.getPlayerById(actingPlayerCommand.getPlayerId());
 					PlayerState playerState = game.getFieldModel().getPlayerState(selectedPlayer);
 					if (StringTool.isProvided(actingPlayerCommand.getPlayerId())
-						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()) {
+						&& game.getActingTeam() == selectedPlayer.getTeam() && playerState != null && playerState.isActive()
+						// the moving player of a pass block is the one whose action was interrupted by a dump-off
+						&& !(game.getTurnMode().isPassBlock() && playerState.getBase() == PlayerState.MOVING)
+						&& turnActionLimitService.isActionAvailable(game, selectedPlayer, actingPlayerCommand.getPlayerAction())) {
 						PlayerAction playerAction = actingPlayerCommand.getPlayerAction();
 						if (playerAction == PlayerAction.BLITZ_MOVE && targetSelectionState == null) {
 							fDispatchPlayerAction = PlayerAction.BLITZ_SELECT;
@@ -211,9 +216,11 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandMove moveCommand = (ClientCommandMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), moveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), moveCommand, homeCommand)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand)));
+						FieldCoordinate moveStart = UtilServerPlayerMove.fetchFromSquare(moveCommand, homeCommand);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, moveStart));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand)));
+							UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), moveStart,
+								UtilServerPlayerMove.fetchMoveStack(moveCommand, homeCommand), actingPlayer.isJumping())));
 						publishParameter(new StepParameter(StepParameterKey.BALL_AND_CHAIN_RE_ROLL_SETTING, moveCommand.getBallAndChainRrSetting()));
 						fDispatchPlayerAction = PlayerAction.MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -223,9 +230,11 @@ public final class StepInitSelecting extends AbstractStep {
 					ClientCommandBlitzMove blitzMoveCommand = (ClientCommandBlitzMove) pReceivedCommand.getCommand();
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), blitzMoveCommand)
 						&& UtilServerPlayerMove.isValidMove(getGameState(), blitzMoveCommand, homeCommand)) {
-						publishParameter(new StepParameter(StepParameterKey.MOVE_START, UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homeCommand)));
+						FieldCoordinate blitzMoveStart = UtilServerPlayerMove.fetchFromSquare(blitzMoveCommand, homeCommand);
+						publishParameter(new StepParameter(StepParameterKey.MOVE_START, blitzMoveStart));
 						publishParameter(new StepParameter(StepParameterKey.MOVE_STACK,
-							UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand)));
+							UtilServerPlayerMove.trimUnsafeMoveStack(getGameState(), blitzMoveStart,
+								UtilServerPlayerMove.fetchMoveStack(blitzMoveCommand, homeCommand), actingPlayer.isJumping())));
 						fDispatchPlayerAction = PlayerAction.BLITZ_MOVE;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
 					}
@@ -270,7 +279,12 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_PASS:
 					ClientCommandPass passCommand = (ClientCommandPass) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)) {
+					boolean keepsPassAction = (actingPlayer.getPlayer() != null) && ((actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS)
+						|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
+						|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB));
+					PlayerAction passAction = keepsPassAction ? actingPlayer.getPlayerAction() : PlayerAction.PASS;
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), passCommand)
+						&& turnActionLimitService.isActionAvailable(game, actingPlayer.getPlayer(), passAction)) {
 						if (passCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(
@@ -280,10 +294,8 @@ public final class StepInitSelecting extends AbstractStep {
 									new StepParameter(StepParameterKey.TARGET_COORDINATE, passCommand.getTargetCoordinate().transform()));
 							}
 						}
-						if ((actingPlayer.getPlayer() != null) && ((actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_PASS)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.THROW_BOMB)
-							|| (actingPlayer.getPlayerAction() == PlayerAction.HAIL_MARY_BOMB))) {
-							fDispatchPlayerAction = actingPlayer.getPlayerAction();
+						if (keepsPassAction) {
+							fDispatchPlayerAction = passAction;
 						} else {
 							UtilServerSteps.changePlayerAction(this, actingPlayer.getPlayerId(), PlayerAction.PASS, false);
 							fDispatchPlayerAction = PlayerAction.PASS;
@@ -293,7 +305,8 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_HAND_OVER:
 					ClientCommandHandOver handOverCommand = (ClientCommandHandOver) pReceivedCommand.getCommand();
-					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)) {
+					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), handOverCommand)
+						&& turnActionLimitService.isActionAvailable(game, actingPlayer.getPlayer(), PlayerAction.HAND_OVER)) {
 						Player<?> catcher = game.getPlayerById(handOverCommand.getCatcherId());
 						FieldCoordinate catcherCoordinate = fieldModel.getPlayerCoordinate(catcher);
 						publishParameter(new StepParameter(StepParameterKey.TARGET_COORDINATE, catcherCoordinate));
@@ -304,8 +317,9 @@ public final class StepInitSelecting extends AbstractStep {
 					break;
 				case CLIENT_THROW_TEAM_MATE:
 					ClientCommandThrowTeamMate throwTeamMateCommand = (ClientCommandThrowTeamMate) pReceivedCommand.getCommand();
+					PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 					if (UtilServerSteps.checkCommandWithActingPlayer(getGameState(), throwTeamMateCommand)
-						&& (!game.getTurnData().isTtmUsed() || throwTeamMateCommand.isKicked())) {
+						&& turnActionLimitService.isActionAvailable(game, actingPlayer.getPlayer(), ttmAction)) {
 						if (throwTeamMateCommand.getTargetCoordinate() != null) {
 							if (game.isHomePlaying()) {
 								publishParameter(
@@ -315,7 +329,6 @@ public final class StepInitSelecting extends AbstractStep {
 									throwTeamMateCommand.getTargetCoordinate().transform()));
 							}
 						}
-						PlayerAction ttmAction = throwTeamMateCommand.isKicked() ? PlayerAction.KICK_TEAM_MATE : PlayerAction.THROW_TEAM_MATE;
 						publishParameter(
 							new StepParameter(StepParameterKey.THROWN_PLAYER_ID, throwTeamMateCommand.getThrownPlayerId()));
 						publishParameter(new StepParameter(StepParameterKey.IS_KICKED_PLAYER, throwTeamMateCommand.isKicked()));

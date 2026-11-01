@@ -95,7 +95,7 @@ public class StepEndFeeding extends AbstractStep {
 		game.setDefenderId(null);
 		markSkillsTrackedOutsideOfActivationAndRemoveEffects(game);
 		if (fEndTurn) {
-			if (game.getTurnMode() == TurnMode.PASS_BLOCK) {
+			if (game.getTurnMode().isPassBlock()) {
 				((EndTurn) factory.forName(SequenceGenerator.Type.EndTurn.name()))
 					.pushSequence(new EndTurn.SequenceParams(getGameState(), false));
 			} else {
@@ -118,7 +118,7 @@ public class StepEndFeeding extends AbstractStep {
 		} else if (!fEndPlayerAction && (game.getThrowerAction() != null) && game.getThrowerAction().isPassing()) {
 			((Pass) factory.forName(SequenceGenerator.Type.Pass.name()))
 				.pushSequence(new Pass.SequenceParams(getGameState(), game.getPassCoordinate()));
-		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || (game.getTurnMode() == TurnMode.PASS_BLOCK)) {
+		} else if ((game.getTurnMode() == TurnMode.KICKOFF_RETURN) || game.getTurnMode().isPassBlock()) {
 			publishParameter(new StepParameter(StepParameterKey.END_PLAYER_ACTION, true));
 		} else {
 			game.setPassCoordinate(null);

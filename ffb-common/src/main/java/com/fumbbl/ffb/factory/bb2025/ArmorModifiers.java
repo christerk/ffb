@@ -44,7 +44,6 @@ public class ArmorModifiers implements com.fumbbl.ffb.factory.ArmorModifiers {
 			}
 		});
 		add(new SpecialEffectArmourModifier("Fireball", 1, false, SpecialEffect.FIREBALL));
-		add(new SpecialEffectArmourModifier("Lightning", 1, false, SpecialEffect.LIGHTNING));
 	}};
 
 	@Override

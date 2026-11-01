@@ -105,7 +105,7 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 					// mandatory
 					case KICKED_PLAYER_HAS_BALL:
 					case THROWN_PLAYER_HAS_BALL:
-						thrownPlayerHasBall = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						thrownPlayerHasBall = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					// mandatory
 					case KICKED_PLAYER_COORDINATE:
@@ -119,19 +119,19 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 						break;
 					// mandatory
 					case THROW_SCATTER:
-						throwScatter = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						throwScatter = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					case IS_KICKED_PLAYER:
-						isKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						isKickedPlayer = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					case DIRECTION:
 						swoopDirection = (Direction) parameter.getValue();
 						break;
 					case USING_SWOOP:
-						usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						usingSwoop = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					case IS_CARRIED_PLAYER:
-						isCarriedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+						isCarriedPlayer = parameter.getValue() != null && (Boolean) parameter.getValue();
 						break;
 					default:
 						break;
@@ -154,22 +154,22 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 		if ((parameter != null) && !super.setParameter(parameter)) {
 			switch (parameter.getKey()) {
 				case IS_KICKED_PLAYER:
-					isKickedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					isKickedPlayer = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				case DIRECTION:
 					swoopDirection = (Direction) parameter.getValue();
 					return true;
 				case USING_BULLSEYE:
-					usingBullseye = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					usingBullseye = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				case USING_SWOOP:
-					usingSwoop = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					usingSwoop = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				case OLD_DEFENDER_STATE:
 					oldPlayerState = (PlayerState) parameter.getValue();
 					return true;
 				case IS_CARRIED_PLAYER:
-					isCarriedPlayer = (parameter.getValue() != null) ? (Boolean) parameter.getValue() : false;
+					isCarriedPlayer = parameter.getValue() != null && (Boolean) parameter.getValue();
 					return true;
 				default:
 					break;
@@ -266,9 +266,6 @@ public final class StepInitScatterPlayer extends AbstractStepWithReRoll {
 		} else {
 			new TtmToCrowdHandler().handle(game, this, thrownPlayer, endCoordinate, thrownPlayerHasBall,
 				new InjuryTypeCrowdPush());
-			if (game.getActingTeam().hasPlayer(thrownPlayer)) {
-				publishParameter(new StepParameter(StepParameterKey.END_TURN, true));
-			}
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_ID, thrownPlayerId));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_STATE, thrownPlayerState));
 			publishParameter(new StepParameter(StepParameterKey.THROWN_PLAYER_HAS_BALL, thrownPlayerHasBall));

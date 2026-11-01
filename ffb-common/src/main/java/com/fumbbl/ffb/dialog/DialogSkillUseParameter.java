@@ -10,6 +10,11 @@ import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Kalimar
  */
@@ -20,6 +25,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 	private int fMinimumRoll;
 	private boolean showNeverUse;
 	private SkillUse skillUse;
+	private final List<String> messages = new ArrayList<>();
 
 	private CommonProperty menuProperty;
 
@@ -29,6 +35,10 @@ public class DialogSkillUseParameter implements IDialogParameter {
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll) {
 		this(pPlayerId, pSkill, pMinimumRoll, null, null, null, false, null);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, List<String> messages) {
+		this(pPlayerId, pSkill, pMinimumRoll, null, null, null, false, null, messages);
 	}
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, SkillUse skillUse) {
@@ -50,6 +60,12 @@ public class DialogSkillUseParameter implements IDialogParameter {
 
 	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill,
 		CommonProperty menuProperty, String defaultValueKey, boolean showNeverUse, SkillUse skillUse) {
+		this(pPlayerId, pSkill, pMinimumRoll, modifyingSkill, menuProperty, defaultValueKey, showNeverUse, skillUse, null);
+	}
+
+	public DialogSkillUseParameter(String pPlayerId, Skill pSkill, int pMinimumRoll, Skill modifyingSkill,
+		CommonProperty menuProperty, String defaultValueKey, boolean showNeverUse, SkillUse skillUse,
+		List<String> messages) {
 		fPlayerId = pPlayerId;
 		fSkill = pSkill;
 		fMinimumRoll = pMinimumRoll;
@@ -58,6 +74,9 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		this.defaultValueKey = defaultValueKey;
 		this.showNeverUse = showNeverUse;
 		this.skillUse = skillUse;
+		if (messages != null) {
+			this.messages.addAll(messages);
+		}
 	}
 
 	public DialogId getId() {
@@ -96,11 +115,18 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		return skillUse;
 	}
 
+	/**
+	 * @return additional lines shown below the question, e.g. why the coach is asked at all
+	 */
+	public List<String> getMessages() {
+		return Collections.unmodifiableList(messages);
+	}
+
 	// transformation
 
 	public IDialogParameter transform() {
 		return new DialogSkillUseParameter(getPlayerId(), getSkill(), getMinimumRoll(), modifyingSkill, menuProperty,
-			defaultValueKey, showNeverUse, skillUse);
+			defaultValueKey, showNeverUse, skillUse, messages);
 	}
 
 	// JSON serialization
@@ -118,6 +144,7 @@ public class DialogSkillUseParameter implements IDialogParameter {
 		IJsonOption.DEFAULT_VALUE_KEY.addTo(jsonObject, defaultValueKey);
 		IJsonOption.SHOW_NEVER_USE.addTo(jsonObject, showNeverUse);
 		IJsonOption.SKILL_USE.addTo(jsonObject, skillUse);
+		IJsonOption.MESSAGE_ARRAY.addTo(jsonObject, messages);
 		return jsonObject;
 	}
 
@@ -136,6 +163,10 @@ public class DialogSkillUseParameter implements IDialogParameter {
 			showNeverUse = IJsonOption.SHOW_NEVER_USE.getFrom(source, jsonObject);
 		}
 		skillUse = (SkillUse) IJsonOption.SKILL_USE.getFrom(source, jsonObject);
+		messages.clear();
+		if (IJsonOption.MESSAGE_ARRAY.isDefinedIn(jsonObject)) {
+			messages.addAll(Arrays.asList(IJsonOption.MESSAGE_ARRAY.getFrom(source, jsonObject)));
+		}
 		return this;
 	}
 

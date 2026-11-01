@@ -18,11 +18,14 @@ import java.util.List;
 
 public class DialogPlayerChoice extends Dialog implements ActionListener {
 
+	private static final double MAX_HEIGHT_FACTOR = 0.9;
+
 	private final PlayerCheckList fList;
 	private final JButton fButtonSelect;
 	private final JButton fButtonCancel;
 	private final JLabel countLabel;
 	private Player<?>[] fSelectedPlayers;
+	private boolean skipped;
 	private final int fMinSelects;
 	private final int maxSelects;
 
@@ -43,11 +46,12 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		fButtonCancel.setToolTipText("Do not select any player");
 		fButtonCancel.addActionListener(this);
 		fButtonCancel.setMnemonic((int) 'i');
+		countLabel = new JLabel(dimensionProvider());
 
 		fList = new PlayerCheckList(client, playerIds, descriptions, minSelects, maxSelects, preSelected, fButtonSelect,
 			this::updateCount);
 		fList.setBackground(Color.LIGHT_GRAY);
-		fList.setVisibleRowCount(Math.min(playerIds.length, 5));
+		fList.setVisibleRowCount(fList.getModel().getSize());
 		fList.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent pMouseEvent) {
 				int index = fList.locationToIndex(pMouseEvent.getPoint());
@@ -81,7 +85,6 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		listPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		JPanel textPanel = new JPanel();
-		countLabel = new JLabel(dimensionProvider());
 		countLabel.setAlignmentX(CENTER_ALIGNMENT);
 		textPanel.add(countLabel);
 		textPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
@@ -106,6 +109,7 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 		getContentPane().add(centerPane, BorderLayout.CENTER);
 
 		pack();
+		shrinkListToClientHeight();
 
 		if (playerCoordinate != null && !playerCoordinate.isBoxCoordinate()) {
 			int offsetX = 1, offsetY = 1;
@@ -116,7 +120,11 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 			PitchViewport pitchViewport = getClient().getUserInterface().getPitchViewport();
 			Point onPitch = pitchViewport.worldToScreen(playerCoordinate.getX() + offsetX, playerCoordinate.getY() + offsetY, false);
-			setLocation(onPitch.x, onPitch.y);
+			int desktopHeight = getClient().getUserInterface().getDesktop().getHeight();
+			if (desktopHeight <= 0) {
+				desktopHeight = getClient().getUserInterface().getSize().height;
+			}
+			setLocation(onPitch.x, Math.max(0, Math.min(onPitch.y, desktopHeight - getSize().height)));
 		} else {
 			setLocationToCenter();
 		}
@@ -125,6 +133,30 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 		fList.setSelectedIndex(0);
 
+	}
+
+	private void shrinkListToClientHeight() {
+		int maxHeight = (int) (getClient().getUserInterface().getSize().height * MAX_HEIGHT_FACTOR);
+		Rectangle cellBounds = fList.getCellBounds(0, 0);
+		if (cellBounds == null || cellBounds.height <= 0) {
+			return;
+		}
+		int overflow = getPreferredSize().height - maxHeight;
+		while (overflow > 0 && fList.getVisibleRowCount() > 1) {
+			int rowsToRemove = Math.max(1, (int) Math.ceil((double) overflow / cellBounds.height));
+			fList.setVisibleRowCount(Math.max(1, fList.getVisibleRowCount() - rowsToRemove));
+			invalidateListHierarchy();
+			pack();
+			overflow = getPreferredSize().height - maxHeight;
+		}
+	}
+
+	private void invalidateListHierarchy() {
+		// layout managers cache their sizes, so every ancestor has to be invalidated explicitly to pick up the new
+		// row count, as invalidation does not propagate through ancestors that are invalid already
+		for (java.awt.Component component = fList; component != null; component = component.getParent()) {
+			component.invalidate();
+		}
 	}
 
 	private void updateCount(int count) {
@@ -145,10 +177,12 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if (pActionEvent.getSource() == fButtonCancel) {
+			skipped = true;
 			fSelectedPlayers = new Player[0];
 			closeDialog();
 		}
 		if (pActionEvent.getSource() == fButtonSelect) {
+			skipped = false;
 			fSelectedPlayers = fList.getSelectedPlayers();
 			if (fSelectedPlayers.length >= fMinSelects) {
 				closeDialog();
@@ -164,6 +198,10 @@ public class DialogPlayerChoice extends Dialog implements ActionListener {
 
 	public Player<?>[] getSelectedPlayers() {
 		return fSelectedPlayers;
+	}
+
+	public boolean isSkipped() {
+		return skipped;
 	}
 
 	public List<Integer> getSelectedIndexes() {

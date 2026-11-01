@@ -5,7 +5,6 @@ import com.eclipsesource.json.JsonValue;
 import com.fumbbl.ffb.ApothecaryMode;
 import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.factory.IFactorySource;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.ActingPlayer;
@@ -86,7 +85,7 @@ public class StepFallDown extends AbstractStep {
 		FieldCoordinate playerCoordinate = game.getFieldModel().getPlayerCoordinate(actingPlayer.getPlayer());
 		InjuryResult injuryResultAttacker = UtilServerInjury.handleInjury(this, fInjuryType, null, actingPlayer.getPlayer(),
 			playerCoordinate, fCoordinateFrom, null, ApothecaryMode.ATTACKER);
-		boolean endTurn = fInjuryType.fallingDownCausesTurnover() && (game.getTurnMode() != TurnMode.PASS_BLOCK);
+		boolean endTurn = fInjuryType.fallingDownCausesTurnover() && !game.getTurnMode().isPassBlock();
 
 		publishParameter(new StepParameter(StepParameterKey.DROP_PLAYER_CONTEXT,
 			new DropPlayerContext(injuryResultAttacker, endTurn, true, null, actingPlayer.getPlayerId(),

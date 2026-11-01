@@ -12,7 +12,6 @@ import com.fumbbl.ffb.PositionChoiceMode;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
-import com.fumbbl.ffb.SeriousInjury;
 import com.fumbbl.ffb.dialog.DialogApothecaryChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogSelectKeywordParameter;
 import com.fumbbl.ffb.dialog.DialogSelectPositionParameter;
@@ -60,6 +59,7 @@ import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerGame;
@@ -135,13 +135,19 @@ public class StepApothecary extends AbstractStep {
 		if (commandStatus == StepCommandStatus.UNHANDLED_COMMAND) {
 			switch (pReceivedCommand.getId()) {
 				case CLIENT_APOTHECARY_CHOICE:
-					ClientCommandApothecaryChoice apothecaryChoiceCommand = (ClientCommandApothecaryChoice) pReceivedCommand
-						.getCommand();
-					if ((fInjuryResult != null) && StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(),
-						fInjuryResult.injuryContext().getDefenderId())) {
-						handleApothecaryChoice(apothecaryChoiceCommand.getPlayerState(),
-							apothecaryChoiceCommand.getSeriousInjury());
-						commandStatus = StepCommandStatus.EXECUTE_STEP;
+					ClientCommandApothecaryChoice apothecaryChoiceCommand =
+						(ClientCommandApothecaryChoice) pReceivedCommand.getCommand();
+					if (game.getDialogParameter() instanceof DialogApothecaryChoiceParameter) {
+						DialogApothecaryChoiceParameter dialogParameter =
+							(DialogApothecaryChoiceParameter) game.getDialogParameter();
+						if (fInjuryResult != null
+							&& StringTool.isEqual(apothecaryChoiceCommand.getPlayerId(), fInjuryResult.injuryContext().getDefenderId())) {
+							Player<?> defender = game.getPlayerById(dialogParameter.getPlayerId());
+							if (UtilServerSteps.checkCommandIsFromPlayerTeam(getGameState(), pReceivedCommand, defender)) {
+								handleApothecaryChoice(dialogParameter, apothecaryChoiceCommand.isChoiceNewInjury());
+								commandStatus = StepCommandStatus.EXECUTE_STEP;
+							}
+						}
 					}
 					break;
 				case CLIENT_USE_APOTHECARY:
@@ -325,19 +331,30 @@ public class StepApothecary extends AbstractStep {
 		if (fInjuryResult.injuryContext().getApothecaryStatus() != null) {
 			switch (fInjuryResult.injuryContext().getApothecaryStatus()) {
 				case DO_REQUEST:
-					if (fShowReport) {
-						fInjuryResult.report(this);
+					if (remainingApos() > 0) {
+						if (fShowReport) {
+							fInjuryResult.report(this);
+						}
+
+						List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId),
+							fInjuryResult.injuryContext().getPlayerState());
+						UtilServerDialog.showDialog(getGameState(),
+							new DialogUseApothecaryParameter(defenderId,
+								fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
+								apothecaryTypes),
+							true);
+						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
+						getResult().setNextAction(StepAction.CONTINUE);
+						return;
 					}
-					List<ApothecaryType> apothecaryTypes = ApothecaryType.forPlayer(game, game.getPlayerById(defenderId),
-						fInjuryResult.injuryContext().getPlayerState());
-					UtilServerDialog.showDialog(getGameState(),
-						new DialogUseApothecaryParameter(defenderId,
-							fInjuryResult.injuryContext().getPlayerState(), fInjuryResult.injuryContext().getSeriousInjury(),
-							apothecaryTypes),
-						true);
-					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
-					getResult().setNextAction(StepAction.CONTINUE);
-					return;
+					fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.DO_NOT_USE_APOTHECARY);
+					// we need to fall through here!! If no apos are left we need to treat this as if the coach declined apo use
+					// this is a special case only needed to multiple B&C players being cassed on the same team by a pitch invasion
+				case DO_NOT_USE_APOTHECARY:
+					getResult()
+						.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null,
+							fInjuryResult.injuryContext().casualtyModifiers));
+					break;
 				case USE_APOTHECARY:
 					if (rollApothecary()) {
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.WAIT_FOR_APOTHECARY_USE);
@@ -346,11 +363,6 @@ public class StepApothecary extends AbstractStep {
 					} else {
 						fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 					}
-					break;
-				case DO_NOT_USE_APOTHECARY:
-					getResult()
-						.addReport(new ReportApothecaryRoll(defenderId, null, null, null, null,
-							fInjuryResult.injuryContext().casualtyModifiers));
 					break;
 				case NO_APOTHECARY:
 					if (fShowReport) {
@@ -437,6 +449,11 @@ public class StepApothecary extends AbstractStep {
 		return inducementSet.getInducementMapping().keySet().stream()
 			.filter(type -> type.hasUsage(Usage.REGENERATION) && inducementSet.hasUsesLeft(type))
 			.sorted(Comparator.comparingInt(InducementType::getPriority)).collect(Collectors.toList());
+	}
+
+	private int remainingApos() {
+		TurnData turnData = getTurnData();
+		return turnData.getApothecaries() + turnData.getPlagueDoctors();
 	}
 
 	private TurnData getTurnData() {
@@ -528,17 +545,18 @@ public class StepApothecary extends AbstractStep {
 		return apothecaryChoice;
 	}
 
-	private void handleApothecaryChoice(PlayerState pPlayerState, SeriousInjury pSeriousInjury) {
-		if (fInjuryResult != null) {
-			if (pPlayerState.getBase() == PlayerState.BADLY_HURT) {
-				fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.RESERVE));
-				fInjuryResult.injuryContext().setSeriousInjury(null);
-			} else {
-				fInjuryResult.injuryContext().setInjury(pPlayerState);
-				fInjuryResult.injuryContext().setSeriousInjury(pSeriousInjury);
-			}
-			fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
+	private void handleApothecaryChoice(DialogApothecaryChoiceParameter dialogParameter, boolean choiceNewInjury) {
+		PlayerState playerState = dialogParameter.getPlayerState(choiceNewInjury);
+
+		if (playerState.getBase() == PlayerState.BADLY_HURT) {
+			fInjuryResult.injuryContext().setInjury(new PlayerState(PlayerState.RESERVE));
+			fInjuryResult.injuryContext().setSeriousInjury(null);
+		} else {
+			fInjuryResult.injuryContext().setInjury(playerState);
+			fInjuryResult.injuryContext().setSeriousInjury(dialogParameter.getSeriousInjury(choiceNewInjury));
 		}
+
+		fInjuryResult.injuryContext().setApothecaryStatus(ApothecaryStatus.RESULT_CHOICE);
 	}
 
 	// JSON serialization

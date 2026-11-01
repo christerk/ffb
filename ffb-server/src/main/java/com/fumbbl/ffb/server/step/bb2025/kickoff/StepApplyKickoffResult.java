@@ -53,14 +53,17 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepException;
+import com.fumbbl.ffb.server.step.StepFactory;
 import com.fumbbl.ffb.server.step.StepId;
 import com.fumbbl.ffb.server.step.StepParameter;
 import com.fumbbl.ffb.server.step.StepParameterKey;
 import com.fumbbl.ffb.server.step.StepParameterSet;
+import com.fumbbl.ffb.server.step.StepStack;
 import com.fumbbl.ffb.server.step.UtilServerSteps;
 import com.fumbbl.ffb.server.step.generator.Sequence;
 import com.fumbbl.ffb.server.util.UtilServerCatchScatterThrowIn;
@@ -75,6 +78,7 @@ import com.fumbbl.ffb.util.UtilPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -178,7 +182,7 @@ public final class StepApplyKickoffResult extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.SOLID_DEFENCE, TurnMode.HIGH_KICK, TurnMode.QUICK_SNAP)) {
 						fEndKickoff = true;
 						if (TurnMode.QUICK_SNAP == getGameState().getGame().getTurnMode()) {
 							endQuickSnap(getGameState().getGame());
@@ -756,32 +760,28 @@ public final class StepApplyKickoffResult extends AbstractStep {
 
 		getResult().addReport(new ReportKickoffDodgySnack(rollHome, rollAway, playerIds));
 
-		boolean update = false;
 		if (playerHome != null) {
-			update |= dodgySnackEffect(game, playerHome);
+			dodgySnackEffect(game, playerHome);
 		}
 
 		if (playerAway != null) {
-			update |= dodgySnackEffect(game, playerAway);
+			dodgySnackEffect(game, playerAway);
 		}
 
-		if (update) {
-			getGameState().updatePlayerMarkings();
-		}
+		UtilServerGame.updatePlayerStateDependentProperties(this);
+		getGameState().updatePlayerMarkings();
 		getResult().setNextAction(StepAction.NEXT_STEP);
 	}
 
-	private boolean dodgySnackEffect(Game game, Player<?> player) {
+	private void dodgySnackEffect(Game game, Player<?> player) {
 		int roll = getGameState().getDiceRoller().rollDice(6);
 		getResult().addReport(new ReportDodgySnackRoll(roll, player.getId()));
 		if (roll == 1) {
 			FieldModel fieldModel = game.getFieldModel();
 			fieldModel.setPlayerState(player, fieldModel.getPlayerState(player).changeBase(PlayerState.RESERVE));
 			UtilBox.putPlayerIntoBox(game, player);
-			return false;
 		} else {
 			game.getFieldModel().addEnhancements(player, KickoffResult.DODGY_SNACK.getName());
-			return true;
 		}
 	}
 
@@ -816,6 +816,11 @@ public final class StepApplyKickoffResult extends AbstractStep {
 	}
 
 	private List<String> stunPlayers(Team team, FieldModel fieldModel, int stunned) {
+		StepStack stepStack = getGameState().getStepStack();
+		StepFactory stepFactory = getGameState().getStepFactory();
+		boolean isHome = getGameState().getGame().getTeamHome() == team;
+		ApothecaryMode apothecaryMode = isHome ? ApothecaryMode.HOME : ApothecaryMode.AWAY;
+
 		List<String> affectedPlayers = new ArrayList<>();
 		List<Player<?>> standing = Arrays.stream(team.getPlayers())
 			.filter(player -> fieldModel.getPlayerState(player).getBase() == PlayerState.STANDING)
@@ -823,7 +828,16 @@ public final class StepApplyKickoffResult extends AbstractStep {
 		for (int i = 0; i < stunned && !standing.isEmpty(); i++) {
 			int index = getGameState().getDiceRoller().rollDice(standing.size()) - 1;
 			Player<?> stunnedPlayer = standing.get(index);
-			UtilServerInjury.stunPlayer(this, stunnedPlayer, ApothecaryMode.HOME);
+
+			StepParameterSet consumeSet = new StepParameterSet();
+			consumeSet.add(from(StepParameterKey.CONSUME_PARAMETER, Collections.singleton(StepParameterKey.INJURY_RESULT)));
+			stepStack.push(stepFactory.create(StepId.CONSUME_PARAMETER, null, consumeSet));
+
+			StepParameterSet apoSet = new StepParameterSet();
+			apoSet.add(from(StepParameterKey.APOTHECARY_MODE, apothecaryMode));
+			stepStack.push(stepFactory.create(StepId.APOTHECARY, null, apoSet));
+
+			UtilServerInjury.stunPlayer(this, stunnedPlayer, apothecaryMode);
 			standing.remove(stunnedPlayer);
 			affectedPlayers.add(stunnedPlayer.getId());
 		}

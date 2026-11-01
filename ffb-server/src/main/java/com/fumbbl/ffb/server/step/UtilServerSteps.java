@@ -65,6 +65,13 @@ public class UtilServerSteps {
 			.getSession());
 	}
 
+	public static boolean checkCommandIsFromPlayerTeam(GameState gameState, ReceivedCommand receivedCommand,
+		Player<?> player) {
+		return gameState.getGame().getTeamHome().hasPlayer(player)
+			? checkCommandIsFromHomePlayer(gameState, receivedCommand)
+			: checkCommandIsFromAwayPlayer(gameState, receivedCommand);
+	}
+
 	public static boolean checkCommandWithActingPlayer(GameState gameState,
 																										 ICommandWithActingPlayer pActingPlayerCommand) {
 		Game game = gameState.getGame();

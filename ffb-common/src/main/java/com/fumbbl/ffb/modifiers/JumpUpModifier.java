@@ -7,8 +7,13 @@ public class JumpUpModifier extends RollModifier<JumpUpContext> {
 	private final ModifierType type;
 
 	public JumpUpModifier(String fName, int fModifier, ModifierType type) {
-		this.fName = fName;
-		this.fModifier = fModifier;
+		this(fName, fModifier, type, false);
+	}
+
+	public JumpUpModifier(String name, int modifier, ModifierType type, boolean optional) {
+		super(optional);
+		this.fName = name;
+		this.fModifier = modifier;
 		this.type = type;
 	}
 

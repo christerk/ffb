@@ -249,7 +249,7 @@ public class StepPass extends AbstractStepWithReRoll {
 						actingTeam.hasPlayer(game.getThrower()));
 				} else {
 					if (UtilServerReRoll.askForReRollIfAvailable(getGameState(), game.getThrower(), ReRolledActions.PASS,
-						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill, null)) {
+						minimumRoll, PassResult.FUMBLE == state.getResult(), modificationSkill)) {
 						doNextStep = false;
 					}
 				}

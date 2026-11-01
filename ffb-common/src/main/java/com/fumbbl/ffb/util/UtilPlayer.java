@@ -365,6 +365,16 @@ public class UtilPlayer {
 		return findTacklezonePlayers(pGame, pPlayer).length;
 	}
 
+	/**
+	 * Same as {@link #findTacklezones(Game, Player)} but for a hypothetical
+	 * coordinate instead of the player's actual current position on the field.
+	 * Used to validate move paths that have not been committed to the field yet.
+	 */
+	public static int findTacklezones(Game pGame, Player<?> pPlayer, FieldCoordinate pCoordinate) {
+		Team otherTeam = findOtherTeam(pGame, pPlayer);
+		return findAdjacentPlayersWithTacklezones(pGame, otherTeam, pCoordinate, false).length;
+	}
+
 	public static Player<?>[] findTacklezonePlayers(Game pGame, Player<?> pPlayer) {
 		Team otherTeam = findOtherTeam(pGame, pPlayer);
 		FieldCoordinate playerCoordinate = pGame.getFieldModel().getPlayerCoordinate(pPlayer);
@@ -573,7 +583,7 @@ public class UtilPlayer {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		Player<?> player = actingPlayer.getPlayer();
 		if (player != null) {
-			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || pGame.getTurnMode().isPassBlock()) {
 				return false;
 			} else if (actingPlayer.isStandingUp() && !actingPlayer.hasActed()
 					&& !actingPlayer.getPlayer().hasSkillProperty(NamedProperties.canStandUpForFree)) {
@@ -603,7 +613,7 @@ public class UtilPlayer {
 		ActingPlayer actingPlayer = pGame.getActingPlayer();
 		PlayerState playerState = pGame.getFieldModel().getPlayerState(actingPlayer.getPlayer());
 		if ((playerState != null) && playerState.isAbleToMove()) {
-			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || (pGame.getTurnMode() == TurnMode.PASS_BLOCK)) {
+			if ((pGame.getTurnMode() == TurnMode.KICKOFF_RETURN) || pGame.getTurnMode().isPassBlock()) {
 				movePossible = jumping ? (actingPlayer.getCurrentMove() < 2) : (actingPlayer.getCurrentMove() < 3);
 			} else {
 				int extraMove = 0;

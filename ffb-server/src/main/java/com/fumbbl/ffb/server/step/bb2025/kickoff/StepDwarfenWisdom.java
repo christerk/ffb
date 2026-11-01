@@ -32,6 +32,7 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.IServerJsonOption;
 import com.fumbbl.ffb.server.mechanic.SetupMechanic;
 import com.fumbbl.ffb.server.net.ReceivedCommand;
+import com.fumbbl.ffb.server.step.EndTurnCommandValidator;
 import com.fumbbl.ffb.server.step.AbstractStep;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
@@ -113,7 +114,7 @@ public class StepDwarfenWisdom extends AbstractStep {
 					}
 					break;
 				case CLIENT_END_TURN:
-					if (UtilServerSteps.checkCommandIsFromCurrentPlayer(getGameState(), pReceivedCommand)) {
+					if (new EndTurnCommandValidator().isValid(getGameState(), pReceivedCommand, TurnMode.DWARFEN_WISDOM)) {
 						setPlayerCoordinates(((ClientCommandEndTurn) pReceivedCommand.getCommand()).getPlayerCoordinates());
 						state.endTurn = true;
 						commandStatus = StepCommandStatus.EXECUTE_STEP;
@@ -269,6 +270,9 @@ public class StepDwarfenWisdom extends AbstractStep {
 			PlayerState playerState = game.getFieldModel().getPlayerState(player);
 			if (playerState.getBase() == PlayerState.PRONE) {
 				game.getFieldModel().setPlayerState(player, playerState.changeBase(PlayerState.RESERVE));
+			} else if (eligiblePlayers.contains(player) && !selectedPlayers.contains(player) && !playerState.isActive()) {
+				// players not selected for re-setup were deactivated to lock them in place, restore them for kickoff events
+				game.getFieldModel().setPlayerState(player, playerState.changeActive(true));
 			}
 		}
 

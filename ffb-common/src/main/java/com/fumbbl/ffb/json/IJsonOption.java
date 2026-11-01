@@ -112,11 +112,13 @@ public interface IJsonOption {
 	JsonIntOption CHEERING_FANS_BLOCK_ASSIST = new JsonIntOption("cheeringFansBlockAssist");
 	JsonBooleanOption CHOICE_FOLLOWUP = new JsonBooleanOption("choiceFollowup");
 	JsonBooleanOption CHOICE_HEADS = new JsonBooleanOption("choiceHeads");
+	JsonBooleanOption CHOICE_NEW_INJURY = new JsonBooleanOption("choiceNewInjury");
 	JsonBooleanOption CHOICE_PICK_UP = new JsonBooleanOption("choicePickUp");
 	JsonBooleanOption CHOICE_RECEIVE = new JsonBooleanOption("choiceReceive");
 	JsonStringListMapOption CHOMPED = new JsonStringListMapOption("chomped");
 	JsonStringOption CHOOSING_TEAM_ID = new JsonStringOption("choosingTeamId");
 	JsonEnumWithNameOption CLIENT_MODE = new JsonEnumWithNameOption("clientMode", Factory.CLIENT_MODE);
+	JsonStringOption CLIENT_NAME = new JsonStringOption("clientName");
 	JsonStringArrayOption CLIENT_PROPERTY_NAMES = new JsonStringArrayOption("clientPropertyNames");
 	JsonStringArrayOption CLIENT_PROPERTY_VALUES = new JsonStringArrayOption("clientPropertyValues");
 	JsonEnumWithNameOption CLIENT_STATE_ID = new JsonEnumWithNameOption("clientStateId", Factory.CLIENT_STATE_ID);
@@ -299,6 +301,8 @@ public interface IJsonOption {
 	JsonStringOption MESSAGE = new JsonStringOption("message");
 	JsonStringArrayOption MESSAGE_ARRAY = new JsonStringArrayOption("messageArray");
 	JsonIntOption MIN_SELECTS = new JsonIntOption("minSelects");
+	JsonArrayOption MODIFIER_OPTIONS = new JsonArrayOption("modifierOptions");
+	JsonArrayOption MODIFIER_COMBINATIONS = new JsonArrayOption("modifierCombinations");
 	JsonIntOption MINIMUM_ROLL = new JsonIntOption("minimumRoll");
 	JsonIntOption MINIMUM_ROLL_DODGE = new JsonIntOption("minimumRollDodge");
 	JsonIntOption MINIMUM_ROLL_GFI = new JsonIntOption("minimumRollGfi");
@@ -408,6 +412,7 @@ public interface IJsonOption {
 	JsonIntOption PRAYERS_BOUGHT_AWAY = new JsonIntOption("prayersBoughtAway");
 	JsonIntOption PRAYERS_BOUGHT_HOME = new JsonIntOption("prayersBoughtHome");
 	JsonBooleanOption PREVENT = new JsonBooleanOption("prevent");
+	JsonStringOption PROTOCOL_VERSION = new JsonStringOption("protocolVersion");
 	JsonIntOption PRO_INDEX = new JsonIntOption("proIndex");
 	JsonBooleanOption PRO_RE_ROLL_OPTION = new JsonBooleanOption("proReRollOption");
 	JsonBooleanOption PUNT_TO_CROWD = new JsonBooleanOption("puntToCrowd");

@@ -120,7 +120,6 @@ public class PassBehaviour extends AbstractPassBehaviour<Pass> {
 								doNextStep = true;
 							}
 						} else {
-							doRoll = true;
 							step.setReRollSource(null);
 						}
 					}

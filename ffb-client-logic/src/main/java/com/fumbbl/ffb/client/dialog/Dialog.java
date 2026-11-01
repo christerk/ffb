@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.CommonProperty;
+import com.fumbbl.ffb.IClientPropertyValue;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.client.FontCache;
 import com.fumbbl.ffb.client.PitchDimensionProvider;
@@ -8,6 +9,7 @@ import com.fumbbl.ffb.client.UserInterface;
 import com.fumbbl.ffb.client.ui.menu.GameMenuBar;
 import com.fumbbl.ffb.client.ui.swing.JComboBox;
 import com.fumbbl.ffb.client.ui.swing.JLabel;
+import com.fumbbl.ffb.client.util.UiDispatcher;
 import com.fumbbl.ffb.util.StringTool;
 
 import javax.swing.BorderFactory;
@@ -22,6 +24,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -35,8 +38,10 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 	private IDialogCloseListener fCloseListener;
 	private final FantasyFootballClient fClient;
 	private boolean fChatInputFocus;
+	private DialogKeyGuard keyGuard;
 
 	private final JPanel contentPanel;
+	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 	public Dialog(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
 		super(pTitle, false, pCloseable);
@@ -61,24 +66,55 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 	public void showDialog(IDialogCloseListener pCloseListener) {
 		fCloseListener = pCloseListener;
-		UserInterface userInterface = getClient().getUserInterface();
-		fChatInputFocus = userInterface.getChat().hasChatInputFocus();
-		userInterface.getDesktop().add(Dialog.this);
-		setVisible(true);
-		moveToFront();
-		if (fChatInputFocus) {
-			userInterface.getChat().requestChatInputFocus();
-		}
-	}
-
-	public void hideDialog() {
-		if (isVisible()) {
-			setVisible(false);
+		uiDispatcher.runOnUiThreadAndWait(() -> {
 			UserInterface userInterface = getClient().getUserInterface();
-			userInterface.getDesktop().remove(this);
+			fChatInputFocus = userInterface.getChat().hasChatInputFocus();
+			userInterface.getDesktop().add(Dialog.this);
+			installKeyGuard();
+			setVisible(true);
+			moveToFront();
 			if (fChatInputFocus) {
 				userInterface.getChat().requestChatInputFocus();
 			}
+		});
+	}
+
+	public void hideDialog() {
+		uiDispatcher.runOnUiThreadAndWait(() -> {
+			removeKeyGuard();
+			if (isVisible()) {
+				setVisible(false);
+				UserInterface userInterface = getClient().getUserInterface();
+				userInterface.getDesktop().remove(this);
+				if (fChatInputFocus) {
+					userInterface.getChat().requestChatInputFocus();
+				}
+			}
+		});
+	}
+
+	private void installKeyGuard() {
+		removeKeyGuard();
+		keyGuard = new DialogKeyGuard(this, System.currentTimeMillis(), keyDelayInMillis());
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyGuard);
+	}
+
+	private void removeKeyGuard() {
+		if (keyGuard != null) {
+			KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyGuard);
+			keyGuard = null;
+		}
+	}
+
+	private long keyDelayInMillis() {
+		String delayProperty = getClient().getProperty(CommonProperty.SETTING_DIALOG_KEY_DELAY);
+		if (!StringTool.isProvided(delayProperty)) {
+			delayProperty = IClientPropertyValue.SETTING_DIALOG_KEY_DELAY_DEFAULT;
+		}
+		try {
+			return Math.max(0, Long.parseLong(delayProperty.trim()));
+		} catch (NumberFormatException e) {
+			return Long.parseLong(IClientPropertyValue.SETTING_DIALOG_KEY_DELAY_DEFAULT);
 		}
 	}
 
@@ -93,7 +129,7 @@ public abstract class Dialog extends JInternalFrame implements IDialog, MouseLis
 
 		setLocation(
 			(frameSize.width - dialogSize.width) / 2,
-			pitchBounds.y + ((pitchBounds.height - dialogSize.height) / 2)
+			Math.max(0, pitchBounds.y + ((pitchBounds.height - dialogSize.height) / 2))
 		);
 	}
 

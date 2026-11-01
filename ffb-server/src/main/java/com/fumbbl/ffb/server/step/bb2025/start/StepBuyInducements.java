@@ -207,6 +207,12 @@ public final class StepBuyInducements extends AbstractStep {
 		if (!UtilGameOption.isOptionEnabled(game, GameOptionId.INDUCEMENTS)) {
 			phase = Phase.DONE;
 		} else if (UtilGameOption.isOptionEnabled(game, GameOptionId.USE_PREDEFINED_INDUCEMENTS)) {
+			// Default the gold fields: a team without an inducement set never enters its block below,
+			// and leaveStep() unboxes these unconditionally.
+			usedInducementGoldHome = 0;
+			availableInducementGoldHome = 0;
+			usedInducementGoldAway = 0;
+			availableInducementGoldAway = 0;
 			Optional<InducementType> starType =
 				((InducementTypeFactory) game.getFactory(FactoryType.Factory.INDUCEMENT_TYPE)).allTypes().stream()
 					.filter(type -> type.hasUsage(Usage.STAR)).findFirst();
@@ -218,7 +224,9 @@ public final class StepBuyInducements extends AbstractStep {
 						.addInducement(new Inducement(starType.get(), starPlayerPositionIds.length));
 					addStarPlayers(game.getTeamHome(), starPlayerPositionIds);
 				}
-				usedInducementGoldHome = availableInducementGoldHome;
+				// availableInducementGoldHome was never assigned on this path; use the predefined set's actual cost so TV and unspent gold stay correct.
+				usedInducementGoldHome = inducementCosts(game.getTeamHome(), game.getTeamHome().getInducementSet());
+				availableInducementGoldHome = usedInducementGoldHome;
 			}
 			if (starType.isPresent() && game.getTeamAway().getInducementSet() != null) {
 				game.getTurnDataAway().getInducementSet().add(game.getTeamAway().getInducementSet());
@@ -228,7 +236,8 @@ public final class StepBuyInducements extends AbstractStep {
 						.addInducement(new Inducement(starType.get(), starPlayerPositionIds.length));
 					addStarPlayers(game.getTeamAway(), starPlayerPositionIds);
 				}
-				usedInducementGoldAway = availableInducementGoldAway;
+				usedInducementGoldAway = inducementCosts(game.getTeamAway(), game.getTeamAway().getInducementSet());
+				availableInducementGoldAway = usedInducementGoldAway;
 			}
 			phase = Phase.DONE;
 

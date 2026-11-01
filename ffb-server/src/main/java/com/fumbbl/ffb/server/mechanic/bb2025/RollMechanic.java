@@ -1,8 +1,8 @@
 package com.fumbbl.ffb.server.mechanic.bb2025;
 
-import com.fumbbl.ffb.CommonProperty;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.FieldCoordinateBounds;
+import com.fumbbl.ffb.IDialogParameter;
 import com.fumbbl.ffb.InjuryAttribute;
 import com.fumbbl.ffb.LeaderState;
 import com.fumbbl.ffb.PlayerAction;
@@ -15,7 +15,6 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.RulesCollection;
 import com.fumbbl.ffb.TurnMode;
 import com.fumbbl.ffb.bb2025.SeriousInjury;
-import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.factory.mixed.CasualtyModifierFactory;
 import com.fumbbl.ffb.inducement.InducementType;
 import com.fumbbl.ffb.inducement.Usage;
@@ -40,7 +39,11 @@ import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.ReRollOptions;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepResult;
+import com.fumbbl.ffb.server.step.mixed.pass.state.PassState;
+import com.fumbbl.ffb.server.util.ReRollDialogParameterFactory;
+import com.fumbbl.ffb.server.util.ReRollRequest;
 import com.fumbbl.ffb.server.util.ServerUtilPlayer;
+import com.fumbbl.ffb.server.util.bb2025.ReRollPropertiesDialogParameterFactory;
 import com.fumbbl.ffb.server.util.UtilServerDialog;
 import com.fumbbl.ffb.server.util.UtilServerInducementUse;
 import com.fumbbl.ffb.util.UtilCards;
@@ -59,7 +62,6 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	private static final Set<TurnMode> modesProhibitingReRolls = new HashSet<TurnMode>() {{
 		add(TurnMode.KICKOFF);
-		add(TurnMode.PASS_BLOCK);
 		add(TurnMode.DUMP_OFF);
 		add(TurnMode.QUICK_SNAP);
 		add(TurnMode.BETWEEN_TURNS);
@@ -246,32 +248,36 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return player.getSkillIntValue(NamedProperties.hasToRollToUseTeamReroll);
 	}
 
+	private static final ReRollDialogParameterFactory DEFAULT_DIALOG_PARAMETER_FACTORY
+		= new ReRollPropertiesDialogParameterFactory();
+
 	@Override
 	public int minimumProRoll() {
 		return 3;
 	}
 
 	@Override
-	public boolean askForReRollIfAvailable(GameState gameState, Player<?> player, ReRolledAction reRolledAction,
-		int minimumRoll, boolean fumble, Skill modificationSkill, Skill reRollSkill, CommonProperty menuProperty,
-		String defaultValueKey, List<String> messages) {
-		boolean dialogShown = false;
+	public boolean askForReRollIfAvailable(ReRollRequest request) {
+		GameState gameState = request.getGameState();
+		Player<?> player = request.getPlayer();
 		Game game = gameState.getGame();
-		if (minimumRoll >= 0) {
-			ReRollOptions reRollOptions = findReRollOptions(gameState, player, reRolledAction, reRollSkill);
-
-			dialogShown =
-				(reRollOptions.canActuallyReRoll() || modificationSkill != null);
-			if (dialogShown) {
-				Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
-				String playerId = player.getId();
-				UtilServerDialog.showDialog(gameState,
-					new DialogReRollPropertiesParameter(playerId, reRolledAction, minimumRoll, reRollOptions.getProperties(),
-						fumble, reRollOptions.getReRollSkill(), modificationSkill, menuProperty, defaultValueKey, messages),
-					!actingTeam.hasPlayer(player));
-			}
+		if (request.getMinimumRoll() < 0) {
+			return false;
 		}
-		return dialogShown;
+		ReRollOptions reRollOptions = findReRollOptions(gameState, player, request.getReRolledAction(),
+			request.getReRollSkill());
+
+		ReRollDialogParameterFactory dialogParameterFactory = request.getDialogParameterFactory();
+		if (dialogParameterFactory == null) {
+			dialogParameterFactory = DEFAULT_DIALOG_PARAMETER_FACTORY;
+		}
+		IDialogParameter dialogParameter = dialogParameterFactory.create(request, reRollOptions);
+		if (dialogParameter == null) {
+			return false;
+		}
+		Team actingTeam = game.isHomePlaying() ? game.getTeamHome() : game.getTeamAway();
+		UtilServerDialog.showDialog(gameState, dialogParameter, !actingTeam.hasPlayer(player));
+		return true;
 	}
 
 	public boolean useReRoll(IStep pStep, ReRollSource reRollSource, Player<?> pPlayer) {
@@ -282,7 +288,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		GameState gameState = pStep.getGameState();
 		Game game = gameState.getGame();
 		StepResult stepResult = pStep.getResult();
-		TurnData turnData = game.getTurnData();
+		TurnData turnData = findReRollTurnData(game);
 		if (reRollSource != null) {
 
 			boolean teamReRoll = ReRollSources.TEAM_RE_ROLL == reRollSource;
@@ -387,7 +393,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private void useMascot(StepResult stepResult, GameState gameState, int mascotRoll, boolean successful,
 		boolean fallback, InducementType mascotType, TurnData turnData) {
 		stepResult.addReport(
-			new ReportMascotUsed(gameState.getGame().getActingTeam().getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
+			new ReportMascotUsed(findReRollTeam(gameState.getGame()).getId(), MASCOT_MINIMUM_ROLL, mascotRoll, successful,
 				fallback));
 
 		if (!successful || !checkTeamCaptain(stepResult, gameState)) {
@@ -398,7 +404,8 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	private boolean checkTeamCaptain(StepResult stepResult, GameState gameState) {
 
 		FieldModel fieldModel = gameState.getGame().getFieldModel();
-		if (Arrays.stream(gameState.getGame().getActingTeam().getPlayers())
+		Team reRollTeam = findReRollTeam(gameState.getGame());
+		if (Arrays.stream(reRollTeam.getPlayers())
 			.noneMatch(player -> player.hasSkillProperty(NamedProperties.canSaveReRolls) &&
 				FieldCoordinateBounds.FIELD.isInBounds(fieldModel.getPlayerCoordinate(player)))) {
 			return false;
@@ -407,7 +414,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		int roll = gameState.getDiceRoller().rollDice(6);
 		boolean rrSaved = roll >= TEAM_CAPTAIN_MINIMUM_ROLL;
 		stepResult.addReport(
-			new ReportTeamCaptainRoll(gameState.getGame().getActingTeam().getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
+			new ReportTeamCaptainRoll(reRollTeam.getId(), TEAM_CAPTAIN_MINIMUM_ROLL, roll, rrSaved));
 		return rrSaved;
 	}
 
@@ -512,17 +519,61 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		return !modesProhibitingReRolls.contains(turnMode);
 	}
 
+	@Override
+	public boolean isProReRollAvailable(Player<?> player, Game game, PassState passState) {
+		// a pass block during a dump-off is not an activation, so Pro cannot be used
+		return game.getTurnMode() != TurnMode.DUMP_OFF_PASS_BLOCK && super.isProReRollAvailable(player, game, passState);
+	}
+
 
 	@Override
 	public boolean isMascotAvailable(GameState pGameState, Player<?> pPlayer) {
 		Game game = pGameState.getGame();
-		InducementSet inducementSet = game.isHomePlaying() ?
-			game.getTurnDataHome().getInducementSet() : game.getTurnDataAway().getInducementSet();
+		InducementSet inducementSet = findReRollTurnData(game).getInducementSet();
 
 		return Arrays.stream(inducementSet.getInducements())
 			.anyMatch(ind -> ind.getType().hasUsage(Usage.CONDITIONAL_REROLL) && ind.getUsesLeft() > 0)
 			&& isTeamReRollAvailable(pGameState, pPlayer, 1);
 
+	}
+
+	@Override
+	public boolean isSingleUseReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, findReRollTurnData(game).getSingleUseReRolls());
+	}
+
+	@Override
+	public boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer) {
+		Game game = pGameState.getGame();
+		return isTeamReRollAvailable(pGameState, pPlayer, findReRollTurnData(game).getReRolls());
+	}
+
+	@Override
+	protected boolean isTeamReRollAvailable(GameState pGameState, Player<?> pPlayer, int amount) {
+		Game game = pGameState.getGame();
+		TurnMode turnMode = game.getTurnMode();
+		boolean homeHasPlayer = game.getTeamHome().hasPlayer(pPlayer);
+		boolean awayHasPlayer = game.getTeamAway().hasPlayer(pPlayer);
+		return (findReRollTeam(game).hasPlayer(pPlayer) && !findReRollTurnData(game).isReRollUsed() && (amount > 0)
+			&& allowsTeamReRoll(turnMode)
+			&& ((turnMode != TurnMode.BOMB_HOME) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_HOME_BLITZ) || homeHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY) || awayHasPlayer)
+			&& ((turnMode != TurnMode.BOMB_AWAY_BLITZ) || awayHasPlayer));
+	}
+
+	// during a pass block homePlaying is switched to the pass blocking team, but the team of the thrower is still the active one
+	private boolean isHomeTeamActive(Game game) {
+		return game.isHomePlaying() != (game.getTurnMode() == TurnMode.PASS_BLOCK);
+	}
+
+	private Team findReRollTeam(Game game) {
+		return isHomeTeamActive(game) ? game.getTeamHome() : game.getTeamAway();
+	}
+
+	private TurnData findReRollTurnData(Game game) {
+		return isHomeTeamActive(game) ? game.getTurnDataHome() : game.getTurnDataAway();
 	}
 
 	private boolean canBeReduced(InjuryAttribute attribute, int currentValue) {
@@ -621,7 +672,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 		if (isTeamReRollAvailable(gameState, player)) {
 			properties.add(ReRollProperty.TRR);
 		}
-		findAdditionalReRollProperty(game.getTurnData()).ifPresent(properties::add);
+		findAdditionalReRollProperty(findReRollTurnData(game)).ifPresent(properties::add);
 
 		if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
 			properties.add(ReRollProperty.LONER);

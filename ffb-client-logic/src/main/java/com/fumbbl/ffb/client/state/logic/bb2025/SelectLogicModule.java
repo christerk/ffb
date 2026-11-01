@@ -18,6 +18,7 @@ import com.fumbbl.ffb.model.skill.Skill;
 import com.fumbbl.ffb.option.GameOptionId;
 import com.fumbbl.ffb.option.UtilGameOption;
 import com.fumbbl.ffb.util.UtilCards;
+import com.fumbbl.ffb.util.bb2025.TurnActionLimitService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +28,15 @@ import java.util.Set;
  */
 public class SelectLogicModule extends LogicModule {
 
+	private final TurnActionLimitService turnActionLimitService = new TurnActionLimitService();
+
 	public SelectLogicModule(FantasyFootballClient pClient) {
 		super(pClient);
+	}
+
+	@Override
+	protected boolean isTurnActionAvailable(Player<?> player, PlayerAction playerAction) {
+		return turnActionLimitService.isActionAvailable(client.getGame(), player, playerAction);
 	}
 
 	@Override
@@ -353,7 +361,7 @@ public class SelectLogicModule extends LogicModule {
 		}
 		if (isStandUpActionAvailable(player)
 			&& player.hasSkillProperty(NamedProperties.enableStandUpAndEndBlitzAction)
-			&& !game.getTurnData().isBlitzUsed()) {
+			&& isTurnActionAvailable(player, PlayerAction.STAND_UP_BLITZ)) {
 			context.add(ClientAction.STAND_UP_BLITZ);
 		}
 		if (isStandUpActionAvailable(player)) {

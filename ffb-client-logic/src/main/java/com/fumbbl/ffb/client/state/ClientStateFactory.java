@@ -225,6 +225,7 @@ public abstract class ClientStateFactory<T extends FantasyFootballClient> {
 					}
 					break;
 				case PASS_BLOCK:
+				case DUMP_OFF_PASS_BLOCK:
 					if (game.isHomePlaying()) {
 						clientStateId = ClientStateId.PASS_BLOCK;
 					} else {
