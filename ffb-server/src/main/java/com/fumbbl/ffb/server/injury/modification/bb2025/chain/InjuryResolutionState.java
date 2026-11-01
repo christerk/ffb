@@ -8,6 +8,7 @@ import com.fumbbl.ffb.modifiers.InjuryModifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class InjuryResolutionState {
 	private final List<AppliedInjuryModification> appliedModifications = new ArrayList<>();
 	private final Set<ArmorModifier> skillArmourModifiers = new LinkedHashSet<>();
 	private final Set<InjuryModifier> skillInjuryModifiers = new LinkedHashSet<>();
+	private final Set<String> declinedPlayerIds = new HashSet<>();
 
 	public InjuryResolutionState(InjuryContext injuryContext, InjuryPhase phase) {
 		this.injuryContext = injuryContext;
@@ -42,7 +44,21 @@ public class InjuryResolutionState {
 	}
 
 	public void setPhase(InjuryPhase phase) {
+		if (this.phase != phase) {
+			declinedPlayerIds.clear();
+		}
 		this.phase = phase;
+	}
+
+	/**
+	 * Marks that the player declined all offered modifications in the current phase.
+	 */
+	public void decline(String playerId) {
+		declinedPlayerIds.add(playerId);
+	}
+
+	public boolean hasDeclined(String playerId) {
+		return declinedPlayerIds.contains(playerId);
 	}
 
 	public boolean isArmourReRolled() {
