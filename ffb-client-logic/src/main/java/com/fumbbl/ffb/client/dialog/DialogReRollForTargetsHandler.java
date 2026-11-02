@@ -7,7 +7,6 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
-import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -33,7 +32,7 @@ public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
 			} else {
 				StringBuilder message = new StringBuilder();
 				String reRolledActionName = (dialogReRollParameter.getReRolledAction() != null)
-						? dialogReRollParameter.getReRolledAction().getName(game.getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL))
+						? dialogReRollParameter.getReRolledAction().getName(game.getRules().getFactory(FactoryType.Factory.SKILL))
 						: null;
 				message.append("Waiting to re-roll ").append(reRolledActionName).append(".");
 				showStatus("Re-roll", message.toString(), StatusType.WAITING);
@@ -46,7 +45,6 @@ public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_FOR_TARGETS)) {
 			DialogReRollForTargets reRollDialog = (DialogReRollForTargets) pDialog;
-			DialogReRollForTargetsParameter parameter = reRollDialog.getDialogParameter();
 			ReRollSource source = reRollDialog.getReRollSource();
 			sendChoice(reRollDialog, source);
 		}
