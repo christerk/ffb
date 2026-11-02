@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 			Player<?> player = game.getPlayerById(target);
 
 			JPanel buttonPanel = createButtonPanel();
-			buttonPanel.add(createButton(target, player.getName(), (char) index));
+			buttonPanel.add(createButton(target, player.getName(), KeyEvent.VK_1 + index));
 			buttonPanel.add(Box.createHorizontalGlue());
 
 			JPanel targetPanel = createTargetPanel(buttonPanel);
