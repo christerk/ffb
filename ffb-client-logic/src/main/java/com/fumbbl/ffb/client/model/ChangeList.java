@@ -67,7 +67,7 @@ public class ChangeList {
 			.addBugfix("Actions limited to once per turn (Blitz, Foul, Pass, Hand-off, Throw/Kick Team-Mate, Bomb, Punt, Secure the Ball) could be declared a second time in the same turn by clients that did not hide the used action")
 			.addBugfix("Leader: Re-roll did not get removed if leader player was sent to reserves by Dodgy Snack")
 			.addBehaviorChange("Re-roll dialogs show separate buttons for Team Mascot, Leader and drive bonus re-rolls (Brilliant Coaching, Pump up the Crowd, Star of the Show). The regular Team Re-Roll button is only shown when neither a drive bonus re-roll nor a Leader re-roll is available")
-			.addBehaviorChange("Drive bonus re-rolls (Brilliant Coaching, Pump up the Crowd, Star of the Show) are no longer used automatically instead of a Team Re-Roll, they have to be selected explicitly. A Team Re-Roll only uses them when no other team re-roll is left")
+			.addBehaviorChange("Drive bonus re-rolls (Brilliant Coaching, Pump up the Crowd, Star of the Show) are no longer used automatically instead of Leader Re-Roll, they have to be selected explicitly.")
 			.addBehaviorChange("Re-roll dialogs: The fallback checkboxes for Pro and the \"Mascot (or Team-ReRoll)\" button were removed. When selecting Pro or the Team Mascot and other team re-rolls are available, a follow-up dialog asks which re-roll to use if Pro or the Team Mascot fail")
 			.addBugfix("Block: A Pro re-roll with Team Mascot or Team Re-Roll fallback re-rolled all block dice instead of the selected die")
 		);
