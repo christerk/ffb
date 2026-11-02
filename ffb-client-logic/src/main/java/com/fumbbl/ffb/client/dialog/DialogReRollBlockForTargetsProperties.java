@@ -83,10 +83,9 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 				List<ReRollSource> targetTeamReRollSources = mascotExtension.teamReRollSources(blockRoll, true);
 				teamReRollSources.put(target, targetTeamReRollSources);
-				for (int i = 0; i < targetTeamReRollSources.size() && i < currentMnemonics.getTeam().size(); i++) {
-					ReRollSource teamReRollSource = targetTeamReRollSources.get(i);
+				for (ReRollSource teamReRollSource : targetTeamReRollSources) {
 					JButton teamReRollButton = createReRollButton(target, mascotExtension.label(teamReRollSource, game),
-						teamReRollSource, currentMnemonics.getTeam().get(i));
+						teamReRollSource, currentMnemonics.forTeamReRollSource(teamReRollSource));
 					buttonPanel.add(mascotExtension.wrapperPanel(teamReRollButton));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}

@@ -120,10 +120,9 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 			List<ReRollSource> targetTeamReRollSources = mascotExtension.teamReRollSources(options, true);
 			teamReRollSources.put(target, targetTeamReRollSources);
-			for (int i = 0; i < targetTeamReRollSources.size() && i < currentMnemonics.getTeam().size(); i++) {
-				ReRollSource teamReRollSource = targetTeamReRollSources.get(i);
+			for (ReRollSource teamReRollSource : targetTeamReRollSources) {
 				buttonPanel.add(createReRollButton(target, mascotExtension.label(teamReRollSource, game), teamReRollSource,
-					currentMnemonics.getTeam().get(i)));
+					currentMnemonics.forTeamReRollSource(teamReRollSource)));
 				buttonPanel.add(Box.createHorizontalGlue());
 			}
 

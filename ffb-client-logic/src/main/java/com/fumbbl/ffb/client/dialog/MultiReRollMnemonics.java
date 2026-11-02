@@ -1,5 +1,8 @@
 package com.fumbbl.ffb.client.dialog;
 
+import com.fumbbl.ffb.ReRollSource;
+import com.fumbbl.ffb.ReRollSources;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +10,7 @@ public interface MultiReRollMnemonics {
 
 	default List<Mnemonics> mnemonics() {
 		return new ArrayList<Mnemonics>() {{
-			add(new Mnemonics(new ArrayList<Character>() {{
-				add('T');
-				add('K');
-				add('G');
-			}}, 'N', 'B', 'H',
+			add(new Mnemonics('T', 'L', 'K', 'G', 'N', 'B', 'H',
 				new ArrayList<Character>() {{
 					add('P');
 					add('o');
@@ -27,11 +26,7 @@ public interface MultiReRollMnemonics {
 					add('i');
 					add('j');
 				}}));
-			add(new Mnemonics(new ArrayList<Character>() {{
-				add('e');
-				add('Y');
-				add('Z');
-			}}, 'l', 'r', 'h',
+			add(new Mnemonics('E', 'W', 'Q', 'F', '0', 'r', 'h',
 				new ArrayList<Character>() {{
 					add('r');
 					add('y');
@@ -39,24 +34,29 @@ public interface MultiReRollMnemonics {
 				}},
 				new ArrayList<Character>() {{
 					add('a');
-					add('f');
+					add('o');
 					add('v');
 				}}, 'b',
 				new ArrayList<Character>() {{
-					add('k');
-					add('l');
-					add('w');
+					add('C');
+					add('I');
+					add('J');
 				}}));
 		}};
 	}
 
 	class Mnemonics {
+		private final char teamReRoll, leader, mascot, driveBonus;
 		private final char brawler, hatred, none, anyBlockDice;
-		private final List<Character> team, pro, anyDie, singleBlockDie;
+		private final List<Character> pro, anyDie, singleBlockDie;
 
-		public Mnemonics(List<Character> team, char none, char brawler, char hatred, List<Character> pro,
-			List<Character> anyDie, char anyBlockDice, List<Character> singleBlockDie) {
-			this.team = team;
+		public Mnemonics(char teamReRoll, char leader, char mascot, char driveBonus, char none, char brawler,
+			char hatred, List<Character> pro, List<Character> anyDie, char anyBlockDice,
+			List<Character> singleBlockDie) {
+			this.teamReRoll = teamReRoll;
+			this.leader = leader;
+			this.mascot = mascot;
+			this.driveBonus = driveBonus;
 			this.none = none;
 			this.brawler = brawler;
 			this.hatred = hatred;
@@ -66,11 +66,36 @@ public interface MultiReRollMnemonics {
 			this.singleBlockDie = singleBlockDie;
 		}
 
-		/**
-		 * @return one mnemonic for each team re-roll option, in the order the options are offered
-		 */
-		public List<Character> getTeam() {
-			return team;
+		public char getTeamReRoll() {
+			return teamReRoll;
+		}
+
+		public char getLeader() {
+			return leader;
+		}
+
+		public char getMascot() {
+			return mascot;
+		}
+
+		public char getDriveBonus() {
+			return driveBonus;
+		}
+
+		public char forTeamReRollSource(ReRollSource source) {
+			if (source == ReRollSources.TEAM_RE_ROLL) {
+				return getTeamReRoll();
+			}
+			if (source == ReRollSources.LEADER) {
+				return getLeader();
+			}
+			if (source == ReRollSources.MASCOT) {
+				return getMascot();
+			}
+			if (source == ReRollSources.DRIVE_BONUS_RE_ROLL) {
+				return getDriveBonus();
+			}
+			throw new IllegalArgumentException("Unsupported team re-roll source: " + source);
 		}
 
 		public char getBrawler() {
