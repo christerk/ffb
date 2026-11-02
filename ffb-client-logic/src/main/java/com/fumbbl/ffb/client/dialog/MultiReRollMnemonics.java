@@ -3,6 +3,7 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,49 +11,51 @@ public interface MultiReRollMnemonics {
 
 	default List<Mnemonics> mnemonics() {
 		return new ArrayList<Mnemonics>() {{
-			add(new Mnemonics('T', 'L', 'M', 'D', 'N', 'B', 'H',
-				new ArrayList<Character>() {{
-					add('P');
-					add('O');
-					add('X');
+			add(new Mnemonics(KeyEvent.VK_T, KeyEvent.VK_L, KeyEvent.VK_M, KeyEvent.VK_D, KeyEvent.VK_N,
+				KeyEvent.VK_B, KeyEvent.VK_H,
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_P);
+					add(KeyEvent.VK_O);
+					add(KeyEvent.VK_X);
 				}},
-				new ArrayList<Character>() {{
-					add('C');
-					add('U');
-					add('G');
-				}}, 'S',
-				new ArrayList<Character>() {{
-					add('Y');
-					add('I');
-					add('J');
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_C);
+					add(KeyEvent.VK_U);
+					add(KeyEvent.VK_G);
+				}}, KeyEvent.VK_S,
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_Y);
+					add(KeyEvent.VK_I);
+					add(KeyEvent.VK_J);
 				}}));
-			add(new Mnemonics('E', 'A', 'Q', 'F', '0', 'W', 'R',
-				new ArrayList<Character>() {{
-					add('K');
-					add('Z');
-					add('V');
+			add(new Mnemonics(KeyEvent.VK_E, KeyEvent.VK_A, KeyEvent.VK_Q, KeyEvent.VK_F, KeyEvent.VK_0,
+				KeyEvent.VK_W, KeyEvent.VK_R,
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_K);
+					add(KeyEvent.VK_Z);
+					add(KeyEvent.VK_V);
 				}},
-				new ArrayList<Character>() {{
-					add('1');
-					add('2');
-					add('3');
-				}}, '4',
-				new ArrayList<Character>() {{
-					add('5');
-					add('6');
-					add('7');
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_1);
+					add(KeyEvent.VK_2);
+					add(KeyEvent.VK_3);
+				}}, KeyEvent.VK_4,
+				new ArrayList<Integer>() {{
+					add(KeyEvent.VK_5);
+					add(KeyEvent.VK_6);
+					add(KeyEvent.VK_7);
 				}}));
 		}};
 	}
 
 	class Mnemonics {
-		private final char teamReRoll, leader, mascot, driveBonus;
-		private final char brawler, hatred, none, anyBlockDice;
-		private final List<Character> pro, anyDie, singleBlockDie;
+		private final int teamReRoll, leader, mascot, driveBonus;
+		private final int brawler, hatred, none, anyBlockDice;
+		private final List<Integer> pro, anyDie, singleBlockDie;
 
-		public Mnemonics(char teamReRoll, char leader, char mascot, char driveBonus, char none, char brawler,
-			char hatred, List<Character> pro, List<Character> anyDie, char anyBlockDice,
-			List<Character> singleBlockDie) {
+		public Mnemonics(int teamReRoll, int leader, int mascot, int driveBonus, int none, int brawler,
+			int hatred, List<Integer> pro, List<Integer> anyDie, int anyBlockDice,
+			List<Integer> singleBlockDie) {
 			this.teamReRoll = teamReRoll;
 			this.leader = leader;
 			this.mascot = mascot;
@@ -66,23 +69,23 @@ public interface MultiReRollMnemonics {
 			this.singleBlockDie = singleBlockDie;
 		}
 
-		public char getTeamReRoll() {
+		public int getTeamReRoll() {
 			return teamReRoll;
 		}
 
-		public char getLeader() {
+		public int getLeader() {
 			return leader;
 		}
 
-		public char getMascot() {
+		public int getMascot() {
 			return mascot;
 		}
 
-		public char getDriveBonus() {
+		public int getDriveBonus() {
 			return driveBonus;
 		}
 
-		public char forTeamReRollSource(ReRollSource source) {
+		public int forTeamReRollSource(ReRollSource source) {
 			if (source == ReRollSources.TEAM_RE_ROLL) {
 				return getTeamReRoll();
 			}
@@ -98,31 +101,31 @@ public interface MultiReRollMnemonics {
 			throw new IllegalArgumentException("Unsupported team re-roll source: " + source);
 		}
 
-		public char getBrawler() {
+		public int getBrawler() {
 			return brawler;
 		}
 
-		public char getHatred() {
+		public int getHatred() {
 			return hatred;
 		}
 
-		public char getNone() {
+		public int getNone() {
 			return none;
 		}
 
-		public char getAnyBlockDice() {
+		public int getAnyBlockDice() {
 			return anyBlockDice;
 		}
 
-		public List<Character> getPro() {
+		public List<Integer> getPro() {
 			return pro;
 		}
 
-		public List<Character> getAnyDie() {
+		public List<Integer> getAnyDie() {
 			return anyDie;
 		}
 
-		public List<Character> getSingleBlockDie() {
+		public List<Integer> getSingleBlockDie() {
 			return singleBlockDie;
 		}
 	}

@@ -150,7 +150,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 		init(mainMessages, detailPanel);
 	}
 
-	private JButton createButton(String target, String buttonName, char mnemonic) {
+	private JButton createButton(String target, String buttonName, int mnemonic) {
 		JButton button = new JButton(dimensionProvider(), buttonName);
 		button.addActionListener(e -> handleUserInteraction(target));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {
@@ -163,7 +163,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 		return button;
 	}
 
-	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
+	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, int mnemonic) {
 		JButton button = new JButton(dimensionProvider(), buttonName);
 		button.addActionListener(e -> handleUserInteraction(target, reRollSource));
 		this.addKeyListener(new PressedKeyListener(mnemonic) {

@@ -173,7 +173,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 
 	}
 
-	private JPanel createSingleDieReRollPanel(JPanel titlePanel, String target, int diceCount, List<Character> mnemonics, ObjIntConsumer<String> consumer) {
+	private JPanel createSingleDieReRollPanel(JPanel titlePanel, String target, int diceCount, List<Integer> mnemonics, ObjIntConsumer<String> consumer) {
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -225,7 +225,7 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 		close();
 	}
 
-	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {
+	private JButton createReRollButton(String target, String buttonName, ReRollSource reRollSource, int mnemonic) {
 		JButton button = new JButton(dimensionProvider(), buttonName, mnemonic);
 		button.setOpaque(false);
 		button.addActionListener(e -> handleReRollUse(target, reRollSource));
