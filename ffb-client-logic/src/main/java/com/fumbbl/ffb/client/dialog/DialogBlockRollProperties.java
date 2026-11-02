@@ -53,8 +53,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource singleDiePerActivationReRollSource;
 	private final ReRollSource bothDownReRollSource;
 	private final ReRollSource skullReRollSource;
-	private final DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
-	private final Map<ReRolledAction, ReRollSource> actionToSource;
+	private final DialogExtensionReRolls rerollExtension = new DialogExtensionReRolls();
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
 	public DialogBlockRollProperties(FantasyFootballClient pClient, DialogBlockRollPropertiesParameter dialogParameter,
@@ -64,7 +63,6 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 
 		fDiceIndex = -1;
 		this.dialogParameter = dialogParameter;
-		this.actionToSource = actionToSource;
 
 		singleDieReRollSource = actionToSource.get(ReRolledActions.SINGLE_DIE);
 		anyBlockDiceReRollSource = actionToSource.get(ReRolledActions.MULTI_BLOCK_DICE);
@@ -195,30 +193,30 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		reRollPanel.add(verticalGlue1);
 		reRollPanel.setOpaque(false);
 
-		for (ReRollSource teamReRollSource : mascotExtension.teamReRollSources(dialogParameter, true)) {
-			JButton teamReRollButton = mascotExtension.button(teamReRollSource, getClient().getGame(), dimensionProvider());
+		for (ReRollSource teamReRollSource : rerollExtension.teamReRollSources(dialogParameter, true)) {
+			JButton teamReRollButton = rerollExtension.button(teamReRollSource, getClient().getGame(), dimensionProvider());
 			teamReRollButton.addActionListener(this);
 			teamReRollButton.addKeyListener(this);
 			teamReRollButton.setOpaque(false);
 			teamReRollButtons.put(teamReRollButton, teamReRollSource);
-			teamReRollKeys.put(mascotExtension.mnemonic(teamReRollSource), teamReRollSource);
-			reRollPanel.add(mascotExtension.wrapperPanel(teamReRollButton));
+			teamReRollKeys.put(rerollExtension.mnemonic(teamReRollSource), teamReRollSource);
+			reRollPanel.add(rerollExtension.wrapperPanel(teamReRollButton));
 		}
 
 		if (getDialogParameter().getNrOfDice() == 1) {
 			if (singleDiePerActivationReRollSource != null) {
 				buttonProReRoll = button("Pro Re-Roll", KeyEvent.VK_P);
-				reRollPanel.add(mascotExtension.wrapperPanel(buttonProReRoll));
+				reRollPanel.add(rerollExtension.wrapperPanel(buttonProReRoll));
 			}
 
 			if (singleDieReRollSource != null) {
 				anySingleDieButton = button(singleDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_C);
-				reRollPanel.add(mascotExtension.wrapperPanel(anySingleDieButton));
+				reRollPanel.add(rerollExtension.wrapperPanel(anySingleDieButton));
 			}
 
 			if (singleBlockDieReRollSource != null) {
 				singleDieButton = button(singleBlockDieReRollSource.getName(getClient().getGame()), KeyEvent.VK_U);
-				reRollPanel.add(mascotExtension.wrapperPanel(singleDieButton));
+				reRollPanel.add(rerollExtension.wrapperPanel(singleDieButton));
 			}
 
 		}
@@ -226,21 +224,21 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		if (anyBlockDiceReRollSource != null) {
 			anyDiceButton = button(anyBlockDiceReRollSource.getName(getClient().getGame()), KeyEvent.VK_V);
 			anyDiceButton.setEnabled(blockRoll.length == 1);
-			reRollPanel.add(mascotExtension.wrapperPanel(anyDiceButton));
+			reRollPanel.add(rerollExtension.wrapperPanel(anyDiceButton));
 		}
 
 		if (bothDownReRollSource != null) {
 			brawlerButton = button("Brawler Re-Roll", KeyEvent.VK_B);
-			reRollPanel.add(mascotExtension.wrapperPanel(brawlerButton));
+			reRollPanel.add(rerollExtension.wrapperPanel(brawlerButton));
 		}
 
 		if (skullReRollSource != null) {
 			hatredButton = button("Hatred Re-Roll", KeyEvent.VK_H);
-			reRollPanel.add(mascotExtension.wrapperPanel(hatredButton));
+			reRollPanel.add(rerollExtension.wrapperPanel(hatredButton));
 		}
 
 		if (getDialogParameter().getNrOfDice() < 0) {
-			reRollPanel.add(mascotExtension.wrapperPanel(buttonNoReRoll));
+			reRollPanel.add(rerollExtension.wrapperPanel(buttonNoReRoll));
 		}
 
 		Box.Filler verticalGlue2 = (Box.Filler) Box.createVerticalGlue();
@@ -387,6 +385,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 		fReRollSource = ReRollSources.HATRED;
 	}
 
+	@SuppressWarnings("SuspiciousMethodCalls")
 	public void actionPerformed(ActionEvent pActionEvent) {
 		Game game = getClient().getGame();
 		boolean homeChoice = ((getDialogParameter().getNrOfDice() > 0) || !game.isHomePlaying());

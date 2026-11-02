@@ -47,13 +47,13 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		dialogParameter = pDialogParameter;
 
-		DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
-		for (ReRollSource teamReRollSource : mascotExtension.teamReRollSources(pDialogParameter, true)) {
-			JButton button = mascotExtension.button(teamReRollSource, getClient().getGame(), dimensionProvider());
+		DialogExtensionReRolls rerollExtension = new DialogExtensionReRolls();
+		for (ReRollSource teamReRollSource : rerollExtension.teamReRollSources(pDialogParameter, true)) {
+			JButton button = rerollExtension.button(teamReRollSource, getClient().getGame(), dimensionProvider());
 			button.addActionListener(this);
 			button.addKeyListener(this);
 			teamReRollButtons.put(button, teamReRollSource);
-			teamReRollKeys.put(mascotExtension.mnemonic(teamReRollSource), teamReRollSource);
+			teamReRollKeys.put(rerollExtension.mnemonic(teamReRollSource), teamReRollSource);
 		}
 
 		buttonProReRoll = new JButton(dimensionProvider(), "Pro Re-Roll");
@@ -140,22 +140,22 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
 		buttonPanel.setAlignmentY(Box.TOP_ALIGNMENT);
 		for (JButton teamReRollButton : teamReRollButtons.keySet()) {
-			buttonPanel.add(mascotExtension.wrapperPanel(teamReRollButton));
+			buttonPanel.add(rerollExtension.wrapperPanel(teamReRollButton));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
-			buttonPanel.add(mascotExtension.wrapperPanel(buttonProReRoll));
+			buttonPanel.add(rerollExtension.wrapperPanel(buttonProReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonSkillReRoll != null) {
-			buttonPanel.add(mascotExtension.wrapperPanel(buttonSkillReRoll));
+			buttonPanel.add(rerollExtension.wrapperPanel(buttonSkillReRoll));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
 		if (buttonModifyingSkill != null) {
-			buttonPanel.add(mascotExtension.wrapperPanel(buttonModifyingSkill));
+			buttonPanel.add(rerollExtension.wrapperPanel(buttonModifyingSkill));
 			buttonPanel.add(Box.createHorizontalStrut(5));
 		}
-		buttonPanel.add(mascotExtension.wrapperPanel(buttonNoReRoll));
+		buttonPanel.add(rerollExtension.wrapperPanel(buttonNoReRoll));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -172,6 +172,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 		return DialogId.RE_ROLL_PROPERTIES;
 	}
 
+	@SuppressWarnings("SuspiciousMethodCalls")
 	public void actionPerformed(ActionEvent pActionEvent) {
 		if (teamReRollButtons.containsKey(pActionEvent.getSource())) {
 			fReRollSource = teamReRollButtons.get(pActionEvent.getSource());

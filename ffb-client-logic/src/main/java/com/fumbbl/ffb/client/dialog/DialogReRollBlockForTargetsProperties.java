@@ -81,12 +81,12 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 				buttonPanel.add(Box.createHorizontalGlue());
 				buttonPanel.setOpaque(false);
 
-				List<ReRollSource> targetTeamReRollSources = mascotExtension.teamReRollSources(blockRoll, true);
+				List<ReRollSource> targetTeamReRollSources = rerollExtension.teamReRollSources(blockRoll, true);
 				teamReRollSources.put(target, targetTeamReRollSources);
 				for (ReRollSource teamReRollSource : targetTeamReRollSources) {
-					JButton teamReRollButton = createReRollButton(target, mascotExtension.label(teamReRollSource, game),
+					JButton teamReRollButton = createReRollButton(target, rerollExtension.label(teamReRollSource, game),
 						teamReRollSource, currentMnemonics.forTeamReRollSource(teamReRollSource));
-					buttonPanel.add(mascotExtension.wrapperPanel(teamReRollButton));
+					buttonPanel.add(rerollExtension.wrapperPanel(teamReRollButton));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (blockRoll.getNrOfDice() == 1) {
@@ -94,29 +94,29 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 						JButton proButton = createReRollButton(target, singleDiePerActicationReRollSource.getName(game),
 							singleDiePerActicationReRollSource,
 							currentMnemonics.getPro().get(0));
-						buttonPanel.add(mascotExtension.wrapperPanel(proButton));
+						buttonPanel.add(rerollExtension.wrapperPanel(proButton));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 					if (singleDieReRollSource != null) {
-						buttonPanel.add(mascotExtension.wrapperPanel(
+						buttonPanel.add(rerollExtension.wrapperPanel(
 							createReRollButton(target, singleDieReRollSource.getName(pClient.getGame()), singleDieReRollSource,
 								currentMnemonics.getAnyDie().get(0))));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 					if (singleBlockDieReRollSource != null) {
-						buttonPanel.add(mascotExtension.wrapperPanel(
+						buttonPanel.add(rerollExtension.wrapperPanel(
 							createReRollButton(target, singleBlockDieReRollSource.getName(game), singleBlockDieReRollSource, 
 								currentMnemonics.getSingleBlockDie().get(0))));
 						buttonPanel.add(Box.createHorizontalGlue());
 					}
 				}
 				if (bothDownReRollSource != null) {
-					buttonPanel.add(mascotExtension.wrapperPanel(
+					buttonPanel.add(rerollExtension.wrapperPanel(
 						createReRollButton(target, "Brawler Re-Roll", bothDownReRollSource, currentMnemonics.getBrawler())));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (skullReRollSource != null) {
-					buttonPanel.add(mascotExtension.wrapperPanel(
+					buttonPanel.add(rerollExtension.wrapperPanel(
 						createReRollButton(target, "Hatred Re-Roll", skullReRollSource, currentMnemonics.getHatred())));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
@@ -125,11 +125,11 @@ public class DialogReRollBlockForTargetsProperties extends AbstractDialogMultiBl
 						currentMnemonics.getAnyBlockDice());
 					anyDiceButton.setEnabled(blockRoll.getNrOfDice() == 1);
 					anyDiceButtons.put(target, anyDiceButton);
-					buttonPanel.add(mascotExtension.wrapperPanel(anyDiceButton));
+					buttonPanel.add(rerollExtension.wrapperPanel(anyDiceButton));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				if (!ownChoice) {
-					buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "No Re-Roll", null,
+					buttonPanel.add(rerollExtension.wrapperPanel(createReRollButton(target, "No Re-Roll", null,
 						currentMnemonics.getNone())));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}

@@ -79,7 +79,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 		List<String> mainMessages = new ArrayList<>();
 		mainMessages.add("<html>Do you want to re-roll one of these Regeneration rolls?</html>");
 
-		DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
+		DialogExtensionReRolls rerollExtension = new DialogExtensionReRolls();
 
 		JPanel detailPanel = createDetailPanel();
 		for (int index = 0; index < parameter.getPlayerIds().size(); index++) {
@@ -118,16 +118,16 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 
 			JPanel buttonPanel = createButtonPanel();
 
-			List<ReRollSource> targetTeamReRollSources = mascotExtension.teamReRollSources(options, true);
+			List<ReRollSource> targetTeamReRollSources = rerollExtension.teamReRollSources(options, true);
 			teamReRollSources.put(target, targetTeamReRollSources);
 			for (ReRollSource teamReRollSource : targetTeamReRollSources) {
-				buttonPanel.add(createReRollButton(target, mascotExtension.label(teamReRollSource, game), teamReRollSource,
+				buttonPanel.add(createReRollButton(target, rerollExtension.label(teamReRollSource, game), teamReRollSource,
 					currentMnemonics.forTeamReRollSource(teamReRollSource)));
 				buttonPanel.add(Box.createHorizontalGlue());
 			}
 
 			if (options.hasProperty(ReRollProperty.PRO)) {
-				buttonPanel.add(mascotExtension.wrapperPanel(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
+				buttonPanel.add(rerollExtension.wrapperPanel(createReRollButton(target, "Pro Re-Roll", ReRollSources.PRO,
 					currentMnemonics.getPro().get(0))));
 				buttonPanel.add(Box.createHorizontalStrut(5));
 			}
