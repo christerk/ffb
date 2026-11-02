@@ -16,10 +16,10 @@ class MultiReRollMnemonicsTest {
 
 		assertEquals('T', mnemonics.get(0).forTeamReRollSource(ReRollSources.TEAM_RE_ROLL));
 		assertEquals('L', mnemonics.get(0).forTeamReRollSource(ReRollSources.LEADER));
-		assertEquals('K', mnemonics.get(0).forTeamReRollSource(ReRollSources.MASCOT));
-		assertEquals('G', mnemonics.get(0).forTeamReRollSource(ReRollSources.DRIVE_BONUS_RE_ROLL));
+		assertEquals('M', mnemonics.get(0).forTeamReRollSource(ReRollSources.MASCOT));
+		assertEquals('D', mnemonics.get(0).forTeamReRollSource(ReRollSources.DRIVE_BONUS_RE_ROLL));
 		assertEquals('E', mnemonics.get(1).forTeamReRollSource(ReRollSources.TEAM_RE_ROLL));
-		assertEquals('W', mnemonics.get(1).forTeamReRollSource(ReRollSources.LEADER));
+		assertEquals('A', mnemonics.get(1).forTeamReRollSource(ReRollSources.LEADER));
 		assertEquals('Q', mnemonics.get(1).forTeamReRollSource(ReRollSources.MASCOT));
 		assertEquals('F', mnemonics.get(1).forTeamReRollSource(ReRollSources.DRIVE_BONUS_RE_ROLL));
 	}
