@@ -10,7 +10,7 @@ import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
-public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
+public class DialogReRollForTargetsHandler extends DialogHandler {
 
 	public DialogReRollForTargetsHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -41,7 +41,7 @@ public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
 	}
 
 	@Override
-	protected void reRollDialogClosed(IDialog pDialog) {
+	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_FOR_TARGETS)) {
 			DialogReRollForTargets reRollDialog = (DialogReRollForTargets) pDialog;
