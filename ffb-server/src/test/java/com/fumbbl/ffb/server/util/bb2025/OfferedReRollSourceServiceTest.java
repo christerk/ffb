@@ -169,4 +169,21 @@ class OfferedReRollSourceServiceTest {
 		assertTrue(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.LORD_OF_CHAOS, "target1"));
 		assertFalse(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.TEAM_RE_ROLL, "target1"));
 	}
+
+	@Test
+	void explicitForTargetsDialogOffersComposedSourcesOnlyForAvailableTargets() {
+		showDialog(new DialogReRollForTargetsParameter("playerId", Arrays.asList("target1", "target2"),
+			ReRolledActions.DAUNTLESS, new HashMap<>(), Collections.singletonList("target1"), true, true, brawler,
+			ReRollSources.LORD_OF_CHAOS, false,
+			Arrays.asList(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.PRO)));
+
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.MASCOT, "target1"));
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.PRO_TRR, "target1"));
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.PRO_MASCOT_TRR, "target1"));
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.BRAWLER, "target1"));
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.LORD_OF_CHAOS, "target1"));
+		assertFalse(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.PRO_TRR, "target2"));
+		assertFalse(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.PRO, "target1"));
+		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, null, null));
+	}
 }

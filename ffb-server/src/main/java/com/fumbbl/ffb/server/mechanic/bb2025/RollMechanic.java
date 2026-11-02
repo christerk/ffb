@@ -672,6 +672,11 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
+	public boolean supportsExplicitTeamReRollSources() {
+		return true;
+	}
+
+	@Override
 	public boolean isReRollSourceOffered(Game game, ReRolledAction reRolledAction, ReRollSource reRollSource,
 		String targetId) {
 		return new OfferedReRollSourceService().isOffered(game, reRolledAction, reRollSource, targetId);

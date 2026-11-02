@@ -70,6 +70,10 @@ public abstract class RollMechanic implements Mechanic {
 	 */
 	public abstract List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player);
 
+	public boolean supportsExplicitTeamReRollSources() {
+		return false;
+	}
+
 	/**
 	 * Tells if a re-roll source sent by a client fits the dialog the game is currently waiting for.
 	 *

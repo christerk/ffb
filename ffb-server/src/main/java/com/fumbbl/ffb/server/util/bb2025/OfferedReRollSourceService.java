@@ -17,9 +17,11 @@ import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.model.Player;
 import com.fumbbl.ffb.model.property.NamedProperties;
 import com.fumbbl.ffb.model.skill.Skill;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -118,6 +120,22 @@ public class OfferedReRollSourceService {
 		ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
 		if (parameter.getReRolledAction() != reRolledAction) {
 			return false;
+		}
+		if (parameter.usesExplicitTeamReRollSources()) {
+			List<String> otherSourceNames = new ArrayList<>(skillNames(parameter.getReRollSkill()));
+			if (parameter.getSingleUseReRollSource() != null) {
+				otherSourceNames.add(parameter.getSingleUseReRollSource().getName(game));
+			}
+			Player<?> player = game.getPlayerById(parameter.getPlayerId());
+			if (parameter.isConsummateAvailable() && player != null) {
+				Skill consummate = player.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+				if (consummate != null) {
+					otherSourceNames.add(consummate.getName());
+				}
+			}
+			return (reRollSource == null || targetId != null
+				&& parameter.getReRollAvailableAgainst().contains(targetId))
+				&& isOffered(game, parameter, otherSourceNames, reRollSource);
 		}
 		if (reRollSource == null) {
 			return true;

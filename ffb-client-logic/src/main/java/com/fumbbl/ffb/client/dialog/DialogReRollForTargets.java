@@ -1,6 +1,7 @@
 package com.fumbbl.ffb.client.dialog;
 
 import com.fumbbl.ffb.FactoryType.Factory;
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
@@ -86,30 +87,35 @@ public class DialogReRollForTargets extends AbstractDialogForTargets {
 
 				JPanel buttonPanel = createButtonPanel();
 
-				if (parameter.isTeamReRollAvailable()) {
-					buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'e'));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (singleUseReRollSource != null) {
-					buttonPanel.add(createButton(target, singleUseReRollSource.getName(game), singleUseReRollSource, index == 0 ? 'L' : 'r'));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (parameter.isProReRollAvailable()) {
-					buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
-					buttonPanel.add(Box.createHorizontalGlue());
-				}
-				if (parameter.isConsummateAvailable() && reRollingPlayer != null) {
-					Skill reRollSkill = reRollingPlayer.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-					if (reRollSkill != null) {
-						ReRollSource source = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
-						if (source != null) {
-							buttonPanel.add(createButton(target, source.getName(game), source, index == 0 ? 'C' : 'm'));
+				if (parameter.usesExplicitTeamReRollSources()) {
+					addExplicitTeamReRollButtons(buttonPanel, target, index, singleUseReRollSource);
+				} else {
+					if (parameter.isTeamReRollAvailable()) {
+						buttonPanel.add(createButton(target, "Team Re-Roll", ReRollSources.TEAM_RE_ROLL, index == 0 ? 'T' : 'e'));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
+					if (singleUseReRollSource != null) {
+						buttonPanel.add(createButton(target, singleUseReRollSource.getName(game), singleUseReRollSource, index == 0 ? 'L' : 'r'));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
+					if (parameter.isProReRollAvailable()) {
+						buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, index == 0 ? 'P' : 'o'));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
+					if (parameter.isConsummateAvailable() && reRollingPlayer != null) {
+						Skill reRollSkill = reRollingPlayer.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+						if (reRollSkill != null) {
+							ReRollSource source = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+							if (source != null) {
+								buttonPanel.add(createButton(target, source.getName(game), source, index == 0 ? 'C' : 'm'));
+							}
 						}
 					}
-				}
-				if (parameter.getReRollSkill() != null) {
-					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));
-					buttonPanel.add(Box.createHorizontalGlue());
+					if (parameter.getReRollSkill() != null) {
+						buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll",
+							parameter.getReRollSkill().getRerollSource(parameter.getReRolledAction()), index == 0 ? 'S' : 'k'));
+						buttonPanel.add(Box.createHorizontalGlue());
+					}
 				}
 				targetPanel.add(Box.createVerticalStrut(3));
 				targetPanel.add(buttonPanel);
@@ -119,6 +125,48 @@ public class DialogReRollForTargets extends AbstractDialogForTargets {
 		}
 
 		init(mainMessages, detailPanel);
+	}
+
+	private void addExplicitTeamReRollButtons(JPanel buttonPanel, String target, int targetIndex,
+		ReRollSource singleUseReRollSource) {
+		int shortcut = targetIndex * 9;
+		DialogExtensionReRolls extension = new DialogExtensionReRolls();
+		for (ReRollSource source : extension.teamReRollSources(dialogParameter, true)) {
+			buttonPanel.add(createButton(target, extension.label(source, getClient().getGame()), source,
+				(char) ('A' + shortcut++)));
+			buttonPanel.add(Box.createHorizontalGlue());
+		}
+		if (dialogParameter.hasProperty(ReRollProperty.PRO)) {
+			buttonPanel.add(createButton(target, "Pro Re-Roll", ReRollSources.PRO, (char) ('A' + shortcut++)));
+			buttonPanel.add(Box.createHorizontalGlue());
+		}
+		if (singleUseReRollSource != null) {
+			buttonPanel.add(createButton(target, singleUseReRollSource.getName(getClient().getGame()),
+				singleUseReRollSource, (char) ('A' + shortcut++)));
+			buttonPanel.add(Box.createHorizontalGlue());
+		}
+		Player<?> reRollingPlayer = getClient().getGame().getPlayerById(dialogParameter.getPlayerId());
+		if (dialogParameter.isConsummateAvailable() && reRollingPlayer != null) {
+			Skill reRollSkill = reRollingPlayer.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+			if (reRollSkill != null) {
+				ReRollSource source = reRollSkill.getRerollSource(ReRolledActions.SINGLE_DIE);
+				if (source != null) {
+					buttonPanel.add(createButton(target, source.getName(getClient().getGame()), source,
+						(char) ('A' + shortcut++)));
+					buttonPanel.add(Box.createHorizontalGlue());
+				}
+			}
+		}
+		if (dialogParameter.getReRollSkill() != null) {
+			ReRollSource source =
+				dialogParameter.getReRollSkill().getRerollSource(dialogParameter.getReRolledAction());
+			if (source != null) {
+				buttonPanel.add(createButton(target, dialogParameter.getReRollSkill().getName() + " Re-Roll", source,
+					(char) ('A' + shortcut++)));
+				buttonPanel.add(Box.createHorizontalGlue());
+			}
+		}
+		buttonPanel.add(createButton(target, "No Re-Roll", null, (char) ('A' + shortcut)));
 	}
 
 	private JButton createButton(String target, String buttonName, ReRollSource reRollSource, char mnemonic) {

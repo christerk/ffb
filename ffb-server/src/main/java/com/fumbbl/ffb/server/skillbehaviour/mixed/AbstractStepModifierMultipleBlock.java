@@ -1,10 +1,12 @@
 package com.fumbbl.ffb.server.skillbehaviour.mixed;
 
 import com.fumbbl.ffb.PlayerState;
+import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
+import com.fumbbl.ffb.mechanics.Mechanic;
 import com.fumbbl.ffb.model.ActingPlayer;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
@@ -14,6 +16,7 @@ import com.fumbbl.ffb.net.commands.ClientCommandUseSkill;
 import com.fumbbl.ffb.report.IReport;
 import com.fumbbl.ffb.report.ReportReRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
+import com.fumbbl.ffb.server.mechanic.RollMechanic;
 import com.fumbbl.ffb.server.model.StepModifier;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepAction;
@@ -25,6 +28,7 @@ import com.fumbbl.ffb.util.StringTool;
 import com.fumbbl.ffb.util.UtilCards;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -132,7 +136,8 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 			} else {
 				state.reRollTarget = null;
 				state.reRollSource = null;
-				UtilServerDialog.showDialog(step.getGameState(), createDialogParameter(actingPlayer.getPlayer(), state, reRollSkill.orElse(null)), false);
+				UtilServerDialog.showDialog(step.getGameState(),
+					createDialogParameter(step.getGameState(), actingPlayer.getPlayer(), state, reRollSkill.orElse(null)), false);
 			}
 		}
 	}
@@ -171,9 +176,22 @@ public abstract class AbstractStepModifierMultipleBlock<T extends IStep, V exten
 
 	protected abstract void failedRollEffect(T step);
 
-	private DialogReRollForTargetsParameter createDialogParameter(Player<?> player, V state, Skill skill) {
+	private DialogReRollForTargetsParameter createDialogParameter(com.fumbbl.ffb.server.GameState gameState,
+		Player<?> player, V state, Skill skill) {
+		Game game = gameState.getGame();
+		RollMechanic rollMechanic = game.getMechanic(Mechanic.Type.ROLL);
+		List<ReRollProperty> reRollProperties = null;
+		if (rollMechanic.supportsExplicitTeamReRollSources()) {
+			reRollProperties = rollMechanic.findTeamReRollProperties(gameState, player);
+			if (state.proReRollAvailable) {
+				reRollProperties.add(ReRollProperty.PRO);
+			}
+			if (player.hasSkillProperty(NamedProperties.hasToRollToUseTeamReroll)) {
+				reRollProperties.add(ReRollProperty.LONER);
+			}
+		}
 		return new DialogReRollForTargetsParameter(player.getId(), state.blockTargets, reRolledAction(),
 			state.minimumRolls, state.reRollAvailableAgainst, state.proReRollAvailable, state.teamReRollAvailable,
-			skill, state.singleUseReRollSource, state.consummateAvailable);
+			skill, state.singleUseReRollSource, state.consummateAvailable, reRollProperties);
 	}
 }
