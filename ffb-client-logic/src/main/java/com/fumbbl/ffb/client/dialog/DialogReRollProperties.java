@@ -47,7 +47,7 @@ public class DialogReRollProperties extends Dialog implements ActionListener, Ke
 
 		dialogParameter = pDialogParameter;
 
-		DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
+		DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
 		for (ReRollSource teamReRollSource : mascotExtension.teamReRollSources(pDialogParameter, true)) {
 			JButton button = mascotExtension.button(teamReRollSource, getClient().getGame(), dimensionProvider());
 			button.addActionListener(this);

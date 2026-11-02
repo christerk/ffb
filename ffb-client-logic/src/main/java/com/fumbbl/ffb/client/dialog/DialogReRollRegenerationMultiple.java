@@ -79,7 +79,7 @@ public class DialogReRollRegenerationMultiple extends AbstractDialogForTargets i
 		List<String> mainMessages = new ArrayList<>();
 		mainMessages.add("<html>Do you want to re-roll one of these Regeneration rolls?</html>");
 
-		DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
+		DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
 
 		JPanel detailPanel = createDetailPanel();
 		for (int index = 0; index < parameter.getPlayerIds().size(); index++) {

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public abstract class AbstractReRollDialogHandler extends DialogHandler {
 
 	private final ReRollSourceComposer reRollSourceComposer = new ReRollSourceComposer();
-	private final DialogExtensionMascot extension = new DialogExtensionMascot();
+	private final DialogExtensionReRolls extension = new DialogExtensionReRolls();
 	private PendingSelection pendingSelection;
 
 	public AbstractReRollDialogHandler(FantasyFootballClient client) {

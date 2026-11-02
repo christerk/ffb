@@ -35,7 +35,7 @@ public class DialogReRollFallback extends Dialog {
 	public DialogReRollFallback(FantasyFootballClient client, ReRollSource fallbackFor, List<ReRollSource> options) {
 		super(client, "Use a Re-roll", false);
 
-		DialogExtensionMascot extension = new DialogExtensionMascot();
+		DialogExtensionReRolls extension = new DialogExtensionReRolls();
 
 		String failingName = fallbackFor == ReRollSources.MASCOT
 			? ReRollSources.MASCOT.getName(client.getGame()) : "the Pro roll";

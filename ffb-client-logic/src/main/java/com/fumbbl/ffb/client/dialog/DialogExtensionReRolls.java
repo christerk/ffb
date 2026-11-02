@@ -16,7 +16,7 @@ import java.util.List;
 
 import static java.awt.Component.CENTER_ALIGNMENT;
 
-public class DialogExtensionMascot {
+public class DialogExtensionReRolls {
 
 	private final ReRollSourceComposer reRollSourceComposer = new ReRollSourceComposer();
 

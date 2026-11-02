@@ -53,7 +53,7 @@ public class DialogBlockRollProperties extends AbstractDialogBlock implements Ac
 	private final ReRollSource singleDiePerActivationReRollSource;
 	private final ReRollSource bothDownReRollSource;
 	private final ReRollSource skullReRollSource;
-	private final DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
+	private final DialogExtensionReRolls mascotExtension = new DialogExtensionReRolls();
 	private final Map<ReRolledAction, ReRollSource> actionToSource;
 	private final DialogBlockRollPropertiesParameter dialogParameter;
 
