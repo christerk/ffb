@@ -8,7 +8,6 @@ import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
-import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
@@ -143,32 +142,6 @@ class OfferedReRollSourceServiceTest {
 		assertFalse(service.isOffered(game, ReRolledActions.REGENERATION, ReRollSources.TEAM_RE_ROLL, "unknown"));
 		assertTrue(service.isOffered(game, ReRolledActions.REGENERATION, null, null));
 		assertFalse(service.isOffered(game, ReRolledActions.BLOCK, null, null));
-	}
-
-	@Test
-	void forTargetsDialogChecksTargetAndOfferedSources() {
-		showDialog(new DialogReRollForTargetsParameter("playerId", Arrays.asList("target1", "target2"),
-			ReRolledActions.DAUNTLESS, new HashMap<>(), Collections.singletonList("target1"), false, true, brawler, null,
-			false));
-
-		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.TEAM_RE_ROLL, "target1"));
-		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.BRAWLER, "target1"));
-		assertFalse(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.TEAM_RE_ROLL, "target2"));
-		assertFalse(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.PRO, "target1"));
-		assertFalse(service.isOffered(game, ReRolledActions.DAUNTLESS, ReRollSources.LORD_OF_CHAOS, "target1"));
-		assertFalse(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.TEAM_RE_ROLL, "target1"));
-		assertTrue(service.isOffered(game, ReRolledActions.DAUNTLESS, null, null));
-	}
-
-	@Test
-	void forTargetsDialogOffersSingleUseSourceAndProWhenAvailable() {
-		showDialog(new DialogReRollForTargetsParameter("playerId", Collections.singletonList("target1"),
-			ReRolledActions.FOUL_APPEARANCE, new HashMap<>(), Collections.singletonList("target1"), true, false, null,
-			ReRollSources.LORD_OF_CHAOS, false));
-
-		assertTrue(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.PRO, "target1"));
-		assertTrue(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.LORD_OF_CHAOS, "target1"));
-		assertFalse(service.isOffered(game, ReRolledActions.FOUL_APPEARANCE, ReRollSources.TEAM_RE_ROLL, "target1"));
 	}
 
 	@Test

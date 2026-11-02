@@ -12,7 +12,6 @@ import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
-import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
@@ -71,10 +70,6 @@ public class OfferedReRollSourceService {
 				|| isOfferedForRegeneration(game, (DialogReRollRegenerationMultipleParameter) dialogParameter, reRollSource,
 				targetId));
 		}
-		if (dialogParameter instanceof DialogReRollForTargetsParameter) {
-			return isOfferedForTargets(game, (DialogReRollForTargetsParameter) dialogParameter, reRolledAction, reRollSource,
-				targetId);
-		}
 		if (dialogParameter instanceof DialogReRollForTargetsPropertiesParameter) {
 			DialogReRollForTargetsPropertiesParameter parameter =
 				(DialogReRollForTargetsPropertiesParameter) dialogParameter;
@@ -120,31 +115,6 @@ public class OfferedReRollSourceService {
 		}
 		ReRollOptions options = reRollOptions.get(index);
 		return isOffered(game, options, skillNames(options.getReRollSkill()), reRollSource);
-	}
-
-	private boolean isOfferedForTargets(Game game, DialogReRollForTargetsParameter parameter,
-		ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
-		if (parameter.getReRolledAction() != reRolledAction) {
-			return false;
-		}
-		if (reRollSource == null) {
-			return true;
-		}
-		if (targetId == null || !parameter.getReRollAvailableAgainst().contains(targetId)) {
-			return false;
-		}
-		if (reRollSource == ReRollSources.TEAM_RE_ROLL) {
-			return parameter.isTeamReRollAvailable();
-		}
-		if (reRollSource == ReRollSources.PRO) {
-			return parameter.isProReRollAvailable();
-		}
-		if (reRollSource == parameter.getSingleUseReRollSource()) {
-			return true;
-		}
-		Skill skill = reRollSource.getSkill(game);
-		return skill != null && (skill.equals(parameter.getReRollSkill())
-			|| (parameter.isConsummateAvailable() && skill.hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)));
 	}
 
 	private boolean isOfferedForExplicitTargets(Game game, DialogReRollForTargetsPropertiesParameter parameter,

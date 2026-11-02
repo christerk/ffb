@@ -371,11 +371,7 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 
 	@Override
 	public List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player) {
-		List<ReRollProperty> properties = new ArrayList<>();
-		if (isTeamReRollAvailable(gameState, player)) {
-			properties.add(ReRollProperty.TRR);
-		}
-		return properties;
+		return Collections.emptyList();
 	}
 
 	@Override
