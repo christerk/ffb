@@ -9,6 +9,7 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
+import com.fumbbl.ffb.dialog.DialogReRollForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
 import com.fumbbl.ffb.dialog.DialogSkillUseParameter;
@@ -172,7 +173,7 @@ class OfferedReRollSourceServiceTest {
 
 	@Test
 	void explicitForTargetsDialogOffersComposedSourcesOnlyForAvailableTargets() {
-		showDialog(new DialogReRollForTargetsParameter("playerId", Arrays.asList("target1", "target2"),
+		showDialog(new DialogReRollForTargetsPropertiesParameter("playerId", Arrays.asList("target1", "target2"),
 			ReRolledActions.DAUNTLESS, new HashMap<>(), Collections.singletonList("target1"), true, true, brawler,
 			ReRollSources.LORD_OF_CHAOS, false,
 			Arrays.asList(ReRollProperty.MASCOT, ReRollProperty.TRR, ReRollProperty.PRO)));

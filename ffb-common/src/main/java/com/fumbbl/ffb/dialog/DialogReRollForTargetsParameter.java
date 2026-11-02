@@ -2,14 +2,10 @@ package com.fumbbl.ffb.dialog;
 
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.fumbbl.ffb.FactoryType;
-import com.fumbbl.ffb.HasReRollProperties;
 import com.fumbbl.ffb.IDialogParameter;
-import com.fumbbl.ffb.ReRollProperty;
 import com.fumbbl.ffb.ReRollSource;
 import com.fumbbl.ffb.ReRolledAction;
 import com.fumbbl.ffb.factory.IFactorySource;
-import com.fumbbl.ffb.factory.ReRollPropertyFactory;
 import com.fumbbl.ffb.json.IJsonOption;
 import com.fumbbl.ffb.json.UtilJson;
 import com.fumbbl.ffb.model.skill.Skill;
@@ -19,9 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class DialogReRollForTargetsParameter implements IDialogParameter, HasReRollProperties {
+public class DialogReRollForTargetsParameter implements IDialogParameter {
 
 	private String playerId;
 	private List<String> targetIds = new ArrayList<>();
@@ -31,7 +26,6 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 	private boolean proReRollAvailable, teamReRollAvailable, consummateAvailable;
 	private Skill reRollSkill;
 	private ReRollSource singleUseReRollSource;
-	private List<ReRollProperty> reRollProperties;
 
 	public DialogReRollForTargetsParameter() {
 		super();
@@ -40,14 +34,6 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction, Map<String, Integer> minimumRolls,
 																				 List<String> reRollAvailableAgainst, boolean proReRollAvailable, boolean teamReRollAvailable,
 																				 Skill reRollSkill, ReRollSource singleUseReRollSource, boolean consummateAvailable) {
-		this(playerId, targetIds, reRolledAction, minimumRolls, reRollAvailableAgainst, proReRollAvailable,
-			teamReRollAvailable, reRollSkill, singleUseReRollSource, consummateAvailable, null);
-	}
-
-	public DialogReRollForTargetsParameter(String playerId, List<String> targetIds, ReRolledAction reRolledAction,
-		Map<String, Integer> minimumRolls, List<String> reRollAvailableAgainst, boolean proReRollAvailable,
-		boolean teamReRollAvailable, Skill reRollSkill, ReRollSource singleUseReRollSource, boolean consummateAvailable,
-		List<ReRollProperty> reRollProperties) {
 		this.targetIds = targetIds;
 		this.reRolledAction = reRolledAction;
 		this.reRollAvailableAgainst = reRollAvailableAgainst;
@@ -58,7 +44,6 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 		this.reRollSkill = reRollSkill;
 		this.singleUseReRollSource = singleUseReRollSource;
 		this.consummateAvailable = consummateAvailable;
-		this.reRollProperties = reRollProperties;
 	}
 
 	public DialogId getId() {
@@ -105,21 +90,12 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 		return consummateAvailable;
 	}
 
-	public boolean usesExplicitTeamReRollSources() {
-		return reRollProperties != null;
-	}
-
-	@Override
-	public boolean hasProperty(ReRollProperty property) {
-		return reRollProperties != null && reRollProperties.contains(property);
-	}
-
 	// transformation
 
 	public IDialogParameter transform() {
 		return new DialogReRollForTargetsParameter(getPlayerId(), getTargetIds(), getReRolledAction(),
 			getMinimumRolls(), getReRollAvailableAgainst(), isProReRollAvailable(), teamReRollAvailable, reRollSkill,
-			singleUseReRollSource, consummateAvailable, reRollProperties);
+			singleUseReRollSource, consummateAvailable);
 	}
 
 	// JSON serialization
@@ -137,10 +113,6 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 		IJsonOption.SKILL.addTo(jsonObject, reRollSkill);
 		IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.addTo(jsonObject, singleUseReRollSource);
 		IJsonOption.CONSUMMATE_OPTION.addTo(jsonObject, consummateAvailable);
-		if (reRollProperties != null) {
-			List<String> properties = reRollProperties.stream().map(ReRollProperty::getName).collect(Collectors.toList());
-			IJsonOption.RE_ROLL_PROPERTIES.addTo(jsonObject, properties);
-		}
 		return jsonObject;
 	}
 
@@ -158,11 +130,6 @@ public class DialogReRollForTargetsParameter implements IDialogParameter, HasReR
 		singleUseReRollSource = (ReRollSource) IJsonOption.RE_ROLL_SOURCE_SINGLE_USE.getFrom(source, jsonObject);
 		if (IJsonOption.CONSUMMATE_OPTION.isDefinedIn(jsonObject)) {
 			consummateAvailable = IJsonOption.CONSUMMATE_OPTION.getFrom(source, jsonObject);
-		}
-		if (IJsonOption.RE_ROLL_PROPERTIES.isDefinedIn(jsonObject)) {
-			ReRollPropertyFactory factory = source.getFactory(FactoryType.Factory.RE_ROLL_PROPERTY);
-			reRollProperties = Arrays.stream(IJsonOption.RE_ROLL_PROPERTIES.getFrom(source, jsonObject))
-				.map(factory::forName).collect(Collectors.toList());
 		}
 		return this;
 	}

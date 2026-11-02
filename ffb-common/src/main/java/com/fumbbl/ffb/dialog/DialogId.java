@@ -9,7 +9,9 @@ public enum DialogId implements INamedObject {
 
 	INFORMATION("information"), YES_OR_NO_QUESTION("yesOrNoQuestion"), GAME_COACH_PASSWORD("gameCoachPassword"),
 	TEAM_CHOICE("teamChoice"), COIN_CHOICE("coinChoice"), RE_ROLL("reRoll"), RE_ROLL_PROPERTIES("reRollProperties"),
-	RE_ROLL_FOR_TARGETS("reRollForTargets"), RE_ROLL_BLOCK_FOR_TARGETS("reRollBlockForTargets"), SKILL_USE("skillUse"),
+	RE_ROLL_FOR_TARGETS("reRollForTargets"),
+	RE_ROLL_FOR_TARGETS_PROPERTIES("reRollForTargetsProperties"), RE_ROLL_BLOCK_FOR_TARGETS("reRollBlockForTargets"),
+	SKILL_USE("skillUse"),
 	PROGRESS_BAR("progressBar"), TEAM_SETUP("teamSetup"), USE_APOTHECARY("useApothecary"),
 	USE_APOTHECARIES("useApothecaries"), USE_IGORS("useIgors"), USE_MORTUARY_ASSISTANTS("useMortuaryAssistants"),
 	RECEIVE_CHOICE("receiveChoice"), FOLLOWUP_CHOICE("followupChoice"), START_GAME("startGame"),

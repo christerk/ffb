@@ -3,8 +3,6 @@ package com.fumbbl.ffb.client.dialog;
 import com.fumbbl.ffb.ClientMode;
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollSource;
-import com.fumbbl.ffb.ReRollSourceComposer;
-import com.fumbbl.ffb.ReRollSources;
 import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
@@ -14,8 +12,6 @@ import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
 public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
-
-	private final ReRollSourceComposer reRollSourceComposer = new ReRollSourceComposer();
 
 	public DialogReRollForTargetsHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -52,17 +48,8 @@ public class DialogReRollForTargetsHandler extends AbstractReRollDialogHandler {
 			DialogReRollForTargets reRollDialog = (DialogReRollForTargets) pDialog;
 			DialogReRollForTargetsParameter parameter = reRollDialog.getDialogParameter();
 			ReRollSource source = reRollDialog.getReRollSource();
-			if (parameter.usesExplicitTeamReRollSources() && usesComposedSource(source)) {
-				selectTeamReRoll(parameter, source, selectedSource -> sendChoice(reRollDialog, selectedSource));
-			} else {
-				sendChoice(reRollDialog, source);
-			}
+			sendChoice(reRollDialog, source);
 		}
-	}
-
-	private boolean usesComposedSource(ReRollSource source) {
-		return source == ReRollSources.PRO || source == ReRollSources.MASCOT
-			|| reRollSourceComposer.compose(false, false, source) != null;
 	}
 
 	private void sendChoice(DialogReRollForTargets reRollDialog, ReRollSource source) {

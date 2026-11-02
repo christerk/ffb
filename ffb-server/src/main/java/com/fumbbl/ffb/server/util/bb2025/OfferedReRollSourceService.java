@@ -13,6 +13,7 @@ import com.fumbbl.ffb.ReRolledActions;
 import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollBlockForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
+import com.fumbbl.ffb.dialog.DialogReRollForTargetsPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollModifierChoiceParameter;
 import com.fumbbl.ffb.dialog.DialogReRollPropertiesParameter;
 import com.fumbbl.ffb.dialog.DialogReRollRegenerationMultipleParameter;
@@ -74,6 +75,11 @@ public class OfferedReRollSourceService {
 			return isOfferedForTargets(game, (DialogReRollForTargetsParameter) dialogParameter, reRolledAction, reRollSource,
 				targetId);
 		}
+		if (dialogParameter instanceof DialogReRollForTargetsPropertiesParameter) {
+			DialogReRollForTargetsPropertiesParameter parameter =
+				(DialogReRollForTargetsPropertiesParameter) dialogParameter;
+			return isOfferedForExplicitTargets(game, parameter, reRolledAction, reRollSource, targetId);
+		}
 		return false;
 	}
 
@@ -121,22 +127,6 @@ public class OfferedReRollSourceService {
 		if (parameter.getReRolledAction() != reRolledAction) {
 			return false;
 		}
-		if (parameter.usesExplicitTeamReRollSources()) {
-			List<String> otherSourceNames = new ArrayList<>(skillNames(parameter.getReRollSkill()));
-			if (parameter.getSingleUseReRollSource() != null) {
-				otherSourceNames.add(parameter.getSingleUseReRollSource().getName(game));
-			}
-			Player<?> player = game.getPlayerById(parameter.getPlayerId());
-			if (parameter.isConsummateAvailable() && player != null) {
-				Skill consummate = player.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
-				if (consummate != null) {
-					otherSourceNames.add(consummate.getName());
-				}
-			}
-			return (reRollSource == null || targetId != null
-				&& parameter.getReRollAvailableAgainst().contains(targetId))
-				&& isOffered(game, parameter, otherSourceNames, reRollSource);
-		}
 		if (reRollSource == null) {
 			return true;
 		}
@@ -155,6 +145,29 @@ public class OfferedReRollSourceService {
 		Skill skill = reRollSource.getSkill(game);
 		return skill != null && (skill.equals(parameter.getReRollSkill())
 			|| (parameter.isConsummateAvailable() && skill.hasSkillProperty(NamedProperties.canRerollSingleDieOncePerPeriod)));
+	}
+
+	private boolean isOfferedForExplicitTargets(Game game, DialogReRollForTargetsPropertiesParameter parameter,
+		ReRolledAction reRolledAction, ReRollSource reRollSource, String targetId) {
+		if (parameter.getReRolledAction() != reRolledAction) {
+			return false;
+		}
+		if (reRollSource != null && (targetId == null
+			|| !parameter.getReRollAvailableAgainst().contains(targetId))) {
+			return false;
+		}
+		List<String> otherSourceNames = new ArrayList<>(skillNames(parameter.getReRollSkill()));
+		if (parameter.getSingleUseReRollSource() != null) {
+			otherSourceNames.add(parameter.getSingleUseReRollSource().getName(game));
+		}
+		Player<?> player = game.getPlayerById(parameter.getPlayerId());
+		if (parameter.isConsummateAvailable() && player != null) {
+			Skill consummate = player.getSkillWithProperty(NamedProperties.canRerollSingleDieOncePerPeriod);
+			if (consummate != null) {
+				otherSourceNames.add(consummate.getName());
+			}
+		}
+		return isOffered(game, parameter, otherSourceNames, reRollSource);
 	}
 
 	private Collection<String> skillNames(Skill skill) {

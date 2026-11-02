@@ -13,7 +13,6 @@ import com.fumbbl.ffb.report.ReportFoulAppearanceRoll;
 import com.fumbbl.ffb.server.DiceInterpreter;
 import com.fumbbl.ffb.server.model.SkillBehaviour;
 import com.fumbbl.ffb.server.model.StepModifier;
-import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractStepModifierMultipleBlock;
 import com.fumbbl.ffb.server.step.StepAction;
 import com.fumbbl.ffb.server.step.StepCommandStatus;
 import com.fumbbl.ffb.server.step.StepParameter;
