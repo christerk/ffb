@@ -10,37 +10,37 @@ public interface MultiReRollMnemonics {
 
 	default List<Mnemonics> mnemonics() {
 		return new ArrayList<Mnemonics>() {{
-			add(new Mnemonics('T', 'L', 'K', 'G', 'N', 'B', 'H',
+			add(new Mnemonics('T', 'L', 'M', 'D', 'N', 'B', 'H',
 				new ArrayList<Character>() {{
 					add('P');
-					add('o');
-					add('x');
+					add('O');
+					add('X');
 				}},
 				new ArrayList<Character>() {{
 					add('C');
-					add('u');
-					add('m');
+					add('U');
+					add('G');
 				}}, 'S',
 				new ArrayList<Character>() {{
-					add('h');
-					add('i');
-					add('j');
-				}}));
-			add(new Mnemonics('E', 'W', 'Q', 'F', '0', 'r', 'h',
-				new ArrayList<Character>() {{
-					add('r');
-					add('y');
-					add('z');
-				}},
-				new ArrayList<Character>() {{
-					add('a');
-					add('o');
-					add('v');
-				}}, 'b',
-				new ArrayList<Character>() {{
-					add('C');
+					add('Y');
 					add('I');
 					add('J');
+				}}));
+			add(new Mnemonics('E', 'A', 'Q', 'F', '0', 'W', 'R',
+				new ArrayList<Character>() {{
+					add('K');
+					add('Z');
+					add('V');
+				}},
+				new ArrayList<Character>() {{
+					add('1');
+					add('2');
+					add('3');
+				}}, '4',
+				new ArrayList<Character>() {{
+					add('5');
+					add('6');
+					add('7');
 				}}));
 		}};
 	}
