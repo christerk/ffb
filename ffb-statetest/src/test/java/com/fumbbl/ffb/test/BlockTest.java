@@ -4,13 +4,17 @@ import com.fumbbl.ffb.FieldCoordinate;
 import com.fumbbl.ffb.PlayerAction;
 import com.fumbbl.ffb.PlayerState;
 import com.fumbbl.ffb.Pushback;
+import com.fumbbl.ffb.ReRollSources;
+import com.fumbbl.ffb.dialog.DialogBlockRollPropertiesParameter;
 import com.fumbbl.ffb.model.Game;
+import com.fumbbl.ffb.net.commands.ClientCommandUseProReRollForBlock;
 import com.fumbbl.ffb.server.GameState;
 import com.fumbbl.ffb.server.step.IStep;
 import com.fumbbl.ffb.server.step.StepId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -139,5 +143,52 @@ public class BlockTest {
 			"Expected attacker to be STANDING after pushback, was " + attackerState.getBase());
 		assertEquals(PlayerState.STANDING, defenderState.getBase(),
 			"Expected defender to be STANDING after pushback, was " + defenderState.getBase());
+	}
+
+	@Test
+	public void proFallbackRerollsOnlySelectedBlockDie() {
+		GameState state = startTwoDieBlockWithProAndTeamReRoll();
+		TestRolls.on(state).general(1, 4).block("pow");
+
+		DialogBlockRollPropertiesParameter initialDialog =
+			(DialogBlockRollPropertiesParameter) state.getGame().getDialogParameter();
+		assertEquals(2, initialDialog.getNrOfDice());
+		assertArrayEquals(new int[]{1, 2}, initialDialog.getBlockRoll());
+
+		StepEngine.respond(state, new ClientCommandUseProReRollForBlock(1, ReRollSources.PRO_TRR));
+
+		DialogBlockRollPropertiesParameter resultDialog =
+			(DialogBlockRollPropertiesParameter) state.getGame().getDialogParameter();
+		assertArrayEquals(new int[]{1, 6}, resultDialog.getBlockRoll());
+	}
+
+	@Test
+	public void failedFinalProRollLeavesAllBlockDiceUnchanged() {
+		GameState state = startTwoDieBlockWithProAndTeamReRoll();
+		TestRolls.on(state).general(1, 1);
+		int[] initialBlockRoll =
+			((DialogBlockRollPropertiesParameter) state.getGame().getDialogParameter()).getBlockRoll().clone();
+
+		StepEngine.respond(state, new ClientCommandUseProReRollForBlock(1, ReRollSources.PRO_TRR));
+
+		DialogBlockRollPropertiesParameter resultDialog =
+			(DialogBlockRollPropertiesParameter) state.getGame().getDialogParameter();
+		assertArrayEquals(initialBlockRoll, resultDialog.getBlockRoll());
+	}
+
+	private GameState startTwoDieBlockWithProAndTeamReRoll() {
+		GameState state = new GameStateBuilder(testServer.getGameState())
+			.withRule("BB2025")
+			.withTeam(true, team -> team
+				.player("home1", player -> player.at(7, 7).stats(6, 6, 3, 5, 8).skill("Pro")))
+			.withTeam(false, team -> team
+				.player("away1", player -> player.at(8, 7).stats(6, 3, 3, 5, 8)))
+			.build();
+		state.getGame().getTurnData().setReRolls(1);
+		TestRolls.on(state).block("skull", "bothdown");
+		StepEngine.start(state);
+		StepEngine.respond(state, Commands.selectPlayer("home1", PlayerAction.BLOCK));
+		StepEngine.respond(state, Commands.block("home1", "away1"));
+		return state;
 	}
 }
