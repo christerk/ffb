@@ -210,9 +210,9 @@ Remaining note: score/log/chat placement still contains local rectangle arithmet
 
 Status: In progress: two scale controls implemented; visual verification remains.
 
-The client offers an overall scale and a GUI scale control. Changing overall scale resizes the current window proportionally; changing GUI scale directly adjusts the interface and fits the pitch in the remaining space. The GUI slider ranges from 25% to 100%; larger interface elements require a larger overall scale or future layout changes. Manual window resizing scales the complete layout while preserving its proportions. If the window has a different aspect ratio, the layout is centered in the available space.
+The client offers an overall scale and a GUI scale control. Changing overall scale resizes the current window proportionally; changing GUI scale resizes the composed layout around the current pitch scale. The GUI slider ranges from 25% to 100%; larger interface elements require a larger overall scale or future layout changes. Manual window resizing scales the complete layout while preserving its proportions. If the window has a different aspect ratio, the layout is centered in the available space.
 
-The earlier on/off resize policy has been removed. A shared runtime fit scale is based on a reference layout independent of the GUI slider, so changing the GUI scale does not cancel itself out.
+The earlier on/off resize policy has been removed. The reference layout uses the selected GUI scale so it does not reserve space for larger interface components.
 
 ## Phase 14: Fix Fractional Pitch Grid Mapping
 

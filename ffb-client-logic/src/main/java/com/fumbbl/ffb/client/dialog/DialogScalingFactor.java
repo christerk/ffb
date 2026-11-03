@@ -26,14 +26,9 @@ public class DialogScalingFactor extends Dialog {
 	private final JSlider guiSlider;
 	private final JLabel guiLabel;
 	private final JLabel overallLabel;
-	private final double initialFactor;
-	private final double initialGuiRatio;
+	private final LayoutSettings initialSettings;
 	private final Dimension initialContentSize;
 	private final Timer previewTimer;
-	private Dimension referenceContentSize;
-	private Dimension lastPreviewContentSize;
-	private double referenceFactor;
-	private double lastPreviewFactor;
 	private boolean previewApplied;
 	private Double appliedGuiRatio;
 	private Double appliedFactor;
@@ -42,19 +37,16 @@ public class DialogScalingFactor extends Dialog {
 
 		super(client, "Scale", true);
 
-		initialFactor = dimensionProvider().getLayoutSettings().getScale();
-		initialGuiRatio = dimensionProvider().getLayoutSettings().getGuiRatio();
+		LayoutSettings current = dimensionProvider().getLayoutSettings();
+		initialSettings = new LayoutSettings(current.getLayout(), current.getScale());
+		initialSettings.setGuiRatio(current.getGuiRatio());
 		initialContentSize = new Dimension(client.getUserInterface().getDesktop().getSize());
-		referenceContentSize = new Dimension(initialContentSize);
-		lastPreviewContentSize = new Dimension(initialContentSize);
-		referenceFactor = initialFactor;
-		lastPreviewFactor = initialFactor;
 		previewTimer = new Timer(100, event -> preview());
 		previewTimer.setRepeats(false);
 
 		overallSlider = new JSlider((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR),
 			(int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
-		overallSlider.setValue((int) Math.round(initialFactor * SLIDER_FACTOR));
+		overallSlider.setValue((int) Math.round(initialSettings.getScale() * SLIDER_FACTOR));
 		guiSlider = new JSlider((int) (LayoutSettings.MIN_GUI_RATIO * SLIDER_FACTOR),
 			(int) (LayoutSettings.MAX_GUI_RATIO * SLIDER_FACTOR));
 		guiSlider.setValue((int) Math.round(dimensionProvider().getLayoutSettings().getGuiRatio() * SLIDER_FACTOR));
@@ -133,19 +125,9 @@ public class DialogScalingFactor extends Dialog {
 		double factor = (double) overallSlider.getValue() / SLIDER_FACTOR;
 		double ratio = (double) guiSlider.getValue() / SLIDER_FACTOR;
 		UserInterface userInterface = getClient().getUserInterface();
-		Dimension currentContentSize = userInterface.getDesktop().getSize();
-		if (!currentContentSize.equals(lastPreviewContentSize)) {
-			referenceContentSize = new Dimension(currentContentSize);
-			referenceFactor = lastPreviewFactor;
-		}
-		double resize = factor / referenceFactor;
-		Dimension contentSize = new Dimension((int) Math.round(referenceContentSize.width * resize),
-			(int) Math.round(referenceContentSize.height * resize));
-		userInterface.previewScale(factor, ratio, contentSize);
+		userInterface.previewScale(factor, ratio, initialSettings, initialContentSize);
 		previewApplied = true;
 		Dimension desktop = userInterface.getDesktop().getSize();
-		lastPreviewContentSize = new Dimension(desktop);
-		lastPreviewFactor = factor;
 		setLocation(Math.max(0, Math.min(getX(), desktop.width - getWidth())),
 			Math.max(0, Math.min(getY(), desktop.height - getHeight())));
 	}
@@ -167,7 +149,8 @@ public class DialogScalingFactor extends Dialog {
 	public void hideDialog() {
 		previewTimer.stop();
 		if (appliedFactor == null && previewApplied) {
-			getClient().getUserInterface().previewScale(initialFactor, initialGuiRatio, initialContentSize);
+			getClient().getUserInterface().previewScale(initialSettings.getScale(), initialSettings.getGuiRatio(),
+				initialSettings, initialContentSize);
 			previewApplied = false;
 		}
 		super.hideDialog();

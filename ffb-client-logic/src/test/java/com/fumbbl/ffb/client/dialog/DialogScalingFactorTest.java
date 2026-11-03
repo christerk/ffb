@@ -8,6 +8,7 @@ import com.fumbbl.ffb.client.PitchViewport;
 import com.fumbbl.ffb.client.UiDimensionProvider;
 import com.fumbbl.ffb.client.UserInterface;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JButton;
@@ -22,9 +23,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -52,7 +55,7 @@ class DialogScalingFactorTest {
 		DialogScalingFactor[] dialog = new DialogScalingFactor[1];
 		CountDownLatch previewed = new CountDownLatch(1);
 		doAnswer(invocation -> { previewed.countDown(); return null; }).when(userInterface)
-			.previewScale(anyDouble(), anyDouble(), any(Dimension.class));
+			.previewScale(anyDouble(), anyDouble(), any(LayoutSettings.class), any(Dimension.class));
 		SwingUtilities.invokeAndWait(() -> {
 			dialog[0] = dialog(userInterface);
 			sliders(dialog[0]).get(0).setValue(30);
@@ -60,8 +63,8 @@ class DialogScalingFactorTest {
 		assertTrue(previewed.await(5, TimeUnit.SECONDS));
 		SwingUtilities.invokeAndWait(() -> dialog[0].hideDialog());
 
-		verify(userInterface).previewScale(1.5, 1.0, new Dimension(1200, 900));
-		verify(userInterface).previewScale(1.0, 1.0, new Dimension(800, 600));
+		verify(userInterface).previewScale(eq(1.5), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		verify(userInterface).previewScale(eq(1.0), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
 	}
 
 	@Test
@@ -78,47 +81,36 @@ class DialogScalingFactorTest {
 			dialog.hideDialog();
 		});
 
-		verify(userInterface, times(1)).previewScale(anyDouble(), anyDouble(), any(Dimension.class));
-		verify(userInterface).previewScale(1.5, 0.75, new Dimension(1200, 900));
+		verify(userInterface, times(1)).previewScale(eq(1.5), eq(0.75), any(LayoutSettings.class), eq(new Dimension(800, 600)));
 	}
 
 	@Test
-	void previewScalesFromWindowSizeChangedWhileDialogIsOpen() throws Exception {
-		UserInterface userInterface = mock(UserInterface.class);
-		SwingUtilities.invokeAndWait(() -> {
-			DialogScalingFactor dialog = dialog(userInterface);
-			userInterface.getDesktop().setSize(1000, 750);
-			sliders(dialog).get(0).setValue(30);
-			button(dialog, "Confirm").doClick();
-			dialog.hideDialog();
-		});
-
-		verify(userInterface).previewScale(1.5, 1.0, new Dimension(1500, 1125));
-	}
-
-	@Test
-	void previewUsesTheLastScaleWhenWindowIsResizedAfterAPreview() throws Exception {
+	void previewsKeepTheOpeningSizeWhenTheDesktopSizeChanges() throws Exception {
 		UserInterface userInterface = mock(UserInterface.class);
 		DialogScalingFactor[] dialog = new DialogScalingFactor[1];
 		CountDownLatch previewed = new CountDownLatch(1);
-		doAnswer(invocation -> {
-			userInterface.getDesktop().setSize(invocation.getArgument(2));
-			previewed.countDown();
-			return null;
-		}).when(userInterface).previewScale(anyDouble(), anyDouble(), any(Dimension.class));
+		doAnswer(invocation -> { previewed.countDown(); return null; }).when(userInterface)
+			.previewScale(anyDouble(), anyDouble(), any(LayoutSettings.class), any(Dimension.class));
 		SwingUtilities.invokeAndWait(() -> {
 			dialog[0] = dialog(userInterface);
-			sliders(dialog[0]).get(0).setValue(30);
+			sliders(dialog[0]).get(1).setValue(14);
 		});
 		assertTrue(previewed.await(5, TimeUnit.SECONDS));
 		SwingUtilities.invokeAndWait(() -> {
-			userInterface.getDesktop().setSize(1500, 900);
-			sliders(dialog[0]).get(0).setValue(40);
+			userInterface.getPitchDimensionProvider().getLayoutSettings().setGuiRatio(0.7);
+			userInterface.getDesktop().setSize(950, 700);
+			sliders(dialog[0]).get(1).setValue(20);
 			button(dialog[0], "Confirm").doClick();
 			dialog[0].hideDialog();
 		});
 
-		verify(userInterface).previewScale(2.0, 1.0, new Dimension(2000, 1200));
+		verify(userInterface).previewScale(eq(1.0), eq(0.7), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		verify(userInterface).previewScale(eq(1.0), eq(1.0), any(LayoutSettings.class), eq(new Dimension(800, 600)));
+		ArgumentCaptor<LayoutSettings> settings = ArgumentCaptor.forClass(LayoutSettings.class);
+		verify(userInterface, times(2)).previewScale(eq(1.0), anyDouble(), settings.capture(), eq(new Dimension(800, 600)));
+		assertSame(settings.getAllValues().get(0), settings.getAllValues().get(1));
+		assertEquals(1.0, settings.getValue().getScale());
+		assertEquals(1.0, settings.getValue().getGuiRatio());
 	}
 
 	private DialogScalingFactor dialog(UserInterface userInterface) {

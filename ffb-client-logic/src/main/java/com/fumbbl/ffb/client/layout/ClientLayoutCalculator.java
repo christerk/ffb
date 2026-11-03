@@ -94,6 +94,8 @@ public class ClientLayoutCalculator {
 
 	public Dimension referenceContentSize(LayoutSettings settings) {
 		LayoutSettings reference = new LayoutSettings(settings.getLayout(), settings.getScale());
+		reference.setGuiRatio(Math.max(LayoutSettings.MIN_GUI_RATIO,
+			Math.min(settings.getGuiRatio(), LayoutSettings.MAX_GUI_RATIO)));
 		return naturalContentSize(reference);
 	}
 

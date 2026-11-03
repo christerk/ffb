@@ -129,6 +129,23 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
+	void referenceSizeKeepsSidebarsBesidePitchAtEachGuiScale() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			for (double ratio : new double[] {0.25, 0.7, 1.0}) {
+				LayoutSettings settings = new LayoutSettings(layout, 1.0);
+				settings.setGuiRatio(ratio);
+				ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+				ClientLayoutResult result = calculator.calculate(settings, calculator.referenceContentSize(settings));
+				Rectangle pitch = result.fieldBounds();
+				Rectangle home = result.homeSidebarBounds();
+				Rectangle away = result.awaySidebarBounds();
+				assertTrue(pitch.x - (home.x + home.width) <= 2, layout + " GUI " + ratio);
+				assertTrue(away.x - (pitch.x + pitch.width) <= 2, layout + " GUI " + ratio);
+			}
+		}
+	}
+
+	@Test
 	void naturalContentSizeProducesConfiguredScaleLayout() {
 		for (ClientLayout layout : new ClientLayout[] {
 			ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT, ClientLayout.SQUARE, ClientLayout.WIDE
@@ -144,7 +161,7 @@ class ClientLayoutCalculatorTest {
 			LayoutSettings settings = new LayoutSettings(layout, 1.0);
 			settings.setGuiRatio(0.75);
 			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-			Dimension natural = calculator.naturalContentSize(new LayoutSettings(layout, 1.0));
+			Dimension natural = calculator.referenceContentSize(settings);
 			ClientLayoutResult base = calculator.calculate(settings, natural);
 			ClientLayoutResult enlarged = calculator.calculate(settings,
 				new Dimension(natural.width * 2, natural.height * 2));
@@ -217,19 +234,21 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void guiRatioChangesGuiSizeWithoutResizingTheClient() {
+	void guiRatioChangesComposedSizeWithoutChangingPitchScale() {
 		for (ClientLayout layout : ClientLayout.values()) {
 			LayoutSettings settings = new LayoutSettings(layout, 1.0);
 			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-			Dimension content = calculator.naturalContentSize(settings);
 			settings.setGuiRatio(0.25);
-			ClientLayoutResult small = calculator.calculate(settings, content);
+			Dimension smallContent = calculator.referenceContentSize(settings);
+			ClientLayoutResult small = calculator.calculate(settings, smallContent);
 			settings.setGuiRatio(LayoutSettings.MAX_GUI_RATIO);
-			ClientLayoutResult large = calculator.calculate(settings, content);
+			Dimension largeContent = calculator.referenceContentSize(settings);
+			ClientLayoutResult large = calculator.calculate(settings, largeContent);
 
-			assertEquals(content, large.contentSize());
+			assertEquals(smallContent, small.contentSize());
+			assertEquals(largeContent, large.contentSize());
 			assertTrue(large.runtimeGuiScale() > small.runtimeGuiScale(), layout.toString());
-			assertTrue(large.pitchScale() < small.pitchScale(), layout.toString());
+			assertEquals(small.pitchScale(), large.pitchScale(), 0.01, layout.toString());
 		}
 	}
 
@@ -238,7 +257,7 @@ class ClientLayoutCalculatorTest {
 		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
 		settings.setGuiRatio(0.0);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-		Dimension content = calculator.naturalContentSize(new LayoutSettings(ClientLayout.LANDSCAPE, 1.0));
+		Dimension content = calculator.referenceContentSize(settings);
 
 		ClientLayoutResult result = calculator.calculate(settings, content);
 
@@ -252,8 +271,8 @@ class ClientLayoutCalculatorTest {
 		for (ClientLayout layout : ClientLayout.values()) {
 			LayoutSettings settings = new LayoutSettings(layout, LayoutSettings.MIN_SCALE_FACTOR);
 			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-			Dimension content = calculator.naturalContentSize(settings);
 			settings.setGuiRatio(LayoutSettings.MIN_GUI_RATIO);
+			Dimension content = calculator.referenceContentSize(settings);
 			ClientLayoutResult result = calculator.calculate(settings, content);
 
 			assertEquals(0.125, result.runtimeGuiScale(), 0.0001, layout.toString());
@@ -267,8 +286,8 @@ class ClientLayoutCalculatorTest {
 	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-		Dimension naturalContentSize = calculator.naturalContentSize(layoutSettings);
 		layoutSettings.setGuiRatio(guiScale);
+		Dimension naturalContentSize = calculator.referenceContentSize(layoutSettings);
 		ClientLayoutResult result = calculator.calculate(layoutSettings, naturalContentSize);
 
 		assertEquals(layoutSettings.getGuiScale(), result.runtimeGuiScale(), 0.0001);

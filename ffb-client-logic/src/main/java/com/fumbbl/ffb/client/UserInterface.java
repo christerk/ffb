@@ -268,15 +268,30 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 	}
 
-	public void previewScale(double scale, double guiRatio, Dimension contentSize) {
+	public void previewScale(double scale, double guiRatio, LayoutSettings initialSettings, Dimension initialContentSize) {
+		Dimension initialReference = layoutCalculator.referenceContentSize(initialSettings);
+		LayoutSettings target = new LayoutSettings(initialSettings.getLayout(), initialSettings.getScale());
+		target.setGuiRatio(guiRatio);
+		Dimension targetReference = layoutCalculator.referenceContentSize(target);
+		double overallChange = scale / initialSettings.getScale();
+		double widthChange = (double) targetReference.width / initialReference.width;
+		double heightChange = (double) targetReference.height / initialReference.height;
+		Dimension contentSize = new Dimension(
+			(int) Math.round(initialContentSize.width * overallChange * widthChange),
+			(int) Math.round(initialContentSize.height * overallChange * heightChange));
+
 		layoutSettings.setScale(scale);
 		layoutSettings.setGuiRatio(guiRatio);
+
 		Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
-		int frameWidth = getWidth() - fDesktop.getWidth();
-		int frameHeight = getHeight() - fDesktop.getHeight();
-		setMinimumSize(new Dimension(minimum.width + frameWidth, minimum.height + frameHeight));
-		setSize(Math.max(contentSize.width, minimum.width) + frameWidth,
-			Math.max(contentSize.height, minimum.height) + frameHeight);
+		Insets frameInsets = getInsets();
+		Insets contentInsets = getContentPane().getInsets();
+		int windowExtraWidth = frameInsets.left + frameInsets.right + contentInsets.left + contentInsets.right;
+		int windowExtraHeight = frameInsets.top + frameInsets.bottom + contentInsets.top + contentInsets.bottom
+			+ getJMenuBar().getHeight();
+		setMinimumSize(new Dimension(minimum.width + windowExtraWidth, minimum.height + windowExtraHeight));
+		setSize(Math.max(contentSize.width, minimum.width) + windowExtraWidth,
+			Math.max(contentSize.height, minimum.height) + windowExtraHeight);
 		validate();
 		resizeClient();
 	}
