@@ -37,6 +37,7 @@ public class DialogScalingFactor extends Dialog {
 
 		super(client, "Scale", true);
 
+		// Capture the starting settings for preview and cancel.
 		LayoutSettings current = dimensionProvider().getLayoutSettings();
 		initialSettings = new LayoutSettings(current.getLayout(), current.getScale());
 		initialSettings.setGuiRatio(current.getGuiRatio());
@@ -44,6 +45,7 @@ public class DialogScalingFactor extends Dialog {
 		previewTimer = new Timer(100, event -> preview());
 		previewTimer.setRepeats(false);
 
+		// Configure sliders and live preview.
 		overallSlider = new JSlider((int) (LayoutSettings.MIN_SCALE_FACTOR * SLIDER_FACTOR),
 			(int) (LayoutSettings.MAX_SCALE_FACTOR * SLIDER_FACTOR));
 		overallSlider.setValue((int) Math.round(initialSettings.getScale() * SLIDER_FACTOR));
@@ -62,11 +64,13 @@ public class DialogScalingFactor extends Dialog {
 			queuePreview();
 		});
 
+		// Create the dialog controls.
 		JButton confirmButton = new JButton(dimensionProvider(), "Confirm");
 		confirmButton.addActionListener(event -> confirm());
 		JButton cancelButton = new JButton(dimensionProvider(), "Cancel");
 		cancelButton.addActionListener(event -> internalFrameClosing(null));
 
+		// Arrange the controls.
 		JPanel settingPanel = new JPanel(new GridBagLayout());
 		settingPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -103,6 +107,7 @@ public class DialogScalingFactor extends Dialog {
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(settingPanel);
 
+		// Size and center the dialog.
 		pack();
 
 		setLocationToCenter();
