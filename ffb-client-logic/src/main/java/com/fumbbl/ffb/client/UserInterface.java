@@ -218,11 +218,21 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private void configureViewports(ClientLayoutResult layoutResult) {
+		String guiScale = uiDimensionProvider.cacheKey();
+		String dugoutScale = dugoutDimensionProvider.cacheKey();
+		String pitchScale = pitchDimensionProvider.cacheKey();
+
 		uiDimensionProvider.setRuntimeGuiScale(layoutResult.runtimeGuiScale());
 		dugoutDimensionProvider.setRuntimeDugoutScale(layoutResult.runtimeDugoutScale());
 		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
 		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
 		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
+
+		if (!guiScale.equals(uiDimensionProvider.cacheKey())
+			|| !dugoutScale.equals(dugoutDimensionProvider.cacheKey())
+			|| !pitchScale.equals(pitchDimensionProvider.cacheKey())) {
+			fIconCache.clear();
+		}
 	}
 
 	private void resizeClient() {
