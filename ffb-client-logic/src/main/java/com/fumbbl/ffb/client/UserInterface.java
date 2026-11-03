@@ -155,8 +155,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		fDesktop = new JDesktopPane();
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
-		uiDimensionProvider.setRuntimeGuiScale(layoutSettings.getGuiScale());
-		dugoutDimensionProvider.setRuntimeDugoutScale(layoutSettings.getDugoutScale());
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
+		configureViewports(layoutResult);
 
 		fFieldComponent.initLayout();
 		fLog.initLayout();
@@ -165,7 +165,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
-		ClientLayoutResult layoutResult = relayoutClient();
+		layoutPanel.apply(layoutResult);
 		if (layoutPanel.getParent() != null) {
 			layoutPanel.getParent().remove(layoutPanel);
 		}
@@ -205,14 +205,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private ClientLayoutResult relayoutClient() {
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
-		uiDimensionProvider.setRuntimeGuiScale(layoutResult.runtimeGuiScale());
-		dugoutDimensionProvider.setRuntimeDugoutScale(layoutResult.runtimeDugoutScale());
-
+		configureViewports(layoutResult);
 		resizeGuiIfNeeded();
-
-		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
-		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
-		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		layoutPanel.apply(layoutResult);
 
 		if (fDesktop != null) {
@@ -221,6 +215,14 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		return layoutResult;
+	}
+
+	private void configureViewports(ClientLayoutResult layoutResult) {
+		uiDimensionProvider.setRuntimeGuiScale(layoutResult.runtimeGuiScale());
+		dugoutDimensionProvider.setRuntimeDugoutScale(layoutResult.runtimeDugoutScale());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
+		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
+		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 	}
 
 	private void resizeClient() {
@@ -256,7 +258,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
 			return fDesktop.getSize();
 		}
-		return layoutCalculator.naturalContentSize(layoutSettings);
+		return layoutCalculator.referenceContentSize(layoutSettings);
 	}
 
 	public void prepareScaleChange(double factor) {

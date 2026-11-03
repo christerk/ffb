@@ -92,7 +92,7 @@ public class ClientLayoutCalculator {
 		return naturalContentSize(minimum);
 	}
 
-	private Dimension referenceContentSize(LayoutSettings settings) {
+	public Dimension referenceContentSize(LayoutSettings settings) {
 		LayoutSettings reference = new LayoutSettings(settings.getLayout(), settings.getScale());
 		return naturalContentSize(reference);
 	}

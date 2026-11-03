@@ -117,6 +117,18 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
+	void startupReferenceSizeKeepsSavedGuiScale() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 0.95);
+		settings.setGuiRatio(0.7);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+
+		ClientLayoutResult result = calculator.calculate(settings, calculator.referenceContentSize(settings));
+
+		assertEquals(0.665, result.runtimeGuiScale(), 0.0001);
+		assertEquals(96, result.homeSidebarBounds().width);
+	}
+
+	@Test
 	void naturalContentSizeProducesConfiguredScaleLayout() {
 		for (ClientLayout layout : new ClientLayout[] {
 			ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT, ClientLayout.SQUARE, ClientLayout.WIDE
