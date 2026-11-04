@@ -76,6 +76,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	private final ClientLayoutCalculator layoutCalculator;
 	private final ClientLayoutPanel layoutPanel;
 	private final Timer resizeRelayoutTimer;
+	private Dimension nextContentSize;
 	private final UiDispatcher uiDispatcher = new UiDispatcher();
 
 
@@ -94,6 +95,13 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 			}
 		}
 		layoutSettings = new LayoutSettings(pClient.getParameters().getLayout(), scale);
+		String guiRatio = pClient.getProperty(CommonProperty.SETTING_GUI_SCALE_FACTOR);
+		if (StringTool.isProvided(guiRatio)) {
+			try {
+				layoutSettings.setGuiRatio(Double.parseDouble(guiRatio));
+			} catch (NumberFormatException ignored) {
+			}
+		}
 		uiDimensionProvider = new UiDimensionProvider(layoutSettings);
 		pitchViewport = new PitchViewport(uiDimensionProvider, layoutSettings);
 		pitchDimensionProvider = new PitchDimensionProvider(layoutSettings, pitchViewport);
@@ -117,7 +125,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 		layoutCalculator = new ClientLayoutCalculator();
-		resizeRelayoutTimer = new Timer(100, e -> resizeClient());
+		resizeRelayoutTimer = new Timer(100, e -> {
+			resizeClient();
+			if (currentDialog == null || currentDialog.getId() != DialogId.SCALING_FACTOR) {
+				getGameMenuBar().init();
+				if (fClient.getClientState() != null) {
+					getGameMenuBar().changeState(fClient.getClientState().getId());
+				}
+			}
+		});
 		resizeRelayoutTimer.setRepeats(false);
 
 
@@ -147,8 +163,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 		fDesktop = new JDesktopPane();
 		fClient.getActionKeyBindings().addKeyBindings(fDesktop, ActionKeyGroup.RESIZE);
-		uiDimensionProvider.setRuntimeGuiScale(layoutSettings.getGuiScale());
-		dugoutDimensionProvider.setRuntimeDugoutScale(layoutSettings.getDugoutScale());
+		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
+		configureViewports(layoutResult);
 
 		fFieldComponent.initLayout();
 		fLog.initLayout();
@@ -157,7 +173,7 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fSideBarAway.initLayout();
 		fScoreBar.initLayout();
 
-		ClientLayoutResult layoutResult = relayoutClient();
+		layoutPanel.apply(layoutResult);
 		if (layoutPanel.getParent() != null) {
 			layoutPanel.getParent().remove(layoutPanel);
 		}
@@ -168,7 +184,9 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		getContentPane().add(fDesktop, BorderLayout.CENTER);
 		setMinimumSize(null);
 		pack();
-		setMinimumSize(getSize());
+		Dimension minimumContent = layoutCalculator.minimumContentSize(layoutSettings);
+		setMinimumSize(new Dimension(minimumContent.width + getWidth() - fDesktop.getWidth(),
+			minimumContent.height + getHeight() - fDesktop.getHeight()));
 
 		if (callInit) {
 			init(null);
@@ -195,14 +213,8 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 
 	private ClientLayoutResult relayoutClient() {
 		ClientLayoutResult layoutResult = layoutCalculator.calculate(layoutSettings, availableClientContentSize());
-		uiDimensionProvider.setRuntimeGuiScale(layoutResult.runtimeGuiScale());
-		dugoutDimensionProvider.setRuntimeDugoutScale(layoutResult.runtimeDugoutScale());
-
+		configureViewports(layoutResult);
 		resizeGuiIfNeeded();
-
-		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
-		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
-		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
 		layoutPanel.apply(layoutResult);
 
 		if (fDesktop != null) {
@@ -211,6 +223,24 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		}
 
 		return layoutResult;
+	}
+
+	private void configureViewports(ClientLayoutResult layoutResult) {
+		String guiScale = uiDimensionProvider.cacheKey();
+		String dugoutScale = dugoutDimensionProvider.cacheKey();
+		String pitchScale = pitchDimensionProvider.cacheKey();
+
+		uiDimensionProvider.setRuntimeGuiScale(layoutResult.runtimeGuiScale());
+		dugoutDimensionProvider.setRuntimeDugoutScale(layoutResult.runtimeDugoutScale());
+		pitchViewport.setRuntimePitchScale(layoutResult.pitchScale());
+		pitchViewport.setViewportBounds(layoutResult.fieldBounds());
+		reserveBoxViewport.setViewportBounds(layoutResult.homeReserveBoxBounds());
+
+		if (!guiScale.equals(uiDimensionProvider.cacheKey())
+			|| !dugoutScale.equals(dugoutDimensionProvider.cacheKey())
+			|| !pitchScale.equals(pitchDimensionProvider.cacheKey())) {
+			fIconCache.clear();
+		}
 	}
 
 	private void resizeClient() {
@@ -235,10 +265,53 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 	}
 
 	private Dimension availableClientContentSize() {
+		if (nextContentSize != null) {
+			Dimension size = nextContentSize;
+			nextContentSize = null;
+			Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
+			size.width = Math.max(size.width, minimum.width);
+			size.height = Math.max(size.height, minimum.height);
+			return size;
+		}
 		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
 			return fDesktop.getSize();
 		}
-		return layoutCalculator.naturalContentSize(layoutSettings);
+		return layoutCalculator.referenceContentSize(layoutSettings);
+	}
+
+	public void prepareScaleChange(double factor) {
+		if (fDesktop != null && fDesktop.getWidth() > 0 && fDesktop.getHeight() > 0) {
+			nextContentSize = new Dimension((int) Math.round(fDesktop.getWidth() * factor),
+				(int) Math.round(fDesktop.getHeight() * factor));
+		}
+	}
+
+	public void previewScale(double scale, double guiRatio, LayoutSettings initialSettings, Dimension initialContentSize) {
+		Dimension initialReference = layoutCalculator.referenceContentSize(initialSettings);
+		LayoutSettings target = new LayoutSettings(initialSettings.getLayout(), initialSettings.getScale());
+		target.setGuiRatio(guiRatio);
+		Dimension targetReference = layoutCalculator.referenceContentSize(target);
+		double overallChange = scale / initialSettings.getScale();
+		double widthChange = (double) targetReference.width / initialReference.width;
+		double heightChange = (double) targetReference.height / initialReference.height;
+		Dimension contentSize = new Dimension(
+			(int) Math.round(initialContentSize.width * overallChange * widthChange),
+			(int) Math.round(initialContentSize.height * overallChange * heightChange));
+
+		layoutSettings.setScale(scale);
+		layoutSettings.setGuiRatio(guiRatio);
+
+		Dimension minimum = layoutCalculator.minimumContentSize(layoutSettings);
+		Insets frameInsets = getInsets();
+		Insets contentInsets = getContentPane().getInsets();
+		int windowExtraWidth = frameInsets.left + frameInsets.right + contentInsets.left + contentInsets.right;
+		int windowExtraHeight = frameInsets.top + frameInsets.bottom + contentInsets.top + contentInsets.bottom
+			+ getJMenuBar().getHeight();
+		setMinimumSize(new Dimension(minimum.width + windowExtraWidth, minimum.height + windowExtraHeight));
+		setSize(Math.max(contentSize.width, minimum.width) + windowExtraWidth,
+			Math.max(contentSize.height, minimum.height) + windowExtraHeight);
+		validate();
+		resizeClient();
 	}
 
 	public ClientSketchManager getSketchManager() {

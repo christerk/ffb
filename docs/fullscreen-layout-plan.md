@@ -208,38 +208,11 @@ Remaining note: score/log/chat placement still contains local rectangle arithmet
 
 ## Phase 13: Add Configurable Resize Scaling Policy
 
-Status: Future.
+Status: In progress: two scale controls implemented; visual verification remains.
 
-Add a client option that controls how window resizing affects scale.
+The client offers an overall scale and a GUI scale control. Changing overall scale resizes the current window proportionally; changing GUI scale resizes the composed layout around the current pitch scale. The GUI slider ranges from 25% to 100%; larger interface elements require a larger overall scale or future layout changes. Manual window resizing scales the complete layout while preserving its proportions. If the window has a different aspect ratio, the layout is centered in the available space.
 
-Dynamic Pitch Scaling ON:
-
-```text
-GUI scale = configured GUI scale
-Pitch scale = configured pitch scale * runtime fitted scale
-```
-
-Behavior:
-
-- GUI stays at configured scale.
-- Pitch receives extra runtime scale from the available pitch area.
-- This is the behavior currently being built.
-
-Dynamic Pitch Scaling OFF:
-
-```text
-The whole composed client scales uniformly.
-GUI and pitch scale together.
-```
-
-Behavior:
-
-- Dragging the window scales the composed client uniformly.
-- GUI and pitch scale together.
-- This is not fixed GUI with blank space.
-- It should still use the same viewport, rendering, and layout-result architecture.
-
-The resize policy should resolve dimensions/scales before layout structure runs. Layout structure should receive already-resolved dimensions and content size; it should not decide scale policy.
+The earlier on/off resize policy has been removed. The reference layout uses the selected GUI scale so it does not reserve space for larger interface components.
 
 ## Phase 14: Fix Fractional Pitch Grid Mapping
 
@@ -257,7 +230,7 @@ width = right - left
 
 Rendering and input should agree on these boundaries. The fix should avoid assuming every square can use one rounded integer `squareSize()` when the pitch scale is fractional.
 
-This should apply to both Dynamic Pitch Scaling ON and Dynamic Pitch Scaling OFF.
+This should apply at all scale settings and window sizes.
 
 ## Phase 15: Move GUI To Rule-Based Placement
 

@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientLayoutCalculatorTest {
 
@@ -108,110 +109,40 @@ class ClientLayoutCalculatorTest {
 	}
 
 	@Test
-	void calculatesDynamicLandscapeBoundsAndPitchScale() {
-		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE, new Dimension(1272, 812));
-
-		assertEquals(new Dimension(1272, 812), result.contentSize());
-		assertEquals(new Rectangle(158, 0, 955, 552), result.fieldBounds());
-		assertEquals(new Rectangle(0, 0, 145, 812), result.homeSidebarBounds());
-		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
-		assertEquals(new Rectangle(1127, 0, 145, 812), result.awaySidebarBounds());
-		assertEquals(new Rectangle(245, 552, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(246, 585, 389, 226), result.logBounds());
-		assertEquals(new Rectangle(637, 585, 389, 226), result.chatBounds());
-		assertEquals(1.2212, result.pitchScale(), 0.0001);
-	}
-
-	@Test
-	void calculatesDynamicPortraitBoundsAndPitchScale() {
-		ClientLayoutResult result = layout(ClientLayout.PORTRAIT, new Dimension(982, 1100));
-
-		assertEquals(new Dimension(982, 1100), result.contentSize());
-		assertEquals(new Rectangle(227, 0, 527, 913), result.fieldBounds());
-		assertEquals(new Rectangle(0, 0, 165, 913), result.homeSidebarBounds());
-		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
-		assertEquals(new Rectangle(817, 0, 165, 913), result.awaySidebarBounds());
-		assertEquals(new Rectangle(100, 913, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(101, 946, 389, 153), result.logBounds());
-		assertEquals(new Rectangle(492, 946, 389, 153), result.chatBounds());
-		assertEquals(1.1675, result.pitchScale(), 0.0001);
-	}
-
-	@Test
-	void calculatesDynamicSquareBoundsAndPitchScale() {
-		ClientLayoutResult result = layout(ClientLayout.SQUARE, new Dimension(1244, 900));
-
-		assertEquals(new Dimension(1244, 900), result.contentSize());
-		assertEquals(new Rectangle(231, 0, 520, 900), result.fieldBounds());
-		assertEquals(new Rectangle(0, 0, 165, 900), result.homeSidebarBounds());
-		assertEquals(new Rectangle(0, 0, 165, 472), result.homeReserveBoxBounds());
-		assertEquals(new Rectangle(817, 0, 165, 900), result.awaySidebarBounds());
-		assertEquals(new Rectangle(983, 344, 260, 96), result.scoreBarBounds());
-		assertEquals(new Rectangle(983, 1, 260, 343), result.logBounds());
-		assertEquals(new Rectangle(983, 440, 260, 343), result.chatBounds());
-		assertEquals(1.1509, result.pitchScale(), 0.0001);
-	}
-
-	@Test
-	void calculatesDynamicWideBoundsAndPitchScale() {
-		ClientLayoutResult result = layout(ClientLayout.WIDE, new Dimension(1920, 1080));
-
-		assertEquals(new Dimension(1920, 1080), result.contentSize());
-		assertEquals(new Rectangle(175, 0, 1570, 907), result.fieldBounds());
-		assertEquals(new Rectangle(0, 0, 145, 1080), result.homeSidebarBounds());
-		assertEquals(new Rectangle(0, 0, 145, 430), result.homeReserveBoxBounds());
-		assertEquals(new Rectangle(1775, 0, 145, 1080), result.awaySidebarBounds());
-		assertEquals(new Rectangle(217, 907, 1486, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(218, 940, 741, 139), result.logBounds());
-		assertEquals(new Rectangle(961, 940, 741, 139), result.chatBounds());
-	}
-
-	@Test
-	void returnsConfiguredGuiScaleAsTheRuntimeGuiScaleForDynamicPitch() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
-		layoutSettings.setGuiScale(1.5);
-
-		ClientLayoutResult result = new ClientLayoutCalculator().calculate(layoutSettings, new Dimension(1272, 812));
-
-		assertEquals(1.5, result.runtimeGuiScale(), 0.0001);
-	}
-
-	@Test
-	void returnsConfiguredDugoutScaleAsTheRuntimeDugoutScaleForDynamicPitch() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
-		layoutSettings.setDugoutScale(1.5);
-
-		ClientLayoutResult result = new ClientLayoutCalculator().calculate(layoutSettings, new Dimension(1272, 812));
-
-		assertEquals(1.5, result.runtimeDugoutScale(), 0.0001);
-	}
-
-	@Test
 	void naturalSquareSizeUsesConfiguredPitchScaleIndependentlyFromGuiScale() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.SQUARE, 1.0);
-		layoutSettings.setPitchScale(0.5);
+		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.SQUARE, 0.5);
+		layoutSettings.setGuiRatio(2.0);
 
 		assertEquals(new Dimension(818, 784), new ClientLayoutCalculator().naturalContentSize(layoutSettings));
 	}
 
 	@Test
-	void placesLandscapeBottomInfoAreaImmediatelyAfterWidthConstrainedPitch() {
-		ClientLayoutResult result = layout(ClientLayout.LANDSCAPE, new Dimension(1072, 1000));
+	void startupReferenceSizeKeepsSavedGuiScale() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 0.95);
+		settings.setGuiRatio(0.7);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
 
-		assertEquals(new Rectangle(145, 0, 782, 452), result.fieldBounds());
-		assertEquals(new Rectangle(145, 452, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(146, 485, 389, 226), result.logBounds());
-		assertEquals(new Rectangle(537, 485, 389, 226), result.chatBounds());
+		ClientLayoutResult result = calculator.calculate(settings, calculator.referenceContentSize(settings));
+
+		assertEquals(0.665, result.runtimeGuiScale(), 0.0001);
+		assertEquals(96, result.homeSidebarBounds().width);
 	}
 
 	@Test
-	void placesPortraitBottomInfoAreaImmediatelyAfterWidthConstrainedPitch() {
-		ClientLayoutResult result = layout(ClientLayout.PORTRAIT, new Dimension(800, 1400));
-
-		assertEquals(new Rectangle(165, 0, 470, 813), result.fieldBounds());
-		assertEquals(new Rectangle(9, 813, 782, 32), result.scoreBarBounds());
-		assertEquals(new Rectangle(10, 846, 389, 153), result.logBounds());
-		assertEquals(new Rectangle(401, 846, 389, 153), result.chatBounds());
+	void referenceSizeKeepsSidebarsBesidePitchAtEachGuiScale() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			for (double ratio : new double[] {0.25, 0.7, 1.0}) {
+				LayoutSettings settings = new LayoutSettings(layout, 1.0);
+				settings.setGuiRatio(ratio);
+				ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+				ClientLayoutResult result = calculator.calculate(settings, calculator.referenceContentSize(settings));
+				Rectangle pitch = result.fieldBounds();
+				Rectangle home = result.homeSidebarBounds();
+				Rectangle away = result.awaySidebarBounds();
+				assertTrue(pitch.x - (home.x + home.width) <= 2, layout + " GUI " + ratio);
+				assertTrue(away.x - (pitch.x + pitch.width) <= 2, layout + " GUI " + ratio);
+			}
+		}
 	}
 
 	@Test
@@ -219,20 +150,144 @@ class ClientLayoutCalculatorTest {
 		for (ClientLayout layout : new ClientLayout[] {
 			ClientLayout.LANDSCAPE, ClientLayout.PORTRAIT, ClientLayout.SQUARE, ClientLayout.WIDE
 		}) {
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.0);
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.5, 1.0);
-			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0, 1.5);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 0.25);
+			assertNaturalContentSizeProducesConfiguredScaleLayout(layout, 1.0);
 		}
 	}
 
-	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale,
-		double pitchScale) {
-		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
-		layoutSettings.setGuiScale(guiScale);
-		layoutSettings.setPitchScale(pitchScale);
+	@Test
+	void resizingPreservesGuiAndPitchProportionsAcrossLayoutsAndWindowShapes() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, 1.0);
+			settings.setGuiRatio(0.75);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			Dimension natural = calculator.referenceContentSize(settings);
+			ClientLayoutResult base = calculator.calculate(settings, natural);
+			ClientLayoutResult enlarged = calculator.calculate(settings,
+				new Dimension(natural.width * 2, natural.height * 2));
+			ClientLayoutResult wider = calculator.calculate(settings,
+				new Dimension(natural.width * 3, natural.height * 2));
+			ClientLayoutResult taller = calculator.calculate(settings,
+				new Dimension(natural.width * 2, natural.height * 3));
 
+			assertEquals(base.runtimeGuiScale() * 2, enlarged.runtimeGuiScale(), 0.0001);
+			assertEquals(base.runtimeDugoutScale() * 2, enlarged.runtimeDugoutScale(), 0.0001);
+			assertEquals(base.pitchScale() * 2, enlarged.pitchScale(), 0.01);
+			assertEquals(enlarged.runtimeGuiScale(), wider.runtimeGuiScale(), 0.0001);
+			assertEquals(enlarged.pitchScale(), wider.pitchScale(), 0.0001);
+			assertTrue(wider.homeSidebarBounds().x > enlarged.homeSidebarBounds().x);
+			assertEquals(enlarged.runtimeGuiScale(), taller.runtimeGuiScale(), 0.0001);
+			assertEquals(enlarged.pitchScale(), taller.pitchScale(), 0.0001);
+			assertTrue(taller.homeSidebarBounds().y > enlarged.homeSidebarBounds().y);
+		}
+	}
+
+	@Test
+	void minimumContentSizePreservesGuiRatioWhenOverallScaleChanges() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		settings.setGuiRatio(0.75);
 		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
-		Dimension naturalContentSize = calculator.naturalContentSize(layoutSettings);
+		Dimension minimum = calculator.minimumContentSize(settings);
+		settings.setScale(2.0);
+
+		assertEquals(minimum, calculator.minimumContentSize(settings));
+	}
+
+	@Test
+	void increasingGuiRatioIncreasesGuiRelativeToPitch() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+		Dimension content = new Dimension(1500, 1000);
+		settings.setGuiRatio(0.5);
+		ClientLayoutResult normal = calculator.calculate(settings, content);
+		settings.setGuiRatio(1.0);
+		ClientLayoutResult largerGui = calculator.calculate(settings, content);
+
+		assertTrue(largerGui.runtimeGuiScale() / largerGui.pitchScale()
+			> normal.runtimeGuiScale() / normal.pitchScale());
+	}
+
+	@Test
+	void guiLimitKeepsPanelsInsideTheLayoutAndLeavesAtLeastHalfSizePitch() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, 1.0);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			Dimension content = calculator.naturalContentSize(settings);
+			double limit = LayoutSettings.MAX_GUI_RATIO;
+			settings.setGuiRatio(limit);
+			ClientLayoutResult result = calculator.calculate(settings, content);
+
+			assertTrue(result.pitchScale() >= 0.5 - 0.01, layout.toString());
+			Rectangle bounds = new Rectangle(content);
+			assertTrue(bounds.contains(result.fieldBounds()), layout.toString());
+			assertTrue(bounds.contains(result.homeSidebarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.awaySidebarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.scoreBarBounds()), layout.toString());
+			assertTrue(bounds.contains(result.logBounds()), layout.toString());
+			assertTrue(bounds.contains(result.chatBounds()), layout.toString());
+
+			settings.setGuiRatio(limit + 0.5);
+			ClientLayoutResult aboveLimit = calculator.calculate(settings, content);
+			assertEquals(result.runtimeGuiScale(), aboveLimit.runtimeGuiScale(), 0.0001, layout.toString());
+			assertEquals(result.fieldBounds(), aboveLimit.fieldBounds(), layout.toString());
+		}
+	}
+
+	@Test
+	void guiRatioChangesComposedSizeWithoutChangingPitchScale() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, 1.0);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			settings.setGuiRatio(0.25);
+			Dimension smallContent = calculator.referenceContentSize(settings);
+			ClientLayoutResult small = calculator.calculate(settings, smallContent);
+			settings.setGuiRatio(LayoutSettings.MAX_GUI_RATIO);
+			Dimension largeContent = calculator.referenceContentSize(settings);
+			ClientLayoutResult large = calculator.calculate(settings, largeContent);
+
+			assertEquals(smallContent, small.contentSize());
+			assertEquals(largeContent, large.contentSize());
+			assertTrue(large.runtimeGuiScale() > small.runtimeGuiScale(), layout.toString());
+			assertEquals(small.pitchScale(), large.pitchScale(), 0.01, layout.toString());
+		}
+	}
+
+	@Test
+	void outOfRangeGuiRatioIsClampedForBothGuiAndDugoutWithoutChangingSettings() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		settings.setGuiRatio(0.0);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+		Dimension content = calculator.referenceContentSize(settings);
+
+		ClientLayoutResult result = calculator.calculate(settings, content);
+
+		assertEquals(LayoutSettings.MIN_GUI_RATIO, result.runtimeGuiScale(), 0.0001);
+		assertEquals(result.runtimeGuiScale(), result.runtimeDugoutScale(), 0.0001);
+		assertEquals(0.0, settings.getGuiRatio());
+	}
+
+	@Test
+	void smallestGuiRatioProducesPositiveComponentSizesInEveryLayout() {
+		for (ClientLayout layout : ClientLayout.values()) {
+			LayoutSettings settings = new LayoutSettings(layout, LayoutSettings.MIN_SCALE_FACTOR);
+			ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+			settings.setGuiRatio(LayoutSettings.MIN_GUI_RATIO);
+			Dimension content = calculator.referenceContentSize(settings);
+			ClientLayoutResult result = calculator.calculate(settings, content);
+
+			assertEquals(0.125, result.runtimeGuiScale(), 0.0001, layout.toString());
+			assertTrue(result.homeSidebarBounds().width > 0, layout.toString());
+			assertTrue(result.scoreBarBounds().height > 0, layout.toString());
+			assertTrue(result.logBounds().width > 0 && result.logBounds().height > 0, layout.toString());
+			assertTrue(result.chatBounds().width > 0 && result.chatBounds().height > 0, layout.toString());
+		}
+	}
+
+	private void assertNaturalContentSizeProducesConfiguredScaleLayout(ClientLayout layout, double guiScale) {
+		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
+		ClientLayoutCalculator calculator = new ClientLayoutCalculator();
+		layoutSettings.setGuiRatio(guiScale);
+		Dimension naturalContentSize = calculator.referenceContentSize(layoutSettings);
 		ClientLayoutResult result = calculator.calculate(layoutSettings, naturalContentSize);
 
 		assertEquals(layoutSettings.getGuiScale(), result.runtimeGuiScale(), 0.0001);
@@ -269,18 +324,6 @@ class ClientLayoutCalculatorTest {
 	private ClientLayoutResult layout(ClientLayout layout, Dimension availableSize) {
 		LayoutSettings layoutSettings = new LayoutSettings(layout, 1.0);
 		return new ClientLayoutCalculator().calculate(layoutSettings, availableSize);
-	}
-
-	private void assertFixedLayout(ClientLayoutResult expected, ClientLayoutResult actual) {
-		assertEquals(expected.contentSize(), actual.contentSize());
-		assertEquals(expected.fieldBounds(), actual.fieldBounds());
-		assertEquals(expected.homeSidebarBounds(), actual.homeSidebarBounds());
-		assertEquals(expected.homeReserveBoxBounds(), actual.homeReserveBoxBounds());
-		assertEquals(expected.awaySidebarBounds(), actual.awaySidebarBounds());
-		assertEquals(expected.scoreBarBounds(), actual.scoreBarBounds());
-		assertEquals(expected.logBounds(), actual.logBounds());
-		assertEquals(expected.chatBounds(), actual.chatBounds());
-		assertEquals(expected.pitchScale(), actual.pitchScale(), 0.0001);
 	}
 
 	private Dimension dimension(LayoutSettings layoutSettings, Component component) {

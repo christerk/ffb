@@ -3,13 +3,11 @@ package com.fumbbl.ffb.client;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LayoutSettingsTest {
 
 	@Test
-	void constructorInitializesAllScaleConceptsFromCompatibilityScale() {
+	void constructorUsesOverallScaleForGuiPitchAndDugout() {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.5);
 
 		assertEquals(1.5, layoutSettings.getScale());
@@ -19,7 +17,7 @@ class LayoutSettingsTest {
 	}
 
 	@Test
-	void setScaleUpdatesAllScaleConceptsForCurrentCompatibilityBehavior() {
+	void changingOverallScaleUpdatesDerivedScales() {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
 
 		layoutSettings.setScale(2.0);
@@ -45,7 +43,7 @@ class LayoutSettingsTest {
 	}
 
 	@Test
-	void largerAndSmallerScaleUseCompatibilityGuiScale() {
+	void largerAndSmallerScaleUseOverallScale() {
 		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
 
 		assertEquals(1.05, layoutSettings.largerScale(), 0.0001);
@@ -62,13 +60,26 @@ class LayoutSettingsTest {
 	}
 
 	@Test
-	void dynamicPitchScalingDefaultsToOnAndCanBeChanged() {
-		LayoutSettings layoutSettings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+	void guiRatioIsPreservedWhenOverallScaleChanges() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 1.0);
+		settings.setGuiRatio(1.5);
+		settings.setScale(2.0);
 
-		assertTrue(layoutSettings.isDynamicPitchScaling());
-
-		layoutSettings.setDynamicPitchScaling(false);
-
-		assertFalse(layoutSettings.isDynamicPitchScaling());
+		assertEquals(2.0, settings.getScale());
+		assertEquals(3.0, settings.getGuiScale());
+		assertEquals(3.0, settings.getDugoutScale());
+		assertEquals(2.05, settings.largerScale(), 0.0001);
 	}
+
+	@Test
+	void changingGuiRatioDoesNotChangeOverallOrPitchScale() {
+		LayoutSettings settings = new LayoutSettings(ClientLayout.LANDSCAPE, 2.0);
+		settings.setGuiRatio(0.5);
+
+		assertEquals(2.0, settings.getScale());
+		assertEquals(2.0, settings.getPitchScale());
+		assertEquals(1.0, settings.getGuiScale());
+		assertEquals(1.0, settings.getDugoutScale());
+	}
+
 }
