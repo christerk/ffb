@@ -55,7 +55,7 @@ public abstract class AbstractDialogMultiBlockProperties extends AbstractDialogB
 	protected Map<String, JButton> anyDiceButtons = new HashMap<>();
 	protected Map<String, List<JCheckBox>> anyDiceCheckBoxes = new HashMap<>();
 
-	protected DialogExtensionMascot mascotExtension = new DialogExtensionMascot();
+	protected DialogExtensionReRolls rerollExtension = new DialogExtensionReRolls();
 
 	public AbstractDialogMultiBlockProperties(FantasyFootballClient pClient, String pTitle, boolean pCloseable) {
 		super(pClient, pTitle, pCloseable);

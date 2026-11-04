@@ -370,8 +370,14 @@ public class RollMechanic extends com.fumbbl.ffb.server.mechanic.RollMechanic {
 	}
 
 	@Override
-	public Optional<ReRollProperty> findAdditionalReRollProperty(TurnData turnData) {
-		return Optional.empty();
+	public List<ReRollProperty> findTeamReRollProperties(GameState gameState, Player<?> player) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public boolean isReRollSourceOffered(Game game, ReRolledAction reRolledAction, ReRollSource reRollSource,
+		String targetId) {
+		return true;
 	}
 
 	@Override

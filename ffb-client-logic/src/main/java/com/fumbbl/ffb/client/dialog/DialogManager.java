@@ -175,6 +175,9 @@ public class DialogManager {
 					case RE_ROLL_FOR_TARGETS:
 						setDialogHandler(new DialogReRollForTargetsHandler(getClient()));
 						break;
+					case RE_ROLL_FOR_TARGETS_PROPERTIES:
+						setDialogHandler(new DialogReRollForTargetsPropertiesHandler(getClient()));
+						break;
 					case RE_ROLL_BLOCK_FOR_TARGETS:
 						setDialogHandler(new DialogReRollBlockForTargetsHandler(getClient()));
 						break;

@@ -108,7 +108,8 @@ public class DialogReRollForTargets extends AbstractDialogForTargets {
 					}
 				}
 				if (parameter.getReRollSkill() != null) {
-					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll", parameter.getReRollSkill().getRerollSource(ReRolledActions.DAUNTLESS), index == 0 ? 'S' : 'k'));
+					buttonPanel.add(createButton(target, parameter.getReRollSkill().getName() + " Re-Roll",
+						parameter.getReRollSkill().getRerollSource(parameter.getReRolledAction()), index == 0 ? 'S' : 'k'));
 					buttonPanel.add(Box.createHorizontalGlue());
 				}
 				targetPanel.add(Box.createVerticalStrut(3));

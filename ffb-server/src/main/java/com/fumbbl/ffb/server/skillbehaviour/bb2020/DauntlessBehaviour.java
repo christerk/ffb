@@ -1,4 +1,4 @@
-package com.fumbbl.ffb.server.skillbehaviour.mixed;
+package com.fumbbl.ffb.server.skillbehaviour.bb2020;
 
 import com.fumbbl.ffb.FactoryType;
 import com.fumbbl.ffb.ReRollSource;
@@ -37,7 +37,6 @@ import com.fumbbl.ffb.skill.common.Dauntless;
 import com.fumbbl.ffb.util.UtilCards;
 
 @RulesCollection(Rules.BB2020)
-@RulesCollection(Rules.BB2025)
 public class DauntlessBehaviour extends SkillBehaviour<Dauntless> {
 	public DauntlessBehaviour() {
 		super();

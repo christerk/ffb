@@ -24,7 +24,6 @@ import com.fumbbl.ffb.server.step.mixed.multiblock.StepFoulAppearanceMultiple;
 import com.fumbbl.ffb.server.util.UtilServerReRoll;
 import com.fumbbl.ffb.skill.common.FoulAppearance;
 import com.fumbbl.ffb.util.UtilCards;
-import com.fumbbl.ffb.server.skillbehaviour.mixed.AbstractStepModifierMultipleBlock;
 
 import java.util.ArrayList;
 

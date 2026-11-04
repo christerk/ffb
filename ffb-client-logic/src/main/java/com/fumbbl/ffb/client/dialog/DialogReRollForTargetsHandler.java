@@ -6,7 +6,6 @@ import com.fumbbl.ffb.StatusType;
 import com.fumbbl.ffb.client.FantasyFootballClient;
 import com.fumbbl.ffb.dialog.DialogId;
 import com.fumbbl.ffb.dialog.DialogReRollForTargetsParameter;
-import com.fumbbl.ffb.factory.SkillFactory;
 import com.fumbbl.ffb.model.Game;
 import com.fumbbl.ffb.model.Player;
 
@@ -32,19 +31,22 @@ public class DialogReRollForTargetsHandler extends DialogHandler {
 			} else {
 				StringBuilder message = new StringBuilder();
 				String reRolledActionName = (dialogReRollParameter.getReRolledAction() != null)
-						? dialogReRollParameter.getReRolledAction().getName(game.getRules().<SkillFactory>getFactory(FactoryType.Factory.SKILL))
-						: null;
+					? dialogReRollParameter.getReRolledAction().getName(game.getRules().getFactory(FactoryType.Factory.SKILL))
+					: null;
 				message.append("Waiting to re-roll ").append(reRolledActionName).append(".");
 				showStatus("Re-roll", message.toString(), StatusType.WAITING);
 			}
 		}
 	}
 
+	@Override
 	public void dialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_FOR_TARGETS)) {
 			DialogReRollForTargets reRollDialog = (DialogReRollForTargets) pDialog;
-			getClient().getCommunication().sendUseReRollForTarget(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource(), reRollDialog.getSelectedTarget());
+			getClient().getCommunication()
+				.sendUseReRollForTarget(reRollDialog.getReRolledAction(), reRollDialog.getReRollSource(),
+					reRollDialog.getSelectedTarget());
 		}
 	}
 }

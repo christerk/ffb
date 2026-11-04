@@ -12,7 +12,7 @@ import com.fumbbl.ffb.model.Player;
 /**
  * Handles the dialog offering optional roll modifiers and re-rolls.
  */
-public class DialogReRollModifierChoiceHandler extends DialogHandler {
+public class DialogReRollModifierChoiceHandler extends AbstractReRollDialogHandler {
 
 	public DialogReRollModifierChoiceHandler(FantasyFootballClient pClient) {
 		super(pClient);
@@ -49,7 +49,8 @@ public class DialogReRollModifierChoiceHandler extends DialogHandler {
 
 	}
 
-	public void dialogClosed(IDialog pDialog) {
+	@Override
+	protected void reRollDialogClosed(IDialog pDialog) {
 		hideDialog();
 		if (testDialogHasId(pDialog, DialogId.RE_ROLL_MODIFIER_CHOICE)) {
 			DialogReRollModifierChoice modifierChoiceDialog = (DialogReRollModifierChoice) pDialog;
@@ -60,9 +61,11 @@ public class DialogReRollModifierChoiceHandler extends DialogHandler {
 			} else if (modifierChoiceDialog.isUseSkill()) {
 				getClient().getCommunication().sendUseSkill(modifierChoiceDialog.getUsedSkill(), true, playerId,
 					modifierChoiceDialog.getReRolledAction());
+			} else if (modifierChoiceDialog.getReRollSource() != null) {
+				selectTeamReRoll(modifierChoiceDialog.getDialogParameter(), modifierChoiceDialog.getReRollSource(),
+					source -> getClient().getCommunication().sendUseReRoll(modifierChoiceDialog.getReRolledAction(), source));
 			} else {
-				getClient().getCommunication().sendUseReRoll(modifierChoiceDialog.getReRolledAction(),
-					modifierChoiceDialog.getReRollSource());
+				getClient().getCommunication().sendUseReRoll(modifierChoiceDialog.getReRolledAction(), null);
 			}
 		}
 	}
