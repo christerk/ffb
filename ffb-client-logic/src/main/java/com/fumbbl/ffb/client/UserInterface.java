@@ -125,7 +125,15 @@ public class UserInterface extends JFrame implements WindowListener, IDialogClos
 		fStatusReport = new StatusReport(getClient());
 		fMouseEntropySource = new MouseEntropySource(this);
 		layoutCalculator = new ClientLayoutCalculator();
-		resizeRelayoutTimer = new Timer(100, e -> resizeClient());
+		resizeRelayoutTimer = new Timer(100, e -> {
+			resizeClient();
+			if (currentDialog == null || currentDialog.getId() != DialogId.SCALING_FACTOR) {
+				getGameMenuBar().init();
+				if (fClient.getClientState() != null) {
+					getGameMenuBar().changeState(fClient.getClientState().getId());
+				}
+			}
+		});
 		resizeRelayoutTimer.setRepeats(false);
 
 
