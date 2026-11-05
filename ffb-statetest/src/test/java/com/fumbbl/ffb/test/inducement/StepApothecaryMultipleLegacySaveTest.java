@@ -193,8 +193,7 @@ public class StepApothecaryMultipleLegacySaveTest {
 			new InjuryResult().initFrom(game.getRules(), staleCopy).injuryContext().getApothecaryStatus());
 
 		// the coach keeps the Seriously Injured result of the apothecary roll, then the pastries are offered for away2
-		step.handleCommand(new ReceivedCommand(new ClientCommandApothecaryChoice("away1",
-			new PlayerState(PlayerState.SERIOUS_INJURY), null, new PlayerState(PlayerState.RIP)), null));
+		step.handleCommand(new ReceivedCommand(new ClientCommandApothecaryChoice("away1", true), null));
 		assertEquals("away2", ((DialogUseInducementParameter) dialog()).getPlayerId());
 		assertEquals(0, game.getTurnDataAway().getApothecaries());
 
